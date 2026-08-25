@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>MyKunda — Kaarten en MapTiler Flex, 25 augustus 2026</title>
+<script src="doc-page.js"></script>
+<style>
+doc-page:not(:defined){visibility:hidden}
+:root{--g9:#0E2E25;--g7:#1C5848;--g2:#DCEAE3;--am:#B4711C;--am-bg:#FBF3E7;--ink:#16211D;--ink2:#3D4B45;--mut:#6B7B74;--line:#E2E8E4}
+doc-page{font-family:"Hanken Grotesk",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:var(--ink2);font-size:10.5pt;line-height:1.62}
+h1{font-size:26pt;line-height:1.1;letter-spacing:-.02em;color:var(--g9);margin:0 0 6px}
+.sub{font-size:11.5pt;color:var(--mut);margin:0 0 4px;line-height:1.5}
+.stamp{font-size:8.5pt;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:var(--am);margin-bottom:12px}
+h2{font-size:15pt;color:var(--g9);margin:30px 0 10px;letter-spacing:-.01em;padding-bottom:7px;border-bottom:2px solid var(--g2)}
+h3{font-size:11.5pt;color:var(--g7);margin:22px 0 6px}
+p{margin:0 0 9px}
+ul,ol{margin:0 0 10px;padding-left:19px}
+li{margin-bottom:5px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:9pt;background:#F1F5F3;padding:1px 5px;border-radius:3px;color:var(--g9);word-break:break-word}
+pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:8.5pt;line-height:1.5;background:var(--g9);color:#D9E7E1;padding:13px 15px;border-radius:6px;overflow-wrap:break-word;white-space:pre-wrap;margin:0 0 12px;break-inside:avoid}
+pre b{color:#F3C77A;font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:9pt;margin:0 0 14px}
+th{background:var(--g7);color:#fff;text-align:left;padding:8px 10px;font-weight:700;font-size:8pt;text-transform:uppercase;letter-spacing:.04em}
+td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.45}
+tr:nth-child(even) td{background:#F7FAF8}
+td code{background:none;padding:0;font-size:8.5pt}
+.tag{display:inline-block;font-size:7.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 7px;border-radius:20px;white-space:nowrap}
+.thoog{background:#FADFD9;color:#8E2C1B}
+.tmid{background:#FDEBD4;color:#8A5510}
+.tlaag{background:#E8EDF5;color:#3A5378}
+.tok{background:#DFF3E5;color:#1D6B36}
+.box{background:var(--am-bg);border:1px solid #F0DCC0;border-radius:7px;padding:14px 17px;margin:0 0 14px;break-inside:avoid;orphans:3;widows:3}
+.box b{color:var(--am)}
+.box.g{background:#F2F8F4;border-color:#D3E6D9}
+.box.g b{color:var(--g7)}
+.item{break-inside:avoid;orphans:3;widows:3}
+.lead{font-size:11pt;color:var(--ink2);line-height:1.65;margin-bottom:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0 16px}
+.kpi{background:#F7FAF8;border:1px solid var(--line);border-radius:7px;padding:12px 14px}
+.kpi .n{font-size:19pt;font-weight:700;color:var(--g9);line-height:1.1}
+.kpi .l{font-size:8.5pt;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-top:3px}
+hr{border:0;border-top:1px solid var(--line);margin:26px 0}
+.foot{font-size:8.5pt;color:var(--mut)}
+a{color:var(--g7)}
+a:hover{color:var(--g9)}
+</style>
+</head>
+<body>
+<doc-page margin="0.7in">
+
+<div class="stamp">MyKunda · mykunda.com</div>
+<h1>Kaarten naar Flex: wat er veranderd is en waar je live op let</h1>
+<p class="sub">25 augustus 2026 — het MapTiler-account is omgezet naar Flex. Alle zesenveertig kaarten op de site zijn daarop aangepast en staan nu op één gedeelde kaartfabriek in <code>app.js</code>. Onderweg bleek één wijkkaart helemaal niet te werken en zou de terugval op OpenStreetMap live door de CSP zijn geblokkeerd. Beide zijn opgelost. Gebouwd, gecommit en gepusht; de upload en de Cloudflare-purge staan nog open.</p>
+
+<div class="grid4">
+  <div class="kpi"><div class="n">46</div><div class="l">kaarten aangepast</div></div>
+  <div class="kpi"><div class="n">2</div><div class="l">stille fouten gevonden</div></div>
+  <div class="kpi"><div class="n">50%</div><div class="l">minder data kaartlaag</div></div>
+  <div class="kpi"><div class="n">mk-v65</div><div class="l">servicewerker</div></div>
+</div>
+
+<h2>Wat er per kaart is veranderd</h2>
+<table>
+<tr><th>Pagina</th><th>Kaart</th><th>Wat er anders is</th></tr>
+<tr><td><code>search.html</code></td><td>Zoekkaart</td><td>hybrid-v4 en streets-v4, @2x, WebP voor de kaartlaag, schaalbalk. De bestaande Map/Satellite-knoppen sturen nu lagen uit de fabriek aan. Nieuw: levert het filter niets op, dan biedt de pagina aan de gezochte plek op de kaart te tonen.</td></tr>
+<tr><td><code>property.html</code></td><td>Kaart bij de woning</td><td>Eigen terugvalcode weg, satelliet/kaart-knop en schaalbalk erbij, zoom tot 21 met scherp beeld tot 19.</td></tr>
+<tr><td><code>list.html</code></td><td>Locatiekaart + teken-tool</td><td>Eigen terugvalcode weg, satelliet/kaart-knop erbij. De perceelfoto komt uit één Static Maps-aanroep in plaats van handmatig aan elkaar geplakte tegels.</td></tr>
+<tr><td><code>sell.html</code></td><td>Twee taxatiekaarten</td><td>De kaart waarop de verkoper sleept krijgt de knop en de schaalbalk; het stille voorbeeldkaartje blijft zonder knoppen. Het label boven de kaart vult zich nu met de echte plaatsnaam bij coördinaten of een Plus Code.</td></tr>
+<tr><td>41 wijkpagina's<br><span class="foot">plus <code>pipeline.html</code></span></td><td>Wijkkaart</td><td>Het hele kaartblok is één regel <code>mkAreaMap()</code> geworden. Satelliet/kaart-knop, schaalbalk en de tweevingerbeveiliging op mobiel zitten er nu overal op — die laatste stond eerder maar op twee pagina's.</td></tr>
+</table>
+
+<h2>Twee stille fouten die hierbij bovenkwamen</h2>
+<div class="box">
+<p><b>De kaart op kololi.html werkte niet.</b> Het kaartblok stond in een functie die meteen draaide, dus vóórdat Leaflet geladen was — waarna hij afbrak. De lazy-loader eronder zocht ondertussen naar een <code>initAreaMap</code> die op die pagina niet bestond. Resultaat: een leeg vak op de drukst bezochte wijkpagina. Nu draait kololi op dezelfde regel als de andere veertig.</p>
+</div>
+<div class="box">
+<p><b>De terugval op OpenStreetMap zou live geblokkeerd zijn.</b> Als MapTiler geen tegels levert, stapt de site over op sleutelloze bronnen. Voor de kaartlaag is dat <code>tile.openstreetmap.org</code> — maar dat domein stond in geen van de drie CSP-bestanden. De browser zou die tegels dus geweigerd hebben, precies op het moment dat ze nodig waren. Toegevoegd, en <code>.htaccess</code>, <code>_headers</code> en <code>vercel.json</code> dragen nu woordelijk dezelfde regel; ze liepen op drie punten uiteen.</p>
+</div>
+
+<h2>Uitrollen</h2>
+<ol>
+<li>De hele inhoud van <code>deploy/</code> via FTP naar de webroot, overschrijven aan. Ook de losse bestanden uit de root van <code>deploy/</code>: de build heeft in élke pagina en in <code>sw.js</code> een nieuwe <code>?v=</code> gezet.</li>
+<li>Cloudflare → Caching → Configuration → <b>Purge Everything</b>.</li>
+<li>Nakijken in een privévenster.</li>
+</ol>
+<p class="foot">Gecommit als <code>de9c030</code> en gepusht naar <code>scheperman/mykunda-com</code>. Stempelcontrole vóór de upload, in de projectmap:</p>
+<pre>$a=(Select-String deploy\sw.js -Pattern "STAMP = '(\d+)'").Matches.Groups[1].Value
+$b=(Select-String deploy\index.html -Pattern "app\.min\.js\?v=(\d+)").Matches[0].Groups[1].Value
+if($a -eq $b){"stempel OK $a"}else{"<b>WIJKT AF</b> sw=$a index=$b"}</pre>
+
+<h2>Waar je live op let</h2>
+<h3>Zichtbaar beter</h3>
+<ul class="item">
+<li><b>Scherper satellietbeeld op je telefoon.</b> Open <code>property.html</code> van een advertentie met coördinaten en zoom in tot je daken los ziet. Het beeld hoort scherp te blijven tot ongeveer twee stappen voorbij het punt waar het eerder zacht werd. Op een gewoon 1x-scherm zie je geen verschil — dat klopt.</li>
+<li><b>Satelliet/kaart-knop rechtsboven</b> op de woningpagina, de wijkkaarten, de verkoopkaart en de taxatiekaart. Twee standen, de actieve is donkergroen.</li>
+<li><b>Schaalbalk linksonder</b> in meters.</li>
+<li><b>Kololi.</b> Open <code>kololi.html</code> en scroll naar de wijkkaart: daar hoort nu een kaart te staan waar eerder niets stond.</li>
+<li><b>Attributie.</b> Rechtsonder op elke kaart staat "© MapTiler © OpenStreetMap contributors", en beide zijn nu klikbaar. Dat is op Flex verplicht; het MapTiler-logo hoeft niet meer.</li>
+</ul>
+
+<h3>De verkoopflow — het belangrijkste om echt te doorlopen</h3>
+<ol class="item">
+<li>Ga naar <code>list.html</code>, kies land, en teken een perceel met vier of vijf hoekpunten.</li>
+<li>Druk op <b>Use this size</b>. Er hoort binnen een paar seconden een perceelfoto in je fotoslots te verschijnen.</li>
+<li>Kijk die foto na: geen naden meer tussen de tegels, de blauwe omtrek scherp, de zijdelengtes leesbaar, en rechtsonder in het kaartdeel de MapTiler-attributie.</li>
+</ol>
+<div class="box">
+<p><b>Als die foto er niet komt, is dat nieuw gedrag en geen storing.</b> De oude versie plakte losse tegels aan elkaar en maakte desnoods een half beeld. De nieuwe haalt de kaart in één keer op en maakt géén foto als MapTiler niets levert — een wazige of lege kaart als hoofdfoto van een advertentie is erger dan geen kaart. De omtrek blijft dan gewoon als gegeven bij de advertentie staan en verschijnt op de woningpagina. Het bericht onder de knop zegt dan dat de kaartafbeelding niet gemaakt kon worden.</p>
+</div>
+
+<h3>Waar je op zou moeten letten omdat het kán tegenvallen</h3>
+<ul class="item">
+<li><b>Trage verbinding.</b> @2x-tegels zijn ongeveer drie keer zoveel bytes. Bij databesparing of een 2G-verbinding schakelt de site zelf terug naar 1x, maar 3G valt daar niet onder. Merk je dat kaarten in Gambia traag opbouwen, dan is de drempel in <code>mkHiDPI()</code> in <code>app.js</code> het enige knopje dat je hoeft te draaien.</li>
+<li><b>De zoekpagina.</b> Typ iets dat geen aanbod heeft — bijvoorbeeld <i>Kunta Kinteh</i>. Onder de lege lijst hoort een knop te komen om die plek op de kaart te tonen. Komt hij niet, dan kent MapTiler de plaatsnaam niet; dat is geen fout, de dekking in Gambia is niet overal even diep.</li>
+<li><b>Betaalflow.</b> De CSP van <code>.htaccess</code> is gelijkgetrokken met de andere twee en staat modempay nu expliciet toe bij <code>form-action</code> en <code>frame-src</code>. Dat was eerder alleen in de Netlify/Vercel-config geregeld. Loop een checkout één keer door na de upload.</li>
+</ul>
+
+<h2>Verbruik in de gaten houden</h2>
+<p>De site gebruikt Leaflet, dus MapTiler rekent per verzoek af: 500.000 per maand inbegrepen op Flex. Wat waarvoor telt:</p>
+<table>
+<tr><th>Wat</th><th>Telt als</th><th>Waar op mykunda.com</th></tr>
+<tr><td>Rastertegel 512 px (ook @2x)</td><td>4 verzoeken</td><td>elke kaartlaag</td></tr>
+<tr><td>Static Maps-afbeelding</td><td>15 verzoeken</td><td>de perceelfoto</td></tr>
+<tr><td>Zoekopdracht, ook omgekeerd</td><td>1 verzoek</td><td>verkoopflow, taxatie, zoekpagina</td></tr>
+<tr><td><code>tiles.json</code>, <code>style.json</code>, fonts</td><td>gratis</td><td>de sleuteltoets bij elke paginalading</td></tr>
+</table>
+<p>Twee dingen zijn hier goedkoper geworden zonder dat je er iets van ziet. De sleuteltoets liep eerder over een echte tegel — vier verzoeken per paginabezoek, voor niets; die loopt nu over <code>tiles.json</code> en kost niets. En de perceelfoto haalde vijftien tot twintig tegels op, samen zestig tot tachtig eenheden; dat is nu één afbeelding van vijftien.</p>
+<div class="box g">
+<p><b>Zet een uitgavenlimiet in het MapTiler-dashboard.</b> Boven de inbegrepen hoeveelheid wordt automatisch bijgeschreven, $0,15 per 1.000 verzoeken. Met een limiet krijg je eerst een waarschuwing en stopt de API daarna, in plaats van dat je het op de rekening leest. Kijk na een week naar het verbruik: loopt het richting de 500.000, dan wordt sessie-facturering interessant — dat vraagt MapLibre in plaats van Leaflet en is een apart traject. Zit je ruim onder de grens, dan is er niets te doen.</p>
+</div>
+
+<h2>De volgende stap, als je wilt</h2>
+<p>Flex geeft twintig eigen kaartstijlen. Een MyKunda-stijl is het enige wat de kaarten nu nog echt anders kan laten voelen: eigen kleuren, en — belangrijker — de labels in het Engels, want bij rastertegels zitten die in het beeld gebakken en is de stijl de enige plek waar dat te zetten valt.</p>
+<ol>
+<li>MapTiler Cloud → <b>Maps</b> → <code>Streets v4</code> of <code>Satellite Hybrid v4</code> → <b>Customize</b>.</li>
+<li>Kleuren naar de huisstijl, en onder Settings (Alt+S) de taal op <b>English</b>.</li>
+<li><b>Publish</b>. De stijl krijgt een eigen ID.</li>
+<li>Dat ID in <code>app.js</code> bij <code>MK_MAP.satellite</code> of <code>MK_MAP.streets</code> zetten. Verder niets — alle kaarten, de perceelfoto en de Static Maps volgen vanzelf.</li>
+<li><code>node build.mjs</code>, uploaden, Cloudflare leegmaken.</li>
+</ol>
+
+<hr>
+<p class="foot">De volledige werkafspraken rond kaarten staan sinds deze wijziging in <code>CLAUDE.md</code>, onder "Kaarten en MapTiler": waar de sleutel staat, welke functies je moet gebruiken, hoe de zoomgrens gemeten is en wat het kost. Dit document is een momentopname van 25 augustus 2026; <code>CLAUDE.md</code> is de blijvende bron.</p>
+
+</doc-page>
+</body>
+</html>
