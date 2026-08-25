@@ -163,3 +163,34 @@ Deze repo blijft de bron.
 De volledige export van 25-08-2026 uit het oude account staat in
 `..\design-export\MyKunda.com`, inclusief `uploads/` met de originele foto's,
 `archief/` en de `upload-*`-mappen. Die zijn hier bewust niet mee gespiegeld.
+
+## Edge functions
+
+De actuele bron van alle 21 edge functions staat in
+`supabase/functions/<naam>/index.ts`, opgehaald met de Supabase CLI en
+bijgehouden in git. De CLI staat in `C:\Users\User\bin\supabase.exe` (niet op
+PATH, roep hem met het volledige pad aan).
+
+Ophalen en uitrollen:
+
+```
+C:\Users\User\bin\supabase.exe functions download <naam> --project-ref jejaerpqltqryqzjvbjp
+C:\Users\User\bin\supabase.exe functions deploy   <naam> --project-ref jejaerpqltqryqzjvbjp --no-verify-jwt
+```
+
+**`--no-verify-jwt` is niet optioneel.** Twintig van de eenentwintig functies
+draaien met `verify_jwt: false` en controleren het token zélf in de code. Rol je
+er één uit zonder die vlag, dan zet de CLI `verify_jwt` op true en wijst de
+gateway de OPTIONS-preflight van de browser af. Het gevolg is een CORS-fout in
+de checkout, zonder duidelijke melding — de betaalflow breekt dan stil.
+
+De enige uitzondering is `swift-responder`: die hoort juist wél op
+`verify_jwt: true` en moet dus **zonder** die vlag worden uitgerold.
+
+De bankgegevens voor bankoverschrijvingen staan hardgecodeerd in **twee**
+functies: `create-payment` (naar het scherm van de klant) en
+`send-payment-instructions` (de mail met het rekeningnummer). Wijzigt de
+rekening, pas ze op beide plekken aan, plus de provider-waarde die bij een
+bankoverschrijving in `payments` wordt weggeschreven.
+
+De map `edge-functions/` is een verouderde momentopname; zie de LEESMIJ daar.
