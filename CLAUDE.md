@@ -194,3 +194,18 @@ rekening, pas ze op beide plekken aan, plus de provider-waarde die bij een
 bankoverschrijving in `payments` wordt weggeschreven.
 
 De map `edge-functions/` is een verouderde momentopname; zie de LEESMIJ daar.
+
+## Pushen na elke sessie
+
+Deze repo heeft een remote: `github.com/scheperman/mykunda-com`, privé.
+Dat is de enige kopie buiten deze pc.
+
+**Sluit elke werksessie af met `git push`.** Niet omdat het netjes staat, maar
+omdat een remote die maanden achterloopt je precies zoveel maanden minder
+beschermt dan je denkt. Committen zonder pushen voelt als opslaan en is het
+niet.
+
+Commits dragen `17229960+scheperman@users.noreply.github.com`. Dat is bewust:
+GitHub weigert een push die een privé-e-mailadres zou publiceren, en het
+persoonlijke gmail-adres hoort niet in de geschiedenis van een bedrijfsrepo.
+Verander `user.email` in deze repo dus niet terug.
