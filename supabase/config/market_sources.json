@@ -1,0 +1,306 @@
+[
+  {
+    "key": "mykunda",
+    "name": "MyKunda listings",
+    "host": "mykunda.com",
+    "url": null,
+    "kind": "own",
+    "trust": 0.90,
+    "active": true,
+    "in_index": true,
+    "cadence": "daily",
+    "adapter": "manual",
+    "robots_ok": null,
+    "tos_note": "Own platform.",
+    "sort": 10,
+    "parse": {}
+  },
+  {
+    "key": "mykunda_sold",
+    "name": "MyKunda closed deals",
+    "host": "mykunda.com",
+    "url": null,
+    "kind": "own",
+    "trust": 1.00,
+    "active": true,
+    "in_index": true,
+    "cadence": "daily",
+    "adapter": "manual",
+    "robots_ok": null,
+    "tos_note": "Own platform.",
+    "sort": 11,
+    "parse": {}
+  },
+  {
+    "key": "observation",
+    "name": "Manual observations",
+    "host": null,
+    "url": null,
+    "kind": "registry",
+    "trust": 0.95,
+    "active": true,
+    "in_index": true,
+    "cadence": "manual",
+    "adapter": "manual",
+    "robots_ok": null,
+    "tos_note": "Entered by an admin in the console.",
+    "sort": 12,
+    "parse": {}
+  },
+  {
+    "key": "registry",
+    "name": "Notary & land registry",
+    "host": null,
+    "url": null,
+    "kind": "registry",
+    "trust": 0.95,
+    "active": true,
+    "in_index": true,
+    "cadence": "manual",
+    "adapter": "manual",
+    "robots_ok": null,
+    "tos_note": "Entered by hand from transfer documents.",
+    "sort": 13,
+    "parse": {}
+  },
+  {
+    "key": "agent_csv",
+    "name": "Agent lists (CSV/email)",
+    "host": null,
+    "url": null,
+    "kind": "agent",
+    "trust": 0.85,
+    "active": true,
+    "in_index": true,
+    "cadence": "monthly",
+    "adapter": "manual",
+    "robots_ok": null,
+    "tos_note": "Supplied to us directly by the agency.",
+    "sort": 14,
+    "parse": {}
+  },
+  {
+    "key": "gamrealty",
+    "name": "GamRealty",
+    "host": "gamrealty.com",
+    "url": "https://gamrealty.com/properties/",
+    "kind": "portal",
+    "trust": 0.65,
+    "active": true,
+    "in_index": true,
+    "cadence": "daily",
+    "adapter": "html",
+    "robots_ok": true,
+    "tos_note": "Public listing pages. Internal benchmarking only, robots.txt checked before every run.",
+    "sort": 20,
+    "parse": {
+      "item": "<article[\\s\\S]{0,80}?class=\"[^\"]*property[^\"]*\"[\\s\\S]*?</article>",
+      "list": ["https://gamrealty.com/properties/?paged={page}"],
+      "pages": 4,
+      "fields": {
+        "sqm": "([0-9][0-9.,]*)\\s?(?:m2|m²|sqm|square met)",
+        "url": "href=\"(https?://[^\"]+)\"",
+        "beds": "([0-9]+)\\s?bed",
+        "price": "(D|GMD|\\$|USD|€|EUR|£|GBP)\\s?([0-9][0-9.,]{2,})",
+        "title": "<h[23][^>]*>([\\s\\S]*?)</h[23]>"
+      }
+    }
+  },
+  {
+    "key": "propertyshop",
+    "name": "Gambia Property Shop",
+    "host": "gambiapropertyshop.com",
+    "url": "https://gambiapropertyshop.com/property-search/",
+    "kind": "portal",
+    "trust": 0.65,
+    "active": true,
+    "in_index": true,
+    "cadence": "daily",
+    "adapter": "html",
+    "robots_ok": true,
+    "tos_note": "Public listing pages. Internal benchmarking only.",
+    "sort": 21,
+    "parse": {
+      "item": "<article[\\s\\S]*?</article>",
+      "pages": 4,
+      "fields": {
+        "sqm": "([0-9][0-9.,]*)\\s?(?:m2|m²|sqm)",
+        "url": "href=\"(https?://[^\"]+)\"",
+        "beds": "([0-9]+)\\s?bed",
+        "price": "(D|GMD|\\$|USD|€|EUR|£|GBP)\\s?([0-9][0-9.,]{2,})",
+        "title": "<h[23][^>]*>([\\s\\S]*?)</h[23]>"
+      }
+    }
+  },
+  {
+    "key": "gambiarealestate",
+    "name": "Gambia Real Estate",
+    "host": "gambiarealestate.gm",
+    "url": "https://gambiarealestate.gm/properties/",
+    "kind": "portal",
+    "trust": 0.60,
+    "active": true,
+    "in_index": true,
+    "cadence": "daily",
+    "adapter": "html",
+    "robots_ok": true,
+    "tos_note": "Agency directory. Listings repeat across member agencies — de-duplication matters here.",
+    "sort": 22,
+    "parse": {
+      "item": "<article[\\s\\S]*?</article>",
+      "pages": 4,
+      "fields": {
+        "sqm": "([0-9][0-9.,]*)\\s?(?:m2|m²|sqm)",
+        "url": "href=\"(https?://[^\"]+)\"",
+        "price": "(D|GMD|\\$|USD|€|EUR|£|GBP)\\s?([0-9][0-9.,]{2,})",
+        "title": "<h[23][^>]*>([\\s\\S]*?)</h[23]>"
+      }
+    }
+  },
+  {
+    "key": "schumann",
+    "name": "Schumann Real Estate",
+    "host": "propertygambiaestate.com",
+    "url": "https://propertygambiaestate.com/",
+    "kind": "portal",
+    "trust": 0.60,
+    "active": true,
+    "in_index": true,
+    "cadence": "weekly",
+    "adapter": "html",
+    "robots_ok": true,
+    "tos_note": "Single agency site.",
+    "sort": 23,
+    "parse": {
+      "item": "<div[^>]*class=\"[^\"]*(?:property|listing|card)[^\"]*\"[\\s\\S]*?</div>",
+      "pages": 2,
+      "fields": {
+        "sqm": "([0-9][0-9.,]*)\\s?(?:m2|m²|sqm)",
+        "url": "href=\"(https?://[^\"]+)\"",
+        "price": "(D|GMD|\\$|USD|€|EUR|£|GBP)\\s?([0-9][0-9.,]{2,})",
+        "title": "<h[234][^>]*>([\\s\\S]*?)</h[234]>"
+      }
+    }
+  },
+  {
+    "key": "realigro",
+    "name": "Realigro (aggregator)",
+    "host": "gambia.realigro.com",
+    "url": "https://gambia.realigro.com/for-sale/property/",
+    "kind": "aggregator",
+    "trust": 0.40,
+    "active": true,
+    "in_index": true,
+    "cadence": "weekly",
+    "adapter": "html",
+    "robots_ok": true,
+    "tos_note": "International aggregator: wide but stale, and prices are often years old. Low weight on purpose.",
+    "sort": 30,
+    "parse": {
+      "item": "<div[^>]*class=\"[^\"]*(?:annuncio|listing|result)[^\"]*\"[\\s\\S]*?</div>",
+      "pages": 3,
+      "fields": {
+        "sqm": "([0-9][0-9.,]*)\\s?(?:m2|m²|sqm)",
+        "url": "href=\"(https?://[^\"]+)\"",
+        "price": "(D|GMD|\\$|USD|€|EUR|£|GBP)\\s?([0-9][0-9.,]{2,})",
+        "title": "<h[234][^>]*>([\\s\\S]*?)</h[234]>"
+      }
+    }
+  },
+  {
+    "key": "holprop",
+    "name": "Holprop (aggregator)",
+    "host": "www.holprop.com",
+    "url": "https://www.holprop.com/sale/property/gambia/",
+    "kind": "aggregator",
+    "trust": 0.40,
+    "active": true,
+    "in_index": true,
+    "cadence": "weekly",
+    "adapter": "html",
+    "robots_ok": true,
+    "tos_note": "International aggregator. Same caveat as Realigro.",
+    "sort": 31,
+    "parse": {
+      "item": "<div[^>]*class=\"[^\"]*(?:property|listing|item)[^\"]*\"[\\s\\S]*?</div>",
+      "pages": 3,
+      "fields": {
+        "sqm": "([0-9][0-9.,]*)\\s?(?:m2|m²|sqm)",
+        "url": "href=\"(https?://[^\"]+)\"",
+        "price": "(D|GMD|\\$|USD|€|EUR|£|GBP)\\s?([0-9][0-9.,]{2,})",
+        "title": "<h[234][^>]*>([\\s\\S]*?)</h[234]>"
+      }
+    }
+  },
+  {
+    "key": "accessgambia",
+    "name": "AccessGambia Property",
+    "host": "www.accessgambia.com",
+    "url": "https://www.accessgambia.com/real-estate.html",
+    "kind": "aggregator",
+    "trust": 0.35,
+    "active": true,
+    "in_index": true,
+    "cadence": "weekly",
+    "adapter": "html",
+    "robots_ok": true,
+    "tos_note": "Directory page — thin, mostly agent contacts. Kept for coverage of areas nobody else lists.",
+    "sort": 32,
+    "parse": {
+      "item": "<tr[\\s\\S]*?</tr>",
+      "pages": 1,
+      "fields": {
+        "url": "href=\"(https?://[^\"]+)\"",
+        "price": "(D|GMD|\\$|USD|€|EUR|£|GBP)\\s?([0-9][0-9.,]{2,})"
+      }
+    }
+  },
+  {
+    "key": "gbos",
+    "name": "GBoS — CPI & inflation",
+    "host": "www.gbos.gov.gm",
+    "url": "https://www.gbos.gov.gm/cpi.php",
+    "kind": "official",
+    "trust": 0.00,
+    "active": true,
+    "in_index": false,
+    "cadence": "monthly",
+    "adapter": "gbos",
+    "robots_ok": null,
+    "tos_note": "Official national statistics. Context and deflator only — never priced into the index.",
+    "sort": 40,
+    "parse": {}
+  },
+  {
+    "key": "cbg",
+    "name": "Central Bank of Gambia",
+    "host": "www.cbg.gm",
+    "url": "https://www.cbg.gm/",
+    "kind": "official",
+    "trust": 0.00,
+    "active": true,
+    "in_index": false,
+    "cadence": "daily",
+    "adapter": "cbg",
+    "robots_ok": null,
+    "tos_note": "Official rates. Context and currency conversion only.",
+    "sort": 41,
+    "parse": {}
+  },
+  {
+    "key": "costs",
+    "name": "Building materials",
+    "host": null,
+    "url": null,
+    "kind": "costs",
+    "trust": 0.00,
+    "active": true,
+    "in_index": false,
+    "cadence": "monthly",
+    "adapter": "manual",
+    "robots_ok": null,
+    "tos_note": "Cement and block prices, entered by hand — no reliable public feed exists.",
+    "sort": 42,
+    "parse": {}
+  }
+]
