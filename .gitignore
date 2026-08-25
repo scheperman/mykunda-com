@@ -1,5 +1,5 @@
-# Spiegel van het MyKunda-project. Bron van waarheid blijft Claude Design.
-# Zie SPIEGEL-LEESMIJ.md.
+# Werkmap van mykunda.com. Deze repo is sinds 25-08-2026 de bron;
+# het Claude Design-project is dat niet meer. Zie CLAUDE.md.
 
 # Niet meegespiegeld (grote originelen en oud materiaal)
 uploads/
@@ -11,3 +11,6 @@ scraps/
 deploy/
 app.min.js
 styles.min.css
+
+# Tijdelijke bestanden van de Supabase CLI
+supabase/.temp/
