@@ -30,7 +30,7 @@ window.MK_MAP = {
      zichtbaar verschil. Op 4G in Gambia weegt dat zwaarder dan de theorie. */
   satellite:       'hybrid-v4',   /* wacht op het ID van MyKunda Satellite */
   satelliteFormat: 'webp',
-  streets:         'streets-v4',
+  streets:         '01a03b2e-4c26-7f79-b769-29d6fb5b7f55',   /* MyKunda Paper */
   streetsFormat:   'webp',
   /* Waar het bronbeeld ophoudt. Gemeten boven Kololi op 25-08-2026: scherp tot
      en met Leaflet-zoom 19, daarboven zichtbaar opgerekt. Vanaf dat punt
