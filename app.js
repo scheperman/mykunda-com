@@ -28,7 +28,7 @@ window.MK_MAP = {
      Kololi op 25-08-2026 is het bij @2x eenderde minder bytes (83 kB tegen
      135 kB op zoom 17) met PSNR 39 dB tussen de twee: naast elkaar gelegd geen
      zichtbaar verschil. Op 4G in Gambia weegt dat zwaarder dan de theorie. */
-  satellite:       '01a03b25-2b66-7446-bca6-e02c35e8beab',   /* MyKunda Satellite */
+  satellite:       'hybrid-v4',   /* wacht op het ID van MyKunda Satellite */
   satelliteFormat: 'webp',
   streets:         'streets-v4',
   streetsFormat:   'webp',
