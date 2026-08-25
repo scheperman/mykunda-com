@@ -21,13 +21,22 @@ ServerSignature Off
 RewriteCond %{REQUEST_METHOD} !^(GET|HEAD|POST|OPTIONS)$
 RewriteRule ^ - [F,L]
 
+# 0b-bis. EIGEN AUDIT. Start een crawl met ?mkaudit=... in de eerste URL en de
+#     scraper- en harvesterblokkade hieronder wordt overgeslagen — alleen voor die
+#     sessie, alleen voor wie de waarde kent. Vervang MKA-2026-Kunda-7X door een
+#     eigen lange waarde en bewaar die buiten de site.
+RewriteCond %{QUERY_STRING} (?:^|&)mkaudit=MKA-2026-Kunda-7X(?:&|$)
+RewriteRule ^ - [E=MKAUDIT:1]
+
 # 0c. Downloadprogramma's, mirrors en scrapers. Dit zijn de tools waarmee een
 #     complete statische site in één commando wordt gekopieerd.
+RewriteCond %{ENV:MKAUDIT} !=1
 RewriteCond %{HTTP_USER_AGENT} (httrack|webzip|webcopier|webreaper|webstripper|teleport|sitesucker|offline\s?explorer|grab-a-site|website\s?extractor|copyrightcheck|zyborg|larbin|scrapy|python-requests|python-urllib|node-fetch|axios/|go-http-client|libwww-perl|okhttp|java/|wget|curl/|masscan|nikto|sqlmap|nmap) [NC]
 RewriteRule ^ - [F,L]
 
 # 0d. SEO-harvesters: ze crawlen de hele site om hem in commerciële databases te
 #     zetten. Leveren geen bezoekers op en kosten alleen bandbreedte.
+RewriteCond %{ENV:MKAUDIT} !=1
 RewriteCond %{HTTP_USER_AGENT} (ahrefsbot|semrushbot|mj12bot|dotbot|blexbot|serpstatbot|dataforseobot|petalbot|barkrowler|seekport|magpie-crawler|megaindex|zoominfobot|sitebulb|screaming\s?frog) [NC]
 RewriteRule ^ - [F,L]
 
@@ -53,7 +62,7 @@ RewriteRule \.(webp|jpe?g|png|gif|svg|avif|woff2?)$ - [F,NC,L]
 #     als er per ongeluk iets meegeüpload wordt.
 RedirectMatch 404 ^/(backend|edge-functions|archief|uploads|scraps|screenshots|node_modules|deploy|\.git|\.well-known/nonexistent)(/|$)
 RedirectMatch 404 (?i)^/.*-(handleiding|controle|analyse|optimalisatie|herstelplan|verbeteringen|audit|prospectus)\.html$
-RedirectMatch 404 (?i)^/(prompt-|werkplan|phase-|logo-|email-preview|photo-brief).*\.html$
+RedirectMatch 404 (?i)^/(prompt-|werkplan|phase-|logo-|email-preview|photo-brief|voorstel-|instructie-|bouwplan).*\.html$
 # Conceptversies van een pagina ("checkout v3.html") en de inerte Netlify/Vercel-
 # configuratie horen niet in de webroot. Vangnet voor als er toch iets meegaat.
 RedirectMatch 404 (?i)^/[a-z0-9-]+(\s|%20)v[0-9]+\.html$
@@ -214,8 +223,8 @@ AddType font/woff .woff
   # Kost nul milliseconden — het is één header, geen extra request.
   # Twijfel je na een wijziging? Zet tijdelijk deze regel aan in plaats van de
   # onderstaande, dan meldt de browser overtredingen zonder iets te blokkeren:
-  # Header set Content-Security-Policy-Report-Only "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; frame-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://api.maptiler.com https://*.supabase.co; font-src 'self'; worker-src 'self'; manifest-src 'self'; media-src 'self'; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.maptiler.com https://api.frankfurter.app; upgrade-insecure-requests"
-  Header set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; frame-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://api.maptiler.com https://*.supabase.co; font-src 'self'; worker-src 'self'; manifest-src 'self'; media-src 'self'; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.maptiler.com https://api.frankfurter.app; upgrade-insecure-requests"
+  # Header set Content-Security-Policy-Report-Only "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; frame-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://api.maptiler.com https://*.supabase.co https://server.arcgisonline.com https://services.arcgisonline.com; font-src 'self'; worker-src 'self'; manifest-src 'self'; media-src 'self'; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.maptiler.com https://api.frankfurter.app https://server.arcgisonline.com https://services.arcgisonline.com; upgrade-insecure-requests"
+  Header set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; frame-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://api.maptiler.com https://*.supabase.co https://server.arcgisonline.com https://services.arcgisonline.com; font-src 'self'; worker-src 'self'; manifest-src 'self'; media-src 'self'; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.maptiler.com https://api.frankfurter.app https://server.arcgisonline.com https://services.arcgisonline.com; upgrade-insecure-requests"
 
   # Andere sites mogen onze afbeeldingen, fonts en scripts niet insluiten.
   Header set Cross-Origin-Resource-Policy "same-site"
