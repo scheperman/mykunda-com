@@ -11,7 +11,7 @@ De pagina werkt volledig zonder databasewijziging. Twee dingen kan hij niet, en 
 ## Wat de pagina nu doet
 
 - Leest `payments` (tot 2000 rijen) met `reference, status, method, plan_id, amount_minor, currency, customer_email, listing_id, metadata, created_at, paid_at, fulfilment_status, admin_note`.
-- Rekent per betaling de providerkosten uit met een percentage per methode: **lokale wallets 3%**, **kaart 4,8%**, **bank transfer 0%** (die komt rechtstreeks op de Ecobank-rekening, daar zit geen provider tussen). Opgegeven door Edwin op 24-08-2026.
+- Rekent per betaling de providerkosten uit met een percentage per methode: **lokale wallets 3%**, **kaart 4,8%**, **bank transfer 0%** (die komt rechtstreeks op de GT Bank-rekening, daar zit geen provider tussen). Opgegeven door Edwin op 24-08-2026.
 - Telt `succeeded` als verkocht, op de datum van `paid_at` (en anders `created_at`).
 - Behandelt een `refunded` betaling zo: het bedrag verlaat de omzet, maar de fee blijft als kosten staan, omdat de provider die niet teruggeeft.
 - `failed`, `cancelled` en `expired` kosten niets en staan alleen in hun eigen tabel.

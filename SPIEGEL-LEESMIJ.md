@@ -1,63 +1,56 @@
-# Lokale spiegel van het MyKunda-project
+# Deze map is de bron — geen spiegel meer
 
-Deze map is een **kopie**, geen werkplek.
+**Vervangt de oude `SPIEGEL-LEESMIJ.md` (25-08-2026).** Die tekst beschreef de
+omgekeerde situatie en is niet meer waar.
 
-## De regel
+## Wat er veranderd is
 
-Claude Design is de enige bron van waarheid — zie `CLAUDE.md` in deze map en de
-werkafspraken. Uploaden is eenrichtingsverkeer: er komt nooit iets van de server
-of van deze pc terug naar het project.
+Tot 25 augustus 2026 was deze map een **kopie** van het Claude Design-project van
+`edwinscheperman@gmail.com`. Sindsdien is de ontwikkeling verhuisd naar
+`admin@mykunda.com` en heeft **deze git-repo de rol van bron overgenomen**.
 
-Dus: **wijzig hier niets en upload hier niets vandaan.** Doe je dat wel, dan
-loopt de Claude Design-kopie weg van wat er live staat, en wordt jouw wijziging
-bij de eerstvolgende levering stil overschreven.
+Deze map is dus geen spiegel: hier wordt gewerkt. Zie `CLAUDE.md` voor de leverroute.
 
-Waar deze map wél voor is: teruglezen, doorzoeken, vergelijken, en zien wat er
-tussen twee exports is veranderd.
+## Draai `spiegel-bijwerken.mjs` niet meer
 
-## Bijwerken
+Dat script staat in de map hierboven en **leegt deze map** voordat het een
+Design-export uitpakt. Er komen geen exports meer. Draaien betekent nu alleen: werk
+kwijtraken, in één keer, zonder waarschuwing.
 
-1. Exporteer het project uit Claude Design; de zip komt in `Downloads`.
-2. Draai:
+Verwijder het script of hernoem het naar `spiegel-bijwerken.mjs.NIET-DRAAIEN` zodra je
+er toch bij bent.
 
-   ```
-   node C:\Users\User\MyKunda\spiegel-bijwerken.mjs "C:\Users\User\Downloads\MyKunda.com.zip"
-   ```
+## Wat wel klopte en blijft gelden
 
-   Dat leegt de projectmap en pakt de zip er opnieuw in uit. Het leegmaken is
-   nodig: zonder dat blijft een bestand dat in Claude Design is verwijderd hier
-   staan, en ziet git die verwijdering niet.
+Uploaden is eenrichtingsverkeer. Een upload overschrijft het serverbestand ongeacht de
+datum, en er komt nooit iets van de server terug. Op de live server wordt daarom
+**nooit** rechtstreeks een bestand aangepast — niet met de bestandsbeheerder van de
+host, niet in een online editor, niet handmatig via FTP.
 
-3. Kijk wat er veranderd is:
+Is er tóch iets rechtstreeks op de server gewijzigd: eerst dat bestand hier verwerken,
+pas daarna opnieuw uploaden.
 
-   ```
-   cd C:\Users\User\MyKunda\project
-   git status
-   git diff -I"\?v=[0-9]+"
-   ```
+## Ontwerpwerk in Claude Design
 
-   Die `-I` laat de regels weg waarin alleen het build-stempel is opgeschoven.
-   Zonder die vlag zie je in élke pagina een wijziging en verdrinkt het echte
-   nieuws erin.
+Visueel werk — nieuwe pagina's, componenten, huisstijl — kan in Claude Design onder
+`admin@mykunda.com`. Wat daar ontstaat komt via deze map de site in, niet andersom.
+Claude Design levert bestanden op en noemt waar ze in de root horen; plaatsen, bouwen,
+uploaden en committen doe je hier.
 
-4. Leg de nieuwe stand vast:
+## Wat niet in git zit
 
-   ```
-   git add -A
-   git commit -m "Spiegel: export <datum>"
-   ```
+`uploads/`, `archief/`, `screenshots/` en `scraps/` — samen ruim 165 MB originele
+foto's en oud materiaal. Verder blijven `deploy/`, `app.min.js` en `styles.min.css`
+buiten de geschiedenis: die worden door `build.mjs` gegenereerd en zouden bij elke
+build als volledig gewijzigd verschijnen. Op schijf staan ze er gewoon.
 
-## Wat er niet in zit
+## Vergelijken
 
-`uploads/`, `archief/`, `screenshots/` en `scraps/` worden niet meegespiegeld —
-samen ruim 165 MB aan originele foto's en oud materiaal. Heb je daar iets van
-nodig, haal het uit de export-zip zelf.
+```
+cd C:\Users\User\MyKunda\project
+git status
+git diff -I"\?v=[0-9]+"
+```
 
-Buiten de git-geschiedenis blijven verder `deploy/`, `app.min.js` en
-`styles.min.css`. Die worden door `build.mjs` gegenereerd uit de bron die hier
-wél in staat, en zouden bij elke build als volledig gewijzigd verschijnen. Op
-schijf staan ze er gewoon.
-
-## Eerste commit
-
-`Spiegel: export Claude Design 2026-08-23 17:53` — 477 bestanden.
+Die `-I` laat de regels weg waarin alleen het build-stempel is opgeschoven. Zonder die
+vlag zie je in élke pagina een wijziging en verdrinkt het echte nieuws erin.
