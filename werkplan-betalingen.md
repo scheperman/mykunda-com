@@ -122,14 +122,18 @@ Alle rails settlen in GMD op één zakelijke rekening:
 | Veld | Waarde |
 |---|---|
 | Bank | Guaranty Trust Bank (Gambia) Ltd |
-| Rekeningnaam | MyKunda.com |
+| Rekeningnaam | EDWIN SCHEPERMAN T/A MYKUNDA.COM |
 | Rekeningnummer | 005201300100074795 |
 | Filiaal | Kairaba (code 201) |
 | USD-route | Intermediary GTBank (UK) Ltd, SWIFT GTBIGB2L · beneficiary bank a/c 901 10015 002 5033 000 |
 | SWIFT / BIC | GTBGGMGM (11-tekens: GTBGGMGMXXX) |
 | Adres | 56 Kairaba Avenue, Fajara, KSMD, Banjul |
 
-Staat in `checkout.html` (bankblok, met kopieerknoppen) en `modempay.js` (`bank_details`).
+De gegevens staan sinds de overstap naar Waychit (22-08-2026) in twee edge functions:
+`create-payment` (naar het scherm van de klant) en `send-payment-instructions`
+(de mail met het rekeningnummer). Wijzigt de rekening, pas ze dan op BEIDE plekken
+aan, plus de provider-waarde die bij een bankoverschrijving wordt weggeschreven.
+`checkout.html` toont ze maar bewaart ze niet meer zelf; `modempay.js` is vervallen.
 De checkout legt zelf uit dat Europese banken meestal de 8-tekencode willen en dat
 je er drie X'en achter zet als het veld 11 tekens eist — scheelt supportvragen.
 - Prijzen worden al currency-aware getoond via `CURRENCIES` in `app.js`
