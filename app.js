@@ -814,7 +814,7 @@ function socialLinks(){return [
 
 /* ---------- Header / footer injectors ---------- */
 function headerHTML(active, onHero){
-  const links = [['Buy','buy.html'],['Rent','rent.html'],['List','sell.html'],['Land','search.html?type=sale&cat=land'],['Verify','verify.html'],['Areas','#'],['Guides','guides.html']];
+  const links = [['Buy','buy.html'],['Rent','rent.html'],['List','sell.html'],['Land','land-for-sale-in-the-gambia.html'],['Verify','verify.html'],['Areas','#'],['Guides','guides.html']];
   const AREA_REGIONS = [
     ['Banjul Area',[['Banjul','banjul.html'],['Bakau','bakau.html'],['Cape Point','cape-point.html'],['Fajara','fajara.html'],['Kotu','kotu.html'],['Pipeline','pipeline.html'],['Bakoteh','bakoteh.html'],['Manjai Kunda','manjai-kunda.html'],['Serrekunda','serrekunda.html']]],
     ['Kombo Coast',[['Kololi','kololi.html'],['Senegambia','senegambia.html'],['Bijilo','bijilo.html'],['Brufut','brufut.html'],['Tanji','tanji.html'],['Batokunku','batokunku.html'],['Tujereng','tujereng.html'],['Sanyang','sanyang.html'],['Gunjur','gunjur.html'],['Kartong','kartong.html']]],
