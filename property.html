@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" id="mkRobots" content="noindex, follow, noai, noimageai"><!--mk:01j9p6b--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" id="mkRobots" content="noindex, follow, noai, noimageai"><!--mk:018y2nu--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -33,7 +33,7 @@
 <link rel="preconnect" href="https://api.maptiler.com" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=1787688533734">
+<link rel="stylesheet" href="styles.min.css?v=1787696111857">
 <style>
 .crumb{padding:18px 0 6px;font-size:14px;color:var(--muted);display:flex;align-items:center;gap:8px}
 .crumb a{font-weight:600}.crumb a:hover{color:var(--green-700)}
@@ -428,15 +428,15 @@
     </div>
   </footer><!--/mk-ftr--></div>
 
-<script src="app.min.js?v=1787688533734"></script>
-<script src="image-slot.js?v=1787688533734" defer></script>
+<script src="app.min.js?v=1787696111857"></script>
+<script src="image-slot.js?v=1787696111857" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel instead of blocking the page, and
    Leaflet (~145 KB) is only fetched when the visitor opens the Map tab. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=1787688533734'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=1787696111857'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -795,27 +795,15 @@ hoodIntro.textContent = hood.intro;
 hoodStats.innerHTML = hood.stats.map(h=>`<div class="hstat-card"><div class="lab">${h[0]}</div><div class="num">${h[0]==='Avg. price/m²'?fmtAreaPrice(h[1]):h[1]}</div><div class="meta">${h[2]}</div></div>`).join('');
 scorebars.innerHTML = hood.scores.map(s=>`<div class="scorebar"><span class="l">${s[0]}</span><div class="track"><div class="fill" style="width:${s[1]}%"></div></div><span class="sc">${(s[1]/10).toFixed(1)}</span></div>`).join('');
 
-// property location map (MapTiler satellite)
+/* ---- Kaart bij de woning ----
+   Lagen, zoomgrenzen, attributie en de terugval bij een afgewezen sleutel
+   komen uit app.js, zodat elke kaart op de site zich hetzelfde gedraagt. */
 let propMap=null;
 function initPropMap(){
   if(propMap || typeof L==='undefined' || typeof P.lat!=='number') return;
-  propMap = L.map('propMap', { zoomControl:true, scrollWheelZoom:true, minZoom:7, maxZoom:20 }).setView([P.lat,P.lng], 16);
-  const attribution='&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
-  /* MapTiler answers a domain-rejected request 403 with a decodable "get a
-     valid key" PNG, so <img> load fires and tileerror never does. Probe one
-     tile and fall back to keyless Esri imagery when the key is not valid here. */
-  const ESRI_SAT='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
-  const mt=L.tileLayer(mapTilerUrl('hybrid'), { maxZoom:20, tileSize:512, zoomOffset:-1, crossOrigin:true, attribution }).addTo(propMap);
-  let satSwapped=false, badTiles=0;
-  function useEsriTiles(){
-    if(satSwapped) return; satSwapped=true;
-    if(propMap.hasLayer(mt)) propMap.removeLayer(mt);
-    L.tileLayer(ESRI_SAT,{maxZoom:19,crossOrigin:true,attribution:'Imagery &copy; Esri, Maxar, Earthstar Geographics'}).addTo(propMap);
-  }
-  mt.on('tileerror',()=>{ if(++badTiles>=3) useEsriTiles(); });
-  fetch(mapTilerUrl('hybrid').replace('{z}','7').replace('{x}','58').replace('{y}','58'),{mode:'cors',credentials:'omit'})
-    .then(r=>{ if(!r.ok || !/jpe?g/i.test(r.headers.get('content-type')||'')) useEsriTiles(); })
-    .catch(()=>useEsriTiles());
+  propMap = mkMap('propMap', { scrollWheelZoom:true, minZoom:7, center:[P.lat,P.lng], zoom:16 });
+  mkBaseToggle(propMap);
+  mkScale(propMap);
   const accent = P.type==='rent' ? 'var(--amber-500)' : 'var(--green-700)';
   const icon = L.divIcon({ className:'price-marker'+(P.type==='rent'?' rent':''), html:`<div class="pin-bubble" style="background:${accent};color:#fff;border-color:${accent}">${fmtPin(P.price,P.type)}</div>`, iconSize:[0,0], iconAnchor:[0,0] });
   const mk = L.marker([P.lat,P.lng], { icon }).addTo(propMap);

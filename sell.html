@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:05eygtg--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:1iagu39--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -31,7 +31,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=1787688533734">
+<link rel="stylesheet" href="styles.min.css?v=1787696111857">
 <style>
 /* hero */
 .shero{position:relative;color:#fff;margin-top:calc(-1 * var(--header-h));isolation:isolate;overflow:hidden}
@@ -850,11 +850,11 @@
 window.__sbReady=new Promise(function(res){window.addEventListener('load',function(){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js';
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=1787688533734'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=1787696111857'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
   document.body.appendChild(s1);
 });});
 </script>
-<script src="app.min.js?v=1787688533734"></script>
+<script src="app.min.js?v=1787696111857"></script>
 <script>
 
 // icons
@@ -1075,8 +1075,12 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
       const opts = live
         ? {zoomControl:true,scrollWheelZoom:false}
         : {zoomControl:false,dragging:false,scrollWheelZoom:false,doubleClickZoom:false,touchZoom:false,boxZoom:false,keyboard:false};
-      const m=L.map(el,opts).setView(VAL_MAP_DEFAULT,9);
-      L.tileLayer(mapTilerUrl('hybrid'),{maxZoom:20,tileSize:512,zoomOffset:-1,crossOrigin:true,attribution:'\u00a9 MapTiler \u00a9 OpenStreetMap'}).addTo(m);
+      const m=mkMap(el,Object.assign({minZoom:7},opts)).setView(VAL_MAP_DEFAULT,9);
+      /* Lagen, zoomgrenzen en terugval komen uit app.js. Alleen de kaart
+         waarop de verkoper zelf sleept krijgt de satelliet/kaart-knop; het
+         stille voorbeeldkaartje blijft een plaatje zonder knoppen. */
+      if(live){ mkBaseToggle(m); mkScale(m); }
+      else { mkTileLayer('satellite').addTo(m); }
       const mkr=L.marker(VAL_MAP_DEFAULT,{draggable:!!live,autoPan:!!live}).addTo(m);
       return {m,mkr};
     }
@@ -1304,6 +1308,17 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
     if(!map||!marker||!ll) return null;
     map.setView([ll.lat,ll.lng], isExactLoc(locStr) ? 18 : 15);
     marker.setLatLng([ll.lat,ll.lng]);
+    /* Wie coördinaten of een Plus Code invult, ziet anders "this area" boven de
+       kaart staan. MapTiler weet welke plek daar ligt; één omgekeerde
+       zoekopdracht maakt er de echte naam van. Lukt het niet, dan blijft het
+       label gewoon staan zoals het stond. */
+    if(typeof mkReverseGeocode==='function' && isExactLoc(locStr) && lab){
+      mkReverseGeocode(ll.lat, ll.lng).then(function(f){
+        if(!f) return;
+        var naam = f.place_name || f.text;
+        if(naam) lab.textContent = naam;
+      });
+    }
     return ll;
   }
 

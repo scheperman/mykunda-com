@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0tf13q8--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:181p89t--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://api.maptiler.com" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=1787688533734">
+<link rel="stylesheet" href="styles.min.css?v=1787696111857">
 <style>
 body{background:var(--paper-2);min-height:100vh}
 
@@ -662,16 +662,16 @@ body{background:var(--paper-2);min-height:100vh}
   </aside>
 </div>
 
-<script src="app.min.js?v=1787688533734"></script>
-<script src="gambia-places.js?v=1787688533734" defer></script>
-<script src="image-slot.js?v=1787688533734" defer></script>
+<script src="app.min.js?v=1787696111857"></script>
+<script src="gambia-places.js?v=1787696111857" defer></script>
+<script src="image-slot.js?v=1787696111857" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel, Leaflet (~145 KB) only when the
    seller reaches the location step. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=1787688533734'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=1787696111857'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -1160,14 +1160,8 @@ window.__setMapTo=setMapTo;
    exact from the start instead of an area centre the seller still has to move.
    The local list stays on top and keeps working if the request fails. */
 const SUG_ROW='padding:11px 14px;cursor:pointer;font-size:14px;font-weight:600;color:var(--ink-2);border-bottom:1px solid var(--line-2)';
-let geoTimer=null, geoSeq=0, geoHits=[];
-function geoLabel(f){
-  const t=(f.place_type||[]).join(',');
-  if(/poi/.test(t)) return 'place';
-  if(/address|street/.test(t)) return 'street';
-  if(/municipality|locality|place|neighbourhood/.test(t)) return 'town';
-  return 'location';
-}
+let geoHits=[];
+const geoLabel = f => mkGeoLabel(f);
 function renderGeoHits(){
   const box=document.getElementById('geoSugg');
   if(!box) return;
@@ -1198,22 +1192,12 @@ function useGeoHit(f){
   locResolved.style.color='var(--green-700)';
   updateSummary();
 }
+/* Zoeken, ontdubbelen en aftellen zitten in app.js; hier blijft alleen wat
+   deze pagina met de treffers doet. proximity duwt Groot-Banjul naar boven. */
+const geoAsk = mkGeoSuggest(list => { geoHits = list; renderGeoHits(); }, { limit: 6, debounce: 300 });
 function geoSearch(q){
-  clearTimeout(geoTimer);
-  if(!window.MAPTILER_KEY || q.length<3){ geoHits=[]; renderGeoHits(); return; }
-  geoTimer=setTimeout(async()=>{
-    const seq=++geoSeq;
-    try{
-      const url='https://api.maptiler.com/geocoding/'+encodeURIComponent(q)+
-        '.json?key='+window.MAPTILER_KEY+'&country=gm&limit=6&language=en&autocomplete=true';
-      const r=await fetch(url,{mode:'cors',credentials:'omit'});
-      if(!r.ok) return;
-      const j=await r.json();
-      if(seq!==geoSeq) return;
-      geoHits=(j.features||[]).filter(f=>f&&f.center);
-      renderGeoHits();
-    }catch(e){ /* offline of geen sleutel: de eigen lijst blijft werken */ }
-  },320);
+  if(!q || q.length < 3){ geoHits=[]; renderGeoHits(); return; }
+  geoAsk(q);
 }
 locInput.addEventListener('input',function(){
   const raw=this.value.trim(), val=raw.toLowerCase();
@@ -1986,42 +1970,16 @@ let listMap=null, listMarker=null;
 /* Whole-country view: what the map opens on before an area is known, so the
    seller always sees The Gambia instead of an empty or key-blocked tile grid. */
 const GAMBIA_CENTER=[13.45,-15.35], GAMBIA_ZOOM=8;
-const MT_ATTR='&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
-const ESRI_SAT='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
-/* Esri's imagery carries no names. Without this overlay the fallback map is a
-   featureless aerial photo — which is exactly how it looked. */
-const ESRI_LABELS='https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}';
-const ESRI_ATTR='Imagery &copy; Esri, Maxar, Earthstar Geographics';
-/* MapTiler's key is domain-restricted; off mykunda.com (preview, staging, a
-   lapsed key) it answers 403 with a decodable "get a valid key" PNG — the
-   <img> fires load, not error, so tileerror never sees it. We therefore probe
-   one tile up front: a non-OK status, or a jpg request answered as PNG, means
-   the key is not valid here and the map switches to Esri's keyless satellite
-   imagery. tileerror stays as a secondary trigger for real network faults. */
-let satIsFallback=false;
-function useEsri(map,mt){
-  if(satIsFallback) return;
-  satIsFallback=true;
-  if(mt && map.hasLayer(mt)) map.removeLayer(mt);
-  L.tileLayer(ESRI_SAT,{maxZoom:21,maxNativeZoom:19,crossOrigin:true,attribution:ESRI_ATTR}).addTo(map);
-  L.tileLayer(ESRI_LABELS,{maxZoom:19,crossOrigin:true,opacity:.9,pane:'overlayPane'}).addTo(map);
-}
-async function mapTilerKeyWorks(){
-  try{
-    const res=await fetch(mapTilerUrl('hybrid').replace('{z}','7').replace('{x}','58').replace('{y}','58'),{mode:'cors',credentials:'omit'});
-    if(!res.ok) return false;
-    return /jpe?g/i.test(res.headers.get('content-type')||'');
-  }catch(e){ return false; }
-}
+/* De satellietlaag, de zoomgrenzen, de attributie en de terugval op
+   sleutelloze bronnen staan één keer in app.js — elke kaart op de site
+   gedraagt zich daardoor hetzelfde. */
 function addSatelliteLayer(map){
-  if(typeof mapTilerUrl!=='function'){ useEsri(map,null); return null; }
-  const mt=L.tileLayer(mapTilerUrl('hybrid'),{maxZoom:21,maxNativeZoom:20,tileSize:512,zoomOffset:-1,crossOrigin:true,attribution:MT_ATTR}).addTo(map);
-  let bad=0;
-  mt.on('tileerror',()=>{ if(++bad>=3) useEsri(map,mt); });
-  mapTilerKeyWorks().then(ok=>{ if(!ok) useEsri(map,mt); });
-  return mt;
+  /* Satelliet staat voor: de verkoper moet zijn perceel herkennen. De knop
+     erbij, omdat een straatnaam soms sneller houvast geeft dan een dak. */
+  const bases = mkBaseToggle(map);
+  mkScale(map);
+  return bases.satellite;
 }
-function satTileTemplate(){ return satIsFallback||typeof mapTilerUrl!=='function' ? ESRI_SAT : mapTilerUrl('hybrid'); }
 function areaKeyFromSel(){ return (S.area||'').split(' · ')[0].trim(); }
 function fillPlusFromMarker(userMoved){
   const ll = (listMarker && listMarker.getLatLng) ? listMarker.getLatLng()
@@ -2120,7 +2078,7 @@ function initListMap(){
   const known = exact || AREA_COORDS[areaKeyFromSel()] || null;
   const start = known || GAMBIA_CENTER;
   const startZoom = known ? (S.pinExact?17:15) : GAMBIA_ZOOM;
-  listMap=L.map('miniMap',{zoomControl:true,scrollWheelZoom:true,minZoom:7,maxZoom:21}).setView(start, startZoom);
+  listMap=mkMap('miniMap',{scrollWheelZoom:true,minZoom:7}).setView(start, startZoom);
   addSatelliteLayer(listMap);
   listMarker=L.marker(start,{draggable:true,autoPan:true}).addTo(listMap);
   listMarker.on('dragend',()=>fillPlusFromMarker(true));
@@ -2350,62 +2308,68 @@ document.getElementById('bndUseSize').addEventListener('click',async function(){
   }catch(e){ console.warn('plot snapshot:', e); note.textContent='✓ Plot size set · map image could not be made'; }
 });
 
-/* ---- Snapshot of the satellite map with the drawn outline ----
-   Tiles are fetched with CORS (same source as the live map), painted on a
-   canvas together with the outline, side lengths and a caption, then dropped
-   into the first free photo slot so it uploads with the listing. */
-let SNAP_TS=512;
-function lngToPx(lng,z){ return ((lng+180)/360)*SNAP_TS*Math.pow(2,z); }
-function latToPx(lat,z){ const s=Math.sin(lat*D2R); return (0.5-Math.log((1+s)/(1-s))/(4*Math.PI))*SNAP_TS*Math.pow(2,z); }
-async function fetchTile(url){
+/* ---- Perceelfoto van de satellietkaart met de getekende omtrek ----
+   Eén Static Maps-aanroep in plaats van een raster losse tegels: geen naden,
+   scherper op elk scherm, en de attributie zit er al in gebrand. Met padding=0
+   dekt de afbeelding exact de opgegeven bbox, dus is de omrekening van lat/lng
+   naar pixels lineair in Mercator — precies wat de zijdelengtes nodig hebben.
+   De omtrek tekent MapTiler; de maten en de balk eronder komen hier op canvas
+   overheen. Levert MapTiler niets, dan komt er géén foto: een lege of wazige
+   kaart als hoofdfoto van een advertentie is erger dan geen kaart. */
+const SNAP_W=1000, SNAP_H=750, SNAP_BAR=92, SNAP_MAP_H=SNAP_H-SNAP_BAR;
+function roundRect(ctx,x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+async function fetchStaticMap(url){
   const res=await fetch(url,{mode:'cors',credentials:'omit'});
-  if(!res.ok) throw new Error('tile '+res.status);
+  if(!res.ok) throw new Error('static map '+res.status);
   const blob=await res.blob();
-  if(!/^image\/(jpe?g|png|webp)$/i.test(blob.type||'')) throw new Error('tile type '+blob.type);
+  if(!/^image\/(jpe?g|png|webp)$/i.test(blob.type||'')) throw new Error('static map type '+blob.type);
   if(typeof createImageBitmap==='function') return await createImageBitmap(blob);
   const src=URL.createObjectURL(blob);
-  return await new Promise((ok,bad)=>{ const im=new Image(); im.onload=()=>{ URL.revokeObjectURL(src); ok(im); }; im.onerror=()=>{ URL.revokeObjectURL(src); bad(new Error('tile decode')); }; im.src=src; });
+  return await new Promise((ok,bad)=>{ const im=new Image(); im.onload=()=>{ URL.revokeObjectURL(src); ok(im); }; im.onerror=()=>{ URL.revokeObjectURL(src); bad(new Error('static map decode')); }; im.src=src; });
 }
-function roundRect(ctx,x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
 async function renderBoundaryImage(){
   if(boundaryPts.length<3) return null;
-  const esri=satTileTemplate()===ESRI_SAT;
-  SNAP_TS=esri?256:512;                       // Esri serves 256 px tiles, MapTiler 512
-  const W=1280,H=960,PAD=110,BAR=96;
+  if(typeof mkStaticMapUrl!=='function') return null;
+  if(typeof mkMapKeyDown==='function' && mkMapKeyDown()) return null;
+
   const lats=boundaryPts.map(p=>p[0]), lngs=boundaryPts.map(p=>p[1]);
-  const minLat=Math.min.apply(null,lats), maxLat=Math.max.apply(null,lats);
-  const minLng=Math.min.apply(null,lngs), maxLng=Math.max.apply(null,lngs);
-  let z;
-  const zMax=esri?19:20;
-  let zTop=Math.min(19,zMax); z=zTop;
-  while(z>10){
-    const w=lngToPx(maxLng,z)-lngToPx(minLng,z), h=latToPx(minLat,z)-latToPx(maxLat,z);
-    if(w<=W-2*PAD && h<=H-BAR-2*PAD) break;
-    z--;
-  }
-  const originX=lngToPx((minLng+maxLng)/2,z)-W/2;
-  const originY=latToPx((minLat+maxLat)/2,z)-(H-BAR)/2;
-  const cv=document.createElement('canvas'); cv.width=W; cv.height=H;
+  let x1=Math.min.apply(null,lngs), x2=Math.max.apply(null,lngs);
+  let y1=mkMercY(Math.min.apply(null,lats)), y2=mkMercY(Math.max.apply(null,lats));
+  /* Lucht rondom het perceel, en daarna de bbox op de verhouding van het
+     kaartvlak brengen: padding=0 betekent precies déze bbox, dus moet hij zelf
+     al de goede vorm hebben. */
+  const padX=(x2-x1)*0.20||0.0005, padY=(y2-y1)*0.20||0.0005;
+  x1-=padX; x2+=padX; y1-=padY; y2+=padY;
+  const want=SNAP_W/SNAP_MAP_H;
+  let dx=x2-x1, dy=y2-y1;
+  if(dx/dy<want){ const n=dy*want, c=(x1+x2)/2; x1=c-n/2; x2=c+n/2; }
+  else { const n=dx/want, c=(y1+y2)/2; y1=c-n/2; y2=c+n/2; }
+  dx=x2-x1; dy=y2-y1;
+
+  const poly=boundaryPts.map(p=>p[1].toFixed(6)+','+p[0].toFixed(6));
+  poly.push(poly[0]);
+  const path='fill:rgba(31,123,255,0.22)|stroke:#1F7BFF|width:5|'+poly.join('|');
+  const url=mkStaticMapUrl(
+    [x1.toFixed(6), mkInvMercY(y1).toFixed(6), x2.toFixed(6), mkInvMercY(y2).toFixed(6)],
+    SNAP_W, SNAP_MAP_H, { path:path, format:'jpg' });
+  /* MapTiler weigert een URL boven 8192 bytes; een perceel met tientallen
+     hoekpunten valt dan af in plaats van halverwege te breken. */
+  if(url.length>7800) return null;
+
+  let img;
+  try{ img=await fetchStaticMap(url); }
+  catch(e){ console.warn('perceelfoto:', e); return null; }
+
+  const S2=2;                       /* @2x: het canvas is twee keer zo groot */
+  const cv=document.createElement('canvas');
+  cv.width=SNAP_W*S2; cv.height=SNAP_H*S2;
   const ctx=cv.getContext('2d');
-  ctx.fillStyle='#1b2b33'; ctx.fillRect(0,0,W,H);
-  const tpl=satTileTemplate();
-  const jobs=[];
-  for(let tx=Math.floor(originX/SNAP_TS); tx<=Math.floor((originX+W)/SNAP_TS); tx++){
-    for(let ty=Math.floor(originY/SNAP_TS); ty<=Math.floor((originY+H-BAR)/SNAP_TS); ty++){
-      const url=tpl.replace('{z}',z).replace('{x}',tx).replace('{y}',ty);
-      jobs.push(fetchTile(url).then(bmp=>({bmp,px:tx*SNAP_TS-originX,py:ty*SNAP_TS-originY})));
-    }
-  }
-  // A rejected key still answers with a valid "Invalid key" PNG, so a tile that
-  // is not a real JPEG tile aborts the snapshot rather than being baked into a
-  // public listing photo.
-  const tiles=await Promise.all(jobs);
-  tiles.forEach(t=>{ try{ ctx.drawImage(t.bmp,t.px,t.py,SNAP_TS,SNAP_TS); }catch(e){} });
-  const pt=p=>[lngToPx(p[1],z)-originX, latToPx(p[0],z)-originY];
+  ctx.scale(S2,S2);
+  ctx.fillStyle='#1b2b33'; ctx.fillRect(0,0,SNAP_W,SNAP_H);
+  ctx.drawImage(img,0,0,SNAP_W,SNAP_MAP_H);
+
+  const pt=p=>[ (p[1]-x1)/dx*SNAP_W, (y2-mkMercY(p[0]))/dy*SNAP_MAP_H ];
   const px=boundaryPts.map(pt);
-  ctx.beginPath(); px.forEach((p,i)=> i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.closePath();
-  ctx.fillStyle='rgba(31,123,255,.22)'; ctx.fill();
-  ctx.strokeStyle='#1F7BFF'; ctx.lineWidth=4; ctx.lineJoin='round'; ctx.stroke();
   px.forEach(p=>{ ctx.beginPath(); ctx.arc(p[0],p[1],7,0,Math.PI*2); ctx.fillStyle='#fff'; ctx.fill(); ctx.lineWidth=3; ctx.strokeStyle='#1F7BFF'; ctx.stroke(); });
   ctx.font='700 20px system-ui,sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
   boundaryPts.forEach((p,i)=>{
@@ -2419,16 +2383,14 @@ async function renderBoundaryImage(){
   });
   let per=0; for(let i=0;i<boundaryPts.length;i++) per+=segMeters(boundaryPts[i],boundaryPts[(i+1)%boundaryPts.length]);
   const sqm=Math.round(polyAreaSqm(boundaryPts)), ha=sqm/10000;
-  ctx.fillStyle='#15463A'; ctx.fillRect(0,H-BAR,W,BAR);
-  ctx.textAlign='left'; ctx.fillStyle='#fff'; ctx.font='800 30px system-ui,sans-serif';
-  ctx.fillText(sqm.toLocaleString('en-US')+' m²  ('+(ha>=1?ha.toFixed(2):ha.toFixed(3))+' ha)', 28, H-BAR/2-8);
+  ctx.fillStyle='#15463A'; ctx.fillRect(0,SNAP_MAP_H,SNAP_W,SNAP_BAR);
+  ctx.textAlign='left'; ctx.textBaseline='alphabetic';
+  ctx.fillStyle='#fff'; ctx.font='800 30px system-ui,sans-serif';
+  ctx.fillText(sqm.toLocaleString('en-US')+' m²  ('+(ha>=1?ha.toFixed(2):ha.toFixed(3))+' ha)', 28, SNAP_MAP_H+40);
   ctx.font='600 18px system-ui,sans-serif'; ctx.fillStyle='rgba(255,255,255,.82)';
   const plus=S.plus||'';
-  ctx.fillText('Perimeter '+fmtMeters(per)+(plus?'  ·  Plus Code '+plus:'')+'  ·  Plot outline marked by the seller', 28, H-BAR/2+22);
-  ctx.textAlign='right'; ctx.font='600 15px system-ui,sans-serif'; ctx.fillStyle='rgba(255,255,255,.6)';
-  ctx.fillText(satIsFallback?'Imagery © Esri, Maxar':'© MapTiler © OpenStreetMap', W-24, H-BAR/2+22);
-  ctx.textAlign='left';
-  return cv.toDataURL('image/jpeg',0.86);
+  ctx.fillText('Perimeter '+fmtMeters(per)+(plus?'  ·  Plus Code '+plus:'')+'  ·  Plot outline marked by the seller', 28, SNAP_MAP_H+70);
+  return cv.toDataURL('image/jpeg',0.88);
 }
 function slotIsFilled(el){
   const im=el && el.shadowRoot && el.shadowRoot.querySelector('img');

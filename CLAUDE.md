@@ -195,6 +195,116 @@ bankoverschrijving in `payments` wordt weggeschreven.
 
 De map `edge-functions/` is een verouderde momentopname; zie de LEESMIJ daar.
 
+## Kaarten en MapTiler
+
+Sinds 25 augustus 2026 draait het MapTiler-account op **Flex**. Alles wat met
+kaarten te maken heeft staat sindsdien op één plek: het blok `MapTiler` bovenin
+`app.js`, met `window.MK_MAP` als enige bron van sleutel, stijlen en zoomgrenzen.
+
+**Zet nooit een tegel-URL of een stijlnaam in een pagina.** Gebruik:
+
+| functie | waarvoor |
+| --- | --- |
+| `mkMap(el, opts)` | een kaart met de instellingen die overal gelijk horen te zijn |
+| `mkTileLayer('satellite'\|'streets')` | één laag, met de juiste tegelgrootte, zoomgrenzen en attributie |
+| `mkBaseToggle(map)` | de satelliet/kaart-knop, plus beide lagen |
+| `mkScale(map)` | schaalbalk, metrisch |
+| `mkAreaMap(id, center, zoom)` | de kleine kaart van de wijkpagina's — alle 41 roepen alleen dit aan |
+| `mkStaticMapUrl(bbox, w, h, opts)` | één kaartafbeelding, bijvoorbeeld de perceelfoto |
+| `mkGeocode` / `mkReverseGeocode` / `mkGeoSuggest` | zoeken op plaats en adres, vastgezet op Gambia |
+
+Een pagina die zelf `L.map(...)` of `L.tileLayer(mapTilerUrl(...))` aanroept,
+loopt uit de pas zodra hier iets verandert. Dat is precies wat er tot 25-08-2026
+gebeurde: vijf verschillende zoomgrenzen, drie losse terugvalimplementaties en
+attributie zonder de verplichte links.
+
+### Wat Flex verandert
+
+- **@2x kost hetzelfde als 1x.** MapTiler rekent per tegel af, niet per pixel.
+  Daarom halen we scherpe tegels op elk scherm met echte extra pixels op, en niet
+  pas vanaf DPR 1,75. Uitzondering: databesparing aan of een 2G-verbinding.
+- **De v4-generatie stijlen.** `hybrid-v4` en `streets-v4`. De oude v2-stijlen
+  blijven werken maar krijgen geen ontwerpupdates meer.
+- **Het MapTiler-logo hoeft niet meer op de kaart.** De tekstattributie met
+  links naar MapTiler én OpenStreetMap blijft wél verplicht, op élke kaart —
+  ook op de perceelfoto. Die zit in `MK_ATTR` en in de Static Maps-URL.
+- **Static Maps** werkt alleen op een betaald plan. Dat is wat de perceelfoto in
+  de verkoopflow nu gebruikt.
+
+### Zoomgrenzen: gemeten, niet gegokt
+
+Boven Kololi is het satellietbeeld scherp tot en met Leaflet-zoom 19; daarboven
+rekt MapTiler zelf op en wordt het zichtbaar zachter. Vandaar `satNativeMax: 19`.
+Boven die grens schaalt Leaflet client-side verder: even scherp als wat MapTiler
+zou terugsturen, maar het kost geen enkele tegel.
+
+Meet het opnieuw voordat je die waarde verandert. Eén tegel ophalen met
+`Referer: https://mykunda.com/` en ernaar kijken is genoeg — een opgerekte tegel
+is meteen te zien, en het bestandsformaat zakt hard in.
+
+### Wat het kost
+
+De site gebruikt Leaflet, en dat betekent dat MapTiler **per verzoek** afrekent,
+niet per sessie. Het Flex-abonnement bevat 500.000 verzoeken per maand.
+
+| wat | telt als |
+| --- | --- |
+| rastertegel van 512 px (ook @2x) | 4 verzoeken |
+| rastertegel van 256 px (ook @2x) | 1 verzoek |
+| Static Maps-afbeelding | 15 verzoeken |
+| zoekopdracht (ook omgekeerd) | 1 verzoek |
+| `tiles.json`, `style.json`, fonts | gratis |
+
+Twee dingen volgen daaruit en staan zo in de code:
+
+1. **`tileSize: 512` hoort altijd samen met `zoomOffset: -1`.** Zonder die
+   tweede haalt Leaflet vier keer zoveel tegels op voor hetzelfde beeld — en
+   elke tegel telt voor vier. Dat is de duurste typefout die je hier kunt maken.
+2. **De sleuteltoets loopt over `tiles.json`, niet over een tegel.** Die toets
+   is gratis en geeft 403 zodra de sleutel op dit domein niet geldig is. De oude
+   toets haalde een echte tegel op: vier verzoeken per paginabezoek, voor niets.
+
+Zet in het MapTiler-dashboard een **uitgavenlimiet**; boven de inbegrepen
+hoeveelheid wordt automatisch bijgeschreven ($0,15 per 1.000 verzoeken).
+
+Groeit het verkeer, dan kantelt het naar sessie-facturering: met de MapTiler SDK
+telt één paginabezoek als één sessie (25.000 inbegrepen, tot 10.000 verzoeken per
+sessie), ongeveer zes keer goedkoper per kaartweergave. Dat vraagt wel MapLibre
+in plaats van Leaflet — zo'n 230 KB extra per kaartpagina, WebGL vereist, en de
+teken-tool en prijsmarkers moeten mee. Afwegen zodra het verbruik richting de
+500.000 loopt, niet eerder.
+
+### Een eigen MyKunda-kaartstijl
+
+Flex geeft er twintig. Zo komt er één in gebruik:
+
+1. MapTiler Cloud → **Maps** → kies `Streets v4` of `Satellite Hybrid v4` →
+   **Customize**. Kleuren naar de huisstijl (`--green-700` #15463A, `--paper`),
+   en zet onder Settings (Alt+S) de **taal op English** — bij rastertegels zitten
+   de labels in het beeld gebakken, dus dit is de enige plek waar dat kan.
+2. **Publish**. De stijl krijgt een eigen ID.
+3. Dat ID in `app.js` bij `MK_MAP.satellite` of `MK_MAP.streets` zetten. Verder
+   niets: alle kaarten, de perceelfoto en de Static Maps volgen vanzelf.
+4. `node build.mjs`, uploaden, Cloudflare leegmaken.
+
+### Terugval als MapTiler niets levert
+
+Een afgewezen sleutel faalt niet als een kapotte afbeelding: de API stuurt een
+prima te tekenen PNG met een grijs "Invalid key"-watermerk terug. Leaflet ziet
+een geladen tegel en meldt niets. Daarom toetst `app.js` bij het eerste gebruik
+op `tiles.json`; komt daar geen 200 uit, dan stappen álle MapTiler-lagen op de
+pagina over op sleutelloze bronnen — Esri-luchtfoto plus een namenlaag voor
+satelliet, OpenStreetMap voor de kaartlaag. Een netwerkfout telt níét als een
+afgewezen sleutel; daarvoor blijft `tileerror` het vangnet.
+
+Die drie hosts staan daarom in `img-src` van de CSP. **`.htaccess`, `_headers` en
+`vercel.json` moeten dezelfde CSP bevatten** — ze liepen uiteen tot 25-08-2026,
+waardoor de OpenStreetMap-terugval op de live site geblokkeerd zou zijn geweest.
+
+De perceelfoto in de verkoopflow heeft géén terugval: levert MapTiler niets, dan
+komt er geen foto. Een wazige of lege kaart als hoofdfoto van een advertentie is
+erger dan geen kaart, en de omtrek staat toch al als data bij de advertentie.
+
 ## Pushen na elke sessie
 
 Deze repo heeft een remote: `github.com/scheperman/mykunda-com`, privé.

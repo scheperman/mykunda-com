@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:1fmmxg8--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:09tu2yh--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -37,7 +37,7 @@
 <link rel="preconnect" href="https://api.maptiler.com" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=1787688533734">
+<link rel="stylesheet" href="styles.min.css?v=1787696111857">
 <style>
 body{height:100vh;overflow:hidden;display:flex;flex-direction:column}
 
@@ -321,7 +321,7 @@ body{height:100vh;overflow:hidden;display:flex;flex-direction:column}
 <button class="mob-map-btn" id="mobMapBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg> Map</button>
 <button class="mob-map-close" id="mobMapClose" aria-label="Close map">&times;</button>
 
-<script src="app.min.js?v=1787688533734"></script>
+<script src="app.min.js?v=1787696111857"></script>
 <script>
 /* 4G: neither Supabase (~205 KB) nor Leaflet (~145 KB) is needed to paint this page.
    Supabase downloads in parallel and the listing code awaits it; Leaflet is only
@@ -330,7 +330,7 @@ body{height:100vh;overflow:hidden;display:flex;flex-direction:column}
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=1787688533734'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=1787696111857'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -494,12 +494,13 @@ function listCardHTML(p){
 let map, markerLayer, markersById = {};
 let baseStreets, baseSat, currentBase='satellite';
 function initMap(){
-  map = L.map('leafmap', { zoomControl:false, attributionControl:true, scrollWheelZoom:true, minZoom:7, maxZoom:20 })
-        .setView([13.44, -16.70], 12);
-  const attribution = '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
-  baseStreets = L.tileLayer(mapTilerUrl('streets-v2','png'), { maxZoom:20, tileSize:512, zoomOffset:-1, crossOrigin:true, attribution });
-  baseSat = L.tileLayer(mapTilerUrl('hybrid'), { maxZoom:20, tileSize:512, zoomOffset:-1, crossOrigin:true, attribution });
+  /* Lagen, zoomgrenzen, attributie en terugval komen uit app.js; de knoppen
+     rechtsboven op deze pagina schakelen alleen tussen de twee lagen. */
+  map = mkMap('leafmap', { zoomControl:false, attributionControl:true, scrollWheelZoom:true, minZoom:7, center:[13.44, -16.70], zoom:12 });
+  baseStreets = mkTileLayer('streets');
+  baseSat     = mkTileLayer('satellite');
   baseSat.addTo(map);
+  mkScale(map);
   markerLayer = L.layerGroup().addTo(map);
   document.getElementById('zin').addEventListener('click', ()=>map.zoomIn());
   document.getElementById('zout').addEventListener('click', ()=>map.zoomOut());
@@ -579,6 +580,42 @@ function applyFilters(){
   renderMarkers(r);
   syncFilterBtns();
   wireHover();
+  offerPlaceOnMap(r.length, state.q);
+}
+
+/* ---- Niets gevonden? Laat dan tenminste zien wáár het ligt ----
+   Onze veertig gebieden dekken niet elk gehucht in Gambia. Levert het filter
+   niets op, dan vragen we MapTiler of de zoekterm een plek in het land is en
+   bieden we aan de kaart daarheen te brengen. Dat gebeurt pas als het typen
+   stilvalt, dus het kost één zoekopdracht per zoekterm — niet per letter. */
+let placeOffered = '';
+const placeAsk = mkGeoSuggest(function(hits, q){
+  const f = hits[0];
+  if(!f || state.q.trim() !== q || lastResults.length || placeOffered === q) return;
+  placeOffered = q;
+  const box = document.createElement('div');
+  box.style.cssText = 'padding:0 0 44px;text-align:center;color:var(--muted)';
+  box.innerHTML = '<p style="font-size:14.5px">' +
+    String(f.place_name || f.text || q).replace(/</g,'&lt;') +
+    ' is on our map — there are just no listings there yet.</p>';
+  const b = document.createElement('button');
+  b.className = 'btn btn-primary';
+  b.style.marginTop = '14px';
+  b.textContent = 'Show ' + (f.text || q) + ' on the map';
+  b.addEventListener('click', function(){
+    if(!map) return;
+    const close = /poi|address|road/.test((f.place_type||[]).join(','));
+    map.__userMoved = true;
+    map.setView([f.center[1], f.center[0]], close ? 17 : 13);
+    document.getElementById('leafmap').scrollIntoView({ behavior:'smooth', block:'center' });
+  });
+  box.appendChild(b);
+  listGrid.appendChild(box);
+}, { limit:1, autocomplete:false, debounce:600 });
+function offerPlaceOnMap(count, q){
+  q = (q||'').trim();
+  if(count > 0 || q.length < 3) return;
+  if(q !== placeOffered) placeAsk(q);
 }
 
 // hover sync: cards highlight markers (markers wire their own hover in renderMarkers)

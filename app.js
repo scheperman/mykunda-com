@@ -3,59 +3,221 @@
    ============================================================ */
 
 /* ---------- MapTiler ----------
-   The map key lives here and nowhere else. Rotating it is one line, not 45
-   files. The key is restricted to mykunda.com and *.mykunda.com in the
-   MapTiler dashboard, so it will not load on any other domain — that is the
-   protection, not secrecy: a key in browser code is always readable. */
-window.MAPTILER_KEY = 'gw2XoLm9z2VCXUcbu383';
-window.mapTilerUrl = function(style, ext){
-  /* Op een retina-scherm halen we @2x-tegels op: 1024px beeld in een 512px vak,
-     dus scherpe satellietbeelden in plaats van vergroot. Dat mag sinds het
-     Flex-abonnement; op een gewoon scherm blijft het bij 1x. */
-  var hd = (typeof window.devicePixelRatio === 'number' && window.devicePixelRatio >= 1.75) ? '@2x' : '';
-  return 'https://api.maptiler.com/maps/' + (style || 'hybrid') +
-         '/{z}/{x}/{y}' + hd + '.' + (ext || 'jpg') + '?key=' + window.MAPTILER_KEY;
+   Eén plek voor de sleutel, de stijlen en de zoomgrenzen van elke kaart op de
+   site. Roteren of overstappen op een eigen stijl is hier één regel, niet
+   vijftig bestanden. De sleutel is in het MapTiler-dashboard vastgezet op
+   mykunda.com en *.mykunda.com; dát is de bescherming, niet geheimhouding —
+   een sleutel in browsercode is altijd leesbaar.
+
+   Sinds 25-08-2026 draait het account op Flex. Wat dat hier verandert:
+   • @2x-tegels kosten exact evenveel als 1x — MapTiler rekent per tegel, niet
+     per pixel — dus die halen we op elk scherm met echte extra pixels op;
+   • de v4-generatie stijlen is beschikbaar; de oude v2-stijlen blijven werken
+     maar krijgen geen ontwerpupdates meer;
+   • het MapTiler-logo hoeft niet meer op de kaart. De tekstattributie met
+     links naar MapTiler én OpenStreetMap blijft wel verplicht, op elke kaart. */
+window.MK_MAP = {
+  key: 'gw2XoLm9z2VCXUcbu383',
+  /* Eigen stijl gemaakt in MapTiler Cloud? Zet het stijl-ID hier neer en de
+     hele site volgt. Flex geeft er twintig; zie CLAUDE.md voor de stappen. */
+  satellite: 'hybrid-v4',
+  streets:   'streets-v4',
+  /* Waar het bronbeeld ophoudt. Gemeten boven Kololi op 25-08-2026: scherp tot
+     en met Leaflet-zoom 19, daarboven zichtbaar opgerekt. Vanaf dat punt
+     schaalt Leaflet zelf verder — dat oogt hetzelfde en kost geen tegel. */
+  satNativeMax: 19,
+  streetsNativeMax: 20,
+  maxZoom: 21
+};
+window.MAPTILER_KEY = window.MK_MAP.key;      /* oude naam, blijft werken */
+
+/* Verplicht op elke kaart — ook op de terugvallagen verderop. */
+window.MK_ATTR = '&copy; <a href="https://www.maptiler.com/copyright/" target="_blank" rel="noopener">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>';
+
+/* @2x kost niets extra, maar is ongeveer drie keer zoveel bytes. Meldt de
+   browser een 2G-verbinding of staat databesparing aan, dan blijft het bij 1x;
+   de rest van Gambia krijgt het scherpe beeld. */
+window.mkHiDPI = function(){
+  if((window.devicePixelRatio || 1) < 1.25) return false;
+  var c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  if(c && (c.saveData || /^(slow-)?2g$/.test(c.effectiveType || ''))) return false;
+  return true;
 };
 
-/* ---------- Map tile fallback ----------
-   A rejected MapTiler key does not fail like a broken image: the API answers
-   403 with a perfectly renderable PNG carrying the grey "Invalid key" watermark,
-   so Leaflet reports the tile as loaded and no error event ever fires. The only
-   reliable signal is the HTTP status. One probe tile is fetched the first time a
-   MapTiler layer is added; if it comes back not-ok (or blocked), every MapTiler
-   layer on the page switches to keyless OpenStreetMap tiles — same place, still
-   a real map of The Gambia. */
-window.MAP_FALLBACK_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+window.mapTilerUrl = function(style, ext){
+  var s  = style || window.MK_MAP.satellite;
+  /* Satellietbeeld is in de bron al JPEG; alles wat uit vectordata wordt
+     gerenderd gaat als WebP over de lijn — dat scheelt daar ruim de helft. */
+  var e  = ext || (/satellite|hybrid/.test(s) ? 'jpg' : 'webp');
+  var hd = window.mkHiDPI() ? '@2x' : '';
+  return 'https://api.maptiler.com/maps/' + s + '/{z}/{x}/{y}' + hd + '.' + e +
+         '?key=' + window.MK_MAP.key;
+};
+
+/* Eén plek waar een kaartlaag ontstaat: overal dezelfde tegelgrootte, dezelfde
+   zoomgrenzen, dezelfde attributie. kind is 'satellite' of 'streets'. */
+window.mkTileLayer = function(kind, extra){
+  var sat = kind !== 'streets';
+  var o = {
+    tileSize: 512, zoomOffset: -1, crossOrigin: true,
+    maxZoom: window.MK_MAP.maxZoom,
+    maxNativeZoom: sat ? window.MK_MAP.satNativeMax : window.MK_MAP.streetsNativeMax,
+    attribution: window.MK_ATTR,
+    updateWhenZooming: false        /* pas tegels halen als het zoomen klaar is */
+  };
+  if(extra) for(var k in extra) o[k] = extra[k];
+  var layer = L.tileLayer(window.mapTilerUrl(sat ? window.MK_MAP.satellite : window.MK_MAP.streets), o);
+  layer.__mkKind = sat ? 'satellite' : 'streets';
+  return layer;
+};
+
+/* Kaart met de instellingen die overal gelijk horen te zijn. */
+window.mkMap = function(el, opts){
+  var o = {
+    zoomControl: true, scrollWheelZoom: false,
+    minZoom: 3, maxZoom: window.MK_MAP.maxZoom,
+    wheelPxPerZoomLevel: 120,       /* rustiger dan Leaflets standaard 60 */
+    zoomAnimationThreshold: 6,
+    worldCopyJump: false
+  };
+  if(opts) for(var k in opts) o[k] = opts[k];
+  var m = L.map(el, o);
+  if(m.attributionControl && m.attributionControl.setPrefix) m.attributionControl.setPrefix('');
+  return m;
+};
+
+/* Schaalbalk, metrisch — Gambia rekent in meters. */
+window.mkScale = function(m){
+  try{ L.control.scale({ imperial:false, metric:true, maxWidth:110, position:'bottomleft' }).addTo(m); }
+  catch(e){}
+  return m;
+};
+
+/* Kaart/Satelliet-knop: twee lagen, één schakelaar, dezelfde vorm op elke
+   pagina. Geeft de twee lagen terug plus set() om van buiten te wisselen. */
+window.mkBaseToggle = function(m, opts){
+  opts = opts || {};
+  var sat = window.mkTileLayer('satellite');
+  var str = window.mkTileLayer('streets');
+  var cur = opts.start === 'streets' ? 'streets' : 'satellite';
+  var box = null;
+  (cur === 'streets' ? str : sat).addTo(m);
+  if(!document.getElementById('mkBaseCSS')){
+    var st = document.createElement('style'); st.id = 'mkBaseCSS';
+    st.textContent = '.mk-baseswap{display:flex;overflow:hidden;border-radius:9px;box-shadow:0 1px 5px rgba(0,0,0,.32);font:700 12px/1 var(--sans,system-ui,sans-serif)}'
+      + '.mk-baseswap button{appearance:none;-webkit-appearance:none;border:0;margin:0;padding:8px 11px;background:#fff;color:#15463A;cursor:pointer}'
+      + '.mk-baseswap button+button{border-left:1px solid rgba(21,70,58,.16)}'
+      + '.mk-baseswap button.on{background:#15463A;color:#fff}';
+    document.head.appendChild(st);
+  }
+  function mark(){
+    if(!box) return;
+    var bs = box.querySelectorAll('button[data-mk]');
+    for(var i=0;i<bs.length;i++) bs[i].classList.toggle('on', bs[i].getAttribute('data-mk') === cur);
+  }
+  function set(next){
+    if(next === cur) return;
+    cur = next;
+    if(cur === 'streets'){ if(m.hasLayer(sat)) m.removeLayer(sat); str.addTo(m); }
+    else { if(m.hasLayer(str)) m.removeLayer(str); sat.addTo(m); }
+    mark();
+  }
+  var ctl = L.control({ position: opts.position || 'topright' });
+  ctl.onAdd = function(){
+    box = L.DomUtil.create('div', 'mk-baseswap');
+    box.innerHTML = '<button type="button" data-mk="satellite">Satellite</button>'
+                  + '<button type="button" data-mk="streets">Map</button>';
+    L.DomEvent.disableClickPropagation(box);
+    L.DomEvent.disableScrollPropagation(box);
+    box.addEventListener('click', function(e){
+      var b = e.target && e.target.closest && e.target.closest('button[data-mk]');
+      if(b) set(b.getAttribute('data-mk'));
+    });
+    mark();
+    return box;
+  };
+  ctl.addTo(m);
+  return { satellite: sat, streets: str, set: set, current: function(){ return cur; } };
+};
+
+/* De eenenveertig wijkpagina's hebben allemaal dezelfde kleine kaart. Die
+   staat hier, zodat een wijziging één bestand is in plaats van eenenveertig. */
+window.mkAreaMap = function(elId, center, zoom){
+  if(typeof L === 'undefined') return null;
+  var el = document.getElementById(elId || 'hoodMap');
+  if(!el) return null;
+  var m = window.mkMap(el, {
+    scrollWheelZoom: false, minZoom: 8,
+    center: center, zoom: zoom || 15
+  });
+  window.mkBaseToggle(m);
+  window.mkScale(m);
+  if(typeof guardMapTouch === 'function') guardMapTouch(m, el);
+  setTimeout(function(){ try{ m.invalidateSize(); }catch(e){} }, 300);
+  return m;
+};
+
+/* ---------- Terugval als MapTiler niet levert ----------
+   Een afgewezen sleutel faalt niet als een kapotte afbeelding: de API stuurt
+   een prima te tekenen PNG met het grijze "Invalid key"-watermerk terug, dus
+   Leaflet meldt de tegel als geladen en er komt nooit een foutgebeurtenis.
+   De enige betrouwbare toets is de status van een aanroep, en die doen we op
+   tiles.json — dat is bij MapTiler gratis, telt niet mee in het verbruik en
+   geeft 403 zodra de sleutel op dit domein niet geldig is. Een netwerkfout
+   zegt niets over de sleutel en laat de kaart dus met rust; daarvoor blijft
+   tileerror de vangnetmelding. Slaagt de toets niet, dan stappen alle
+   MapTiler-lagen op de pagina over op sleutelloze bronnen: Esri-luchtfoto met
+   een namenlaag voor satelliet, OpenStreetMap voor de kaartlaag. Zelfde plek,
+   nog steeds een echte kaart van Gambia. */
+window.MK_FALLBACK = {
+  sat:      'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+  satNames: 'https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+  satAttr:  'Imagery &copy; Esri, Maxar, Earthstar Geographics',
+  streets:  'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+  strAttr:  '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>'
+};
+window.MAP_FALLBACK_URL = window.MK_FALLBACK.streets;   /* oude naam */
 (function(){
-  var layers = [], probed = false;
+  var layers = [], probed = false, down = false, named = [];
   function swap(layer){
     if(layer.__mkSwapped) return;
     layer.__mkSwapped = true;
-    layer.options.tileSize = 256;
-    layer.options.zoomOffset = 0;
-    layer.options.maxZoom = 19;
-    layer.options.attribution = '&copy; OpenStreetMap contributors';
-    var map = layer._map;
-    if(map){
-      if(map.attributionControl) map.attributionControl.addAttribution('&copy; OpenStreetMap contributors');
-      if(map.getZoom() > 19) map.setZoom(19);
+    var sat = layer.__mkKind !== 'streets';
+    var map = layer._map, old = layer.options.attribution;
+    layer.options.tileSize     = 256;
+    layer.options.zoomOffset   = 0;
+    layer.options.maxNativeZoom = 19;
+    layer.options.attribution  = sat ? window.MK_FALLBACK.satAttr : window.MK_FALLBACK.strAttr;
+    if(map && map.attributionControl){
+      if(old) map.attributionControl.removeAttribution(old);
+      map.attributionControl.addAttribution(layer.options.attribution);
     }
-    layer.setUrl(window.MAP_FALLBACK_URL);
+    layer.setUrl(sat ? window.MK_FALLBACK.sat : window.MK_FALLBACK.streets);
+    /* Esri's luchtfoto draagt geen namen. Zonder deze laag is de terugval een
+       kale foto — precies zoals het er eerder uitzag. */
+    if(sat && map && named.indexOf(map) < 0){
+      named.push(map);
+      L.tileLayer(window.MK_FALLBACK.satNames, {
+        maxZoom: window.MK_MAP.maxZoom, maxNativeZoom: 19,
+        crossOrigin: true, opacity: .9, pane: 'overlayPane'
+      }).addTo(map);
+    }
     if(map) setTimeout(function(){ try{ map.invalidateSize(); }catch(e){} }, 60);
   }
-  window.mkSwapMapTiles = function(){ layers.forEach(swap); };
+  window.mkSwapMapTiles = function(){ down = true; for(var i=0;i<layers.length;i++) swap(layers[i]); };
+  window.mkMapKeyDown   = function(){ return down; };
   function probe(){
     if(probed) return;
     probed = true;
-    /* One tile over the Gambian coast — cheap, cached, and enough to see a 403. */
-    var url = window.mapTilerUrl('hybrid').replace('{z}','13').replace('{x}','3716').replace('{y}','3787');
-    var done = function(ok){ if(!ok) window.mkSwapMapTiles(); };
+    var url = 'https://api.maptiler.com/maps/' + window.MK_MAP.satellite +
+              '/tiles.json?key=' + window.MK_MAP.key;
     try{
-      fetch(url, { mode:'cors', cache:'no-store' })
-        .then(function(r){ done(r.ok); })
-        .catch(function(){ done(false); });
-    }catch(e){ done(false); }
+      fetch(url, { mode:'cors', credentials:'omit', cache:'no-store' })
+        .then(function(r){ if(!r.ok) window.mkSwapMapTiles(); })
+        .catch(function(){ /* netwerkfout zegt niets over de sleutel */ });
+    }catch(e){}
   }
+  window.mkProbeMapKey = probe;
   function patch(){
     if(typeof L === 'undefined' || !L.TileLayer || L.__mkTileFallback) return typeof L !== 'undefined';
     L.__mkTileFallback = true;
@@ -64,16 +226,19 @@ window.MAP_FALLBACK_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
       var layer = this;
       if(/api\.maptiler\.com/.test(this._url || '')){
         layers.push(layer);
-        var fails = 0;
-        this.on('tileerror', function(){ if(++fails >= 2) swap(layer); });
-        setTimeout(probe, 0);
+        if(down){ setTimeout(function(){ swap(layer); }, 0); }
+        else {
+          var fails = 0;
+          this.on('tileerror', function(){ if(++fails >= 3) swap(layer); });
+          setTimeout(probe, 0);
+        }
       }
       return onAdd.call(this, map);
     };
     return true;
   }
-  /* Area pages lazy-load Leaflet on scroll, so catch the moment it assigns
-     window.L, with a poll as backstop. */
+  /* Wijkpagina's laden Leaflet pas bij het scrollen, dus vangen we het moment
+     op waarop window.L wordt gezet, met een poll als vangnet. */
   if(!patch()){
     try{
       var held;
@@ -92,6 +257,92 @@ window.MAP_FALLBACK_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
   }
   window.mkPatchTiles = patch;
 })();
+
+/* ---------- Static map ----------
+   Eén afbeelding in plaats van een raster losse tegels: scherper, geen naden,
+   de attributie zit er al in gebrand en het kost bij MapTiler vijftien
+   eenheden in plaats van vier per tegel. Met padding=0 dekt de afbeelding
+   exact de opgegeven bbox, dus is de omrekening van lat/lng naar pixels
+   lineair in Mercator — dat is wat de perceelfoto nodig heeft. */
+window.mkMercY = function(lat){
+  return Math.log(Math.tan(Math.PI/4 + (lat*Math.PI/180)/2)) * 180 / Math.PI;
+};
+window.mkInvMercY = function(y){
+  return (2*Math.atan(Math.exp(y*Math.PI/180)) - Math.PI/2) * 180 / Math.PI;
+};
+window.mkStaticMapUrl = function(bbox, w, h, opts){
+  opts = opts || {};
+  var style = opts.style || window.MK_MAP.satellite;
+  var hd = opts.hidpi === false ? '' : '@2x';
+  var u = 'https://api.maptiler.com/maps/' + style + '/static/' +
+          bbox.join(',') + '/' + w + 'x' + h + hd + '.' + (opts.format || 'jpg') +
+          '?key=' + window.MK_MAP.key + '&padding=0&attribution=' +
+          (opts.attribution || 'bottomright');
+  if(opts.path) u += '&path=' + encodeURIComponent(opts.path);
+  if(opts.markers) u += '&markers=' + encodeURIComponent(opts.markers);
+  return u;
+};
+
+
+
+/* ---------- Zoeken op plaats en adres (MapTiler Geocoding) ----------
+   Onze eigen lijst kent zo'n veertig gebieden. Een bezoeker denkt in "Palma
+   Rima Road" of "Coco Ocean", dus vragen we het daarnaast aan MapTiler, strak
+   op Gambia gezet. Een treffer draagt een echte coördinaat, dus staat de pin
+   meteen goed in plaats van op een gebiedsmiddelpunt.
+
+   proximity is een magneet, geen hek: het duwt Groot-Banjul naar boven zonder
+   iets in het binnenland weg te gooien. country=gm is wél een hek.
+   MapTiler rekent per zoekopdracht af, dus wachten we tot het typen even stil
+   valt en telt alleen het antwoord op de laatste toetsaanslag. */
+window.MK_GEO_NEAR = '-16.6800,13.4400';       /* Groot-Banjul */
+window.mkGeocode = function(q, opts){
+  opts = opts || {};
+  if(!q || q.length < (opts.min || 3) || !window.MK_MAP || !window.MK_MAP.key) return Promise.resolve([]);
+  var u = 'https://api.maptiler.com/geocoding/' + encodeURIComponent(q) +
+          '.json?key=' + window.MK_MAP.key +
+          '&country=gm&language=en&limit=' + (opts.limit || 6) +
+          '&proximity=' + (opts.near || window.MK_GEO_NEAR) +
+          '&autocomplete=' + (opts.autocomplete === false ? 'false' : 'true');
+  if(opts.types) u += '&types=' + opts.types;
+  return fetch(u, { mode:'cors', credentials:'omit' })
+    .then(function(r){ return r.ok ? r.json() : { features: [] }; })
+    .then(function(j){ return (j.features || []).filter(function(f){ return f && f.center; }); })
+    .catch(function(){ return []; });          /* offline: de eigen lijst blijft werken */
+};
+
+/* Omgekeerd: van een pin naar de naam van de plek waar hij staat. */
+window.mkReverseGeocode = function(lat, lng, opts){
+  opts = opts || {};
+  if(!window.MK_MAP || !window.MK_MAP.key) return Promise.resolve(null);
+  var u = 'https://api.maptiler.com/geocoding/' + Number(lng).toFixed(6) + ',' + Number(lat).toFixed(6) +
+          '.json?key=' + window.MK_MAP.key + '&language=en&limit=1';
+  if(opts.types) u += '&types=' + opts.types;
+  return fetch(u, { mode:'cors', credentials:'omit' })
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(j){ return (j && j.features && j.features[0]) || null; })
+    .catch(function(){ return null; });
+};
+
+window.mkGeoLabel = function(f){
+  var t = (f.place_type || []).join(',');
+  if(/poi/.test(t)) return 'place';
+  if(/address|road|street/.test(t)) return 'street';
+  if(/municipality|locality|place|neighbourhood/.test(t)) return 'town';
+  return 'location';
+};
+
+/* Geeft een functie terug die je bij elke toetsaanslag mag aanroepen. */
+window.mkGeoSuggest = function(cb, opts){
+  var timer = null, seq = 0;
+  return function(q){
+    clearTimeout(timer);
+    timer = setTimeout(function(){
+      var mine = ++seq;
+      window.mkGeocode(q, opts).then(function(list){ if(mine === seq) cb(list, q); });
+    }, (opts && opts.debounce) || 250);
+  };
+};
 
 
 /* ---------- Distance to the Atlantic shoreline ----------
