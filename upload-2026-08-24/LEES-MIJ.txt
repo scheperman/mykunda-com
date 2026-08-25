@@ -1,0 +1,36 @@
+Upload 24 augustus 2026 — taken 4, 5 en 6
+
+DOE EERST: node build.mjs
+
+Deze map bevat alleen de HTML-pagina's. Twee bestanden die ook mee moeten,
+kan ik niet leveren omdat build.mjs ze schrijft:
+
+  styles.min.css   de nieuwe .keytakeaways-regels staan in styles.css, maar de
+                   pagina's laden styles.min.css. Zonder build staat het
+                   "In short"-blok ongestyled op de site.
+  sitemap.xml      de root-versie is een <urlset>; deploy/ krijgt van build.mjs
+                   een <sitemapindex>. Upload de deploy/-versie, niet de root.
+
+Werkwijze: node build.mjs draaien, daarna deploy/ uploaden met overschrijven aan.
+Deze map is alleen bedoeld om te zien wat er inhoudelijk veranderd is.
+
+16 pagina's in deze map:
+  guide-bank-mortgages-in-the-gambia.html
+  guide-best-areas-to-buy-on-the-gambian-coast.html
+  guide-building-a-house-in-the-gambia.html
+  guide-buying-property-in-the-gambia-as-a-foreigner.html
+  guide-cost-of-buying-property-in-the-gambia.html
+  guide-developer-financing-in-the-gambia.html
+  guide-freehold-leasehold-customary-land-explained.html
+  guide-how-to-verify-land-title-in-the-gambia.html
+  guide-inheritance-and-wills-for-gambian-property.html
+  guide-renting-out-property-in-the-gambia.html
+  guide-residency-and-retiring-in-the-gambia.html
+  guide-sending-money-to-the-gambia.html
+  about.html
+  gambia-property-prices.html
+  land-for-sale-in-the-gambia.html
+  how-we-measure-prices.html
+
+Nieuw op de site: land-for-sale-in-the-gambia.html en how-we-measure-prices.html.
+Beide staan al in sitemap.xml in de root.

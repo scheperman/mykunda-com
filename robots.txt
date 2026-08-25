@@ -12,8 +12,11 @@ Allow: /
 # e-mailvoorbeelden, logo-opties) dragen sinds 13 augustus 2026 zelf
 # noindex,nofollow. Ze horen niet in het uploadpakket; de tag is het vangnet.
 
-# market.html is sinds 13 augustus 2026 wel indexeerbaar: unieke marktdata
-# (prijs per m² per gebied), gelinkt vanuit de footer en opgenomen in de sitemap.
+# market.html is een backofficepagina (draagt admin-guard.js) en houdt daarom
+# noindex. De PUBLIEKE prijsdata staat op /gambia-property-prices.html: statisch
+# in de HTML, indexeerbaar, gelinkt vanuit de footer en opgenomen in de sitemap.
+# Gecorrigeerd 24 augustus 2026 — de oude tekst hier beschreef een situatie die
+# niet bestond (market.html stond noindex EN niet in de sitemap).
 
 # Mappen zonder HTML kunnen geen metatag dragen; die blokkeren we hier wel.
 Disallow: /uploads/

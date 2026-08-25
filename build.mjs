@@ -32,7 +32,7 @@ const SITE_ASSETS = [
   'admin-nav.js', 'image-slot.js', 'gambia-places.js',
   'market-index.js', 'market-sources.js',
   'title-verification-app.js', 'title-verification-components.js',
-  'robots.txt', 'sitemap.xml', '.htaccess'
+  'robots.txt', 'sitemap.xml', 'sitemap-pages.xml', '.htaccess'
 ];
 
 /* Bestanden die in de root MOETEN blijven maar NIET op de server horen. Ze stonden
@@ -259,6 +259,11 @@ function robotsFor(name) {
   if (name === '404.html') return 'noindex, follow, ' + AI;   /* wel volgen, niet indexeren */
   return 'index, follow, max-image-preview:large, ' + AI;
 }
+/* property.html is de kale objecttemplate: zonder ?id= is het een lege pagina en die
+   hoort niet in de index. De tag start daarom op noindex EN houdt id="mkRobots"; het
+   canonical-script in de pagina zet hem op index zodra er een geldige listing staat.
+   Zonder deze uitzondering zet markPage() hem bij elke build terug op index. */
+const JS_ROBOTS = new Set(['property.html']);
 function markPage(src, name) {
   const stripped = src
     .replace(new RegExp(MARK_START + '[\\s\\S]*?' + MARK_END + '\\n?'), '')
@@ -267,7 +272,9 @@ function markPage(src, name) {
     .replace(/[ \t]*<meta name="robots"[^>]*>\n?/gi, '');
   const block = MARK_START +
     '<meta name="copyright" content="\u00a9 MyKunda \u2014 mykunda.com. All rights reserved.">' +
-    '<meta name="robots" content="' + robotsFor(name) + '">' +
+    (JS_ROBOTS.has(name)
+      ? '<meta name="robots" id="mkRobots" content="noindex, follow, ' + AI + '">'
+      : '<meta name="robots" content="' + robotsFor(name) + '">') +
     '<!--mk:' + fingerprint(name) + '-->' + MARK_END + '\n';
   return stripped.replace(/<head[^>]*>\n?/i, m => m + block);
 }
