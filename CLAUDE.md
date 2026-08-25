@@ -276,16 +276,32 @@ teken-tool en prijsmarkers moeten mee. Afwegen zodra het verbruik richting de
 
 ### Een eigen MyKunda-kaartstijl
 
-Flex geeft er twintig. Zo komt er één in gebruik:
+Flex geeft er twintig, en er is **geen API om er een aan te maken** — uploaden
+door de webinterface is de enige weg.
 
-1. MapTiler Cloud → **Maps** → kies `Streets v4` of `Satellite Hybrid v4` →
-   **Customize**. Kleuren naar de huisstijl (`--green-700` #15463A, `--paper`),
-   en zet onder Settings (Alt+S) de **taal op English** — bij rastertegels zitten
-   de labels in het beeld gebakken, dus dit is de enige plek waar dat kan.
-2. **Publish**. De stijl krijgt een eigen ID.
+De twee stijlen staan kant-en-klaar in `maptiler/`, samen met de generator die
+ze uit de officiële v4-stijlen opbouwt en een leesmij met het uploadformulier
+veld voor veld. Korte versie:
+
+1. cloud.maptiler.com/maps → blauwe pijlknop → **Upload map**, het JSON-bestand
+   erbij. Label `production`; **Rendering format WebP voor de kaartlaag, JPEG
+   voor de satellietlaag**.
+2. **Save & Publish**. De stijl krijgt een eigen ID (een UUID).
 3. Dat ID in `app.js` bij `MK_MAP.satellite` of `MK_MAP.streets` zetten. Verder
    niets: alle kaarten, de perceelfoto en de Static Maps volgen vanzelf.
 4. `node build.mjs`, uploaden, Cloudflare leegmaken.
+
+**Stijl-ID en tegelformaat staan los van elkaar in `MK_MAP`**, en dat is
+opzettelijk. Een eigen stijl heet straks `8f3c-…`; aan die naam valt niet meer
+af te lezen of het om luchtfoto's gaat. Het formaat dat je hier zet, moet gelijk
+zijn aan het Rendering format dat je bij de upload koos — anders vraagt de site
+een formaat op dat MapTiler voor die stijl niet klaarzet.
+
+**Buildings is geen stijl maar een tileset**: gebouwvlakken met gevelkleur,
+hoogte, ingangen en pandnamen, zoom 12–15 met overzoom. Hij zit als extra bron
+in beide MyKunda-stijlen. Op de kaartlaag als vlak met rand, op de
+satellietlaag alleen als omtrek en pas vanaf zoom 18 — daaronder wordt het een
+wit hekwerk over de luchtfoto.
 
 ### Terugval als MapTiler niets levert
 

@@ -19,9 +19,14 @@
 window.MK_MAP = {
   key: 'gw2XoLm9z2VCXUcbu383',
   /* Eigen stijl gemaakt in MapTiler Cloud? Zet het stijl-ID hier neer en de
-     hele site volgt. Flex geeft er twintig; zie CLAUDE.md voor de stappen. */
-  satellite: 'hybrid-v4',
-  streets:   'streets-v4',
+     hele site volgt. Flex geeft er twintig; zie CLAUDE.md voor de stappen.
+     Het tegelformaat staat er los naast, want een eigen stijl heet straks
+     iets als 8f3c-… en dan valt er niets meer aan de naam af te leiden. Zet
+     het hier gelijk aan het Rendering format dat je bij de upload koos. */
+  satellite:       'hybrid-v4',
+  satelliteFormat: 'jpg',        /* luchtfoto: in de bron al JPEG   */
+  streets:         'streets-v4',
+  streetsFormat:   'webp',       /* uit vectordata: ruim de helft kleiner */
   /* Waar het bronbeeld ophoudt. Gemeten boven Kololi op 25-08-2026: scherp tot
      en met Leaflet-zoom 19, daarboven zichtbaar opgerekt. Vanaf dat punt
      schaalt Leaflet zelf verder — dat oogt hetzelfde en kost geen tegel. */
@@ -46,9 +51,12 @@ window.mkHiDPI = function(){
 
 window.mapTilerUrl = function(style, ext){
   var s  = style || window.MK_MAP.satellite;
-  /* Satellietbeeld is in de bron al JPEG; alles wat uit vectordata wordt
-     gerenderd gaat als WebP over de lijn — dat scheelt daar ruim de helft. */
-  var e  = ext || (/satellite|hybrid/.test(s) ? 'jpg' : 'webp');
+  /* Zonder opgegeven formaat: de stijl die als satelliet in MK_MAP staat
+     krijgt het satellietformaat, de rest dat van de kaartlaag. Aan de naam
+     van een eigen stijl valt niets af te lezen, dus vergelijken we met wat er
+     in MK_MAP staat en niet met een woord in het ID. */
+  var e  = ext || (s === window.MK_MAP.satellite ? window.MK_MAP.satelliteFormat
+                                                 : window.MK_MAP.streetsFormat) || 'jpg';
   var hd = window.mkHiDPI() ? '@2x' : '';
   return 'https://api.maptiler.com/maps/' + s + '/{z}/{x}/{y}' + hd + '.' + e +
          '?key=' + window.MK_MAP.key;
@@ -66,7 +74,9 @@ window.mkTileLayer = function(kind, extra){
     updateWhenZooming: false        /* pas tegels halen als het zoomen klaar is */
   };
   if(extra) for(var k in extra) o[k] = extra[k];
-  var layer = L.tileLayer(window.mapTilerUrl(sat ? window.MK_MAP.satellite : window.MK_MAP.streets), o);
+  var layer = L.tileLayer(window.mapTilerUrl(
+    sat ? window.MK_MAP.satellite       : window.MK_MAP.streets,
+    sat ? window.MK_MAP.satelliteFormat : window.MK_MAP.streetsFormat), o);
   layer.__mkKind = sat ? 'satellite' : 'streets';
   return layer;
 };
@@ -275,7 +285,8 @@ window.mkStaticMapUrl = function(bbox, w, h, opts){
   var style = opts.style || window.MK_MAP.satellite;
   var hd = opts.hidpi === false ? '' : '@2x';
   var u = 'https://api.maptiler.com/maps/' + style + '/static/' +
-          bbox.join(',') + '/' + w + 'x' + h + hd + '.' + (opts.format || 'jpg') +
+          bbox.join(',') + '/' + w + 'x' + h + hd + '.' +
+          (opts.format || (style === window.MK_MAP.satellite ? window.MK_MAP.satelliteFormat : window.MK_MAP.streetsFormat) || 'jpg') +
           '?key=' + window.MK_MAP.key + '&padding=0&attribution=' +
           (opts.attribution || 'bottomright');
   if(opts.path) u += '&path=' + encodeURIComponent(opts.path);
