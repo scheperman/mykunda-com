@@ -20,13 +20,18 @@ window.MK_MAP = {
   key: 'gw2XoLm9z2VCXUcbu383',
   /* Eigen stijl gemaakt in MapTiler Cloud? Zet het stijl-ID hier neer en de
      hele site volgt. Flex geeft er twintig; zie CLAUDE.md voor de stappen.
-     Het tegelformaat staat er los naast, want een eigen stijl heet straks
-     iets als 8f3c-… en dan valt er niets meer aan de naam af te leiden. Zet
-     het hier gelijk aan het Rendering format dat je bij de upload koos. */
-  satellite:       'hybrid-v4',
-  satelliteFormat: 'jpg',        /* luchtfoto: in de bron al JPEG   */
+     Het tegelformaat staat er los naast, want een eigen stijl heet 01a03b…
+     en dan valt er niets meer aan de naam af te leiden.
+
+     Beide op WebP, ook de luchtfoto. Dat laatste is tegen de intuïtie in — het
+     bronbeeld is JPEG, dus WebP is een hercompressie — maar gemeten boven
+     Kololi op 25-08-2026 is het bij @2x eenderde minder bytes (83 kB tegen
+     135 kB op zoom 17) met PSNR 39 dB tussen de twee: naast elkaar gelegd geen
+     zichtbaar verschil. Op 4G in Gambia weegt dat zwaarder dan de theorie. */
+  satellite:       '01a03b25-2b66-7446-bca6-e02c35e8beab',   /* MyKunda Satellite */
+  satelliteFormat: 'webp',
   streets:         'streets-v4',
-  streetsFormat:   'webp',       /* uit vectordata: ruim de helft kleiner */
+  streetsFormat:   'webp',
   /* Waar het bronbeeld ophoudt. Gemeten boven Kololi op 25-08-2026: scherp tot
      en met Leaflet-zoom 19, daarboven zichtbaar opgerekt. Vanaf dat punt
      schaalt Leaflet zelf verder — dat oogt hetzelfde en kost geen tegel. */
@@ -49,14 +54,32 @@ window.mkHiDPI = function(){
   return true;
 };
 
+/* Kan deze browser WebP aan? Een canvas dat om een WebP wordt gevraagd en een
+   PNG teruggeeft, kan het niet. Eén keer meten, daarna onthouden. */
+window.mkWebP = (function(){
+  var ok = null;
+  return function(){
+    if(ok !== null) return ok;
+    try{
+      var c = document.createElement('canvas');
+      ok = !!(c.getContext && c.getContext('2d')) &&
+           c.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+    }catch(e){ ok = false; }
+    return ok;
+  };
+})();
+
 window.mapTilerUrl = function(style, ext){
   var s  = style || window.MK_MAP.satellite;
   /* Zonder opgegeven formaat: de stijl die als satelliet in MK_MAP staat
      krijgt het satellietformaat, de rest dat van de kaartlaag. Aan de naam
      van een eigen stijl valt niets af te lezen, dus vergelijken we met wat er
      in MK_MAP staat en niet met een woord in het ID. */
-  var e  = ext || (s === window.MK_MAP.satellite ? window.MK_MAP.satelliteFormat
-                                                 : window.MK_MAP.streetsFormat) || 'jpg';
+  var sat = (s === window.MK_MAP.satellite);
+  var e  = ext || (sat ? window.MK_MAP.satelliteFormat : window.MK_MAP.streetsFormat) || 'jpg';
+  /* Oude browsers zonder WebP krijgen het formaat dat er het dichtst bij komt:
+     JPEG voor een luchtfoto, PNG voor vlakke kaartkleuren. */
+  if(e === 'webp' && !window.mkWebP()) e = sat ? 'jpg' : 'png';
   var hd = window.mkHiDPI() ? '@2x' : '';
   return 'https://api.maptiler.com/maps/' + s + '/{z}/{x}/{y}' + hd + '.' + e +
          '?key=' + window.MK_MAP.key;

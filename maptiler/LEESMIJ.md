@@ -51,17 +51,22 @@ gepubliceerde stijl naar een sleutel die niet meer bestaat.
    | Title | `MyKunda Paper` | `MyKunda Satellite` |
    | Description | *Kaartlaag mykunda.com — huisstijl, Engelse labels, Buildings* | *Satellietlaag mykunda.com — Engelse labels, gebouwomtrekken vanaf zoom 18* |
    | Label | `production` | `production` |
-   | Rendering format | **WebP** | **JPEG** |
+   | Rendering format | **WebP** | **WebP** |
 
    *Label* is niet meer dan een etiket (`production` / `test`) om je eigen
    kaarten uit elkaar te houden; het verandert niets aan het ID of aan de
    werking, en je kunt het later omzetten.
 
-   *Rendering format* is het formaat waarin MapTiler de rastertegels van deze
-   stijl klaarzet. **Het moet overeenkomen met wat `app.js` opvraagt**, en dat
-   staat daar in `MK_MAP.satelliteFormat` en `MK_MAP.streetsFormat`. WebP voor
-   de kaartlaag scheelt ruim de helft aan bytes; de luchtfoto is in de bron al
-   JPEG, dus daar levert WebP alleen een hercompressie op.
+   *Rendering format* is de standaard waarin MapTiler de rastertegels van deze
+   stijl klaarzet — een standaard, geen slot: alle drie de formaten blijven
+   opvraagbaar. Houd hem toch gelijk aan `MK_MAP.satelliteFormat` en
+   `MK_MAP.streetsFormat` in `app.js`, anders lees je later een verschil dat er
+   niet is.
+
+   **WebP voor allebei**, ook voor de luchtfoto. Dat gaat tegen de intuïtie in,
+   want het bronbeeld is JPEG en WebP is dus een hercompressie. Gemeten boven
+   Kololi, zoom 17 op @2x: 83 kB tegen 135 kB, PSNR 39 dB — naast elkaar gelegd
+   geen zichtbaar verschil. Eenderde minder bytes weegt op 4G zwaarder.
 
    Dan het bestand erbij en **Create**. MapTiler controleert de stijl meteen en
    meldt het als er iets niet klopt.

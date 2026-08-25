@@ -284,18 +284,32 @@ ze uit de officiële v4-stijlen opbouwt en een leesmij met het uploadformulier
 veld voor veld. Korte versie:
 
 1. cloud.maptiler.com/maps → blauwe pijlknop → **Upload map**, het JSON-bestand
-   erbij. Label `production`; **Rendering format WebP voor de kaartlaag, JPEG
-   voor de satellietlaag**.
+   erbij. Label `production` (alleen een etiket); **Rendering format WebP**,
+   voor beide stijlen.
 2. **Save & Publish**. De stijl krijgt een eigen ID (een UUID).
 3. Dat ID in `app.js` bij `MK_MAP.satellite` of `MK_MAP.streets` zetten. Verder
    niets: alle kaarten, de perceelfoto en de Static Maps volgen vanzelf.
 4. `node build.mjs`, uploaden, Cloudflare leegmaken.
 
 **Stijl-ID en tegelformaat staan los van elkaar in `MK_MAP`**, en dat is
-opzettelijk. Een eigen stijl heet straks `8f3c-…`; aan die naam valt niet meer
-af te lezen of het om luchtfoto's gaat. Het formaat dat je hier zet, moet gelijk
-zijn aan het Rendering format dat je bij de upload koos — anders vraagt de site
-een formaat op dat MapTiler voor die stijl niet klaarzet.
+opzettelijk. Een eigen stijl heet `01a03b…`; aan die naam valt niet meer af te
+lezen of het om luchtfoto's gaat, dus vergelijkt `mapTilerUrl` met wat er in
+`MK_MAP` staat in plaats van met een woord in het ID.
+
+**Ook de luchtfoto gaat als WebP over de lijn**, tegen de intuïtie in — het
+bronbeeld is JPEG, dus dit is een hercompressie. Gemeten boven Kololi op
+25-08-2026, zoom 17 op @2x: 83 kB tegen 135 kB, PSNR 39 dB, naast elkaar gelegd
+geen zichtbaar verschil. Op 4G in Gambia weegt eenderde minder bytes zwaarder
+dan de theorie. Browsers zonder WebP-ondersteuning worden herkend met een
+canvas-toets en krijgen JPEG voor de luchtfoto en PNG voor de kaartlaag.
+
+Het Rendering format in het dashboard is een **standaard, geen slot**: alle drie
+de formaten blijven opvraagbaar, ongeacht wat je daar koos. Houd ze toch gelijk,
+anders lees je later een verschil dat er niet is.
+
+De perceelfoto haalt bewust wél JPEG op (`format:'jpg'` in `list.html`). Die
+afbeelding wordt op canvas hertekend en als JPEG opgeslagen bij de advertentie;
+via WebP zou er een generatie hercompressie bij komen die je niet terugkrijgt.
 
 **Buildings is geen stijl maar een tileset**: gebouwvlakken met gevelkleur,
 hoogte, ingangen en pandnamen, zoom 12–15 met overzoom. Hij zit als extra bron
