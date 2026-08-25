@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<title>Voorstel — pand-identificatie bij Ownership Verification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--green-900:#0E2E25;--green-800:#123A2E;--green-700:#15463A;--green-500:#2A7561;--green-50:#F2F7F4;--paper:#FBFAF6;--paper-2:#F3F0E8;--ink:#18201D;--ink-2:#384640;--muted:#5C6B64;--muted-2:#8A958E;--line:#E5E1D6;--line-2:#EFEBE1;--amber:#B4761A;--amber-50:#FCF6EA;--red:#CE1126;--serif:'Mulish',sans-serif;--sans:'Hanken Grotesk',sans-serif}
+doc-page:not(:defined){visibility:hidden}
+doc-page{font-family:var(--sans);color:var(--ink-2);font-size:11.4pt;line-height:1.62}
+h1,h2,h3,h4{font-family:var(--serif);color:var(--green-900);line-height:1.2}
+h1{font-size:27pt;font-weight:800;letter-spacing:-.01em;margin:0 0 6px}
+.sub{font-size:12.5pt;color:var(--muted);max-width:34em;margin:0 0 4px}
+.meta{font-size:9pt;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--green-500);margin:0 0 22px}
+h2{font-size:16pt;font-weight:700;margin:30px 0 8px;padding-top:14px;border-top:2px solid var(--green-700)}
+h2 .n{font-family:var(--sans);font-size:9.5pt;font-weight:800;color:var(--green-500);display:block;letter-spacing:.1em;margin-bottom:3px}
+h3{font-size:12.6pt;font-weight:700;margin:20px 0 6px}
+h4{font-size:11pt;font-weight:700;margin:14px 0 4px;font-family:var(--sans);letter-spacing:.01em}
+p{margin:0 0 9px}
+b,strong{color:var(--ink);font-weight:700}
+code{font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:.87em;background:var(--paper-2);padding:1px 5px;border-radius:4px;color:var(--green-800)}
+ul,ol{margin:0 0 10px;padding-left:1.15em}
+li{margin-bottom:5px}
+.lead{font-size:12pt;color:var(--ink-2)}
+.callout{background:var(--green-50);border-left:3px solid var(--green-700);padding:14px 18px;margin:14px 0;break-inside:avoid;border-radius:0 8px 8px 0}
+.callout.warn{background:var(--amber-50);border-color:var(--amber)}
+.callout p:last-child{margin-bottom:0}
+.callout .k{font-size:9pt;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--green-700);margin-bottom:4px}
+.callout.warn .k{color:var(--amber)}
+.routes{display:grid;grid-template-columns:1fr;gap:10px;margin:12px 0}
+.route{border:1.5px solid var(--line);border-radius:10px;padding:14px 16px;break-inside:avoid;background:#fff}
+.route .rt{display:flex;align-items:baseline;gap:9px;margin-bottom:5px}
+.route .tag{font-size:8.6pt;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--green-700);border-radius:20px;padding:3px 9px;flex:none}
+.route.b .tag{background:var(--amber)}
+.route.c .tag{background:var(--red)}
+.route b.h{font-family:var(--serif);font-size:12.4pt;color:var(--green-900)}
+.route p{font-size:10.6pt;margin-bottom:6px}
+.route .ask{font-size:10.4pt;color:var(--ink-2);border-top:1px solid var(--line-2);padding-top:8px;margin:0}
+.route .ask em{color:var(--muted);font-style:normal;font-weight:700;font-size:9pt;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:3px}
+table{width:100%;border-collapse:collapse;margin:10px 0 14px;font-size:10.5pt}
+thead th{text-align:left;font-family:var(--sans);font-size:9pt;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--green-700);border-bottom:1.5px solid var(--green-700);padding:0 10px 6px 0}
+td{border-bottom:1px solid var(--line-2);padding:7px 10px 7px 0;vertical-align:top}
+td:first-child{font-weight:700;color:var(--ink);width:33%}
+td.q{font-weight:600;color:var(--ink);width:44%}
+tbody tr{break-inside:avoid}
+.req{font-size:8.6pt;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--red)}
+.opt{font-size:8.6pt;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted-2)}
+.gate{display:grid;gap:8px;margin:12px 0}
+.g{display:grid;grid-template-columns:16px 1fr;gap:12px;align-items:start;border:1.5px solid var(--line);border-radius:10px;padding:12px 15px;break-inside:avoid}
+.g>i{width:14px;height:14px;border-radius:50%;margin-top:5px;display:block}
+.g.ok>i{background:var(--green-500)}.g.mid>i{background:var(--amber)}.g.no>i{background:var(--red)}
+.g b{display:block;font-size:11pt;margin-bottom:2px}
+.g p{font-size:10.4pt;margin:0;color:var(--muted)}
+.g p.say{color:var(--ink-2);margin-top:5px;font-style:italic}
+.steps{counter-reset:s;margin:12px 0}
+.step{display:grid;grid-template-columns:34px 1fr;gap:14px;padding:12px 0;border-top:1px solid var(--line-2);break-inside:avoid}
+.step:first-child{border-top:none}
+.step .num{counter-increment:s;font-family:var(--serif);font-weight:700;font-size:12pt;color:#fff;background:var(--green-700);width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center}
+.step .num::before{content:counter(s)}
+.step h4{margin:3px 0 3px}
+.step p{font-size:10.6pt;margin:0}
+.decide{border:1.5px solid var(--green-700);border-radius:12px;padding:6px 18px 14px;background:var(--paper);margin-top:12px}
+.decide .d{border-top:1px solid var(--line);padding:11px 0 3px}
+.decide .d:first-of-type{border-top:none}
+.decide b{display:block;font-size:11.2pt;color:var(--green-900);font-family:var(--serif);margin-bottom:2px}
+.decide p{font-size:10.5pt;margin:0;color:var(--ink-2)}
+.decide .rec{color:var(--green-700);font-weight:700}
+footer.doc{margin-top:26px;padding-top:12px;border-top:1px solid var(--line);font-size:9.5pt;color:var(--muted-2)}
+a{color:var(--green-700)}a:hover{color:var(--red)}
+@media print{.route,.g,.callout{background:#fff}}
+</style>
+</head>
+<body>
+<doc-page margin="0.8in">
+
+<p class="meta">Intern voorstel · MyKunda · 24 augustus 2026</p>
+<h1>Welk pand is dit eigenlijk?</h1>
+<p class="sub">Een voorstel om bij een Ownership Verification zonder MyKunda-listing het perceel scherp te krijgen — vóór er betaald wordt.</p>
+
+<h2><span class="n">Het probleem</span>Eén tekstveld is te weinig om een perceel te vinden</h2>
+<p>Het formulier op <code>verify.html</code> vraagt nu naar de plek in één open regel — <i>"Where is the property?"</i> — plus type, waar de koper het vond, een paar vinkjes over documenten, en een vrij tekstveld voor opmerkingen. Dat is genoeg om een gesprek te beginnen. Het is niet genoeg om een titel op te zoeken.</p>
+<p>Wat er in de praktijk mist zodra er geen listing achter zit:</p>
+<ul>
+<li><b>Geen plek die te vinden is.</b> "Sanyang, off the beach road" beschrijft een paar honderd percelen. Er is geen pin, geen Plus Code, geen dorp-en-district.</li>
+<li><b>Geen naam om op te zoeken.</b> De verkoper staat nergens als veld — alleen als suggestie in het notitieveld. Zonder naam zoals die op het papier staat is een registry search niet uit te voeren.</li>
+<li><b>Geen documentkenmerk.</b> We weten straks dát er een sketch plan is, niet welk nummer erop staat of hoe het eruitziet.</li>
+<li><b>Geen papier.</b> Er kan niets geüpload worden, dus het echte werk begint pas na een e-mailwissel.</li>
+</ul>
+<div class="callout warn"><div class="k">Waarom dit nu geld kost</div><p>De betaling gaat vooraf aan het gesprek. We innen een vaste prijs voor een check waarvan we op dat moment niet kunnen beoordelen of hij uitvoerbaar is. Loopt hij vast op iets wat de koper nooit kon aanleveren, dan is het onze restitutie en ons imago — niet zijn fout.</p></div>
+
+<h2><span class="n">Het inzicht</span>De vraag hangt af van het papier, niet van het pand</h2>
+<p>In Gambia is er geen enkele manier om een perceel te identificeren. Er zijn er drie, en welke geldt, blijkt uit het soort papier dat de verkoper heeft laten zien. Daarom is één vraag genoeg om de rest van het formulier te bepalen: <b>"What paperwork have you actually been shown?"</b></p>
+
+<div class="routes">
+<div class="route a">
+<div class="rt"><span class="tag">Route A</span><b class="h">Lease of state land — layout, scheme, Physical Planning</b></div>
+<p>Greater Banjul en de kustlayouts. Het perceel bestaat op papier bij de overheid en is met een nummer te vinden. Hier is een registry search de kern van de check en levert hij een hard antwoord.</p>
+<p class="ask"><em>Dan vragen we</em>Lease- of certificaatnummer · layout/scheme-naam en plotnummer · naam van de lessee zoals op het stuk · jaar van uitgifte · laatste ground rent-bewijs indien aanwezig.</p>
+</div>
+<div class="route b">
+<div class="rt"><span class="tag">Route B</span><b class="h">Dorpsgrond — Alkalo-toewijzing, sketch plan</b></div>
+<p>Customary land. Er is meestal geen registerinschrijving, dus identificatie is geografisch en op getuigen: welk dorp, welke Alkalo, welke buren. Een registry search vindt hier vaak niets, en dat is zelf een bevinding — geen mislukking.</p>
+<p class="ask"><em>Dan vragen we</em>Dorp en district · naam van de Alkalo of de toewijzer · sketch plan-nummer en opsteller · namen van de aangrenzende percelen · staan er bakens/markeringen · is de oorspronkelijke eigenaar overleden.</p>
+</div>
+<div class="route c">
+<div class="rt"><span class="tag">Route C</span><b class="h">Nog niets op papier — belofte, off-plan, of een agent</b></div>
+<p>Een mondelinge afspraak, een aanbetaling op een plot dat "nog geregeld wordt", of een developer die off-plan verkoopt. Een documentcheck heeft hier weinig om te lezen. Dit is het geval waarin de koper het meest risico loopt en waarin wij het minst kunnen beloven — dus zeggen we dat vóór de betaling.</p>
+<p class="ask"><em>Dan vragen we</em>Wie verkoopt en in welke hoedanigheid · wat er al betaald is en aan wie · welke afspraak er ligt en per wanneer · een pin of een afspraak om samen te gaan kijken.</p>
+</div>
+</div>
+<p>Dit is ook het antwoord op "hoe voorkom je 25 velden": niemand ziet alle drie de routes. Kies je route B, dan verdwijnt het lease-nummer uit beeld. Vijf à zeven velden per route, niet meer.</p>
+
+<h2><span class="n">De drempel</span>Drie dingen, anders kunnen we niet beginnen</h2>
+<p>Wat er ook wordt ingevuld: zonder deze drie is een check niet uitvoerbaar. Dit is de enige harde eis in het voorstel; al het andere is nuttige context.</p>
+<table>
+<thead><tr><th>Wat</th><th>Waarom precies dit</th></tr></thead>
+<tbody>
+<tr><td>Een plek op de kaart</td><td>Een pin, een Plus Code, een gedeelde WhatsApp-locatie of een Google Maps-link. Kan de koper dat niet — hij zit in Birmingham en heeft er nooit gestaan — dan is dorp + district + de naam van twee buren de terugvaloptie. MyKunda gebruikt Plus Codes al op de listings, dus het veld en de weergave bestaan.</td></tr>
+<tr><td>Een naam om op te zoeken</td><td>De verkoper zoals hij op het document staat, plus in welke hoedanigheid hij verkoopt: eigenaar, familielid, erfgenaam, agent of gemachtigde. Dat onderscheid is de helft van de fraudegevallen.</td></tr>
+<tr><td>Papier of een expliciet "geen"</td><td>Een foto van elk stuk dat hij is voorgehouden. Uitdrukkelijk "ik heb niets gezien" aanvinken is ook een geldig antwoord — dat bepaalt namelijk de prijs en de aanpak.</td></tr>
+</tbody>
+</table>
+
+<h2><span class="n">Het voorstel</span>Van één formulier naar drie korte stappen met een eerlijke poortwachter</h2>
+<p>Dezelfde pagina, dezelfde twee tiers, dezelfde prijzen. Alleen de aanvraag wordt drie schermpjes in plaats van één lange lap, en er komt een blok bij dat de koper vertelt wat wij met zijn gegevens kúnnen.</p>
+
+<div class="steps">
+<div class="step"><div class="num"></div><div><h4>Wat en waar</h4><p>Type pand · de routevraag over het papier · de locatie op drie manieren aan te leveren (pin, Plus Code of link · dorp en district uit een lijst · "ik kan geen pin geven") · de vraagprijs indien bekend.</p></div></div>
+<div class="step"><div class="num"></div><div><h4>Papieren en verkoper</h4><p>De vijf à zeven route-eigen velden · foto's van de documenten · naam van de verkoper en zijn hoedanigheid · zijn telefoonnummer · wat er al betaald is en welke deadline er ligt.</p></div></div>
+<div class="step"><div class="num"></div><div><h4>Jij en de urgentie</h4><p>Naam, e-mail, telefoon, urgentie en opmerkingen — precies zoals het nu al is, want dat werkt. Daarna de prijs en de betaalknop.</p></div></div>
+</div>
+
+<h3>De poortwachter: drie uitkomsten, in gewone taal</h3>
+<p>Onder in het formulier staat live wat wij met de ingevulde gegevens kunnen. Niet als score of voortgangsbalk, maar als één zin die uitlegt wat de koper voor zijn geld krijgt.</p>
+<div class="gate">
+<div class="g ok"><i></i><div><b>Groen — we kunnen beginnen</b><p>Plek, naam en papier zijn er. De betaalknop staat normaal.</p><p class="say">"We can run this check on the details you have given us."</p></div></div>
+<div class="g mid"><i></i><div><b>Amber — we kunnen beginnen, met een voorbehoud</b><p>Bijvoorbeeld dorpsgrond zonder sketch plan, of geen pin maar wel buren. De check gaat door, maar we zeggen vooraf waar hij waarschijnlijk stopt en dat een bezoek nodig is.</p><p class="say">"We can start, but on village land without a sketch plan the registry search often finds nothing. That answer is worth having — as long as you expect it."</p></div></div>
+<div class="g no"><i></i><div><b>Rood — dit is niet te vinden</b><p>Geen plek én geen naam. In plaats van de betaalknop komt <i>"Ask us first"</i>: de aanvraag gaat als vraag naar de backoffice, er wordt niets afgerekend.</p><p class="say">"We cannot find this property with what we have. Send it to us and we will tell you exactly what to ask the seller."</p></div></div>
+</div>
+<div class="callout"><div class="k">Waarom dit gunstig is, niet remmend</div><p>Elke rode aanvraag die nu een betaling wordt, is straks een gesprek dat vaak alsnog tot een betaling leidt — maar dan tot een uitvoerbare. Geen restituties, geen check die stilvalt, en de koper heeft het gevoel dat er iemand meedenkt in plaats van afrekent.</p></div>
+
+<h2><span class="n">Techniek</span>Wat er verandert en wat niet</h2>
+<table>
+<thead><tr><th>Onderdeel</th><th>Wijziging</th></tr></thead>
+<tbody>
+<tr><td>verify.html</td><td>Het formulier en het <code>req</code>-object dat naar localStorage gaat. Het mechanisme zelf blijft precies zoals het is.</td></tr>
+<tr><td>checkout.html</td><td>Niets. Die stuurt <code>intake</code> sinds vandaag al ongewijzigd mee, hoe groot het object ook wordt.</td></tr>
+<tr><td>create-payment</td><td>Alleen de snoeigrens op <code>intake</code> nakijken: het object wordt drie tot vier keer zo groot.</td></tr>
+<tr><td>Uploads</td><td>Foto's kunnen niet via localStorage. Twee routes — zie de beslissingen hieronder.</td></tr>
+<tr><td>admin.html</td><td>De intake leesbaar tonen bij de betaling, zodat de backoffice bij een <code>MK-</code>referentie in één blik ziet om welk perceel het gaat. Optioneel, maar zonder dit blijft het in de database staan.</td></tr>
+</tbody>
+</table>
+<h4>Onaangeroerd</h4>
+<p>De prijzen en de twee tiers · de plan-id's en de server-lookup · de Verified-badge-flow van verkopers · de FAQ · de urgentievraag · en de doorgifte van het e-mailadres die we vandaag hebben gebouwd.</p>
+
+<h2><span class="n">Vastgesteld</span>De zes besluiten — zo gaat het gebouwd worden</h2>
+<p>Edwin volgt op alle zes punten het advies. Hieronder staat het besluit, niet meer de vraag.</p>
+<div class="decide">
+<div class="d"><b>1. Uploads komen ná de betaling</b><p>In het formulier wordt alleen vastgelegd <i>welke</i> stukken de koper heeft — dat is wat de poortwachter nodig heeft. De foto's zelf gaan naar een intake-pagina die opent zodra de betaling loopt, op de <code>MK-</code>referentie. Zo verlagen we de conversie niet en houden we geen weesbestanden over van afgebroken betalingen.</p></div>
+<div class="d"><b>2. Rood blokkeert de betaling</b><p>Geen foutmelding, maar een afslag: de betaalknop wordt <i>"Ask us first"</i> en de aanvraag gaat als vraag naar de backoffice. Er wordt niets afgerekend voor een check die we niet kunnen uitvoeren.</p></div>
+<div class="d"><b>3. Regio en district uit een vaste lijst, dorp als vrij veld</b><p>De zeven LGA's — Banjul, KMC en de vijf regio's — met hun districten in twee gekoppelde keuzelijsten. Het dorp of de wijk blijft een tekstveld met suggesties, omdat spelling van dorpsnamen te veel varieert om af te dwingen. Vergelijkbare aanvragen, zonder de koper op een spelling af te rekenen.</p></div>
+<div class="d"><b>4. Identiteitsnummer van de verkoper: optioneel, met uitleg</b><p>Eén regel eronder waarom we het vragen en wat we ermee doen. Leeg laten mag en heeft geen gevolg voor de poortwachter.</p></div>
+<div class="d"><b>5. Drie stappen</b><p>De routevraag moet vóór de vervolgvelden komen, en op een telefoon is één pagina met dit aantal velden onwerkbaar. Terug kunnen naar een vorige stap zonder verlies van wat al is ingevuld.</p></div>
+<div class="d"><b>6. Groen betekent volledige restitutie</b><p>Gaven wij bij aanvang groen en loopt de check alsnog vast op iets wat wij hadden moeten zien, dan komt de hele fee terug. Bij amber geldt restitutie minus de kosten die al gemaakt zijn — en dat staat dan vóór de betaling op het scherm, niet achteraf in de FAQ. De FAQ-tekst over restitutie moet daarop worden bijgewerkt.</p></div>
+</div>
+
+<h2><span class="n">Uitvoering</span>Wat hier gebouwd wordt en wat elders moet</h2>
+<p>Het grootste deel valt binnen dit project. Twee dingen niet, en die staan in een aparte instructie: <code>instructie-claude-ai-ownership-intake.md</code>.</p>
+<table>
+<thead><tr><th>Wie</th><th>Wat</th></tr></thead>
+<tbody>
+<tr><td>Hier, in dit project</td><td>Het formulier in drie stappen op <code>verify.html</code>, de routevraag met route-eigen velden, de regio/district-lijsten, de poortwachter met zijn drie uitkomsten, het uitgebreide <code>intake</code>-object, de nieuwe intake-pagina voor de uploads, de weergave van de intake in <code>admin.html</code>, en de bijgewerkte restitutietekst in de FAQ.</td></tr>
+<tr><td>Claude AI — serverkant</td><td>De snoeigrens op <code>intake</code> in <code>create-payment</code> verruimen; een Storage-bucket met beleid voor de documentfoto's; een endpoint dat een upload aan een <code>MK-</code>referentie koppelt en verifieert dat die betaling van deze gebruiker is; en de melding aan de backoffice zodra de stukken binnen zijn.</td></tr>
+</tbody>
+</table>
+<div class="callout"><div class="k">Volgorde</div><p>De front-end kan vooruit: stap 1 tot 3 en de poortwachter werken zonder één serverwijziging, want <code>checkout.html</code> stuurt <code>intake</code> al mee. Alleen de upload-pagina heeft de serverkant nodig — tot die er is, vraagt de bedankpagina de stukken per e-mail of WhatsApp, precies zoals het nu gaat.</p></div>
+
+<footer class="doc">Besluiten vastgelegd 24 augustus 2026 · nog niets gewijzigd aan verify.html. De serverkant staat in <code>instructie-claude-ai-ownership-intake.md</code>.</footer>
+
+</doc-page>
+<script src="doc-page.js"></script>
+</body>
+</html>

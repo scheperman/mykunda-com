@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyKunda — Photo Collection Brief (The Gambia)</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+body{background:var(--paper-2)}
+.doc{max-width:940px;margin:0 auto;background:var(--white);box-shadow:var(--sh-md)}
+.doc-head{background:var(--green-700);color:#fff;padding:46px 56px 40px}
+.doc-head .logo{color:#fff;margin-bottom:22px}
+.doc-head .eyebrow{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--amber-400);margin-bottom:12px}
+.doc-head h1{color:#fff;font-size:40px;line-height:1.05;letter-spacing:-.02em}
+.doc-head p{color:rgba(255,255,255,.85);font-size:16.5px;margin-top:14px;max-width:620px;line-height:1.6}
+.doc-body{padding:46px 56px 60px}
+.sec2{margin-bottom:46px}
+.sec2 > h2{font-size:25px;margin-bottom:6px;display:flex;align-items:center;gap:12px}
+.sec2 .num{width:30px;height:30px;border-radius:50%;background:var(--green-50);color:var(--green-700);display:inline-flex;align-items:center;justify-content:center;font-family:var(--sans);font-weight:800;font-size:15px;flex:none}
+.sec2 > .lead{color:var(--muted);font-size:15.5px;margin:0 0 20px 42px;max-width:660px;line-height:1.6}
+p,li{color:var(--ink-2);font-size:15.5px;line-height:1.65}
+
+.routes{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-left:42px}
+.route{border:1px solid var(--line);border-radius:var(--r-md);padding:20px;background:var(--paper)}
+.route .tag{display:inline-block;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:4px 10px;border-radius:var(--r-pill);margin-bottom:11px}
+.route.best .tag{background:var(--green-100);color:var(--green-700)}
+.route.ok .tag{background:var(--amber-100);color:var(--amber-600)}
+.route.free .tag{background:#E3EEF4;color:#3E6E86}
+.route h3{font-size:17px;margin-bottom:8px}
+.route p{font-size:13.8px;color:var(--muted);line-height:1.55}
+.route ul{margin:9px 0 0 0;padding-left:17px}
+.route li{font-size:13.5px;color:var(--ink-2);margin-bottom:4px}
+
+.specs{display:flex;gap:14px;margin-left:42px;flex-wrap:wrap}
+.spec{flex:1;min-width:150px;border:1px solid var(--line);border-radius:var(--r-md);padding:16px 18px}
+.spec .k{font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--amber-600);margin-bottom:7px}
+.spec .v{font-size:14px;color:var(--ink-2);line-height:1.5}
+.spec .v b{color:var(--ink);font-weight:700}
+
+table{width:100%;border-collapse:collapse;margin-left:0;font-size:14px}
+.tablewrap{margin-left:42px;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+thead th{background:var(--green-700);color:#fff;text-align:left;font-family:var(--sans);font-weight:700;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;padding:13px 16px}
+tbody td{padding:13px 16px;border-bottom:1px solid var(--line-2);vertical-align:top;color:var(--ink-2)}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:nth-child(even){background:var(--paper)}
+td .slot{font-family:var(--sans);font-size:12px;font-weight:700;color:var(--green-700);background:var(--green-50);padding:2px 8px;border-radius:6px;white-space:nowrap}
+td .where{color:var(--muted);font-size:13px}
+.fmt{font-weight:700;color:var(--ink);white-space:nowrap}
+.grp{background:var(--paper-2) !important}
+.grp td{font-family:var(--serif);font-weight:600;color:var(--ink);font-size:15px;padding:11px 16px}
+
+.searchlist{margin-left:42px;display:flex;flex-direction:column;gap:10px}
+.searchrow{display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:var(--r-md);padding:14px 18px}
+.searchrow .src{font-weight:700;color:var(--ink);width:150px;flex:none}
+.searchrow .lic{font-size:12.5px;color:var(--muted);width:200px;flex:none}
+.searchrow .terms{font-size:13.5px;color:var(--green-700);font-weight:600}
+.callout{margin:0 0 0 42px;background:var(--amber-50);border:1px solid var(--amber-100);border-radius:var(--r-md);padding:16px 20px;font-size:14px;color:var(--amber-600);line-height:1.6}
+.callout b{color:var(--amber-600)}
+.tips{margin-left:42px;padding-left:20px}
+.tips li{margin-bottom:8px}
+.print-hint{text-align:center;padding:18px;color:var(--muted);font-size:13px}
+@media print{
+  body{background:#fff}
+  .doc{box-shadow:none;max-width:none}
+  .print-hint{display:none}
+  .sec2{break-inside:avoid}
+  .tablewrap{break-inside:auto}
+  tbody tr{break-inside:avoid}
+}
+@media(max-width:760px){
+  .doc-head,.doc-body{padding-left:24px;padding-right:24px}
+  .routes{grid-template-columns:1fr;margin-left:0}
+  .sec2 > .lead,.specs,.tablewrap,.searchlist,.callout,.tips{margin-left:0}
+  .searchrow{flex-wrap:wrap}.searchrow .src,.searchrow .lic{width:auto}
+}
+</style>
+</head>
+<body>
+<div class="doc">
+  <div class="doc-head">
+    <div class="logo" id="logo"></div>
+    <div class="eyebrow">Photo collection brief</div>
+    <h1>Real photos for your Gambia listings</h1>
+    <p>This brief lists every photo the MyKunda site needs, what to shoot and where, and how to source images you have the rights to use. Drop each photo onto its matching slot on the site — fill it once and it appears everywhere.</p>
+  </div>
+
+  <div class="doc-body">
+
+    <!-- 1. Where to get photos -->
+    <section class="sec2">
+      <h2><span class="num">1</span> Where to get the photos</h2>
+      <p class="lead">In order of quality and authenticity. The first two give you images you fully own and that are genuinely in The Gambia — always the best outcome.</p>
+      <div class="routes">
+        <div class="route best">
+          <span class="tag">Best</span>
+          <h3>Your own listing photos</h3>
+          <p>Photos taken at the actual properties by you or the selling agent.</p>
+          <ul>
+            <li>100% authentic &amp; rights-cleared</li>
+            <li>Matches the real listing</li>
+            <li>Use a phone in landscape or a basic camera</li>
+          </ul>
+        </div>
+        <div class="route ok">
+          <span class="tag">Recommended</span>
+          <h3>Local photographer</h3>
+          <p>Commission a Kombo-based photographer / drone operator for a half-day shoot.</p>
+          <ul>
+            <li>Drone shots of coast &amp; plots</li>
+            <li>Consistent, professional look</li>
+            <li>Ask for full commercial usage rights in writing</li>
+          </ul>
+        </div>
+        <div class="route free">
+          <span class="tag">Free libraries</span>
+          <h3>Stock with a license</h3>
+          <p>For area/atmosphere shots (beaches, river, markets) where a specific listing isn't needed.</p>
+          <ul>
+            <li>Unsplash, Pexels, Pixabay</li>
+            <li>Wikimedia Commons (check CC terms)</li>
+            <li>See the search terms in section 4</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Technical specs -->
+    <section class="sec2">
+      <h2><span class="num">2</span> Technical specs</h2>
+      <p class="lead">Keep things simple and consistent. Shoot in landscape unless noted, and compress before uploading (use squoosh.app or tinypng.com) so pages stay fast.</p>
+      <div class="specs">
+        <div class="spec"><div class="k">Format</div><div class="v"><b>JPG</b> (or PNG). Aim for under <b>500 KB</b> per image after compression.</div></div>
+        <div class="spec"><div class="k">Hero / area</div><div class="v">Landscape, <b>≥ 1600 px</b> wide. Wide coastal / beach scenes.</div></div>
+        <div class="spec"><div class="k">Listing &amp; gallery</div><div class="v">Landscape <b>4:3</b>, <b>≥ 1200 px</b> wide. 5–8 photos per property.</div></div>
+        <div class="spec"><div class="k">Agent portrait</div><div class="v"><b>Square</b>, <b>≥ 400 px</b>. Friendly headshot, plain background.</div></div>
+      </div>
+    </section>
+
+    <!-- 3. Shot list -->
+    <section class="sec2">
+      <h2><span class="num">3</span> The shot list</h2>
+      <p class="lead">Each row is one photo slot on the site. The slot name shows where it lives. Tip: a property photo dropped once (e.g. ph-pr1) shows on the card, the search list and the gallery automatically.</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th style="width:130px">Slot</th><th>What to photograph</th><th style="width:180px">Where in The Gambia</th><th style="width:90px">Format</th></tr></thead>
+          <tbody>
+            <tr class="grp"><td colspan="4">Homepage &amp; area guide</td></tr>
+            <tr><td><span class="slot">ph-home-hero</span></td><td>Big, bright hero shot — palm-lined beach, ocean or sweeping coastline at golden hour.</td><td class="where">Kololi / Kotu / Cape Point beach</td><td class="fmt">Wide landscape</td></tr>
+            <tr><td><span class="slot">ph-hood-kololi</span></td><td>Kololi vibe — Senegambia strip, beach bars, or the beach itself. <em>(Also used as the area-guide hero.)</em></td><td class="where">Kololi, Kombo South</td><td class="fmt">Landscape</td></tr>
+            <tr><td><span class="slot">ph-hood-capepoint</span></td><td>Cape Point beach / Bakau coastline.</td><td class="where">Bakau, Kombo St Mary</td><td class="fmt">Landscape</td></tr>
+            <tr><td><span class="slot">ph-hood-brufut</span></td><td>Brufut beach or the cliffs / heights area.</td><td class="where">Brufut, Kombo South</td><td class="fmt">Landscape</td></tr>
+            <tr><td><span class="slot">ph-hood-bijilo</span></td><td>Bijilo beach or the forest park (monkeys / palms).</td><td class="where">Bijilo, Kombo South</td><td class="fmt">Landscape</td></tr>
+            <tr><td><span class="slot">ph-hood-sanyang</span></td><td>Sanyang beach — long sandy / fishing-boat scene.</td><td class="where">Sanyang, Kombo South</td><td class="fmt">Landscape</td></tr>
+            <tr><td><span class="slot">ph-value</span></td><td>An attractive Gambian villa or home (for the "value my property" banner).</td><td class="where">Any Kombo property</td><td class="fmt">Landscape</td></tr>
+
+            <tr class="grp"><td colspan="4">Listings — one main exterior photo each (shows on cards + search + gallery)</td></tr>
+            <tr><td><span class="slot">ph-pr1</span></td><td>Beachfront villa with private pool — exterior + pool.</td><td class="where">Kololi</td><td class="fmt">4:3</td></tr>
+            <tr><td><span class="slot">ph-pr2</span></td><td>Sea-view apartment — balcony / living room with sea view.</td><td class="where">Kotu</td><td class="fmt">4:3</td></tr>
+            <tr><td><span class="slot">ph-pr3</span></td><td>Gated estate villa — exterior with pool &amp; garden.</td><td class="where">Brufut Heights</td><td class="fmt">4:3</td></tr>
+            <tr><td><span class="slot">ph-pr4</span></td><td>Furnished studio — tidy furnished interior.</td><td class="where">Senegambia, Kololi</td><td class="fmt">4:3</td></tr>
+            <tr><td><span class="slot">ph-pr5</span></td><td>Family compound — walled compound exterior.</td><td class="where">Bijilo</td><td class="fmt">4:3</td></tr>
+            <tr><td><span class="slot">ph-pr6</span></td><td>Sea-view penthouse — terrace / sea-view exterior.</td><td class="where">Cape Point, Bakau</td><td class="fmt">4:3</td></tr>
+            <tr><td><span class="slot">ph-pr7</span></td><td>Beachfront building plot — the empty land, ideally with a beach / palm backdrop.</td><td class="where">Sanyang</td><td class="fmt">4:3</td></tr>
+            <tr><td><span class="slot">ph-pr8</span></td><td>New-build townhouse — street-facing exterior.</td><td class="where">Brusubi</td><td class="fmt">4:3</td></tr>
+            <tr><td><span class="slot">ph-pr9</span></td><td>Riverside eco lodge — lodge buildings / river frontage.</td><td class="where">Kartong</td><td class="fmt">4:3</td></tr>
+
+            <tr class="grp"><td colspan="4">Property gallery — extra photos per listing</td></tr>
+            <tr><td><span class="slot">ph-(id)-g1…g4</span></td><td>4 more shots of each property: living room, kitchen, a bedroom, bathroom, garden / outdoor space. (On the property page for that listing.)</td><td class="where">At the property</td><td class="fmt">4:3</td></tr>
+
+            <tr class="grp"><td colspan="4">People</td></tr>
+            <tr><td><span class="slot">ph-agent-awa</span></td><td>Headshot of the agent shown on listings (currently labelled "Awa Camara" — change the name in the code to your real agent). Friendly, plain background.</td><td class="where">Your office</td><td class="fmt">Square</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 4. Free search starting points -->
+    <section class="sec2">
+      <h2><span class="num">4</span> Free photo search starting points</h2>
+      <p class="lead">For atmosphere / area shots only. Always confirm each photo's license and keep a note of the source. These open searches you can browse:</p>
+      <div class="searchlist">
+        <div class="searchrow"><span class="src">Unsplash</span><span class="lic">Free, no attribution req.</span><a class="terms" href="https://unsplash.com/s/photos/gambia" target="_blank" rel="noopener">unsplash.com/s/photos/gambia</a></div>
+        <div class="searchrow"><span class="src">Pexels</span><span class="lic">Free, no attribution req.</span><a class="terms" href="https://www.pexels.com/search/gambia/" target="_blank" rel="noopener">pexels.com/search/gambia</a></div>
+        <div class="searchrow"><span class="src">Pixabay</span><span class="lic">Free (Pixabay license)</span><a class="terms" href="https://pixabay.com/images/search/gambia/" target="_blank" rel="noopener">pixabay.com/images/search/gambia</a></div>
+        <div class="searchrow"><span class="src">Wikimedia Commons</span><span class="lic">CC — check &amp; credit each</span><a class="terms" href="https://commons.wikimedia.org/w/index.php?search=Kololi+Gambia" target="_blank" rel="noopener">commons.wikimedia.org · "Kololi Gambia"</a></div>
+      </div>
+      <p class="lead" style="margin-top:18px">Useful search words: <strong>Gambia beach, Kololi, Senegambia, Kotu, Bakau, Cape Point, Bijilo, Sanyang, Tanji, Banjul, Gambia river, Kartong, Gambia resort, Gambia village.</strong></p>
+    </section>
+
+    <!-- 5. Do / avoid -->
+    <section class="sec2">
+      <h2><span class="num">5</span> A few rules of thumb</h2>
+      <ul class="tips">
+        <li><strong>Shoot landscape</strong> and hold steady — wide shots crop better into the site's slots.</li>
+        <li><strong>Good light wins.</strong> Early morning and late afternoon flatter both buildings and beaches.</li>
+        <li><strong>Get people's consent</strong> before using recognisable faces (especially the agent portrait).</li>
+        <li><strong>Don't pull images from Google Images</strong> or other sites — most are copyrighted. Stick to the sources above or your own photos.</li>
+        <li><strong>Keep a simple record</strong> — for each photo note where it came from and its licence, in case you're ever asked.</li>
+      </ul>
+      <div class="callout" style="margin-top:18px"><b>Note:</b> I'm not a lawyer and licensing can be nuanced — when in doubt, use photos you took yourself or commissioned with written rights. That keeps you on the safe side and your listings genuinely Gambian.</div>
+    </section>
+
+  </div>
+  <div class="print-hint">Tip: press Ctrl/Cmd + P to save this brief as a PDF or print it for your photographer.</div>
+</div>
+
+<script src="app.js"></script>
+<script>
+document.getElementById('logo').innerHTML = LOGO_MARK + ' MyKunda';
+</script>
+</body>
+</html>

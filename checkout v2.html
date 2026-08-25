@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1w9rynw--><!--/mk-mark-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — MyKunda</title>
+<link rel="stylesheet" href="styles.css?v=1787660000000">
+<style>
+body{background:var(--paper-2)}
+
+/* ============ Layout ============ */
+.co{max-width:1080px;margin:0 auto;padding:30px 28px 80px}
+.co-back{display:inline-flex;align-items:center;gap:8px;font-size:14.5px;font-weight:600;color:var(--muted);margin-bottom:18px;transition:.15s}
+.co-back:hover{color:var(--green-700)}
+.co-head{margin-bottom:30px}
+.co-head .eyebrow{font-family:var(--sans);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--amber-600);margin-bottom:8px}
+.co-head h1{font-size:30px;letter-spacing:-.01em}
+.co-head p{color:var(--muted);font-size:15px;margin-top:5px}
+.co-grid{display:grid;grid-template-columns:1fr 370px;gap:32px;align-items:start}
+
+/* ============ Stepper ============ */
+.stepper{display:flex;align-items:center;gap:0;margin-bottom:28px;padding:0 4px}
+.step{display:flex;align-items:center;gap:10px;flex:1;position:relative}
+.step:not(:last-child)::after{content:"";flex:1;height:2px;background:var(--line);margin:0 14px;transition:background .3s}
+.step.done:not(:last-child)::after{background:var(--green-500)}
+.step-dot{width:32px;height:32px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--muted-2);background:var(--white);transition:.25s;flex:none}
+.step.active .step-dot{border-color:var(--green-700);background:var(--green-700);color:#fff}
+.step.done .step-dot{border-color:var(--green-500);background:var(--green-500);color:#fff}
+.step-label{font-size:13px;font-weight:600;color:var(--muted-2);white-space:nowrap;transition:.15s}
+.step.active .step-label{color:var(--ink)}
+.step.done .step-label{color:var(--green-700)}
+
+/* ============ Block ============ */
+.block{background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-sm);padding:28px;margin-bottom:22px;transition:opacity .25s}
+.block h2{font-size:18px;margin-bottom:3px;display:flex;align-items:center;gap:10px}
+.block h2 .h-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex:none}
+.block .sub{font-size:13.5px;color:var(--muted);margin-bottom:20px}
+
+/* ============ Payment Method Cards ============ */
+.methods{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:0}
+.method{border:1.5px solid var(--line);border-radius:var(--r-md);padding:18px 16px;cursor:pointer;transition:.18s;display:flex;flex-direction:column;align-items:center;gap:10px;background:var(--white);text-align:center;position:relative}
+.method:hover{border-color:var(--green-500);background:var(--green-50)}
+.method.sel{border-color:var(--green-700);background:var(--green-50);box-shadow:inset 0 0 0 1px var(--green-700)}
+.method .m-ic{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+.method .m-name{font-weight:700;font-size:14.5px;color:var(--ink)}
+.method .m-desc{font-size:12px;color:var(--muted);line-height:1.35}
+.method .m-pop{position:absolute;top:-8px;right:-6px;background:var(--amber-500);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--r-pill);letter-spacing:.02em;text-transform:uppercase}
+
+/* ============ Provider Chips ============ */
+.prov-section{margin-top:22px;display:none}
+.prov-section.show{display:block}
+.prov-label{font-size:13px;font-weight:700;color:var(--ink-2);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.providers{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.prov{border:1.5px solid var(--line);border-radius:var(--r-md);padding:14px 10px;cursor:pointer;text-align:center;transition:.15s;background:var(--white)}
+.prov:hover{border-color:var(--green-500)}
+.prov.sel{border-color:var(--green-700);background:var(--green-50);box-shadow:inset 0 0 0 1px var(--green-700)}
+.prov-logo{width:44px;height:44px;border-radius:12px;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;color:#fff}
+.prov-name{font-weight:700;font-size:13.5px;color:var(--ink)}
+.prov-sub{font-size:11.5px;color:var(--muted);margin-top:1px}
+
+/* ============ Form Fields ============ */
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fld{margin-bottom:14px}
+.fld.full{grid-column:1/3}
+.fld label{display:block;font-size:13px;font-weight:700;color:var(--ink-2);margin-bottom:6px}
+.fld input,.fld select{width:100%;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:12px 14px;font-size:15px;outline:none;transition:.15s;font-family:var(--sans);background:var(--white);color:var(--ink)}
+.fld input:focus,.fld select:focus{border-color:var(--green-500);box-shadow:0 0 0 3px rgba(42,117,97,.1)}
+.fld input.err{border-color:#C2533A;box-shadow:0 0 0 3px rgba(194,83,58,.1)}
+.fld .hint{font-size:12px;color:var(--muted-2);margin-top:5px;display:flex;align-items:center;gap:5px}
+.fld .hint svg{flex:none}
+
+/* phone prefix */
+.phone-row{display:flex;align-items:stretch;border:1.5px solid var(--line);border-radius:var(--r-sm);overflow:hidden;transition:.15s;background:var(--white)}
+.phone-row:focus-within{border-color:var(--green-500);box-shadow:0 0 0 3px rgba(42,117,97,.1)}
+.phone-row .pre{display:flex;align-items:center;gap:5px;padding:0 12px;background:var(--paper);font-weight:700;color:var(--ink-2);font-size:14px;border-right:1.5px solid var(--line);white-space:nowrap}
+.phone-row .pre .flag{font-size:16px}
+.phone-row input{border:none!important;box-shadow:none!important;flex:1;padding:12px 14px;font-size:15px;outline:none}
+
+/* card row */
+.card-row{display:flex;align-items:center;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:0 14px;transition:.15s;background:var(--white)}
+.card-row:focus-within{border-color:var(--green-500);box-shadow:0 0 0 3px rgba(42,117,97,.1)}
+.card-row input{border:none!important;box-shadow:none!important;padding:12px 0;flex:1}
+.card-brands{display:flex;gap:6px;flex:none}
+.card-brands span{width:34px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff}
+
+/* bank info box */
+.bank-info{background:var(--paper);border-radius:var(--r-md);padding:20px;border:1.5px solid var(--line)}
+.bank-info h4{font-size:15px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.bank-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line-2);font-size:14px}
+.bank-row:last-child{border:none}
+.bank-row .bk{color:var(--muted);font-weight:500}
+.bank-row .bv{font-weight:700;color:var(--ink);display:flex;align-items:center;gap:6px}
+.bank-row .copy-sm{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;background:var(--white);box-shadow:var(--sh-sm);color:var(--muted-2);cursor:pointer;transition:.12s;flex:none}
+.bank-row .copy-sm:hover{color:var(--green-700)}
+.bank-note{font-size:12.5px;color:var(--muted);margin-top:12px;line-height:1.5;display:flex;align-items:flex-start;gap:8px}
+.bank-note svg{flex:none;margin-top:1px}
+
+/* ============ Powered-by / Trust ============ */
+.powered{display:flex;align-items:center;gap:8px;margin-top:16px;padding:12px 16px;border-radius:var(--r-sm);background:var(--paper);font-size:12.5px;color:var(--muted)}
+.powered .mp-logo{display:flex;align-items:center;gap:5px;font-weight:800;font-size:13px;color:var(--ink-2)}
+.powered .mp-logo .mp-dot{width:8px;height:8px;border-radius:50%;background:var(--green-500)}
+.trust-row{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);margin-top:10px}
+.trust-row svg{color:var(--green-600);flex:none}
+
+/* ============ Order Summary Sidebar ============ */
+.summary{position:sticky;top:calc(var(--header-h) + 16px);background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-md);overflow:hidden;border:1px solid var(--line)}
+.sum-head{padding:20px 22px 16px;border-bottom:1px solid var(--line-2)}
+.sum-head h3{font-size:17px}
+.plan-card{display:flex;align-items:flex-start;gap:14px;padding:18px 22px;border-bottom:1px solid var(--line-2)}
+.plan-ic{width:44px;height:44px;border-radius:12px;background:var(--green-50);color:var(--green-700);display:flex;align-items:center;justify-content:center;flex:none}
+.plan-info{flex:1}
+.plan-name{font-family:var(--serif);font-size:16px;font-weight:600}
+.plan-desc{font-size:12.5px;color:var(--muted);margin-top:2px;line-height:1.4}
+.plan-price{font-weight:800;font-size:16px;color:var(--ink);white-space:nowrap}
+
+.coupon{display:flex;gap:8px;padding:14px 22px;border-bottom:1px solid var(--line-2)}
+.coupon input{flex:1;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:9px 12px;font-size:13px;outline:none;font-family:var(--sans)}
+.coupon input:focus{border-color:var(--green-500)}
+.coupon button{padding:0 14px;border-radius:var(--r-sm);background:var(--paper-2);font-weight:700;font-size:13px;color:var(--ink-2);transition:.12s}
+.coupon button:hover{background:var(--line)}
+
+.sum-rows{padding:14px 22px}
+.sum-row{display:flex;justify-content:space-between;font-size:13.5px;color:var(--ink-2);padding:5px 0}
+.sum-row .muted{color:var(--muted)}
+
+.sum-total{display:flex;justify-content:space-between;align-items:baseline;padding:16px 22px;border-top:1.5px solid var(--line);background:var(--paper)}
+.sum-total .k{font-weight:700;font-size:14.5px}
+.sum-total .v{font-family:var(--serif);font-size:26px;font-weight:700;color:var(--green-700)}
+
+.sum-foot{padding:14px 22px 20px}
+.sum-trust{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);padding:3px 0}
+.sum-trust svg{color:var(--green-600);flex:none}
+
+.sum-gateway{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px 22px;border-top:1px solid var(--line-2);font-size:11.5px;color:var(--muted-2)}
+.sum-gateway .gw-logo{display:flex;align-items:center;gap:4px;font-weight:800;font-size:12px;color:var(--muted)}
+.sum-gateway .gw-dot{width:7px;height:7px;border-radius:50%;background:var(--green-500)}
+
+/* ============ Pay Button ============ */
+.pay-btn-wrap{margin-top:6px}
+.pay-btn{width:100%;height:56px;border-radius:var(--r-pill);background:var(--green-700);color:#fff;font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:center;gap:10px;transition:.18s;border:none;cursor:pointer;font-family:var(--sans)}
+.pay-btn:hover{background:var(--green-800);transform:translateY(-1px);box-shadow:var(--sh-md)}
+.pay-btn:active{transform:translateY(0)}
+.pay-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.pay-btn .spinner{width:20px;height:20px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ============ Success Screen ============ */
+.success{max-width:580px;margin:30px auto;text-align:center}
+.success-card{background:var(--white);border-radius:var(--r-xl);box-shadow:var(--sh-md);padding:44px 40px;position:relative;overflow:hidden}
+.success-card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--green-500),var(--amber-400))}
+.success .seal{width:72px;height:72px;border-radius:50%;background:var(--green-50);color:var(--green-700);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;animation:sealPop .4s cubic-bezier(.4,0,.2,1)}
+@keyframes sealPop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.success h1{font-size:28px;margin-bottom:10px}
+.success .msg{color:var(--muted);font-size:15px;line-height:1.6;margin-bottom:4px;max-width:420px;margin-left:auto;margin-right:auto}
+.receipt{background:var(--paper);border-radius:var(--r-md);padding:18px 22px;margin:24px 0;text-align:left}
+.receipt .r-row{display:flex;justify-content:space-between;font-size:13.5px;padding:6px 0;color:var(--ink-2)}
+.receipt .r-row .muted{color:var(--muted)}
+.receipt .r-row.tot{border-top:1.5px solid var(--line);margin-top:8px;padding-top:12px;font-weight:700;font-size:15px;color:var(--ink)}
+.success-actions{display:flex;gap:12px;justify-content:center;margin-top:6px;flex-wrap:wrap}
+
+/* ============ Pending Screen ============ */
+.pending{max-width:520px;margin:30px auto;text-align:center}
+.pending-card{background:var(--white);border-radius:var(--r-xl);box-shadow:var(--sh-md);padding:44px 40px}
+.pending .pulse-ring{width:72px;height:72px;border-radius:50%;background:var(--amber-50,#FFF4E6);color:var(--amber-500);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;position:relative}
+.pending .pulse-ring::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--amber-400);animation:pulse 1.8s ease-out infinite}
+@keyframes pulse{0%{transform:scale(.9);opacity:.7}100%{transform:scale(1.3);opacity:0}}
+.pending h2{font-size:24px;margin-bottom:10px}
+.pending .msg{color:var(--muted);font-size:15px;line-height:1.6;margin-bottom:20px}
+.pending .instr{background:var(--paper);border-radius:var(--r-md);padding:18px 22px;text-align:left;margin-bottom:20px}
+.pending .instr-step{display:flex;align-items:flex-start;gap:12px;padding:8px 0;font-size:14px;color:var(--ink-2);line-height:1.45}
+.pending .instr-step .sn{width:26px;height:26px;border-radius:50%;background:var(--green-50);color:var(--green-700);font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex:none}
+
+/* ============ Responsive ============ */
+@media(max-width:900px){
+  .co-grid{grid-template-columns:1fr}
+  .summary{position:static;order:-1}
+  .methods{grid-template-columns:1fr 1fr 1fr}
+  .providers{grid-template-columns:repeat(4,1fr)}
+  .stepper .step-label{display:none}
+}
+@media(max-width:600px){
+  .co{padding:20px 16px 60px}
+  .methods{grid-template-columns:1fr}
+  .providers{grid-template-columns:1fr 1fr}
+  .fgrid{grid-template-columns:1fr}
+  .fld.full{grid-column:auto}
+  .block{padding:22px 18px}
+  .success-card,.pending-card{padding:32px 22px}
+  .stepper{gap:0}
+  .step:not(:last-child)::after{margin:0 6px}
+}
+</style>
+<meta property="fb:pages" content="61593360783009">
+<meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
+</head>
+<body>
+<div id="header"></div>
+
+<div class="co" id="coRoot">
+  <a class="co-back" href="sell.html#pricing" id="backLink">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    Back to plans
+  </a>
+
+  <!-- Stepper -->
+  <div class="stepper" id="stepper">
+    <div class="step active" data-s="1"><span class="step-dot">1</span><span class="step-label">Payment method</span></div>
+    <div class="step" data-s="2"><span class="step-dot">2</span><span class="step-label">Details</span></div>
+    <div class="step" data-s="3"><span class="step-dot">3</span><span class="step-label">Confirm</span></div>
+  </div>
+
+  <div class="co-grid">
+    <!-- Main -->
+    <div class="co-main" id="coMain">
+
+      <!-- STEP 1: Payment Method -->
+      <div class="co-step" id="step1">
+        <div class="block">
+          <h2>
+            <span class="h-icon" style="background:var(--green-50);color:var(--green-700)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+            </span>
+            Choose payment method
+          </h2>
+          <div class="sub">Select how you'd like to pay. All transactions are processed securely via Modem Pay.</div>
+
+          <div class="methods" id="methods">
+            <div class="method sel" data-m="mobile" onclick="selectMethod(this)">
+              <span class="m-pop">Popular</span>
+              <span class="m-ic" style="background:var(--green-50);color:var(--green-700)">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+              </span>
+              <span class="m-name">Mobile Money</span>
+              <span class="m-desc">Wave · QMoney · Africell · Orange Money</span>
+            </div>
+            <div class="method" data-m="card" onclick="selectMethod(this)">
+              <span class="m-ic" style="background:var(--amber-50,#FFF4E6);color:var(--amber-500)">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+              </span>
+              <span class="m-name">Debit / Credit Card</span>
+              <span class="m-desc">Visa · Mastercard · International</span>
+            </div>
+            <div class="method" data-m="bank" onclick="selectMethod(this)">
+              <span class="m-ic" style="background:var(--paper-2);color:var(--ink-2)">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M3 10h18"/><path d="M12 3l9 7H3z"/><path d="M5 10v8M9 10v8M15 10v8M19 10v8"/></svg>
+              </span>
+              <span class="m-name">Bank Transfer</span>
+              <span class="m-desc">Direct to Gambian bank account</span>
+            </div>
+          </div>
+
+          <!-- Mobile Money Providers -->
+          <div class="prov-section show" id="provSection">
+            <div class="prov-label">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 7H3z"/></svg>
+              Select your provider
+            </div>
+            <div class="providers" id="providers">
+              <div class="prov sel" data-p="wave" onclick="selectProv(this)">
+                <div class="prov-logo" style="background:#1DC8FF">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M3 12c2-4 5-4 6 0s4 4 6 0 4-4 6 0"/></svg>
+                </div>
+                <div class="prov-name">Wave</div>
+                <div class="prov-sub">Most popular</div>
+              </div>
+              <div class="prov" data-p="qmoney" onclick="selectProv(this)">
+                <div class="prov-logo" style="background:#E2231A">Q</div>
+                <div class="prov-name">QMoney</div>
+                <div class="prov-sub">QCell</div>
+              </div>
+              <div class="prov" data-p="africell" onclick="selectProv(this)">
+                <div class="prov-logo" style="background:#5B2D8E">A</div>
+                <div class="prov-name">Africell</div>
+                <div class="prov-sub">Afrimoney</div>
+              </div>
+              <div class="prov" data-p="orange" onclick="selectProv(this)">
+                <div class="prov-logo" style="background:#FF6600">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="12" r="8"/></svg>
+                </div>
+                <div class="prov-name">Orange</div>
+                <div class="prov-sub">Orange Money</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="powered">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+            Secured &amp; processed by
+            <span class="mp-logo"><span class="mp-dot"></span> Modem Pay</span>
+            — Licensed by Central Bank of The Gambia
+          </div>
+        </div>
+
+        <button class="pay-btn" onclick="goStep(2)">
+          Continue to details
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+
+      <!-- STEP 2: Payment Details -->
+      <div class="co-step" id="step2" style="display:none">
+        <!-- Mobile Money Form -->
+        <div class="block" id="formMobile">
+          <h2>
+            <span class="h-icon" style="background:var(--green-50);color:var(--green-700)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+            </span>
+            <span id="mmTitle">Mobile money details</span>
+          </h2>
+          <div class="sub">Enter the phone number linked to your <span id="mmProvName">Wave</span> account.</div>
+          <div class="fld">
+            <label for="mmNumber">Mobile money number</label>
+            <div class="phone-row">
+              <span class="pre"><span class="flag">🇬🇲</span> +220</span>
+              <input type="tel" id="mmNumber" placeholder="7XX XXXX" inputmode="numeric" maxlength="10" autocomplete="tel">
+            </div>
+            <div class="hint">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+              You'll receive a push notification to approve the payment on your phone.
+            </div>
+          </div>
+          <div class="fld">
+            <label for="mmName">Full name (account holder)</label>
+            <input type="text" id="mmName" placeholder="e.g. Ousman Jallow" autocomplete="name">
+          </div>
+        </div>
+
+        <!-- Card Form -->
+        <div class="block" id="formCard" style="display:none">
+          <h2>
+            <span class="h-icon" style="background:var(--amber-50,#FFF4E6);color:var(--amber-500)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+            </span>
+            Card details
+          </h2>
+          <div class="sub">Enter your Visa or Mastercard details. 3D Secure verification may be required.</div>
+          <div class="fld">
+            <label>Card number</label>
+            <div class="card-row">
+              <input type="text" id="cardNum" placeholder="1234  5678  9012  3456" inputmode="numeric" autocomplete="cc-number">
+              <span class="card-brands">
+                <span style="background:#1A1F71">V</span>
+                <span style="background:#EB001B">M</span>
+              </span>
+            </div>
+          </div>
+          <div class="fgrid">
+            <div class="fld"><label>Expiry date</label><input type="text" id="cardExp" placeholder="MM / YY" inputmode="numeric" autocomplete="cc-exp"></div>
+            <div class="fld"><label>CVC / CVV</label><input type="text" id="cardCvc" placeholder="123" inputmode="numeric" autocomplete="cc-csc" maxlength="4"></div>
+          </div>
+          <div class="fld"><label>Name on card</label><input type="text" id="cardName" placeholder="Full name as shown on card" autocomplete="cc-name"></div>
+        </div>
+
+        <!-- Bank Transfer Info -->
+        <div class="block" id="formBank" style="display:none">
+          <h2>
+            <span class="h-icon" style="background:var(--paper-2);color:var(--ink-2)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M3 10h18"/><path d="M12 3l9 7H3z"/><path d="M5 10v8M9 10v8M15 10v8M19 10v8"/></svg>
+            </span>
+            Bank transfer details
+          </h2>
+          <div class="sub">Transfer the exact amount to the account below. Your listing will be activated after confirmation (1–2 business days).</div>
+          <div class="bank-info">
+            <h4>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green-600)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M3 10h18"/><path d="M12 3l9 7H3z"/></svg>
+              MyKunda — Trust Bank Gambia
+            </h4>
+            <div class="bank-row"><span class="bk">Bank</span><span class="bv">Trust Bank Gambia Ltd</span></div>
+            <div class="bank-row"><span class="bk">Account name</span><span class="bv">MyKunda</span></div>
+            <div class="bank-row">
+              <span class="bk">Account number</span>
+              <span class="bv">0012 3456 7890 <button class="copy-sm" onclick="domCopy('001234567890');this.innerHTML='✓';setTimeout(()=>this.innerHTML=copySvg,1200)" title="Copy">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button></span>
+            </div>
+            <div class="bank-row"><span class="bk">Branch</span><span class="bv">Kairaba Avenue, Serrekunda</span></div>
+            <div class="bank-row"><span class="bk">Reference</span><span class="bv" id="bankRef">MK-00000000</span></div>
+            <div class="bank-note">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--amber-500)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+              <span>Use the reference code above as your payment reference. Without it, we cannot match your transfer to your listing.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Billing -->
+        <div class="block" id="billingBlock">
+          <h2>
+            <span class="h-icon" style="background:var(--paper-2);color:var(--ink-2)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </span>
+            Billing details
+          </h2>
+          <div class="sub">For your receipt and listing confirmation email.</div>
+          <div class="fgrid">
+            <div class="fld"><label>Full name</label><input type="text" id="billName" placeholder="Your full name" autocomplete="name"></div>
+            <div class="fld"><label>Email address</label><input type="email" id="billEmail" placeholder="you@email.com" autocomplete="email"></div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px">
+          <button class="pay-btn" onclick="goStep(1)" style="background:var(--white);color:var(--ink-2);box-shadow:inset 0 0 0 1.5px var(--line);flex:0 0 auto;width:auto;padding:0 28px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+            Back
+          </button>
+          <button class="pay-btn" id="payBtn" onclick="submitPayment()">
+            Pay <span id="payAmt">$99.00</span>
+          </button>
+        </div>
+        <div class="trust-row" style="margin-top:12px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+          Payments are encrypted end-to-end and processed securely via Modem Pay. You can cancel a listing any time.
+        </div>
+      </div>
+
+      <!-- STEP 3: Confirmation (injected by JS) -->
+      <div class="co-step" id="step3" style="display:none"></div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="summary" id="sidebar">
+      <div class="sum-head"><h3>Order summary</h3></div>
+      <div class="plan-card">
+        <span class="plan-ic" id="planIc">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6z"/><path d="m9 12 2 2 4-4"/></svg>
+        </span>
+        <div class="plan-info">
+          <div class="plan-name" id="sumPlanName">Verified listing</div>
+          <div class="plan-desc" id="sumPlanDesc">Title check, Verified badge &amp; priority placement</div>
+        </div>
+        <div class="plan-price" id="sumPlanPrice">$99</div>
+      </div>
+      <div class="coupon">
+        <input type="text" id="couponIn" placeholder="Promo code">
+        <button id="couponBtn" onclick="applyCoupon()">Apply</button>
+      </div>
+      <div class="sum-rows">
+        <div class="sum-row"><span class="muted">Subtotal</span><span id="sumSub">$99.00</span></div>
+        <div class="sum-row"><span class="muted">Processing fee</span><span id="sumFee">$0.00</span></div>
+        <div class="sum-row" id="discRow" style="display:none;color:var(--green-600)"><span>Discount</span><span id="sumDisc">-$0.00</span></div>
+      </div>
+      <div class="sum-total"><span class="k">Total due</span><span class="v" id="sumTotal">$99.00</span></div>
+      <div class="sum-foot">
+        <div class="sum-trust">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          <span id="trustFoot1">One-time payment · valid 6 months</span>
+        </div>
+        <div class="sum-trust">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          <span id="trustFoot2">Verified badge live within 1–2 business days</span>
+        </div>
+      </div>
+      <div class="sum-gateway">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        Processed by
+        <span class="gw-logo"><span class="gw-dot"></span> Modem Pay</span>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<div id="footer"></div>
+
+<script src="image-slot.js?v=1787660000000" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="window.supabase=null"></script>
+<script src="supabase.js?v=1787660000000"></script>
+<script src="app.js?v=1787660000000"></script>
+<script>
+document.getElementById('header').innerHTML = headerHTML('List', false);
+document.getElementById('footer').innerHTML = footerHTML();
+
+/* -------- Plan config -------- */
+const PLANS = {
+  verified: { name:'Verified listing', desc:'Title check, Verified badge & priority placement', priceGMD:8500, foot:['Priced by property value band · valid 6 months','Verified badge live within 1–2 business days'] },
+  promoted: { name:'Promoted listing', desc:'Professional photos, written listing and 60 days featured placement', priceGMD:20000, foot:['One-time payment · 60 days featured','Photographer booked within 3 business days'] },
+  managed:  { name:'Managed service', desc:'Six months of full listing management, viewings included', priceGMD:45000, foot:['Priced by property value band · payable in two instalments','Account manager assigned within 1 business day'] },
+  feature:  { name:'Featured boost', desc:'Top of search & homepage for 30 days', priceGMD:4000, foot:['One-time payment · 30 days','Live immediately after payment'] },
+};
+const planKey = (qs('plan') && PLANS[qs('plan')]) ? qs('plan') : 'verified';
+const plan = PLANS[planKey];
+
+document.getElementById('sumPlanName').textContent = plan.name;
+document.getElementById('sumPlanDesc').textContent = plan.desc;
+document.getElementById('sumPlanPrice').textContent = CURRENCIES[getCurrency()].symbol + Math.round(plan.priceGMD/CURRENCIES.GMD.rate*CURRENCIES[getCurrency()].rate).toLocaleString();
+document.getElementById('trustFoot1').textContent = plan.foot[0];
+document.getElementById('trustFoot2').textContent = plan.foot[1];
+document.getElementById('bankRef').textContent = 'MK-' + Date.now().toString().slice(-8);
+
+let discount = 0;
+let currentMethod = 'mobile';
+let currentProv = 'wave';
+let currentStep = 1;
+
+function money(n) { var c=CURRENCIES[getCurrency()]; return c.symbol + Math.round(n/CURRENCIES.GMD.rate*c.rate).toLocaleString(); }
+
+function recalc() {
+  const sub = plan.priceGMD;
+  const fee = currentMethod === 'card' ? Math.round(sub * 0.035 * 100) / 100 : 0;
+  const total = Math.max(0, sub + fee - discount);
+  document.getElementById('sumSub').textContent = money(sub);
+  document.getElementById('sumFee').textContent = fee > 0 ? money(fee) : '$0.00';
+  document.getElementById('sumTotal').textContent = money(total);
+  document.getElementById('payAmt').textContent = money(total);
+  document.getElementById('discRow').style.display = discount > 0 ? 'flex' : 'none';
+  document.getElementById('sumDisc').textContent = '-' + money(discount);
+}
+recalc();
+
+/* -------- Method selection -------- */
+function selectMethod(el) {
+  document.querySelectorAll('.method').forEach(m => m.classList.remove('sel'));
+  el.classList.add('sel');
+  currentMethod = el.dataset.m;
+  document.getElementById('provSection').classList.toggle('show', currentMethod === 'mobile');
+  recalc();
+}
+
+/* -------- Provider selection -------- */
+function selectProv(el) {
+  document.querySelectorAll('.prov').forEach(p => p.classList.remove('sel'));
+  el.classList.add('sel');
+  currentProv = el.dataset.p;
+  const names = { wave:'Wave', qmoney:'QMoney', africell:'Africell (Afrimoney)', orange:'Orange Money' };
+  document.getElementById('mmProvName').textContent = names[currentProv] || currentProv;
+}
+
+/* -------- Step navigation -------- */
+function goStep(n) {
+  currentStep = n;
+  document.querySelectorAll('.co-step').forEach(s => s.style.display = 'none');
+  document.getElementById('step' + n).style.display = 'block';
+
+  // Show correct form
+  if (n === 2) {
+    document.getElementById('formMobile').style.display = currentMethod === 'mobile' ? 'block' : 'none';
+    document.getElementById('formCard').style.display = currentMethod === 'card' ? 'block' : 'none';
+    document.getElementById('formBank').style.display = currentMethod === 'bank' ? 'block' : 'none';
+    // For bank transfer, change pay button text
+    const payBtn = document.getElementById('payBtn');
+    if (currentMethod === 'bank') {
+      payBtn.innerHTML = 'Confirm &amp; get bank details';
+    } else {
+      payBtn.innerHTML = 'Pay <span id="payAmt">' + money(Math.max(0, plan.priceGMD + (currentMethod === 'card' ? Math.round(plan.priceGMD * 0.035 * 100) / 100 : 0) - discount)) + '</span>';
+    }
+  }
+
+  // Update stepper
+  document.querySelectorAll('.step').forEach(s => {
+    const sn = parseInt(s.dataset.s);
+    s.classList.remove('active', 'done');
+    if (sn < n) s.classList.add('done');
+    if (sn === n) s.classList.add('active');
+  });
+  // Update done dot to checkmark
+  document.querySelectorAll('.step.done .step-dot').forEach(d => {
+    d.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+  });
+
+  // Hide sidebar on step 3
+  document.getElementById('sidebar').style.display = n === 3 ? 'none' : '';
+  if (n === 3) {
+    document.querySelector('.co-grid').style.gridTemplateColumns = '1fr';
+  } else {
+    document.querySelector('.co-grid').style.gridTemplateColumns = '';
+  }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* -------- Validation -------- */
+function flash(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.add('err');
+  el.focus();
+  setTimeout(() => el.classList.remove('err'), 2000);
+}
+
+/* -------- Submit -------- */
+function submitPayment() {
+  // Validate billing
+  if (!document.getElementById('billEmail').value.trim()) { flash('billEmail'); return; }
+
+  if (currentMethod === 'mobile') {
+    const num = document.getElementById('mmNumber').value.replace(/\s/g, '');
+    if (num.length < 7) { flash('mmNumber'); return; }
+    if (!document.getElementById('mmName').value.trim()) { flash('mmName'); return; }
+    showPending();
+  } else if (currentMethod === 'card') {
+    if (!document.getElementById('cardNum').value.trim()) { flash('cardNum'); return; }
+    if (!document.getElementById('cardExp').value.trim()) { flash('cardExp'); return; }
+    if (!document.getElementById('cardCvc').value.trim()) { flash('cardCvc'); return; }
+    if (!document.getElementById('cardName').value.trim()) { flash('cardName'); return; }
+    processCard();
+  } else if (currentMethod === 'bank') {
+    showBankConfirm();
+  }
+}
+
+/* -------- Mobile Money: pending approval -------- */
+function showPending() {
+  const btn = document.getElementById('payBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Sending payment request…';
+
+  const names = { wave:'Wave', qmoney:'QMoney', africell:'Africell', orange:'Orange Money' };
+  const provName = names[currentProv];
+  const num = document.getElementById('mmNumber').value;
+
+  setTimeout(() => {
+    goStep(3);
+    document.getElementById('step3').innerHTML = `
+      <div class="pending">
+        <div class="pending-card">
+          <div class="pulse-ring">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+          </div>
+          <h2>Check your phone</h2>
+          <p class="msg">We've sent a payment request to your <b>${provName}</b> number <b>+220 ${num}</b>. Approve the payment on your phone to complete.</p>
+          <div class="instr">
+            <div class="instr-step"><span class="sn">1</span><span>Open the <b>${provName}</b> notification or dial the USSD code</span></div>
+            <div class="instr-step"><span class="sn">2</span><span>Review the amount: <b>${document.getElementById('sumTotal').textContent}</b></span></div>
+            <div class="instr-step"><span class="sn">3</span><span>Enter your <b>PIN</b> to confirm</span></div>
+          </div>
+          <p class="msg" style="font-size:13px">Waiting for confirmation… This usually takes 10–30 seconds.</p>
+          <button class="pay-btn" style="margin-top:16px;background:var(--paper-2);color:var(--ink-2);height:48px;font-size:14px" id="simConfirm">
+            <span class="spinner" style="border-color:rgba(0,0,0,.15);border-top-color:var(--ink-2)"></span>
+            Waiting for approval…
+          </button>
+        </div>
+      </div>`;
+
+    // Simulate approval after delay
+    setTimeout(() => {
+      const simBtn = document.getElementById('simConfirm');
+      if (simBtn) {
+        simBtn.innerHTML = '✓ Payment confirmed!';
+        simBtn.style.background = 'var(--green-50)';
+        simBtn.style.color = 'var(--green-700)';
+      }
+      setTimeout(() => showSuccess('mobile'), 800);
+    }, 3000);
+  }, 1500);
+}
+
+/* -------- Card: processing -------- */
+function processCard() {
+  const btn = document.getElementById('payBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Processing payment…';
+
+  setTimeout(() => {
+    try {
+      const all = getUserListings();
+      if (all.length) { all[0].verified = true; all[0].plan = planKey; all[0].status = (planKey === 'managed' ? 'In review' : 'Active'); localStorage.setItem('mykunda_listings', JSON.stringify(all)); }
+    } catch(e) {}
+    showSuccess('card');
+  }, 2000);
+}
+
+/* -------- Bank: confirm instructions -------- */
+function showBankConfirm() {
+  const ref = document.getElementById('bankRef').textContent;
+  try {
+    const all = getUserListings();
+    if (all.length) { all[0].plan = planKey; all[0].status = 'Awaiting payment'; localStorage.setItem('mykunda_listings', JSON.stringify(all)); }
+  } catch(e) {}
+
+  goStep(3);
+  document.getElementById('step3').innerHTML = `
+    <div class="success">
+      <div class="success-card">
+        <div class="seal" style="background:var(--amber-50,#FFF4E6);color:var(--amber-500)">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M3 10h18"/><path d="M12 3l9 7H3z"/><path d="M5 10v8M9 10v8M15 10v8M19 10v8"/></svg>
+        </div>
+        <h1>Transfer instructions sent</h1>
+        <p class="msg">We've emailed the bank details to <b>${document.getElementById('billEmail').value || 'your email'}</b>. Complete the transfer within 48 hours to activate your listing.</p>
+        <div class="receipt">
+          <div class="r-row"><span class="muted">Reference</span><span style="font-weight:700">${ref}</span></div>
+          <div class="r-row"><span class="muted">Plan</span><span>${plan.name}</span></div>
+          <div class="r-row"><span class="muted">Bank</span><span>Trust Bank Gambia Ltd</span></div>
+          <div class="r-row"><span class="muted">Account</span><span>MyKunda — 0012 3456 7890</span></div>
+          <div class="r-row tot"><span>Amount to transfer</span><span>${document.getElementById('sumTotal').textContent}</span></div>
+        </div>
+        <div class="success-actions">
+          <a class="btn btn-primary" href="dashboard.html">Go to dashboard</a>
+          <a class="btn btn-ghost" href="search.html">View listings</a>
+        </div>
+      </div>
+    </div>`;
+}
+
+/* -------- Success -------- */
+function showSuccess(method) {
+  try {
+    const all = getUserListings();
+    if (all.length) { all[0].verified = true; all[0].plan = planKey; all[0].status = (planKey === 'managed' ? 'In review' : 'Active'); localStorage.setItem('mykunda_listings', JSON.stringify(all)); }
+  } catch(e) {}
+
+  const total = document.getElementById('sumTotal').textContent;
+  const ref = 'MK-' + Date.now().toString().slice(-8);
+  const names = { wave:'Wave', qmoney:'QMoney', africell:'Africell', orange:'Orange Money' };
+  let methodLabel;
+  if (method === 'mobile') {
+    methodLabel = (names[currentProv] || 'Mobile Money') + ' (+220 ' + document.getElementById('mmNumber').value + ')';
+  } else {
+    methodLabel = 'Card ending ' + (document.getElementById('cardNum').value.replace(/\s/g, '').slice(-4) || '••••');
+  }
+
+  goStep(3);
+  document.getElementById('step3').innerHTML = `
+    <div class="success">
+      <div class="success-card">
+        <div class="seal">
+          <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        </div>
+        <h1>Payment successful!</h1>
+        <p class="msg">Thank you! Your <b>${plan.name}</b> is confirmed. ${planKey === 'managed' ? 'Your account manager will be in touch within one business day.' : 'Our team will review your documents and your Verified badge will be live within 1–2 business days.'}</p>
+        <div class="receipt">
+          <div class="r-row"><span class="muted">Reference</span><span>${ref}</span></div>
+          <div class="r-row"><span class="muted">Plan</span><span>${plan.name}</span></div>
+          <div class="r-row"><span class="muted">Payment method</span><span>${methodLabel}</span></div>
+          <div class="r-row"><span class="muted">Date</span><span>${new Date().toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' })}</span></div>
+          <div class="r-row tot"><span>Total paid</span><span>${total}</span></div>
+        </div>
+        <div class="success-actions">
+          <a class="btn btn-primary" href="dashboard.html">Go to My MyKunda</a>
+          <a class="btn btn-ghost" href="search.html">View listings</a>
+        </div>
+      </div>
+    </div>`;
+}
+
+/* -------- Coupon -------- */
+function applyCoupon() {
+  const code = document.getElementById('couponIn').value.trim().toUpperCase();
+  const btn = document.getElementById('couponBtn');
+  if (code === 'MYKUNDA10') {
+    discount = plan.priceGMD * 0.1;
+    recalc();
+    btn.textContent = 'Applied ✓';
+    btn.style.color = 'var(--green-700)';
+  } else if (code) {
+    btn.textContent = 'Invalid';
+    btn.style.color = '#C2533A';
+    setTimeout(() => { btn.textContent = 'Apply'; btn.style.color = ''; }, 1500);
+  }
+}
+
+/* -------- Card input formatting -------- */
+document.getElementById('cardNum').addEventListener('input', e => {
+  let v = e.target.value.replace(/\D/g, '').slice(0, 16);
+  e.target.value = v.replace(/(.{4})/g, '$1  ').trim();
+});
+document.getElementById('cardExp').addEventListener('input', e => {
+  let v = e.target.value.replace(/\D/g, '').slice(0, 4);
+  if (v.length > 2) v = v.slice(0, 2) + ' / ' + v.slice(2);
+  e.target.value = v;
+});
+document.getElementById('cardCvc').addEventListener('input', e => {
+  e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
+});
+
+/* -------- Phone formatting -------- */
+document.getElementById('mmNumber').addEventListener('input', e => {
+  let v = e.target.value.replace(/\D/g, '').slice(0, 7);
+  if (v.length > 3) v = v.slice(0, 3) + ' ' + v.slice(3);
+  e.target.value = v;
+});
+
+const copySvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+</script>
+</body>
+</html>

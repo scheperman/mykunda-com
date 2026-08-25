@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt — tarieven voor inlogcodes uitzoeken</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="styles.min.css?v=1791580000000">
+<style>
+body{background:var(--paper-2)}
+.pw{max-width:880px;margin:0 auto;padding:48px 24px 80px}
+.ph{margin-bottom:32px}
+.ph .kick{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--green-700);margin-bottom:11px}
+.ph h1{font-family:var(--serif);font-size:38px;font-weight:600;color:var(--ink);line-height:1.15;letter-spacing:-.01em}
+.ph p{font-size:16.5px;color:var(--muted);line-height:1.65;margin-top:13px;max-width:640px}
+.howto{background:var(--white);border:1.5px solid var(--line);border-radius:var(--r-lg);padding:24px 28px;margin-bottom:26px}
+.howto h2{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:14px}
+.howto ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:9px}
+.howto li{font-size:14.5px;color:var(--ink-2);line-height:1.6}
+.howto b{font-weight:700;color:var(--ink)}
+.fill{background:var(--paper-2);border:1.5px solid var(--line);border-radius:var(--r-md);padding:15px 18px;margin-top:16px}
+.fill p{font-size:13.5px;color:var(--ink-2);line-height:1.6;margin:0}
+.fill b{color:var(--ink);font-weight:700}
+.pbar{display:flex;align-items:center;justify-content:space-between;gap:16px;background:var(--ink);border-radius:var(--r-lg) var(--r-lg) 0 0;padding:14px 20px}
+.pbar span{font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#8FA79C}
+.pbtn{font-size:13px;font-weight:700;background:var(--green-500);color:#fff;border:none;border-radius:var(--r-pill);padding:9px 20px;cursor:pointer;transition:.15s;flex:none}
+.pbtn:hover{filter:brightness(1.08)}
+.pbtn.done{background:#fff;color:var(--ink)}
+pre.prompt{background:#0E1714;color:#D6E4DD;border-radius:0 0 var(--r-lg) var(--r-lg);padding:26px 24px;margin:0;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.72;white-space:pre-wrap;word-wrap:break-word}
+pre.prompt b{color:#FFD98A;font-weight:600}
+.after{margin-top:30px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.acard{background:var(--white);border:1.5px solid var(--line);border-radius:var(--r-md);padding:20px 22px}
+.acard h3{font-size:14.5px;font-weight:700;color:var(--ink);margin-bottom:8px}
+.acard p{font-size:13.5px;color:var(--ink-2);line-height:1.6}
+@media(max-width:720px){.pw{padding:32px 16px 60px}.ph h1{font-size:29px}.after{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="pw">
+<div class="ph">
+<div class="kick">Voor een nieuw gesprek met Claude</div>
+<h1>Tarieven voor inlogcodes uitzoeken</h1>
+<p>Elke keer dat iemand inlogt op MyKunda kost dat geld: er gaat een code de deur uit via WhatsApp of SMS. Bij honderd logins per dag telt het verschil tussen die twee kanalen hard op. Deze prompt geeft Claude de context om uit te zoeken wat je écht betaalt voor Gambia, en welke vragen je aan Twilio moet stellen.</p>
+</div>
+
+<div class="howto">
+<h2>Zo gebruik je hem</h2>
+<ol>
+<li>Klik op <b>Prompt kopiëren</b> hieronder.</li>
+<li>Open een <b>nieuw gesprek</b> met Claude — niet dit gesprek, want daar zit al veel context in die de antwoorden kan vertroebelen.</li>
+<li>Plak de prompt en vul de drie regels tussen vierkante haken in.</li>
+<li>Claude zoekt de openbare tarieven op en stelt vragen. Reken erop dat een deel van de prijzen alleen bij Twilio zelf te krijgen is — je eindigt met een lijstje vragen voor hun sales.</li>
+</ol>
+<div class="fill">
+<p><b>Drie dingen moet je zelf invullen</b> — ze staan geel in de prompt: hoeveel logins je per maand verwacht, wat je maximaal wilt uitgeven, en of je al een Twilio-account hebt. Zonder die drie krijg je een tarievenlijst in plaats van een advies. Weet je het loginaantal niet, geef dan een ruwe schatting en zeg dat het een gok is.</p>
+</div>
+</div>
+
+<div class="pbar">
+<span>Prompt</span>
+<button type="button" class="pbtn" id="copyBtn">Prompt kopiëren</button>
+</div>
+<pre class="prompt" id="promptText">Ik moet uitzoeken wat het versturen van inlogcodes mij per maand gaat kosten, en op basis daarvan kiezen hoe ik ze verstuur. Help me dat scherp te krijgen.
+
+=== OVER HET PROJECT ===
+
+MyKunda (mykunda.com) is een vastgoedplatform voor Gambia: woningen en grond te koop en te huur. Verkopers en agents zitten in Gambia, kopers zowel lokaal als in de diaspora (Nederland, VK, VS).
+
+Technisch: statische HTML-site, geen build-stap, geen framework. Supabase voor authenticatie en data. Vanilla JavaScript.
+
+=== HOE HET INLOGGEN WERKT ===
+
+Er zijn geen wachtwoorden. Iedereen logt in met een code van zes cijfers, of via Google.
+
+De volgorde op het scherm:
+1. Telefoonnummer, +220 staat vast voorgevuld — dit is de hoofdroute, want in Gambia is het telefoonnummer de identiteit
+2. De code gaat standaard via WhatsApp, omdat dat over data gaat in plaats van via internationale SMS-routes naar +220
+3. Lukt WhatsApp niet, dan valt hij automatisch terug op SMS, en de gebruiker kan zelf ook om SMS vragen
+4. E-mailcode als alternatief, voor wie geen WhatsApp op dat nummer heeft
+5. Google als snelle route, vooral voor de diaspora
+
+Apple-login heb ik bewust laten liggen vanwege de jaarlijkse kosten van het developer-account.
+
+Dit is allemaal al gebouwd en werkt in demo-modus: het codescherm accepteert nu elke zes cijfers. Er gaat nog geen echt bericht de deur uit, want de provider is nog niet ingericht.
+
+=== WAT IK VAN PLAN WAS ===
+
+Twilio als provider koppelen aan Supabase (Authentication → Providers → Phone), met WhatsApp als kanaal en SMS als terugval. Ik heb nog geen Twilio-account aangemaakt en nog geen euro uitgegeven — als er een betere of goedkopere route is voor Gambia, hoor ik dat liever nu dan later.
+
+=== WAT IK VAN JOU NODIG HEB ===
+
+1. Wat kost één inlogcode naar een Gambiaans nummer (+220), per kanaal? Zoek de actuele, openbare tarieven op:
+   - SMS naar Gambia via Twilio
+   - WhatsApp authenticatie-bericht naar Gambia (dit loopt via Meta's tarieven, niet die van Twilio zelf)
+   Als een tarief niet openbaar is, zeg dat, en zet de vraag op mijn lijstje voor Twilio-sales in plaats van een getal te gokken.
+
+2. Twilio Verify of gewone Programmable Messaging? Verify rekent per verificatie en regelt het genereren en controleren van de code, Messaging rekent per bericht en dan doet Supabase de rest. Reken beide door bij mijn volume en zeg welke goedkoper uitpakt.
+
+3. Heb ik een telefoonnummer nodig, en wat kost dat per maand? Kan ik voor Gambia een alfanumerieke afzender ("MyKunda") gebruiken in plaats van een nummer, en accepteren Africell, QCell en Gamcel die?
+
+4. Wat kost mijn terugval? Als WhatsApp mislukt en ik stuur daarna een SMS, betaal ik twee keer voor één login. Hoe groot is dat risico in de praktijk, en hoe voorkom ik dat de terugval te snel of te vaak afgaat?
+
+5. Het WhatsApp-traject zelf: wat vraagt Meta aan bedrijfsverificatie voor een in Gambia geregistreerde Ltd, hoe lang duurt dat gemiddeld, wat kost het, en waar loopt het meestal vast? Kan ik ondertussen met de Twilio-sandbox testen?
+
+6. Fraude en misbruik. SMS pumping is een reëel risico bij een open inlogformulier: iemand vuurt duizenden aanvragen af naar dure bestemmingen en ik krijg de rekening. Vertel me welke beveiliging ik aan moet zetten — landbeperkingen, rate limiting, Twilio Fraud Guard — en welke landen ik überhaupt moet toestaan gegeven dat mijn gebruikers in Gambia, Nederland, het VK en de VS zitten.
+
+7. Bezorging in de praktijk. Komen SMS'jes naar Gambia betrouwbaar aan via Twilio, en hoe lang duurt dat gemiddeld? Als de routes wisselvallig zijn, zeg dat eerlijk.
+
+8. Alternatieven om tegen af te zetten: andere internationale aanbieders, en of er lokale Gambiaanse SMS-aggregators zijn die directe verbindingen met de operators hebben. Directe verbindingen zijn vaak goedkoper en sneller, maar de koppeling met Supabase is dan lastiger — weeg dat af.
+
+9. Een rekensom aan het eind. Kosten per login, kosten per maand bij mijn verwachte volume, en wat er gebeurt als ik tien keer zo groot word. Plus: bij welk volume wordt het de moeite waard om over te stappen op iets anders?
+
+10. Een concrete lijst vragen die ik aan Twilio-support of -sales moet stellen, in de vorm waarin ik ze kan kopiëren en versturen.
+
+=== HOE IK WIL DAT JE WERKT ===
+
+Stel eerst je vragen. Als je iets nodig hebt wat ik niet heb verteld, vraag het voordat je begint.
+
+Zoek de actuele tarieven op internet op — prijzen voor berichten veranderen regelmatig en Meta heeft de opbouw van WhatsApp-tarieven de afgelopen jaren meermaals omgegooid. Noem bij elk bedrag de bron en de datum.
+
+Verzin geen prijzen. Als je een tarief voor Gambia niet met zekerheid kunt vinden, zeg dat expliciet. Een eerlijk "dit moet je navragen" is bruikbaar; een aannemelijk klinkend verkeerd getal kost me straks echt geld.
+
+Reken in euro's of dollars, en zet de uitkomst er ook in GMD bij zodat ik het kan vergelijken met wat een listing opbrengt.
+
+Denk mee over wat er misgaat, niet alleen over het gelukkige scenario. Gebruikers in Gambia zitten vaak op een trage of wegvallende 4G-verbinding.
+
+Antwoord in het Nederlands.
+
+=== DIT MOET IK NOG INVULLEN ===
+
+<b>Hoeveel logins ik per maand verwacht: [vul in — bijvoorbeeld: geen idee, ik gok 500 in het eerste half jaar / ongeveer 3000 / ik weet het echt niet, help me dit te schatten op basis van mijn bezoekersaantallen]</b>
+
+<b>Wat ik hier maximaal per maand aan wil uitgeven: [vul in — bijvoorbeeld: 20 euro zolang ik geen omzet heb / geen hard plafond, maar het moet in verhouding staan tot wat een listing opbrengt]</b>
+
+<b>Of ik al een Twilio-account heb: [vul in — nee nog niet / ja, aangemaakt maar niets ingericht / ja, met WhatsApp-verificatie al ingediend]</b>
+
+Begin met je vragen.</pre>
+
+<div class="after">
+<div class="acard">
+<h3>Neem dit mee naar het gesprek</h3>
+<p>Claude in dat nieuwe gesprek kan jouw bestanden niet zien. Gaat het over hoe het inloggen nu werkt, kopieer dan <b>auth.html</b> erbij, en het <b>Auth</b>-gedeelte bovenin <b>supabase.js</b>.</p>
+</div>
+<div class="acard">
+<h3>Wat hier al klaar is</h3>
+<p>Het inlogscherm staat er: telefoon voorop, WhatsApp met SMS-terugval, e-mailcode en Google. Kom je terug met tarieven en een keuze, dan pas ik <b>auth.html</b> en <b>supabase.js</b> hier aan.</p>
+</div>
+</div>
+</div>
+<script>
+document.getElementById('copyBtn').addEventListener('click',async function(){
+  var b=this,t=document.getElementById('promptText').innerText;
+  try{await navigator.clipboard.writeText(t);}catch(e){
+    var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();
+  }
+  b.textContent='Gekopieerd';b.classList.add('done');
+  setTimeout(function(){b.textContent='Prompt kopiëren';b.classList.remove('done');},1800);
+});
+</script>
+</body>
+</html>

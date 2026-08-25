@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyKunda — Backend &amp; CRM Architecture</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Mulish:wght@400;500;600;700;800;900&display=swap">
+<style>
+:root{
+  --green-900:#0E2E25;--green-800:#123A2E;--green-700:#15463A;--green-600:#1C5848;--green-500:#2A7561;
+  --green-200:#BEDACE;--green-100:#DCEAE3;--green-50:#EAF2ED;
+  --amber-600:#B45F22;--amber-500:#C8702D;--amber-400:#DD8A45;--amber-100:#F6E6D4;--amber-50:#FBF1E6;
+  --paper:#FAF8F3;--paper-2:#F3F0E8;--white:#FFFFFF;--ink:#18201D;--ink-2:#384640;
+  --muted:#5C6B64;--muted-2:#8A958E;--line:#E5E1D6;--line-2:#EFEBE1;
+  --serif:'Mulish',sans-serif;--sans:'Hanken Grotesk',sans-serif;
+  --r-sm:8px;--r-md:12px;--r-lg:18px;
+  --sh-sm:0 1px 2px rgba(24,32,29,.06),0 1px 3px rgba(24,32,29,.05);
+  --sh-md:0 4px 14px rgba(24,32,29,.07),0 2px 6px rgba(24,32,29,.05);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--paper-2);color:var(--ink);line-height:1.62;-webkit-font-smoothing:antialiased}
+.doc{max-width:920px;margin:0 auto;background:var(--paper);box-shadow:var(--sh-md)}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:800;line-height:1.14;letter-spacing:-.015em;color:var(--ink)}
+.sans{font-family:var(--sans)}
+p{margin:11px 0;color:var(--ink-2)}
+a{color:var(--green-700)}
+strong{color:var(--ink);font-weight:700}
+code{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.86em;background:var(--green-50);color:var(--green-700);padding:2px 6px;border-radius:5px;font-weight:600}
+
+/* cover */
+.cover{background:linear-gradient(150deg,var(--green-800),var(--green-600));color:#fff;padding:70px 64px 56px}
+.cover .logo{display:flex;align-items:center;gap:11px;font-family:var(--serif);font-weight:800;font-size:24px;letter-spacing:-.02em;margin-bottom:48px}
+.cover .logo svg{width:38px;height:38px}
+.cover .kicker{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--amber-400);margin-bottom:16px}
+.cover h1{color:#fff;font-size:46px;font-weight:900;max-width:660px}
+.cover .lede{font-size:18px;color:rgba(255,255,255,.86);margin-top:18px;max-width:600px;line-height:1.55}
+.cover .meta{display:flex;gap:36px;margin-top:40px;padding-top:26px;border-top:1px solid rgba(255,255,255,.18)}
+.cover .meta div span{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.6);font-weight:700;margin-bottom:4px}
+.cover .meta div b{font-family:var(--serif);font-size:17px;font-weight:700;color:#fff}
+
+.body{padding:56px 64px 70px}
+section{margin-bottom:54px}
+.num{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;background:var(--green-700);color:#fff;font-family:var(--serif);font-weight:800;font-size:16px;margin-right:13px;flex:none}
+.h-row{display:flex;align-items:center;margin-bottom:8px}
+.h-row h2{font-size:27px}
+.lead-line{color:var(--muted);font-size:16px;margin:0 0 22px 47px}
+section > p,section > ul,section > .card,section > .grid,section > .tablewrap,section > .flow,section > .note,section > .stack{margin-left:47px}
+
+ul.clean{list-style:none;margin:14px 0 14px 47px}
+ul.clean li{position:relative;padding-left:26px;margin:9px 0;color:var(--ink-2)}
+ul.clean li::before{content:"";position:absolute;left:2px;top:9px;width:8px;height:8px;border-radius:50%;background:var(--amber-500)}
+ul.clean li b{color:var(--ink)}
+
+.card{background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);padding:24px 26px;margin:18px 0}
+.card.tinted{background:var(--green-50);border-color:var(--green-100)}
+.card h4{font-size:17px;margin-bottom:7px}
+.note{border-left:4px solid var(--amber-500);background:var(--amber-50);padding:16px 20px;border-radius:0 var(--r-md) var(--r-md) 0;margin:18px 0}
+.note b{color:var(--amber-600)}
+.note.warn{border-color:#C2533A;background:#FBEEEA}
+.note.warn b{color:#C2533A}
+
+/* stack diagram */
+.stack{display:flex;flex-direction:column;gap:12px;margin:22px 0}
+.layer{border-radius:var(--r-md);padding:16px 20px;border:1.5px solid}
+.layer .lt{font-family:var(--serif);font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:9px}
+.layer .chips{display:flex;flex-wrap:wrap;gap:8px}
+.layer .chip{background:var(--white);border-radius:99px;padding:6px 13px;font-size:13px;font-weight:600;color:var(--ink-2);box-shadow:var(--sh-sm)}
+.l-client{background:#EAF2ED;border-color:var(--green-200)}.l-client .lt{color:var(--green-700)}
+.l-api{background:#FBF1E6;border-color:var(--amber-100)}.l-api .lt{color:var(--amber-600)}
+.l-data{background:#EEF3F4;border-color:#CDE0E4}.l-data .lt{color:#3F6E78}
+.l-ext{background:var(--paper-2);border-color:var(--line)}.l-ext .lt{color:var(--muted)}
+.arrow-down{text-align:center;color:var(--muted-2);font-size:18px;line-height:.4}
+
+/* grids */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}
+.grid.three{grid-template-columns:1fr 1fr 1fr}
+.mini{background:var(--white);border:1px solid var(--line);border-radius:var(--r-md);padding:18px}
+.mini .ic{width:38px;height:38px;border-radius:10px;background:var(--green-50);color:var(--green-700);display:flex;align-items:center;justify-content:center;margin-bottom:11px}
+.mini h4{font-size:15.5px;margin-bottom:5px}
+.mini p{font-size:13.5px;margin:0;color:var(--muted)}
+
+/* tables */
+.tablewrap{margin:20px 0;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{background:var(--green-700);color:#fff;text-align:left;padding:12px 16px;font-family:var(--serif);font-weight:700;font-size:13px;letter-spacing:.01em}
+td{padding:11px 16px;border-top:1px solid var(--line-2);color:var(--ink-2);vertical-align:top}
+tr:nth-child(even) td{background:var(--paper)}
+td code{white-space:nowrap}
+.pill{display:inline-block;padding:2px 9px;border-radius:99px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.03em}
+.pill.p1{background:var(--green-100);color:var(--green-700)}
+.pill.p2{background:var(--amber-100);color:var(--amber-600)}
+.pill.p3{background:#E4E9EC;color:#4A6068}
+
+/* lead pipeline */
+.flow{display:flex;gap:0;margin:22px 0;flex-wrap:wrap}
+.stage{flex:1;min-width:110px;position:relative;background:var(--white);border:1px solid var(--line);padding:14px 14px 14px 22px;text-align:left}
+.stage:first-child{border-radius:var(--r-md) 0 0 var(--r-md)}
+.stage:last-child{border-radius:0 var(--r-md) var(--r-md) 0}
+.stage .sn{font-size:11px;font-weight:700;color:var(--amber-600);text-transform:uppercase;letter-spacing:.05em}
+.stage .st{font-family:var(--serif);font-weight:700;font-size:14.5px;margin-top:3px;color:var(--ink)}
+.stage::after{content:"";position:absolute;right:-9px;top:50%;transform:translateY(-50%) rotate(45deg);width:16px;height:16px;background:var(--white);border-right:1px solid var(--line);border-top:1px solid var(--line);z-index:2}
+.stage:last-child::after{display:none}
+
+/* roadmap */
+.phase{display:grid;grid-template-columns:130px 1fr;gap:20px;padding:22px 0;border-top:1px solid var(--line)}
+.phase:first-of-type{border-top:none}
+.phase .pmeta .ph{font-family:var(--serif);font-weight:800;font-size:18px;color:var(--green-700)}
+.phase .pmeta .pt{font-size:13px;color:var(--muted);font-weight:600;margin-top:2px}
+.phase .pbody h4{font-size:15.5px;margin-bottom:6px}
+.phase .pbody ul{list-style:none}
+.phase .pbody li{position:relative;padding-left:22px;font-size:14px;margin:6px 0;color:var(--ink-2)}
+.phase .pbody li::before{content:"✓";position:absolute;left:0;color:var(--green-500);font-weight:800}
+
+.foot{background:var(--green-900);color:#9FB6AC;padding:30px 64px;font-size:13px;display:flex;gap:14px;align-items:center}
+.foot b{color:#fff;font-family:var(--serif)}
+.foot .sp{margin-left:auto}
+
+@media print{
+  body{background:#fff}.doc{box-shadow:none;max-width:none}
+  section{break-inside:avoid}.cover{break-after:page}.phase,.card,.tablewrap,.stack{break-inside:avoid}
+}
+@media(max-width:720px){
+  .cover{padding:44px 26px}.cover h1{font-size:32px}.body{padding:38px 26px}
+  section > p,section > ul,section > .card,section > .grid,section > .tablewrap,section > .flow,section > .note,section > .stack,.lead-line,ul.clean{margin-left:0}
+  .grid,.grid.three{grid-template-columns:1fr}.phase{grid-template-columns:1fr}.foot{padding:24px 26px;flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <!-- COVER -->
+  <div class="cover">
+    <div class="logo">
+      <svg viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="11" fill="#fff" opacity=".12"/><path d="M11 20.5 20 12l9 8.5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 19v9h14v-9" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.5 28v-5h5v5" stroke="#DD8A45" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      MyKunda
+    </div>
+    <div class="kicker">Technical Blueprint · Option 3</div>
+    <h1>Full backend &amp; CRM architecture</h1>
+    <p class="lede">How MyKunda turns a static prototype into a live platform: storing listings, capturing every lead, notifying buyers and sellers, and feeding a real sales pipeline — built for The Gambia.</p>
+    <div class="meta">
+      <div><span>Prepared for</span><b>MyKunda — Real Estate</b></div>
+      <div><span>Scope</span><b>Backend · Data · CRM</b></div>
+      <div><span>Status</span><b>Build specification</b></div>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <!-- WHY -->
+    <section>
+      <div class="h-row"><span class="num">0</span><h2>Why this is needed</h2></div>
+      <p class="lead-line">The frontend is done. Nothing is stored or sent yet.</p>
+      <p>Today every form on the site — valuation, <em>List a property</em>, viewing requests, agent messages, account sign-up, area alerts — validates input and shows a confirmation <strong>in the visitor's browser only</strong>. The data goes nowhere. A web page on its own cannot save records or send email.</p>
+      <p>This blueprint adds the missing half: a <strong>backend</strong> (database + API) that persists everything, and a <strong>CRM layer</strong> that turns each enquiry into a trackable lead your team can act on — so the promise of "we'll get back to you" is actually kept.</p>
+      <div class="note"><b>Outcome.</b> Sellers can list and manage real properties · every buyer enquiry lands in your inbox and pipeline · alerts and confirmations are really sent by email and WhatsApp · nothing slips through the cracks.</div>
+    </section>
+
+    <!-- ARCHITECTURE -->
+    <section>
+      <div class="h-row"><span class="num">1</span><h2>The architecture</h2></div>
+      <p class="lead-line">Four layers. The browser talks only to the API; the API owns the data.</p>
+      <div class="stack">
+        <div class="layer l-client">
+          <div class="lt">1 · Client — the website (already built)</div>
+          <div class="chips"><span class="chip">Static HTML / CSS / JS</span><span class="chip">MapTiler maps</span><span class="chip">Calls the API over HTTPS</span><span class="chip">→ later: Next.js for SEO</span></div>
+        </div>
+        <div class="arrow-down">▼</div>
+        <div class="layer l-api">
+          <div class="lt">2 · API &amp; logic</div>
+          <div class="chips"><span class="chip">Supabase (Postgres + Auth + Storage + Edge Functions)</span><span class="chip">Row-level security</span><span class="chip">Webhooks</span><span class="chip">Validation &amp; rules</span></div>
+        </div>
+        <div class="arrow-down">▼</div>
+        <div class="layer l-data">
+          <div class="lt">3 · Data &amp; search</div>
+          <div class="chips"><span class="chip">PostgreSQL + PostGIS (geo)</span><span class="chip">Object storage (photos &amp; documents)</span><span class="chip">Meilisearch / Typesense (faceted search)</span></div>
+        </div>
+        <div class="arrow-down">▼</div>
+        <div class="layer l-ext">
+          <div class="lt">4 · External services</div>
+          <div class="chips"><span class="chip">Resend / Postmark — email</span><span class="chip">WhatsApp Business API</span><span class="chip">HubSpot — CRM</span><span class="chip">Mobile money &amp; card payments</span></div>
+        </div>
+      </div>
+      <div class="card tinted">
+        <h4>Why Supabase as the core</h4>
+        <p style="margin:0">It bundles the four things this project needs most — a <strong>PostgreSQL database with PostGIS</strong> for map search, <strong>authentication</strong> (email + phone OTP, ideal for Gambia), <strong>file storage</strong> for photos and land documents, and <strong>serverless functions</strong> for business logic — behind one managed service with a generous free tier. It runs on the static host you already use, so no servers to maintain. A custom Node/NestJS + Postgres stack remains the alternative if you outgrow it.</p>
+      </div>
+    </section>
+
+    <!-- DATA MODEL -->
+    <section>
+      <div class="h-row"><span class="num">2</span><h2>Data model</h2></div>
+      <p class="lead-line">The core tables and how they relate.</p>
+      <div class="tablewrap">
+        <table>
+          <tr><th>Table</th><th>Holds</th><th>Key fields</th></tr>
+          <tr><td><code>users</code></td><td>Buyers, sellers, agents, admins</td><td>role, name, email, phone, locale, consent flags</td></tr>
+          <tr><td><code>listings</code></td><td>Every property &amp; land plot</td><td>owner_id, type (sale/rent), category, price, beds, baths, sqm, plot, lat/lng, <strong>plus_code</strong>, status, plan</td></tr>
+          <tr><td><code>listing_media</code></td><td>Photos, floor plans, 360°, documents</td><td>listing_id, kind, storage_url, sort, is_document</td></tr>
+          <tr><td><code>title_verifications</code></td><td>Land-document review (trust)</td><td>listing_id, doc_urls, status, verifier_id, notes</td></tr>
+          <tr><td><code>leads</code></td><td>Valuations, enquiries, contact requests</td><td>source, name, email, phone, listing_id, area, message, stage</td></tr>
+          <tr><td><code>viewings</code></td><td>Viewing requests &amp; proposed slots</td><td>listing_id, buyer_id, requested_slot, proposed_slots[], status</td></tr>
+          <tr><td><code>messages</code></td><td>Buyer ⇄ seller / agent threads</td><td>thread_id, sender_id, body, read_at</td></tr>
+          <tr><td><code>saved_searches</code></td><td>Alert subscriptions</td><td>user_id, filters (json), area, channel (email/WA)</td></tr>
+          <tr><td><code>favorites</code></td><td>Saved properties</td><td>user_id, listing_id</td></tr>
+          <tr><td><code>payments</code></td><td>Listing plans &amp; upgrades</td><td>user_id, listing_id, plan, amount, method, status</td></tr>
+        </table>
+      </div>
+      <p>Listings move through a clear <strong>status lifecycle</strong> so nothing unverified goes public:</p>
+      <div class="flow">
+        <div class="stage"><div class="sn">01</div><div class="st">Draft</div></div>
+        <div class="stage"><div class="sn">02</div><div class="st">Pending review</div></div>
+        <div class="stage"><div class="sn">03</div><div class="st">Active</div></div>
+        <div class="stage"><div class="sn">04</div><div class="st">Under offer</div></div>
+        <div class="stage"><div class="sn">05</div><div class="st">Sold / Let</div></div>
+      </div>
+    </section>
+
+    <!-- FORMS -->
+    <section>
+      <div class="h-row"><span class="num">3</span><h2>Every form, wired up</h2></div>
+      <p class="lead-line">What each existing form does today vs. what the backend makes it do.</p>
+      <div class="tablewrap">
+        <table>
+          <tr><th>Form / action</th><th>Writes to</th><th>Triggers</th></tr>
+          <tr><td><b>Valuation</b> (Home)</td><td><code>leads</code> (source: valuation)</td><td>Email to team + auto-reply with the estimate</td></tr>
+          <tr><td><b>List a property</b> (wizard)</td><td><code>listings</code> + <code>listing_media</code></td><td>Admin "new listing to review" alert</td></tr>
+          <tr><td><b>Request viewing</b></td><td><code>viewings</code> + <code>leads</code></td><td>Notify seller/agent · confirm to buyer</td></tr>
+          <tr><td><b>Propose / accept slots</b></td><td><code>viewings.proposed_slots</code></td><td>Email + WhatsApp both parties</td></tr>
+          <tr><td><b>Message agent</b></td><td><code>messages</code> + <code>leads</code></td><td>Thread created · push/email notify</td></tr>
+          <tr><td><b>Sign in / register</b></td><td><code>users</code></td><td>Email or phone OTP verification</td></tr>
+          <tr><td><b>Area alerts</b> (Neighborhood)</td><td><code>saved_searches</code></td><td>Subscribe to matching-listing alerts</td></tr>
+          <tr><td><b>Plan checkout</b></td><td><code>payments</code></td><td>Payment capture · receipt · activate listing</td></tr>
+        </table>
+      </div>
+      <div class="note"><b>One shared pattern.</b> Every submission becomes a row plus a notification. Even account-only actions (favorites, saved searches) feed the same engine, so your team always sees intent — not just completed deals.</div>
+    </section>
+
+    <!-- CRM -->
+    <section>
+      <div class="h-row"><span class="num">4</span><h2>The CRM &amp; lead pipeline</h2></div>
+      <p class="lead-line">Turn enquiries into a pipeline your team works, end to end.</p>
+      <p>Every <code>leads</code> row enters a pipeline. Your team (or an agent) moves it along; automation handles reminders and hand-offs. This can run as a <strong>built-in MyKunda pipeline</strong> (a simple admin board) or sync to <strong>HubSpot</strong> (free tier) via API + webhooks for a full CRM.</p>
+      <div class="flow">
+        <div class="stage"><div class="sn">New</div><div class="st">Captured</div></div>
+        <div class="stage"><div class="sn">Step 2</div><div class="st">Contacted</div></div>
+        <div class="stage"><div class="sn">Step 3</div><div class="st">Qualified</div></div>
+        <div class="stage"><div class="sn">Step 4</div><div class="st">Viewing booked</div></div>
+        <div class="stage"><div class="sn">Step 5</div><div class="st">Negotiating</div></div>
+        <div class="stage"><div class="sn">Close</div><div class="st">Won / Lost</div></div>
+      </div>
+      <div class="grid three">
+        <div class="mini"><div class="ic">⏱</div><h4>SLA reminders</h4><p>Auto-nudge if a lead isn't contacted within one working day.</p></div>
+        <div class="mini"><div class="ic">🔀</div><h4>Routing</h4><p>Assign leads by area or listing to the right agent automatically.</p></div>
+        <div class="mini"><div class="ic">📊</div><h4>Reporting</h4><p>Source, conversion, response time and revenue per agent.</p></div>
+      </div>
+    </section>
+
+    <!-- NOTIFICATIONS -->
+    <section>
+      <div class="h-row"><span class="num">5</span><h2>Notifications</h2></div>
+      <p class="lead-line">Email for records, WhatsApp for reach — the Gambian default.</p>
+      <div class="grid">
+        <div class="card"><h4>To your team</h4>
+          <ul class="clean" style="margin:8px 0 0">
+            <li>New lead / valuation request</li>
+            <li>New listing awaiting review</li>
+            <li>Title document uploaded</li>
+            <li>Payment received</li>
+          </ul>
+        </div>
+        <div class="card"><h4>To users</h4>
+          <ul class="clean" style="margin:8px 0 0">
+            <li>Valuation estimate &amp; confirmation</li>
+            <li>Viewing confirmed / new slots proposed</li>
+            <li><b>New listings matching a saved search</b></li>
+            <li>Message replies</li>
+          </ul>
+        </div>
+      </div>
+      <p><strong>Channels:</strong> transactional <strong>email</strong> via Resend or Postmark; <strong>WhatsApp</strong> via the WhatsApp Business API (through Twilio or 360dialog) for confirmations and alerts; optional <strong>web push</strong> for instant match alerts.</p>
+    </section>
+
+    <!-- TRUST -->
+    <section>
+      <div class="h-row"><span class="num">6</span><h2>Title verification workflow</h2></div>
+      <p class="lead-line">The trust feature that matters most in The Gambia.</p>
+      <p>Double-selling and unclear ownership are the biggest risks in Gambian property. The backend makes verification a real, auditable process — not just a badge.</p>
+      <div class="flow">
+        <div class="stage"><div class="sn">01</div><div class="st">Seller uploads docs</div></div>
+        <div class="stage"><div class="sn">02</div><div class="st">Secure storage</div></div>
+        <div class="stage"><div class="sn">03</div><div class="st">Legal review</div></div>
+        <div class="stage"><div class="sn">04</div><div class="st">Verified badge</div></div>
+      </div>
+      <p>Documents land in <strong>private, access-controlled storage</strong> (never public), an admin or partnered lawyer reviews them, and only on approval does the listing earn its <em>Verified title</em> badge — with a timestamped audit trail of who checked what.</p>
+    </section>
+
+    <!-- SECURITY -->
+    <section>
+      <div class="h-row"><span class="num">7</span><h2>Security &amp; data protection</h2></div>
+      <p class="lead-line">GDPR/AVG-ready, because your diaspora users are in the EU.</p>
+      <div class="grid">
+        <div class="mini"><div class="ic">🔐</div><h4>Row-level security</h4><p>Users can only read/write their own records; documents are private by default.</p></div>
+        <div class="mini"><div class="ic">✅</div><h4>Explicit consent</h4><p>Opt-in checkboxes for contact &amp; marketing, stored with timestamp.</p></div>
+        <div class="mini"><div class="ic">🗑</div><h4>Right to erasure</h4><p>Self-service data export &amp; account deletion.</p></div>
+        <div class="mini"><div class="ic">🧾</div><h4>Audit log</h4><p>Who accessed sensitive documents and when.</p></div>
+        <div class="mini"><div class="ic">🛡</div><h4>Encryption</h4><p>TLS in transit, encryption at rest, secrets in a vault.</p></div>
+        <div class="mini"><div class="ic">🚫</div><h4>Abuse controls</h4><p>Rate limiting, spam filtering, "report this listing".</p></div>
+      </div>
+    </section>
+
+    <!-- ROADMAP -->
+    <section>
+      <div class="h-row"><span class="num">8</span><h2>Phased roadmap</h2></div>
+      <p class="lead-line">Ship value early; layer in sophistication.</p>
+
+      <div class="phase">
+        <div class="pmeta"><div class="ph">Phase 1</div><div class="pt">MVP · 3–5 weeks</div><div style="margin-top:8px"><span class="pill p1">Must-have</span></div></div>
+        <div class="pbody"><h4>Make it real</h4>
+          <ul>
+            <li>Supabase project, database schema &amp; storage</li>
+            <li>Auth: email + phone OTP, roles</li>
+            <li>Listings CRUD + photo/document upload (the wizard goes live)</li>
+            <li>All forms wired → records + email to your team</li>
+            <li>Simple admin board: review &amp; approve listings, see leads</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="pmeta"><div class="ph">Phase 2</div><div class="pt">Growth · 4–8 weeks</div><div style="margin-top:8px"><span class="pill p2">High value</span></div></div>
+        <div class="pbody"><h4>Reach &amp; revenue</h4>
+          <ul>
+            <li>Meilisearch faceted search + PostGIS map queries</li>
+            <li>Saved searches &amp; automatic match alerts</li>
+            <li>WhatsApp notifications</li>
+            <li>Payments: mobile money + card, paid listing plans</li>
+            <li>Title-verification workflow</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="pmeta"><div class="ph">Phase 3</div><div class="pt">Scale · 8–12 weeks</div><div style="margin-top:8px"><span class="pill p3">Later</span></div></div>
+        <div class="pbody"><h4>Intelligence &amp; scale</h4>
+          <ul>
+            <li>HubSpot CRM sync, agent routing &amp; SLAs</li>
+            <li>Agent dashboards &amp; performance reporting</li>
+            <li>AI recommendations (pgvector) &amp; saved-search ranking</li>
+            <li>Next.js migration for top-tier SEO &amp; speed</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- COSTS -->
+    <section>
+      <div class="h-row"><span class="num">9</span><h2>Indicative running costs</h2></div>
+      <p class="lead-line">Early-stage, monthly. Most tiers scale with usage.</p>
+      <div class="tablewrap">
+        <table>
+          <tr><th>Service</th><th>Role</th><th>Start cost / mo</th></tr>
+          <tr><td>Supabase</td><td>DB · auth · storage · functions</td><td>$0 → ~$25</td></tr>
+          <tr><td>Meilisearch / Typesense</td><td>Fast search</td><td>$0 self-host → ~$30</td></tr>
+          <tr><td>Resend / Postmark</td><td>Transactional email</td><td>$0 → ~$20</td></tr>
+          <tr><td>WhatsApp Business API</td><td>Alerts &amp; confirmations</td><td>Usage-based (~$0.01/msg)</td></tr>
+          <tr><td>MapTiler</td><td>Maps (already in use)</td><td>$0 → ~$25</td></tr>
+          <tr><td>HubSpot</td><td>CRM</td><td>$0 (free tier) → paid later</td></tr>
+          <tr><td>Hosting (static + CDN)</td><td>The website</td><td>$0 → ~$20</td></tr>
+        </table>
+      </div>
+      <div class="note"><b>Ballpark:</b> roughly <strong>$80–150 / month</strong> to run a real, lead-capturing platform at launch — before payment-processing fees, which are per-transaction.</div>
+    </section>
+
+    <!-- NEXT -->
+    <section style="margin-bottom:0">
+      <div class="h-row"><span class="num">→</span><h2>What I need to start</h2></div>
+      <ul class="clean">
+        <li>A <b>destination email</b> for leads &amp; team notifications</li>
+        <li>Decision: <b>built-in pipeline</b> first, or <b>HubSpot</b> from day one</li>
+        <li>A <b>Supabase account</b> (free) — I'll scaffold the schema</li>
+        <li>Payment preference: which <b>mobile-money</b> providers (e.g. Wave, QMoney, APS) + card</li>
+        <li>Confirmation of the <b>domain</b> so email, links &amp; auth are configured correctly</li>
+      </ul>
+      <div class="card tinted" style="margin-top:6px">
+        <h4>Recommended first step</h4>
+        <p style="margin:0">Approve <strong>Phase 1</strong>. In a few weeks the <em>List a property</em> wizard writes real listings, every form lands in your inbox, and you can review and publish from a simple admin board — the moment MyKunda stops being a prototype and starts generating leads.</p>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="foot">
+    <b>MyKunda</b>
+    <span>Backend &amp; CRM Architecture · Option 3</span>
+    <span class="sp">Build specification · v1</span>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyKunda — Logo options</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  body{background:var(--paper-2);padding:48px 0 90px}
+  .lead{max-width:760px;margin:0 auto 40px;text-align:center}
+  .lead h1{font-size:38px}
+  .lead p{color:var(--muted);font-size:16.5px;margin-top:12px}
+  .flagkey{display:inline-flex;gap:0;border-radius:6px;overflow:hidden;box-shadow:var(--sh-sm);margin-top:18px;vertical-align:middle}
+  .flagkey i{display:block;width:34px;height:22px}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:26px;max-width:1080px;margin:0 auto}
+  .opt{background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-md);overflow:hidden;display:flex;flex-direction:column}
+  .opt-stage{padding:44px;display:flex;align-items:center;justify-content:center;gap:30px;flex-wrap:wrap}
+  .opt-stage.dark{background:var(--green-900)}
+  .opt-stage svg{width:84px;height:84px}
+  .wordmark{display:flex;align-items:center;gap:13px;font-family:'Mulish',sans-serif;font-weight:800;font-size:34px;letter-spacing:-.018em;color:var(--ink)}
+  .wordmark svg{width:44px;height:44px}
+  .dark .wordmark{color:#fff}
+  .opt-foot{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-top:1px solid var(--line)}
+  .opt-foot h3{font-size:19px}
+  .opt-foot .num{width:30px;height:30px;border-radius:50%;background:var(--green-50);color:var(--green-700);display:flex;align-items:center;justify-content:center;font-weight:800;font-family:'Mulish';font-size:14px}
+  .opt-foot p{font-size:13.5px;color:var(--muted);margin-top:2px}
+  .row{display:flex;align-items:center;gap:14px}
+  .scalebar{display:flex;align-items:center;gap:16px;padding:14px 22px;background:var(--paper);border-top:1px solid var(--line)}
+  .scalebar span{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted-2)}
+  .scalebar svg{width:24px;height:24px}
+  .scalebar svg.s2{width:18px;height:18px}
+</style>
+</head>
+<body>
+<div class="lead">
+  <h1>Five logo directions</h1>
+  <p>Each one weaves in the Gambian flag — red, blue and green split by white bars — paired with the new Mulish wordmark. Tell me the number you like and I'll roll it out everywhere.</p>
+  <div class="flagkey"><i style="background:#CE1126"></i><i style="background:#fff"></i><i style="background:#0C1C8C"></i><i style="background:#fff"></i><i style="background:#3A7728"></i></div>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<script src="app.js"></script>
+<script>
+/* ---- Gambian flag palette ---- */
+const RED='#CE1126', BLUE='#0C1C8C', GRN='#3A7728', GOLD='#C8702D';
+
+/* Option 1 — Location pin with flag bands (ties to the Google Plus Code / map story) */
+const L1 = `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M24 3C15.4 3 8.5 9.8 8.5 18.2C8.5 29.5 24 45 24 45C24 45 39.5 29.5 39.5 18.2C39.5 9.8 32.6 3 24 3Z" fill="#15463A"/>
+  <circle cx="24" cy="18" r="10.5" fill="#fff"/>
+  <g>
+    <path d="M14.2 14.2 A10.5 10.5 0 0 1 33.8 14.2 Z" fill="${RED}"/>
+    <rect x="13.5" y="14.2" width="21" height="1.4" fill="#fff"/>
+    <rect x="13.5" y="15.6" width="21" height="4.8" fill="${BLUE}"/>
+    <rect x="13.5" y="20.4" width="21" height="1.4" fill="#fff"/>
+    <path d="M13.5 21.8 H34.5 A10.5 10.5 0 0 1 13.5 21.8 Z" fill="${GRN}"/>
+  </g>
+</svg>`;
+
+/* Option 2 — Roofline house, flag bands as floors (refined, bolder) */
+const L2 = `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="48" height="48" rx="13" fill="#15463A"/>
+  <path d="M24 9 L37 20.2 V36 A1.8 1.8 0 0 1 35.2 37.8 H12.8 A1.8 1.8 0 0 1 11 36 V20.2 Z" fill="#fff"/>
+  <path d="M24 9 L39.5 22.2 H8.5 Z" fill="#fff"/>
+  <rect x="15" y="23.2" width="18" height="3.4" rx="0.6" fill="${RED}"/>
+  <rect x="15" y="27.6" width="18" height="3.4" rx="0.6" fill="${BLUE}"/>
+  <rect x="15" y="32" width="18" height="3.4" rx="0.6" fill="${GRN}"/>
+</svg>`;
+
+/* Option 3 — Monogram D as a doorway/arch with a flag spine */
+const L3 = `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="48" height="48" rx="13" fill="#fff" stroke="#E5E1D6" stroke-width="1.5"/>
+  <path d="M14 11 H25 C32.7 11 38 17 38 24.5 C38 32 32.7 38 25 38 H14 Z" fill="#15463A"/>
+  <path d="M20 18 H25 C28.6 18 31 21 31 24.5 C31 28 28.6 31 25 31 H20 Z" fill="#fff"/>
+  <rect x="14" y="11" width="3.4" height="27" fill="${RED}"/>
+  <rect x="14" y="11" width="3.4" height="9" fill="${RED}"/>
+  <rect x="14" y="20" width="3.4" height="9" fill="${BLUE}"/>
+  <rect x="14" y="29" width="3.4" height="9" fill="${GRN}"/>
+</svg>`;
+
+/* Option 4 — Bold sun over flag bands (the "Smiling Coast" / Atlantic sunset) */
+const L4 = `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="48" height="48" rx="13" fill="#15463A"/>
+  <circle cx="24" cy="19" r="7.5" fill="${GOLD}"/>
+  <rect x="10" y="29" width="28" height="3.6" rx="1" fill="${RED}"/>
+  <rect x="10" y="33.6" width="28" height="3.6" rx="1" fill="${BLUE}"/>
+  <rect x="10" y="38.2" width="28" height="3.2" rx="1" fill="${GRN}"/>
+</svg>`;
+
+/* Option 5 — Pennant/keyhole: house roof + flag waving as one bold shape */
+const L5 = `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="48" height="48" rx="13" fill="#fff" stroke="#E5E1D6" stroke-width="1.5"/>
+  <path d="M24 7 L38 18 V39 H10 V18 Z" fill="#15463A"/>
+  <path d="M16 22 H32 V25.6 H16 Z" fill="${RED}"/>
+  <path d="M16 26.6 H32 V30.2 H16 Z" fill="${BLUE}"/>
+  <path d="M16 31.2 H32 V34.8 H16 Z" fill="${GRN}"/>
+  <circle cx="24" cy="15" r="2.4" fill="${GOLD}"/>
+</svg>`;
+
+const OPTIONS = [
+  [L1, 'Location pin', 'Nods to maps & Google Plus Codes — the flag flies inside the pin.'],
+  [L2, 'Banded house', 'A clear home silhouette; flag colours stack as floors.'],
+  [L3, 'Doorway “D”', 'Monogram that doubles as an arch, with a flag spine.'],
+  [L4, 'Smiling sun', 'Atlantic sun rising over the flag — warm & distinctive.'],
+  [L5, 'Roof & flag', 'Bold rooftop with the flag as the façade.'],
+];
+
+document.getElementById('grid').innerHTML = OPTIONS.map((o,i)=>`
+  <div class="opt">
+    <div class="opt-stage">
+      ${o[0]}
+      <div class="wordmark">${o[0]} MyKunda</div>
+    </div>
+    <div class="opt-stage dark">
+      <div class="wordmark">${o[0]} MyKunda</div>
+    </div>
+    <div class="scalebar">
+      <span>At UI size</span>
+      ${o[0].replace('<svg ','<svg class="s1" ')}
+      ${o[0].replace('<svg ','<svg class="s2" ')}
+      <span style="margin-left:auto">favicon / nav / app icon</span>
+    </div>
+    <div class="opt-foot">
+      <div class="row"><span class="num">${i+1}</span><div><h3>${o[1]}</h3><p>${o[2]}</p></div></div>
+    </div>
+  </div>`).join('');
+</script>
+</body>
+</html>

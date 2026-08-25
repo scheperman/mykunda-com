@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:0mq43u1--><!--/mk-mark-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
+<link rel="apple-touch-icon" href="images/mykunda-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#15463A">
+<title>Property — MyKunda</title>
+<meta name="description" content="View this property for sale or rent in The Gambia — photos, floor plan, neighborhood insights and an investor snapshot. Message an English-speaking agent.">
+<meta name="keywords" content="Gambia property for sale, villa for sale Gambia, apartment for rent Gambia, beachfront land Gambia, house Gambia, Kololi property, Brufut property, Cape Point property">
+<script>(function(){var m=/[?&]id=([A-Za-z0-9_-]{1,64})/.exec(location.search),c="https://mykunda.com/property.html"+(m?"?id="+m[1]:""),l=document.createElement("link");l.rel="canonical";l.href=c;document.head.appendChild(l);}());</script>
+<meta property="og:site_name" content="MyKunda">
+<meta property="og:locale" content="en_GB">
+<meta property="og:image:alt" content="Property for sale in The Gambia — MyKunda">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Property in The Gambia — MyKunda">
+<meta property="og:description" content="View property for sale or rent in The Gambia — photos, floor plan, neighborhood insights and investor snapshot.">
+<meta property="og:url" content="https://mykunda.com/property.html">
+<meta property="og:image" content="https://mykunda.com/images/og/home-hero.jpg">
+<meta property="og:image:secure_url" content="https://mykunda.com/images/og/home-hero.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:title" content="Property in The Gambia — MyKunda">
+<meta name="twitter:description" content="View property for sale or rent in The Gambia on MyKunda.">
+<meta name="twitter:image" content="https://mykunda.com/images/og/home-hero.jpg">
+<noscript></noscript>
+<link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
+<link rel="preconnect" href="https://api.maptiler.com" crossorigin>
+<link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.min.css?v=1787660000000">
+<style>
+.crumb{padding:18px 0 6px;font-size:14px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.crumb a{font-weight:600}.crumb a:hover{color:var(--green-700)}
+.crumb .back{display:inline-flex;align-items:center;gap:7px;color:var(--green-700);font-weight:700}
+
+/* media */
+.media{margin-top:8px}
+.media-tabs{display:flex;gap:8px;margin-bottom:14px}
+.mtab{display:flex;align-items:center;gap:8px;height:42px;padding:0 18px;border-radius:var(--r-pill);box-shadow:inset 0 0 0 1.5px var(--line);font-weight:700;font-size:14px;color:var(--ink-2);transition:.15s}
+.mtab.active{background:var(--green-700);color:#fff;box-shadow:none}
+.mtab svg{width:16px;height:16px}
+.gallery{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:10px;height:480px;border-radius:var(--r-lg);overflow:hidden}
+.gallery .g{position:relative;overflow:hidden;cursor:pointer;background:var(--paper-2)}
+.gallery .g:first-child{grid-row:1/3;grid-column:1}
+.gallery .g img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.gallery .g:hover img{transform:scale(1.05)}
+.gallery .more{position:absolute;inset:0;background:rgba(14,46,37,.55);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;gap:8px;backdrop-filter:blur(2px)}
+
+/* Lightbox */
+.lb{position:fixed;inset:0;z-index:500;background:rgba(10,20,16,.92);display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.lb.open{display:flex}
+.lb img{max-width:92vw;max-height:88vh;border-radius:var(--r-md);object-fit:contain;box-shadow:0 12px 40px rgba(0,0,0,.4);user-select:none;-webkit-user-drag:none;transition:opacity .2s}
+.lb-close{position:absolute;top:18px;right:20px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;z-index:2;transition:.15s}
+.lb-close:hover{background:rgba(255,255,255,.25)}
+.lb-arr{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2;transition:.15s}
+.lb-arr:hover{background:rgba(255,255,255,.25)}
+.lb-arr.left{left:18px}
+.lb-arr.right{right:18px}
+.lb-counter{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.7);font-size:14px;font-weight:700;z-index:2}
+.media-pane{display:none}
+.media-pane.active{display:block}
+
+/* floorplan */
+.floorplan{background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-sm);padding:30px;height:480px;display:flex;align-items:center;justify-content:center}
+.floorplan svg{max-height:100%;width:auto}
+
+
+
+/* mini map pane */
+.mapmini{height:480px;border-radius:var(--r-lg);overflow:hidden;position:relative;background:var(--map-land)}
+#propMap{height:480px;width:100%}
+.mapmini .leaflet-container{background:#1b2b33;font-family:var(--sans)}
+.mapmini .leaflet-control-attribution{font-size:10px}
+.price-marker{width:0!important;height:0!important;overflow:visible}
+.price-marker .pin-bubble{position:absolute;left:0;bottom:8px;transform:translateX(-50%);display:flex;align-items:center;height:30px;padding:0 11px;border-radius:var(--r-pill);box-shadow:var(--sh-pin);font-weight:800;font-size:13.5px;white-space:nowrap;border:2px solid var(--white)}
+.price-marker .pin-bubble::after{content:"";position:absolute;left:50%;bottom:-5px;transform:translateX(-50%) rotate(45deg);width:9px;height:9px;background:inherit}
+.mapmini svg{position:absolute;inset:0;width:100%;height:100%}
+.mapmini .me{position:absolute;left:50%;top:48%;transform:translate(-50%,-100%);z-index:3}
+.mapmini .me .pin-bubble{background:var(--green-700);color:#fff;border-color:var(--green-700);box-shadow:var(--sh-pin)}
+.me::after{content:"";position:absolute;left:50%;bottom:-5px;transform:translateX(-50%) rotate(45deg);width:9px;height:9px;background:var(--green-700)}
+
+/* body grid */
+.detail{display:grid;grid-template-columns:1fr 380px;gap:40px;margin-top:34px;align-items:start}
+.title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding-bottom:22px;border-bottom:1px solid var(--line)}
+.title-row .badges{display:flex;gap:8px;margin-bottom:12px}
+.title-row h1{font-size:32px;line-height:1.1}
+.title-row .addr{font-size:16px;color:var(--muted);display:flex;align-items:center;gap:7px;margin-top:9px}
+.price-big{font-family:var(--sans);font-weight:800;font-size:30px;color:var(--green-700);white-space:nowrap;text-align:right}
+.price-big .per{font-size:16px;color:var(--muted);font-weight:600}
+.price-actions{display:flex;gap:9px;margin-top:12px;justify-content:flex-end}
+
+.specbar{display:flex;gap:0;margin:24px 0;background:var(--white);border-radius:var(--r-md);box-shadow:var(--sh-sm);overflow:hidden}
+.specbar .s{flex:1;padding:18px 20px;display:flex;flex-direction:column;gap:5px;border-right:1px solid var(--line-2)}
+.specbar .s:last-child{border-right:none}
+.specbar .s .k{font-size:13px;color:var(--muted);font-weight:600;display:flex;align-items:center;gap:7px}
+.specbar .s .v{font-family:var(--serif);font-size:22px;font-weight:600;color:var(--ink)}
+
+.block{margin:34px 0}
+.block h2{font-size:23px;margin-bottom:14px}
+.block p{color:var(--ink-2);font-size:16px;line-height:1.65;max-width:680px}
+.feat-list{display:grid;grid-template-columns:1fr 1fr;gap:11px 30px;margin-top:6px}
+.feat-list .fi{display:flex;align-items:center;gap:11px;font-size:15px;color:var(--ink-2);font-weight:500;padding:9px 0;border-bottom:1px solid var(--line-2)}
+.feat-list .fi .ic{width:30px;height:30px;border-radius:8px;background:var(--green-50);color:var(--green-700);display:flex;align-items:center;justify-content:center;flex:none}
+
+/* neighborhood mini */
+.hood-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:8px}
+.hstat-card{background:var(--white);border-radius:var(--r-md);box-shadow:var(--sh-sm);padding:18px}
+.hstat-card .lab{font-size:13px;color:var(--muted);font-weight:600}
+.hstat-card .num{font-family:var(--serif);font-size:26px;font-weight:600;color:var(--green-700);margin-top:4px}
+.hstat-card .meta{font-size:12.5px;color:var(--muted-2);margin-top:2px}
+.scorebars{margin-top:18px;display:flex;flex-direction:column;gap:13px;max-width:560px}
+.scorebar{display:grid;grid-template-columns:130px 1fr 42px;align-items:center;gap:14px}
+.scorebar .l{font-size:14px;font-weight:600;color:var(--ink-2)}
+.scorebar .track{height:8px;background:var(--paper-2);border-radius:99px;overflow:hidden}
+.scorebar .fill{height:100%;background:var(--green-500);border-radius:99px}
+.scorebar .sc{font-weight:700;font-size:14px;color:var(--green-700);text-align:right}
+
+/* sidebar */
+.aside{position:sticky;top:90px;display:flex;flex-direction:column;gap:18px}
+.agent-card{background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-md);padding:24px;border:1px solid var(--line)}
+.agent-top{display:flex;align-items:center;gap:14px;padding-bottom:18px;border-bottom:1px solid var(--line-2);transition:opacity .15s}
+.agent-top:hover{opacity:.78}
+.agent-top .n:hover{color:var(--green-700)}
+.agent-top img{width:58px;height:58px;border-radius:50%;object-fit:cover;background:var(--paper-2)}
+.agent-top .n{font-family:var(--serif);font-size:18px;font-weight:600}
+.agent-top .ag{font-size:13.5px;color:var(--muted)}
+.agent-rating{display:flex;align-items:center;gap:5px;color:var(--amber-500);font-size:13px;font-weight:700;margin-top:3px}
+.agent-rating span{color:var(--muted);font-weight:600}
+.vform{margin-top:18px;display:flex;flex-direction:column;gap:11px}
+.vform label{font-size:13px;font-weight:700;color:var(--ink-2)}
+.vform input,.vform textarea{width:100%;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:11px 13px;font-size:14.5px;outline:none;transition:.15s;font-family:var(--sans)}
+.vform input:focus,.vform textarea:focus{border-color:var(--green-500)}
+.slots{display:flex;gap:7px;flex-wrap:wrap}
+.slot{flex:1;min-width:64px;height:38px;border-radius:var(--r-sm);box-shadow:inset 0 0 0 1.5px var(--line);font-weight:600;font-size:13px;color:var(--ink-2);transition:.13s}
+.slot.active{background:var(--green-700);color:#fff;box-shadow:none}
+.contact-alt{display:flex;gap:9px;margin-top:4px}
+.contact-alt .btn{flex:1}
+.wa{background:#25D366;color:#fff}.wa:hover{background:#1FB855}
+
+.invest-card{background:linear-gradient(160deg,var(--green-800),var(--green-700));color:#fff;border-radius:var(--r-lg);padding:24px;box-shadow:var(--sh-md)}
+.invest-card .eyebrow{color:var(--amber-400);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px}
+.invest-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.13);font-size:14.5px}
+.invest-row:last-of-type{border-bottom:none}
+.invest-row .lab{color:rgba(255,255,255,.8)}
+.invest-row .val{font-weight:800;font-size:17px}
+.invest-card .yield{color:var(--amber-400)}
+.dp-slider{margin-top:14px}
+.dp-slider .top{display:flex;justify-content:space-between;font-size:13px;color:rgba(255,255,255,.85);margin-bottom:8px;font-weight:600}
+.dp-slider input[type=range]{width:100%;accent-color:var(--amber-400)}
+.disc{font-size:11.5px;color:var(--muted-2);margin-top:10px;line-height:1.5}
+
+.similar{margin-top:20px}
+@media(max-width:480px){
+  .wrap{padding:0 20px}
+  .gallery{grid-template-columns:1fr;height:auto}
+  .gallery .g:first-child{grid-column:1;height:220px}
+  .gallery .g{height:140px}
+  .media-tabs{flex-wrap:wrap;gap:6px}
+  .mtab{padding:0 12px;font-size:13px;height:38px}
+  .title-row{flex-direction:column;gap:12px}
+  .title-row h1{font-size:24px}
+  .title-row .addr{font-size:14px}
+  .price-big{font-size:24px;text-align:left;white-space:normal}
+  .price-actions{justify-content:flex-start}
+  .specbar{flex-wrap:wrap}
+  .specbar .s{flex:none;width:calc(50% - 1px);box-sizing:border-box}
+  .specbar .s .v{font-size:18px}
+  .block h2{font-size:20px}
+  .block p{font-size:15px}
+  .feat-list{grid-template-columns:1fr}
+  .hood-stats{grid-template-columns:1fr 1fr}
+  .scorebar{grid-template-columns:90px 1fr 36px;gap:10px}
+  .scorebar .l{font-size:13px}
+  .sidebar{padding:0}
+  .price-row{flex-direction:column;align-items:flex-start;gap:10px}
+  .contact-card{padding:20px 16px}
+  .invest-row{font-size:13px}
+}
+
+@media(max-width:980px){
+  .detail{grid-template-columns:1fr}
+  .gallery{grid-template-columns:1fr 1fr;height:auto}
+  .gallery .g:first-child{grid-column:1/3;height:240px}
+  .gallery .g{height:150px}
+  .feat-list{grid-template-columns:1fr}
+  .hood-stats{grid-template-columns:1fr 1fr}
+  .grid-4{grid-template-columns:1fr 1fr}
+}
+</style>
+<meta property="fb:pages" content="61593360783009">
+<meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div id="header" data-static data-active="" data-hero="0"><!--mk-hdr-->
+  <header class="site-header " id="siteHeader">
+    <div class="wrap header-inner">
+      <a class="logo" href="/"><img class="logo-mark" src="images/mykunda-icon.png" alt="MyKunda" width="36" height="36" style="border-radius:8px"> MyKunda</a>
+      <nav class="nav">
+        <a href="buy.html" >Buy</a><a href="rent.html" >Rent</a><a href="sell.html" >List</a><a href="search.html?type=sale&cat=land" >Land</a><a href="verify.html" style="display:inline-flex;align-items:center;gap:6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M12 3 4 6v6c0 5 3.4 7.8 8 9 4.6-1.2 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg>Verify</a><div class="nav-dd">
+              <button class="nav-dd-btn" >Areas <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+              <div class="nav-dd-menu"><div class="nav-dd-region"><div class="nav-dd-region-title">Banjul Area</div><a href="banjul.html">Banjul</a><a href="bakau.html">Bakau</a><a href="cape-point.html">Cape Point</a><a href="fajara.html">Fajara</a><a href="kotu.html">Kotu</a><a href="pipeline.html">Pipeline</a><a href="bakoteh.html">Bakoteh</a><a href="manjai-kunda.html">Manjai Kunda</a><a href="serrekunda.html">Serrekunda</a></div><div class="nav-dd-region"><div class="nav-dd-region-title">Kombo Coast</div><a href="kololi.html">Kololi</a><a href="senegambia.html">Senegambia</a><a href="bijilo.html">Bijilo</a><a href="brufut.html">Brufut</a><a href="tanji.html">Tanji</a><a href="batokunku.html">Batokunku</a><a href="tujereng.html">Tujereng</a><a href="sanyang.html">Sanyang</a><a href="gunjur.html">Gunjur</a><a href="kartong.html">Kartong</a></div><div class="nav-dd-region"><div class="nav-dd-region-title">Kombo Inland</div><a href="brusubi.html">Brusubi</a><a href="kerr-serign.html">Kerr Serign</a><a href="sukuta.html">Sukuta</a><a href="jabang.html">Jabang</a><a href="nema-kunku.html">Nema Kunku</a><a href="sinchu-alagie.html">Sinchu Alagie</a><a href="lamin.html">Lamin</a><a href="yundum.html">Yundum</a><a href="busumbala.html">Busumbala</a><a href="brikama.html">Brikama</a></div><div class="nav-dd-region"><div class="nav-dd-region-title">North Bank</div><a href="barra.html">Barra</a><a href="essau.html">Essau</a><a href="kerewan.html">Kerewan</a><a href="farafenni.html">Farafenni</a></div><div class="nav-dd-region"><div class="nav-dd-region-title">Central River</div><a href="janjanbureh.html">Janjanbureh</a><a href="bansang.html">Bansang</a><a href="kuntaur.html">Kuntaur</a></div><div class="nav-dd-region"><div class="nav-dd-region-title">Upcountry</div><a href="soma.html">Soma</a><a href="mansa-konko.html">Mansa Konko</a><a href="basse.html">Basse</a><a href="gambissara.html">Gambissara</a><a href="fatoto.html">Fatoto</a></div></div>
+            </div><div class="nav-dd">
+              <button class="nav-dd-btn" >Guides <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+              <div class="nav-dd-menu nav-dd-guides"><div class="nav-dd-region"><div class="nav-dd-region-title">Buying</div><a href="guide-buying-property-in-the-gambia-as-a-foreigner.html">Buying property in The Gambia as a foreigner</a><a href="guide-cost-of-buying-property-in-the-gambia.html">The real cost of buying property in The Gambia</a><a href="guide-bank-mortgages-in-the-gambia.html">Bank mortgages in The Gambia — rates, conditions and eligibility</a><a href="guide-developer-financing-in-the-gambia.html">Developer financing in The Gambia — the smart alternative to a mortgage</a></div><div class="nav-dd-region"><div class="nav-dd-region-title">Land & title</div><a href="guide-freehold-leasehold-customary-land-explained.html">Freehold, leasehold & customary land explained</a><a href="guide-how-to-verify-land-title-in-the-gambia.html">Land in The Gambia: prices, sizes and how to verify title safely</a><a href="guide-inheritance-and-wills-for-gambian-property.html">Inheritance and wills for Gambian property</a></div><div class="nav-dd-region"><div class="nav-dd-region-title">Areas</div><a href="guide-best-areas-to-buy-on-the-gambian-coast.html">The best areas to buy on the Gambian coast</a></div><div class="nav-dd-region"><div class="nav-dd-region-title">Building</div><a href="guide-building-a-house-in-the-gambia.html">Building your own house in The Gambia</a></div><div class="nav-dd-region"><div class="nav-dd-region-title">Renting out</div><a href="guide-renting-out-property-in-the-gambia.html">Renting out property in The Gambia — season, yields and tax</a></div><div class="nav-dd-region"><div class="nav-dd-region-title">Money</div><a href="guide-sending-money-to-the-gambia.html">Sending money to The Gambia — what it really costs</a></div><div class="nav-dd-region"><div class="nav-dd-region-title">Living there</div><a href="guide-residency-and-retiring-in-the-gambia.html">Residency, permits and retiring in The Gambia</a></div><div class="nav-dd-footer"><a href="guides.html" class="nav-dd-all">All guides →</a></div></div>
+            </div>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn" id="hdrSearchBtn" aria-label="Search properties"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></button><div class="ccy-picker" id="ccyPicker">
+      <button class="ccy-btn" id="ccyBtn" aria-label="Currency">D GMD<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+      <div class="ccy-menu" id="ccyMenu"><button data-ccy="EUR" class=""><b>€ EUR</b> <span>Euro</span> <span data-ccy-cross="EUR" style="opacity:.55;font-size:11px;white-space:nowrap">= D85</span></button><button data-ccy="USD" class=""><b>$ USD</b> <span>US Dollar</span> <span data-ccy-cross="USD" style="opacity:.55;font-size:11px;white-space:nowrap">= D78</span></button><button data-ccy="GMD" class="on"><b>D GMD</b> <span>Gambian Dalasi</span></button><button data-ccy="GBP" class=""><b>£ GBP</b> <span>British Pound</span> <span data-ccy-cross="GBP" style="opacity:.55;font-size:11px;white-space:nowrap">= D99</span></button>
+      <div style="padding:6px 14px 10px;font-size:10.5px;color:var(--muted);line-height:1.4;border-top:1px solid var(--line)"><span data-rate-note>Indicative rate.</span><br>Conversions are indicative only. No rights can be derived from displayed amounts.</div>
+      </div>
+    </div><a class="signin" href="auth.html">Sign in</a><a class="btn btn-primary btn-sm" href="list.html">Add your property</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </header>
+  <div class="hdr-search" id="hdrSearch" hidden>
+    <div class="wrap hdr-search-inner">
+      <span class="hdr-s-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></span>
+      <input type="text" id="hdrSearchInput" aria-label="Search properties" placeholder="Search by area or town — Kololi, Brufut, Cape Point…">
+      <button class="btn btn-primary btn-sm" id="hdrSearchGo">Search</button>
+      <button class="hdr-search-x" id="hdrSearchX" aria-label="Close search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+  </div>
+  <div class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
+    <div class="md-backdrop" id="mdBackdrop"></div>
+    <div class="md-panel">
+      <div class="md-head">
+        <a class="logo" href="/"><img class="logo-mark" src="images/mykunda-icon.png" alt="MyKunda" width="36" height="36" style="border-radius:8px"> MyKunda</a>
+        <button class="md-close" id="mdClose" aria-label="Close menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+      <form class="md-search" id="mdSearchForm" role="search">
+        <span class="md-search-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></span>
+        <input type="search" id="mdSearchInput" placeholder="Search area or town" aria-label="Search properties">
+        <button type="submit" class="md-search-go" aria-label="Search"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      </form>
+      <nav class="md-nav">
+        <a href="buy.html" >Buy</a><a href="rent.html" >Rent</a><a href="sell.html" >List</a><a href="search.html?type=sale&cat=land" >Land</a><a href="verify.html"  style="display:flex;align-items:center;gap:9px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M12 3 4 6v6c0 5 3.4 7.8 8 9 4.6-1.2 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg>Verify a property</a><a href="#" class="md-areas-toggle " onclick="event.preventDefault();this.nextElementSibling.classList.toggle('open')">Areas <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;transition:transform .2s"><path d="m6 9 6 6 6-6"/></svg></a>
+            <div class="md-areas-sub"><div style="padding:10px 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Banjul Area</div><a href="banjul.html">Banjul</a><a href="bakau.html">Bakau</a><a href="cape-point.html">Cape Point</a><a href="fajara.html">Fajara</a><a href="kotu.html">Kotu</a><a href="pipeline.html">Pipeline</a><a href="bakoteh.html">Bakoteh</a><a href="manjai-kunda.html">Manjai Kunda</a><a href="serrekunda.html">Serrekunda</a><div style="padding:10px 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Kombo Coast</div><a href="kololi.html">Kololi</a><a href="senegambia.html">Senegambia</a><a href="bijilo.html">Bijilo</a><a href="brufut.html">Brufut</a><a href="tanji.html">Tanji</a><a href="batokunku.html">Batokunku</a><a href="tujereng.html">Tujereng</a><a href="sanyang.html">Sanyang</a><a href="gunjur.html">Gunjur</a><a href="kartong.html">Kartong</a><div style="padding:10px 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Kombo Inland</div><a href="brusubi.html">Brusubi</a><a href="kerr-serign.html">Kerr Serign</a><a href="sukuta.html">Sukuta</a><a href="jabang.html">Jabang</a><a href="nema-kunku.html">Nema Kunku</a><a href="sinchu-alagie.html">Sinchu Alagie</a><a href="lamin.html">Lamin</a><a href="yundum.html">Yundum</a><a href="busumbala.html">Busumbala</a><a href="brikama.html">Brikama</a><div style="padding:10px 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">North Bank</div><a href="barra.html">Barra</a><a href="essau.html">Essau</a><a href="kerewan.html">Kerewan</a><a href="farafenni.html">Farafenni</a><div style="padding:10px 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Central River</div><a href="janjanbureh.html">Janjanbureh</a><a href="bansang.html">Bansang</a><a href="kuntaur.html">Kuntaur</a><div style="padding:10px 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Upcountry</div><a href="soma.html">Soma</a><a href="mansa-konko.html">Mansa Konko</a><a href="basse.html">Basse</a><a href="gambissara.html">Gambissara</a><a href="fatoto.html">Fatoto</a></div><a href="#" class="md-areas-toggle " onclick="event.preventDefault();this.nextElementSibling.classList.toggle('open')">Guides <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;transition:transform .2s"><path d="m6 9 6 6 6-6"/></svg></a>
+            <div class="md-areas-sub"><div style="padding:10px 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Buying</div><a href="guide-buying-property-in-the-gambia-as-a-foreigner.html">Buying property in The Gambia as a foreigner</a><a href="guide-cost-of-buying-property-in-the-gambia.html">The real cost of buying property in The Gambia</a><a href="guide-bank-mortgages-in-the-gambia.html">Bank mortgages in The Gambia — rates, conditions and eligibility</a><a href="guide-developer-financing-in-the-gambia.html">Developer financing in The Gambia — the smart alternative to a mortgage</a><div style="padding:10px 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Land & title</div><a href="guide-freehold-leasehold-customary-land-explained.html">Freehold, leasehold & customary land explained</a><a href="guide-how-to-verify-land-title-in-the-gambia.html">Land in The Gambia: prices, sizes and how to verify title safely</a><a href="guide-inheritance-and-wills-for-gambian-property.html">Inheritance and wills for Gambian property</a><div style="padding:10px 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Areas</div><a href="guide-best-areas-to-buy-on-the-gambian-coast.html">The best areas to buy on the Gambian coast</a><div style="padding:10px 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Building</div><a href="guide-building-a-house-in-the-gambia.html">Building your own house in The Gambia</a><div style="padding:10px 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Renting out</div><a href="guide-renting-out-property-in-the-gambia.html">Renting out property in The Gambia — season, yields and tax</a><div style="padding:10px 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Money</div><a href="guide-sending-money-to-the-gambia.html">Sending money to The Gambia — what it really costs</a><div style="padding:10px 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Living there</div><a href="guide-residency-and-retiring-in-the-gambia.html">Residency, permits and retiring in The Gambia</a><a href="guides.html" style="margin-top:8px;font-weight:700;color:var(--green-700)">All guides →</a></div>
+      </nav>
+      <div class="md-actions">
+        <a class="btn btn-ghost btn-block" href="auth.html">Sign in</a>
+        <a class="btn btn-primary btn-block" href="list.html">Add your property</a>
+      </div>
+      <div class="md-ccy">
+        <span class="md-ccy-label">Currency</span>
+        <div class="md-ccy-row"><button data-ccy="EUR" class="">€ EUR</button><button data-ccy="USD" class="">$ USD</button><button data-ccy="GMD" class="on">D GMD</button><button data-ccy="GBP" class="">£ GBP</button></div>
+      </div>
+    </div>
+  </div><!--/mk-hdr--></div>
+<main id="main">
+
+<div class="wrap">
+  <div class="crumb">
+    <a class="back" href="search.html" id="backLink"><span id="backArr"></span> Back to results</a>
+    <span>·</span><a href="/">Home</a><span>›</span><a href="search.html">The Gambia</a><span>›</span><span id="crumbTitle"></span>
+  </div>
+
+  <div class="media">
+    <div class="media-tabs">
+      <button class="mtab active" data-pane="photos"><span id="t1"></span> Photos</button>
+      <button class="mtab" data-pane="floor"><span id="t2"></span> Floor plan</button>
+      <button class="mtab" data-pane="map"><span id="t4"></span> Map</button>
+    </div>
+
+    <div class="media-pane active" data-pane="photos">
+      <div class="gallery" id="gallery"></div>
+    </div>
+
+    <div class="media-pane" data-pane="floor">
+      <div class="floorplan" id="floorplan"></div>
+    </div>
+
+    <div class="media-pane" data-pane="map">
+      <div class="mapmini" id="propMap"></div>
+    </div>
+  </div>
+
+  <div class="detail">
+    <div class="main">
+      <div class="title-row">
+        <div>
+          <div class="badges" id="dBadges"></div>
+          <h1 id="dTitle"></h1>
+          <div class="addr" id="dAddr"></div>
+          <div id="dPlusCode" style="margin-top:11px"></div>
+        </div>
+        <div>
+          <div class="price-big" id="dPrice"></div>
+          <div class="price-actions">
+            <button class="icon-btn" id="favBtn" aria-label="Save"></button>
+            <button class="icon-btn" id="shareBtn" aria-label="Share"></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="specbar" id="specbar"></div>
+
+      <div class="block">
+        <h2>About this home</h2>
+        <p id="dDesc"></p>
+      </div>
+
+      <div class="block">
+        <h2>Features &amp; details</h2>
+        <div class="feat-list" id="featList"></div>
+      </div>
+
+      <div class="block">
+        <h2>The neighborhood</h2>
+        <p style="margin-bottom:18px" id="hoodIntro"></p>
+        <div class="hood-stats" id="hoodStats"></div>
+        <div class="scorebars" id="scorebars"></div>
+        <a class="link-arrow" href="kololi.html" style="margin-top:20px;display:inline-flex">Explore full neighborhood guide <span id="hoodArr"></span></a>
+      </div>
+    </div>
+
+    <aside class="aside">
+      <div class="agent-card">
+        <a class="agent-top" href="agent.html" style="text-decoration:none;color:inherit">
+          <image-slot id="ph-agent-awa" shape="circle" placeholder="Photo" style="width:58px;height:58px;flex:none"></image-slot>
+          <div>
+            <div class="n">MyKunda</div>
+            <div class="ag">Viewings &amp; enquiries desk · Kombo</div>
+          </div>
+        </a>
+        <form class="vform" onsubmit="event.preventDefault();bookViewing(this)">
+          <div>
+            <label for="vDate">Request a viewing</label>
+            <input type="date" id="vDate" required>
+          </div>
+          <div class="slots" id="slots">
+            <button type="button" class="slot active">10:00</button>
+            <button type="button" class="slot">13:00</button>
+            <button type="button" class="slot">15:30</button>
+            <button type="button" class="slot">18:00</button>
+          </div>
+          <input type="text" placeholder="Your name" required aria-label="Your name" autocomplete="name">
+          <input type="email" placeholder="Email address" required aria-label="Email address" autocomplete="email">
+          <input type="tel" placeholder="Phone / WhatsApp (optional)" aria-label="Phone or WhatsApp number, optional" autocomplete="tel">
+          <textarea rows="2" placeholder="Anything we should know? (optional)" aria-label="Message, optional"></textarea>
+          <button class="btn btn-primary btn-block" type="submit">Request viewing</button>
+          <p class="form-legal">Your details are shared with this agent to arrange the viewing — see our <a href="legal-privacy.html">Privacy Policy</a>.</p>
+        </form>
+        <a class="btn btn-ghost btn-block btn-sm" id="msgAgentBtn" style="margin-top:9px"><span id="msgIc"></span> Message agent</a>
+        <div class="contact-alt">
+          <a class="btn wa btn-sm" id="waLink" target="_blank" rel="noopener" href="#"><span id="waIc"></span> WhatsApp</a>
+        </div>
+      </div>
+
+      <div class="agent-card" style="padding:24px 24px;background:linear-gradient(135deg,#0E2E25,#1C5848);border:none">
+        <div style="display:flex;align-items:center;gap:7px;font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--amber-400);margin-bottom:9px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.4 7.8 8 9 4.6-1.2 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg> Before you pay anyone</div>
+        <div style="font-family:var(--serif);font-size:19px;font-weight:600;margin-bottom:7px;color:#fff;line-height:1.25">Order your own ownership check</div>
+        <p style="font-size:13.5px;color:rgba(255,255,255,.8);line-height:1.55;margin-bottom:16px">An independent check of the title, the registry and the plot itself — reported in writing to you, not to the listing. From <span id="ovcFrom">D7,500</span> — never a percentage of the price.</p>
+        <a class="btn btn-amber btn-block btn-sm" id="ovcBtn" href="verify.html">Check this property</a>
+      </div>
+
+      <div class="invest-card">
+        <div class="eyebrow">Investor snapshot · holiday let</div>
+        <div class="invest-row"><span class="lab">Est. nightly rate</span><span class="val" id="nightVal"></span></div>
+        <div class="invest-row"><span class="lab">Est. annual income</span><span class="val" id="incomeVal"></span></div>
+        <div class="invest-row"><span class="lab">Gross rental yield</span><span class="val yield" id="yieldVal"></span></div>
+        <div class="dp-slider">
+          <div class="top"><span>Occupancy</span><span id="occLabel">55%</span></div>
+          <input type="range" id="occRange" aria-label="Occupancy" min="30" max="90" value="55" step="5">
+        </div>
+        <div class="disc">Indicative gross yield · based on area, bedrooms and comparable Airbnb/Booking rates on the Gambian coast. Actual net income after management (20–30%), maintenance and utilities will be lower. Not financial advice.</div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="block similar">
+    <div class="sec-head"><div><div class="eyebrow">You might also like</div><h2 style="font-size:28px">Similar properties nearby</h2></div>
+      <a class="link-arrow" href="search.html">See more <span id="simArr"></span></a></div>
+    <div class="grid-4" id="similarGrid"></div>
+  </div>
+</div>
+
+</main>
+<div id="footer" data-static><!--mk-ftr-->
+  <footer class="site-footer">
+    <div class="fb-social">
+      <div class="wrap fb-social-in">
+        <div class="fb-social-txt">
+          <div class="fs-title">Follow MyKunda</div>
+          <p class="fs-sub">New listings, market updates and a look behind the scenes along the coast.</p>
+        </div>
+        <nav class="footer-social" aria-label="Follow MyKunda"><a href="https://www.facebook.com/mykundagambia" rel="me noopener" target="_blank" aria-label="Facebook" title="Facebook" style="--sc:#1877F2"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V7.9c0-.9.25-1.5 1.55-1.5H16.7V3.6a22 22 0 0 0-2.4-.12c-2.4 0-4 1.46-4 4.14V9.9H7.6V13h2.7v8Z"/></svg><span>Facebook</span></a><a href="https://www.instagram.com/mykundagambia/" rel="me noopener" target="_blank" aria-label="Instagram" title="Instagram" style="--sc:#E1306C"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg><span>Instagram</span></a><a href="https://www.threads.com/@mykundagambia" rel="me noopener" target="_blank" aria-label="Threads" title="Threads" style="--sc:#111111"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16.2 11.4c-.3-2-1.7-3-3.9-3-1.8 0-3.1.7-3.7 2"/><path d="M15.9 15.2c0-2-1.6-3-3.6-2.8-1.6.1-2.6.9-2.5 2 .1 1.2 1.3 1.7 2.4 1.6 2-.2 3.2-1.6 3.4-4.2"/><path d="M12 21.5c-5.2 0-8.5-3.4-8.5-9.5S6.8 2.5 12 2.5s8.5 3.4 8.5 9.5-3.3 9.5-8.5 9.5Z"/></svg><span>Threads</span></a><a href="https://www.linkedin.com/company/mykunda" rel="me noopener" target="_blank" aria-label="LinkedIn" title="LinkedIn" style="--sc:#0A66C2"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.94 8.5H3.56V20.5H6.94V8.5Z"/><path d="M5.25 7.03C4.15 7.03 3.25 6.12 3.25 5.02C3.25 3.91 4.15 3 5.25 3C6.36 3 7.25 3.91 7.25 5.02C7.25 6.12 6.36 7.03 5.25 7.03Z"/><path d="M20.75 20.5H17.38V14.6C17.38 13.14 17.35 11.27 15.35 11.27C13.32 11.27 13.01 12.85 13.01 14.5V20.5H9.63V8.5H12.87V10.02H12.92C13.37 9.17 14.46 8.28 16.08 8.28C19.5 8.28 20.75 10.55 20.75 13.87V20.5Z"/></svg><span>LinkedIn</span></a><a href="https://wa.me/2202282717?text=Hello%20MyKunda!%20I%20have%20a%20question%20about%20property%20in%20The%20Gambia." rel="noopener" target="_blank" aria-label="WhatsApp" title="WhatsApp" style="--sc:#25D366"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2Zm5.5 14c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.2-.7-2.7-1.1-4.4-3.8-4.5-4-.1-.2-1.1-1.4-1.1-2.7s.7-1.9.9-2.1c.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.5c-.2.2-.3.4-.1.7.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.2 0 .4 0 .6-.2l.7-.8c.2-.2.4-.2.6-.1l1.9.9c.2.1.4.2.5.3.1.3.1.7-.1 1.2Z"/></svg><span>WhatsApp</span></a></nav>
+      </div>
+    </div>
+    <div class="fb-pay"><div class="wrap fb-pay-in">
+      <div class="fp-label">Ways to pay on MyKunda</div>
+        <div class="pay-strip"><span class="pay-chip"><i style="background:#1DC8FF"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M3 12c2-4.5 5-4.5 6 0s4 4.5 6 0 4-4.5 6 0"/></svg></i>Wave<small>Mobile money</small></span><span class="pay-chip"><i style="background:#5B2D8E">A</i>Afrimoney<small>Africell</small></span><span class="pay-chip"><i style="background:#E2231A">Q</i>QMoney<small>QCell</small></span><span class="pay-chip"><i style="background:#0E7A4F">APS</i>APS Wallet<small>Agents &amp; upcountry</small></span><span class="pay-chip"><i style="background:#1A1F71">VISA</i>Visa<small>Debit &amp; credit</small></span><span class="pay-chip"><i style="background:#16214C"><svg width="26" height="16" viewBox="0 0 34 20"><circle cx="13" cy="10" r="9" fill="#EB001B"/><circle cx="21" cy="10" r="9" fill="#F79E1B" fill-opacity=".85"/></svg></i>Mastercard<small>Debit &amp; credit</small></span><span class="pay-chip"><i style="background:#3A5247"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M3 10h18M12 3l9 7H3z"/><path d="M6 10v8M10 10v8M14 10v8M18 10v8"/></svg></i>Bank transfer<small>Any Gambian bank</small></span></div>
+        <p class="fp-note"><b>Pay by mobile money or card, or by bank transfer.</b> Online payments are processed by Waychit, a licensed Gambian payment provider. MyKunda never sees your card or wallet details.</p>
+        <p class="fp-note">Bank transfers clear once the banks release them. MyKunda only collects listing and service fees — <b>we never take deposits, down payments or purchase money</b>. Those are always paid into the escrow account of your lawyer or notary.</p>
+        <p class="fp-note">Currency conversions are indicative only, based on approximate exchange rates. No rights can be derived from displayed amounts in any currency.</p>
+    </div></div>
+    <div class="fb-nav">
+    <div class="wrap footer-top">
+      <div class="footer-brand">
+        <div class="logo"><img class="logo-mark" src="images/mykunda-icon.png" alt="MyKunda" width="36" height="36" style="border-radius:8px"> MyKunda</div>
+        <p>A new property platform for The Gambia, built on proven professional standards and local knowledge. Buy, rent and invest along the Atlantic coast — with title checks on request, market insights and professional service.</p>
+        <div class="footer-contact">
+          <a href="mailto:info@mykunda.com"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span>info@mykunda.com</span></a>
+          <a href="https://wa.me/2202282717?text=Hello%20MyKunda!%20I%20have%20a%20question%20about%20property%20in%20The%20Gambia." target="_blank" rel="noopener"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2Zm5.5 14c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.2-.7-2.7-1.1-4.4-3.8-4.5-4-.1-.2-1.1-1.4-1.1-2.7s.7-1.9.9-2.1c.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.5c-.2.2-.3.4-.1.7.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.2 0 .4 0 .6-.2l.7-.8c.2-.2.4-.2.6-.1l1.9.9c.2.1.4.2.5.3.1.3.1.7-.1 1.2Z"/></svg><span>WhatsApp +220 228 2717</span></a>
+        </div>
+      </div>
+      <div class="footer-col"><h3>Explore</h3><a href="search.html?type=sale">Properties for sale</a><a href="search.html?type=rent">Properties for rent</a><a href="search.html?type=sale&cat=land">Land & plots</a><a href="kololi.html">Area guides</a><a href="search.html?type=sale&feat=new">New developments</a><a href="market.html">Market index</a></div><div class="footer-col"><h3>For you</h3><a href="dashboard.html">Saved searches</a><a href="dashboard.html">Favorites</a><a href="guide-cost-of-buying-property-in-the-gambia.html">Buyer’s guide</a><a href="verify.html">Ownership check</a><a href="sell.html#value">Value my property</a><a href="guide-buying-property-in-the-gambia-as-a-foreigner.html">Diaspora & investor guide</a></div><div class="footer-col"><h3>Company</h3><a href="about.html">About MyKunda</a><a href="agent.html">Partner agents</a><a href="faq.html">FAQ</a><a href="safe.html">Safe & supported</a><a href="contact.html">Contact</a><a href="legal.html">Legal & policies</a></div>
+    </div>
+    <div class="wrap footer-bottom">
+      <span>© 2026 MyKunda.com</span>
+      <span class="spacer"></span>
+      <a href="legal-privacy.html">Privacy</a><a href="legal-terms.html">Terms</a><a href="legal-cookies.html">Cookies</a><a href="photo-credits.html">Photo credits</a>
+    </div>
+    </div>
+  </footer><!--/mk-ftr--></div>
+
+<script src="app.min.js?v=1787660000000"></script>
+<script src="image-slot.js?v=1787660000000" defer></script>
+<script>
+/* 4G: Supabase (~205 KB) downloads in parallel instead of blocking the page, and
+   Leaflet (~145 KB) is only fetched when the visitor opens the Map tab. */
+window.__sbReady=new Promise(function(res){
+  var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
+  s1.onerror=function(){ window.supabase=null; res(); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=1787660000000'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  document.head.appendChild(s1);
+});
+window.__leafletReady=function(){
+  if(window.__lfP) return window.__lfP;
+  window.__lfP=new Promise(function(res,rej){
+    var c=document.createElement('link'); c.rel='stylesheet'; c.href='vendor/leaflet-1.9.4.css'; document.head.insertBefore(c, document.head.firstChild);
+    var s=document.createElement('script'); s.src='vendor/leaflet-1.9.4.js'; s.onload=function(){res();}; s.onerror=rej; document.head.appendChild(s);
+  });
+  return window.__lfP;
+};
+</script>
+<script>
+
+// resolve property — database only
+const id = qs('id')||'';
+let P = null;
+
+(async function loadProperty(){
+  // 1) Prime the DB cache if backend is live (Supabase arrives off the critical path)
+  try{ await window.__sbReady; }catch(e){}
+  // One indexed primary-key lookup for this listing, instead of pulling the whole
+  // table in just to find one row. Errors are expected for ids that are not uuids.
+  if(id && typeof fetchListing==='function' && typeof backendReady==='function' && backendReady()){
+    try{
+      const row = await fetchListing(id);
+      if(row && typeof dbListingToCard==='function') P = dbListingToCard(row);
+    }catch(e){}
+  }
+  // 2) Not in the database — a listing this visitor created locally
+  if(!P){
+    if(typeof primeListings==='function' && typeof backendReady==='function' && backendReady()) await primeListings();
+    P = allListings().find(x=>x.id===id);
+  }
+
+  // 3) If not found and backend is live, fetch this specific listing.
+  //    Database ids are UUIDs; anything else can never match, so we skip the
+  //    query instead of firing a request that always fails.
+  const isDbId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id||'');
+  if(!P && isDbId && typeof backendReady==='function' && backendReady()){
+    try{
+      const r = await fetchListing(id);
+      if(r){
+        P = dbListingToCard(r);
+        const c = getDbCache(); c.unshift(P);
+        try{ sessionStorage.setItem('mykunda_db_cache', JSON.stringify(c)); }catch(e){}
+        window.__dbListings = c;
+      }
+    }catch(e){ console.warn('fetchListing:', e); }
+  }
+  // 4) Nothing found — say so, honestly
+  if(!P){
+    document.getElementById('main').innerHTML = '<section class="wrap" style="padding:80px 0;text-align:center"><h1 style="font-family:var(--serif);font-size:32px;margin-bottom:12px">This listing is no longer available</h1><p style="color:var(--muted);max-width:520px;margin:0 auto 22px">It may have been sold, let or removed by the owner.</p><a class="btn btn-primary" href="search.html">Browse current listings</a></section>';
+    document.title = 'Listing not found — MyKunda';
+    return;
+  }
+  renderProperty();
+})();
+
+function renderProperty(){
+
+// ---- dynamic SEO for this listing ----
+(function(){
+  const dealTxt = P.cat==='land' ? 'land for sale' : (P.type==='rent'?'for rent':'for sale');
+  const areaTxt = P.area.replace(' · ', ', ');
+  const priceFmt = fmtPrice(P.price,P.type).replace(/<[^>]+>/g,'');
+  const specTxt = P.cat==='land' ? `${(P.plot||0).toLocaleString()} m² plot` : `${P.beds} bed, ${P.baths} bath, ${P.sqm} m²`;
+  const title = `${P.title}, ${areaTxt} — ${priceFmt} — MyKunda`;
+  const desc = `${P.title} ${dealTxt} in ${areaTxt}, The Gambia. ${specTxt}. ${priceFmt}. View photos, floor plan and contact an English-speaking agent on MyKunda.`;
+  const canon = SITE_URL+'/property.html?id='+P.id;
+  document.title = title;
+  const setM=(k,v,a='name')=>{let e=document.querySelector(`meta[${a}="${k}"]`);if(!e){e=document.createElement('meta');e.setAttribute(a,k);document.head.appendChild(e);}e.setAttribute('content',v);};
+  setM('description',desc);
+  setM('og:title',title,'property'); setM('og:description',desc,'property'); setM('og:type','product','property');
+  setM('og:url',canon,'property'); setM('og:image',P.img||SITE_URL+'/images/home-hero.webp','property');
+  setM('twitter:title',title); setM('twitter:description',desc);
+  if(P.img) setM('twitter:image',P.img);
+  let l=document.querySelector('link[rel="canonical"]'); if(!l){l=document.createElement('link');l.rel='canonical';document.head.appendChild(l);} l.href=canon;
+  // RealEstateListing structured data
+  addJsonLd({
+    "@context":"https://schema.org",
+    "@type":["Product","Residence"],
+    "name":P.title,
+    "description":desc,
+    "image":P.img?[P.img]:[SITE_URL+"/images/home-hero.webp"],
+    "url":canon,
+    "category":P.cat,
+    "address":{"@type":"PostalAddress","streetAddress":P.street,"addressLocality":P.area.split(' · ')[0],"addressRegion":(P.area.split(' · ')[1]||'Kombo'),"addressCountry":"GM"},
+    ...(P.cat!=='land'?{"numberOfRooms":P.beds,"floorSize":{"@type":"QuantitativeValue","value":P.sqm,"unitCode":"MTK"}}:{"floorSize":{"@type":"QuantitativeValue","value":P.plot,"unitCode":"MTK"}}),
+    "offers":{"@type":"Offer","price":P.price,"priceCurrency":"GMD","availability":"https://schema.org/InStock","businessFunction":P.type==='rent'?"http://purl.org/goodrelations/v1#LeaseOut":"http://purl.org/goodrelations/v1#Sell"}
+  });
+  addJsonLd(breadcrumbLd([["Home",""],[P.type==='rent'?"For rent":"For sale","search.html?type="+P.type],[P.area.split(' · ')[0],"search.html?q="+encodeURIComponent(P.area.split(' · ')[0])],[P.title,"property.html?id="+P.id]]));
+})();
+
+// icons
+backArr.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>';
+t1.innerHTML = ICON.camera; 
+t2.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="1.5"/><path d="M3 9h6V3M15 21v-6h6M9 9v12M15 3v6h6"/></svg>';
+t4.innerHTML = ICON.pin;
+favBtn.innerHTML = isFav(P.id)?ICON.heartFill:ICON.heart; if(isFav(P.id))favBtn.style.color='var(--amber-500)';
+shareBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5 8.6 10.5"/></svg>';
+waIc.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2Zm5.5 14c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.2-.7-2.7-1.1-4.4-3.8-4.5-4-.1-.2-1.1-1.4-1.1-2.7s.7-1.9.9-2.1c.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.5c-.2.2-.3.4-.1.7.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.2 0 .4 0 .6-.2l.7-.8c.2-.2.4-.2.6-.1l1.9.9c.2.1.4.2.5.3.1.3.1.7-.1 1.2Z"/></svg>';
+hoodArr.innerHTML = simArr.innerHTML = ICON.arrow;
+msgIc.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
+msgAgentBtn.href = 'messages.html?id='+P.id;
+
+// gallery — only this listing's own photos
+function renderGallery(photos){
+  const GAL = photos.length ? photos.slice(0,5) : (P.img ? [P.img] : []);
+  if(!GAL.length){
+    gallery.innerHTML = '<div class="g" style="grid-column:1/-1;grid-row:1/3;display:flex;align-items:center;justify-content:center;color:var(--muted);font-weight:600;font-size:15px;cursor:default">No photos yet</div>';
+    window.__galImages = [];
+    return;
+  }
+  const total = photos.length || P.photos || GAL.length;
+  gallery.innerHTML = GAL.map((src,i)=>`<div class="g" data-lb="${i}">
+    ${slotImg(i===0?('ph-'+P.id):('ph-'+P.id+'-g'+i), src, 'Drop Gambia photo '+(i+1)+' of '+P.title)}
+    ${i===GAL.length-1 && total>GAL.length?`<div class="more">${ICON.camera} +${total-GAL.length} photos</div>`:''}</div>`).join('');
+  // re-wire lightbox
+  window.__galImages = photos.length ? photos : GAL;
+  document.querySelectorAll('.gallery .g').forEach(g=>g.addEventListener('click',()=>{
+    if(typeof openLb==='function') openLb(+g.dataset.lb||0);
+  }));
+}
+
+// Try to load real photos from Supabase
+(async function(){
+  if(typeof getListingPhotos==='function'){
+    try{
+      const realPhotos = await getListingPhotos(P.id);
+      if(realPhotos.length){ renderGallery(realPhotos); return; }
+    }catch(e){ console.warn('photo fetch:', e); }
+  }
+  // Also check if listing has photo_urls stored
+  if(P.photo_urls && P.photo_urls.length){ renderGallery(P.photo_urls); return; }
+  renderGallery([]);
+})();
+
+// ---- Lightbox ----
+(function(){
+  const lb=document.createElement('div'); lb.className='lb'; lb.id='lb';
+  lb.innerHTML=`<button class="lb-close" aria-label="Close">&times;</button>
+    <button class="lb-arr left" aria-label="Previous"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <img id="lbImg" alt="">
+    <button class="lb-arr right" aria-label="Next"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+    <div class="lb-counter" id="lbCounter"></div>`;
+  document.body.appendChild(lb);
+  const img=document.getElementById('lbImg'), counter=document.getElementById('lbCounter');
+  let cur=0;
+  function getGal(){ return window.__galImages || [P.img]; }
+  function show(i){
+    const g=getGal();
+    cur=((i%g.length)+g.length)%g.length;
+    img.src=g[cur]; counter.textContent=(cur+1)+' / '+g.length;
+  }
+  function open(i){ show(i); lb.classList.add('open'); document.body.style.overflow='hidden'; }
+  window.openLb = open;
+  function close(){ lb.classList.remove('open'); document.body.style.overflow=''; }
+  lb.querySelector('.lb-close').addEventListener('click',close);
+  lb.querySelector('.lb-arr.left').addEventListener('click',()=>show(cur-1));
+  lb.querySelector('.lb-arr.right').addEventListener('click',()=>show(cur+1));
+  lb.addEventListener('click',e=>{ if(e.target===lb) close(); });
+  document.addEventListener('keydown',e=>{
+    if(!lb.classList.contains('open')) return;
+    if(e.key==='Escape') close();
+    if(e.key==='ArrowLeft') show(cur-1);
+    if(e.key==='ArrowRight') show(cur+1);
+  });
+  // touch swipe
+  let tx=0;
+  lb.addEventListener('touchstart',e=>{ tx=e.touches[0].clientX; },{passive:true});
+  lb.addEventListener('touchend',e=>{ const dx=e.changedTouches[0].clientX-tx; if(Math.abs(dx)>50){ dx<0?show(cur+1):show(cur-1); } },{passive:true});
+  // gallery clicks are wired by renderGallery() above
+})();
+
+// title / price
+dBadges.innerHTML = (P.isNew?'<span class="badge badge-new">New</span>':'')+(P.verified?'<span class="badge badge-verified"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1l3.09 4.26L20 6.27l-2.18 4.35L19.36 16 12 18.27 4.64 16l1.54-5.38L4 6.27l4.91-1.01L12 1z"/><path d="M9.5 11.5l2 2 3.5-4" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Verified</span>':'')+(P.cat==='land'?'<span class="badge badge-rent">Land</span>':(P.type==='sale'?'<span class="badge badge-sale">For sale</span>':'<span class="badge badge-rent">For rent</span>'))+`<span class="badge badge-sale" style="background:var(--amber-100);color:var(--amber-600)">${P.tag}</span>`;
+dTitle.textContent = P.title;
+crumbTitle.textContent = P.title;
+dAddr.innerHTML = ICON.pin+' '+P.street+', '+P.area.replace('· ','');
+if(typeof P.lat==='number'){ dPlusCode.innerHTML = plusCodeChip(P.lat, P.lng, P.area.split('·')[0].trim()); }
+dPrice.innerHTML = fmtPrice(P.price,P.type);
+
+// specbar
+function pTypeLabel(p){return {villa:'Villa',apartment:'Apartment',compound:'Compound',penthouse:'Penthouse',townhouse:'Townhouse',land:'Land / plot',lodge:'Lodge',commercial:'Commercial'}[p.cat]||'Property';}
+const COND_LABEL={good:'Good condition',new:'New build',renovation:'Needs renovation'};
+const FLOOR_LABEL={'1':'Single storey','2':'2 storeys','3':'3+ storeys'};
+const BEACH_LABEL={inland:'Inland',walking:'Walking distance',beachfront:'Beachfront'};
+/* A measured distance beats a category — show the metres when we have them. */
+function seaDistText(p){
+  const m=p.beach_m;
+  if(typeof m!=='number') return BEACH_LABEL[p.cat==='land'?p.land_beach:p.beach]||'—';
+  return (m<1000 ? Math.round(m/10)*10+' m' : (m/1000).toFixed(m<10000?1:0)+' km')+' to the sea';
+}
+const TITLE_LABEL={alkalalo:'Customary / Alkalalo',leasehold:'State lease',sublease:'Sublease',freehold:'Freehold',unclear:'Unclear'};
+let specs;
+if(P.cat==='land'){
+  specs=[['Plot size',(P.plot||0).toLocaleString()+' m²',ICON.area],['Road access',{laterite:'Laterite',tarmac:'Tarmac',none:'No access'}[P.road]||'—',''],['To the sea',seaDistText(P),''],['Title',TITLE_LABEL[P.title_type]||'—',''],['Beach',BEACH_LABEL[P.land_beach||P.beach]||'—',ICON.pin],['Flood risk',{no:'None',low:'Low',high:'High'}[P.flood_risk]||'None',''],['Type','Land / plot']];
+} else {
+  specs=[['Bedrooms',P.beds||'—',ICON.bed],['Bathrooms',P.baths||'—',ICON.bath],['Built area',(P.sqm?P.sqm+' m²':'—'),ICON.area],['Condition',COND_LABEL[P.condition]||'Good condition',''],['Storeys',FLOOR_LABEL[P.floors]||'—',''],['Type',pTypeLabel(P)]];
+}
+specbar.innerHTML = specs.map(s=>`<div class="s"><span class="k">${s[2]||''} ${s[0]}</span><span class="v">${s[1]}</span></div>`).join('');
+
+// description — use seller's own description if available, else generate
+if(P.desc || P.description){
+  dDesc.textContent = P.desc || P.description;
+} else if(P.cat==='land'){
+  dDesc.textContent = `A rare ${(P.plot||0).toLocaleString()} m² building plot in ${P.area.replace('· ',', ')}, just a short walk from the Atlantic. The land has a verified title deed, road access and is ready to build — ideal for a private villa, a small development or a holiday-let investment. A partner agency can manage the entire build for you remotely, from architect to handover, while you follow progress from abroad.`;
+} else {
+  const sqmTxt=P.sqm?P.sqm+' m²':'spacious'; const bedsTxt=P.beds?(P.beds+' generous bedroom'+(P.beds>1?'s':'')):'generous living space'; const bathsTxt=P.baths?(P.beds+' bathroom'+(P.baths>1?'s':'')):'modern facilities';
+  dDesc.textContent = `This beautifully presented ${pTypeLabel(P).toLowerCase()}${P.sqm?' of '+P.sqm+' m²':''} sits in one of ${P.area.replace('· ',', ')}'s most sought-after coastal pockets. Bright, open living spaces flow to a shaded terrace, with quality finishes throughout and ${P.tag.toLowerCase()} among its highlights. ${bedsTxt} and ${bathsTxt} make it equally suited to family life, a coastal second home, or a strong holiday-rental investment — minutes from the beach, restaurants and the Senegambia strip.`;
+}
+
+// features — build from real listing data, fall back to defaults
+function buildFeatures(p){
+  const feats = [];
+  if(p.cat==='land'){
+    if(p.title_type) feats.push({freehold:'Freehold title deed',leasehold:'State lease (99-year leasehold)',sublease:'Sublease of an existing state lease',alkalalo:'Customary / Alkalalo title',unclear:'Title status unclear'}[p.title_type]||'Title deed');
+    if(p.road && p.road!=='none') feats.push({laterite:'Laterite / dirt road access',tarmac:'Tarmac / paved road access'}[p.road]);
+    if(p.fencing && p.fencing!=='none') feats.push({partial:'Partially fenced',full:'Fully fenced / walled'}[p.fencing]);
+    if(p.electricity && p.electricity!=='none') feats.push({nearby:'Electricity available nearby',present:'Electricity connected on plot'}[p.electricity]);
+    if(p.land_water && p.land_water!=='none') feats.push({nearby:'Water nearby',borehole:'Borehole on plot',nawec:'Nawec water connected'}[p.land_water]);
+    if(typeof p.beach_m==='number') feats.push(seaDistText(p));
+    else if(p.land_beach==='beachfront') feats.push('Beachfront');
+    else if(p.land_beach==='walking') feats.push('Walking distance to beach');
+    if(p.plot_shape==='regular') feats.push('Regular (rectangular) plot');
+    if(p.flood_risk==='no') feats.push('No flood risk');
+  } else {
+    if(p.condition) feats.push(COND_LABEL[p.condition]||'Good condition');
+    if(p.floors && p.floors!=='1') feats.push(FLOOR_LABEL[p.floors]);
+    if(typeof p.beach_m==='number') feats.push(seaDistText(p));
+    else if(p.beach==='beachfront') feats.push('Beachfront');
+    else if(p.beach==='walking') feats.push('Walking distance to beach');
+    if(p.view==='ocean') feats.push('Ocean / sea view');
+    else if(p.view==='garden') feats.push('Garden / green view');
+    if(p.security && p.security!=='none') feats.push({wall:'Walled compound',gated:'Gated compound with guard'}[p.security]);
+    if(p.furnished && p.furnished!=='unfurnished') feats.push({semi:'Semi-furnished',furnished:'Fully furnished'}[p.furnished]);
+    if(p.water) feats.push({nawec:'Nawec (mains) water',borehole:'Borehole water',both:'Nawec + borehole water',none:null}[p.water]);
+    if(p.power && p.power!=='no') feats.push({solar:'Solar panels',generator:'Generator backup',both:'Solar + generator'}[p.power]);
+  }
+  // Add user-selected checkbox features
+  if(p.features && Array.isArray(p.features)) p.features.forEach(f=>{ if(f && !feats.includes(f)) feats.push(f); });
+  // Verified badge
+  if(p.verified) feats.unshift('Verified title deed');
+  return feats.filter(Boolean);
+}
+const FEATS = buildFeatures(P);
+// If no real features, use defaults
+const displayFeats = FEATS.length >= 3 ? FEATS : (P.cat==='land'
+  ? ['Verified title deed','Road access','Walled & pegged','Mains electricity nearby','Borehole-ready','~120 m to the beach','Residential zoning','Build management available','Clear of encumbrances','Survey plan included']
+  : ['Verified title deed','Walled & gated compound','Borehole water supply','Solar backup power','Air-conditioning throughout','Fibre internet ready','Mature tropical garden','Off-street parking','Staff / guard quarters','Fitted kitchen','Backup water tank','Fully furnished option']);
+featList.innerHTML = displayFeats.map(f=>`<div class="fi"><span class="ic">${ICON.check}</span> ${f}</div>`).join('');
+
+// ---- ownership check CTA (buyer product, priced from PRICING.ownership) ----
+(function(){
+  var btn=document.getElementById('ovcBtn'); if(!btn) return;
+  var q='verify.html?tier=full';
+  if(P.title) q+='&title='+encodeURIComponent(P.title);
+  if(P.area)  q+='&area='+encodeURIComponent(P.area);
+  if(P.id)    q+='&ref='+encodeURIComponent(P.id);
+  btn.href=q;
+  var from=document.getElementById('ovcFrom');
+  if(from && typeof PRICING!=='undefined' && PRICING.ownership){
+    var c=CURRENCIES[getCurrency()];
+    from.textContent=c.symbol+Math.round(PRICING.ownership.standard.gmd/CURRENCIES.GMD.rate*c.rate).toLocaleString('en-US');
+  }
+})();
+
+// neighborhood — per-area profiles with realistic data
+const town = P.area.split('· ')[0].trim();
+const HOOD_DATA = {
+  'Kololi': {
+    intro: 'Kololi is the heart of The Gambia\'s tourism strip — home to the famous Senegambia junction with its restaurants, bars and nightlife. A 5–10 minute walk brings you to Kololi beach. Popular with expats, holiday-home investors and digital nomads for its walkable amenities and vibrant social scene.',
+    stats: [['Avg. price/m²',1009,' '],['To the beach','5–10 min','on foot'],['To airport (BJL)','25–45 min','via Westfield'],['Intl. schools','3','within 8 km']],
+    scores: [['Safety',72],['Beach access',88],['Dining & nightlife',95],['Connectivity',90],['Investment demand',92]]
+  },
+  'Bijilo': {
+    intro: 'Bijilo is a quieter, upscale residential area just south of Kololi. Known for the Bijilo Forest Park (monkey park) and a long stretch of undeveloped beach. It attracts expat families and retirees who want peace and nature while staying close to Kololi\'s amenities — a 5-minute drive away.',
+    stats: [['Avg. price/m²',779,' '],['To the beach','10–15 min','on foot'],['To airport (BJL)','20–35 min','coastal road'],['Intl. schools','2','within 6 km']],
+    scores: [['Safety',82],['Beach access',78],['Dining & nightlife',55],['Connectivity',80],['Investment demand',80]]
+  },
+  'Brufut Heights': {
+    intro: 'Brufut Heights is a peaceful, family-friendly hillside area with spacious villas and stunning Atlantic views. Popular with expat families for its secure estates, large gardens and quiet streets. The beach is a 15-minute walk downhill, and Senegambia\'s restaurants are a short drive away.',
+    stats: [['Avg. price/m²',734,' '],['To the beach','15 min','on foot'],['To airport (BJL)','20–35 min','via highway'],['Intl. schools','2','within 10 km']],
+    scores: [['Safety',88],['Beach access',68],['Dining & nightlife',40],['Connectivity',72],['Investment demand',85]]
+  },
+  'Brufut': {
+    intro: 'Brufut is a traditional coastal town with wide golden beaches and a relaxed pace of life. The Brufut Forest Reserve offers great birdwatching. Development is accelerating — estates like Brufut Gardens bring modern infrastructure — making it one of The Gambia\'s fastest-growing property areas.',
+    stats: [['Avg. price/m²',596,' '],['To the beach','5–15 min','depends on location'],['To airport (BJL)','15–30 min','via highway'],['Intl. schools','1','within 10 km']],
+    scores: [['Safety',84],['Beach access',82],['Dining & nightlife',35],['Connectivity',68],['Investment demand',82]]
+  },
+  'Bakau': {
+    intro: 'Bakau is one of The Gambia\'s oldest coastal towns, with a strong local character and proximity to Banjul. Cape Point and the Kachikally Crocodile Pool are landmarks. The area has good beach access and established infrastructure, though it feels more authentically Gambian than the tourist strip.',
+    stats: [['Avg. price/m²',688,' '],['To the beach','5–10 min','on foot'],['To airport (BJL)','40–60 min','through Serrekunda'],['Intl. schools','2','within 5 km']],
+    scores: [['Safety',70],['Beach access',85],['Dining & nightlife',50],['Connectivity',75],['Investment demand',65]]
+  },
+  'Cape Point': {
+    intro: 'Cape Point is an established residential enclave within Bakau, popular with long-term expats and embassy staff. It offers quiet tree-lined streets, proximity to Fajara\'s amenities and direct beach access. Property here tends to hold its value well thanks to limited supply and consistent demand.',
+    stats: [['Avg. price/m²',1100,' '],['To the beach','5 min','on foot'],['To airport (BJL)','45–65 min','through Serrekunda'],['Intl. schools','3','within 5 km']],
+    scores: [['Safety',80],['Beach access',90],['Dining & nightlife',55],['Connectivity',78],['Investment demand',72]]
+  },
+  'Fajara': {
+    intro: 'Fajara is The Gambia\'s most established expat neighbourhood. Home to international schools, embassies, clinics and quality restaurants. The area combines leafy residential streets with good beach access and reliable infrastructure — a top choice for families who want Western-level comfort.',
+    stats: [['Avg. price/m²',871,' '],['To the beach','8–12 min','on foot'],['To airport (BJL)','35–55 min','via Westfield'],['Intl. schools','4','within 5 km']],
+    scores: [['Safety',82],['Beach access',75],['Dining & nightlife',65],['Connectivity',85],['Investment demand',75]]
+  },
+  'Sanyang': {
+    intro: 'Sanyang is a fishing village about 35 km south of Banjul, known for Paradise Beach — 8 km of pristine white sand and one of West Africa\'s most beautiful coastlines. It\'s quiet, authentic and increasingly popular with investors seeking affordable beachside land before prices rise.',
+    stats: [['Avg. price/m²',348,' '],['To the beach','5–20 min','depends on plot'],['To airport (BJL)','30–50 min','unpaved sections'],['Intl. schools','0','nearest 20 km']],
+    scores: [['Safety',78],['Beach access',90],['Dining & nightlife',20],['Connectivity',45],['Investment demand',75]]
+  },
+  'Kotu': {
+    intro: 'Kotu sits between Kololi and Fajara and is known for its wide beach, Kotu Stream (a birding hotspot) and cluster of tourist hotels. It\'s quieter than Kololi but close to its nightlife. A solid choice for holiday rental investment with good year-round occupancy rates.',
+    stats: [['Avg. price/m²',825,' '],['To the beach','5 min','on foot'],['To airport (BJL)','30–45 min','via Westfield'],['Intl. schools','2','within 7 km']],
+    scores: [['Safety',75],['Beach access',92],['Dining & nightlife',60],['Connectivity',82],['Investment demand',78]]
+  },
+  'Brusubi': {
+    intro: 'Brusubi is a fast-developing inland area about 10 minutes from Kololi. It offers more affordable, spacious plots and modern builds. While there\'s no beach within walking distance, the coastal highway provides quick access. Increasingly popular with young Gambian professionals and diaspora families.',
+    stats: [['Avg. price/m²',504,' '],['To the beach','15 min','by car'],['To airport (BJL)','15–25 min','highway access'],['Intl. schools','1','within 8 km']],
+    scores: [['Safety',80],['Beach access',30],['Dining & nightlife',35],['Connectivity',75],['Investment demand',70]]
+  },
+  'Sukuta': {
+    intro: 'Sukuta is a large, bustling town inland from the coast — one of The Gambia\'s most affordable areas for property. It has a lively local market, good transport links and a growing residential sector. Best for buyers seeking value and authentic community life over tourist-area polish.',
+    stats: [['Avg. price/m²',367,' '],['To the beach','20 min','by car'],['To airport (BJL)','20–35 min','via Brikama road'],['Intl. schools','1','within 10 km']],
+    scores: [['Safety',68],['Beach access',20],['Dining & nightlife',30],['Connectivity',72],['Investment demand',55]]
+  },
+  'Kerr Serign': {
+    intro: 'Kerr Serign is a quiet residential area near Kololi, offering more affordable property than its beachfront neighbours. It\'s within easy reach of the Senegambia strip and coastal amenities while maintaining a calmer, more local atmosphere. A good entry point for budget-conscious investors.',
+    stats: [['Avg. price/m²',459,' '],['To the beach','15 min','by car/on foot'],['To airport (BJL)','25–40 min','via Westfield'],['Intl. schools','2','within 8 km']],
+    scores: [['Safety',72],['Beach access',45],['Dining & nightlife',40],['Connectivity',70],['Investment demand',60]]
+  },
+  'Tanji': {
+    intro: 'Tanji is a colourful fishing village south of Brufut, famous for its busy fish market and the Tanji Bird Reserve. Property prices are among the lowest on the coast. It\'s an emerging area with limited infrastructure but genuine charm — ideal for adventurous investors with a longer time horizon.',
+    stats: [['Avg. price/m²',321,' '],['To the beach','5 min','on foot'],['To airport (BJL)','15–25 min','coastal road'],['Intl. schools','0','nearest 15 km']],
+    scores: [['Safety',72],['Beach access',88],['Dining & nightlife',15],['Connectivity',40],['Investment demand',55]]
+  }
+};
+
+// find matching hood data — try exact match, then partial match, then default
+let hood = HOOD_DATA[town];
+if(!hood){
+  const lc = town.toLowerCase();
+  for(const [k,v] of Object.entries(HOOD_DATA)){
+    if(lc.includes(k.toLowerCase()) || k.toLowerCase().includes(lc)){ hood=v; break; }
+  }
+}
+if(!hood){
+  // sensible generic fallback for unknown areas
+  hood = {
+    intro: `${town} is a residential area in The Gambia's coastal region. Contact us for detailed neighbourhood insights and property guidance in this area.`,
+    stats: [['Avg. price/m²',459,' '],['To the beach','varies','ask agent'],['To airport (BJL)','30–50 min','traffic dependent'],['Intl. schools','—','ask agent']],
+    scores: [['Safety',70],['Beach access',50],['Dining & nightlife',40],['Connectivity',60],['Investment demand',60]]
+  };
+}
+
+hoodIntro.textContent = hood.intro;
+hoodStats.innerHTML = hood.stats.map(h=>`<div class="hstat-card"><div class="lab">${h[0]}</div><div class="num">${h[0]==='Avg. price/m²'?fmtAreaPrice(h[1]):h[1]}</div><div class="meta">${h[2]}</div></div>`).join('');
+scorebars.innerHTML = hood.scores.map(s=>`<div class="scorebar"><span class="l">${s[0]}</span><div class="track"><div class="fill" style="width:${s[1]}%"></div></div><span class="sc">${(s[1]/10).toFixed(1)}</span></div>`).join('');
+
+// property location map (MapTiler satellite)
+let propMap=null;
+function initPropMap(){
+  if(propMap || typeof L==='undefined' || typeof P.lat!=='number') return;
+  propMap = L.map('propMap', { zoomControl:true, scrollWheelZoom:true, minZoom:7, maxZoom:20 }).setView([P.lat,P.lng], 16);
+  const attribution='&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+  /* MapTiler answers a domain-rejected request 403 with a decodable "get a
+     valid key" PNG, so <img> load fires and tileerror never does. Probe one
+     tile and fall back to keyless Esri imagery when the key is not valid here. */
+  const ESRI_SAT='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+  const mt=L.tileLayer(mapTilerUrl('hybrid'), { maxZoom:20, tileSize:512, zoomOffset:-1, crossOrigin:true, attribution }).addTo(propMap);
+  let satSwapped=false, badTiles=0;
+  function useEsriTiles(){
+    if(satSwapped) return; satSwapped=true;
+    if(propMap.hasLayer(mt)) propMap.removeLayer(mt);
+    L.tileLayer(ESRI_SAT,{maxZoom:19,crossOrigin:true,attribution:'Imagery &copy; Esri, Maxar, Earthstar Geographics'}).addTo(propMap);
+  }
+  mt.on('tileerror',()=>{ if(++badTiles>=3) useEsriTiles(); });
+  fetch(mapTilerUrl('hybrid').replace('{z}','7').replace('{x}','58').replace('{y}','58'),{mode:'cors',credentials:'omit'})
+    .then(r=>{ if(!r.ok || !/jpe?g/i.test(r.headers.get('content-type')||'')) useEsriTiles(); })
+    .catch(()=>useEsriTiles());
+  const accent = P.type==='rent' ? 'var(--amber-500)' : 'var(--green-700)';
+  const icon = L.divIcon({ className:'price-marker'+(P.type==='rent'?' rent':''), html:`<div class="pin-bubble" style="background:${accent};color:#fff;border-color:${accent}">${fmtPin(P.price,P.type)}</div>`, iconSize:[0,0], iconAnchor:[0,0] });
+  const mk = L.marker([P.lat,P.lng], { icon }).addTo(propMap);
+  // seller-drawn plot outline, when the listing has one
+  const bndPts = (function(v){ if(!v) return []; const a = Array.isArray(v) ? v : (v.points||[]); return a.map(q=>Array.isArray(q)?[q[0],q[1]]:[q.lat,q.lng]).filter(q=>typeof q[0]==='number'&&typeof q[1]==='number'); })(P.boundary);
+  if(bndPts.length>2){
+    const pg = L.polygon(bndPts, { color:'#1F7BFF', weight:3, fillColor:'#1F7BFF', fillOpacity:.2 }).addTo(propMap);
+    propMap.fitBounds(pg.getBounds(), { padding:[40,40], maxZoom:19 });
+  }
+  const loc = P.area.split('·')[0].trim();
+  mk.bindPopup(`<div style="font-family:var(--sans);min-width:170px"><div style="font-weight:700;color:#18201D;margin-bottom:3px">${P.street}</div><div style="color:#5C6B64;font-size:12.5px;margin-bottom:8px">${P.area.replace('· ',', ')}</div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#15463A">Google Plus Code</div><div style="font-weight:800;color:#15463A">${plusCodeShort(P.lat,P.lng,loc)}</div></div>`);
+}
+
+// floorplan
+floorplan.innerHTML = floorplanSVG(P);
+
+
+
+// similar — real listings only; the whole block disappears when there are none
+(function(){
+  const all = (typeof allListings==='function'?allListings():[]).filter(x=>x.id!==P.id);
+  const sims = all.filter(x=>x.type===P.type).slice(0,4);
+  const show = sims.length?sims:all.slice(0,4);
+  const block = similarGrid.closest('.similar');
+  if(!show.length){ if(block) block.style.display='none'; return; }
+  similarGrid.innerHTML = show.map(cardHTML).join('');
+})();
+
+// ---- interactions ----
+// media tabs
+document.querySelectorAll('.mtab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.mtab').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+  document.querySelectorAll('.media-pane').forEach(p=>p.classList.toggle('active',p.dataset.pane===t.dataset.pane));
+  if(t.dataset.pane==='map'){ window.__leafletReady().then(()=>{ initPropMap(); setTimeout(()=>{ if(propMap){ propMap.invalidateSize(); guardMapTouch(propMap, document.getElementById('propMap').closest('.mapmini')||document.getElementById('propMap')); } }, 60); }).catch(()=>{}); }
+}));
+// fav + share
+favBtn.addEventListener('click',()=>{const on=toggleFav(P.id);favBtn.innerHTML=on?ICON.heartFill:ICON.heart;favBtn.style.color=on?'var(--amber-500)':'';});
+shareBtn.addEventListener('click',()=>{
+  const loc=P.area.split('·')[0].trim();
+  const url=(location.origin&&location.origin!=='null'?location.origin+location.pathname.replace(/[^/]*$/,''):'')+'property.html?id='+P.id;
+  openShareSheet({
+    title:P.title+' — MyKunda',
+    text:listingShareText(P,{tail:'Shared via MyKunda'}),
+    url:url,
+    plus: typeof P.lat==='number' ? plusCodeShort(P.lat,P.lng,loc) : '',
+    previewHTML:`<img src="${P.img}" alt="" onerror="this.style.background='#DCEAE3';this.removeAttribute('src')"><div><div class="sp-t">${P.title}</div><div class="sp-m">${fmtPrice(P.price,P.type)} · ${loc}</div></div>`
+  });
+});
+
+// real WhatsApp deep-link with the listing details + Google Plus Code
+(function(){
+  const loc=P.area.split('·')[0].trim();
+  const enquiry = listingShareText(P, { lead:'Hello MyKunda! I\'m interested in this property:', tail:'Is it still available? I\'d like to arrange a viewing.' });
+  const wl=document.getElementById('waLink');
+  if(wl) wl.href = waLink(enquiry);
+  // make the site-wide floating button context-aware for this property
+  window.MYKUNDA_WA_MESSAGE = enquiry;
+  const fab=document.getElementById('waFab');
+  if(fab) fab.href = waLink(enquiry);
+})();
+// slots
+document.querySelectorAll('#slots .slot').forEach(s=>s.addEventListener('click',()=>{document.querySelectorAll('#slots .slot').forEach(x=>x.classList.remove('active'));s.classList.add('active');}));
+
+// holiday-let investor calculator — bedroom + area + type driven
+const occRange=document.getElementById('occRange');
+function calcInvest(){
+  const occ=+occRange.value; occLabel.textContent=occ+'%';
+  const isRent=P.type==='rent';
+  const capitalValue = isRent ? P.price*150 : P.price;
+
+  if(P.cat==='land'){
+    nightVal.textContent = '—';
+    incomeVal.textContent = '—';
+    yieldVal.textContent = 'n/a';
+    return;
+  }
+
+  // base nightly rate by bedrooms (USD, Gambia coastal short-let market 2025-26)
+  // sources: Airbnb Gambia, Booking.com, local property managers
+  const BED_RATE = [0, 35, 55, 75, 105, 140]; // index = bedrooms (1-5)
+  const beds = Math.min(Math.max(P.beds||1, 1), 5);
+  const base = BED_RATE[beds];
+
+  // area multiplier — tourist-premium locations command higher nightly rates
+  const a = (P.area||'').toLowerCase();
+  const areaMult =
+    a.includes('kololi') || a.includes('senegambia') ? 1.25 :
+    a.includes('cape point') || a.includes('fajara') ? 1.15 :
+    a.includes('brufut heights') || a.includes('bijilo') ? 1.10 :
+    a.includes('kotu') || a.includes('bakau') ? 1.05 :
+    a.includes('brufut') ? 0.95 :
+    a.includes('sanyang') || a.includes('tanji') ? 0.85 :
+    a.includes('kartong') ? 0.75 :
+    1.0;
+
+  // type multiplier — villas with 4+ beds get luxury premium
+  const typeMult =
+    P.cat==='house' && beds >= 4 ? 1.15 :
+    P.cat==='house' ? 1.05 :
+    P.cat==='apartment' ? 0.95 :
+    1.0;
+
+  const nightly = Math.round(base * areaMult * typeMult / 5) * 5;
+  const annualIncome = Math.round(nightly * 365 * occ / 100);
+  const grossYield = capitalValue ? (annualIncome / capitalValue * 100) : 0;
+
+  nightVal.textContent = '$'+nightly.toLocaleString();
+  incomeVal.textContent = '$'+annualIncome.toLocaleString();
+  yieldVal.textContent = grossYield.toFixed(1)+'%';
+}
+occRange.addEventListener('input',calcInvest); calcInvest();
+// viewing
+document.getElementById('vDate').min = new Date().toISOString().slice(0,10);
+window.bookViewing = async function(form) {
+  const btn = form.querySelector('button[type=submit]') || form.querySelector('.btn-primary');
+  const d = document.getElementById('vDate').value;
+  const slot = (document.querySelector('#slots .slot.active') || {textContent: ''}).textContent;
+  const nameEl = form.querySelector('input[type=text]');
+  const emailEl = form.querySelector('input[type=email]');
+  const phoneEl = form.querySelector('input[type=tel]');
+  const msgEl = form.querySelector('textarea');
+  const name = nameEl ? nameEl.value.trim() : '';
+  const email = emailEl ? emailEl.value.trim() : '';
+  const phone = phoneEl ? phoneEl.value.trim() : '';
+  const note = msgEl ? msgEl.value.trim().slice(0, 1000) : '';
+  let err = form.querySelector('.form-err');
+  if(!err){ err = document.createElement('div'); err.className='form-err'; err.style.cssText='font-size:13px;font-weight:600;color:#C2533A;line-height:1.45;margin-top:10px'; form.appendChild(err); }
+  if(!d || !name || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ err.textContent = 'Please pick a date and fill in your name and a valid email address.'; return; }
+  err.innerHTML = '';
+  const label = btn ? btn.textContent : 'Request viewing';
+  if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+  try {
+    const listingId = (typeof P !== 'undefined' && P && P.id) || null;
+    await sendLead('viewing', {
+      name, email, phone: phone || null, message: note || null,
+      listing_id: listingId,
+      payload: { date: d, slot: slot }
+    });
+    /* Also record it as a real viewing, so it lands in the seller's dashboard
+       instead of only in the mailbox. notify:false — notify-lead just mailed
+       both sides. Never blocks the confirmation: the request is already saved. */
+    if(listingId && typeof requestViewing === 'function'){
+      const dt = new Date(d + 'T' + ((slot || '10:00').trim() || '10:00'));
+      try{
+        await requestViewing({
+          listing_id: listingId, buyer_name: name, buyer_email: email,
+          buyer_phone: phone || null, note: note || null,
+          requested_slot: isNaN(dt) ? null : dt.toISOString(), status: 'requested'
+        }, { notify: false });
+      }catch(vErr){ console.warn('viewing row not created:', vErr.message || vErr); }
+    }
+  } catch(e) {
+    console.warn('bookViewing lead error:', e);
+    if (btn) { btn.disabled = false; btn.textContent = label; }
+    err.innerHTML = contactFallbackHTML((typeof window.MYKUNDA_WA_MESSAGE === 'string' ? window.MYKUNDA_WA_MESSAGE : 'Hello MyKunda! I would like to request a viewing.') + ' Preferred: ' + d + ' at ' + slot + '.', "Your viewing request didn't go through. Please reach us directly \u2014 these all work right now:");
+    return;
+  }
+  form.innerHTML = `<div style="text-align:center;padding:14px 6px"><div style="width:54px;height:54px;border-radius:50%;background:var(--green-50);color:var(--green-700);display:flex;align-items:center;justify-content:center;margin:0 auto 14px">${ICON.check}</div><div style="font-family:var(--serif);font-size:19px;font-weight:600;margin-bottom:6px">Viewing requested</div><p style="font-size:14px;color:var(--muted)">A confirmation is on its way to ${email.replace(/[<>&"]/g,'')}. We come back to you with the time — usually the same day.</p></div>`;
+};
+
+// floorplan generator
+function floorplanSVG(p){
+  if(p.cat==='land'){
+    return `<svg viewBox="0 0 560 420" xmlns="http://www.w3.org/2000/svg" font-family="Hanken Grotesk, sans-serif">
+    <defs><style>.bd{fill:none;stroke:#2A3B34;stroke-width:4}.plot{fill:#EAF2ED}.rl{fill:#384640;font-size:14px;font-weight:700}.rd{fill:#8A958E;font-size:12px;font-weight:600}.dim{stroke:#C8702D;stroke-width:1.5}.road{fill:#E9D9B0}</style></defs>
+    <rect x="60" y="40" width="400" height="300" class="plot"/>
+    <rect x="60" y="40" width="400" height="300" class="bd"/>
+    <rect x="60" y="345" width="440" height="40" class="road"/>
+    <text x="280" y="370" text-anchor="middle" class="rd">Access road</text>
+    <line x1="60" y1="30" x2="460" y2="30" class="dim"/>
+    <text x="260" y="22" text-anchor="middle" class="rd" fill="#C8702D">40 m frontage</text>
+    <line x1="475" y1="40" x2="475" y2="340" class="dim"/>
+    <text x="500" y="195" text-anchor="middle" class="rd" fill="#C8702D" transform="rotate(90,500,195)">30 m deep</text>
+    <text x="260" y="180" text-anchor="middle" class="rl">${p.plot.toLocaleString()} m² plot</text>
+    <text x="260" y="205" text-anchor="middle" class="rd">Residential · ready to build</text>
+    <text x="100" y="60" class="rd" fill="#5B86A0">← ~120 m to beach</text>
+  </svg>`;
+  }
+  return `<svg viewBox="0 0 560 420" xmlns="http://www.w3.org/2000/svg" font-family="Hanken Grotesk, sans-serif">
+    <defs><style>.wall{fill:none;stroke:#2A3B34;stroke-width:5;stroke-linejoin:round}.rm{fill:#F7F5F1}.rl{fill:#384640;font-size:14px;font-weight:700}.rd{fill:#8A958E;font-size:11px;font-weight:600}.door{stroke:#C8702D;stroke-width:3;fill:none}</style></defs>
+    <rect x="20" y="20" width="520" height="380" class="rm"/>
+    <rect x="20" y="20" width="520" height="380" class="wall"/>
+    <line x1="300" y1="20" x2="300" y2="230" class="wall"/>
+    <line x1="20" y1="230" x2="540" y2="230" class="wall"/>
+    <line x1="300" y1="230" x2="300" y2="400" class="wall"/>
+    <line x1="430" y1="230" x2="430" y2="400" class="wall"/>
+    <line x1="430" y1="315" x2="540" y2="315" class="wall"/>
+    <path d="M205,230 a30,30 0 0 0 30,-30" class="door"/>
+    <path d="M300,140 a26,26 0 0 1 -26,26" class="door"/>
+    <text x="160" y="118" text-anchor="middle" class="rl">Living &amp; Dining</text>
+    <text x="160" y="138" text-anchor="middle" class="rd">7.2 × 5.0 m</text>
+    <text x="420" y="118" text-anchor="middle" class="rl">Kitchen</text>
+    <text x="420" y="138" text-anchor="middle" class="rd">4.1 × 3.4 m</text>
+    <text x="160" y="320" text-anchor="middle" class="rl">Master Bedroom</text>
+    <text x="160" y="340" text-anchor="middle" class="rd">4.4 × 3.8 m</text>
+    <text x="365" y="320" text-anchor="middle" class="rl">Bedroom 2</text>
+    <text x="365" y="340" text-anchor="middle" class="rd">3.6 × 3.0 m</text>
+    <text x="485" y="278" text-anchor="middle" class="rl" font-size="12">Bath</text>
+    <text x="485" y="365" text-anchor="middle" class="rl" font-size="12">Hall</text>
+    <text x="280" y="46" text-anchor="middle" class="rd" font-size="12" fill="#C8702D">▲ Terrace — ocean side</text>
+  </svg>`;
+}
+} // end renderProperty
+</script>
+</body>
+</html>

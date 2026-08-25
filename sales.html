@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
+<link rel="apple-touch-icon" href="images/mykunda-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#15463A">
+<title>Sales &amp; revenue — MyKunda</title>
+<link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
+<link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.min.css?v=1787660000000">
+<style>
+body{background:var(--paper-2)}
+.admin{max-width:1180px;margin:0 auto;padding:34px 28px 70px}
+.admin-head{margin-bottom:22px}
+.admin-head h1{font-size:32px;line-height:1.1}
+.admin-head p{color:var(--muted);font-size:15px;margin-top:6px;max-width:70ch}
+.card{background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-sm);padding:22px 24px;margin-bottom:20px}
+.card-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.card-head h2{font-size:18px;margin:0}
+.card-head .sub{font-size:12.5px;color:var(--muted)}
+.card-head .spacer{flex:1}
+.pbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.pseg{display:inline-flex;background:var(--white);border-radius:99px;padding:4px;gap:3px;box-shadow:inset 0 0 0 1.5px var(--line);overflow-x:auto;max-width:100%;scrollbar-width:none}
+.pseg::-webkit-scrollbar{display:none}
+.pseg button{border:none;background:none;border-radius:99px;padding:8px 15px;font-family:var(--sans);font-size:13.5px;font-weight:700;color:var(--ink-2);cursor:pointer;white-space:nowrap}
+.pseg button:hover{color:var(--green-700)}
+.pseg button.on{background:var(--green-700);color:#fff}
+.pcustom{display:none;align-items:center;gap:8px;font-size:13px;color:var(--muted);font-weight:700}
+.pcustom.on{display:flex}
+.pcustom input{height:38px;border-radius:var(--r-sm);border:1.5px solid var(--line);padding:0 10px;font-family:var(--sans);font-size:13.5px;font-weight:600;color:var(--ink);background:var(--white)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.kpi{background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-sm);padding:17px 19px}
+.kpi .lab{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.kpi .val{font-family:var(--serif);font-size:27px;font-weight:800;color:var(--ink);line-height:1.05;font-variant-numeric:tabular-nums}
+.kpi .note{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.5}
+.kpi.hero{background:var(--green-700)}
+.kpi.hero .lab{color:#A9C6BB}.kpi.hero .val{color:#fff}.kpi.hero .note{color:#CFE0D8}
+.kpi.cost .val{color:var(--amber-600)}
+.kpi.back .val{color:var(--rent)}
+.rwarn{display:none;margin-top:14px;background:var(--amber-50);border:1px solid var(--amber-100);border-radius:var(--r-md);padding:12px 16px;font-size:13px;color:var(--amber-600);font-weight:600;line-height:1.55}
+.rwarn.on{display:block}
+table.t{width:100%;border-collapse:collapse;font-size:13.5px}
+table.t th{text-align:left;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-bottom:1.5px solid var(--line);padding:0 14px 8px 0;white-space:nowrap}
+table.t td{border-bottom:1px solid var(--line-2);padding:10px 14px 10px 0;color:var(--ink-2);vertical-align:middle}
+table.t td.p{font-weight:700;color:var(--ink)}
+table.t th.n,table.t td.n{text-align:right;padding-left:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+table.t th:last-child,table.t td:last-child{padding-right:0}
+table.t tfoot td{border-bottom:none;border-top:1.5px solid var(--line);font-weight:800;color:var(--ink);padding-top:11px}
+table.t tbody tr:hover td{background:var(--paper)}
+table.t tr.sub td{background:var(--paper);color:var(--muted);font-size:12.5px;padding:7px 12px 7px 0;line-height:1.5}
+table.t tr.sub b{color:var(--ink-2);font-weight:800}
+.ref{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;font-weight:700;color:var(--ink-2)}
+.bar{height:6px;border-radius:99px;background:var(--paper-2);min-width:60px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--green-600);border-radius:99px}
+.pill{display:inline-block;padding:3px 9px;border-radius:99px;font-size:11.5px;font-weight:800;white-space:nowrap;background:var(--paper-2);color:var(--muted)}
+.pill.ok{background:var(--green-100);color:var(--green-700)}
+.pill.warn{background:var(--amber-50);color:var(--amber-600)}
+.pill.bad{background:#FEE2E2;color:#B91C1C}
+.pill.part{background:var(--amber-50);color:var(--amber-600)}
+.tbtn{height:28px;padding:0 10px;border-radius:var(--r-sm);border:1.5px solid var(--line);background:var(--white);color:var(--ink-2);font-family:inherit;font-size:11.5px;font-weight:700;white-space:nowrap;cursor:pointer;transition:.15s}
+.tbtn:hover{border-color:var(--green-600);color:var(--green-700)}
+.tbtn.x{border:none;padding:0 7px;color:var(--muted);font-size:13px}
+.tbtn.x:hover{background:#FEE2E2;color:#B91C1C}
+.scroll{overflow-x:auto}
+.subhead{font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:4px 0 10px}
+.subhead.gap{margin-top:26px}
+.chart{display:block;width:100%;height:auto;font-family:var(--sans)}
+.chart .gl{stroke:var(--line-2);stroke-width:1}
+.chart .zl{stroke:var(--line);stroke-width:1.5}
+.chart text{fill:var(--muted-2);font-size:10.5px}
+.chart .mlab{font-size:10px}
+.chart .net{fill:var(--green-600)}
+.chart .fee{fill:var(--amber-500)}
+.chart .back{fill:var(--rent)}
+.chart .val{fill:var(--ink);font-size:10.5px;font-weight:700;font-family:var(--serif)}
+.legend{display:flex;gap:18px;font-size:12px;color:var(--muted);margin-top:12px;flex-wrap:wrap;font-weight:600}
+.legend span:before{content:"";display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:7px;vertical-align:-1px}
+.legend .l-net:before{background:var(--green-600)}
+.legend .l-fee:before{background:var(--amber-500)}
+.legend .l-back:before{background:var(--rent)}
+.rates{display:grid;grid-template-columns:repeat(auto-fit,minmax(178px,1fr));gap:12px;margin-bottom:18px}
+.rate{background:var(--green-50);border:1.5px solid var(--green-200);border-radius:var(--r-md);padding:13px 15px}
+.rate .lab{font-size:11.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--green-700);margin-bottom:6px}
+.rate .now{font-family:var(--serif);font-size:23px;font-weight:800;color:var(--ink);line-height:1;font-variant-numeric:tabular-nums}
+.rate .from{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.45}
+.rate.none{background:var(--amber-50);border-color:var(--amber-100)}
+.rate.none .lab{color:var(--amber-600)}
+.rate.none .now{font-size:16px;color:var(--amber-600)}
+.setrate{display:grid;grid-template-columns:1.2fr .7fr .9fr 1.7fr auto;gap:10px;align-items:end;margin-bottom:6px}
+.setrate .d-fld{margin:0}
+.setrate button{height:40px}
+.fine{font-size:12.5px;color:var(--muted);line-height:1.6;margin:0}
+.fine b{color:var(--ink-2)}
+.fine code{background:var(--paper-2);border-radius:5px;padding:1px 5px;font-size:11.5px}
+.est{margin-left:3px;color:var(--muted-2);font-weight:700;cursor:help}
+.estnote{font-size:13px;color:var(--muted);line-height:1.6;margin:14px 0 0}
+.saved{font-size:12.5px;font-weight:800;color:var(--green-700);opacity:0;transition:opacity .2s}
+.saved.on{opacity:1}
+.empty{text-align:center;padding:34px 20px;color:var(--muted)}
+.empty h3{font-size:16px;color:var(--ink-2);margin-bottom:5px}
+.empty p{font-size:13.5px;max-width:46ch;margin:0 auto}
+.note-demo{background:var(--amber-50);border-radius:var(--r-md);padding:13px 16px;font-size:13px;color:var(--amber-900,#7A4B0E);line-height:1.6;margin-bottom:20px}
+.savings{margin-top:14px;padding:13px 16px;background:var(--paper);border-radius:var(--r-md);font-size:13px;color:var(--ink-2);line-height:1.6}
+.d-ov{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;display:flex;align-items:flex-start;justify-content:center;padding:28px 16px;overflow:auto;opacity:0;transition:opacity .2s;-webkit-overflow-scrolling:touch}
+.d-ov.show{opacity:1}
+.d-box{background:var(--white);border-radius:var(--r-lg);padding:26px 28px;max-width:480px;width:100%;margin:auto;box-shadow:0 20px 60px rgba(0,0,0,.25);transform:scale(.94);transition:transform .2s}
+.d-ov.show .d-box{transform:scale(1)}
+.d-box h3{font-size:19px;margin:0 0 8px;color:var(--ink)}
+.d-box p.i{font-size:13.5px;color:var(--muted);line-height:1.55;margin:0 0 16px}
+.d-facts{border:1px solid var(--line-2);border-radius:var(--r-md);overflow:hidden;margin:0 0 16px}
+.d-facts div{display:flex;justify-content:space-between;gap:14px;padding:9px 13px;font-size:13.5px;border-bottom:1px solid var(--line-2)}
+.d-facts div:last-child{border-bottom:none}
+.d-facts i{font-style:normal;color:var(--muted);font-weight:600}
+.d-facts b{color:var(--ink);font-weight:800;text-align:right;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.d-warn{background:#FEF2F2;border:1px solid #FECACA;color:#B91C1C;border-radius:var(--r-md);padding:11px 13px;font-size:13px;font-weight:600;line-height:1.5;margin:0 0 16px}
+.d-fld{margin:0 0 14px}
+.d-fld label{display:block;font-size:12.5px;font-weight:700;color:var(--ink-2);margin-bottom:6px}
+.d-fld input,.d-fld textarea,.d-fld select{width:100%;box-sizing:border-box;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:9px 11px;font-family:inherit;font-size:14px;font-weight:600;color:var(--ink);background:var(--white)}
+.d-fld textarea{min-height:70px;resize:vertical;font-weight:500}
+.d-fld input:focus,.d-fld textarea:focus,.d-fld select:focus{outline:none;border-color:var(--green-600)}
+.d-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.d-err{background:#FEF2F2;border:1px solid #FECACA;color:#B91C1C;border-radius:var(--r-md);padding:10px 13px;font-size:13.5px;font-weight:600;line-height:1.45;margin:0 0 14px;display:none}
+.d-err.on{display:block}
+.d-btns{display:flex;gap:10px;justify-content:flex-end}
+.d-btns button{padding:10px 20px;border-radius:var(--r-md);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:.15s;border:none}
+.d-btns .no{border:1.5px solid var(--line);background:var(--white);color:var(--ink-2)}
+.d-btns .no:hover{background:var(--paper)}
+.d-btns .yes{background:var(--green-700);color:#fff}
+.d-btns .yes:hover{background:var(--green-600)}
+.d-btns .yes[disabled]{opacity:.5;cursor:default}
+.d-btns .danger{background:#B91C1C}
+.d-btns .danger:hover{background:#991B1B}
+a{color:var(--green-700)}
+a:hover{color:var(--green-600)}
+@media(max-width:900px){.kpis{grid-template-columns:1fr 1fr}.setrate{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.admin{padding:20px 16px 50px}.card{padding:18px 16px}.kpis{grid-template-columns:1fr}.setrate{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="header"></div>
+<div id="adminNav"></div>
+
+<div class="admin">
+  <div class="admin-head">
+    <h1>Sales &amp; revenue</h1>
+    <p>Every payment MyKunda has ever recorded, what it cost to collect, and what stayed. Fees are what the payment provider keeps, not a MyKunda charge. Once a payout has been reconciled against a bank statement, the fee shown is the amount actually withheld; until then it is estimated from the rates at the bottom of this page, and marked. Those rates each carry the date they started applying, so a payment from June is always counted at June's rate.</p>
+  </div>
+
+  <div class="note-demo" id="demoNote">Not connected to the backend, so these are example rows. The shape and the sums are real; the orders are not, and nothing you change here is saved.</div>
+
+  <div class="pbar">
+    <div class="pseg" id="periodSeg"></div>
+    <div class="pcustom" id="pcustom">
+      <label for="dFrom">From</label><input type="date" id="dFrom">
+      <label for="dTo">to</label><input type="date" id="dTo">
+    </div>
+    <span class="spacer" style="flex:1"></span>
+    <button class="btn btn-ghost btn-sm" id="csvBtn">Orders CSV</button>
+    <button class="btn btn-ghost btn-sm" id="csvRefBtn">Refunds CSV</button>
+  </div>
+
+  <div class="kpis" id="kpis"></div>
+  <p class="estnote" id="kpiNote"></p>
+  <div class="rwarn" id="rateWarn"></div>
+
+  <div class="card" style="margin-top:20px">
+    <div class="card-head"><h2>What sold</h2><span class="sub" id="soldSub"></span></div>
+    <div class="scroll" id="byProduct"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Cost per payment method</h2><span class="sub">What each way of paying costs you to collect</span></div>
+    <div class="scroll" id="byMethod"></div>
+    <div class="savings" id="savings"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Month by month</h2><span class="sub">Net kept, with the fee stacked on top and money given back below the line</span></div>
+    <div id="chart"></div>
+    <div class="legend"><span class="l-net">Net kept</span><span class="l-fee">Provider fee</span><span class="l-back">Given back</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Money given back</h2><span class="sub" id="refSub"></span></div>
+    <div class="scroll" id="refunds"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Every order</h2><span class="sub" id="allSub"></span></div>
+    <div class="scroll" id="allOrders"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Fee rates</h2><span class="sub">One row per method per start date — older payments keep the rate they were charged at</span><span class="spacer"></span><span class="saved" id="rateSaved">Saved</span></div>
+    <div class="rates" id="rateNow"></div>
+    <div class="setrate">
+      <div class="d-fld"><label for="sMethod">Method</label><select id="sMethod"></select></div>
+      <div class="d-fld"><label for="sPct">Rate %</label><input type="number" id="sPct" step="0.1" min="0" max="100" placeholder="4.8"></div>
+      <div class="d-fld"><label for="sFrom">Applies from</label><input type="date" id="sFrom"></div>
+      <div class="d-fld"><label for="sNote">Why (optional)</label><input type="text" id="sNote" placeholder="Waychit raised the card rate"></div>
+      <button class="btn btn-primary btn-sm" id="sSet">Set rate</button>
+    </div>
+    <p class="rwarn" id="rateMsg"></p>
+    <p class="fine" style="margin-bottom:20px">A rate applies from its date onwards until a later one takes over. Setting a rate for a date that already has one overwrites that percentage; it never touches the months before it.</p>
+    <div class="scroll" id="rateHist"></div>
+    <p class="fine" style="margin-top:18px"><b>How the numbers are built.</b> <b>Sold</b> is every payment that reached <code>succeeded</code> or <code>refunded</code>, on the date the money arrived. <b>Fee</b> is what the provider kept: the amount actually withheld from the payout once it has been reconciled against a bank statement, and until then an estimate from the rate that applied on the payment date, marked <span class="est">~</span>. Either way it sits on the full amount — the provider keeps its cut whatever happens afterwards. <b>Given back</b> is a refund, counted on the day the money went back, so a September refund of a June sale lands in September. <b>Net kept</b> is sold, minus fees, minus what went back. Payments that failed, expired or were cancelled cost nothing and count nowhere except in their own table.</p>
+  </div>
+</div>
+
+<div id="footer"></div>
+
+<script src="vendor/supabase-js-2.umd.js"></script>
+<script src="supabase.js?v=1787660000000"></script>
+<script src="app.min.js?v=1787660000000"></script>
+<script src="admin-nav.js?v=1787900000000"></script>
+<script src="admin-guard.js?v=1787660000000"></script>
+<script>
+document.getElementById('header').innerHTML = headerHTML('', false);
+document.getElementById('footer').innerHTML = footerHTML();
+document.getElementById('adminNav').innerHTML = adminNavHTML('sales');
+
+const LIVE = (typeof backendReady==='function' && backendReady());
+if(LIVE){
+  const f = document.getElementById('modeFlag');
+  if(f){ f.className = 'mode-flag live'; f.textContent = 'Live · connected'; }
+  document.getElementById('demoNote').style.display = 'none';
+}
+
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* Bedragen uit payments en payment_refunds staan in butut. Alles op deze
+   pagina rekent in butut en deelt pas bij het tonen, zodat er nooit met
+   afgeronde dalasi wordt doorgerekend. */
+const D  = b => (Number(b||0) < 0 ? '−D' : 'D') + Math.round(Math.abs(Number(b||0))/100).toLocaleString('en-US');
+const D2 = b => (Number(b||0)/100).toFixed(2);
+const pct = (a,b) => b ? Math.round(a/b*1000)/10 : 0;
+const isoDay = d => new Date(d).toISOString().slice(0,10);
+const todayISO = () => isoDay(new Date());
+
+const METHOD_LABEL = { card:'Card', bank_transfer:'Bank transfer', wave:'Wave', afrimoney:'Afrimoney', qmoney:'QMoney', aps:'APS Wallet' };
+const METHODS = ['wave','afrimoney','qmoney','aps','card','bank_transfer'];
+
+const PLAN_LABEL = {
+  verified_s:'Verified listing · S', verified_m:'Verified listing · M', verified_l:'Verified listing · L',
+  boost_30:'Boost · 30 days', doc_check:'Ownership · Document Check', ownership_check:'Ownership · Full Check',
+  managed:'Managed listing', promoted:'Promoted listing', featured:'Featured listing'
+};
+const planLabel = o => (o.metadata||{}).plan_name || PLAN_LABEL[o.plan_id] || o.plan_id || 'Unnamed service';
+
+const SOLD='succeeded', REFUND='refunded';
+const LOST = ['failed','cancelled','expired'];
+/* De volledige enum payment_status uit de database is: pending, processing,
+   succeeded, failed, cancelled, expired, refunded. Alle zeven zijn gedekt —
+   SOLD, REFUND, LOST en OPEN samen. Komt er ooit een waarde bij, dan valt
+   die in geen enkele bak en telt hij stil in geen enkele KPI mee; voeg hem
+   dan hier toe. */
+const OPEN = ['pending','processing'];
+/* Geld dat binnen is gekomen: succeeded én refunded. Bij refunded is het
+   ook binnengekomen — het is later weer weggegaan, en dat is een eigen
+   gebeurtenis met een eigen datum. */
+const isPaid = o => o.status===SOLD || o.status===REFUND;
+const isLost = o => LOST.indexOf(o.status)>=0;
+const isOpen = o => OPEN.indexOf(o.status)>=0;
+/* Op de dag dat het geld er was, niet op de dag dat de knop is ingedrukt. */
+const dayOf = o => new Date(o.paid_at || o.created_at);
+
+/* ---- fee rates: provider_fee_rates ----
+   Eén regel per methode per ingangsdatum. Het geldende tarief is de regel
+   met de hoogste valid_from die op of vóór de betaaldatum ligt. Geen regel
+   betekent geen tarief — dat wordt zichtbaar gemaakt, niet stil op 0 gezet. */
+let RATES = [];
+function rateRowFor(method, when){
+  const day = isoDay(when);
+  let best = null;
+  for(const r of RATES){
+    if(r.method !== method) continue;
+    const from = String(r.valid_from);
+    if(from <= day && (!best || from > String(best.valid_from))) best = r;
+  }
+  return best;
+}
+const rateFor = (m, when) => { const r = rateRowFor(m, when); return r ? Number(r.percent) : null; };
+const rateOf  = o => rateFor(o.method, dayOf(o));
+const pctTxt  = p => p==null ? 'no rate' : (Math.round(p*1000)/1000) + '%';
+
+/* Kosten: geboekt als ze er zijn, geschat als ze er nog niet zijn.
+
+   fee_minor wordt gevuld zodra de uitbetaling van de provider is afgeletterd
+   tegen deze betaling, en bij een bankoverschrijving zodra de bijschrijving
+   is bevestigd. Tot dat moment is het tarief hierboven het beste wat we
+   hebben — maar dan moet er ook bij staan dat het een schatting is, anders
+   lezen twee verschillende soorten getallen als hetzelfde. */
+const feeModel  = o => { const p = rateOf(o); return p==null ? 0 : Math.round(Number(o.amount_minor||0) * p / 100); };
+const feeBooked = o => (o.fee_minor === null || o.fee_minor === undefined) ? null : Number(o.fee_minor);
+const feeOf     = o => { const b = feeBooked(o); return b === null ? feeModel(o) : b; };
+const isEstimated = o => feeBooked(o) === null;
+/* Wat de boeking werkelijk inhield, als percentage van het orderbedrag. */
+const bookedPct = o => { const a = Number(o.amount_minor||0); return (a ? Math.round(feeOf(o)/a*1000)/10 : 0) + '%'; };
+/* net_minor is wat er werkelijk binnenkwam. Zonder boeking het bedrag min
+   de geschatte kosten. */
+const netOf = o => (o.net_minor === null || o.net_minor === undefined)
+  ? Number(o.amount_minor||0) - feeOf(o)
+  : Number(o.net_minor);
+
+/* ---- refunds: payment_refunds ----
+   Eén regel per terugbetaling. Betalingen van vóór de migratie hebben geen
+   regels; staat zo'n betaling op refunded, dan lezen we dat als het volle
+   bedrag op de betaaldatum. Anders zou de omzet te hoog uitvallen. */
+function refundsOf(p){
+  const rows = p.payment_refunds || [];
+  if(rows.length) return rows.map(r=>({
+    id:r.id, amount:Number(r.amount_minor||0), at:r.refunded_at,
+    reason:r.reason||'', note:r.note||'', p:p, legacy:false
+  })).sort((a,b)=>new Date(a.at)-new Date(b.at));
+  if(p.status===REFUND) return [{
+    id:null, amount:Number(p.amount_minor||0), at:p.paid_at||p.created_at,
+    reason:'Recorded before refunds were itemised — read as the full amount', note:'', p:p, legacy:true
+  }];
+  return [];
+}
+const refundedOf  = p => refundsOf(p).reduce((t,r)=>t+r.amount, 0);
+const remainingOf = p => Math.max(0, Number(p.amount_minor||0) - refundedOf(p));
+
+let all = [], loadError = null, rateError = null, period = 'month';
+
+/* ---- periods ---- */
+const PERIODS = [['month','This month'],['last','Last month'],['quarter','This quarter'],['year','This year'],['all','All time'],['custom','Pick dates']];
+function rangeFor(p){
+  const n = new Date(), y = n.getFullYear(), m = n.getMonth();
+  if(p==='month')   return [new Date(y,m,1), new Date(y,m+1,1)];
+  if(p==='last')    return [new Date(y,m-1,1), new Date(y,m,1)];
+  if(p==='quarter'){ const q = Math.floor(m/3)*3; return [new Date(y,q,1), new Date(y,q+3,1)]; }
+  if(p==='year')    return [new Date(y,0,1), new Date(y+1,0,1)];
+  if(p==='custom'){
+    const f = document.getElementById('dFrom').value, t = document.getElementById('dTo').value;
+    return [f?new Date(f+'T00:00:00'):new Date(2000,0,1), t?new Date(new Date(t+'T00:00:00').getTime()+86400000):new Date(2100,0,1)];
+  }
+  return [new Date(2000,0,1), new Date(2100,0,1)];
+}
+function inWindow(d){ const [a,b] = rangeFor(period); return d>=a && d<b; }
+const inRange = o => inWindow(dayOf(o));
+function rangeLabel(){
+  if(period==='all') return 'everything on record';
+  const [a,b] = rangeFor(period);
+  const f = d => d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+  return f(a) + ' – ' + f(new Date(b.getTime()-86400000));
+}
+
+/* ---- load ---- */
+async function load(){
+  if(!LIVE){
+    if(!all.length) all = DEMO_SALES;
+    if(!RATES.length) RATES = DEMO_RATES.slice();
+    render(); return;
+  }
+  try{
+    const { data, error } = await sb.from('payments')
+      .select('reference,status,method,plan_id,amount_minor,currency,customer_email,listing_id,metadata,created_at,paid_at,fulfilment_status,admin_note,fee_minor,net_minor,settled_at,payment_refunds(id,amount_minor,refunded_at,reason,note)')
+      .order('created_at',{ascending:false})
+      .limit(2000);
+    if(error) throw error;
+    all = data||[]; loadError = null;
+  }catch(e){ all = []; loadError = e.message || String(e); }
+  try{
+    const { data, error } = await sb.from('provider_fee_rates')
+      .select('id,method,percent,valid_from,note')
+      .order('method').order('valid_from',{ascending:false});
+    if(error) throw error;
+    RATES = data||[]; rateError = null;
+  }catch(e){ RATES = []; rateError = e.message || String(e); }
+  render();
+}
+
+function emptyState(h,p){ return '<div class="empty"><h3>'+h+'</h3><p>'+p+'</p></div>'; }
+
+/* ---- render ---- */
+function render(){
+  document.getElementById('periodSeg').innerHTML = PERIODS.map(p=>
+    '<button data-p="'+p[0]+'" class="'+(period===p[0]?'on':'')+'">'+p[1]+'</button>').join('');
+  document.getElementById('pcustom').classList.toggle('on', period==='custom');
+  renderRates();
+
+  if(loadError){
+    document.getElementById('kpis').innerHTML = '';
+    document.getElementById('byProduct').innerHTML = emptyState('Could not load payments', esc(loadError));
+    ['byMethod','refunds','allOrders','chart'].forEach(id=>document.getElementById(id).innerHTML='');
+    document.getElementById('savings').innerHTML = '';
+    return;
+  }
+
+  const rows = all.filter(inRange);
+  const paid = rows.filter(isPaid), lost = rows.filter(isLost), open = rows.filter(isOpen);
+  /* Refunds horen bij hun eigen datum, dus over alle betalingen heen —
+     ook die van buiten deze periode. */
+  const refs = all.filter(isPaid).reduce((a,p)=>a.concat(refundsOf(p)), []).filter(r=>inWindow(new Date(r.at)));
+
+  const sum   = (a,f) => a.reduce((t,o)=>t+f(o),0);
+  const gross = sum(paid, o=>Number(o.amount_minor||0));
+  const fee   = sum(paid, feeOf);
+  const given = refs.reduce((t,r)=>t+r.amount, 0);
+  /* Netto uit de boeking waar die er is, anders afgeleid. De refunds gaan er
+     los af: bij een terugbetaling gaat het bedrag terug naar de klant maar
+     houdt de provider zijn kosten. */
+  const net   = sum(paid, netOf) - given;
+
+  document.getElementById('kpis').innerHTML = [
+    ['hero','Net kept', D(net), paid.length ? 'after D'+Math.round(fee/100).toLocaleString('en-US')+' of fees and D'+Math.round(given/100).toLocaleString('en-US')+' given back · '+rangeLabel() : rangeLabel()],
+    ['','Sold', D(gross), paid.length+' paid order'+(paid.length===1?'':'s')],
+    ['cost','Provider fees', D(fee), gross ? pct(fee, gross)+'% of what came in' : 'nothing collected yet'],
+    ['back','Given back', D(given), refs.length ? refs.length+' refund'+(refs.length===1?'':'s')+' · counted on the day the money went back' : 'no refunds in this period'],
+    ['','Never collected', D(sum(lost,o=>Number(o.amount_minor||0))), lost.length+' failed, cancelled or expired'],
+    ['','Still open', D(sum(open,o=>Number(o.amount_minor||0))), open.length+' waiting to be paid']
+  ].map(k=>'<div class="kpi '+k[0]+'"><div class="lab">'+k[1]+'</div><div class="val">'+k[2]+'</div><div class="note">'+esc(k[3])+'</div></div>').join('');
+
+  /* Eén regel die zegt hoeveel van het kostentotaal gemeten is en hoeveel
+     geschat. Zonder dat leest een schatting als een boeking. */
+  const est = paid.filter(isEstimated);
+  document.getElementById('kpiNote').innerHTML = !paid.length ? ''
+    : (est.length
+        ? 'Fees on ' + est.length + ' of ' + paid.length + ' paid order' + (paid.length===1?'':'s') + ' are still estimated (marked <span class="est">~</span>) — their payout has not landed or has not been reconciled yet.' + (est.length < paid.length ? ' The rest are the amounts actually withheld.' : '')
+        : 'Every fee here is the amount actually withheld, taken from the reconciled payout — not an estimate.');
+
+  const noRate = paid.filter(o=>isEstimated(o) && rateOf(o)==null);
+  const warn = document.getElementById('rateWarn');
+  if(rateError){
+    warn.className = 'rwarn on';
+    warn.innerHTML = 'The fee rates could not be read from the database, so every fee on this page shows as nothing: ' + esc(rateError);
+  } else if(noRate.length){
+    const miss = [...new Set(noRate.map(o=>METHOD_LABEL[o.method]||o.method||'unknown'))].join(', ');
+    warn.className = 'rwarn on';
+    warn.innerHTML = noRate.length + ' paid order' + (noRate.length===1?' has':'s have') + ' no booked fee and no rate for their method on their date (' + esc(miss) + '), so their fee counts as nothing. Add a rate with an earlier start date at the bottom of this page.';
+  } else { warn.className = 'rwarn'; warn.innerHTML = ''; }
+
+  renderGroup('byProduct', paid, refs, planLabel, 'Product', gross);
+  renderMethods(paid, refs, gross);
+  renderChart(paid, refs);
+  renderRefunds(refs, lost);
+  renderAll(rows);
+
+  document.getElementById('soldSub').textContent = rangeLabel();
+  document.getElementById('allSub').textContent  = rows.length + ' order' + (rows.length===1?'':'s') + ' · ' + rangeLabel();
+  document.getElementById('refSub').textContent  = (refs.length+lost.length) ? (refs.length+' refund'+(refs.length===1?'':'s')+', '+lost.length+' never completed') : 'nothing went back';
+}
+
+function renderGroup(el, paid, refs, keyFn, head, grossAll){
+  const map = new Map();
+  const get = k => { let r = map.get(k); if(!r){ r = {n:0,gross:0,fee:0,ref:0}; map.set(k,r); } return r; };
+  paid.forEach(o=>{ const r = get(keyFn(o)); r.n++; r.gross += Number(o.amount_minor||0); r.fee += feeOf(o); });
+  refs.forEach(x=>{ get(keyFn(x.p)).ref += x.amount; });
+  const list = [...map.entries()].sort((a,b)=>b[1].gross-a[1].gross);
+  if(!list.length){ document.getElementById(el).innerHTML = emptyState('Nothing sold in this period','Pick a wider period, or All time, to see what has been sold before.'); return; }
+  const tot = list.reduce((t,x)=>({n:t.n+x[1].n, gross:t.gross+x[1].gross, fee:t.fee+x[1].fee, ref:t.ref+x[1].ref}), {n:0,gross:0,fee:0,ref:0});
+  document.getElementById(el).innerHTML =
+   '<table class="t"><thead><tr><th>'+head+'</th><th class="n">Orders</th><th class="n">Sold</th><th class="n">Fees</th><th class="n">Given back</th><th class="n">Net</th><th style="width:110px;padding-left:22px">Share</th></tr></thead><tbody>'+
+    list.map(([k,r])=>'<tr><td class="p">'+esc(k)+'</td><td class="n">'+r.n+'</td><td class="n">'+D(r.gross)+'</td><td class="n">'+D(r.fee)+'</td><td class="n">'+(r.ref?D(r.ref):'—')+'</td><td class="n">'+D(r.gross-r.fee-r.ref)+'</td>'+
+      '<td style="padding-left:22px"><div class="bar"><i style="width:'+pct(r.gross,grossAll||1)+'%"></i></div></td></tr>').join('')+
+   '</tbody><tfoot><tr><td>Total</td><td class="n">'+tot.n+'</td><td class="n">'+D(tot.gross)+'</td><td class="n">'+D(tot.fee)+'</td><td class="n">'+(tot.ref?D(tot.ref):'—')+'</td><td class="n">'+D(tot.gross-tot.fee-tot.ref)+'</td><td></td></tr></tfoot></table>';
+}
+
+function renderMethods(paid, refs, grossAll){
+  const map = new Map();
+  const get = k => { let r = map.get(k); if(!r){ r = {n:0,gross:0,fee:0,ref:0,rates:new Set()}; map.set(k,r); } return r; };
+  paid.forEach(o=>{
+    const r = get(o.method || 'unknown');
+    r.n++; r.gross += Number(o.amount_minor||0); r.fee += feeOf(o);
+    r.rates.add(isEstimated(o) ? pctTxt(rateOf(o))+' ~' : bookedPct(o));
+  });
+  refs.forEach(x=>{ get(x.p.method || 'unknown').ref += x.amount; });
+  const list = [...map.entries()].sort((a,b)=>b[1].fee-a[1].fee);
+  const box = document.getElementById('byMethod');
+  if(!list.length){ box.innerHTML = emptyState('No payments in this period','Nothing was collected, so nothing cost anything.'); document.getElementById('savings').innerHTML=''; return; }
+  const tot = list.reduce((t,x)=>({n:t.n+x[1].n, gross:t.gross+x[1].gross, fee:t.fee+x[1].fee, ref:t.ref+x[1].ref}), {n:0,gross:0,fee:0,ref:0});
+  box.innerHTML =
+   '<table class="t"><thead><tr><th>Method</th><th class="n">Rate charged</th><th class="n">Orders</th><th class="n">Collected</th><th class="n">Cost</th><th class="n">Given back</th><th class="n">Net</th><th class="n">Avg order</th></tr></thead><tbody>'+
+    list.map(([k,r])=>'<tr><td class="p">'+esc(METHOD_LABEL[k]||k)+'</td><td class="n">'+esc([...r.rates].join(' · '))+'</td><td class="n">'+r.n+'</td><td class="n">'+D(r.gross)+'</td><td class="n" style="color:var(--amber-600);font-weight:700">'+D(r.fee)+'</td><td class="n">'+(r.ref?D(r.ref):'—')+'</td><td class="n">'+D(r.gross-r.fee-r.ref)+'</td><td class="n">'+(r.n?D(r.gross/r.n):'—')+'</td></tr>').join('')+
+   '</tbody><tfoot><tr><td>Total</td><td class="n"></td><td class="n">'+tot.n+'</td><td class="n">'+D(tot.gross)+'</td><td class="n">'+D(tot.fee)+'</td><td class="n">'+(tot.ref?D(tot.ref):'—')+'</td><td class="n">'+D(tot.gross-tot.fee-tot.ref)+'</td><td class="n"></td></tr></tfoot></table>';
+
+  /* Wat het kost dat mensen met de duurste methode betalen, tegen de
+     tarieven van vandaag. Geen advies om kaart te weren — buiten Gambia is
+     dat vaak de enige optie. */
+  const card = map.get('card');
+  const now = new Date();
+  const cardR = rateFor('card', now);
+  const others = METHODS.filter(m=>m!=='card').map(m=>rateFor(m, now)).filter(v=>v!=null);
+  const cheap = others.length ? Math.min(...others) : null;
+  const box2 = document.getElementById('savings');
+  if(card && card.gross && cardR!=null && cheap!=null && cardR > cheap){
+    const diff = Math.round(card.gross * (cardR - cheap) / 100);
+    box2.innerHTML = 'Card is the expensive way in: at '+cardR+'% against '+cheap+'%, the '+D(card.gross)+' paid by card cost <b>'+D(diff)+'</b> more than the same money over a wallet or a transfer. Worth knowing, not worth refusing — a diaspora buyer often has no other option.';
+  } else if(card && card.gross){
+    box2.innerHTML = 'Card came in at '+pctTxt(cardR)+', which is no dearer than the alternatives, so there is no expensive tail to look at.';
+  } else {
+    box2.innerHTML = 'Nothing came in by card in this period, so there is no expensive tail to look at.';
+  }
+}
+
+function renderChart(paid, refs){
+  const byMonth = new Map();
+  const key = d => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+  const get = k => { let r = byMonth.get(k); if(!r){ r = {sold:0,fee:0,netIn:0,back:0}; byMonth.set(k,r); } return r; };
+  paid.forEach(o=>{ const r = get(key(dayOf(o))); r.sold += Number(o.amount_minor||0); r.fee += feeOf(o); r.netIn += netOf(o); });
+  refs.forEach(x=>{ get(key(new Date(x.at))).back += x.amount; });
+  const months = [...byMonth.keys()].sort().slice(-18);
+  const box = document.getElementById('chart');
+  if(!months.length){ box.innerHTML = emptyState('No months to chart','Once a payment goes through, its month appears here.'); return; }
+  const W = 1000, H = 268, PL = 8, PR = 8, PB = 34, PT = 26;
+  const monthNet = r => r.netIn - r.back;
+  const tops = months.map(m=>{ const r=byMonth.get(m); return Math.max(0, monthNet(r)) + r.fee; });
+  const bots = months.map(m=>Math.min(0, monthNet(byMonth.get(m))));
+  const top = Math.max(1, ...tops), bot = Math.min(0, ...bots);
+  const y = v => PT + (H-PT-PB) * (1 - (v-bot)/(top-bot));
+  const bw = (W-PL-PR)/months.length, bar = Math.min(58, bw*0.62);
+  const grid = [0,.25,.5,.75,1].map(f=>'<line class="gl" x1="'+PL+'" x2="'+(W-PR)+'" y1="'+y(bot+(top-bot)*f)+'" y2="'+y(bot+(top-bot)*f)+'"/>').join('')
+    + (bot<0 ? '<line class="zl" x1="'+PL+'" x2="'+(W-PR)+'" y1="'+y(0)+'" y2="'+y(0)+'"/>' : '');
+  const bars = months.map((m,i)=>{
+    const r = byMonth.get(m), n = monthNet(r), x = PL + bw*i + (bw-bar)/2;
+    const y0 = y(0), yPos = y(Math.max(0,n)), yFee = y(Math.max(0,n)+r.fee), yNeg = y(Math.min(0,n));
+    const d = new Date(m+'-01T00:00:00');
+    const label = n>=0 ? '<text class="val" x="'+(x+bar/2)+'" y="'+(yFee-7)+'" text-anchor="middle">'+D(n)+'</text>'
+                       : '<text class="val" x="'+(x+bar/2)+'" y="'+(yNeg+14)+'" text-anchor="middle" fill="var(--rent)">'+D(n)+'</text>';
+    return '<g><title>'+d.toLocaleDateString('en-GB',{month:'long',year:'numeric'})+' — sold '+D(r.sold)+', fee '+D(r.fee)+', given back '+D(r.back)+', net '+D(n)+'</title>'+
+      (r.fee>0 ? '<rect class="fee" x="'+x+'" y="'+yFee+'" width="'+bar+'" height="'+Math.max(0.6, yPos-yFee)+'" rx="3"/>' : '')+
+      (n>0 ? '<rect class="net" x="'+x+'" y="'+yPos+'" width="'+bar+'" height="'+Math.max(0, y0-yPos)+'" rx="3"/>' : '')+
+      (n<0 ? '<rect class="back" x="'+x+'" y="'+y0+'" width="'+bar+'" height="'+Math.max(0, yNeg-y0)+'" rx="3"/>' : '')+
+      label+
+      '<text class="mlab" x="'+(x+bar/2)+'" y="'+(H-13)+'" text-anchor="middle">'+d.toLocaleDateString('en-GB',{month:'short'})+'</text>'+
+      (d.getMonth()===0||i===0?'<text class="mlab" x="'+(x+bar/2)+'" y="'+(H-2)+'" text-anchor="middle">'+d.getFullYear()+'</text>':'')+
+      '</g>';
+  }).join('');
+  box.innerHTML = '<svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Net revenue per month">'+grid+bars+'</svg>';
+}
+
+const STATUS_PILL = { succeeded:'ok', refunded:'bad', failed:'bad', cancelled:'bad', expired:'', pending:'warn', processing:'warn' };
+const dayTxt = d => new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});
+const whenTxt = o => dayTxt(dayOf(o));
+
+function renderRefunds(refs, lost){
+  const box = document.getElementById('refunds');
+  if(!refs.length && !lost.length){ box.innerHTML = emptyState('Nothing went back','No refunds, no cancellations and no failed payments in this period.'); return; }
+  let out = '';
+  if(refs.length){
+    const rows = refs.slice().sort((a,b)=>new Date(b.at)-new Date(a.at));
+    out += '<div class="subhead">Refunds, on the day the money went back</div>'+
+      '<table class="t"><thead><tr><th>Given back</th><th>Reference</th><th>Product</th><th class="n">Amount</th><th class="n">Of the sale</th><th>Reason</th><th></th></tr></thead><tbody>'+
+      rows.map(r=>'<tr><td>'+dayTxt(r.at)+'</td><td><span class="ref">'+esc(r.p.reference)+'</span></td><td class="p">'+esc(planLabel(r.p))+'</td>'+
+        '<td class="n" style="color:var(--rent);font-weight:700">'+D(r.amount)+'</td>'+
+        '<td class="n">'+D(r.p.amount_minor)+' <span class="pill '+(r.amount>=Number(r.p.amount_minor||0)?'bad':'part')+'">'+(r.amount>=Number(r.p.amount_minor||0)?'all of it':pct(r.amount, Number(r.p.amount_minor||0))+'%')+'</span></td>'+
+        '<td>'+esc(r.reason)+(r.note?'<br><span style="color:var(--muted-2)">'+esc(r.note)+'</span>':'')+'</td>'+
+        '<td>'+(r.id!=null?'<button class="tbtn x" data-del="'+esc(r.id)+'" title="Remove this refund line">✕</button>':'')+'</td></tr>').join('')+
+      '</tbody><tfoot><tr><td>Total</td><td></td><td></td><td class="n">'+D(refs.reduce((t,r)=>t+r.amount,0))+'</td><td></td><td></td><td></td></tr></tfoot></table>';
+  }
+  if(lost.length){
+    const rows = lost.slice().sort((a,b)=>dayOf(b)-dayOf(a));
+    out += '<div class="subhead'+(refs.length?' gap':'')+'">Never completed — nothing came in, nothing cost anything</div>'+
+      '<table class="t"><thead><tr><th>When</th><th>Reference</th><th>Product</th><th>Method</th><th class="n">Amount</th><th>Status</th><th>Note</th></tr></thead><tbody>'+
+      rows.map(o=>'<tr><td>'+whenTxt(o)+'</td><td><span class="ref">'+esc(o.reference)+'</span></td><td class="p">'+esc(planLabel(o))+'</td><td>'+esc(METHOD_LABEL[o.method]||o.method||'—')+'</td>'+
+        '<td class="n">'+D(o.amount_minor)+'</td><td><span class="pill '+(STATUS_PILL[o.status]||'')+'">'+esc(o.status)+'</span></td><td>'+esc(o.admin_note||'')+'</td></tr>').join('')+
+      '</tbody></table>';
+  }
+  box.innerHTML = out;
+}
+
+function renderAll(rows){
+  const box = document.getElementById('allOrders');
+  if(!rows.length){ box.innerHTML = emptyState('No orders in this period','Widen the period to see earlier sales.'); return; }
+  const list = rows.slice().sort((a,b)=>dayOf(b)-dayOf(a));
+  box.innerHTML = '<table class="t"><thead><tr><th>When</th><th>Reference</th><th>Product</th><th>Method</th><th class="n">Amount</th><th class="n">Fee</th><th class="n">Given back</th><th class="n">Net</th><th>Status</th><th></th></tr></thead><tbody>'+
+    list.map(o=>{
+      const p = isPaid(o), back = refundedOf(o), lines = refundsOf(o);
+      const main = '<tr><td>'+whenTxt(o)+'</td><td><span class="ref">'+esc(o.reference)+'</span></td><td class="p">'+esc(planLabel(o))+'</td><td>'+esc(METHOD_LABEL[o.method]||o.method||'—')+'</td>'+
+        '<td class="n">'+D(o.amount_minor)+'</td><td class="n">'+(p
+          ? D(feeOf(o)) + ' <span style="color:var(--muted-2)">' + esc(isEstimated(o)?pctTxt(rateOf(o)):bookedPct(o)) + '</span>'
+            + (isEstimated(o)?'<span class="est" title="Estimated from the rate below — the payout has not been reconciled yet">~</span>':'')
+          : '—')+'</td>'+
+        '<td class="n">'+(back?'<span style="color:var(--rent);font-weight:700">'+D(back)+'</span>':'—')+'</td>'+
+        '<td class="n">'+(p?D(netOf(o)-back):'—')+'</td>'+
+        '<td><span class="pill '+(STATUS_PILL[o.status]||'')+'">'+esc(o.status)+'</span>'+(o.status===SOLD&&back?' <span class="pill part">part refunded</span>':'')+'</td>'+
+        '<td>'+(p&&remainingOf(o)>0?'<button class="tbtn" data-ref="'+esc(o.reference)+'">Refund</button>':'')+'</td></tr>';
+      const subs = lines.map(r=>'<tr class="sub"><td></td><td colspan="9">↳ '+dayTxt(r.at)+' · <b>'+D(r.amount)+'</b> given back — '+esc(r.reason)+(r.note?' ('+esc(r.note)+')':'')+
+        (r.id!=null?' <button class="tbtn x" data-del="'+esc(r.id)+'" title="Remove this refund line">✕</button>':'')+'</td></tr>').join('');
+      return main + subs;
+    }).join('')+'</tbody></table>';
+}
+
+/* ---- rates screen ---- */
+function renderRates(){
+  const sel = document.getElementById('sMethod');
+  if(!sel.options.length){
+    sel.innerHTML = METHODS.map(m=>'<option value="'+m+'">'+(METHOD_LABEL[m]||m)+'</option>').join('');
+    document.getElementById('sFrom').value = todayISO();
+  }
+  const now = new Date();
+  document.getElementById('rateNow').innerHTML = METHODS.map(m=>{
+    const r = rateRowFor(m, now);
+    return '<div class="rate'+(r?'':' none')+'"><div class="lab">'+esc(METHOD_LABEL[m]||m)+'</div>'+
+      '<div class="now">'+(r?(Math.round(Number(r.percent)*1000)/1000)+'%':'Not set')+'</div>'+
+      '<div class="from">'+(r?'since '+dayTxt(r.valid_from)+(r.note?' · '+esc(r.note):''):'no rate applies today')+'</div></div>';
+  }).join('');
+
+  const hist = document.getElementById('rateHist');
+  if(rateError){ hist.innerHTML = emptyState('Could not load the rates', esc(rateError)); return; }
+  if(!RATES.length){ hist.innerHTML = emptyState('No rates yet','Set one above. Give it a start date on or before your oldest payment, or those months keep counting a fee of nothing.'); return; }
+  const order = RATES.slice().sort((a,b)=>
+    METHODS.indexOf(a.method)-METHODS.indexOf(b.method) || String(b.valid_from).localeCompare(String(a.valid_from)));
+  const perMethod = {};
+  order.forEach(r=>{ perMethod[r.method] = (perMethod[r.method]||0)+1; });
+  hist.innerHTML = '<div class="subhead">Every rate ever set</div><table class="t"><thead><tr><th>Method</th><th class="n">Rate</th><th>Applies from</th><th>Why</th><th></th></tr></thead><tbody>'+
+    order.map(r=>{
+      const live = rateRowFor(r.method, now);
+      const isNow = live && String(live.id)===String(r.id);
+      const future = String(r.valid_from) > todayISO();
+      return '<tr><td class="p">'+esc(METHOD_LABEL[r.method]||r.method)+'</td>'+
+        '<td class="n">'+(Math.round(Number(r.percent)*1000)/1000)+'%</td>'+
+        '<td>'+dayTxt(r.valid_from)+' '+(isNow?'<span class="pill ok">in force</span>':(future?'<span class="pill warn">starts later</span>':'<span class="pill">superseded</span>'))+'</td>'+
+        '<td>'+esc(r.note||'')+'</td>'+
+        '<td>'+(perMethod[r.method]>1?'<button class="tbtn x" data-rdel="'+esc(r.id)+'" title="Remove this rate">✕</button>':'')+'</td></tr>';
+    }).join('')+'</tbody></table>';
+}
+
+/* ---- dialog ---- */
+function dialog(o){
+  const ov = document.createElement('div');
+  ov.className = 'd-ov';
+  ov.innerHTML = '<div class="d-box" role="dialog" aria-modal="true">'
+    + '<h3>'+o.title+'</h3>'
+    + (o.intro?'<p class="i">'+o.intro+'</p>':'')
+    + (o.facts?'<div class="d-facts">'+o.facts.map(f=>'<div><i>'+f[0]+'</i><b>'+f[1]+'</b></div>').join('')+'</div>':'')
+    + (o.warn?'<div class="d-warn">'+o.warn+'</div>':'')
+    + (o.fields||'')
+    + '<div class="d-err"></div>'
+    + '<div class="d-btns"><button class="no" type="button">Cancel</button>'
+    + '<button class="yes'+(o.danger?' danger':'')+'" type="button">'+o.action+'</button></div></div>';
+  document.body.appendChild(ov);
+  requestAnimationFrame(()=>ov.classList.add('show'));
+  const go = ov.querySelector('.yes'), errBox = ov.querySelector('.d-err');
+  let busy = false;
+  const showErr = m => { errBox.textContent = m; errBox.classList.add('on'); };
+  const close = () => { if(busy) return; ov.classList.remove('show'); setTimeout(()=>ov.remove(),200); document.removeEventListener('keydown', onKey); };
+  function onKey(e){ if(e.key==='Escape') close(); }
+  document.addEventListener('keydown', onKey);
+  ov.querySelector('.no').onclick = close;
+  ov.addEventListener('click', e=>{ if(e.target===ov) close(); });
+  if(o.ready) o.ready(ov, go);
+  go.onclick = async ()=>{
+    if(busy) return;
+    errBox.classList.remove('on');
+    const vals = o.read ? o.read(ov, showErr) : {};
+    if(vals === false) return;
+    busy = true; go.disabled = true;
+    const label = go.textContent; go.textContent = 'Working…';
+    try{
+      await o.run(vals);
+      busy = false; close();
+      await load();
+    }catch(e){
+      busy = false; go.disabled = false; go.textContent = label;
+      showErr(o.err ? o.err(e) : (e.message || 'Something went wrong. Nothing was changed.'));
+    }
+  };
+}
+
+/* Foutcodes uit de RPC's, in woorden waar iets mee te doen is. */
+const RATE_ERR = {
+  not_authorised:'You are not signed in as an admin, so rates cannot be changed.',
+  invalid_method:'That is not one of the payment methods the database knows.',
+  invalid_percent:'A rate has to be between 0 and 100 percent.',
+  invalid_valid_from:'Fill in the date this rate starts applying.',
+  last_rate_for_method:'This is the only rate for that method. Removing it would leave older payments without a rate — set the replacement first.'
+};
+const REF_ERR = {
+  not_authorised:'You are not signed in as an admin, so refunds cannot be recorded.',
+  invalid_reference:'That reference does not look like MK- followed by seven characters.',
+  invalid_amount:'Fill in an amount above zero.',
+  reason_required:'A reason is required — this is what the line will still have to explain in six months.',
+  payment_not_found:'No payment exists with that reference.',
+  payment_not_succeeded:'That payment never succeeded, so there is nothing to give back.',
+  refund_exceeds_payment:'That is more than is left on this payment. Check the amount already given back.',
+  payment_fully_refunded:'This payment is fully refunded, so its lines are locked. Report it on the database side instead of forcing it — putting the status back would extend the listing twice and send a second receipt.'
+};
+function errText(e, map){
+  const m = String((e && e.message) || e || '');
+  for(const k in map){ if(m.indexOf(k) >= 0) return map[k]; }
+  return m || 'Something went wrong. Nothing was changed.';
+}
+
+/* ---- refunds: vastleggen en terugdraaien ---- */
+function refundDialog(ref){
+  const p = all.find(o=>o.reference===ref);
+  if(!p) return;
+  const left = remainingOf(p), had = refundedOf(p);
+  dialog({
+    title:'Record a refund',
+    intro:'This writes down what has happened. It sends nothing to Waychit or the bank — paying the money back is a separate job.',
+    facts:[
+      ['Reference', esc(p.reference)],
+      ['Product', esc(planLabel(p))],
+      ['Paid', D(p.amount_minor)+' on '+whenTxt(p)],
+      ['Already given back', had?D(had):'nothing'],
+      ['Left to give back', D(left)]
+    ],
+    fields:'<div class="d-row"><div class="d-fld"><label>Amount in dalasi</label><input class="amt" type="number" step="0.01" min="0.01" value="'+D2(left)+'"></div>'
+      + '<div class="d-fld"><label>Date the money went back</label><input class="at" type="date" value="'+todayISO()+'"></div></div>'
+      + '<div class="d-fld"><label>Reason</label><textarea class="why" placeholder="e.g. Visit for the Full Ownership Check never happened"></textarea></div>'
+      + '<div class="d-fld"><label>Note (optional)</label><input class="nt" type="text" placeholder="Anything the reason does not cover"></div>',
+    action:'Record refund',
+    ready: ov => ov.querySelector('.why').focus(),
+    read: (ov, err) => {
+      const amount = Math.round(parseFloat(ov.querySelector('.amt').value) * 100);
+      const at = ov.querySelector('.at').value;
+      const why = ov.querySelector('.why').value.trim();
+      if(!isFinite(amount) || amount <= 0){ err('Fill in an amount above zero.'); return false; }
+      if(amount > left){ err('That is more than the '+D(left)+' still left on this payment.'); return false; }
+      if(!at){ err('Fill in the date the money went back.'); return false; }
+      if(!why){ err('A reason is required.'); return false; }
+      return { amount, at, why, note: ov.querySelector('.nt').value.trim() };
+    },
+    err: e => errText(e, REF_ERR),
+    run: async v => {
+      if(!LIVE){
+        p.payment_refunds = (p.payment_refunds||[]).concat([{ id:'demo-'+Date.now(), amount_minor:v.amount, refunded_at:v.at+'T12:00:00Z', reason:v.why, note:v.note||null }]);
+        if(refundedOf(p) >= Number(p.amount_minor||0)) p.status = REFUND;
+        return;
+      }
+      const { error } = await sb.rpc('add_payment_refund', {
+        p_reference: p.reference, p_amount_minor: v.amount, p_reason: v.why,
+        p_refunded_at: v.at + 'T12:00:00Z', p_note: v.note || null
+      });
+      if(error) throw error;
+    }
+  });
+}
+
+function deleteRefund(id){
+  let hit = null;
+  all.forEach(p=>(p.payment_refunds||[]).forEach(r=>{ if(String(r.id)===String(id)) hit = {r,p}; }));
+  if(!hit) return;
+  const full = refundedOf(hit.p) >= Number(hit.p.amount_minor||0);
+  dialog({
+    title:'Remove this refund line?',
+    intro:'Use this for a line that was entered wrongly. A refund that really happened belongs in the books.',
+    facts:[
+      ['Reference', esc(hit.p.reference)],
+      ['Amount', D(hit.r.amount_minor)],
+      ['Given back on', dayTxt(hit.r.refunded_at)],
+      ['Reason', esc(hit.r.reason||'—')]
+    ],
+    warn: full ? 'This payment is fully refunded, so the database will refuse: putting the status back to succeeded would extend the listing a second time and send a second receipt. Report it on the database side instead.' : null,
+    action:'Remove line', danger:true,
+    err: e => errText(e, REF_ERR),
+    run: async () => {
+      if(!LIVE){
+        hit.p.payment_refunds = (hit.p.payment_refunds||[]).filter(r=>String(r.id)!==String(id));
+        if(hit.p.status===REFUND && refundedOf(hit.p) < Number(hit.p.amount_minor||0)) hit.p.status = SOLD;
+        return;
+      }
+      const { error } = await sb.rpc('delete_payment_refund', { p_refund_id: hit.r.id });
+      if(error) throw error;
+    }
+  });
+}
+
+/* ---- rates: zetten en weghalen ---- */
+async function setRate(){
+  const method = document.getElementById('sMethod').value;
+  const pctIn  = parseFloat(document.getElementById('sPct').value);
+  const from   = document.getElementById('sFrom').value;
+  const note   = document.getElementById('sNote').value.trim();
+  const msg = document.getElementById('rateMsg');
+  const bad = m => { msg.className = 'rwarn on'; msg.innerHTML = esc(m); };
+  msg.className = 'rwarn';
+  if(!isFinite(pctIn) || pctIn < 0 || pctIn > 100) return bad('A rate has to be a number between 0 and 100 percent.');
+  if(!from) return bad('Fill in the date this rate starts applying.');
+  try{
+    if(LIVE){
+      const { error } = await sb.rpc('set_provider_fee_rate', {
+        p_method: method, p_percent: pctIn, p_valid_from: from, p_note: note || null
+      });
+      if(error) throw error;
+      await load();
+    } else {
+      const hit = RATES.find(r=>r.method===method && String(r.valid_from)===from);
+      if(hit){ hit.percent = pctIn; if(note) hit.note = note; }
+      else RATES.push({ id:'demo-'+Date.now(), method, percent:pctIn, valid_from:from, note:note||null });
+      render();
+    }
+    document.getElementById('sPct').value = '';
+    document.getElementById('sNote').value = '';
+    const s = document.getElementById('rateSaved');
+    s.textContent = LIVE ? 'Saved' : 'Example only — not saved';
+    s.classList.add('on'); clearTimeout(window.__rt); window.__rt = setTimeout(()=>s.classList.remove('on'), 2200);
+  }catch(e){ bad(errText(e, RATE_ERR)); }
+}
+
+function deleteRate(id){
+  const r = RATES.find(x=>String(x.id)===String(id));
+  if(!r) return;
+  dialog({
+    title:'Remove this rate?',
+    intro:'Only for a rate that was typed in wrongly. Every payment on or after this date falls back to the rate before it.',
+    facts:[
+      ['Method', esc(METHOD_LABEL[r.method]||r.method)],
+      ['Rate', (Math.round(Number(r.percent)*1000)/1000)+'%'],
+      ['Applies from', dayTxt(r.valid_from)]
+    ],
+    action:'Remove rate', danger:true,
+    err: e => errText(e, RATE_ERR),
+    run: async () => {
+      if(!LIVE){ RATES = RATES.filter(x=>String(x.id)!==String(id)); return; }
+      const { error } = await sb.rpc('delete_provider_fee_rate', { p_id: r.id });
+      if(error) throw error;
+    }
+  });
+}
+
+/* ---- csv ---- */
+const csvQ = v => '"' + String(v==null?'':v).replace(/"/g,'""') + '"';
+function download(name, text){
+  const blob = new Blob(['\ufeff'+text], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
+}
+const stamp = () => (period==='custom' ? 'custom' : period) + '-' + todayISO();
+function csv(){
+  const rows = all.filter(inRange).slice().sort((a,b)=>dayOf(a)-dayOf(b));
+  const head = ['date','reference','product','plan_id','method','status','fulfilment','gross_gmd','fee_rate_pct','fee_gmd','fee_source','refunded_gmd','net_gmd','settled_on','customer_email','listing_id','note'];
+  const body = rows.map(o=>{
+    const p = isPaid(o), r = rateOf(o), back = refundedOf(o);
+    return [isoDay(dayOf(o)), o.reference, planLabel(o), o.plan_id, o.method, o.status, o.fulfilment_status||'new',
+      D2(o.amount_minor), r==null?'':r, p?D2(feeOf(o)):'0.00', p?(isEstimated(o)?'estimated':'booked'):'',
+      D2(back), p?D2(netOf(o)-back):'0.00', o.settled_at ? String(o.settled_at).slice(0,10) : '',
+      o.customer_email, o.listing_id, o.admin_note].map(csvQ).join(',');
+  });
+  download('mykunda-sales-'+stamp()+'.csv', [head.map(csvQ).join(',')].concat(body).join('\r\n'));
+}
+function csvRefunds(){
+  const refs = all.filter(isPaid).reduce((a,p)=>a.concat(refundsOf(p)), [])
+    .filter(r=>inWindow(new Date(r.at))).sort((a,b)=>new Date(a.at)-new Date(b.at));
+  const head = ['refunded_on','reference','product','method','sale_gmd','refund_gmd','reason','note','sale_date','payment_status'];
+  const body = refs.map(r=>[isoDay(r.at), r.p.reference, planLabel(r.p), r.p.method,
+    D2(r.p.amount_minor), D2(r.amount), r.reason, r.note, isoDay(dayOf(r.p)), r.p.status].map(csvQ).join(','));
+  download('mykunda-refunds-'+stamp()+'.csv', [head.map(csvQ).join(',')].concat(body).join('\r\n'));
+}
+
+/* ---- events ---- */
+document.getElementById('periodSeg').addEventListener('click', e=>{
+  const b = e.target.closest('button[data-p]'); if(!b) return;
+  period = b.dataset.p; render();
+});
+['dFrom','dTo'].forEach(id=>document.getElementById(id).addEventListener('change', ()=>{ period='custom'; render(); }));
+document.getElementById('csvBtn').addEventListener('click', csv);
+document.getElementById('csvRefBtn').addEventListener('click', csvRefunds);
+document.getElementById('sSet').addEventListener('click', setRate);
+document.getElementById('rateHist').addEventListener('click', e=>{
+  const b = e.target.closest('button[data-rdel]'); if(b) deleteRate(b.dataset.rdel);
+});
+['allOrders','refunds'].forEach(id=>document.getElementById(id).addEventListener('click', e=>{
+  const r = e.target.closest('button[data-ref]'); if(r){ refundDialog(r.dataset.ref); return; }
+  const d = e.target.closest('button[data-del]'); if(d) deleteRefund(d.dataset.del);
+}));
+
+/* Voorbeeldrijen voor de preview en voor iedereen zonder sessie. Alleen in
+   gebruik als er geen backend is; de vorm is gelijk aan payments met
+   payment_refunds erbij. */
+const DEMO_SALES = (function(){
+  const iso = (m,d) => new Date(2026, m-1, d, 11, 20).toISOString();
+  const r = (ref,plan,amount,method,status,m,d,extra) => Object.assign({
+    reference:ref, plan_id:plan, amount_minor:amount*100, method:method, status:status, currency:'GMD',
+    created_at:iso(m,d), paid_at:status==='succeeded'||status==='refunded'?iso(m,d):null,
+    customer_email:'buyer@example.com', listing_id:null, metadata:{}, fulfilment_status:'done', admin_note:'',
+    payment_refunds:[]
+  }, extra||{});
+  const ref = (amount,m,d,reason,note) => ({ id:'demo-r'+m+d, amount_minor:amount*100, refunded_at:new Date(2026,m-1,d,12,0).toISOString(), reason:reason, note:note||null });
+  return [
+    r('MK-A1B2C3D','verified_m',9000,'card','succeeded',5,14),
+    r('MK-D4E5F6G','boost_30',2500,'wave','succeeded',5,22),
+    r('MK-H7J8K9L','doc_check',3500,'afrimoney','succeeded',6,3),
+    r('MK-M1N2P3Q','verified_s',4500,'bank_transfer','succeeded',6,11),
+    r('MK-R4S5T6U','boost_30',2500,'qmoney','succeeded',6,19),
+    r('MK-Z1A2B3C','verified_l',16000,'bank_transfer','succeeded',7,2),
+    r('MK-D5E6F7G','doc_check',3500,'card','refunded',7,9,{admin_note:'Seller withdrew before we started.', payment_refunds:[ref(3500,7,12,'Seller withdrew before we started — full refund')]}),
+    r('MK-H8J9K1L','boost_30',2500,'wave','succeeded',7,15),
+    r('MK-M2N3P4Q','verified_m',9000,'card','succeeded',7,24,{payment_refunds:[ref(1000,8,5,'Boost ran only three weeks of the four','Agreed by phone with the seller')]}),
+    r('MK-R5S6T7U','doc_check',3500,'aps','succeeded',8,4),
+    r('MK-Z2A3B4C','verified_s',4500,'wave','succeeded',8,13),
+    r('MK-H9J1K2L','doc_check',3500,'card','succeeded',8,22)
+  ];
+})();
+
+/* Dezelfde startwaarden als in provider_fee_rates: wallets 3%, kaart 4,8%,
+   bank transfer 0%, alle vanaf 1 januari 2026. */
+const DEMO_RATES = METHODS.map((m,i)=>({
+  id:'demo-rate-'+i, method:m,
+  percent: m==='card' ? 4.8 : (m==='bank_transfer' ? 0 : 3),
+  valid_from:'2026-01-01',
+  note: m==='bank_transfer' ? 'Straight into the Ecobank account — no provider in between' : null
+}));
+
+load();
+</script>
+</body>
+</html>

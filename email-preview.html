@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyKunda — alle automatische e-mails</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Mulish:wght@400;600;700;800;900&display=swap">
+<style>
+:root{--green-900:#0E2E25;--green-800:#123A2E;--green-700:#15463A;--green-600:#1C5848;--green-500:#2A7561;--green-100:#DCEAE3;--green-50:#EAF2ED;--amber-600:#B45F22;--amber-500:#C8702D;--amber-400:#DD8A45;--amber-50:#FBF1E6;--paper:#FAF8F3;--paper-2:#F3F0E8;--white:#fff;--ink:#18201D;--ink-2:#384640;--muted:#5C6B64;--muted-2:#8A958E;--line:#E5E1D6;--line-2:#EFEBE1;--serif:'Mulish',sans-serif;--sans:'Hanken Grotesk',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--paper-2);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--serif);font-weight:800;letter-spacing:-.015em;line-height:1.15}
+a{color:var(--green-700)}a:hover{color:var(--green-500)}
+code{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.86em;background:var(--green-50);color:var(--green-700);padding:2px 6px;border-radius:5px;font-weight:600}
+.top{background:linear-gradient(150deg,var(--green-800),var(--green-600));color:#fff;padding:52px 40px 44px}
+.top .in{max-width:1180px;margin:0 auto}
+.top .logo{font-family:var(--serif);font-weight:800;font-size:21px;margin-bottom:30px}
+.top .kicker{font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.13em;color:var(--amber-400);margin-bottom:12px}
+.top h1{color:#fff;font-size:36px;font-weight:900;max-width:680px}
+.top p{color:rgba(255,255,255,.86);font-size:16.5px;margin-top:14px;max-width:660px}
+.nav{position:sticky;top:0;z-index:20;background:rgba(250,248,243,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .in{max-width:1180px;margin:0 auto;display:flex;gap:6px;padding:10px 40px;overflow-x:auto}
+.nav a{font-size:13.5px;font-weight:700;color:var(--muted);text-decoration:none;padding:8px 14px;border-radius:99px;white-space:nowrap}
+.nav a:hover{background:var(--green-50);color:var(--green-700)}
+main{max-width:1180px;margin:0 auto;padding:44px 40px 80px}
+.grp{margin-bottom:16px;scroll-margin-top:70px}
+.grp>h2{font-size:23px;margin:38px 0 4px;padding-top:14px}
+.grp>p.gd{color:var(--muted);font-size:15px;margin-bottom:22px;max-width:720px}
+.card{background:var(--white);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:22px}
+.chead{padding:20px 24px;border-bottom:1px solid var(--line-2);display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap}
+.chead .t{flex:1;min-width:260px}
+.chead h3{font-size:17.5px}
+.chead .trig{font-size:13.5px;color:var(--muted);margin-top:3px}
+.meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pill{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:5px 11px;border-radius:99px;background:var(--green-50);color:var(--green-700)}
+.pill.team{background:var(--amber-50);color:var(--amber-600)}
+.pill.new{background:#E8F5E9;color:#1B7A3E}
+.subj{padding:13px 24px;background:var(--paper);border-bottom:1px solid var(--line-2);font-size:13.5px;color:var(--ink-2);display:flex;gap:10px;flex-wrap:wrap;align-items:baseline}
+.subj b{font-family:var(--serif);color:var(--ink);font-weight:700}
+.subj .lbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted-2)}
+.frame{background:var(--paper-2);padding:0}
+iframe{width:100%;border:0;display:block;background:var(--paper-2)}
+.tools{display:flex;gap:8px;padding:12px 24px;border-top:1px solid var(--line-2);background:var(--paper)}
+.tools button{font-family:var(--sans);font-size:12.5px;font-weight:700;color:var(--green-700);background:var(--green-50);border:1px solid var(--green-100);border-radius:8px;padding:7px 14px;cursor:pointer}
+.tools button:hover{background:var(--green-100)}
+pre.txt{display:none;margin:0;padding:22px 26px;background:var(--green-900);color:#C8E6DC;font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:12.5px;line-height:1.65;white-space:pre-wrap;border-top:1px solid var(--line-2)}
+pre.txt.on{display:block}
+.wa{background:#E5DDD5;padding:30px;display:flex;justify-content:center}
+.wa .bub{background:#fff;border-radius:10px;padding:16px 18px;max-width:480px;font-size:14.5px;line-height:1.55;color:#111;white-space:pre-wrap;box-shadow:0 1px 2px rgba(0,0,0,.14);position:relative}
+.err{background:#FEF2F2;border-left:4px solid #C2533A;padding:18px 22px;border-radius:0 12px 12px 0;margin:20px 0;font-size:14.5px}
+.err b{color:#C2533A}
+.note{border-left:4px solid var(--amber-500);background:var(--amber-50);padding:16px 22px;border-radius:0 12px 12px 0;margin:0 0 28px;font-size:14.5px;max-width:860px}
+.note b{color:var(--amber-600)}
+.loading{padding:60px 0;text-align:center;color:var(--muted);font-size:15px}
+@media(max-width:760px){.top,.nav .in,main{padding-left:20px;padding-right:20px}.top h1{font-size:27px}}
+</style>
+</head>
+<body>
+
+<div class="top"><div class="in">
+  <div class="logo">MyKunda</div>
+  <div class="kicker">Backoffice · e-mailtemplates</div>
+  <h1>Elke automatische e-mail die de site verstuurt</h1>
+  <p>Hieronder staat elke mail die een bezoeker, verkoper of het team van mykunda.com kan krijgen — precies zoals hij in de inbox landt. Direct opgebouwd uit de broncode van de templates, niet nagemaakt.</p>
+</div></div>
+
+<div class="nav"><div class="in">
+  <a href="#formulieren">Formulieren</a>
+  <a href="#bezichtigingen">Bezichtigingen</a>
+  <a href="#advertenties">Advertenties</a>
+  <a href="#betalingen">Betalingen</a>
+  <a href="#account">Account</a>
+  <a href="#intern">Intern</a>
+  <a href="#whatsapp">WhatsApp</a>
+</div></div>
+
+<main>
+  <div class="note"><b>Waar dit vandaan komt.</b> Deze pagina laadt <code>edge-functions/_shared/email-template.ts</code> en <code>email-listing.ts</code> uit het project en voert ze uit met voorbeeldgegevens. Wat je ziet is dus letterlijk de mail die Resend verstuurt. Verandert de template, dan verandert deze pagina mee.</div>
+  <div id="out"><div class="loading">Templates laden…</div></div>
+</main>
+
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="email-preview.js"></script>
+</body>
+</html>

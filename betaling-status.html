@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0p4ystq--><!--/mk-mark-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
+<link rel="apple-touch-icon" href="images/mykunda-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#15463A">
+<title>Payment status — MyKunda</title>
+<meta property="fb:pages" content="61593360783009">
+<meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
+<noscript></noscript>
+<link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
+<link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.min.css?v=1787660000000">
+<style>
+body{background:var(--paper-2)}
+.ps-wrap{max-width:620px;margin:0 auto;padding:46px 24px 76px}
+.ps-card{background:var(--white);border-radius:var(--r-xl);box-shadow:var(--sh-md);padding:44px 44px 38px;text-align:center}
+@media(max-width:560px){.ps-wrap{padding:28px 18px 60px}.ps-card{padding:32px 24px 28px;border-radius:var(--r-lg)}}
+.ps-seal{width:80px;height:80px;border-radius:50%;background:var(--paper-2);color:var(--ink-2);display:flex;align-items:center;justify-content:center;margin:0 auto 22px}
+.ps-card.is-ok .ps-seal{background:var(--green-50);color:var(--green-700)}
+.ps-card.is-bad .ps-seal{background:var(--amber-50);color:var(--amber-600)}
+.ps-spin{width:34px;height:34px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--green-700);animation:ps-rot .85s linear infinite}
+@keyframes ps-rot{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.ps-spin{animation-duration:2.4s}}
+.ps-hero{font-family:var(--serif);font-size:25px;line-height:1.3;font-weight:600;color:var(--ink);text-wrap:pretty;margin:0}
+.ps-sub{font-size:15px;line-height:1.6;color:var(--muted);margin:12px 0 0;text-wrap:pretty}
+.ps-receipt{background:var(--paper);border-radius:var(--r-md);padding:16px 20px;margin:26px 0 4px;text-align:left}
+.ps-receipt .r-row{display:flex;justify-content:space-between;gap:16px;font-size:14px;padding:5px 0;color:var(--ink-2)}
+.ps-receipt .r-row span:first-child{color:var(--muted)}
+.ps-receipt .r-row[hidden]{display:none}
+.ps-receipt .r-row b{font-weight:700;letter-spacing:.03em}
+.ps-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+.ps-again{display:flex;justify-content:center;margin-top:16px}
+.ps-again[hidden],.ps-receipt[hidden]{display:none}
+.ps-again button{font-size:14px;font-weight:700;color:var(--green-700);background:none;padding:6px 4px}
+.ps-again button:hover{color:var(--amber-600)}
+.ps-note{display:flex;gap:10px;align-items:flex-start;margin-top:26px;font-size:13px;line-height:1.6;color:var(--muted-2);text-align:left}
+.ps-note svg{color:var(--green-600);flex:none;margin-top:2px}
+.ps-wrap a:not(.btn){color:var(--green-700)}
+.ps-wrap a:not(.btn):hover{color:var(--amber-600)}
+/* ---- voortgang van een titelcontrole, ná de betaling ---- */
+.prog{margin:26px auto 0;max-width:520px;text-align:left;background:var(--paper,#FAF8F3);border:1px solid var(--line,#EFEBE1);border-radius:14px;padding:20px 22px}
+.prog h4{margin:0 0 3px;font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted,#5C6B64)}
+.prog .now{margin:0;font-size:16px;font-weight:700;color:var(--ink,#18201D);line-height:1.4}
+.prog .bar{display:flex;gap:5px;margin:14px 0 0}
+.prog .bar i{flex:1;height:5px;border-radius:99px;background:var(--line,#EFEBE1)}
+.prog .bar i.on{background:var(--green-700,#15463A)}
+.prog .when{margin:10px 0 0;font-size:12.5px;color:var(--muted-2,#8A958E)}
+.prog .hint{margin:12px 0 0;font-size:13.5px;color:var(--muted,#5C6B64);line-height:1.6}
+</style>
+</head>
+<body>
+<div id="header"></div>
+
+<div class="ps-wrap">
+  <div class="ps-card" id="psCard">
+    <div class="ps-seal" id="psSeal"><div class="ps-spin"></div></div>
+    <p class="ps-hero" id="psHero">Checking your payment</p>
+    <p class="ps-sub" id="psSub">This usually takes a few seconds. You can keep this page open.</p>
+    <div id="psProg"></div>
+    <div class="ps-receipt" id="psReceipt" hidden>
+      <div class="r-row"><span>Reference</span><b id="psRef"></b></div>
+      <div class="r-row" id="psPlanRow" hidden><span>Plan</span><span id="psPlan"></span></div>
+      <div class="r-row" id="psAmtRow" hidden><span>Amount</span><span id="psAmt"></span></div>
+      <div class="r-row" id="psTimeRow"><span>Last checked</span><span id="psTime">—</span></div>
+    </div>
+    <div class="ps-actions" id="psActions"></div>
+    <div class="ps-again" id="psAgain" hidden><button type="button" id="psAgainBtn">Check again</button></div>
+  </div>
+  <div class="ps-note">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+    <p>Payments are handled through Waychit, a licensed Gambian payment provider. MyKunda only collects listing and service fees — we never take deposits, down payments or purchase money.</p>
+  </div>
+</div>
+
+<div id="footer"></div>
+
+<script src="app.min.js?v=1787660000000"></script>
+<script>
+/* The Supabase client is not needed to paint this page; it downloads in
+   parallel and the status poll awaits window.__sbReady. */
+window.__sbReady=new Promise(function(res){
+  var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
+  s1.onerror=function(){ window.supabase=null; res(); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=1787660000000'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  document.head.appendChild(s1);
+});
+</script>
+<script>
+document.getElementById('header').innerHTML = headerHTML('', false);
+document.getElementById('footer').innerHTML = footerHTML();
+
+const FN_FALLBACK = 'https://jejaerpqltqryqzjvbjp.supabase.co/functions/v1';
+const REF = (qs('ref') || '').trim();
+/* ?failed=1 and ?cancelled=1 come from the URL and can be typed by anyone.
+   They are never treated as the outcome — only as a reason to open with a
+   neutral line while the real answer is fetched. Both are handled alike. */
+const HINTED = qs('failed') === '1' || qs('cancelled') === '1';
+
+/* Three minutes of polling, then we stop asking and say so: the webhook may
+   arrive after the customer has closed the page, and the email covers that. */
+const MAX_POLL_MS = 180000, MIN_DELAY = 3000, MAX_DELAY = 30000;
+let startedAt = Date.now(), timer = null, stopped = false;
+
+const card = document.getElementById('psCard'), seal = document.getElementById('psSeal');
+const hero = document.getElementById('psHero'), sub = document.getElementById('psSub');
+const receipt = document.getElementById('psReceipt'), actionsEl = document.getElementById('psActions');
+const againEl = document.getElementById('psAgain'), timeEl = document.getElementById('psTime');
+const progEl = document.getElementById('psProg');
+
+/* Plan ids as create-payment knows them, in the customer's words. */
+const PLAN_NAMES = {
+  verified:'Verified listing', boost:'Boost',
+  'ownership-standard':'Ownership Verification · Document Check',
+  'ownership-full':'Ownership Verification · Full Check'
+};
+
+const IC = {
+  spin: '<div class="ps-spin"></div>',
+  check: '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+  alert: '<svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v5"/><path d="M12 17.5h.01"/><path d="M10.3 3.9 2.6 17.4A1.6 1.6 0 0 0 4 19.8h16a1.6 1.6 0 0 0 1.4-2.4L13.7 3.9a1.6 1.6 0 0 0-2.8 0Z"/></svg>',
+  mail: '<svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
+  info: '<svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg>',
+  lock: '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>'
+};
+const LINK = {
+  dashboard: '<a class="btn btn-primary" href="dashboard.html">Go to My MyKunda</a>',
+  contact: '<a class="btn btn-ghost" href="contact.html">Contact us</a>',
+  signin: '<a class="btn btn-primary" href="auth.html?next=' + encodeURIComponent('betaling-status.html' + location.search) + '">Sign in</a>'
+};
+
+function render(o){
+  card.classList.toggle('is-ok', o.tone === 'ok');
+  card.classList.toggle('is-bad', o.tone === 'bad');
+  seal.innerHTML = IC[o.icon] || IC.info;
+  hero.textContent = o.hero;
+  sub.textContent = o.sub || '';
+  sub.hidden = !o.sub;
+  progEl.innerHTML = o.extra || '';
+  actionsEl.innerHTML = o.actions || '';
+  againEl.hidden = !o.again;
+}
+let LAST = {};
+function stamp(d){
+  if(d) LAST = d;
+  receipt.hidden = false;
+  document.getElementById('psRef').textContent = LAST.reference || REF;
+  if(LAST.plan_id){
+    document.getElementById('psPlan').textContent = PLAN_NAMES[LAST.plan_id] || LAST.plan_id;
+    document.getElementById('psPlanRow').hidden = false;
+  }
+  const amt = Number(LAST.amount_gmd);
+  if(amt > 0){
+    document.getElementById('psAmt').textContent = 'D' + amt.toLocaleString('en-US');
+    document.getElementById('psAmtRow').hidden = false;
+  }
+  timeEl.textContent = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+}
+function tell(){ return LINK.dashboard + LINK.contact; }
+function retry(){
+  return '<a class="btn btn-primary" href="checkout.html' +
+    (LAST.plan_id ? '?plan=' + encodeURIComponent(LAST.plan_id) : '') + '">Try again</a>';
+}
+
+/* payment-status returns status on every response — pending, processing,
+   succeeded, failed, cancelled, expired, refunded — and that field decides the
+   tone of this page. Only failed, cancelled and expired offer "Try again";
+   a refund is settled but is nobody's cue to pay again. */
+const BAD_STATUS = ['failed','cancelled','expired'];
+function statusOf(d){ return String((d && d.status) || '').toLowerCase(); }
+function toneOf(d){
+  const s = statusOf(d);
+  if(s === 'succeeded') return 'ok';
+  if(BAD_STATUS.indexOf(s) > -1) return 'bad';
+  if(s) return 'neutral';                 /* refunded, pending, processing */
+  /* Fallback for the day the field is somehow absent: the wording is then the
+     only signal we have, and a failed payment must not read as neutral. */
+  const m = String((d && d.message_en) || '').toLowerCase();
+  if(/fail|cancel|expire|declin|refus|unsuccessful|not complete|did not go through/.test(m)) return 'bad';
+  if(/confirm|received|successful|activated|now active|thank you|paid in full/.test(m)) return 'ok';
+  return 'neutral';
+}
+
+/* De tweede as: het WERK, niet het geld.
+
+   Alleen aanwezig bij een betaalde titelcontrole; payment-status laat de
+   velden weg bij een Boost of een listingbetaling. Ontbreken ze, dan
+   tekenen we niets — een lege balk is erger dan geen balk.
+
+   Er staat met opzet geen datum en geen schatting bij. Dat is dezelfde
+   belofte als op verify.html: registratiekantoren, landmeters en verkopers
+   gaan hun eigen tempo, en een deadline noemen die je niet in de hand hebt
+   is erger dan er geen noemen. */
+function progEsc(v){
+  return String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function progressHTML(d){
+  if(!d || !d.progress || !d.progress_en) return '';
+  const totaal = Number(d.progress_steps) || 4;
+  const stap   = Math.max(0, Math.min(totaal, Number(d.progress_step) || 0));
+  const balk   = Array.from({length: totaal}, function(_, i){
+    return '<i class="' + (i < stap ? 'on' : '') + '"></i>';
+  }).join('');
+  let wanneer = '';
+  if(d.progress_updated_at){
+    const t = new Date(d.progress_updated_at);
+    if(!isNaN(t)) wanneer = '<p class="when">Last update ' +
+      t.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) + '</p>';
+  }
+  const hint = (d.progress === 'in_progress' || d.progress === 'new')
+    ? '<p class="hint">We deliberately do not put a date on this. Registry offices, surveyors and sellers move at their own pace, and a deadline we cannot control would be worth less than none. You will get an email at every step — and you can reply to any of them to ask where it stands.</p>'
+    : (d.progress === 'report_sent'
+        ? '<p class="hint">The report came as a separate email. If it has not reached you, check your spam folder and then reply to it — we will send it again.</p>'
+        : '');
+  return '<div class="prog">' +
+    '<h4>Your ownership check</h4>' +
+    '<p class="now">' + progEsc(d.progress_en) + '</p>' +
+    '<div class="bar">' + balk + '</div>' +
+    wanneer + hint +
+  '</div>';
+}
+
+async function endpoint(){
+  if(window.__sbReady) await window.__sbReady;
+  const base = (typeof MYKUNDA_FN_URL !== 'undefined' && MYKUNDA_FN_URL) ? MYKUNDA_FN_URL : FN_FALLBACK;
+  let token = null, anon = (typeof MYKUNDA_SUPABASE_ANON !== 'undefined') ? MYKUNDA_SUPABASE_ANON : null;
+  try{
+    if(typeof sb !== 'undefined' && sb){
+      const { data } = await sb.auth.getSession();
+      if(data && data.session) token = data.session.access_token;
+    }
+  }catch(e){}
+  return { base: base, token: token || anon, anon: anon };
+}
+
+/* Two ways the page stops asking: our own three-minute window runs out, or the
+   server hands back no retry interval at all. Both end in the same promise —
+   the email — but only the first one is about waiting long. */
+function emailNotice(kind){
+  stopped = true;
+  render({
+    tone: 'neutral', icon: 'mail',
+    hero: kind === 'quiet' ? 'We are waiting for the payment provider.' : 'This is taking longer than usual.',
+    sub: (kind === 'quiet' ? 'There is nothing more for you to do. ' : '') +
+      "We'll email you as soon as your payment is confirmed — your reference is " + (LAST.reference || REF) + '.',
+    actions: tell(), again: true
+  });
+}
+
+async function poll(){
+  if(stopped) return;
+  let r, out = {};
+  const { base, token, anon } = await endpoint();
+  try{
+    r = await fetch(base + '/payment-status?ref=' + encodeURIComponent(REF), {
+      headers: anon ? { 'Authorization': 'Bearer ' + token, 'apikey': anon } : { 'Authorization': 'Bearer ' + token }
+    });
+  }catch(e){
+    return again(8000);          // no response at all — try again inside the window
+  }
+  if(r.status === 401 || r.status === 403){
+    stopped = true;
+    return render({
+      tone: 'neutral', icon: 'lock',
+      hero: 'Sign in to see this payment',
+      sub: 'This page only shows payments made from your own account.',
+      actions: LINK.signin + LINK.contact
+    });
+  }
+  if(r.status === 404){
+    stopped = true;
+    return render({
+      tone: 'neutral', icon: 'info',
+      hero: 'We cannot find this payment reference',
+      sub: 'Open the link from your payment confirmation again, or send us the reference and we will look it up.',
+      actions: tell()
+    });
+  }
+  out = await r.json().catch(function(){ return {}; });
+  if(!r.ok) return again(8000);
+
+  stamp(out);
+  const msg = (out && typeof out.message_en === 'string' && out.message_en.trim()) ? out.message_en.trim() : '';
+
+  if(out && out.settled === true){
+    stopped = true;
+    const tone = toneOf(out);
+    if(statusOf(out) === 'refunded'){
+      return render({
+        tone: 'neutral', icon: 'info',
+        hero: msg || 'This payment has been refunded.',
+        sub: 'The amount is on its way back to the account you paid from. Keep the reference below if you need to ask us about it.',
+        actions: tell()
+      });
+    }
+    return render({
+      tone: tone, icon: tone === 'ok' ? 'check' : tone === 'bad' ? 'alert' : 'info',
+      hero: msg || 'This payment has been processed.',
+      sub: tone === 'bad'
+        ? 'Nothing has been charged. You can try again — with another payment method if you prefer.'
+        : 'Keep the reference below if you need to ask us about this payment.',
+      /* Bij een geslaagde titelcontrole hoort de klant hier ook te zien
+         hoe ver het werk is. Bij een mislukte betaling niet: dan is er
+         geen werk en zou een balk alleen verwarren. */
+      extra: tone === 'ok' ? progressHTML(out) : '',
+      actions: tone === 'bad' ? retry() + LINK.contact : tell()
+    });
+  }
+  /* Not settled yet. retry_after_seconds is the server saying when to ask
+     again; null means it has nothing more coming, so we stop rather than spin. */
+  const secs = Number(out && out.retry_after_seconds);
+  if(!(secs > 0)) return emailNotice('quiet');
+  render({
+    tone: 'neutral', icon: 'spin',
+    hero: msg || 'Checking your payment',
+    sub: 'We are waiting for the payment provider to confirm. This page updates by itself.'
+  });
+  again(secs * 1000);
+}
+
+function again(ms){
+  if(stopped) return;
+  if(Date.now() - startedAt >= MAX_POLL_MS) return emailNotice();
+  clearTimeout(timer);
+  timer = setTimeout(poll, Math.min(MAX_DELAY, Math.max(MIN_DELAY, ms)));
+}
+
+document.getElementById('psAgainBtn').addEventListener('click', function(){
+  stopped = false; startedAt = Date.now();
+  render({ tone: 'neutral', icon: 'spin', hero: 'Checking your payment', sub: 'One moment.' });
+  poll();
+});
+
+/* ---- start ---- */
+if(!REF){
+  stopped = true;
+  render({
+    tone: 'neutral', icon: 'info',
+    hero: 'This link has no payment reference',
+    sub: 'Open the link from your payment confirmation, or check your payments in My MyKunda.',
+    actions: tell()
+  });
+}else{
+  stamp();
+  if(HINTED){
+    render({
+      tone: 'neutral', icon: 'spin',
+      hero: 'Checking this payment',
+      sub: 'The link suggests the payment was not completed. We are checking our own records — one moment.'
+    });
+  }
+  poll();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--mk-mark--><meta name="copyright" content="© MyKunda Ltd — mykunda.com. Alle rechten voorbehouden."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:040rvoe--><!--/mk-mark-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
+<link rel="apple-touch-icon" href="images/mykunda-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#15463A">
+<title>Rates &amp; pricing — MyKunda</title>
+<link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
+<link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.min.css?v=1791100000000">
+<style>
+body{background:var(--paper-2)}
+.admin{max-width:1180px;margin:0 auto;padding:34px 28px 70px}
+.admin-head{margin-bottom:24px}
+.admin-head h1{font-size:32px;line-height:1.1}
+.admin-head p{color:var(--muted);font-size:15px;margin-top:6px;max-width:64ch}
+.card{background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-sm);padding:22px 24px;margin-bottom:20px}
+.card h2{font-size:18px;margin:0}
+.card-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.rate-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-bottom:16px}
+.rate-tile{background:var(--paper);border-radius:var(--r-md);padding:14px 16px}
+.rate-tile .lab{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.rate-tile .val{font-family:var(--serif);font-size:24px;font-weight:800;color:var(--ink);line-height:1.1;font-variant-numeric:tabular-nums}
+.rate-tile .src{font-size:11px;color:var(--green-700);font-weight:600;margin-top:4px}
+.rate-tile.editable{background:var(--green-50);border:1.5px solid var(--green-200)}
+.rate-tile.editable .lab{color:var(--green-700)}
+.rate-row{display:flex;align-items:center;gap:10px;margin-top:2px}
+.rate-row input{width:112px;height:40px;border-radius:var(--r-sm);border:1.5px solid var(--line);padding:0 12px;font-size:20px;font-weight:800;color:var(--ink);font-family:var(--serif)}
+.rate-row input:focus{outline:none;border-color:var(--green-500)}
+.fine{font-size:12.5px;color:var(--muted);line-height:1.55;margin:0}
+.fine a{color:var(--green-700)}
+.fine code,.drift code{background:var(--paper-2);border-radius:5px;padding:1px 5px;font-size:11.5px}
+#rateStatus{font-size:12px;color:var(--muted);font-weight:600;cursor:pointer}
+#gmdAuto{display:none;font-size:11.5px;font-weight:700;color:var(--green-700);margin-top:6px;text-decoration:underline;background:none;border:none;padding:0;cursor:pointer}
+.drift{border-radius:var(--r-md);padding:15px 18px;font-size:13.5px;line-height:1.6}
+.card-head .sub{font-size:12px;color:var(--muted);margin-top:2px}
+.card-head .spacer{flex:1}
+.seg{display:inline-flex;background:var(--paper-2);border-radius:999px;padding:3px}
+.seg button{border:0;background:transparent;font:inherit;font-size:12px;font-weight:600;color:var(--muted);padding:5px 11px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--white);color:var(--green-700);box-shadow:0 1px 2px rgba(24,32,29,.10)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
+.rate-tile .val small{font-size:13px;font-weight:600;color:var(--muted);margin-left:4px;font-family:var(--sans)}
+.rate-tile .val .up{color:var(--amber-600)}
+.rate-tile .val .down{color:var(--green-500)}
+.chart-wrap{position:relative}
+.chart-wrap svg{display:block;width:100%;height:auto;font-family:var(--sans)}
+.grid line{stroke:var(--line-2);stroke-width:1}
+.axis text{fill:var(--muted-2);font-size:11px}
+.series{fill:none;stroke:var(--green-600);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.area{fill:url(#fade)}
+.ref line{stroke:var(--ink-2);stroke-dasharray:3 4;stroke-width:1}
+.ref text{fill:var(--ink-2);font-size:11px;font-weight:600}
+.last circle{fill:var(--green-600);stroke:#fff;stroke-width:2}
+.last text{fill:var(--ink);font-size:12px;font-weight:700;font-family:var(--serif)}
+.cross line{stroke:var(--muted-2);stroke-width:1;stroke-dasharray:2 3}
+.cross circle{fill:#fff;stroke:var(--green-600);stroke-width:2}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:#fff;font-size:12px;line-height:1.35;padding:6px 9px;border-radius:8px;white-space:nowrap;transform:translate(-50%,-115%);opacity:0;transition:opacity .08s}
+.tip b{font-family:var(--serif);font-size:13px}
+.legend{display:flex;gap:18px;font-size:11.5px;color:var(--muted);margin-top:8px;flex-wrap:wrap}
+.legend span::before{content:"";display:inline-block;width:14px;height:0;border-top:2px solid var(--green-600);margin-right:6px;vertical-align:middle}
+.legend .ref-l::before{border-top:1px dashed var(--ink-2)}
+@media(max-width:640px){.kpis{grid-template-columns:1fr 1fr}.kpis .rate-tile:last-child{grid-column:1/-1}}
+@media(max-width:620px){.admin{padding:20px 16px 50px}.card{padding:18px 16px}}
+</style>
+<meta property="fb:pages" content="61593360783009">
+<meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
+</head>
+<body>
+<div id="header"></div>
+<div id="adminNav"></div>
+
+<div class="admin">
+  <div class="admin-head">
+    <h1>Rates &amp; pricing</h1>
+    <p>The exchange rates every price on the site is converted with, and the listing plan prices that follow from them.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Exchange rates</h2><span id="rateStatus"></span></div>
+    <div class="rate-grid">
+      <div class="rate-tile">
+        <div class="lab">EUR → USD</div>
+        <div class="val" id="rateEUR">—</div>
+        <div class="src" id="srcUSD">—</div>
+      </div>
+      <div class="rate-tile">
+        <div class="lab">EUR → GBP</div>
+        <div class="val" id="rateGBP">—</div>
+        <div class="src" id="srcGBP">—</div>
+      </div>
+      <div class="rate-tile editable">
+        <div class="lab">1 EUR = ? GMD</div>
+        <div class="rate-row">
+          <input type="number" id="gmdInput" step="0.1" min="1">
+          <span style="font-size:14px;font-weight:700;color:var(--ink-2)">GMD</span>
+          <button class="btn btn-primary btn-sm" id="gmdSave" style="white-space:nowrap">Override</button>
+        </div>
+        <div style="font-size:11.5px;font-weight:600;margin-top:6px" id="gmdSrc"></div>
+        <div style="font-size:11.5px;color:var(--muted);margin-top:3px" id="gmdCalc"></div>
+        <button id="gmdAuto">Use the automatic CBG rate again</button>
+      </div>
+    </div>
+    <p class="fine">All rates come from the <a href="https://www.cbg.gm/indicative-exchange-rates-latest" target="_blank" rel="noopener">Central Bank of The Gambia daily valuation rates</a> — the official published rate — pulled once a day. CBG quotes the dalasi against all three currencies, so <b>EUR → USD and EUR → GBP are cross rates derived from it</b> (EUR/GMD ÷ USD/GMD), not ECB mid-market rates. Expect them to sit a few percent away from what frankfurter.app or Google shows: CBG's indicative rates carry a bank spread. That is correct behaviour — a price quoted in dollars here matches what a Gambian bank charges, and every currency on the site stays on one source. <a href="https://frankfurter.app" target="_blank" rel="noopener">frankfurter.app</a> (ECB) is only used when the CBG scrape returns the dalasi but not USD/GBP; the tile above says which source is live. A daily move over 3% is rejected and logged in <code>fx_rate_rejects</code> rather than applied, so a bad scrape can never reprice the site. Only override manually if the published rate is clearly wrong.</p>
+  </div>
+
+  <div class="card" id="fxTrendCard">
+    <div class="card-head">
+      <div>
+        <h2>Dalasi trend</h2>
+        <div class="sub" id="trendSub">GMD per 1 EUR · higher = weaker dalasi</div>
+      </div>
+      <div class="spacer"></div>
+      <div class="seg" id="ccySeg" role="group" aria-label="Currency">
+        <button aria-pressed="true" data-ccy="e">EUR</button><button aria-pressed="false" data-ccy="u">USD</button><button aria-pressed="false" data-ccy="g">GBP</button>
+      </div>
+      <div class="seg" id="rangeSeg" role="group" aria-label="Range">
+        <button aria-pressed="false" data-days="30">1M</button><button aria-pressed="true" data-days="91">3M</button><button aria-pressed="false" data-days="182">6M</button><button aria-pressed="false" data-days="365">1Y</button>
+      </div>
+    </div>
+    <div class="kpis">
+      <div class="rate-tile"><div class="lab">Latest</div><div class="val" id="kNow">—</div><div class="src" id="kNowSrc">—</div></div>
+      <div class="rate-tile"><div class="lab">Change over period</div><div class="val" id="kChg">—</div><div class="src" id="kChgSrc">—</div></div>
+      <div class="rate-tile"><div class="lab">Range · low – high</div><div class="val" id="kRange">—</div><div class="src" id="kRangeSrc">—</div></div>
+    </div>
+    <div class="chart-wrap" id="chartWrap">
+      <svg id="fxChart" viewBox="0 0 1000 300" role="img" aria-label="Dalasi exchange rate over time"></svg>
+      <div class="tip" id="tip"></div>
+    </div>
+    <div class="legend">
+      <span>CBG daily valuation rate</span>
+      <span class="ref-l" id="legRef">Plan-price reference</span>
+    </div>
+    <p class="fine" style="margin-top:14px">Daily valuation rates from the <a href="https://www.cbg.gm/indicative-exchange-rates/EUR" target="_blank" rel="noopener">Central Bank of The Gambia</a>, one point per publication day (no weekends or holidays, nothing interpolated). Read from <code>fx_rates</code>; the dashed line follows <code>PRICING.referenceRate</code>, so a price review moves it automatically. Indicative only.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Listing plan prices</h2></div>
+    <div class="drift" id="driftBox"></div>
+  </div>
+</div>
+
+<div id="footer"></div>
+
+<script src="vendor/supabase-js-2.umd.js"></script>
+<script src="supabase.js?v=1791100000000"></script>
+<script src="app.min.js?v=1791100000000"></script>
+<script src="admin-nav.js?v=1791100000000"></script>
+<script src="admin-guard.js?v=1791100000000"></script>
+<script>
+document.getElementById('header').innerHTML = headerHTML('', false);
+document.getElementById('footer').innerHTML = footerHTML();
+document.getElementById('adminNav').innerHTML = adminNavHTML('rates');
+
+if(typeof backendReady==='function' && backendReady()){
+  var f=document.getElementById('modeFlag'); f.className='mode-flag live'; f.textContent='Live · connected';
+}
+
+/* ---------- Exchange rate management (EUR-based) ---------- */
+(function initRates(){
+  var elUSD = document.getElementById('rateEUR');
+  var elGBP = document.getElementById('rateGBP');
+  var elGMD = document.getElementById('gmdInput');
+  var elStatus = document.getElementById('rateStatus');
+  var elSrc = document.getElementById('gmdSrc');
+  var btnSave = document.getElementById('gmdSave');
+  var btnAuto = document.getElementById('gmdAuto');
+
+  elUSD.textContent = CURRENCIES.USD.rate.toFixed(4);
+  elGBP.textContent = CURRENCIES.GBP.rate.toFixed(4);
+
+  /* The tiles used to be hardcoded to "Auto · frankfurter.app", which was wrong
+     whenever CBG answered in full — then these two ARE CBG cross rates and read
+     a few percent off ECB mid-market. Say which source is actually on screen. */
+  function showFxSource(){
+    var txt, warn = false;
+    if(RATE_INFO.cbgCross){ txt = 'CBG cross rate · via the dalasi'; }
+    else if(RATE_INFO.source === 'built-in fallback'){ txt = 'Fallback rate · not live'; warn = true; }
+    else { txt = 'Auto · frankfurter.app (ECB)'; }
+    ['srcUSD','srcGBP'].forEach(function(id){
+      var el = document.getElementById(id);
+      el.textContent = txt;
+      el.style.color = warn ? 'var(--amber-600)' : 'var(--green-700)';
+    });
+  }
+
+  var savedGmd = parseFloat(localStorage.getItem('mykunda_gmd_eur'));
+  elGMD.value = savedGmd > 0 ? savedGmd : CURRENCIES.GMD.rate;
+
+  function showSource(){
+    var manual = parseFloat(localStorage.getItem('mykunda_gmd_eur')) > 0;
+    elSrc.textContent = manual ? 'Manual override — the automatic CBG rate is ignored' : rateNote();
+    elSrc.style.color = manual ? 'var(--amber-600)' : (RATE_INFO.stale ? 'var(--amber-600)' : 'var(--green-700)');
+    btnAuto.style.display = manual ? 'inline' : 'none';
+  }
+  function showDrift(){
+    var box = document.getElementById('driftBox');
+    var pct = pricingDrift() * 100;
+    var pctTxt = (pct > 0.05 ? '+' : '') + pct.toFixed(1) + '%';
+    var due = pricingReviewDue();
+    box.style.background = due ? 'var(--amber-50)' : 'var(--paper)';
+    box.style.border = '1.5px solid ' + (due ? 'var(--amber-200)' : 'var(--line)');
+    box.innerHTML = 'Plan prices were last reviewed on <b>' + PRICING.reviewedAt +
+      '</b> at D' + PRICING.referenceRate + ' per euro. The rate is now D' + CURRENCIES.GMD.rate.toFixed(2) +
+      ' — a drift of <b>' + pctTxt + '</b>. ' +
+      (due
+        ? '<span style="color:var(--amber-600);font-weight:700">Time to re-round them.</span> Edit <code>PRICING</code> in <code>app.js</code>: set new tidy dalasi amounts, update the euro references, bump <code>reviewedAt</code>.'
+        : 'No action needed — plan prices never move on their own. Review is due when the drift passes ±' +
+          Math.round(PRICING.driftTolerance * 100) + '% or 3 months after the last review.');
+  }
+  function showGmdCalc(){
+    var val = parseFloat(elGMD.value);
+    var calc = document.getElementById('gmdCalc');
+    if(!val || val <= 0){ calc.textContent = ''; return; }
+    calc.textContent = '→ 1 USD = ' + (val / CURRENCIES.USD.rate).toFixed(1) + ' GMD · 1 GBP = ' + (val / CURRENCIES.GBP.rate).toFixed(1) + ' GMD';
+  }
+  showGmdCalc(); showSource(); showDrift(); showFxSource();
+  elGMD.addEventListener('input', showGmdCalc);
+
+  try {
+    var cached = JSON.parse(localStorage.getItem('mykunda_rates')||'null');
+    if(cached && cached.ts){
+      var ageH = Math.round((Date.now() - cached.ts) / 3600000);
+      elStatus.textContent = 'Checked ' + (ageH < 1 ? 'just now' : ageH + 'h ago') + ' · click to refresh';
+    } else {
+      elStatus.textContent = 'Using fallback rates';
+      elStatus.style.color = 'var(--amber-600)';
+    }
+  } catch(e){}
+
+  btnSave.addEventListener('click', function(){
+    var val = parseFloat(elGMD.value);
+    if(!val || val <= 0){ alert('Please enter a valid rate'); return; }
+    localStorage.setItem('mykunda_gmd_eur', String(val));
+    CURRENCIES.GMD.rate = val;
+    RATE_INFO.source = 'manual override';
+    RATE_INFO.stale = false;
+    showGmdCalc(); showSource(); showDrift();
+    if(typeof renderRateNote === 'function') renderRateNote();
+    btnSave.textContent = 'Saved ✓';
+    setTimeout(function(){ btnSave.textContent = 'Override'; }, 1500);
+  });
+
+  btnAuto.addEventListener('click', function(){
+    localStorage.setItem('mykunda_gmd_eur', '0');
+    fetchLiveRates(true);
+    setTimeout(function(){
+      elGMD.value = CURRENCIES.GMD.rate;
+      showGmdCalc(); showSource(); showDrift(); showFxSource();
+      if(typeof renderRateNote === 'function') renderRateNote();
+    }, 1500);
+  });
+
+  elStatus.title = 'Click to force refresh';
+  elStatus.addEventListener('click', function(){
+    elStatus.textContent = 'Refreshing…';
+    fetchLiveRates(true);
+    setTimeout(function(){
+      elUSD.textContent = CURRENCIES.USD.rate.toFixed(4);
+      elGBP.textContent = CURRENCIES.GBP.rate.toFixed(4);
+      elGMD.value = CURRENCIES.GMD.rate;
+      showGmdCalc(); showSource(); showDrift(); showFxSource();
+      elStatus.textContent = 'Refreshed ✓';
+      elStatus.style.color = 'var(--green-700)';
+    }, 2000);
+  });
+
+  /* Admin page: always show the latest stored CBG rate, never a cached one. */
+  if(typeof fetchLiveRates === 'function' && !(parseFloat(localStorage.getItem('mykunda_gmd_eur')) > 0)){
+    fetchLiveRates(true);
+    setTimeout(function(){
+      elUSD.textContent = CURRENCIES.USD.rate.toFixed(4);
+      elGBP.textContent = CURRENCIES.GBP.rate.toFixed(4);
+      elGMD.value = CURRENCIES.GMD.rate;
+      showGmdCalc(); showSource(); showDrift(); showFxSource();
+      elStatus.textContent = 'Checked just now · click to refresh';
+    }, 1500);
+  }
+})();
+
+/* ---------- Dalasi trend ---------- */
+(async function initTrend(){
+  var card = document.getElementById('fxTrendCard');
+  if(typeof backendReady !== 'function' || !backendReady()){ card.style.display = 'none'; return; }
+  var since = new Date(); since.setUTCDate(since.getUTCDate() - 400);
+  var res;
+  try {
+    res = await sb.from('fx_rates')
+      .select('as_at,eur_gmd,usd_gmd,gbp_gmd')
+      .gte('as_at', since.toISOString().slice(0,10))
+      .order('as_at', { ascending: false })
+      .limit(1000);
+    if(res && res.data) res.data.reverse();
+  } catch(e){ card.style.display = 'none'; return; }
+  if(!res || res.error || !res.data || res.data.length < 2){ card.style.display = 'none'; return; }
+  var HIST = res.data.map(function(r){ return { d: r.as_at, e: +r.eur_gmd, u: r.usd_gmd == null ? null : +r.usd_gmd, g: r.gbp_gmd == null ? null : +r.gbp_gmd }; });
+
+  const CCY = { e:{label:'EUR', ref:true}, u:{label:'USD', ref:false}, g:{label:'GBP', ref:false} };
+  let ccy='e', days=91;
+  const $=id=>document.getElementById(id);
+  const fmtD=iso=>new Date(iso+'T00:00:00Z').toLocaleDateString('en-GB',{day:'numeric',month:'short',timeZone:'UTC'});
+  const fmtDY=iso=>new Date(iso+'T00:00:00Z').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'});
+  const nice=(lo,hi)=>{const span=hi-lo||1;const raw=span/4;const p=Math.pow(10,Math.floor(Math.log10(raw)));const step=[1,2,2.5,5,10].map(m=>m*p).find(s=>s>=raw);return {lo:Math.floor(lo/step)*step, hi:Math.ceil(hi/step)*step, step};};
+
+  function render(){
+    const all=HIST.map(r=>({d:r.d, v:r[ccy]})).filter(r=>r.v!=null&&!isNaN(r.v));
+    if(all.length<2){ card.style.display='none'; return; }
+    const last=all[all.length-1];
+    const from=new Date(last.d+'T00:00:00Z'); from.setUTCDate(from.getUTCDate()-days);
+    let rows=all.filter(r=>new Date(r.d+'T00:00:00Z')>=from);
+    if(rows.length<2) rows=all.slice(-2);
+    const first=rows[0];
+    const vals=rows.map(r=>r.v);
+    let lo=Math.min(...vals), hi=Math.max(...vals);
+    const showRef=CCY[ccy].ref;
+    const ref=PRICING.referenceRate;
+    if(showRef){lo=Math.min(lo,ref);hi=Math.max(hi,ref);}
+    const pad=(hi-lo)*0.08; const sc=nice(lo-pad,hi+pad);
+
+    $('legRef').style.display=showRef?'':'none';
+    $('legRef').textContent='Plan-price reference (D'+ref.toFixed(2)+', reviewed '+fmtDY(PRICING.reviewedAt)+')';
+    $('trendSub').textContent=`GMD per 1 ${CCY[ccy].label} · higher = weaker dalasi`;
+    const chg=last.v/first.v-1;
+    $('kNow').innerHTML=`D${last.v.toFixed(2)}`;
+    $('kNowSrc').textContent=`CBG rate of ${fmtDY(last.d)}`;
+    const cls=chg>0.0005?'up':chg<-0.0005?'down':'';
+    const arrow=chg>0.0005?'▲':chg<-0.0005?'▼':'▬';
+    $('kChg').innerHTML=`<span class="${cls}">${arrow} ${(chg*100>0?'+':'')}${(chg*100).toFixed(1)}%</span>`;
+    $('kChgSrc').textContent=`${chg>0?'Dalasi weaker':chg<0?'Dalasi stronger':'Flat'} since ${fmtDY(first.d)} (D${first.v.toFixed(2)})`;
+    const mn=rows.reduce((a,b)=>b.v<a.v?b:a), mx=rows.reduce((a,b)=>b.v>a.v?b:a);
+    $('kRange').innerHTML=`D${mn.v.toFixed(2)} <small>–</small> D${mx.v.toFixed(2)}`;
+    $('kRangeSrc').textContent=`Low ${fmtD(mn.d)} · high ${fmtD(mx.d)} · ${rows.length} trading days`;
+
+    const W=1000,H=300,L=52,R=70,T=18,B=30;
+    const x0=new Date(first.d+'T00:00:00Z').getTime(), x1=new Date(last.d+'T00:00:00Z').getTime();
+    const X=iso=>L+(new Date(iso+'T00:00:00Z').getTime()-x0)/((x1-x0)||1)*(W-L-R);
+    const Y=v=>T+(sc.hi-v)/((sc.hi-sc.lo)||1)*(H-T-B);
+    let s='<defs><linearGradient id="fade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1C5848" stop-opacity=".16"/><stop offset="1" stop-color="#1C5848" stop-opacity="0"/></linearGradient></defs>';
+    s+='<g class="grid axis">';
+    for(let v=sc.lo; v<=sc.hi+1e-9; v+=sc.step){ s+=`<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}"/><text x="${L-8}" y="${Y(v)+4}" text-anchor="end">${v.toFixed(sc.step%1?1:0)}</text>`; }
+    s+='</g><g class="axis">';
+    const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const seen=new Set(); let firstTickX=1e9;
+    rows.forEach(r=>{const m=r.d.slice(0,7); if(!seen.has(m)){seen.add(m); if(seen.size===1) return; const x=X(r.d); firstTickX=Math.min(firstTickX,x); s+=`<line x1="${x}" x2="${x}" y1="${H-B}" y2="${H-B+4}" stroke="#8A958E"/><text x="${x}" y="${H-B+16}" text-anchor="middle">${MON[+m.slice(5,7)-1]}${m.endsWith('-01')?' '+m.slice(0,4):''}</text>`;}});
+    if(firstTickX-L>48) s+=`<text x="${L}" y="${H-B+16}" text-anchor="start">${fmtD(first.d)}</text>`;
+    s+='</g>';
+    const pts=rows.map(r=>`${X(r.d).toFixed(1)},${Y(r.v).toFixed(1)}`);
+    s+=`<path class="area" d="M${pts[0]} L${pts.join(' L')} L${X(last.d).toFixed(1)},${H-B} L${X(first.d).toFixed(1)},${H-B} Z"/>`;
+    s+=`<path class="series" d="M${pts.join(' L')}"/>`;
+    if(showRef){ s+=`<g class="ref"><line x1="${L}" x2="${W-R}" y1="${Y(ref)}" y2="${Y(ref)}"/><text x="${W-R+6}" y="${Y(ref)+4}">D${ref.toFixed(2)} ref</text></g>`; }
+    s+=`<g class="last"><circle cx="${X(last.d)}" cy="${Y(last.v)}" r="4.5"/><text x="${X(last.d)+9}" y="${Y(last.v)-8}">D${last.v.toFixed(2)}</text></g>`;
+    s+=`<g class="cross" id="cross" style="display:none"><line id="cx" y1="${T}" y2="${H-B}"/><circle id="cc" r="5"/></g>`;
+    s+=`<rect id="hit" x="${L}" y="${T}" width="${W-L-R}" height="${H-T-B}" fill="transparent"/>`;
+    $('fxChart').innerHTML=s;
+
+    const svg=$('fxChart'), tip=$('tip');
+    const move=ev=>{
+      const rect=svg.getBoundingClientRect(); const px=(ev.clientX-rect.left)/rect.width*W;
+      let best=rows[0], bd=1e9; rows.forEach(r=>{const d=Math.abs(X(r.d)-px); if(d<bd){bd=d;best=r;}});
+      const x=X(best.d), y=Y(best.v);
+      $('cross').style.display=''; $('cx').setAttribute('x1',x); $('cx').setAttribute('x2',x); $('cc').setAttribute('cx',x); $('cc').setAttribute('cy',y);
+      tip.style.left=(x/W*rect.width)+'px'; tip.style.top=(y/H*rect.height)+'px'; tip.style.opacity=1;
+      const dref=showRef?` · <span style="opacity:.8">${((best.v/ref-1)*100>=0?'+':'')}${((best.v/ref-1)*100).toFixed(1)}% vs ref</span>`:'';
+      tip.innerHTML=`<b>D${best.v.toFixed(2)}</b> per ${CCY[ccy].label}<br>${fmtDY(best.d)}${dref}`;
+    };
+    $('hit').onmousemove=move; $('hit').ontouchmove=e=>move(e.touches[0]);
+    $('hit').onmouseleave=()=>{tip.style.opacity=0;$('cross').style.display='none';};
+  }
+
+  document.querySelectorAll('#ccySeg button').forEach(b=>b.onclick=()=>{ccy=b.dataset.ccy;document.querySelectorAll('#ccySeg button').forEach(x=>x.setAttribute('aria-pressed',x===b));render();});
+  document.querySelectorAll('#rangeSeg button').forEach(b=>b.onclick=()=>{days=+b.dataset.days;document.querySelectorAll('#rangeSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b));render();});
+  render();
+})();
+</script>
+</body>
+</html>

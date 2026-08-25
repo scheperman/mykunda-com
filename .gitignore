@@ -1,0 +1,13 @@
+# Spiegel van het MyKunda-project. Bron van waarheid blijft Claude Design.
+# Zie SPIEGEL-LEESMIJ.md.
+
+# Niet meegespiegeld (grote originelen en oud materiaal)
+uploads/
+archief/
+screenshots/
+scraps/
+
+# Door build.mjs gegenereerd - afleidbaar uit de bron, dus buiten de diff
+deploy/
+app.min.js
+styles.min.css

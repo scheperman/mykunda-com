@@ -1,0 +1,2107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
+<link rel="apple-touch-icon" href="images/mykunda-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#15463A">
+<title>List your property — MyKunda</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
+<link rel="preconnect" href="https://api.maptiler.com" crossorigin>
+<link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.min.css?v=1787990400000">
+<style>
+body{background:var(--paper-2);min-height:100vh}
+
+/* top bar */
+.wizbar{position:sticky;top:0;z-index:40;background:var(--white);border-bottom:1px solid var(--line);height:64px;display:flex;align-items:center}
+.wizbar .wrap{max-width:1100px;display:flex;align-items:center;gap:20px;width:100%}
+.wizbar .logo{font-size:21px}
+.wizbar .exit{margin-left:auto;font-size:14.5px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:7px}
+.wizbar .exit:hover{color:var(--green-700)}
+.wizbar .save-note{font-size:13px;color:var(--muted-2);display:flex;align-items:center;gap:6px}
+
+/* progress */
+.progress-wrap{background:var(--white);border-bottom:1px solid var(--line);padding:18px 0}
+.progress-wrap .wrap{max-width:1100px}
+.psteps{display:flex;gap:6px;align-items:center}
+.pstep{flex:1;display:flex;flex-direction:column;gap:8px}
+.pstep .bar{height:5px;border-radius:99px;background:var(--line);transition:background .3s}
+.pstep.done .bar,.pstep.active .bar{background:var(--green-600)}
+.pstep .lab{font-size:12px;font-weight:700;color:var(--muted-2);transition:color .2s}
+.pstep.active .lab{color:var(--green-700)}
+.pstep.done .lab{color:var(--green-600)}
+
+/* resume bar */
+.resume[hidden]{display:none}
+.resume{background:var(--green-50);border-bottom:1px solid var(--line)}
+.resume .wrap{max-width:1100px;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:13px 0;flex-wrap:wrap}
+.rz-txt{display:flex;flex-direction:column;gap:2px;font-size:14px}
+.rz-txt b{color:var(--green-800);font-size:15px}
+.rz-txt span{color:var(--muted);font-size:13px}
+.rz-acts{display:flex;gap:10px;align-items:center}
+.rz-go,.rz-drop{height:38px;padding:0 18px;border-radius:var(--r-pill);font-size:13.5px;font-weight:700;cursor:pointer;font-family:var(--sans)}
+.rz-go{border:none;background:var(--green-700);color:#fff}
+.rz-go:hover{background:var(--green-800)}
+.rz-drop{border:1.5px solid var(--line);background:var(--white);color:var(--ink-2)}
+.rz-drop:hover{background:var(--paper)}
+
+/* layout */
+.wiz{max-width:1100px;margin:0 auto;padding:38px 28px 60px;display:grid;grid-template-columns:1fr 320px;gap:44px;align-items:start}
+.stepwrap{min-height:420px}
+.step{display:none}
+.step.on{display:block;opacity:1}
+.step .eyebrow{font-family:var(--sans);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--amber-600);margin-bottom:10px}
+.step h1{font-size:30px;line-height:1.12;margin-bottom:8px}
+.step .desc{color:var(--muted);font-size:16px;margin-bottom:28px;max-width:560px}
+
+/* option cards */
+.opt-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:560px}
+.opt-card{border:1.5px solid var(--line);border-radius:var(--r-md);padding:20px;cursor:pointer;background:var(--white);transition:.15s;display:flex;align-items:center;gap:15px}
+.opt-card:hover{border-color:var(--green-500)}
+.opt-card.sel{border-color:var(--green-700);background:var(--green-50);box-shadow:inset 0 0 0 1px var(--green-700)}
+.opt-card .ic{width:46px;height:46px;border-radius:12px;background:var(--paper-2);color:var(--green-700);display:flex;align-items:center;justify-content:center;flex:none;transition:.15s}
+.opt-card.sel .ic{background:var(--green-700);color:#fff}
+.opt-card .t{font-family:var(--serif);font-size:17px;font-weight:600;color:var(--ink)}
+.opt-card .s{font-size:13px;color:var(--muted);margin-top:2px}
+
+.pill-row{display:flex;gap:10px;flex-wrap:wrap;max-width:600px}
+.pill-opt{height:46px;padding:0 20px;border-radius:var(--r-pill);border:1.5px solid var(--line);background:var(--white);font-weight:600;font-size:15px;color:var(--ink-2);cursor:pointer;transition:.13s;display:flex;align-items:center;gap:9px}
+.pill-opt:hover{border-color:var(--green-500)}
+.pill-opt.sel{background:var(--green-700);color:#fff;border-color:var(--green-700)}
+
+/* fields */
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:600px;margin-bottom:18px}
+.frow.one{grid-template-columns:1fr}
+.fld label{display:block;font-size:13.5px;font-weight:700;color:var(--ink-2);margin-bottom:7px}
+.fld input,.fld select,.fld textarea{width:100%;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:12px 14px;font-size:15px;outline:none;transition:.15s;font-family:var(--sans);background:var(--white);color:var(--ink)}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--green-500)}
+.fld textarea{resize:vertical;min-height:110px;line-height:1.5}
+.fld .hint{font-size:12.5px;color:var(--muted-2);margin-top:6px}
+.input-affix{display:flex;align-items:center;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:0 14px;transition:.15s}
+.input-affix:focus-within{border-color:var(--green-500)}
+.input-affix .pre{font-weight:700;color:var(--green-700);font-size:16px}
+.input-affix input{border:none;padding:12px 10px}
+.input-affix .suf{color:var(--muted);font-size:14px;font-weight:600}
+
+/* checks grid */
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:600px}
+.chk-opt{display:flex;align-items:center;gap:11px;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:13px 15px;cursor:pointer;font-size:14.5px;font-weight:600;color:var(--ink-2);transition:.13s;background:var(--white)}
+.chk-opt:hover{border-color:var(--green-500)}
+.chk-opt.sel{border-color:var(--green-700);background:var(--green-50)}
+.chk-opt .box{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;color:#fff;flex:none;transition:.13s}
+.chk-opt.sel .box{background:var(--green-700);border-color:var(--green-700)}
+
+/* map draw tools */
+.maptools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.mt-btn{white-space:nowrap;display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 14px;border-radius:var(--r-pill);border:1.5px solid var(--line);background:var(--white);font-family:var(--sans);font-size:13.5px;font-weight:700;color:var(--ink-2);cursor:pointer;transition:.13s}
+.mt-btn:hover:not(:disabled){border-color:var(--green-500)}
+.mt-btn.sel{background:var(--green-700);border-color:var(--green-700);color:#fff}
+.mt-btn:disabled{opacity:.4;cursor:default}
+.mt-sep{width:1px;height:22px;background:var(--line)}
+.bnd-len{display:flex;align-items:center;justify-content:center;overflow:visible;pointer-events:none}
+.bnd-len span{background:rgba(24,32,29,.85);color:#fff;font-family:var(--sans);font-size:11.5px;font-weight:800;letter-spacing:.01em;padding:2px 7px;border-radius:99px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.bnd-len.live span{background:#1F7BFF}
+.bnd-handle{background:#fff;border:2.5px solid #1F7BFF;border-radius:50%;box-shadow:0 1px 5px rgba(0,0,0,.4);cursor:move}
+.bnd-info{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:10px;padding:11px 15px;border-radius:var(--r-sm);background:var(--green-50);font-size:13.5px;font-weight:700;color:var(--green-700)}
+.bnd-info button{border:1.5px solid var(--green-700);background:transparent;color:var(--green-700);font-family:var(--sans);font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:var(--r-pill);cursor:pointer}
+.bnd-info button:hover{background:var(--green-700);color:#fff}
+#miniMap.drawing{cursor:crosshair}
+#miniMap.drawing .leaflet-grab{cursor:crosshair}
+
+/* photo slots */
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:620px}
+.photo-cell{aspect-ratio:4/3;border-radius:var(--r-md);overflow:hidden;border:1.5px dashed var(--line);position:relative;background:var(--white)}
+.photo-cell.cover{border-style:solid;border-color:var(--green-200)}
+.cover-tag{position:absolute;top:8px;left:8px;z-index:3;background:var(--green-700);color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:var(--r-pill);text-transform:uppercase;letter-spacing:.03em}
+
+/* doc upload */
+.upload{border:1.5px dashed var(--line);border-radius:var(--r-md);padding:24px;display:flex;align-items:center;gap:18px;max-width:600px;background:var(--white);cursor:pointer;transition:.15s;margin-bottom:14px}
+.upload:hover{border-color:var(--green-500);background:var(--green-50)}
+.upload.done{border-style:solid;border-color:var(--green-600);background:var(--green-50)}
+.upload .ic{width:50px;height:50px;border-radius:13px;background:var(--paper-2);color:var(--green-700);display:flex;align-items:center;justify-content:center;flex:none}
+.upload.done .ic{background:var(--green-700);color:#fff}
+.upload .t{font-weight:700;font-size:15px;color:var(--ink)}
+.upload .s{font-size:13px;color:var(--muted);margin-top:2px}
+.confirm-box{display:flex;align-items:flex-start;gap:13px;background:var(--amber-50);border:1px solid var(--amber-100);border-radius:var(--r-md);padding:16px 18px;max-width:600px;margin-top:10px;cursor:pointer}
+.confirm-box .box{width:24px;height:24px;border-radius:7px;border:1.5px solid var(--amber-100);background:#fff;display:flex;align-items:center;justify-content:center;color:#fff;flex:none;transition:.13s}
+.confirm-box.sel .box{background:var(--amber-500);border-color:var(--amber-500)}
+.confirm-box p{font-size:14px;color:var(--amber-600);line-height:1.5;font-weight:600}
+
+/* plan picker */
+.plan-pick{display:flex;flex-direction:column;gap:14px;max-width:620px}
+.plan-row{display:flex;align-items:center;gap:18px;border:1.5px solid var(--line);border-radius:var(--r-md);padding:20px 22px;cursor:pointer;background:var(--white);transition:.15s}
+.plan-row:hover{border-color:var(--green-500)}
+.plan-row.sel{border-color:var(--green-700);background:var(--green-50);box-shadow:inset 0 0 0 1px var(--green-700)}
+.plan-row .radio{width:24px;height:24px;border-radius:50%;border:2px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;transition:.13s}
+.plan-row.sel .radio{border-color:var(--green-700)}
+.plan-row.sel .radio::after{content:"";width:12px;height:12px;border-radius:50%;background:var(--green-700)}
+.plan-row .info{flex:1}
+.plan-row .info b{font-family:var(--serif);font-size:18px;font-weight:600;color:var(--ink)}
+.plan-row .info p{font-size:13.5px;color:var(--muted);margin-top:2px}
+.plan-row .cost{font-family:var(--sans);font-weight:800;font-size:22px;color:var(--green-700);white-space:nowrap}
+.plan-row .cost small{font-size:12px;color:var(--muted);font-weight:600;display:block;text-align:right}
+
+.band-note{background:var(--green-50);border:1px solid var(--green-200);border-radius:var(--r-md);padding:14px 18px;font-size:13.5px;color:var(--ink-2);line-height:1.55;margin-bottom:4px}
+.band-note b{color:var(--green-700);font-weight:700}
+
+/* nav buttons */
+.wiz-nav{display:flex;align-items:center;gap:14px;margin-top:36px;max-width:620px}
+.wiz-nav .back{color:var(--muted);font-weight:600;font-size:15px;display:flex;align-items:center;gap:7px}
+.wiz-nav .back:hover{color:var(--green-700)}
+.wiz-nav .spacer{margin-left:auto}
+
+/* summary sidebar */
+.summary{position:sticky;top:160px;background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-sm);padding:24px;border:1px solid var(--line)}
+.summary h4{font-family:var(--sans);font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:16px;font-weight:700}
+.summary-prev{aspect-ratio:16/10;border-radius:var(--r-md);overflow:hidden;background:var(--paper-2);margin-bottom:16px;position:relative;display:flex;align-items:center;justify-content:center}
+.summary-prev img{width:100%;height:100%;object-fit:cover}
+.summary-prev .ph{color:var(--muted-2);font-size:13px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:8px}
+.summary-line{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line-2);font-size:14px;align-items:flex-start}
+.summary-line:last-child{border-bottom:none}
+.summary-line .k{color:var(--muted)}
+.summary-line .v{font-weight:700;color:var(--ink);text-align:right;line-height:1.35}
+.summary-line .v.empty{color:var(--muted-2);font-weight:500}
+.summary-total{display:flex;justify-content:space-between;align-items:baseline;margin-top:14px;padding-top:14px;border-top:1.5px solid var(--line)}
+.summary-total .k{font-weight:700;color:var(--ink)}
+.summary-total .v{font-family:var(--serif);font-size:24px;font-weight:700;color:var(--green-700)}
+
+/* success */
+.success{max-width:620px;margin:30px auto;background:var(--white);border-radius:var(--r-xl);box-shadow:var(--sh-md);padding:48px;text-align:center}
+.success .seal{width:78px;height:78px;border-radius:50%;background:var(--green-50);color:var(--green-700);display:flex;align-items:center;justify-content:center;margin:0 auto 22px}
+.success h1{font-size:32px;margin-bottom:12px}
+.success p{color:var(--muted);font-size:16.5px;line-height:1.6;margin-bottom:8px}
+.success .card-preview{margin:28px 0;text-align:left}
+.success-actions{display:flex;gap:12px;justify-content:center;margin-top:28px;flex-wrap:wrap}
+
+@media(max-width:480px){
+  .wiz{padding:24px 16px 50px;gap:24px}
+  .frow{flex-direction:column;gap:14px}
+  .summary-card{padding:18px 16px}
+}
+
+@media(max-width:900px){
+  .wiz{grid-template-columns:1fr}
+  .summary{display:none}
+  .opt-cards,.checks,.photo-grid{grid-template-columns:1fr 1fr}
+  .frow{grid-template-columns:1fr}
+  .pstep .lab{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wizbar">
+  <div class="wrap">
+    <a class="logo" id="logo" href="/"></a>
+    <span class="save-note" id="saveNote"></span>
+    <a class="exit" href="sell.html"><span id="exitIc"></span> Save &amp; exit</a>
+  </div>
+</div>
+
+<div class="progress-wrap" id="progressWrap">
+  <div class="wrap"><div class="psteps" id="psteps"></div></div>
+</div>
+
+<div class="resume" id="resumeBar" hidden>
+  <div class="wrap">
+    <div class="rz-txt"><b id="rzTitle">Your draft</b><span id="rzWhen"></span></div>
+    <div class="rz-acts">
+      <button class="rz-drop" id="rzDrop" type="button">Start fresh</button>
+      <button class="rz-go" id="rzGo" type="button">Continue</button>
+    </div>
+  </div>
+</div>
+
+<div class="wiz" id="wizGrid">
+  <div class="stepwrap">
+
+    <!-- STEP 1: type -->
+    <section class="step on" data-step="0">
+      <div class="eyebrow">Step 1 · What &amp; how</div>
+      <h1>What would you like to do?</h1>
+      <p class="desc">Tell us whether you're selling or renting out — and what kind of property it is.</p>
+      <div style="margin-bottom:26px">
+        <div class="pill-row" id="dealRow">
+          <button class="pill-opt sel" data-deal="sale">For sale</button>
+          <button class="pill-opt" data-deal="rent">For rent</button>
+        </div>
+      </div>
+      <label style="display:block;font-size:13.5px;font-weight:700;color:var(--ink-2);margin-bottom:11px">Property type</label>
+      <div class="opt-cards" id="typeCards"></div>
+      <div class="fld" style="max-width:560px;margin-top:24px">
+        <label>Listing title <span style="font-weight:500;color:var(--muted-2)">— optional, we'll generate one if blank</span></label>
+        <input type="text" id="customTitle" placeholder="e.g. Stunning sea-view villa with private pool" maxlength="80">
+        <div class="hint">A great title highlights the best feature. Keep it short and compelling.</div>
+      </div>
+    </section>
+
+    <!-- STEP 2: location -->
+    <section class="step" data-step="1">
+      <div class="eyebrow">Step 2 · Location</div>
+      <h1>Where is it?</h1>
+      <p class="desc">Pick the area and add the street or landmark. You can fine-tune the pin on the map.</p>
+      <div class="frow one">
+        <div class="fld">
+          <label>Location <span style="font-weight:600;color:var(--muted)">· Google Plus Code, coordinates, or area name</span></label>
+          <div style="position:relative">
+            <input type="text" id="locInput" placeholder="e.g. F852+G8, 13.4500 -16.7167, or Kololi" autocomplete="off" style="font-weight:600">
+            <div id="locSuggestions" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:50;background:var(--white);border:1.5px solid var(--line);border-top:none;border-radius:0 0 var(--r-sm) var(--r-sm);box-shadow:var(--sh-md);max-height:260px;overflow-y:auto"></div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;margin-top:8px;flex-wrap:wrap">
+            <label for="geoPhotoInput" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--paper);border:1.5px dashed var(--line);border-radius:var(--r-sm);cursor:pointer;font-size:13px;font-weight:600;color:var(--ink-2);transition:.15s" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--line)'">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              📍 Upload photo with GPS (optional)
+            </label>
+            <input type="file" id="geoPhotoInput" accept="image/*" style="display:none">
+            <span id="geoPhotoStatus" style="font-size:12.5px;color:var(--muted);font-weight:500"></span>
+          </div>
+          <div class="hint" id="locHint">Enter a <b>Google Plus Code</b> (e.g. F852+G8 — the short form shown on compounds), <b>lat, lng</b> coordinates, or an <b>area name</b>. Optionally, you can also <b>upload a photo</b> taken at the property — if it contains GPS data, we'll extract the location automatically.</div>
+          <div id="locResolved" style="display:none;margin-top:8px;padding:10px 14px;background:var(--green-50);border-radius:var(--r-sm);font-size:13.5px;color:var(--green-700);font-weight:600"></div>
+        </div>
+      </div>
+      <div class="frow">
+        <div class="fld">
+          <label>Street / landmark</label>
+          <input type="text" id="streetIn" placeholder="e.g. Palma Rima Beach Road">
+        </div>
+        <div class="fld">
+          <label>Google Plus Code <span style="font-weight:500;color:var(--muted-2)">· auto-filled</span></label>
+          <input type="text" id="plusIn" placeholder="auto-filled from pin" style="font-variant-numeric:tabular-nums;font-weight:700;background:var(--paper)" readonly>
+        </div>
+      </div>
+      <div class="fld" style="max-width:600px">
+        <label>Mark the property on the map</label>
+        <div class="maptools" id="mapTools">
+          <button type="button" class="mt-btn sel" data-mapmode="pin"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Pin only</button>
+          <button type="button" class="mt-btn" data-mapmode="draw"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17 9 5l6 9 5-4v11H4Z"/></svg> Draw the plot</button>
+          <span class="mt-sep"></span>
+          <button type="button" class="mt-btn sel" id="bndSnap" title="Snap corners to 15° steps and 5 m lengths">Snap 90° / 5 m</button>
+          <button type="button" class="mt-btn" id="bndUndo" disabled>Undo point</button>
+          <button type="button" class="mt-btn" id="bndClear" disabled>Clear outline</button>
+        </div>
+        <div style="height:320px;border-radius:var(--r-md);overflow:hidden;position:relative;border:1.5px solid var(--line)" id="miniMap"></div>
+        <div class="hint" id="miniMapHint">Satellite view — drag the marker onto your property to set the exact location.</div>
+        <div class="bnd-info" id="bndInfo" style="display:none"><span id="bndArea"></span><button type="button" id="bndUseSize">Use as plot size + add map photo</button><span id="bndNote" style="font-weight:600;color:var(--green-700)"></span></div>
+      </div>
+    </section>
+
+    <!-- STEP 3: details -->
+    <section class="step" data-step="2">
+      <div class="eyebrow">Step 3 · Details</div>
+      <h1>Describe your property</h1>
+      <p class="desc" id="detailDesc">Add the key facts buyers look for first.</p>
+
+      <!-- building details -->
+      <div id="buildingDetails">
+        <div class="frow">
+          <div class="fld"><label>Bedrooms</label><input type="number" id="bedsIn" min="0" placeholder="3"></div>
+          <div class="fld"><label>Bathrooms</label><input type="number" id="bathsIn" min="0" placeholder="2"></div>
+        </div>
+        <div class="frow">
+          <div class="fld"><label>Built area (m²)</label><input type="number" id="sqmIn" min="0" placeholder="180"></div>
+          <div class="fld"><label>Plot size (m²) <span style="font-weight:500;color:var(--muted-2)">— optional</span></label><input type="number" id="plotIn" min="0" placeholder="600"></div>
+        </div>
+        <div class="frow">
+          <div class="fld"><label>Condition</label>
+            <select id="conditionIn"><option value="good" selected>Good condition</option><option value="new">New build (0–5 yr)</option><option value="renovation">Needs renovation</option></select>
+          </div>
+          <div class="fld"><label>Storeys</label>
+            <select id="floorsIn"><option value="1" selected>Single storey</option><option value="2">2 storeys</option><option value="3">3+ storeys</option></select>
+          </div>
+        </div>
+        <div class="frow">
+          <div class="fld"><label>Year built <span style="font-weight:500;color:var(--muted-2)">— approx.</span></label><input type="number" id="yearIn" min="1950" max="2030" placeholder="e.g. 2018"></div>
+          <div class="fld" id="availWrap" style="display:none"><label>Available from</label><input type="date" id="availIn"><div class="hint">When can a tenant move in?</div></div>
+          <div class="fld" id="beachWrapNormal"><label>Distance to the sea</label>
+            <input type="text" id="beachDistIn" readonly placeholder="Set the location on the map first" style="font-variant-numeric:tabular-nums;font-weight:700;background:var(--paper)">
+            <div class="hint" id="beachDistInHint">Measured in a straight line from your pin to the Atlantic shoreline.</div>
+          </div>
+        </div>
+        <div class="frow">
+          <div class="fld"><label>View</label>
+            <select id="viewIn"><option value="none" selected>No special view</option><option value="ocean">Ocean / sea view</option><option value="garden">Garden / green view</option></select>
+          </div>
+        </div>
+        <div class="frow">
+          <div class="fld"><label>Security</label>
+            <select id="securityIn"><option value="none" selected>None / open</option><option value="wall">Walled compound</option><option value="gated">Gated compound with guard</option></select>
+          </div>
+          <div class="fld"><label>Furnished</label>
+            <select id="furnishedIn"><option value="unfurnished" selected>Unfurnished</option><option value="semi">Semi-furnished</option><option value="furnished">Fully furnished</option></select>
+          </div>
+        </div>
+        <div class="frow">
+          <div class="fld"><label>Water supply</label>
+            <select id="waterIn"><option value="nawec" selected>Nawec (mains)</option><option value="borehole">Borehole</option><option value="both">Nawec + borehole</option><option value="none">No running water</option></select>
+          </div>
+          <div class="fld"><label>Power / backup</label>
+            <select id="powerIn"><option value="no" selected>Grid only (no backup)</option><option value="solar">Solar panels</option><option value="generator">Generator</option><option value="both">Solar + generator</option></select>
+          </div>
+        </div>
+        <label style="display:block;font-size:13.5px;font-weight:700;color:var(--ink-2);margin:6px 0 11px">Additional features</label>
+        <div class="checks" id="featChecks"></div>
+        <div class="fld" style="max-width:600px;margin-top:16px">
+          <label>Other features <span style="font-weight:500;color:var(--muted-2)">— add your own, comma-separated</span></label>
+          <input type="text" id="customFeatsIn" placeholder="e.g. Fruit trees, outdoor kitchen, guest cottage">
+        </div>
+
+        <div style="margin-top:28px;padding-top:24px;border-top:1px solid var(--line);max-width:600px">
+          <label style="display:block;font-size:15px;font-weight:700;color:var(--ink);margin-bottom:6px">✨ What makes this property special?</label>
+          <p style="font-size:13.5px;color:var(--muted);margin-bottom:14px">Tell buyers about the things that don't fit in a dropdown — the mango tree, the sunset view, the friendly neighbours, the quiet street.</p>
+          <textarea id="highlightsIn" placeholder="The rooftop terrace has a 180° ocean view and catches the breeze all year round. The compound is very quiet — perfect for families or remote workers…" style="width:100%;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:14px;font-size:15px;min-height:100px;line-height:1.55;font-family:var(--sans);resize:vertical"></textarea>
+        </div>
+
+        <div style="margin-top:24px;max-width:600px">
+          <label style="display:block;font-size:15px;font-weight:700;color:var(--ink);margin-bottom:6px">📍 Nearby places &amp; distances</label>
+          <p style="font-size:13.5px;color:var(--muted);margin-bottom:14px">Help buyers understand the neighbourhood — how far to the beach, shops, schools, airport?</p>
+          <div id="nearbyList"></div>
+          <button type="button" id="addNearbyBtn" style="margin-top:10px;padding:10px 18px;border:1.5px dashed var(--line);border-radius:var(--r-sm);background:var(--white);font-size:14px;font-weight:600;color:var(--green-700);cursor:pointer;transition:.15s" onmouseover="this.style.borderColor='var(--green-500)'" onmouseout="this.style.borderColor='var(--line)'">+ Add a nearby place</button>
+        </div>
+      </div>
+
+      <!-- land details -->
+      <div id="landDetails" style="display:none">
+        <div class="frow">
+          <div class="fld"><label>Plot size (m²)</label><input type="number" id="landSqmIn" min="0" placeholder="1200"></div>
+        </div>
+        <div class="frow">
+          <div class="fld"><label>Road access</label>
+            <select id="roadIn"><option value="laterite" selected>Laterite / dirt road</option><option value="tarmac">Tarmac / paved road</option><option value="none">No road access</option></select>
+          </div>
+          <div class="fld"><label>Title type</label>
+            <select id="titleIn"><option value="alkalalo" selected>Customary / Alkalalo</option><option value="leasehold">State lease (99-year leasehold)</option><option value="sublease">Sublease / transfer of an existing lease</option><option value="freehold">Freehold (with title deed)</option><option value="unclear">Unclear / not sure</option></select>
+          </div>
+        </div>
+        <div class="frow">
+          <div class="fld"><label>Electricity</label>
+            <select id="elecIn"><option value="none" selected>No electricity</option><option value="nearby">Available nearby</option><option value="present">Connected on plot</option></select>
+          </div>
+          <div class="fld"><label>Water</label>
+            <select id="landWaterIn"><option value="none" selected>No water</option><option value="nearby">Water nearby</option><option value="borehole">Borehole on plot</option><option value="nawec">Nawec connected</option></select>
+          </div>
+        </div>
+        <div class="frow">
+          <div class="fld" id="landBeachDistInWrap"><label>Distance to the sea</label>
+            <input type="text" id="landBeachDistIn" readonly placeholder="Set the location on the map first" style="font-variant-numeric:tabular-nums;font-weight:700;background:var(--paper)">
+            <div class="hint" id="landBeachDistInHint">Measured in a straight line from your pin (or the middle of the drawn plot) to the Atlantic shoreline.</div>
+          </div>
+        </div>
+        <div class="frow">
+          <div class="fld"><label>Flood risk</label>
+            <select id="floodIn"><option value="no" selected>No flood risk</option><option value="low">Low risk (seasonal)</option><option value="high">High risk</option></select>
+          </div>
+          <div class="fld"><label>Fencing</label>
+            <select id="fenceIn"><option value="none" selected>Not fenced</option><option value="partial">Partially fenced</option><option value="full">Fully fenced / walled</option></select>
+          </div>
+        </div>
+        <label style="display:block;font-size:13.5px;font-weight:700;color:var(--ink-2);margin:6px 0 11px">Additional features</label>
+        <div class="checks" id="landChecks"></div>
+      </div>
+
+      <div class="fld one frow" style="margin-top:22px">
+        <div class="fld"><label>Description</label><textarea id="descIn" placeholder="Tell buyers what makes this place special — the location, the light, the potential…"></textarea></div>
+      </div>
+    </section>
+
+    <!-- STEP 4: photos & video -->
+    <section class="step" data-step="3">
+      <div class="eyebrow">Step 4 · Photos &amp; video</div>
+      <h1>Show off your property</h1>
+      <p class="desc">Drag photos onto each slot. The first one is your cover — make it count. More photos = more enquiries.</p>
+      <div class="photo-grid" id="photoGrid" style="grid-template-columns:repeat(4,1fr)"></div>
+      <div style="margin-top:22px;max-width:620px">
+        <label style="display:block;font-size:13.5px;font-weight:700;color:var(--ink-2);margin-bottom:7px">🎥 Video link <span style="font-weight:500;color:var(--muted-2)">— optional</span></label>
+        <input type="text" id="videoIn" placeholder="Paste a YouTube or Vimeo link" style="width:100%;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:12px 14px;font-size:15px;font-family:var(--sans)">
+        <div class="hint">A walkthrough video can double your enquiries. Record with your phone and upload to YouTube, then paste the link here.</div>
+      </div>
+    </section>
+
+    <!-- STEP 5: documents -->
+    <section class="step" data-step="4">
+      <div class="eyebrow">Step 5 · Ownership</div>
+      <h1>Ownership &amp; documents</h1>
+      <p class="desc">This helps buyers trust your listing. Verified plans include a full title check by a qualified specialist.</p>
+      <div class="fld" style="max-width:600px;margin-bottom:20px">
+        <label>Document type</label>
+        <select id="docType">
+          <option value="">Select…</option>
+          <option>Freehold (with title deed)</option>
+          <option>Leasehold</option>
+          <option>Customary / family land</option>
+          <option>Sporting lease</option>
+          <option>Not sure</option>
+        </select>
+        <div class="hint">Don't worry if you're unsure — this gets established during verification.</div>
+      </div>
+      <div class="upload" id="upDeed">
+        <span class="ic" id="upIc1"></span>
+        <div><div class="t" id="upDeedT">Upload title deed / document</div><div class="s">PDF, JPG or PNG — optional now, required for verification</div></div>
+      </div>
+      <div class="upload" id="upPlan">
+        <span class="ic" id="upIc2"></span>
+        <div><div class="t" id="upPlanT">Upload site / sketch plan</div><div class="s">Helpful for land and plots</div></div>
+      </div>
+      <div class="confirm-box" id="confirmBox">
+        <span class="box" id="confirmCk"></span>
+        <p>I confirm I am the owner, or am authorised to sell or rent this property, and the information provided is accurate.</p>
+      </div>
+    </section>
+
+    <!-- STEP 6: price -->
+    <section class="step" data-step="5">
+      <div class="eyebrow">Step 6 · Price</div>
+      <h1>Set your price</h1>
+      <p class="desc" id="priceDesc">You can always change this later. Prices on MyKunda are shown in Gambian Dalasi (GMD).</p>
+      <div class="fld" style="max-width:340px;margin-bottom:18px">
+        <label id="priceLab">Asking price</label>
+        <div class="input-affix">
+          <span class="pre">D</span>
+          <input type="text" id="priceIn" inputmode="numeric" placeholder="150,000">
+          <span class="suf" id="priceSuf"></span>
+        </div>
+      </div>
+      <label class="chk-opt sel" id="negToggle" style="max-width:340px;display:flex">
+        <span class="box" id="negCk"></span> Open to offers / negotiable
+      </label>
+    </section>
+
+    <!-- STEP 7: plan -->
+    <section class="step" data-step="6">
+      <div class="eyebrow">Step 7 · Choose your plan</div>
+      <h1>How much help do you want?</h1>
+      <p class="desc">Start free, or add help. Verified and Managed are priced by your asking price — you see the exact amount before you pay.</p>
+      <div class="plan-pick" id="planPick"></div>
+    </section>
+
+    <!-- STEP 8: preview -->
+    <section class="step" data-step="7">
+      <div class="eyebrow">Step 8 · Preview</div>
+      <h1>Review your listing</h1>
+      <p class="desc">This is how buyers will see your property. Check everything looks right before publishing.</p>
+      <div id="previewCard" style="max-width:620px;background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-md);overflow:hidden;border:1px solid var(--line)"></div>
+      <p class="form-legal" style="max-width:620px;margin-top:16px">By publishing you confirm you own this property or are authorised to market it, and you agree to our <a href="legal-terms.html#terms-3">listing rules</a>, <a href="legal-terms.html">Terms of Service</a> and <a href="legal-privacy.html">Privacy Policy</a>.</p>
+    </section>
+
+    <!-- STEP 9: contact -->
+    <section class="step" data-step="8">
+      <div class="eyebrow">Step 8 · Almost done</div>
+      <h1>Where should buyers reach you?</h1>
+      <p class="desc">Enquiries and viewing requests come straight to you. Your contact details are only shared when you respond.</p>
+      <div class="frow">
+        <div class="fld"><label>Your name</label><input type="text" id="nameIn" placeholder="Full name"></div>
+        <div class="fld"><label>WhatsApp number</label><input type="tel" id="phoneIn" placeholder="+220 …"></div>
+      </div>
+      <div class="frow one">
+        <div class="fld"><label>Email address</label><input type="email" id="emailIn" placeholder="you@email.com"></div>
+      </div>
+    </section>
+
+    <!-- SUCCESS -->
+    <section class="step" data-step="9">
+      <div class="success">
+        <div class="seal" id="successSeal"></div>
+        <h1 id="successTitle">Your listing is live!</h1>
+        <p id="successMsg">Buyers across The Gambia and the diaspora can now find your property on MyKunda.</p>
+        <div class="card-preview" id="successCard"></div>
+        <div class="success-actions">
+          <a class="btn btn-primary" href="search.html" id="viewListingBtn">View it on MyKunda</a>
+          <a class="btn btn-ghost" href="dashboard.html">Go to My MyKunda</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- nav -->
+    <div class="wiz-nav" id="wizNav">
+      <a class="back" id="backBtn"><span id="backIc"></span> Back</a>
+      <span class="spacer"></span>
+      <button class="btn btn-primary" id="nextBtn" style="padding:0 30px;height:50px">Continue</button>
+    </div>
+  </div>
+
+  <!-- summary -->
+  <aside class="summary" id="summary">
+    <h4>Your listing</h4>
+    <div class="summary-prev" id="sumPrev"><div class="ph"><span id="sumPhIc"></span> Add photos</div></div>
+    <div class="summary-line"><span class="k">Type</span><span class="v empty" id="sumType">—</span></div>
+    <div class="summary-line"><span class="k">Location</span><span class="v empty" id="sumLoc">—</span></div>
+    <div class="summary-line"><span class="k">Details</span><span class="v empty" id="sumDetails">—</span></div>
+    <div class="summary-line"><span class="k">Price</span><span class="v empty" id="sumPrice">—</span></div>
+    <div class="summary-line"><span class="k">Plan</span><span class="v empty" id="sumPlan">Basic · Free</span></div>
+    <div class="summary-total"><span class="k">Today's total</span><span class="v" id="sumTotal">D 0</span></div>
+  </aside>
+</div>
+
+<script src="app.min.js?v=1787990400000"></script>
+<script src="gambia-places.js?v=1787990400000" defer></script>
+<script src="image-slot.js?v=1787990400000" defer></script>
+<script>
+/* 4G: Supabase (~205 KB) downloads in parallel, Leaflet (~145 KB) only when the
+   seller reaches the location step. */
+window.__sbReady=new Promise(function(res){
+  var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
+  s1.onerror=function(){ window.supabase=null; res(); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=1787990400000'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  document.head.appendChild(s1);
+});
+window.__leafletReady=function(){
+  if(window.__lfP) return window.__lfP;
+  window.__lfP=new Promise(function(res,rej){
+    var c=document.createElement('link'); c.rel='stylesheet'; c.href='vendor/leaflet-1.9.4.css'; document.head.insertBefore(c, document.head.firstChild);
+    var s=document.createElement('script'); s.src='vendor/leaflet-1.9.4.js'; s.onload=function(){res();}; s.onerror=rej; document.head.appendChild(s);
+  });
+  return window.__lfP;
+};
+</script>
+<script>
+requireAuth('list.html'+location.search);
+logo.innerHTML = LOGO_MARK + ' MyKunda';
+saveNote.innerHTML = ICON.check + ' Kept on this device';
+
+// ---- draft tracking ----
+/* Two-stage save. Every answer is kept in this browser from the first keystroke;
+   the listings table only gets a row once the seller has given a location and an
+   asking price. That is what stops the database filling with " Villa" drafts at
+   price 0 that nobody ever finishes. */
+let draftId = qs('draft') || null;  // resume a draft via ?draft=UUID
+let _saving = false;
+const saveIndicator = document.getElementById('saveNote');
+const LOCAL_DRAFT = 'mykunda_wizard_draft';
+const SPIN_IC = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10" stroke-dasharray="31.4" stroke-dashoffset="10"><animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="0.8s" repeatCount="indefinite"/></circle></svg>';
+
+function setSaveNote(state){
+  if(state==='saving'){ saveIndicator.innerHTML = SPIN_IC + ' Saving…'; return; }
+  if(state==='saved'){ saveIndicator.innerHTML = ICON.check + ' Draft saved'; return; }
+  if(state==='error'){ saveIndicator.innerHTML = '&#9888; Not saved'; return; }
+  saveIndicator.innerHTML = ICON.check + ' Kept on this device';
+}
+
+/* A title we are not ashamed of — never a bare category with a leading space. */
+function draftTitle(){
+  const custom = (S.customTitle||'').trim();
+  if(custom) return custom;
+  const feat = ((S.cat==='land' ? S.landFeats[0] : S.feats[0]) || '').trim();
+  const base = (feat ? feat+' ' : '') + catLabel();
+  const where = S.area ? S.area.split(' · ')[0].trim() : '';
+  return where ? base+' in '+where : base;
+}
+/* Worth a row in the database yet? */
+function draftWorthSaving(){
+  return !!((S.customTitle||'').trim() || S.area) && askingGMD() > 0;
+}
+function saveLocalDraft(){
+  try{ localStorage.setItem(LOCAL_DRAFT, JSON.stringify({ at:Date.now(), step:step, draftId:draftId, title:draftTitle(), s:S })); }catch(e){}
+}
+function clearLocalDraft(){ try{ localStorage.removeItem(LOCAL_DRAFT); }catch(e){} }
+
+async function autoSaveDraft(){
+  saveLocalDraft();
+  if(_saving) return;
+  if(!draftId && !draftWorthSaving()){ setSaveNote('local'); return; }
+  try{ await window.__sbReady; }catch(e){}
+  if(typeof backendReady!=='function' || !backendReady()){ setSaveNote('local'); return; }
+  _saving = true;
+  setSaveNote('saving');
+  try{
+    const areaKey = S.area ? S.area.split(' · ')[0].trim() : '';
+    const lat = (typeof S.lat==='number') ? S.lat : null;
+    const lng = (typeof S.lng==='number') ? S.lng : null;
+    const fields = {
+      kind: S.deal==='rent'?'rent':'sale',
+      category: S.cat||'house',
+      title: draftTitle(),
+      description: S.desc||null,
+      street: S.street||null,
+      area: S.area||null,
+      price: parseInt(S.price)||0,
+      negotiable: !!S.neg,
+      beds: parseInt(S.beds)||0,
+      baths: parseInt(S.baths)||0,
+      sqm: parseInt(S.cat==='land'?0:S.sqm)||0,
+      plot_sqm: parseInt(S.cat==='land'?S.landSqm:S.plot)||0,
+      lat: lat, lng: lng,
+      plus_code: S.plus||null,
+      boundary: S.boundary||null,
+      features: (S.feats||[]).concat(S.landFeats||[]),
+      plan: S.plan||'basic',
+      condition: S.condition||'good', floors: parseInt(S.floors)||1,
+      beach: S.beach||'inland', view: S.view||'none',
+      security: S.security||'none', furnished: S.furnished||'unfurnished',
+      water: S.water||'nawec', power: S.power||'no',
+      road: S.road||'laterite', title_type: S.titleType||'alkalalo',
+      electricity: S.elec||'none', land_water: S.landWater||'none',
+      land_beach: S.landBeach||'inland', beach_m: S.beachM||null, plot_shape: S.shape||'regular',
+      flood_risk: S.flood||'no', fencing: S.fence||'none'
+    };
+    const saved = await saveDraft(fields, draftId);
+    if(saved && saved.id) draftId = saved.id;
+    setSaveNote('saved');
+  }catch(e){
+    console.warn('autoSaveDraft:', e.message);
+    setSaveNote('error');
+  }
+  _saving = false;
+}
+
+// Load an existing draft from DB
+async function loadDraft(id){
+  if(!sb) return;
+  try{
+    const { data, error } = await sb.from('listings').select('*').eq('id', id).single();
+    if(error || !data) return;
+    S.deal = data.kind||'sale';
+    S.cat = data.category||'villa';
+    S.area = data.area||'';
+    S.street = data.street||'';
+    S.desc = data.description||'';
+    S.price = data.price ? String(Math.round(data.price)) : '';
+    S.neg = !!data.negotiable;
+    S.beds = data.beds ? String(data.beds) : '';
+    S.baths = data.baths ? String(data.baths) : '';
+    S.sqm = data.sqm ? String(data.sqm) : '';
+    S.plot = data.plot_sqm ? String(data.plot_sqm) : '';
+    S.landSqm = data.category==='land' && data.plot_sqm ? String(data.plot_sqm) : '';
+    S.feats = (data.features||[]).filter(f=>FEATS.includes(f));
+    S.landFeats = (data.features||[]).filter(f=>LANDFEATS.includes(f));
+    S.plan = data.plan||'basic';
+    if(typeof data.lat==='number'){ S.lat=data.lat; S.lng=data.lng; S.plus=data.plus_code||''; }
+    if(data.boundary && boundaryToPairs(data.boundary).length>=3){ S.boundary=data.boundary; S.boundarySqm=data.boundary.area_m2||0; }
+    applyStateToUI();
+  }catch(e){ console.warn('loadDraft:', e); }
+}
+
+/* Put S on screen. Shared by draft resume (database or device) and URL prefill. */
+function applyStateToUI(){
+    if(S.plotMapImage && typeof S.plotMapSlot==='number'){
+      const ms=document.querySelector('#list-photo-'+S.plotMapSlot);
+      if(ms){ ms.setAttribute('src',S.plotMapImage); snapshotSlot=S.plotMapSlot; }
+    }
+    dealRow.querySelectorAll('.pill-opt').forEach(b=>b.classList.toggle('sel',b.dataset.deal===S.deal));
+    typeCards.querySelectorAll('.opt-card').forEach(c=>c.classList.toggle('sel',c.dataset.cat===S.cat));
+    if(S.area) document.getElementById('locInput').value=S.area;
+    if(S.street) streetIn.value=S.street;
+    if(S.beds) document.getElementById('bedsIn').value=S.beds;
+    if(S.baths) document.getElementById('bathsIn').value=S.baths;
+    if(S.sqm) document.getElementById('sqmIn').value=S.sqm;
+    if(S.plot) document.getElementById('plotIn').value=S.plot;
+    if(S.landSqm) document.getElementById('landSqmIn').value=S.landSqm;
+    if(S.desc) document.getElementById('descIn').value=S.desc;
+    if(S.price) priceIn.value=parseInt(S.price).toLocaleString();
+    if(S.plus) document.getElementById('plusIn').value=S.plus;
+    S.feats.forEach(f=>{ const el=featChecks.querySelector(`[data-feat="${f}"]`); if(el) el.classList.add('sel'); });
+    S.landFeats.forEach(f=>{ const el=landChecks.querySelector(`[data-landfeat="${f}"]`); if(el) el.classList.add('sel'); });
+    const isLand=S.cat==='land';
+    document.getElementById('buildingDetails').style.display=isLand?'none':'block';
+    document.getElementById('landDetails').style.display=isLand?'block':'none';
+    renderPlans();
+  if(S.customTitle) document.getElementById('customTitle').value=S.customTitle;
+  toggleRentalFields();
+  updateSummary();
+  updatePriceLabels();
+  updateSeaDistance();
+}
+
+/* Prefill from the valuation tool's URL parameters (home page → "list this
+   property"). This block existed twice: once at top level and once pasted by
+   accident inside loadDraft(), where it could overwrite a resumed draft with
+   stale URL values. One copy now, called once from the boot sequence. */
+function prefillFromURL(){
+  const p = k => new URLSearchParams(location.search).get(k);
+  if(!p('cat') && !p('area') && !p('price') && !p('deal')) return; // no prefill data
+  /* Deal type first — it drives the price label and the pricing band. */
+  const deal = p('deal'); if(deal==='rent'||deal==='sale'){
+    S.deal = deal;
+    dealRow.querySelectorAll('.pill-opt').forEach(b=>b.classList.toggle('sel', b.dataset.deal===deal));
+    updatePriceLabels(); toggleRentalFields();
+  }
+  const cat = p('cat'); if(cat){ S.cat=cat; typeCards.querySelectorAll('.opt-card').forEach(c=>c.classList.toggle('sel',c.dataset.cat===cat)); const isLand=cat==='land'; document.getElementById('buildingDetails').style.display=isLand?'none':'block'; document.getElementById('landDetails').style.display=isLand?'block':'none'; }
+  const area = p('area'); if(area){ S.area=area; document.getElementById('locInput').value=area; }
+  if(p('beds')){ S.beds=p('beds'); document.getElementById('bedsIn').value=p('beds'); }
+  if(p('baths')){ S.baths=p('baths'); document.getElementById('bathsIn').value=p('baths'); }
+  if(p('sqm')){ if(cat==='land'){ S.landSqm=p('sqm'); document.getElementById('landSqmIn').value=p('sqm'); } else { S.sqm=p('sqm'); document.getElementById('sqmIn').value=p('sqm'); } }
+  if(p('plot')){ S.plot=p('plot'); document.getElementById('plotIn').value=p('plot'); }
+  if(p('condition')){ S.condition=p('condition'); document.getElementById('conditionIn').value=p('condition'); }
+  if(p('floors')){ S.floors=p('floors'); document.getElementById('floorsIn').value=p('floors'); }
+  if(p('view')){ S.view=p('view'); document.getElementById('viewIn').value=p('view'); }
+  if(p('security')){ S.security=p('security'); document.getElementById('securityIn').value=p('security'); }
+  if(p('furnished')){ S.furnished=p('furnished'); document.getElementById('furnishedIn').value=p('furnished'); }
+  if(p('water')){ S.water=p('water'); document.getElementById('waterIn').value=p('water'); }
+  if(p('power')){ S.power=p('power'); document.getElementById('powerIn').value=p('power'); }
+  if(p('road')){ S.road=p('road'); document.getElementById('roadIn').value=p('road'); }
+  if(p('titleType')){ S.titleType=p('titleType'); document.getElementById('titleIn').value=p('titleType'); }
+  if(p('elec')){ S.elec=p('elec'); document.getElementById('elecIn').value=p('elec'); }
+  if(p('landWater')){ S.landWater=p('landWater'); document.getElementById('landWaterIn').value=p('landWater'); }
+  if(p('flood')){ S.flood=p('flood'); document.getElementById('floodIn').value=p('flood'); }
+  if(p('fence')){ S.fence=p('fence'); document.getElementById('fenceIn').value=p('fence'); }
+  if(p('price')){ S.price=p('price'); priceIn.value=parseInt(p('price')).toLocaleString(); }
+  if(p('feat')){ const f=p('feat'); const el=featChecks.querySelector(`[data-feat="${f}"]`); if(el){ el.classList.add('sel'); S.feats.push(f); } }
+  updateSummary(); renderPlans();
+}
+
+// On page load: resume draft if ?draft= is present (waits for the deferred Supabase load)
+if(draftId){
+  (async function(){
+    try{ await window.__sbReady; }catch(e){}
+    if(typeof backendReady==='function' && backendReady()) loadDraft(draftId);
+  })();
+}
+exitIc.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>';
+backIc.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>';
+sumPhIc.innerHTML = ICON.camera;
+
+const checkSm='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+
+// ---- state ----
+const S = { deal:'sale', cat:'villa', area:'', street:'', beds:'', baths:'', sqm:'', plot:'', landSqm:'', front:'', feats:[], customFeats:'', landFeats:[], desc:'', highlights:'', nearby:[], photos:0, docType:'', confirm:false, price:'', neg:true, plan:(['basic','verified','promoted','managed'].indexOf(qs('plan'))>-1?qs('plan'):'basic'), condition:'good', floors:'1', beach:'inland', view:'none', security:'none', furnished:'unfurnished', water:'nawec', power:'no', road:'laterite', titleType:'alkalalo', elec:'none', landWater:'none', landBeach:'inland', shape:'regular', flood:'no', fence:'none', customTitle:'', yearBuilt:'', availDate:'', beachDist:'', videoLink:'' };
+/* Plan prices live in PRICING (app.js) — the one place they are defined. */
+function askingGMD(){ return parseInt(String(S.price||'').replace(/[^0-9]/g,''),10)||0; }
+function bandFor(){ return planBandFor(askingGMD(), S.deal); }
+function bandNo(){ return planBandNo(askingGMD(), S.deal); }
+function bandLabel(){
+  const B=PRICING.bands, i=B.indexOf(bandFor());
+  if(i===0) return 'under D'+B[0].max.toLocaleString('en-US');
+  if(i===B.length-1) return 'above D'+B[i-1].max.toLocaleString('en-US');
+  return 'D'+B[i-1].max.toLocaleString('en-US')+' – D'+B[i].max.toLocaleString('en-US');
+}
+function planPriceGMD(key){ return planPriceFor(key, askingGMD(), S.deal); }
+function gmdIn(gmd){ return CURRENCIES[getCurrency()].symbol + Math.round(gmd/CURRENCIES.GMD.rate*CURRENCIES[getCurrency()].rate).toLocaleString('en-US'); }
+
+// step labels
+const STEP_LABELS=['Type','Location','Details','Photos','Ownership','Price','Plan','Preview','Contact'];
+let step=0;
+const TOTAL=STEP_LABELS.length; // step 8 = success (not counted)
+
+psteps.innerHTML = STEP_LABELS.map((l,i)=>`<div class="pstep" data-i="${i}"><div class="bar"></div><div class="lab">${l}</div></div>`).join('');
+
+// type cards
+const TYPES=[['villa','Villa','Detached home with land',ICON.area],['apartment','Apartment','Flat or unit',''],['compound','Compound','Walled family compound',''],['townhouse','Townhouse','Terraced / row house',''],['penthouse','Penthouse','Top-floor with terrace',''],['land','Land / plot','Bare land to build on',''],['lodge','Lodge / guesthouse','Hospitality property',''],['commercial','Commercial','Shop, office or unit','']];
+const homeIc='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>';
+const landIc='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18M5 20V9l7-4 7 4v11"/><path d="M4 9h16"/></svg>';
+typeCards.innerHTML = TYPES.map(t=>`<div class="opt-card ${t[0]==='villa'?'sel':''}" data-cat="${t[0]}"><span class="ic">${t[0]==='land'?landIc:homeIc}</span><div><div class="t">${t[1]}</div><div class="s">${t[2]}</div></div></div>`).join('');
+
+// features
+const FEATS=['Private pool','Garden','Air-con','Parking','Staff quarters','Balcony / terrace','Rooftop','Garage','CCTV','Laundry room'];
+featChecks.innerHTML = FEATS.map(f=>`<label class="chk-opt" data-feat="${f}"><span class="box">${checkSm}</span> ${f}</label>`).join('');
+const LANDFEATS=['Cleared / level','Corner plot','Trees / vegetation','Elevated / hilltop','Near school'];
+landChecks.innerHTML = LANDFEATS.map(f=>`<label class="chk-opt" data-landfeat="${f}"><span class="box">${checkSm}</span> ${f}</label>`).join('');
+
+// photos
+photoGrid.innerHTML = Array.from({length:10}).map((_,i)=>`<div class="photo-cell ${i===0?'cover':''}" data-i="${i}">${i===0?'<span class="cover-tag">Cover</span>':''}<image-slot id="list-photo-${i}" placeholder="${i===0?'Cover photo':'Photo '+(i+1)}" radius="0" style="position:absolute;inset:0;width:100%;height:100%;display:block"></image-slot></div>`).join('');
+
+// plan picker
+const PLANS=[
+  ['basic','Basic','List it yourself and talk to buyers directly',''],
+  ['verified','Verified','Title check, Verified badge and priority placement','one-time'],
+  ['promoted','Promoted','We arrange photos and the write-up, plus 60 days featured','one-time'],
+  ['managed','Managed','An established Gambian agent runs it for six months, viewings included','two instalments']
+];
+function renderPlans(){
+  const price=askingGMD();
+  const bandLine = S.deal==='rent'
+    ? 'Rentals are always priced on our lowest band.'
+    : (price
+        ? 'Your asking price of <b>D'+price.toLocaleString('en-US')+'</b> puts you in band '+bandNo()+' of 3 — <b>'+bandLabel()+'</b>. That sets the Verified and Managed prices below.'
+        : 'Verified and Managed are priced by your asking price. Go back to step 6 and enter one to see your exact prices — the amounts below assume the lowest band.');
+  planPick.innerHTML = '<div class="band-note" id="bandNote">'+bandLine+'</div>' + PLANS.map(function(p){
+    const gmd=planPriceGMD(p[0]);
+    const cost = p[0]==='basic' ? 'Free' : gmdIn(gmd);
+    return '<div class="plan-row '+(S.plan===p[0]?'sel':'')+'" data-plan="'+p[0]+'"><span class="radio"></span><div class="info"><b>'+p[1]+'</b><p>'+p[2]+'</p></div><div class="cost">'+cost+(p[3]?'<small>'+p[3]+'</small>':'')+'</div></div>';
+  }).join('');
+  planPick.querySelectorAll('.plan-row').forEach(function(r){ r.addEventListener('click',function(){S.plan=r.dataset.plan;renderPlans();updateSummary();}); });
+}
+renderPlans();
+
+
+// ---- interactions ----
+dealRow.querySelectorAll('.pill-opt').forEach(b=>b.addEventListener('click',()=>{
+  dealRow.querySelectorAll('.pill-opt').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');S.deal=b.dataset.deal;updateSummary();updatePriceLabels();toggleRentalFields();
+}));
+function bindTypeCards(){
+  typeCards.querySelectorAll('.opt-card').forEach(c=>c.addEventListener('click',()=>{
+    typeCards.querySelectorAll('.opt-card').forEach(x=>x.classList.remove('sel'));c.classList.add('sel');S.cat=c.dataset.cat;
+    const isLand=S.cat==='land';
+    document.getElementById('buildingDetails').style.display=isLand?'none':'block';
+    document.getElementById('landDetails').style.display=isLand?'block':'none';
+    document.getElementById('detailDesc').textContent=isLand?'Add the key facts about your plot.':'Add the key facts buyers look for first.';
+    updateSummary();
+  }));
+}
+bindTypeCards();
+// ---- Smart location input: Google Plus Code, lat/lng, or area name ----
+const AREA_LIST=[
+  ['Bakau','Banjul Area'],['Banjul','Banjul Area'],['Cape Point','Banjul Area'],['Fajara','Banjul Area'],['Kotu','Banjul Area'],
+  ['Bijilo','West Coast'],['Batokunku','West Coast'],['Brikama','West Coast'],['Brufut','West Coast'],['Brusubi','West Coast'],
+  ['Gunjur','West Coast'],['Kartong','West Coast'],['Kololi','West Coast'],['Sanyang','West Coast'],['Serrekunda','West Coast'],['Tanji','West Coast'],
+  ['Barra','North Bank'],['Farafenni','North Bank'],['Basse','Upcountry'],['Soma','Upcountry']
+];
+const locInput=document.getElementById('locInput');
+const locSugg=document.getElementById('locSuggestions');
+const locResolved=document.getElementById('locResolved');
+const COORD_RE=/^(-?\d{1,3}\.\d{2,8})[,\s]+(-?\d{1,3}\.\d{2,8})$/;
+const PLUS_RE_LOC=/^[23456789CFGHJMPQRVWX]{4,8}\+[23456789CFGHJMPQRVWX]{2,3}/i;
+function resolveLocation(val){
+  val=val.trim(); if(!val) return;
+  function setResolved(ok,msg){ locResolved.textContent=msg; locResolved.style.display='block'; locResolved.style.background=ok?'var(--green-50)':'var(--red-50,#fef2f2)'; locResolved.style.color=ok?'var(--green-700)':'var(--red-600,#dc2626)'; }
+  // 1. Google Plus Code (short or full)
+  const pm=val.match(/([23456789CFGHJMPQRVWX]{4,8}\+[23456789CFGHJMPQRVWX]{2,3})/i);
+  if(pm){
+    const codeStr=pm[0].toUpperCase();
+    const rest=val.replace(pm[0],'').trim();
+    const sepIdx=codeStr.indexOf('+');
+    let decoded=null, fullCode=codeStr;
+    if(sepIdx>=8){
+      // Full code — decode directly
+      decoded=plusCodeDecode(codeStr);
+    } else {
+      // Short code — expand using Gambia reference
+      const expanded=expandShortPlusCode(codeStr, val);
+      if(expanded){ decoded={lat:expanded.lat,lng:expanded.lng}; fullCode=expanded.full; }
+    }
+    if(decoded){
+      S.lat=decoded.lat; S.lng=decoded.lng;
+      // Find nearest area
+      let best=null,bd=Infinity; Object.entries(AREA_COORDS).forEach(([n,c])=>{ const d=Math.hypot(c[0]-decoded.lat,c[1]-decoded.lng); if(d<bd){bd=d;best=n;} });
+      let found=null; if(rest) GAMBIA_PLACES.forEach(([n,r])=>{ if(rest.toLowerCase().includes(n.toLowerCase())) found=n+' · '+r; });
+      const am=GAMBIA_PLACES.find(([n])=>n===best);
+      S.area=found||( am?am[0]+' · '+am[1]:(best||'The Gambia'));
+      const shortDisplay=fullCode.substring(4)+(best?' '+best:'');
+      S.plus=shortDisplay;
+      document.getElementById('plusIn').value=shortDisplay;
+      setMapTo(decoded.lat,decoded.lng);
+      setResolved(true,'✓ Google Plus Code '+shortDisplay+' — '+(found||best||'The Gambia'));
+      updateSummary(); return;
+    } else {
+      // Couldn't decode
+      let found=null; GAMBIA_PLACES.forEach(([n,r])=>{ if(rest.toLowerCase().includes(n.toLowerCase())) found=n+' · '+r; });
+      S.area=found||rest||'The Gambia'; S.plus=val;
+      document.getElementById('plusIn').value=val;
+      setResolved(true,'✓ Google Plus Code — '+(found||rest||'The Gambia'));
+      updateSummary(); return;
+    }
+  }
+  // 2. Coordinates
+  const cm=val.match(COORD_RE);
+  if(cm){
+    const lat=parseFloat(cm[1]),lng=parseFloat(cm[2]);
+    if(lat>=-90&&lat<=90&&lng>=-180&&lng<=180){
+      let best=null,bd=Infinity; Object.entries(AREA_COORDS).forEach(([n,c])=>{ const d=Math.hypot(c[0]-lat,c[1]-lng); if(d<bd){bd=d;best=n;} });
+      const am=GAMBIA_PLACES.find(([n])=>n===best); S.area=am?am[0]+' · '+am[1]:(best||'The Gambia');
+      setResolved(true,'✓ '+lat.toFixed(5)+', '+lng.toFixed(5)+' — '+(best||'unknown'));
+      setMapTo(lat,lng); updateSummary(); return;
+    }
+  }
+  // 3. Area name
+  const lc=val.toLowerCase();
+  const exact=GAMBIA_PLACES.find(([n])=>n.toLowerCase()===lc);
+  if(exact){ S.area=exact[0]+' · '+exact[1]; if(exact[2]&&exact[3]) setMapTo(exact[2],exact[3]); else { const c=AREA_COORDS[exact[0]]; if(c) setMapTo(c[0],c[1]); } setResolved(true,'✓ '+exact[0]+', '+exact[1]); updateSummary(); return; }
+  const partial=GAMBIA_PLACES.find(([n])=>n.toLowerCase().startsWith(lc));
+  if(partial){ S.area=partial[0]+' · '+partial[1]; if(partial[2]&&partial[3]) setMapTo(partial[2],partial[3]); else { const c=AREA_COORDS[partial[0]]; if(c) setMapTo(c[0],c[1]); } setResolved(true,'✓ '+partial[0]+', '+partial[1]); updateSummary(); return; }
+  S.area=''; setResolved(false,'✗ "'+val+'" is not a recognised area — please pick from the suggestions'); updateSummary(); return;
+}
+function setMapTo(lat,lng,zoom){ S.lat=lat; S.lng=lng; if(listMap){ listMap.setView([lat,lng],zoom||17); listMarker.setLatLng([lat,lng]); if(!listMap.hasLayer(listMarker)) listMarker.addTo(listMap); } fillPlusFromMarker(); autoFillNearbyDists(); updateSeaDistance(); }
+window.__setMapTo=setMapTo;
+locInput.addEventListener('input',function(){
+  const val=this.value.trim().toLowerCase();
+  if(!val||PLUS_RE_LOC.test(val)||COORD_RE.test(val)){ locSugg.style.display='none'; return; }
+  const m=GAMBIA_PLACES.filter(([n,r])=>n.toLowerCase().includes(val)||r.toLowerCase().includes(val)).slice(0,10);
+  if(m.length&&val.length>=2){
+    locSugg.innerHTML=m.map(([n,r])=>`<div style="padding:11px 14px;cursor:pointer;font-size:14px;font-weight:600;color:var(--ink-2);border-bottom:1px solid var(--line-2)" data-name="${n}">${n} <span style="color:var(--muted);font-weight:500">· ${r}</span></div>`).join('');
+    locSugg.style.display='block';
+    locSugg.querySelectorAll('div').forEach(d=>d.addEventListener('mousedown',e=>{e.preventDefault();locInput.value=d.dataset.name;locSugg.style.display='none';resolveLocation(d.dataset.name);}));
+  } else locSugg.style.display='none';
+});
+locInput.addEventListener('blur',()=>{ setTimeout(()=>locSugg.style.display='none',200); if(locInput.value.trim()) resolveLocation(locInput.value); });
+locInput.addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDefault();locSugg.style.display='none';resolveLocation(locInput.value);} });
+streetIn.addEventListener('input',()=>{S.street=streetIn.value;});
+
+// ---- EXIF GPS extraction from uploaded photo ----
+document.getElementById('geoPhotoInput').addEventListener('change',function(){
+  const file=this.files[0]; if(!file) return;
+  const status=document.getElementById('geoPhotoStatus');
+  status.textContent='Reading GPS data…'; status.style.color='var(--muted)';
+  const reader=new FileReader();
+  reader.onload=function(){
+    const buf=new Uint8Array(reader.result);
+    const gps=extractExifGPS(buf);
+    if(gps){
+      status.textContent='✓ GPS found: '+gps.lat.toFixed(6)+', '+gps.lng.toFixed(6);
+      status.style.color='var(--green-700)';
+      locInput.value=gps.lat.toFixed(6)+', '+gps.lng.toFixed(6);
+      resolveLocation(locInput.value);
+    } else {
+      status.textContent='✗ No GPS data in this photo — try a different one or enter location manually';
+      status.style.color='var(--red,#c33)';
+    }
+  };
+  reader.readAsArrayBuffer(file);
+});
+
+function extractExifGPS(buf){
+  // Find EXIF in JPEG
+  if(buf[0]!==0xFF||buf[1]!==0xD8) return null;
+  let offset=2;
+  while(offset<buf.length-1){
+    if(buf[offset]!==0xFF) break;
+    const marker=buf[offset+1];
+    if(marker===0xE1){ // APP1
+      const len=(buf[offset+2]<<8)|buf[offset+3];
+      const exif=buf.slice(offset+4,offset+2+len);
+      if(String.fromCharCode(...exif.slice(0,4))==='Exif') return parseExifGPS(exif.slice(6));
+    }
+    const segLen=(buf[offset+2]<<8)|buf[offset+3];
+    offset+=2+segLen;
+  }
+  return null;
+}
+function parseExifGPS(tiff){
+  const dv=new DataView(tiff.buffer,tiff.byteOffset,tiff.byteLength);
+  const le=String.fromCharCode(tiff[0],tiff[1])==='II';
+  const r16=(o)=>le?dv.getUint16(o,true):dv.getUint16(o,false);
+  const r32=(o)=>le?dv.getUint32(o,true):dv.getUint32(o,false);
+  // Find IFD0
+  let ifdOff=le?dv.getUint32(4,true):dv.getUint32(4,false);
+  let gpsOff=null;
+  // Search IFD0 for GPS IFD pointer (tag 0x8825)
+  let cnt=r16(ifdOff); ifdOff+=2;
+  for(let i=0;i<cnt;i++){
+    const tag=r16(ifdOff+i*12);
+    if(tag===0x8825){ gpsOff=r32(ifdOff+i*12+8); break; }
+  }
+  if(gpsOff===null) return null;
+  // Parse GPS IFD
+  const gcnt=r16(gpsOff); let latRef='N',lngRef='E',latVals=null,lngVals=null;
+  for(let i=0;i<gcnt;i++){
+    const off=gpsOff+2+i*12;
+    const tag=r16(off), valOff=r32(off+8);
+    if(tag===1) latRef=String.fromCharCode(tiff[off+8]); // GPSLatitudeRef
+    if(tag===3) lngRef=String.fromCharCode(tiff[off+8]); // GPSLongitudeRef
+    if(tag===2) latVals=readRationals(tiff,valOff,3,r32); // GPSLatitude
+    if(tag===4) lngVals=readRationals(tiff,valOff,3,r32); // GPSLongitude
+  }
+  if(!latVals||!lngVals) return null;
+  let lat=latVals[0]+latVals[1]/60+latVals[2]/3600;
+  let lng=lngVals[0]+lngVals[1]/60+lngVals[2]/3600;
+  if(latRef==='S') lat=-lat;
+  if(lngRef==='W') lng=-lng;
+  if(isNaN(lat)||isNaN(lng)||lat===0&&lng===0) return null;
+  return {lat,lng};
+}
+function readRationals(tiff,off,count,r32){
+  const vals=[];
+  for(let i=0;i<count;i++){
+    const num=r32(off+i*8), den=r32(off+i*8+4);
+    vals.push(den?num/den:0);
+  }
+  return vals;
+}
+['bedsIn','bathsIn','sqmIn','plotIn','landSqmIn','descIn','highlightsIn','customFeatsIn','customTitle','videoIn'].forEach(id=>{
+  const el=document.getElementById(id); if(!el) return;
+  const key={bedsIn:'beds',bathsIn:'baths',sqmIn:'sqm',plotIn:'plot',landSqmIn:'landSqm',descIn:'desc',highlightsIn:'highlights',customFeatsIn:'customFeats',customTitle:'customTitle',videoIn:'videoLink'}[id];
+  el.addEventListener('input',e=>{ S[key]=e.target.value; updateSummary(); });
+});
+document.getElementById('yearIn').addEventListener('input',e=>{ S.yearBuilt=e.target.value; });
+const availIn=document.getElementById('availIn'); if(availIn) availIn.addEventListener('change',e=>{ S.availDate=e.target.value; });
+// Show availability date for rentals
+function toggleRentalFields(){ document.getElementById('availWrap').style.display=S.deal==='rent'?'block':'none'; document.getElementById('beachWrapNormal').style.display='block'; }
+toggleRentalFields();
+// Building dropdowns
+['conditionIn','floorsIn','viewIn','securityIn','furnishedIn','waterIn','powerIn'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(!el) return;
+  const key={conditionIn:'condition',floorsIn:'floors',viewIn:'view',securityIn:'security',furnishedIn:'furnished',waterIn:'water',powerIn:'power'}[id];
+  el.addEventListener('change',()=>{ S[key]=el.value; updateSummary(); });
+});
+// Land dropdowns
+['roadIn','titleIn','elecIn','landWaterIn','floodIn','fenceIn'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(!el) return;
+  const key={roadIn:'road',titleIn:'titleType',elecIn:'elec',landWaterIn:'landWater',floodIn:'flood',fenceIn:'fence'}[id];
+  el.addEventListener('change',()=>{ S[key]=el.value; updateSummary(); });
+});
+featChecks.querySelectorAll('.chk-opt').forEach(c=>c.addEventListener('click',()=>{c.classList.toggle('sel');S.feats=[...featChecks.querySelectorAll('.sel')].map(x=>x.dataset.feat);}));
+landChecks.querySelectorAll('.chk-opt').forEach(c=>c.addEventListener('click',()=>{c.classList.toggle('sel');S.landFeats=[...landChecks.querySelectorAll('.sel')].map(x=>x.dataset.landfeat);}));
+
+// ---- Real file uploads (photos + documents) ----
+const uploadSvg='<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 9l5-5 5 5M12 4v12"/></svg>';
+upIc1.innerHTML=upIc2.innerHTML=uploadSvg;
+
+// Hidden file inputs for document uploads
+const deedInput = document.createElement('input'); deedInput.type='file'; deedInput.accept='.pdf,.jpg,.jpeg,.png';
+const planInput = document.createElement('input'); planInput.type='file'; planInput.accept='.pdf,.jpg,.jpeg,.png';
+let deedFile=null, planFile=null;
+
+function wireRealUpload(boxId, tId, fileInput, label, setter){
+  const box=document.getElementById(boxId);
+  box.addEventListener('click',()=>fileInput.click());
+  fileInput.addEventListener('change',()=>{
+    const file=fileInput.files[0];
+    if(!file) return;
+    setter(file);
+    box.classList.add('done');
+    const sizeMB=(file.size/1024/1024).toFixed(1);
+    document.getElementById(tId).textContent=file.name+' ('+sizeMB+' MB) ✓';
+  });
+}
+wireRealUpload('upDeed','upDeedT',deedInput,'Title deed',f=>{deedFile=f;});
+wireRealUpload('upPlan','upPlanT',planInput,'Site plan',f=>{planFile=f;});
+docType.addEventListener('change',()=>S.docType=docType.value);
+confirmCk.innerHTML=checkSm;
+confirmBox.addEventListener('click',()=>{S.confirm=!S.confirm;confirmBox.classList.toggle('sel',S.confirm);});
+
+// price
+priceIn.addEventListener('input',()=>{
+  const raw=priceIn.value.replace(/[^0-9]/g,'');
+  priceIn.value=raw?parseInt(raw).toLocaleString():'';
+  S.price=raw; updateSummary();
+});
+negCk.innerHTML=checkSm;
+negToggle.addEventListener('click',()=>{S.neg=!S.neg;negToggle.classList.toggle('sel',S.neg);});
+
+// ---- Beach points along Gambian coast (lat, lng, name) ----
+const BEACH_POINTS=[
+  [13.4915,-16.6655,'Cape Point Beach'],[13.4835,-16.6760,'Bakau Beach'],[13.4715,-16.6905,'Fajara Beach'],
+  [13.4575,-16.7080,'Kotu Beach'],[13.4410,-16.7210,'Kololi / Senegambia Beach'],[13.4285,-16.7270,'Bijilo Beach'],
+  [13.4000,-16.7590,'Brufut Beach'],[13.3830,-16.7700,'Ghana Town Beach'],[13.3530,-16.7940,'Tanji Beach'],
+  [13.3235,-16.8000,'Batokunku Beach'],[13.3110,-16.7990,'Tujereng Beach'],[13.2760,-16.7950,'Sanyang Beach'],
+  [13.1910,-16.7820,'Gunjur Beach'],[13.0970,-16.7760,'Kartong Beach']
+];
+/* Atlantic shoreline of The Gambia, north to south. Distance to the sea is
+   measured against these segments rather than to the nearest named beach, so a
+   plot between two beaches gets a true perpendicular distance. */
+const COASTLINE=[
+  [13.4790,-16.5790],[13.4700,-16.5830],[13.4650,-16.6120],[13.4680,-16.6420],[13.4780,-16.6580],
+  [13.4880,-16.6650],[13.4930,-16.6690],[13.4880,-16.6760],[13.4835,-16.6790],[13.4780,-16.6850],
+  [13.4715,-16.6920],[13.4650,-16.6990],[13.4575,-16.7095],[13.4490,-16.7160],[13.4410,-16.7225],
+  [13.4340,-16.7255],[13.4285,-16.7285],[13.4200,-16.7350],[13.4110,-16.7440],[13.4000,-16.7600],
+  [13.3910,-16.7660],[13.3830,-16.7715],[13.3700,-16.7810],[13.3530,-16.7955],[13.3400,-16.8000],
+  [13.3235,-16.8015],[13.3110,-16.8005],[13.2960,-16.7985],[13.2760,-16.7965],[13.2500,-16.7920],
+  [13.2200,-16.7870],[13.1910,-16.7835],[13.1600,-16.7810],[13.1300,-16.7790],[13.0970,-16.7775],
+  [13.0640,-16.7760]
+];
+function metresPerDeg(lat){ const d=Math.PI/180; return { lat:110574, lng:111320*Math.cos(lat*d) }; }
+/* Perpendicular distance in metres from a point to a segment, in a local
+   metric frame — accurate to a metre or so at these latitudes. */
+function distToSegment(p,a,b){
+  const m=metresPerDeg(p[0]);
+  const px=(p[1]-a[1])*m.lng, py=(p[0]-a[0])*m.lat;
+  const bx=(b[1]-a[1])*m.lng, by=(b[0]-a[0])*m.lat;
+  const len2=bx*bx+by*by;
+  let t = len2 ? (px*bx+py*by)/len2 : 0;
+  t=Math.max(0,Math.min(1,t));
+  const dx=px-t*bx, dy=py-t*by;
+  return Math.sqrt(dx*dx+dy*dy);
+}
+function distanceToSea(lat,lng){
+  let best=Infinity;
+  for(let i=0;i<COASTLINE.length-1;i++){
+    const d=distToSegment([lat,lng],COASTLINE[i],COASTLINE[i+1]);
+    if(d<best) best=d;
+  }
+  return best;
+}
+function beachBandFrom(m){ return m<=150?'beachfront':(m<=1200?'walking':'inland'); }
+function fmtSeaDist(m){
+  if(m<1000) return Math.round(m/10)*10+' m';
+  return (m/1000).toFixed(m<10000?1:0)+' km';
+}
+function haversineKm(lat1,lng1,lat2,lng2){
+  const R=6371,toR=Math.PI/180,dLat=(lat2-lat1)*toR,dLng=(lng2-lng1)*toR;
+  const a=Math.sin(dLat/2)**2+Math.cos(lat1*toR)*Math.cos(lat2*toR)*Math.sin(dLng/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+// ---- Airport location ----
+const AIRPORT_POS=[13.3380,-16.6522]; // Banjul International Airport
+
+// ---- Schools & universities ----
+const SCHOOL_POINTS=[
+  // Universities & colleges
+  [13.4730,-16.6770,'University of The Gambia (Fajara)'],[13.4350,-16.6800,'University of The Gambia (Kanifing)'],
+  [13.2700,-16.6500,'Gambia College (Brikama)'],[13.4550,-16.6650,'Gambia Technical Training Institute'],
+  // ── Region 1: Banjul / KMC ──
+  // Lower Basic
+  [13.4531,-16.5775,'Albion LBS (Banjul)'],[13.4531,-16.5750,'Campama LBS (Banjul)'],[13.4531,-16.5760,'Half-Die LBS (Banjul)'],
+  [13.4531,-16.5740,'Methodist LBS (Banjul)'],[13.4531,-16.5730,'Muhammedan LBS (Banjul)'],[13.4531,-16.5720,'St. Mary\'s LBS (Banjul)'],
+  [13.4531,-16.5710,'Wesley LBS (Banjul)'],[13.4531,-16.5700,'St. Joseph\'s LBS (Banjul)'],
+  [13.4781,-16.6819,'Bakau LBS'],[13.4780,-16.6830,'Bakau New Town LBS'],
+  [13.4420,-16.6780,'Bakoteh LBS'],[13.4450,-16.6600,'Bundung LBS'],
+  [13.4580,-16.6930,'Kotu LBS'],[13.4370,-16.6740,'Latrikunda LBS'],
+  [13.4480,-16.6620,'Ndow Comprehensive LBS (Pipeline)'],[13.4600,-16.6640,'New Jeshwang LBS'],
+  [13.4630,-16.6580,'Old Jeshwang LBS'],[13.4386,-16.6781,'Serekunda LBS'],
+  [13.4350,-16.6700,'St. Charles Lwanga LBS (Faji Kunda)'],[13.4520,-16.6650,'St. John\'s School for the Deaf'],
+  [13.4520,-16.6660,'St. Theresa\'s LBS (Kanifing)'],[13.4256,-16.6726,'Tallinding LBS'],
+  // Upper Basic
+  [13.4042,-16.6558,'Abuko UBS'],[13.4781,-16.6819,'Bakau UBS'],[13.4420,-16.6780,'Bakoteh UBS'],
+  [13.4580,-16.6930,'Kotu UBS'],[13.4370,-16.6740,'Latrikunda UBS'],
+  [13.4480,-16.6620,'Ndow Comprehensive UBS'],[13.4520,-16.6660,'St. Theresa\'s UBS (Kanifing)'],
+  // Senior Secondary
+  [13.4531,-16.5775,'Gambia Senior Secondary (Banjul)'],[13.4531,-16.5760,'Muslim Senior Secondary (Banjul)'],
+  [13.4531,-16.5740,'St. Augustine\'s SSS (Banjul)'],[13.4531,-16.5720,'St. Joseph\'s SSS (Banjul)'],
+  [13.4580,-16.6930,'Kotu SSS'],[13.4480,-16.6620,'Ndow Comprehensive SSS'],
+  [13.4386,-16.6781,'Nusrat Senior Secondary (Bundung)'],[13.4480,-16.6630,'Pipeline Comprehensive SSS'],
+  [13.4780,-16.6830,'Marina International School (Bakau)'],
+  [13.4700,-16.6950,'Banjul American Embassy School (Fajara)'],
+  [13.4580,-16.6940,'British International School (Kotu)'],
+  [13.4580,-16.6935,'Gambia Maarif School (Kotu)'],
+  [13.4600,-16.7000,'SOS-Herman Gmeiner SSS'],
+  // ── Region 2: West Coast ──
+  // Lower Basic
+  [13.4181,-16.7300,'Bijilo LBS'],[13.3842,-16.7514,'Brufut LBS'],[13.2714,-16.6506,'Brikama LBS'],
+  [13.3858,-16.6428,'Lamin Daranka LBS'],[13.4100,-16.7080,'Sukuta LBS'],[13.3456,-16.6728,'Yundum LBS'],
+  [13.3667,-16.6833,'Banjulinding LBS'],[13.3489,-16.7908,'Tanji LBS'],[13.2674,-16.7644,'Sanyang LBS'],
+  [13.1786,-16.7594,'Gunjur LBS'],[13.0947,-16.7622,'Kartong LBS (St. Martin\'s)'],
+  [13.3189,-16.7855,'Tujereng LBS'],[13.2667,-16.5167,'Faraba Banta LBS'],
+  [13.2333,-16.5667,'Kafuta LBS'],[13.3167,-16.4333,'Sibanor LBS'],
+  [13.3200,-16.6800,'Marakissa LBS'],[13.2725,-16.5353,'Pirang LBS'],
+  [13.3800,-16.7300,'Jambur LBS'],[13.1836,-16.6975,'Sifoe LBS'],
+  [13.3400,-16.7450,'Berending LBS (St. Andrew\'s)'],[13.3392,-16.6875,'Busumbala LBS'],
+  [13.2353,-16.0864,'Bwiam LBS (St. Edward\'s)'],[13.3200,-16.5500,'Berefet LBS'],
+  [13.3100,-16.6600,'Nyambai LBS'],[13.3400,-16.6700,'Mandinaba LBS'],
+  [13.3830,-16.7670,'Ghana Town LBS'],[13.3233,-16.8008,'Batokunku LBS'],
+  [13.4040,-16.6740,'Wellingara LBS'],
+  [13.3600,-16.6600,'Sinchu Baliya LBS'],[13.3533,-16.7631,'Madiana LBS'],
+  [13.3625,-16.6861,'Old Yundum LBS'],[13.4325,-16.7203,'Kerr Serign LBS'],
+  // Upper Basic
+  [13.2714,-16.6506,'Brikama UBS'],[13.3858,-16.6428,'St. Peter\'s UBS (Lamin)'],
+  [13.4100,-16.7080,'Sukuta UBS'],[13.1786,-16.7594,'Gunjur UBS'],
+  [13.2333,-16.5667,'Kafuta UBS'],[13.3167,-16.4333,'Sibanor UBS'],
+  [13.3189,-16.7855,'Tujereng UBS'],[13.3667,-16.6833,'Banjulinding UBS'],
+  [13.3900,-16.7200,'Nema Kunku UBS'],[13.1836,-16.6975,'Sifoe UBS'],
+  // Senior Secondary
+  [13.3858,-16.6428,'St. Peter\'s SSS (Lamin)'],[13.2714,-16.6510,'Jamisa SSS (Brikama)'],
+  [13.2353,-16.0864,'Fatima SSS (Bwiam)'],[13.1836,-16.6975,'Sifoe SSS'],
+  [13.4100,-16.7080,'SBEC International School (Sukuta)'],
+  // ── Region 3: North Bank ──
+  [13.4828,-16.5456,'Barra LBS'],[13.4839,-16.5347,'Essau LBS'],
+  [13.3345,-16.3860,'Albreda LBS'],[13.3386,-16.3825,'Juffureh LBS'],
+  [13.4898,-16.0888,'Kerewan LBS'],[13.5670,-15.6010,'Farafenni LBS'],
+  [13.5670,-15.6020,'Farafenni UBS'],[13.5670,-15.6030,'Farafenni SSS'],
+  [13.5400,-15.6800,'Sabach Sanjal LBS'],
+  [13.5167,-15.9500,'Kuntair LBS'],[13.4900,-16.5000,'Berending (NBR) LBS'],
+  // ── Region 4: Lower River ──
+  [13.4333,-15.5333,'Soma LBS'],[13.4333,-15.5340,'Soma UBS'],
+  [13.4000,-15.5000,'Pakalinding LBS'],[13.4433,-15.5357,'Mansa Konko LBS'],
+  [13.3289,-16.0150,'Keneba LBS'],[13.4167,-15.2833,'Bureng LBS'],
+  [13.3833,-15.6500,'Genieri LBS'],
+  // ── Region 5: Central River ──
+  [13.5341,-14.7662,'Janjanbureh LBS'],[13.5341,-14.7660,'Armitage SSS (Janjanbureh)'],
+  [13.4333,-14.6500,'Bansang LBS'],[13.4333,-14.6510,'Bansang UBS'],
+  [13.6709,-14.8898,'Kuntaur LBS'],[13.7000,-15.3330,'Kaur LBS'],
+  [13.6909,-14.8788,'Wassu LBS'],
+  // ── Region 6: Upper River ──
+  [13.3092,-14.2192,'Basse LBS'],[13.3092,-14.2195,'Basse UBS'],[13.3092,-14.2198,'Basse SSS'],
+  [13.3167,-13.9500,'Gambissara LBS'],[13.2167,-13.9500,'Fatoto LBS'],
+  [13.4167,-13.9500,'Garowol LBS'],[13.4833,-13.8667,'Koina LBS']
+];
+
+// ---- Hospitals & clinics ----
+const HOSPITAL_POINTS=[
+  [13.4502,-16.5730,'Edward Francis Small Teaching Hospital'],[13.4762,-16.6858,'MRC Hospital (Fajara)'],
+  [13.4463,-16.6648,'Kanifing General Hospital'],[13.4386,-16.6781,'Serekunda Health Centre'],
+  [13.2714,-16.6506,'Brikama District Hospital'],[13.5670,-15.6010,'Farafenni District Hospital'],
+  [13.4333,-14.6500,'Bansang Hospital'],[13.3092,-14.2192,'Basse District Hospital'],
+  [13.4433,-15.5357,'Mansa Konko Health Centre'],[13.5341,-14.7662,'Janjanbureh Health Centre'],
+  [13.3858,-16.6428,'Lamin Health Centre'],[13.4100,-16.7080,'Sukuta Health Centre'],
+  [13.3842,-16.7514,'Brufut Health Centre'],[13.1786,-16.7594,'Gunjur Health Centre'],
+  [13.3489,-16.7908,'Tanji Health Centre'],[13.4600,-16.6950,'EFSTH Polyclinic (Kotu)'],
+  [13.4415,-16.7140,'Kololi Health Centre'],[13.4042,-16.6558,'Abuko Health Centre'],
+  [13.2674,-16.7644,'Sanyang Health Centre'],[13.4890,-16.6690,'Cape Point Clinic'],
+  [13.2353,-16.0864,'Sulayman Junkung Hospital (Bwiam)']
+];
+
+// ---- Banks ----
+const BANK_POINTS=[
+  [13.4531,-16.5775,'Standard Chartered Bank (Banjul)'],[13.4386,-16.6781,'Trust Bank (Serekunda)'],
+  [13.4425,-16.7135,'Ecobank (Kololi)'],[13.4580,-16.6930,'GT Bank (Kotu)'],
+  [13.4820,-16.6750,'Trust Bank (Bakau)'],[13.2714,-16.6506,'Trust Bank (Brikama)'],
+  [13.4531,-16.5760,'Zenith Bank (Banjul)'],[13.4256,-16.6726,'Reliance Financial (Talinding)'],
+  [13.4531,-16.5770,'Central Bank of The Gambia'],[13.4386,-16.6790,'Ecobank (Serekunda)'],
+  [13.5670,-15.6010,'Trust Bank (Farafenni)'],[13.3858,-16.6428,'Supersonicz (Lamin)'],
+  [13.4490,-16.6670,'Bloom Bank (Westfield)'],[13.4042,-16.6558,'Access Bank (Abuko)'],
+  [13.3842,-16.7514,'Ecobank (Brufut)'],[13.4415,-16.7140,'GT Bank (Senegambia)'],
+  [13.3092,-14.2192,'Trust Bank (Basse)'],[13.4400,-16.6750,'Megabank (Latrikunda)']
+];
+
+// ---- Markets / shops with coordinates ----
+const MARKET_POINTS=[
+  [13.4386,-16.6781,'Serekunda Market'],[13.2714,-16.6506,'Brikama Market'],
+  [13.4545,-16.5750,'Albert Market (Banjul)'],[13.4100,-16.7080,'Sukuta Market'],
+  [13.3540,-16.7930,'Tanji Fish Market'],[13.5670,-15.6010,'Farafenni Market'],
+  [13.4570,-16.7060,'Kotu Craft Market'],[13.1786,-16.7594,'Gunjur Market'],
+  [13.3858,-16.6428,'Lamin Market'],[13.2674,-16.7644,'Sanyang Market'],
+  [13.4256,-16.6726,'Talinding Market'],[13.4042,-16.6558,'Abuko Market'],
+  [13.4425,-16.7135,'Kololi Craft Market'],[13.3842,-16.7514,'Brufut Market'],
+  [13.3092,-14.2190,'Basse Market'],[13.4333,-15.5333,'Soma Market'],[13.5341,-14.7662,'Janjanbureh Market']
+];
+
+function estimateDriveTime(km,fromLat,fromLng,toLat,toLng){
+  // Road distance is ~1.35x straight-line, measured against real routes:
+  // Banjul-Basse 370 km road vs 257 km straight (1.44), Kololi-Gunjur 41 vs 29 (1.4),
+  // Barra-Kerewan 50 vs 49 (1.0) - accessgambia.com travel distances table.
+  const roadKm=km*1.35;
+  // Urban = Greater Banjul Area grid (lat>13.38, lng<-16.55): congestion, speed bumps
+  const isUrban=(fromLat>13.38&&fromLng<-16.55&&toLat>13.38&&toLng<-16.55);
+  // Door-to-door speeds: GBA traffic ~20 km/h (~28 on longer arterial runs), sandy
+  // last mile ~18, local paved ~30,
+  // regional ~40, trunk roads ~55 km/h (Banjul-Basse: 370 km in 6.5-7 h incl. stops)
+  const avgSpeed=isUrban?(roadKm<8?20:28):roadKm<3?18:roadKm<12?30:roadKm<45?40:55;
+  let mins=Math.round((roadKm/avgSpeed)*60);
+  // Police/immigration checkpoints on longer runs: ~2 min per 30 km, capped
+  if(roadKm>30) mins+=Math.min(12,Math.floor(roadKm/30)*2);
+  // Minimum 2 min
+  if(mins<2) mins=2;
+  if(mins>=60){ const h=Math.floor(mins/60); const m=mins%60; return m>0?h+'h '+m+'min':h+'h'; }
+  return mins+' min';
+}
+
+function nearestDist(lat,lng,points){
+  let best=null,bd=Infinity,bLat=0,bLng=0;
+  points.forEach(([plat,plng,name])=>{ const d=haversineKm(lat,lng,plat,plng); if(d<bd){bd=d;best=name;bLat=plat;bLng=plng;} });
+  const distStr=bd<1?Math.round(bd*1000)+' m':bd.toFixed(1)+' km';
+  const driveTime=estimateDriveTime(bd,lat,lng,bLat,bLng);
+  return {distStr,name:best,km:bd,driveTime,toLat:bLat,toLng:bLng};
+}
+
+/* Beach proximity is derived from the pin (or the centre of the drawn plot)
+   instead of being chosen by hand, so buyers see a measured figure. */
+function updateSeaDistance(){
+  const fields=['beachDistIn','landBeachDistIn'];
+  if(typeof S.lat!=='number' || typeof S.lng!=='number'){
+    fields.forEach(id=>{ const el=document.getElementById(id); if(el){ el.value=''; } });
+    return;
+  }
+  const m=Math.round(distanceToSea(S.lat,S.lng));
+  const band=beachBandFrom(m);
+  S.beachM=m; S.beach=band; S.landBeach=band; S.beachDist=fmtSeaDist(m);
+  const label=band==='beachfront'?'Beachfront':(band==='walking'?'Walking distance to the beach':'Inland');
+  const nearest=nearestDist(S.lat,S.lng,BEACH_POINTS);
+  fields.forEach(id=>{
+    const el=document.getElementById(id); if(!el) return;
+    el.value=fmtSeaDist(m)+' · '+label;
+    const h=document.getElementById(id+'Hint');
+    if(h) h.textContent='Measured to the Atlantic shoreline near '+nearest.name+'. Updates when you move the pin or redraw the plot.';
+  });
+  updateSummary();
+}
+function autoFillNearbyDists(){
+  if(!S.lat||!S.lng) return;
+  document.querySelectorAll('#nearbyList > div').forEach(row=>{
+    const placeInp=row.querySelector('[data-nearby-place]');
+    if(!placeInp) return;
+    const v=placeInp.value.toLowerCase().trim();
+    const distInp=row.querySelector('[data-nearby-dist]');
+    if(v==='beach'){
+      const r=nearestDist(S.lat,S.lng,BEACH_POINTS);
+      distInp.value=r.distStr+' · ~'+r.driveTime+' ('+r.name+')';
+    } else if(v==='airport'){
+      const d=haversineKm(S.lat,S.lng,AIRPORT_POS[0],AIRPORT_POS[1]);
+      const distStr=d<1?Math.round(d*1000)+' m':d.toFixed(1)+' km';
+      const driveTime=estimateDriveTime(d,S.lat,S.lng,AIRPORT_POS[0],AIRPORT_POS[1]);
+      distInp.value=distStr+' · ~'+driveTime+' (Banjul Int\'l Airport)';
+    } else if(v==='shops / market'||v==='shops/market'||v==='market'||v==='shops'){
+      const r=nearestDist(S.lat,S.lng,MARKET_POINTS);
+      distInp.value=r.distStr+' · ~'+r.driveTime+' ('+r.name+')';
+    } else if(v==='school'||v==='school / university'||v==='university'||v==='schools'){
+      const r=nearestDist(S.lat,S.lng,SCHOOL_POINTS);
+      distInp.value=r.distStr+' · ~'+r.driveTime+' ('+r.name+')';
+    } else if(v==='hospital'||v==='hospitals'||v==='clinic'||v==='health centre'){
+      const r=nearestDist(S.lat,S.lng,HOSPITAL_POINTS);
+      distInp.value=r.distStr+' · ~'+r.driveTime+' ('+r.name+')';
+    } else if(v==='bank'||v==='banks'){
+      const r=nearestDist(S.lat,S.lng,BANK_POINTS);
+      distInp.value=r.distStr+' · ~'+r.driveTime+' ('+r.name+')';
+    }
+  });
+  syncNearby();
+}
+
+// ---- Nearby places ----
+let nearbyCount=0;
+function addNearbyRow(place,dist){
+  const id='nearby-'+nearbyCount++;
+  const row=document.createElement('div');
+  row.style.cssText='display:flex;gap:10px;align-items:center;margin-bottom:10px;max-width:600px';
+  row.innerHTML=`<input type="text" placeholder="e.g. Beach, Airport, School" value="${place||''}" style="flex:1;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:10px 14px;font-size:14px;font-family:var(--sans)" data-nearby-place>
+    <input type="text" placeholder="e.g. 5 min walk" value="${dist||''}" style="width:140px;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:10px 14px;font-size:14px;font-family:var(--sans)" data-nearby-dist>
+    <button type="button" style="width:36px;height:36px;border:none;background:none;cursor:pointer;color:var(--muted);font-size:20px" onclick="this.parentElement.remove();syncNearby()">&times;</button>`;
+  document.getElementById('nearbyList').appendChild(row);
+  row.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',syncNearby));
+}
+function syncNearby(){
+  S.nearby=[];
+  document.querySelectorAll('#nearbyList > div').forEach(row=>{
+    const place=row.querySelector('[data-nearby-place]').value.trim();
+    const dist=row.querySelector('[data-nearby-dist]').value.trim();
+    if(place) S.nearby.push({place,dist});
+  });
+}
+document.getElementById('addNearbyBtn').addEventListener('click',()=>addNearbyRow('',''));
+// Add 3 starter rows
+addNearbyRow('Beach',''); addNearbyRow('Airport',''); addNearbyRow('Shops / market',''); addNearbyRow('School / university',''); addNearbyRow('Hospital',''); addNearbyRow('Bank','');
+
+// ---- Preview rendering ----
+function renderPreview(){
+  const cover=document.querySelector('#list-photo-0');
+  const img=cover && cover.shadowRoot && cover.shadowRoot.querySelector('img');
+  const imgSrc=img?img.src:'';
+  const title=S.customTitle || ((S.feats[0]||S.landFeats[0]||'')+' '+catLabel()).trim();
+  const priceTxt=S.price?'D '+parseInt(S.price).toLocaleString()+(S.deal==='rent'?'/mo':''):'Price on request';
+  const det=S.cat==='land'?`${S.landSqm||'—'} m² plot`:`${S.beds||'—'} bed · ${S.baths||'—'} bath · ${S.sqm||'—'} m²`;
+  const featsAll=[...S.feats,...(S.customFeats?S.customFeats.split(',').map(s=>s.trim()).filter(Boolean):[]),...S.landFeats];
+  const nearbyHtml=S.nearby.filter(n=>n.place).map(n=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line-2);font-size:14px"><span>${n.place}</span><span style="font-weight:600;color:var(--ink)">${n.dist||'—'}</span></div>`).join('');
+  document.getElementById('previewCard').innerHTML=`
+    <div style="aspect-ratio:16/9;background:var(--paper-2);overflow:hidden">${imgSrc?`<img src="${imgSrc}" alt="Listing cover photo" style="width:100%;height:100%;object-fit:cover">`:'<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--muted)">No cover photo</div>'}</div>
+    <div style="padding:24px">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+        <span style="padding:4px 12px;border-radius:99px;font-size:12px;font-weight:700;background:var(--green-50);color:var(--green-700)">${S.deal==='rent'?'FOR RENT':'FOR SALE'}</span>
+        ${S.plan!=='basic'?'<span style="padding:4px 12px;border-radius:99px;font-size:12px;font-weight:700;background:var(--amber-50);color:var(--amber-600)">VERIFIED</span>':''}
+      </div>
+      <h2 style="font-size:24px;margin-bottom:4px;font-family:var(--serif)">${title}</h2>
+      <p style="color:var(--muted);font-size:15px;margin-bottom:16px">${S.area||'Location not set'}${S.street?' · '+S.street:''}</p>
+      <div style="font-family:var(--serif);font-size:28px;font-weight:700;color:var(--green-700);margin-bottom:20px">${priceTxt}</div>
+      <div style="display:flex;gap:24px;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:15px;color:var(--ink-2)">${det}</div>
+      ${S.highlights?`<div style="margin-top:18px"><b style="font-size:14px;color:var(--ink)">✨ What makes it special</b><p style="color:var(--muted);font-size:14.5px;line-height:1.6;margin-top:6px">${S.highlights}</p></div>`:''}
+      ${S.desc?`<div style="margin-top:16px"><b style="font-size:14px;color:var(--ink)">Description</b><p style="color:var(--muted);font-size:14.5px;line-height:1.6;margin-top:6px">${S.desc}</p></div>`:''}
+      ${featsAll.length?`<div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:8px">${featsAll.map(f=>'<span style="padding:6px 14px;border-radius:99px;font-size:13px;font-weight:600;background:var(--paper);color:var(--ink-2)">'+f+'</span>').join('')}</div>`:''}
+      ${nearbyHtml?`<div style="margin-top:18px"><b style="font-size:14px;color:var(--ink)">📍 Nearby</b><div style="margin-top:8px">${nearbyHtml}</div></div>`:''}
+      ${S.videoLink?`<div style="margin-top:16px"><b style="font-size:14px;color:var(--ink)">🎥 Video</b><p style="color:var(--green-700);font-size:14px;margin-top:4px">${S.videoLink}</p></div>`:''}
+    </div>`;
+}
+
+
+// ---- location map (MapTiler satellite) + Google Plus Code auto-fill ----
+// AREA_COORDS (real lat/lng) is defined in app.js
+let listMap=null, listMarker=null;
+/* Whole-country view: what the map opens on before an area is known, so the
+   seller always sees The Gambia instead of an empty or key-blocked tile grid. */
+const GAMBIA_CENTER=[13.45,-15.35], GAMBIA_ZOOM=8;
+const MT_ATTR='&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+const ESRI_SAT='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+const ESRI_ATTR='Imagery &copy; Esri, Maxar, Earthstar Geographics';
+/* MapTiler's key is domain-restricted; off mykunda.com (preview, staging, a
+   lapsed key) it answers 403 with a decodable "get a valid key" PNG — the
+   <img> fires load, not error, so tileerror never sees it. We therefore probe
+   one tile up front: a non-OK status, or a jpg request answered as PNG, means
+   the key is not valid here and the map switches to Esri's keyless satellite
+   imagery. tileerror stays as a secondary trigger for real network faults. */
+let satIsFallback=false;
+function useEsri(map,mt){
+  if(satIsFallback) return;
+  satIsFallback=true;
+  if(mt && map.hasLayer(mt)) map.removeLayer(mt);
+  L.tileLayer(ESRI_SAT,{maxZoom:19,crossOrigin:true,attribution:ESRI_ATTR}).addTo(map);
+}
+async function mapTilerKeyWorks(){
+  try{
+    const res=await fetch(mapTilerUrl('hybrid').replace('{z}','7').replace('{x}','58').replace('{y}','58'),{mode:'cors',credentials:'omit'});
+    if(!res.ok) return false;
+    return /jpe?g/i.test(res.headers.get('content-type')||'');
+  }catch(e){ return false; }
+}
+function addSatelliteLayer(map){
+  if(typeof mapTilerUrl!=='function'){ useEsri(map,null); return null; }
+  const mt=L.tileLayer(mapTilerUrl('hybrid'),{maxZoom:20,tileSize:512,zoomOffset:-1,crossOrigin:true,attribution:MT_ATTR}).addTo(map);
+  let bad=0;
+  mt.on('tileerror',()=>{ if(++bad>=3) useEsri(map,mt); });
+  mapTilerKeyWorks().then(ok=>{ if(!ok) useEsri(map,mt); });
+  return mt;
+}
+function satTileTemplate(){ return satIsFallback||typeof mapTilerUrl!=='function' ? ESRI_SAT : mapTilerUrl('hybrid'); }
+function areaKeyFromSel(){ return (S.area||'').split(' · ')[0].trim(); }
+function fillPlusFromMarker(){
+  const ll=listMarker.getLatLng();
+  S.lat=ll.lat; S.lng=ll.lng;
+  const code=plusCodeShort(ll.lat,ll.lng,areaKeyFromSel());
+  document.getElementById('plusIn').value=code;
+  S.plus=code;
+  if(typeof updateSeaDistance==='function') updateSeaDistance();
+  if(!S.area||S.area===''){
+    let best=null,bd=Infinity; Object.entries(AREA_COORDS).forEach(([n,c])=>{ const d=Math.hypot(c[0]-ll.lat,c[1]-ll.lng); if(d<bd){bd=d;best=n;} });
+    if(best){ const am=(typeof GAMBIA_PLACES!=='undefined')?GAMBIA_PLACES.find(([n])=>n===best):null; S.area=am?am[0]+' · '+am[1]:best; if(locInput) locInput.value=best; if(locResolved){locResolved.textContent='✓ '+best+' (from pin)';locResolved.style.display='block';} }
+  }
+  updateSummary();
+}
+function initListMap(){
+  if(listMap || typeof L==='undefined') return;
+  const known = AREA_COORDS[areaKeyFromSel()] || (typeof S.lat==='number' ? [S.lat,S.lng] : null);
+  const start = known || GAMBIA_CENTER;
+  listMap=L.map('miniMap',{zoomControl:true,scrollWheelZoom:true,minZoom:7,maxZoom:20}).setView(start, known?16:GAMBIA_ZOOM);
+  addSatelliteLayer(listMap);
+  listMarker=L.marker(start,{draggable:true,autoPan:true}).addTo(listMap);
+  listMarker.on('dragend',fillPlusFromMarker);
+  listMap.on('click',e=>{ if(drawMode){ addBoundaryPoint(e.latlng); return; } listMarker.setLatLng(e.latlng); fillPlusFromMarker(); });
+  listMap.on('mousemove',e=>{ if(drawMode) updateRubber(e.latlng); });
+  listMap.on('mouseout',()=>clearRubber());
+  const savedBnd=boundaryToPairs(S.boundary);
+  if(savedBnd.length>=3){ boundaryPts=savedBnd; redrawBoundary(); fitBoundary(); }
+  setTimeout(()=>listMap.invalidateSize(),200);
+}
+
+/* ---- Plot boundary drawing (Leaflet core only, no plugin) ----
+   Tap the map to drop corner points; handles are draggable, double-tap a handle
+   removes it. Area is computed on the sphere, so it matches the real plot. */
+let drawMode=false, boundaryPts=[], boundaryPoly=null, boundaryLine=null, boundaryHandles=[], segLabels=[], rubberLine=null, rubberLabel=null;
+const BND_COLOR='#1F7BFF';
+function handleIcon(){ return L.divIcon({className:'bnd-handle',iconSize:[16,16],iconAnchor:[8,8]}); }
+function polyAreaSqm(pts){
+  if(pts.length<3) return 0;
+  const R=EARTH_R, d=Math.PI/180; let a=0;
+  for(let i=0,l=pts.length;i<l;i++){
+    const p1=pts[i], p2=pts[(i+1)%l];
+    a += (p2[1]-p1[1])*d * (2 + Math.sin(p1[0]*d) + Math.sin(p2[0]*d));
+  }
+  return Math.abs(a*R*R/2);
+}
+/* Stored shape: {type:'polygon', points:[{lat,lng}], area_m2, centroid:{lat,lng}}.
+   Reads back older array-of-pairs drafts too. */
+function boundaryToPairs(v){
+  if(!v) return [];
+  const pts = Array.isArray(v) ? v : (v.points||[]);
+  return pts.map(p=>Array.isArray(p)?[p[0],p[1]]:[p.lat,p.lng]).filter(p=>typeof p[0]==='number'&&typeof p[1]==='number');
+}
+/* Local metric helpers — used only for snapping, distances stay geodetic. */
+const D2R=Math.PI/180, EARTH_R=6371008.8, M_PER_DEG=EARTH_R*D2R;
+function mPerDeg(lat){ return { lat:M_PER_DEG, lng:M_PER_DEG*Math.cos(lat*D2R) }; }
+function bearingOf(a,b){ const m=mPerDeg(a[0]); return (Math.atan2((b[1]-a[1])*m.lng,(b[0]-a[0])*m.lat)*180/Math.PI+360)%360; }
+function destPoint(a,distM,brgDeg){ const m=mPerDeg(a[0]), r=brgDeg*D2R; return [a[0]+distM*Math.cos(r)/m.lat, a[1]+distM*Math.sin(r)/m.lng]; }
+/* Snaps the next corner to 15° steps off the previous side (so 90° corners and
+   parallel sides land exactly) and to whole 5 m steps. Toggle with "Snap". */
+let snapOn=true;
+function snapPoint(latlng){
+  const raw=[latlng.lat,latlng.lng];
+  if(!snapOn || !boundaryPts.length) return raw;
+  const A=boundaryPts[boundaryPts.length-1];
+  // 4th corner: close the shape as a true parallelogram (P0 + P2 - P1)
+  if(boundaryPts.length===3){
+    const P0=boundaryPts[0],P1=boundaryPts[1],P2=boundaryPts[2];
+    const m=mPerDeg(P0[0]);
+    const ideal=[P0[0]+(P2[0]-P1[0]), P0[1]+(P2[1]-P1[1])];
+    const side=segMeters(P2,P0);
+    if(segMeters(raw,ideal) <= Math.max(8, 0.2*side)) return ideal;
+  }
+  let dist=segMeters(A,raw);
+  if(dist<1) return raw;
+  let brg=bearingOf(A,raw);
+  const ref = boundaryPts.length>=2 ? bearingOf(boundaryPts[boundaryPts.length-2],A) : 0;
+  let rel=((brg-ref)%360+360)%360;
+  const snapRel=Math.round(rel/15)*15;                 // 15° steps → 90° corners land exactly
+  if(Math.abs(rel-snapRel)<=7) rel=snapRel;
+  const dist5=Math.round(dist/5)*5;
+  if(dist5>0 && Math.abs(dist-dist5) <= Math.max(1.5, 0.02*dist)) dist=dist5;
+  return destPoint(A,dist,(ref+rel)%360);
+}
+function relAngleAt(prev,corner,next){
+  const b1=bearingOf(corner,prev), b2=bearingOf(corner,next);
+  let a=Math.abs(b1-b2)%360; if(a>180) a=360-a; return a;
+}
+function segMeters(a,b){
+  const R=EARTH_R, d=Math.PI/180;
+  const dLat=(b[0]-a[0])*d, dLng=(b[1]-a[1])*d;
+  const h=Math.sin(dLat/2)**2+Math.cos(a[0]*d)*Math.cos(b[0]*d)*Math.sin(dLng/2)**2;
+  return R*2*Math.atan2(Math.sqrt(h),Math.sqrt(1-h));
+}
+function fmtMeters(m){ return m>=1000 ? (m/1000).toFixed(2)+' km' : (m<10?m.toFixed(1):Math.round(m))+' m'; }
+function lenLabel(a,b,cls,text){
+  const mid=[(a[0]+b[0])/2,(a[1]+b[1])/2];
+  const txt=text||fmtMeters(segMeters(a,b));
+  return L.marker(mid,{interactive:false,keyboard:false,zIndexOffset:650,icon:L.divIcon({className:'bnd-len'+(cls?' '+cls:''),html:'<span>'+txt+'</span>',iconSize:[0,0],iconAnchor:[0,0]})});
+}
+function clearSegLabels(){ segLabels.forEach(l=>listMap.removeLayer(l)); segLabels=[]; }
+function renderSegLabels(){
+  if(!listMap) return;
+  clearSegLabels();
+  const n=boundaryPts.length;
+  if(n<2) return;
+  const last = n>=3 ? n : n-1;   // 3+ points: also label the closing edge
+  for(let i=0;i<last;i++){
+    const l=lenLabel(boundaryPts[i],boundaryPts[(i+1)%n]).addTo(listMap);
+    segLabels.push(l);
+  }
+}
+function boundaryCentroid(pts){
+  let x=0,y=0; pts.forEach(p=>{x+=p[0];y+=p[1];});
+  return [x/pts.length, y/pts.length];
+}
+function clearBoundaryLayers(){
+  if(boundaryPoly){ listMap.removeLayer(boundaryPoly); boundaryPoly=null; }
+  if(boundaryLine){ listMap.removeLayer(boundaryLine); boundaryLine=null; }
+  boundaryHandles.forEach(h=>listMap.removeLayer(h)); boundaryHandles=[];
+  clearSegLabels();
+}
+function clearRubber(){
+  if(rubberLine){ listMap.removeLayer(rubberLine); rubberLine=null; }
+  if(rubberLabel){ listMap.removeLayer(rubberLabel); rubberLabel=null; }
+}
+function redrawBoundary(){
+  if(!listMap) return;
+  clearBoundaryLayers();
+  if(boundaryPts.length>=3){
+    boundaryPoly=L.polygon(boundaryPts,{color:BND_COLOR,weight:3,fillColor:BND_COLOR,fillOpacity:.22,interactive:false}).addTo(listMap);
+  } else if(boundaryPts.length===2){
+    boundaryLine=L.polyline(boundaryPts,{color:BND_COLOR,weight:3,dashArray:'6 5',interactive:false}).addTo(listMap);
+  }
+  boundaryPts.forEach((p,i)=>{
+    const h=L.marker(p,{draggable:true,icon:handleIcon(),zIndexOffset:700}).addTo(listMap);
+    h.on('drag',e=>{ const c=e.target.getLatLng(); boundaryPts[i]=[c.lat,c.lng]; liveShape(); });
+    h.on('dragend',commitBoundary);
+    h.on('dblclick',ev=>{ L.DomEvent.stop(ev); boundaryPts.splice(i,1); redrawBoundary(); commitBoundary(); });
+    boundaryHandles.push(h);
+  });
+  renderSegLabels();
+  updateBoundaryUI();
+}
+function liveShape(){
+  if(boundaryPoly) boundaryPoly.setLatLngs(boundaryPts);
+  else if(boundaryLine) boundaryLine.setLatLngs(boundaryPts);
+  renderSegLabels();
+  updateBoundaryUI();
+}
+/* Live "next segment" readout: from the last placed corner to the pointer,
+   so a 50 m or 150 m edge can be set exactly before clicking. */
+function updateRubber(latlng){
+  if(!drawMode || !boundaryPts.length){ clearRubber(); return; }
+  const a=boundaryPts[boundaryPts.length-1], b=snapPoint(latlng);
+  if(rubberLine) rubberLine.setLatLngs([a,b]);
+  else rubberLine=L.polyline([a,b],{color:'#1F7BFF',weight:2,dashArray:'4 5',interactive:false}).addTo(listMap);
+  if(rubberLabel) listMap.removeLayer(rubberLabel);
+  let extra='';
+  if(boundaryPts.length>=2) extra=' · '+Math.round(relAngleAt(boundaryPts[boundaryPts.length-2],a,b))+'°';
+  rubberLabel=lenLabel(a,b,'live',fmtMeters(segMeters(a,b))+extra).addTo(listMap);
+}
+function addBoundaryPoint(latlng){
+  boundaryPts.push(snapPoint(latlng));
+  redrawBoundary();
+  commitBoundary();
+}
+function updateBoundaryUI(){
+  const info=document.getElementById('bndInfo'), areaEl=document.getElementById('bndArea');
+  const sqm=polyAreaSqm(boundaryPts);
+  document.getElementById('bndUndo').disabled = boundaryPts.length===0;
+  document.getElementById('bndClear').disabled = boundaryPts.length===0;
+  if(boundaryPts.length>=3){
+    const ha=sqm/10000;
+    let per=0; for(let i=0;i<boundaryPts.length;i++) per+=segMeters(boundaryPts[i],boundaryPts[(i+1)%boundaryPts.length]);
+    areaEl.textContent=Math.round(sqm).toLocaleString('en-US')+' m² ('+(ha>=1?ha.toFixed(2):ha.toFixed(3))+' ha) · perimeter '+fmtMeters(per)+' · '+boundaryPts.length+' corners';
+    info.style.display='flex';
+  } else if(boundaryPts.length>0){
+    areaEl.textContent=boundaryPts.length+' of at least 3 corners placed — keep tapping the map';
+    info.style.display='flex';
+    document.getElementById('bndUseSize').style.display='none';
+    return;
+  } else { info.style.display='none'; }
+  document.getElementById('bndUseSize').style.display=boundaryPts.length>=3?'':'none';
+}
+function commitBoundary(){
+  const sqm=polyAreaSqm(boundaryPts);
+  if(boundaryPts.length>=3){
+    const c=boundaryCentroid(boundaryPts);
+    S.boundary={
+      type:'polygon',
+      points:boundaryPts.map(p=>({lat:+p[0].toFixed(6),lng:+p[1].toFixed(6)})),
+      area_m2:Math.round(sqm),
+      centroid:{lat:+c[0].toFixed(6),lng:+c[1].toFixed(6)}
+    };
+    S.boundarySqm=Math.round(sqm);
+    listMarker.setLatLng(c);
+    fillPlusFromMarker();
+  } else {
+    S.boundary=null; S.boundarySqm=0;
+  }
+  const note=document.getElementById('bndNote'); if(note) note.textContent='';
+  if(typeof updateSeaDistance==='function') updateSeaDistance();
+  updateBoundaryUI();
+  saveLocalDraft(); updateSummary();
+}
+function fitBoundary(){
+  if(boundaryPts.length>=3 && listMap) listMap.fitBounds(L.latLngBounds(boundaryPts),{padding:[30,30],maxZoom:19});
+}
+function setDrawMode(on){
+  drawMode=on;
+  document.querySelectorAll('#mapTools [data-mapmode]').forEach(b=>b.classList.toggle('sel', (b.dataset.mapmode==='draw')===on));
+  const mm=document.getElementById('miniMap'); if(mm) mm.classList.toggle('drawing',on);
+  if(listMarker) listMarker.setOpacity(on?.55:1);
+  if(listMap){ if(on) listMap.doubleClickZoom.disable(); else listMap.doubleClickZoom.enable(); }
+  if(!on) clearRubber();
+  document.getElementById('miniMapHint').innerHTML = on
+    ? 'Tap each corner of the plot. The dashed line shows the next side\'s length and its angle to the previous side; with Snap on, corners lock to 90° (15° steps) and lengths to 5 m — so 50 × 150 m comes out exact. Drag a corner to adjust, double-tap it to remove.'
+    : 'Satellite view — drag the marker onto your property to set the exact location.';
+}
+document.querySelectorAll('#mapTools [data-mapmode]').forEach(b=>b.addEventListener('click',()=>setDrawMode(b.dataset.mapmode==='draw')));
+document.getElementById('bndSnap').addEventListener('click',function(){ snapOn=!snapOn; this.classList.toggle('sel',snapOn); });
+document.getElementById('bndUndo').addEventListener('click',()=>{ boundaryPts.pop(); redrawBoundary(); commitBoundary(); });
+document.getElementById('bndClear').addEventListener('click',()=>{ boundaryPts=[]; redrawBoundary(); commitBoundary(); });
+document.getElementById('bndUseSize').addEventListener('click',async function(){
+  const sqm=Math.round(polyAreaSqm(boundaryPts)); if(!sqm) return;
+  if(S.cat==='land'){ S.landSqm=String(sqm); const el=document.getElementById('landSqmIn'); if(el) el.value=sqm; }
+  else { S.plot=String(sqm); const el=document.getElementById('plotIn'); if(el) el.value=sqm; }
+  updateSummary(); saveLocalDraft();
+  const note=document.getElementById('bndNote');
+  note.textContent='Adding the plot map to your photos…';
+  try{
+    const ok=await addBoundarySnapshotPhoto();
+    note.textContent = !ok ? '✓ Plot size set · photo slots are full, map not added'
+      : snapshotSlot===0 ? '✓ Plot size set · plot map is now your main photo (replaceable in step 4)'
+      : '✓ Plot size set · plot map added to your photos (step 4)';
+  }catch(e){ console.warn('plot snapshot:', e); note.textContent='✓ Plot size set · map image could not be made'; }
+});
+
+/* ---- Snapshot of the satellite map with the drawn outline ----
+   Tiles are fetched with CORS (same source as the live map), painted on a
+   canvas together with the outline, side lengths and a caption, then dropped
+   into the first free photo slot so it uploads with the listing. */
+let SNAP_TS=512;
+function lngToPx(lng,z){ return ((lng+180)/360)*SNAP_TS*Math.pow(2,z); }
+function latToPx(lat,z){ const s=Math.sin(lat*D2R); return (0.5-Math.log((1+s)/(1-s))/(4*Math.PI))*SNAP_TS*Math.pow(2,z); }
+async function fetchTile(url){
+  const res=await fetch(url,{mode:'cors',credentials:'omit'});
+  if(!res.ok) throw new Error('tile '+res.status);
+  const blob=await res.blob();
+  if(!/^image\/(jpe?g|png|webp)$/i.test(blob.type||'')) throw new Error('tile type '+blob.type);
+  if(typeof createImageBitmap==='function') return await createImageBitmap(blob);
+  const src=URL.createObjectURL(blob);
+  return await new Promise((ok,bad)=>{ const im=new Image(); im.onload=()=>{ URL.revokeObjectURL(src); ok(im); }; im.onerror=()=>{ URL.revokeObjectURL(src); bad(new Error('tile decode')); }; im.src=src; });
+}
+function roundRect(ctx,x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+async function renderBoundaryImage(){
+  if(boundaryPts.length<3) return null;
+  const esri=satTileTemplate()===ESRI_SAT;
+  SNAP_TS=esri?256:512;                       // Esri serves 256 px tiles, MapTiler 512
+  const W=1280,H=960,PAD=110,BAR=96;
+  const lats=boundaryPts.map(p=>p[0]), lngs=boundaryPts.map(p=>p[1]);
+  const minLat=Math.min.apply(null,lats), maxLat=Math.max.apply(null,lats);
+  const minLng=Math.min.apply(null,lngs), maxLng=Math.max.apply(null,lngs);
+  let z;
+  const zMax=esri?19:20;
+  let zTop=Math.min(19,zMax); z=zTop;
+  while(z>10){
+    const w=lngToPx(maxLng,z)-lngToPx(minLng,z), h=latToPx(minLat,z)-latToPx(maxLat,z);
+    if(w<=W-2*PAD && h<=H-BAR-2*PAD) break;
+    z--;
+  }
+  const originX=lngToPx((minLng+maxLng)/2,z)-W/2;
+  const originY=latToPx((minLat+maxLat)/2,z)-(H-BAR)/2;
+  const cv=document.createElement('canvas'); cv.width=W; cv.height=H;
+  const ctx=cv.getContext('2d');
+  ctx.fillStyle='#1b2b33'; ctx.fillRect(0,0,W,H);
+  const tpl=satTileTemplate();
+  const jobs=[];
+  for(let tx=Math.floor(originX/SNAP_TS); tx<=Math.floor((originX+W)/SNAP_TS); tx++){
+    for(let ty=Math.floor(originY/SNAP_TS); ty<=Math.floor((originY+H-BAR)/SNAP_TS); ty++){
+      const url=tpl.replace('{z}',z).replace('{x}',tx).replace('{y}',ty);
+      jobs.push(fetchTile(url).then(bmp=>({bmp,px:tx*SNAP_TS-originX,py:ty*SNAP_TS-originY})));
+    }
+  }
+  // A rejected key still answers with a valid "Invalid key" PNG, so a tile that
+  // is not a real JPEG tile aborts the snapshot rather than being baked into a
+  // public listing photo.
+  const tiles=await Promise.all(jobs);
+  tiles.forEach(t=>{ try{ ctx.drawImage(t.bmp,t.px,t.py,SNAP_TS,SNAP_TS); }catch(e){} });
+  const pt=p=>[lngToPx(p[1],z)-originX, latToPx(p[0],z)-originY];
+  const px=boundaryPts.map(pt);
+  ctx.beginPath(); px.forEach((p,i)=> i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.closePath();
+  ctx.fillStyle='rgba(31,123,255,.22)'; ctx.fill();
+  ctx.strokeStyle='#1F7BFF'; ctx.lineWidth=4; ctx.lineJoin='round'; ctx.stroke();
+  px.forEach(p=>{ ctx.beginPath(); ctx.arc(p[0],p[1],7,0,Math.PI*2); ctx.fillStyle='#fff'; ctx.fill(); ctx.lineWidth=3; ctx.strokeStyle='#1F7BFF'; ctx.stroke(); });
+  ctx.font='700 20px system-ui,sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  boundaryPts.forEach((p,i)=>{
+    const q=boundaryPts[(i+1)%boundaryPts.length];
+    const a=pt(p), b=pt(q);
+    const mx=(a[0]+b[0])/2, my=(a[1]+b[1])/2;
+    const txt=fmtMeters(segMeters(p,q));
+    const w=ctx.measureText(txt).width+22;
+    ctx.fillStyle='rgba(24,32,29,.85)'; roundRect(ctx,mx-w/2,my-16,w,32,16); ctx.fill();
+    ctx.fillStyle='#fff'; ctx.fillText(txt,mx,my+1);
+  });
+  let per=0; for(let i=0;i<boundaryPts.length;i++) per+=segMeters(boundaryPts[i],boundaryPts[(i+1)%boundaryPts.length]);
+  const sqm=Math.round(polyAreaSqm(boundaryPts)), ha=sqm/10000;
+  ctx.fillStyle='#15463A'; ctx.fillRect(0,H-BAR,W,BAR);
+  ctx.textAlign='left'; ctx.fillStyle='#fff'; ctx.font='800 30px system-ui,sans-serif';
+  ctx.fillText(sqm.toLocaleString('en-US')+' m²  ('+(ha>=1?ha.toFixed(2):ha.toFixed(3))+' ha)', 28, H-BAR/2-8);
+  ctx.font='600 18px system-ui,sans-serif'; ctx.fillStyle='rgba(255,255,255,.82)';
+  const plus=S.plus||'';
+  ctx.fillText('Perimeter '+fmtMeters(per)+(plus?'  ·  Plus Code '+plus:'')+'  ·  Plot outline marked by the seller', 28, H-BAR/2+22);
+  ctx.textAlign='right'; ctx.font='600 15px system-ui,sans-serif'; ctx.fillStyle='rgba(255,255,255,.6)';
+  ctx.fillText(satIsFallback?'Imagery © Esri, Maxar':'© MapTiler © OpenStreetMap', W-24, H-BAR/2+22);
+  ctx.textAlign='left';
+  return cv.toDataURL('image/jpeg',0.86);
+}
+function slotIsFilled(el){
+  const im=el && el.shadowRoot && el.shadowRoot.querySelector('img');
+  return !!(im && im.src && !im.src.startsWith('data:image/svg'));
+}
+let snapshotSlot=-1;
+async function addBoundarySnapshotPhoto(){
+  const url=await renderBoundaryImage();
+  if(!url) return false;
+  // Slot 0 is the cover photo, so the plot map becomes the listing's main
+  // image — unless the seller already put a photo there, in which case it goes
+  // in the first free slot. Either slot stays replaceable in step 4.
+  let idx=snapshotSlot;
+  if(idx<0){
+    const cover=document.querySelector('#list-photo-0');
+    if(cover && !slotIsFilled(cover)) idx=0;
+    else for(let i=1;i<10;i++){ const el=document.querySelector('#list-photo-'+i); if(el && !slotIsFilled(el)){ idx=i; break; } }
+  }
+  if(idx<0) return false;
+  const el=document.querySelector('#list-photo-'+idx);
+  if(!el) return false;
+  el.setAttribute('src',url);
+  snapshotSlot=idx;
+  S.plotMapImage=url; S.plotMapSlot=idx;
+  saveLocalDraft();
+  return true;
+}
+// recenter handled by resolveLocation / setMapTo above
+document.getElementById('plusIn').addEventListener('input',function(){ S.plus=this.value; });
+
+// price labels
+function updatePriceLabels(){
+  document.getElementById('priceLab').textContent = S.deal==='rent'?'Monthly rent':'Asking price';
+  document.getElementById('priceSuf').textContent = S.deal==='rent'?'/mo':'';
+  document.getElementById('priceDesc').textContent = S.deal==='rent'?'Set the monthly rent. Prices on MyKunda are shown in Gambian Dalasi (GMD).':'You can always change this later. Prices on MyKunda are shown in Gambian Dalasi (GMD).';
+}
+updatePriceLabels();
+
+// ---- summary ----
+function catLabel(){return {villa:'Villa',apartment:'Apartment',compound:'Compound',townhouse:'Townhouse',penthouse:'Penthouse',land:'Land / plot',lodge:'Lodge',commercial:'Commercial'}[S.cat];}
+function updateSummary(){
+  const setV=(id,val)=>{const el=document.getElementById(id);el.textContent=val||'—';el.classList.toggle('empty',!val);};
+  setV('sumType', `${catLabel()} · ${S.deal==='rent'?'For rent':'For sale'}`);
+  setV('sumLoc', S.area? S.area.split(' · ')[0] : '');
+  let det = S.cat==='land' ? (S.landSqm?S.landSqm+' m² plot':'') : [S.beds&&S.beds+' bed',S.baths&&S.baths+' bath',S.sqm&&S.sqm+' m²'].filter(Boolean).join(' · ');
+  setV('sumDetails', det);
+  setV('sumPrice', S.price? 'D '+parseInt(S.price).toLocaleString('en-US')+(S.deal==='rent'?'/mo':'') : '');
+  const sym=CURRENCIES[getCurrency()].symbol;
+  const planPriceDisplay=function(gmd){return sym+Math.round(gmd/CURRENCIES.GMD.rate*CURRENCIES[getCurrency()].rate).toLocaleString('en-US');};
+  const planLabel={basic:'Basic',verified:'Verified',promoted:'Promoted',managed:'Managed'}[S.plan]||'Basic';
+  const planGmd=planPriceGMD(S.plan);
+  setV('sumPlan', planGmd? planLabel+' · '+planPriceDisplay(planGmd) : 'Basic · Free');
+  document.getElementById('sumTotal').textContent = S.plan==='managed'
+    ? planPriceDisplay(Math.round(planGmd/2))
+    : planPriceDisplay(planGmd);
+  const totLab=document.querySelector('.summary-total .k');
+  if(totLab) totLab.textContent = S.plan==='managed' ? 'Due today (half)' : "Today's total";
+  // cover preview
+  const cover=document.querySelector('#list-photo-0');
+  const prev=document.getElementById('sumPrev');
+  if(cover && cover.getAttribute('data-filled')!==null && cover.hasAttribute('data-filled')){/* slot fills itself */}
+}
+// Mirror the cover slot into "Your listing". Tracks the current source so a
+// photo swapped in later replaces the preview instead of sticking on the first.
+let sumCoverSrc='';
+setInterval(()=>{
+  const cover=document.querySelector('#list-photo-0');
+  if(!cover) return;
+  const img=cover.shadowRoot && cover.shadowRoot.querySelector('img');
+  const src=img && img.src && !img.src.startsWith('data:image/svg') ? img.src : '';
+  if(src===sumCoverSrc) return;
+  sumCoverSrc=src;
+  const prev=document.getElementById('sumPrev');
+  prev.innerHTML = src ? '<img src="'+src+'" alt="cover">' : '<div class="ph"><span id="sumPhIc"></span> Add photos</div>';
+},900);
+
+// ---- navigation ----
+const nextBtn=document.getElementById('nextBtn'),backBtn=document.getElementById('backBtn');
+function showStep(n){
+  document.querySelectorAll('.step').forEach(s=>s.classList.toggle('on', +s.dataset.step===n));
+  // progress
+  psteps.querySelectorAll('.pstep').forEach((p,i)=>{
+    p.classList.toggle('active', i===n);
+    p.classList.toggle('done', i<n);
+  });
+  backBtn.style.visibility = n===0?'hidden':'visible';
+  nextBtn.textContent = n===TOTAL-1 ? 'Publish listing' : 'Continue';
+  if(n===1){ window.__leafletReady().then(()=>{ initListMap(); setTimeout(()=>{ if(listMap) listMap.invalidateSize(); }, 80); }).catch(()=>{}); }
+  if(n===7){ renderPreview(); }
+  if(n>=TOTAL){ // success
+    document.getElementById('wizNav').style.display='none';
+    document.getElementById('progressWrap').style.display='none';
+    document.getElementById('summary').style.display='none';
+    document.getElementById('wizGrid').style.gridTemplateColumns='1fr';
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function validate(n){
+  if(n===0) return true;
+  if(n===1 && !S.area){ flash(locInput); return false; }
+  if(n===4 && !S.confirm){ confirmBox.style.animation='shake .4s'; setTimeout(()=>confirmBox.style.animation='',400); return false; }
+  if(n===5 && !S.price){ flash(priceIn); return false; }
+  if(n===8){ const nm=document.getElementById('nameIn'),ph=document.getElementById('phoneIn'),em=document.getElementById('emailIn'); if(!nm.value){flash(nm);return false;} if(!ph.value){flash(ph);return false;} if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em.value.trim())){flash(em);return false;} }
+  return true;
+}
+function flash(el){el.style.borderColor='#C2533A';el.focus();setTimeout(()=>el.style.borderColor='',1500);}
+
+nextBtn.addEventListener('click',()=>{
+  if(!validate(step)) return;
+  if(step===TOTAL-1){
+    publish();
+    // paid plans go to secure checkout; Basic publishes straight to success
+    if(S.plan==='verified'||S.plan==='promoted'||S.plan==='managed'){
+      window.location.href='checkout.html?plan='+S.plan+'&band='+bandNo()+'&amount='+planPriceGMD(S.plan)+(draftId?'&draft='+draftId:'');
+      return;
+    }
+    step=TOTAL; showStep(step); return;
+  }
+  step++; showStep(step);
+  // auto-save draft to DB on each step change
+  autoSaveDraft();
+});
+backBtn.addEventListener('click',()=>{ if(step>0){step--;showStep(step);} });
+
+// publish → build success card
+function publish(){
+  clearLocalDraft();
+  successSeal.innerHTML='<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+  const planMsg={basic:'Your free listing is live and ready for enquiries.',promoted:'We will call to book your photo shoot, then your promoted listing goes live for 60 days.',verified:'A qualified specialist will review your documents, and your Verified badge goes live once the check is complete.',managed:'We will introduce you to the partner agency taking this on, and your named agent will arrange photos and viewings.'}[S.plan];
+  const reviewMsg = (typeof backendReady==='function' && backendReady()) ? 'Your listing has been submitted for review. Your listing and documents are checked before it goes live.' : '';
+  document.getElementById('successTitle').textContent = (typeof backendReady==='function' && backendReady()) ? 'Submitted for review!' : 'Your listing is live!';
+  document.getElementById('successMsg').textContent=((typeof backendReady==='function' && backendReady()) ? reviewMsg : 'Buyers across The Gambia and the diaspora can now find your property on MyKunda.') + ' ' + planMsg;
+  // mini card
+  const cover=document.querySelector('#list-photo-0');
+  const img=cover && cover.shadowRoot && cover.shadowRoot.querySelector('img');
+  const imgSrc=img?img.src:'';
+  // count filled photos
+  let photoCount=0;
+  for(let i=0;i<10;i++){ const c=document.querySelector('#list-photo-'+i); if(c && c.shadowRoot && c.shadowRoot.querySelector('img')) photoCount++; }
+
+  // ---- persist a real listing ----
+  const areaKey = S.area ? S.area.split(' · ')[0].trim() : 'Kololi';
+  const base = (typeof AREA_COORDS!=='undefined' && AREA_COORDS[areaKey]) || [13.4525,-16.6945];
+  const lat = (typeof S.lat==='number') ? S.lat : base[0]+(Math.random()*0.01-0.005);
+  const lng = (typeof S.lng==='number') ? S.lng : base[1]+(Math.random()*0.01-0.005);
+  const feat = S.feats[0] || S.landFeats[0] || (S.plan!=='basic'?'Verified':'New listing');
+  const titleFeat = (S.feats[0] && S.cat!=='land') ? S.feats[0]+' ' : (S.cat==='land' && S.landFeats[0] ? S.landFeats[0]+' ' : '');
+  const listing = {
+    id:'u'+Date.now(),
+    cat:S.cat, type:S.deal,
+    isNew:true, verified:(S.plan!=='basic'),
+    plan:S.plan,
+    status:(S.plan==='basic'?'Active':'In review'),
+    price:Math.round((parseInt(S.price)||0)/CURRENCIES.GMD.rate),
+    title:S.customTitle || (titleFeat+catLabel()).trim(),
+    street:S.street||(S.area?S.area.split(' · ')[0]:'The Gambia'),
+    area:S.area||'Kololi · Kombo North',
+    beds:parseInt(S.beds)||0, baths:parseInt(S.baths)||0,
+    sqm:parseInt(S.cat==='land'?0:S.sqm)||0,
+    plot:parseInt(S.cat==='land'?S.landSqm:S.plot)||0,
+    tag:feat,
+    photos:photoCount||1,
+    img:imgSrc||'',
+    photo_urls:(function(){ const pu=[]; for(let i=0;i<10;i++){ const c=document.querySelector('#list-photo-'+i); const im=c&&c.shadowRoot&&c.shadowRoot.querySelector('img'); if(im&&im.src&&!im.src.startsWith('data:image/svg')) pu.push(im.src); } return pu; })(),
+    lat:lat, lng:lng,
+    plus:S.plus||plusCodeShort(lat,lng,areaKey),
+    boundary:S.boundary||null, boundarySqm:S.boundarySqm||0,
+    negotiable:S.neg, docType:S.docType,
+    highlights:S.highlights||'', nearby:S.nearby||[], customFeats:S.customFeats||'', yearBuilt:S.yearBuilt||'', availDate:S.availDate||'', beachDist:S.beachDist||'', videoLink:S.videoLink||'',
+    createdAt:Date.now()
+  };
+  try{ saveUserListing(listing); }catch(e){ /* storage full (large image) — listing still shown on success */ }
+  // ---- When backend is live: save/update the listing and submit for review ----
+  if (typeof backendReady === 'function' && backendReady()) {
+    (async function(){
+      try{
+        let rec;
+        if(draftId){
+          // Update existing draft then submit for review
+          const fields = {
+            kind: S.deal==='rent'?'rent':'sale',
+            category: S.cat||'house',
+            title: listing.title, description: S.desc||null,
+            street: listing.street, area: listing.area,
+            price: listing.price, negotiable: !!S.neg,
+            beds: listing.beds, baths: listing.baths,
+            sqm: listing.sqm, plot_sqm: listing.plot,
+            lat: lat, lng: lng,
+            plus_code: (typeof plusCode==='function'?plusCode(lat,lng,10):null),
+            boundary: S.boundary||null,
+            features: (S.feats||[]).concat(S.landFeats||[]),
+            plan: S.plan||'basic',
+            condition: S.condition||'good', floors: parseInt(S.floors)||1,
+            beach: S.beach||'inland', view: S.view||'none',
+            security: S.security||'none', furnished: S.furnished||'unfurnished',
+            water: S.water||'nawec', power: S.power||'no',
+            road: S.road||'laterite', title_type: S.titleType||'alkalalo',
+            electricity: S.elec||'none', land_water: S.landWater||'none',
+            land_beach: S.landBeach||'inland', beach_m: S.beachM||null, plot_shape: S.shape||'regular',
+            flood_risk: S.flood||'no', fencing: S.fence||'none'
+          };
+          rec = await saveDraft(fields, draftId);
+          await submitForReview(draftId);
+        } else {
+          // Create new listing directly as pending_review
+          const dbRow = {
+            kind: S.deal==='rent'?'rent':'sale',
+            category: S.cat||'house',
+            title: listing.title, description: S.desc||null,
+            street: listing.street, area: listing.area,
+            price: listing.price, negotiable: !!S.neg,
+            beds: listing.beds, baths: listing.baths, sqm: listing.sqm, plot_sqm: listing.plot,
+            lat: lat, lng: lng, plus_code: (typeof plusCode==='function'?plusCode(lat,lng,10):null),
+            boundary: S.boundary||null,
+            features: (S.feats||[]).concat(S.landFeats||[]),
+            plan: S.plan||'basic',
+            condition: S.condition||'good', floors: parseInt(S.floors)||1,
+            beach: S.beach||'inland', view: S.view||'none',
+            security: S.security||'none', furnished: S.furnished||'unfurnished',
+            water: S.water||'nawec', power: S.power||'no',
+            road: S.road||'laterite', title_type: S.titleType||'alkalalo',
+            electricity: S.elec||'none', land_water: S.landWater||'none',
+            land_beach: S.landBeach||'inland', beach_m: S.beachM||null, plot_shape: S.shape||'regular',
+            flood_risk: S.flood||'no', fencing: S.fence||'none'
+          };
+          rec = await createListing(dbRow);
+        }
+        const listingDbId = rec.id || draftId;
+        // Upload photos to storage
+        for(let i=0;i<10;i++){
+          const c=document.querySelector('#list-photo-'+i);
+          const im=c && c.shadowRoot && c.shadowRoot.querySelector('img');
+          if(im && im.src && im.src.startsWith('data:')){
+            try{
+              const blob=await (await fetch(im.src)).blob();
+              const file=new File([blob],'photo'+i+'.jpg',{type:blob.type||'image/jpeg'});
+              await uploadFile(listingDbId, file, 'photo');
+            }catch(e){ console.warn('photo upload',e.message); }
+          }
+        }
+        // Upload documents if present
+        if(deedFile){
+          try{ await uploadFile(listingDbId, deedFile, 'document'); }catch(e){ console.warn('deed upload:',e.message); }
+        }
+        if(planFile){
+          try{ await uploadFile(listingDbId, planFile, 'document'); }catch(e){ console.warn('plan upload:',e.message); }
+        }
+        // Update the view link to the real listing
+        document.getElementById('viewListingBtn').href='property.html?id='+listingDbId;
+        // Remove from localStorage to prevent duplicate (now in DB)
+        try{ const ul=getUserListings().filter(l=>l.id!==listing.id); localStorage.setItem('mykunda_listings',JSON.stringify(ul)); }catch(ex){}
+
+        // ---- Send confirmation emails (seller + backoffice) ----
+        try{
+          const emailData = {
+            listing_id: listingDbId,
+            listing_data: {
+              id: listingDbId,
+              title: listing.title,
+              area: listing.area,
+              price: parseInt(S.price)||0,
+              deal: S.deal,
+              cat: S.cat,
+              beds: listing.beds, baths: listing.baths,
+              sqm: listing.sqm, plot: listing.plot,
+              plan: S.plan,
+              name: document.getElementById('nameIn').value,
+              email: document.getElementById('emailIn').value,
+              phone: document.getElementById('phoneIn').value,
+              plus: S.plus,
+              highlights: S.highlights,
+              nearby: S.nearby,
+              customFeats: S.customFeats,
+              yearBuilt: S.yearBuilt,
+              videoLink: S.videoLink,
+              status: listing.status,
+              docType: S.docType,
+              condition: S.condition||'good',
+              floors: S.floors||'1',
+              beach: S.beach||'inland',
+              view: S.view||'none',
+              security: S.security||'none',
+              furnished: S.furnished||'unfurnished',
+              water: S.water||'nawec',
+              power: S.power||'no',
+              road: S.road||'laterite',
+              titleType: S.titleType||'alkalalo',
+              elec: S.elec||'none',
+              landWater: S.landWater||'none',
+              landBeach: S.landBeach||'inland',
+              shape: S.shape||'regular',
+              flood: S.flood||'no',
+              fence: S.fence||'none',
+              beachDist: S.beachDist||'',
+              availDate: S.availDate||'',
+              features: (S.feats||[]).concat(S.landFeats||[]),
+              negotiable: S.neg
+            }
+          };
+          await fetch('https://jejaerpqltqryqzjvbjp.supabase.co/functions/v1/notify-listing', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + MYKUNDA_SUPABASE_ANON }, body: JSON.stringify(emailData) });
+        }catch(e){ console.warn('notify-listing:', e.message); }
+
+      }catch(e){
+        console.warn('publish to DB:', e.message);
+      }
+    })();
+  }
+  document.getElementById('viewListingBtn').href='property.html?id='+listing.id;
+
+  const priceTxt = S.price? 'D '+parseInt(S.price).toLocaleString()+(S.deal==='rent'?'<span class="per">/mo</span>':'') : 'Price on request';
+  const det = S.cat==='land'? `${S.landSqm||'—'} m² plot` : `${ICON.bed} ${S.beds||'—'} &nbsp; ${ICON.bath} ${S.baths||'—'} &nbsp; ${ICON.area} ${S.sqm||'—'} m²`;
+  document.getElementById('successCard').innerHTML=`
+    <div class="card" style="max-width:340px;margin:0 auto">
+      <div class="card-media" style="aspect-ratio:4/3">${imgSrc?`<img src="${imgSrc}" alt="Listing cover photo" style="width:100%;height:100%;object-fit:cover">`:`<div style="width:100%;height:100%;background:linear-gradient(135deg,#DCEAE3,#F6E6D4)"></div>`}
+        <div class="badges">${S.plan!=='basic'?'<span class="badge badge-new">Verified</span>':''}<span class="badge ${S.deal==='rent'?'badge-rent':'badge-sale'}">${S.deal==='rent'?'For rent':'For sale'}</span></div>
+      </div>
+      <div class="card-body">
+        <div class="card-price">${priceTxt}</div>
+        <div class="card-title">${catLabel()}${S.street?' · '+S.street:''}</div>
+        <div class="card-addr">${ICON.pin} ${S.area? S.area.replace(' · ',', ') : 'The Gambia'}</div>
+        <div class="card-specs"><span class="card-spec" style="gap:14px">${det}</span></div>
+      </div>
+    </div>`;
+}
+
+showStep(0);
+updateSummary();
+prefillFromURL();
+
+/* ---- "Continue where you left off" ---- */
+function rzAgo(ts){
+  const m = Math.round((Date.now()-ts)/60000);
+  if(m < 2) return 'just now';
+  if(m < 60) return m+' minutes ago';
+  const h = Math.round(m/60);
+  if(h < 24) return h===1?'an hour ago':h+' hours ago';
+  const d = Math.round(h/24);
+  return d===1?'yesterday':d+' days ago';
+}
+function showResume(title, at, go){
+  const bar=document.getElementById('resumeBar');
+  document.getElementById('rzTitle').textContent='Continue your draft — '+title;
+  document.getElementById('rzWhen').textContent='Last edited '+rzAgo(at)+'. Nothing is published until you finish the last step.';
+  bar.hidden=false;
+  document.getElementById('rzGo').onclick=function(){ bar.hidden=true; go(); };
+  document.getElementById('rzDrop').onclick=function(){ bar.hidden=true; clearLocalDraft(); };
+}
+async function initResume(){
+  if(draftId) return;                                   // ?draft= resumes on its own
+  if(/[?&](cat|area|price|deal)=/.test(location.search)) return;   // arrived from the valuation tool
+  let local=null;
+  try{ local=JSON.parse(localStorage.getItem(LOCAL_DRAFT)||'null'); }catch(e){}
+  if(local && local.s && (Date.now()-local.at) < 30*864e5){
+    showResume(local.title||'unnamed listing', local.at, function(){
+      Object.assign(S, local.s);
+      draftId = local.draftId || null;
+      applyStateToUI();
+      step = Math.min(local.step||0, TOTAL-1);
+      showStep(step);
+    });
+    return;
+  }
+  try{ await window.__sbReady; }catch(e){}
+  if(typeof fetchMyDrafts!=='function' || typeof backendReady!=='function' || !backendReady()) return;
+  try{
+    const rows = await fetchMyDrafts();
+    const d = (rows||[])[0];
+    if(!d) return;
+    const when = new Date(d.updated_at||d.created_at).getTime();
+    showResume((d.title||'').trim() || 'unnamed listing', when, function(){ draftId=d.id; loadDraft(d.id); });
+  }catch(e){}
+}
+initResume();
+
+// shake keyframe
+const st=document.createElement('style');st.textContent='@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}';document.head.appendChild(st);
+</script>
+</body>
+</html>

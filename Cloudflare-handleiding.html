@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>MyKunda — Cloudflare aanzetten</title>
+<script src="doc-page.js"></script>
+<style>
+doc-page:not(:defined){visibility:hidden}
+:root{--g9:#0E2E25;--g7:#1C5848;--g2:#DCEAE3;--am:#B4711C;--am-bg:#FBF3E7;--ink:#16211D;--ink2:#3D4B45;--mut:#6B7B74;--line:#E2E8E4;--rd:#8E2C16;--rd-bg:#FBEEEA}
+doc-page{font-family:"Hanken Grotesk",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:var(--ink2);font-size:10.5pt;line-height:1.62}
+h1{font-size:26pt;line-height:1.1;letter-spacing:-.02em;color:var(--g9);margin:0 0 6px}
+.sub{font-size:11.5pt;color:var(--mut);margin:0 0 4px;line-height:1.5}
+.stamp{font-size:8.5pt;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:var(--am);margin-bottom:12px}
+h2{font-size:15pt;color:var(--g9);margin:30px 0 10px;letter-spacing:-.01em;padding-bottom:7px;border-bottom:2px solid var(--g2)}
+h3{font-size:11.5pt;color:var(--g7);margin:20px 0 6px}
+p{margin:0 0 9px}
+ul,ol{margin:0 0 10px;padding-left:19px}
+li{margin-bottom:5px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:9pt;background:#F1F5F3;padding:1px 5px;border-radius:3px;color:var(--g9);word-break:break-word}
+pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:8.5pt;line-height:1.5;background:var(--g9);color:#D9E7E1;padding:13px 15px;border-radius:6px;overflow-wrap:break-word;white-space:pre-wrap;margin:0 0 12px;break-inside:avoid}
+pre b{color:#F3C77A;font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:9pt;margin:0 0 14px}
+th{background:var(--g7);color:#fff;text-align:left;padding:8px 10px;font-weight:700;font-size:8pt;text-transform:uppercase;letter-spacing:.04em}
+td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.45}
+tr:nth-child(even) td{background:#F7FAF8}
+td code{background:none;padding:0;font-size:8.5pt}
+.tag{display:inline-block;font-size:7.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 7px;border-radius:20px;white-space:nowrap}
+.taan{background:#DFF3E5;color:#1D6B36}
+.tuit{background:#FBDFD8;color:#8E2C16}
+.tlaat{background:#E8EDF5;color:#3A5378}
+.box{background:var(--am-bg);border:1px solid #F0DCC0;border-radius:7px;padding:14px 17px;margin:0 0 14px;break-inside:avoid;orphans:3;widows:3}
+.box b{color:var(--am)}
+.box.g{background:#F2F8F4;border-color:#D3E6D9}
+.box.g b{color:var(--g7)}
+.box.r{background:var(--rd-bg);border-color:#F0CFC4}
+.box.r b{color:var(--rd)}
+.step{list-style:none;padding-left:0;counter-reset:c}
+.step>li{position:relative;padding-left:34px;margin-bottom:18px;counter-increment:c;break-inside:avoid;orphans:3;widows:3}
+.step>li::before{content:counter(c);position:absolute;left:0;top:0;width:23px;height:23px;border-radius:50%;background:var(--g7);color:#fff;font-size:9.5pt;font-weight:700;display:flex;align-items:center;justify-content:center}
+.step>li>b{display:block;color:var(--g9);font-size:11pt;margin-bottom:4px}
+.lead{font-size:11pt;color:var(--ink2);line-height:1.65;margin-bottom:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.kpi{background:#F7FAF8;border:1px solid var(--line);border-radius:7px;padding:12px 14px}
+.kpi .n{font-size:16pt;font-weight:700;color:var(--g9);line-height:1.15}
+.kpi .l{font-size:8.5pt;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-top:3px}
+hr{border:0;border-top:1px solid var(--line);margin:26px 0}
+.foot{font-size:8.5pt;color:var(--mut)}
+a{color:var(--g7)}
+a:hover{color:var(--g9)}
+</style>
+</head>
+<body>
+<doc-page margin="0.7in">
+
+<div class="stamp">MyKunda · mykunda.com</div>
+<h1>Cloudflare aanzetten</h1>
+<p class="sub">De grootste snelheidswinst die mykunda.com kan boeken, en gratis. Ongeveer een uur werk, waarvan het meeste wachten is. Deze handleiding is toegespitst op jullie situatie: FTP-hosting, Google Workspace voor de mail, Resend voor de automatische e-mails, en een <code>.htaccess</code> die de cache-headers al goed zet.</p>
+
+<div class="grid2" style="margin-top:20px">
+  <div class="kpi"><div class="n">Gratis</div><div class="l">Free plan is genoeg</div></div>
+  <div class="kpi"><div class="n">±1 uur</div><div class="l">plus tot 24 u wachten op DNS</div></div>
+</div>
+
+<h2>Wat het oplevert</h2>
+<p class="lead">Nu staat de site op één server. Voor een bezoeker in Serekunda is elk bestand een rondje naar Europa: 200–400 ms per request, en de eerste pageview vraagt HTML, CSS, JS, twee fonts en een hero-afbeelding op.</p>
+<p>Met Cloudflare ervoor staat een kopie van al die bestanden op een knooppunt dichter bij de bezoeker. Daarnaast krijg je HTTP/3 en QUIC — dat herstelt op een wisselvallige mobiele verbinding merkbaar sneller dan gewoon TCP, en dat is op deze markt precies waar het om gaat. En je server blijft overeind bij een piek of een bot, omdat hij het grootste deel van de verzoeken nooit ziet.</p>
+
+<div class="box">
+<p><b>Wat je nodig hebt vóór je begint.</b> Toegang tot de plek waar het domein <i>geregistreerd</i> is — dat is de partij waar je <code>mykunda.com</code> gekocht hebt, en dat is niet noodzakelijk dezelfde partij als je hosting. Daar moet je straks de nameservers wijzigen. Zoek dat eerst uit; het is het enige onderdeel dat je niet in Cloudflare zelf doet.</p>
+</div>
+
+<h2>De stappen</h2>
+
+<ol class="step">
+
+<li><b>Account maken en de site toevoegen</b>
+<p>Ga naar <code>dash.cloudflare.com/sign-up</code>, maak een account met een e-mailadres waar je bij kunt (gebruik geen adres op <code>@mykunda.com</code> — als er ooit iets met de DNS misgaat, kun je juist dan niet bij die mailbox). Kies daarna <i>Add a site</i>, vul <code>mykunda.com</code> in, en kies het <b>Free</b> plan. Voor deze site is dat genoeg; de betaalde plannen voegen niets toe wat jullie nu nodig hebben.</p></li>
+
+<li><b>Laat Cloudflare je DNS scannen — en controleer die scan regel voor regel</b>
+<p>Cloudflare leest je huidige DNS uit en neemt de records over. <b>Dit is de stap waar het misgaat als je hem overslaat.</b> De scan is meestal compleet, maar niet altijd, en een gemist record betekent dat er iets stopt te werken zodra je overschakelt.</p>
+<p>Maak eerst een foto of screenshot van je huidige DNS-records bij je hosting, zodat je iets hebt om tegen te vergelijken. Loop dan de lijst in Cloudflare na. Dit moet erin staan:</p>
+<table>
+<tr><th>Type</th><th>Waarvoor</th><th>Proxy</th></tr>
+<tr><td><code>A</code> op <code>@</code></td><td>de website zelf → het IP van je server</td><td><span class="tag taan">oranje wolk</span></td></tr>
+<tr><td><code>A</code> of <code>CNAME</code> op <code>www</code></td><td><code>www.mykunda.com</code></td><td><span class="tag taan">oranje wolk</span></td></tr>
+<tr><td><code>MX</code></td><td>Google Workspace — de inkomende mail</td><td><span class="tag tuit">grijze wolk</span></td></tr>
+<tr><td><code>TXT</code> met <code>v=spf1</code></td><td>SPF — wie namens jou mag mailen</td><td>n.v.t.</td></tr>
+<tr><td><code>TXT</code> op <code>google._domainkey</code></td><td>DKIM van Google Workspace</td><td>n.v.t.</td></tr>
+<tr><td><code>TXT</code> op <code>_dmarc</code></td><td>DMARC</td><td>n.v.t.</td></tr>
+<tr><td>records voor <b>Resend</b></td><td>de automatische e-mails van de site</td><td><span class="tag tuit">grijze wolk</span></td></tr>
+<tr><td><code>A</code> op <code>ftp</code>, <code>cpanel</code>, <code>mail</code></td><td>beheer en FTP</td><td><span class="tag tuit">grijze wolk</span></td></tr>
+</table>
+<p>Resend gebruikt doorgaans een eigen subdomein met een eigen MX en TXT (iets als <code>send.mykunda.com</code>). Zoek die op in je Resend-dashboard onder <i>Domains</i> en vergelijk ze één voor één met wat Cloudflare heeft opgepikt. Ontbreekt er iets: handmatig toevoegen, nú, vóór stap 3.</p></li>
+
+<li><b>De nameservers wijzigen bij je registrar</b>
+<p>Cloudflare geeft je twee nameservers, iets als <code>dana.ns.cloudflare.com</code> en <code>rick.ns.cloudflare.com</code>. Log in bij je domeinregistrar, zoek naar <i>nameservers</i> of <i>DNS-beheer</i>, en vervang de bestaande door die twee. Verwijder de oude; er mogen er geen twee sets naast elkaar staan.</p>
+<p>Daarna is het wachten. Meestal binnen een uur actief, soms tot 24 uur. Cloudflare mailt je zodra het domein actief is en het dashboard springt van <i>Pending</i> naar <i>Active</i>. Ga pas verder als dat gebeurd is.</p></li>
+
+<li><b>SSL op Full (strict) zetten</b>
+<p><b>Doe dit direct na activatie, vóór iets anders.</b> Ga naar <i>SSL/TLS</i> → <i>Overview</i> en kies <b>Full (strict)</b>.</p>
+<p>Waarom dit niet kan wachten: jullie <code>.htaccess</code> stuurt elk <code>http://</code>-verzoek door naar <code>https://</code>. Staat Cloudflare op <i>Flexible</i>, dan praat Cloudflare over http met je server, die stuurt terug naar https, Cloudflare stuurt dat weer over http heen — en de bezoeker krijgt een oneindige doorverwijzing. De site is dan volledig onbereikbaar. Met <i>Full (strict)</i> gebeurt dat niet.</p>
+<p>Werkt je site op <i>Full (strict)</i> niet, dan is je servercertificaat het probleem (verlopen of self-signed). Zet dan tijdelijk op <i>Full</i>, repareer het certificaat bij je host, en zet hem terug. Kies nooit <i>Flexible</i>.</p></li>
+
+<li><b>De caching op "respecteer mijn headers" zetten</b>
+<p>Dit is het belangrijkste van alle instellingen, en het is contra-intuïtief: je laat Cloudflare hier bewust <i>minder</i> zelf beslissen.</p>
+<p>Jullie <code>.htaccess</code> zegt al precies het juiste per bestandstype: een jaar op afbeeldingen en fonts, een maand op CSS en JS, nul seconden op HTML, en <code>no-cache</code> op <code>sw.js</code> en <code>supabase.js</code>. Als Cloudflare daar zijn eigen regels overheen legt, gaat dat mis — dan kan een bezoeker een uur lang een oude pagina blijven zien.</p>
+<p>Ga naar <i>Caching</i> → <i>Configuration</i> en zet <b>Browser Cache TTL</b> op <b>Respect Existing Headers</b>. Laat <i>Caching Level</i> op <i>Standard</i>. Verder niets aanpassen.</p></li>
+
+<li><b>Snelheid aanzetten</b>
+<p>Onder <i>Speed</i> → <i>Optimization</i>:</p>
+<table>
+<tr><th>Instelling</th><th>Stand</th><th>Waarom</th></tr>
+<tr><td>HTTP/3 (with QUIC)</td><td><span class="tag taan">aan</span></td><td>Herstelt sneller op wisselvallige 4G — hier de grootste winst</td></tr>
+<tr><td>0-RTT Connection Resumption</td><td><span class="tag taan">aan</span></td><td>Scheelt een rondje bij een terugkerende bezoeker</td></tr>
+<tr><td>Brotli / compressie</td><td><span class="tag taan">aan</span></td><td>Staat vaak al aan; jullie server doet het ook al</td></tr>
+<tr><td>Early Hints</td><td><span class="tag taan">aan</span></td><td>Onschuldig, en helpt bij de preloads in jullie <code>&lt;head&gt;</code></td></tr>
+<tr><td>Rocket Loader</td><td><span class="tag tuit">UIT</span></td><td>Herordent je scripts. <code>app.min.js</code> moet vóór de inline scripts staan; Rocket Loader breekt dat</td></tr>
+<tr><td>Auto Minify</td><td><span class="tag tuit">uit</span></td><td><code>build.mjs</code> doet dit al, en beter — met een controle op de gerenderde tekst</td></tr>
+<tr><td>Email Address Obfuscation</td><td><span class="tag tuit">uit</span></td><td>Injecteert een script in je HTML en verandert e-mailadressen in de broncode</td></tr>
+<tr><td>Mirage / Polish</td><td><span class="tag tlaat">niet nodig</span></td><td>Jullie afbeeldingen zijn al WebP met mobiele varianten</td></tr>
+</table></li>
+
+<li><b>Controleer dat FTP nog werkt — vóór je iets uploadt</b>
+<p>Cloudflare proxyt alleen web-verkeer. Staat er een oranje wolk op een naam die je voor FTP gebruikt, dan wijst die naam naar Cloudflare en komt je FTP-programma nergens meer aan.</p>
+<p>Zorg dus dat <code>ftp.mykunda.com</code> (en <code>cpanel</code>, <code>webmail</code>, en wat je host verder gebruikt) op de <b>grijze wolk</b> staat: DNS-only. Kun je het niet aan de praat krijgen, gebruik dan het IP-adres van je server rechtstreeks in je FTP-programma in plaats van de domeinnaam. Test dit met een klein bestand vóór je een echte upload doet.</p></li>
+
+</ol>
+
+<div class="box r">
+<p><b>Als de site na het overschakelen stuk is.</b> Ga naar <i>Overview</i> en klik <i>Pause Cloudflare on Site</i>. Binnen vijf minuten loopt al het verkeer weer rechtstreeks naar je server en is de site terug zoals hij was. Je verliest niets; je DNS-records blijven staan. Dat is je noodrem — zoek daarna in alle rust uit wat er misging.</p>
+<p>De twee oorzaken die het bijna altijd zijn: SSL stond op <i>Flexible</i> (stap 4), of een DNS-record is niet meegekomen in de scan (stap 2).</p>
+</div>
+
+<h2>Je werkwijze verandert op één punt</h2>
+<p class="lead">Vanaf nu staat er een cache tussen jou en de bezoeker. Upload je een bestand, dan blijft Cloudflare de oude versie serveren tot je het zegt.</p>
+<p>De werkafspraak wordt dus één stap langer:</p>
+<pre>1. wijziging in het project
+2. <b>node build.mjs</b>
+3. deploy/ uploaden via FTP, overschrijven aan
+4. <b>Cloudflare: cache purgen</b>          <b>&lt;-- nieuw</b>
+5. hard-refreshen en controleren</pre>
+<p>Purgen doe je onder <i>Caching</i> → <i>Configuration</i> → <i>Purge Cache</i>. Twee manieren:</p>
+<ul>
+<li><b>Custom Purge</b> — je vult de gewijzigde URL's in, bijvoorbeeld <code>https://mykunda.com/app.min.js</code>. Netjes, maar bij een grote upload veel typen.</li>
+<li><b>Purge Everything</b> — gooit alles weg. De eerste bezoeker na het purgen is even iets langzamer terwijl de cache zich opnieuw vult, en dat is het. Voor een site van deze grootte is dit gewoon de praktische keuze.</li>
+</ul>
+<div class="box g">
+<p><b>Ben je een middag aan het werk?</b> Zet dan <i>Overview</i> → <i>Development Mode</i> aan. Cloudflare cacht drie uur lang niets en je ziet elke upload direct, zonder purgen. Hij gaat daarna automatisch weer uit — je kunt hem dus niet per ongeluk aan laten staan.</p>
+</div>
+
+<h2>Controleren of het werkt</h2>
+<p>Open mykunda.com, druk op <code>F12</code>, tabblad <i>Network</i>, en klik op het eerste verzoek in de lijst. Kijk bij <i>Response Headers</i> naar:</p>
+<table>
+<tr><th>Header</th><th>Wat je wil zien</th></tr>
+<tr><td><code>server</code></td><td><code>cloudflare</code> — het verkeer loopt er nu door</td></tr>
+<tr><td><code>cf-cache-status</code></td><td><code>HIT</code> op afbeeldingen, CSS en JS. <code>MISS</code> of <code>DYNAMIC</code> op HTML is goed: dat cacht Cloudflare bewust niet, want jullie sturen daar <code>max-age=0</code>.</td></tr>
+<tr><td><code>cf-ray</code></td><td>Eindigt op een luchthavencode: het knooppunt dat je bediende. Vanuit Nederland <code>AMS</code>, vanuit Gambia idealiter iets in West-Afrika of <code>LIS</code>/<code>CMN</code>.</td></tr>
+</table>
+<p>Zie je bij afbeeldingen na een tweede bezoek nog steeds <code>MISS</code>, dan cacht Cloudflare ze niet. Controleer dan of stap 5 goed staat en of het bestand echt via de oranje wolk gaat.</p>
+
+<div class="box">
+<p><b>Nog één ding, en dan ben je klaar.</b> Vergeet niet dat er nog een tweede actie openstaat uit de performance-audit: <code>backend/performance-indexes.sql</code> uitvoeren in Supabase. Cloudflare maakt het bezorgen van de bestanden snel; dat script maakt de database snel. Je hebt ze beide nodig.</p>
+</div>
+
+<hr>
+<p class="foot">Intern document — niet uploaden naar de webroot. Hoort bij <code>Performance-audit.html</code>, punt 7.</p>
+
+</doc-page>
+</body>
+</html>

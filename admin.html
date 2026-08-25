@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:10b0xth--><!--/mk-mark-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
+<link rel="apple-touch-icon" href="images/mykunda-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#15463A">
+<title>Admin — MyKunda</title>
+<link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
+<link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.min.css?v=1787660000000">
+<style>
+body{background:var(--paper-2)}
+.admin{max-width:1180px;margin:0 auto;padding:34px 28px 70px}
+.admin-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:26px;flex-wrap:wrap}
+.admin-head .hi{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--amber-600);margin-bottom:7px}
+.admin-head h1{font-size:32px;line-height:1.1}
+.admin-head p{color:var(--muted);font-size:15px;margin-top:5px}
+
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.stat{background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-sm);padding:20px 22px}
+.stat .num{font-family:var(--serif);font-size:30px;font-weight:800;color:var(--ink);line-height:1}
+.stat .lab{font-size:13px;color:var(--muted);font-weight:600;margin-top:6px}
+
+.tab .badge-count{display:inline-block;margin-left:7px;background:var(--amber-500);color:#fff;border-radius:99px;padding:1px 8px;font-size:12px}
+
+.panel{background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-sm);overflow:hidden}
+.view{display:none}.view.on{display:block}
+
+/* listing review rows */
+.rev{display:grid;grid-template-columns:120px 1fr auto;gap:18px;padding:18px 22px;border-bottom:1px solid var(--line-2);align-items:center}
+.rev:last-child{border-bottom:none}
+.rev .thumb{width:120px;height:84px;border-radius:var(--r-md);object-fit:cover;background:var(--paper-2)}
+.rev .info h3{font-size:17px;margin-bottom:3px}
+.rev .info .meta{font-size:13.5px;color:var(--muted)}
+.rev .info .tags{display:flex;gap:7px;margin-top:8px;flex-wrap:wrap}
+.rev .info .pc{font-size:12.5px;font-weight:700;color:var(--green-700);font-variant-numeric:tabular-nums;margin-top:6px}
+.rev .acts{display:flex;flex-direction:column;gap:8px;min-width:130px}
+.docpill{display:inline-flex;align-items:center;gap:6px;height:25px;padding:0 10px;border-radius:99px;background:var(--amber-50);color:var(--amber-600);font-size:11.5px;font-weight:700}
+
+/* lead triage bar */
+.leadbar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:14px 20px;border-bottom:1px solid var(--line-2)}
+.lseg{display:flex;background:var(--paper);border-radius:var(--r-pill);padding:3px;gap:2px}
+.lseg button{height:32px;padding:0 15px;border-radius:var(--r-pill);border:none;background:none;font-size:13.5px;font-weight:700;color:var(--ink-2);cursor:pointer;transition:.15s;white-space:nowrap}
+.lseg button.on{background:var(--green-700);color:#fff}
+.lseg button b{font-weight:700;opacity:.6;margin-left:5px}
+.leadhint{font-size:13px;font-weight:600;color:var(--muted)}
+.leadhint.late{color:#B91C1C}
+
+/* lead table — fixed layout so every column stays inside the panel */
+.tablewrap{overflow-x:auto}
+table{width:100%;min-width:680px;border-collapse:collapse;font-size:13.5px;table-layout:fixed}
+th{background:var(--green-700);color:#fff;text-align:left;padding:11px 12px;font-family:var(--serif);font-weight:700;font-size:12.5px}
+td{padding:12px;border-top:1px solid var(--line-2);color:var(--ink-2);vertical-align:top;overflow-wrap:anywhere}
+th:nth-child(1),td:nth-child(1){width:8%}
+th:nth-child(2),td:nth-child(2){width:13%}
+th:nth-child(3),td:nth-child(3){width:21%}
+th:nth-child(4),td:nth-child(4){width:9%}
+th:nth-child(5),td:nth-child(5){width:14%}
+th:nth-child(6),td:nth-child(6){width:16%}
+th:nth-child(7),td:nth-child(7){width:19%}
+tr:nth-child(even) td{background:var(--paper)}
+.lcontact{font-size:12.5px;color:var(--muted);line-height:1.45;margin-top:3px}
+.src{display:inline-block;padding:2px 8px;border-radius:99px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.02em;white-space:nowrap;background:var(--green-50);color:var(--green-700)}
+.stage-sel{width:100%;max-width:100%;height:32px;border-radius:var(--r-sm);border:1.5px solid var(--line);padding:0 4px 0 7px;font-weight:600;font-size:12px;color:var(--ink-2);background:var(--white)}
+.btn-del{width:28px;height:28px;border:none;background:none;color:var(--muted);cursor:pointer;border-radius:var(--r-sm);font-size:15px;display:inline-flex;align-items:center;justify-content:center;transition:all .15s}
+.btn-del:hover{background:#FEE2E2;color:#B91C1C}
+.wchip{display:inline-block;padding:3px 8px;border-radius:99px;font-size:12px;font-weight:700;white-space:nowrap;background:var(--paper-2);color:var(--muted)}
+.wchip.warn{background:var(--amber-50);color:var(--amber-600)}
+.wchip.late{background:#FEE2E2;color:#B91C1C}
+tr.od td{background:#FFF7F6}
+.rowacts{display:flex;gap:5px;align-items:center;justify-content:flex-end;flex-wrap:nowrap}
+.btn-mark{flex:0 1 auto;height:30px;padding:0 9px;border-radius:var(--r-sm);border:1.5px solid var(--green-600);background:var(--white);color:var(--green-700);font-size:11.5px;font-weight:700;white-space:nowrap;cursor:pointer;font-family:inherit;transition:all .15s}
+.btn-del{flex:0 0 auto}
+.btn-mark:hover{background:var(--green-700);border-color:var(--green-700);color:#fff}
+
+/* Custom confirm modal */
+.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s}
+.confirm-overlay.show{opacity:1}
+.confirm-box{background:var(--white);border-radius:var(--r-lg);padding:28px 32px;max-width:380px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.25);text-align:center;transform:scale(.92);transition:transform .2s}
+.confirm-overlay.show .confirm-box{transform:scale(1)}
+.confirm-box h3{font-size:18px;margin:0 0 8px;color:var(--ink)}
+.confirm-box p{font-size:14px;color:var(--muted);margin:0 0 22px;line-height:1.5}
+.confirm-btns{display:flex;gap:10px;justify-content:center}
+.confirm-btns .btn-cancel{padding:10px 22px;border-radius:var(--r-md);border:1.5px solid var(--line);background:var(--white);font-size:14px;font-weight:600;color:var(--ink-2);cursor:pointer;transition:all .15s}
+.confirm-btns .btn-cancel:hover{background:var(--paper)}
+.confirm-btns .btn-confirm-del{padding:10px 22px;border-radius:var(--r-md);border:none;background:#B91C1C;color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s}
+.confirm-btns .btn-confirm-del:hover{background:#991B1B}
+
+.empty{padding:54px 24px;text-align:center;color:var(--muted)}
+.empty h3{font-size:18px;color:var(--ink-2);margin-bottom:6px}
+
+.note{background:var(--amber-50);border:1px solid var(--amber-100);border-radius:var(--r-md);padding:14px 18px;font-size:13.5px;color:var(--amber-600);margin-bottom:22px;line-height:1.5}
+.note b{color:var(--amber-600)}
+
+/* bank transfers — lines the automatic reconciliation could not settle */
+.bankbar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:14px 20px;border-bottom:1px solid var(--line-2)}
+.bankbar .bl{flex:0 0 auto;font-size:13.5px;font-weight:700;color:var(--ink-2)}
+.bankbar .br{flex:0 1 auto;font-size:13px;font-weight:600;color:var(--muted);text-align:right}
+table.btab{min-width:900px}
+.btab th:nth-child(1),.btab td:nth-child(1){width:9%}
+.btab th:nth-child(2),.btab td:nth-child(2){width:23%}
+.btab th:nth-child(3),.btab td:nth-child(3){width:20%}
+.btab th:nth-child(4),.btab td:nth-child(4){width:16%}
+.btab th:nth-child(5),.btab td:nth-child(5){width:18%}
+.btab th:nth-child(6),.btab td:nth-child(6){width:14%}
+.bdate b{display:block;color:var(--ink);font-weight:800;white-space:nowrap}
+.bdate span{font-size:12px;color:var(--muted-2)}
+.bfrom b{color:var(--ink)}
+.bfrom .desc{font-size:12.5px;color:var(--muted);line-height:1.45;margin-top:3px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere}
+.bamt{font-variant-numeric:tabular-nums}
+.bamt .got{font-size:15px;font-weight:800;color:var(--ink);white-space:nowrap}
+.bamt .exp{font-size:12.5px;color:var(--muted);margin-top:2px;white-space:nowrap}
+.bamt .cur{font-size:11px;font-weight:700;color:var(--muted-2);letter-spacing:.03em}
+.dchip{display:inline-block;margin-top:6px;padding:2px 8px;border-radius:99px;font-size:11.5px;font-weight:800;white-space:nowrap;background:var(--green-50);color:var(--green-700)}
+.dchip.off{background:var(--amber-50);color:var(--amber-600)}
+.mchip{display:inline-block;padding:2px 9px;border-radius:99px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;white-space:nowrap;background:var(--paper-2);color:var(--muted)}
+.mchip.ok{background:var(--green-50);color:var(--green-700)}
+.mchip.part{background:var(--amber-50);color:var(--amber-600)}
+.bref{display:block;margin-top:7px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;font-weight:700;color:var(--ink-2);overflow-wrap:anywhere}
+.bstat{display:block;margin-top:5px;font-size:12px;color:var(--muted-2);font-weight:600}
+.bnote{font-size:13px;color:var(--ink-2);line-height:1.5}
+.bacts{display:flex;flex-direction:column;gap:6px}
+.bacts button{height:30px;padding:0 10px;border-radius:var(--r-sm);font-family:inherit;font-size:11.5px;font-weight:700;white-space:nowrap;cursor:pointer;transition:all .15s}
+.bacts .go{border:none;background:var(--green-700);color:#fff}
+.bacts .go:hover{background:var(--green-600)}
+.bacts .lk{border:1.5px solid var(--line);background:var(--white);color:var(--ink-2)}
+.bacts .lk:hover{border-color:var(--green-600);color:var(--green-700)}
+.bacts .ig{border:1.5px solid transparent;background:none;color:var(--muted)}
+.bacts .ig:hover{background:#FEE2E2;color:#B91C1C}
+
+/* review dialog — confirming is irreversible, so it never happens on one click */
+.confirm-box.bdlg{text-align:left;max-width:470px}
+.bdlg p{margin:0 0 16px}
+.bfacts{border:1px solid var(--line-2);border-radius:var(--r-md);overflow:hidden;margin:0 0 16px}
+.bfacts div{display:flex;justify-content:space-between;gap:14px;padding:9px 13px;font-size:13.5px;border-bottom:1px solid var(--line-2)}
+.bfacts div:last-child{border-bottom:none}
+.bfacts i{font-style:normal;color:var(--muted);font-weight:600}
+.bfacts b{color:var(--ink);font-weight:800;text-align:right;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.bwarn{background:#FEF2F2;border:1px solid #FECACA;color:#B91C1C;border-radius:var(--r-md);padding:11px 13px;font-size:13px;font-weight:600;line-height:1.5;margin:0 0 16px}
+.bfield{margin:0 0 16px}
+.bfield label{display:block;font-size:12.5px;font-weight:700;color:var(--ink-2);margin-bottom:6px}
+.bfield input,.bfield textarea{width:100%;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:9px 11px;font-family:inherit;font-size:14px;color:var(--ink);background:var(--white)}
+.bfield input:focus,.bfield textarea:focus{outline:none;border-color:var(--green-600)}
+.bfield input{text-transform:uppercase;letter-spacing:.04em;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.bfield textarea{min-height:74px;resize:vertical}
+.bcheck{display:flex;gap:9px;align-items:flex-start;font-size:13.5px;font-weight:600;color:var(--ink-2);margin:0 0 16px;cursor:pointer;line-height:1.45}
+.bcheck input{width:17px;height:17px;flex:none;margin-top:1px;accent-color:var(--green-700)}
+.bdlg-err{background:#FEF2F2;border:1px solid #FECACA;color:#B91C1C;border-radius:var(--r-md);padding:10px 13px;font-size:13.5px;font-weight:600;line-height:1.45;margin:0 0 14px;display:none}
+.bdlg-err.on{display:block}
+.bank-ov{align-items:flex-start;overflow:auto;padding:28px 16px;-webkit-overflow-scrolling:touch}
+.bank-ov .bdlg{margin:auto}
+.confirm-btns.right{justify-content:flex-end}
+.confirm-btns .btn-go{padding:10px 22px;border-radius:var(--r-md);border:none;background:var(--green-700);color:#fff;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s}
+.confirm-btns .btn-go:hover{background:var(--green-600)}
+.confirm-btns .btn-go[disabled]{opacity:.5;cursor:default}
+
+@media(max-width:480px){
+  .admin{padding:20px 16px 50px}
+  .stat-row{grid-template-columns:1fr 1fr}
+  .tabs{flex-wrap:wrap}
+  .rev{grid-template-columns:1fr;gap:12px}
+  .rev .thumb{width:100%;height:160px}
+  .rev .acts{flex-direction:row}
+}
+
+@media(max-width:760px){
+  .stat-row{grid-template-columns:1fr 1fr}
+  .rev{grid-template-columns:1fr;gap:12px}.rev .thumb{width:100%;height:160px}
+}
+/* ---- orders (paid work that still has to be done) ---- */
+.obar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.oseg{display:inline-flex;background:var(--paper-2);border-radius:99px;padding:3px;gap:3px}
+.oseg button{border:none;background:none;border-radius:99px;padding:7px 15px;font-family:var(--sans);font-size:13.5px;font-weight:700;color:var(--ink-2);cursor:pointer}
+.oseg button.on{background:var(--white);color:var(--green-700);box-shadow:var(--sh-sm)}
+.oseg button b{margin-left:6px;color:var(--muted-2)}
+.oseg button.on b{color:var(--green-700)}
+.ocard{background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px 22px;margin-bottom:14px;transition:box-shadow .2s,border-color .2s}
+.ocard.hit{border-color:var(--amber-500);box-shadow:0 0 0 3px rgba(221,138,69,.18)}
+.ohead{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.ohead h3{font-size:16.5px;font-weight:800;color:var(--ink);margin:0 0 4px;line-height:1.3}
+.oref{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;font-weight:700;color:var(--ink-2);overflow-wrap:anywhere}
+.oamt{font-family:var(--serif);font-size:22px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ometa{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}
+.ochip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px;background:var(--paper-2);color:var(--ink-2)}
+.ochip.ok{background:var(--green-100);color:var(--green-700)}
+.ochip.warn{background:var(--amber-50);color:var(--amber-600)}
+.ochip.bad{background:#FBEEEA;color:#B91C1C}
+.obuyer{margin-top:14px;font-size:13.5px;color:var(--muted);line-height:1.6}
+.obuyer a{color:var(--green-700);font-weight:700;text-decoration:none}
+.obuyer a:hover{text-decoration:underline}
+.ointake{margin-top:15px;border-top:1px solid var(--line);padding-top:14px}
+.ointake summary{cursor:pointer;font-size:13.5px;font-weight:700;color:var(--green-700);list-style:none}
+.ointake summary::-webkit-details-marker{display:none}
+.ointake summary:before{content:"▸ ";display:inline-block;transition:transform .15s}
+.ointake[open] summary:before{transform:rotate(90deg)}
+.ointake dl{display:grid;grid-template-columns:150px 1fr;gap:8px 16px;margin:14px 0 0;font-size:13.5px}
+.ointake dt{color:var(--muted);font-weight:600}
+.ointake dd{margin:0;color:var(--ink);font-weight:600;overflow-wrap:anywhere;white-space:pre-wrap}
+.onone{margin-top:15px;border-top:1px solid var(--line);padding-top:14px;font-size:13px;color:var(--muted-2);line-height:1.6}
+.oacts{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:16px;border-top:1px solid var(--line);padding-top:14px}
+.oacts label{font-size:12.5px;font-weight:700;color:var(--muted)}
+.oacts select{height:38px;border-radius:9px;border:1.5px solid var(--line);background:var(--white);padding:0 12px;font-family:var(--sans);font-size:13.5px;font-weight:700;color:var(--ink);cursor:pointer}
+.oacts .owhen{font-size:12.5px;color:var(--muted-2);margin-left:auto}
+.onote{margin-top:12px}
+.onote textarea{width:100%;min-height:64px;border-radius:10px;border:1.5px solid var(--line);padding:10px 12px;font-family:var(--sans);font-size:13.5px;color:var(--ink);resize:vertical}
+.onote .row{display:flex;align-items:center;gap:10px;margin-top:8px}
+.onote .saved{font-size:12.5px;font-weight:700;color:var(--green-700);opacity:0;transition:opacity .2s}
+.onote .saved.on{opacity:1}
+.obadge{margin-top:15px;border-top:1px solid var(--line);padding-top:14px}
+.obadge .bstate{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.obadge .btitle{font-size:13.5px;font-weight:700;color:var(--ink)}
+.obadge .bwhen{font-size:12.5px;color:var(--muted-2)}
+.obadge .bhint{font-size:13px;color:var(--muted);line-height:1.6;margin:9px 0 11px;max-width:62ch}
+@media(max-width:640px){.ointake dl{grid-template-columns:1fr;gap:3px 0}.ointake dt{margin-top:8px}}
+</style>
+<meta property="fb:pages" content="61593360783009">
+<meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
+</head>
+<body>
+<div id="header"></div>
+<div id="adminNav"></div>
+
+<div class="admin">
+  <div class="admin-head">
+    <div>
+      <h1>Review &amp; leads</h1>
+      <p>Approve listings before they go public, and act on every enquiry.</p>
+    </div>
+  </div>
+
+  <div class="note" id="demoNote">
+    <b>Offline.</b> The backend isn't connected in this browser, so there is nothing to show. Once your Supabase keys are in <code>supabase.js</code>, this console shows real pending listings and leads — see <code>backend/README.md</code>.
+  </div>
+
+  <div class="stat-row" id="statRow"></div>
+
+  <div class="vswitch" role="tablist" aria-label="Review views">
+    <button class="vbtn on" role="tab" aria-selected="true" data-view="pending">Pending listings <span class="badge-count" id="cPending">0</span></button>
+    <button class="vbtn" role="tab" aria-selected="false" data-view="leads">Leads <span class="badge-count" id="cLeads">0</span></button>
+    <button class="vbtn" role="tab" aria-selected="false" data-view="active">Active listings <span class="badge-count" id="cActive">0</span></button>
+    <button class="vbtn" role="tab" aria-selected="false" data-view="bank">Bank transfers <span class="badge-count" id="cBank">0</span></button>
+    <button class="vbtn" role="tab" aria-selected="false" data-view="orders">Orders <span class="badge-count" id="cOrders">0</span></button>
+  </div>
+
+  <div class="view on" data-view="pending"><div class="panel" id="pendingPanel"></div></div>
+  <div class="view" data-view="leads"><div class="panel" id="leadsPanel"></div></div>
+  <div class="view" data-view="active"><div class="panel" id="activePanel"></div></div>
+  <div class="view" data-view="bank"><div class="panel" id="bankPanel"></div></div>
+  <div class="view" data-view="orders"><div class="panel" id="ordersPanel"></div></div>
+</div>
+
+<div id="footer"></div>
+
+<script src="vendor/supabase-js-2.umd.js"></script>
+<script src="supabase.js?v=1787660000000"></script>
+<script src="app.min.js?v=1787660000000"></script>
+<script src="admin-nav.js?v=1787900000000"></script>
+<script src="admin-guard.js?v=1787660000000"></script>
+<script>
+document.getElementById('header').innerHTML = headerHTML('', false);
+document.getElementById('footer').innerHTML = footerHTML();
+document.getElementById('adminNav').innerHTML = adminNavHTML('review');
+
+const LIVE = (typeof backendReady==='function' && backendReady());
+const flag = document.getElementById('modeFlag');
+if(LIVE){ flag.className='mode-flag live'; flag.textContent='Live · connected'; document.getElementById('demoNote').style.display='none'; }
+
+
+const STAGES = ['new','contacted','qualified','viewing_booked','negotiating','won','lost'];
+const SRC_LABEL = {valuation:'Valuation',viewing:'Viewing',agent_message:'Message',area_alert:'Alert',contact:'Contact',listing_enquiry:'Enquiry'};
+const money = p => '$'+Number(p).toLocaleString('en-US');
+const ago = t => { const m=Math.round((Date.now()-(typeof t==='number'?t:new Date(t).getTime()))/60000); if(m<60)return m+'m ago'; const h=Math.round(m/60); if(h<24)return h+'h ago'; return Math.round(h/24)+'d ago'; };
+
+/* ---------- lead triage ---------- */
+const hrsSince = t => (Date.now()-(typeof t==='number'?t:new Date(t).getTime()))/36e5;
+const isOpen    = l => l.stage==='new' || l.stage==='contacted';
+const isOverdue = l => l.stage==='new' && hrsSince(l.created_at) > 48;
+let leadFilter = 'action';
+
+function waitChip(l){
+  const h = hrsSince(l.created_at), lab = ago(l.created_at).replace(' ago','');
+  if(l.stage!=='new') return '<span class="wchip">'+lab+'</span>';
+  return '<span class="wchip '+(h>48?'late':(h>24?'warn':''))+'">'+lab+'</span>';
+}
+/* Oldest untouched lead at the top — the one costing the most money. Anything
+   already picked up drops below, newest first. */
+function visibleLeads(){
+  const rows = leadFilter==='action' ? leads.filter(isOpen) : leads.slice();
+  return rows.sort((a,b)=>{
+    const an = a.stage==='new', bn = b.stage==='new';
+    if(an!==bn) return an ? -1 : 1;
+    const at = (typeof a.created_at==='number'?a.created_at:new Date(a.created_at).getTime());
+    const bt = (typeof b.created_at==='number'?b.created_at:new Date(b.created_at).getTime());
+    return an ? at-bt : bt-at;
+  });
+}
+
+let pending=[], leads=[], active=[], bankLines=[], bankError=null, orders=[], ordersError=null;
+
+async function load(){
+  if(LIVE){
+    try{
+      const { data: pend } = await sb.from('listings').select('*, listing_media(*)').eq('status','pending_review').order('created_at',{ascending:false});
+      const { data: act }  = await sb.from('listings').select('*').in('status',['active','under_offer']).order('created_at',{ascending:false});
+      const { data: lds }  = await sb.from('leads').select('*').order('created_at',{ascending:false}).limit(100);
+      pending = (pend||[]).map(normListing);
+      active  = (act||[]).map(normListing);
+      leads   = lds||[];
+    }catch(e){ console.warn('admin load failed:', e.message); }
+
+    /* Bestellingen apart, met eigen foutafhandeling: valt deze query om,
+       dan moeten de listings en leads gewoon blijven werken. */
+    try{
+      const { data: pay, error } = await sb.from('payments')
+        .select('reference,status,method,plan_id,amount_minor,currency,customer_email,listing_id,metadata,created_at,paid_at,fulfilment_status,fulfilment_updated_at,admin_note,listings(id,title,is_verified_title,verified_at)')
+        .order('created_at',{ascending:false})
+        .limit(200);
+      if(error) throw error;
+      orders = pay||[]; ordersError = null;
+    }catch(e){ orders = []; ordersError = e.message || String(e); }
+  } else {
+    pending = []; leads = []; active = []; orders = []; ordersError = null;
+  }
+  await loadBank();
+  render();
+  openDeepLink();
+}
+function normListing(r){
+  const photo = (r.listing_media||[]).find(m=>!m.is_document);
+  return { id:r.id, title:r.title, area:r.area, kind:r.kind, category:r.category, price:r.price,
+           beds:r.beds, baths:r.baths, sqm:r.sqm, lat:r.lat, lng:r.lng, plus_code:r.plus_code,
+           hasDoc:(r.listing_media||[]).some(m=>m.is_document),
+           img: photo ? (typeof mediaUrl==='function'?mediaUrl(photo.storage_path,false):'') : (r.img||'') };
+}
+
+function plusOf(l){ const raw = l.plus_code || (typeof plusCode==='function' && typeof l.lat==='number' ? plusCode(l.lat,l.lng,10) : ''); return (raw && raw.indexOf('+')===8) ? raw.slice(4) : raw; }
+
+function render(){
+  document.getElementById('cPending').textContent = pending.length;
+  document.getElementById('cLeads').textContent   = leads.length;
+  document.getElementById('cActive').textContent  = active.length;
+  document.getElementById('cBank').textContent     = bankLines.length;
+  adminNavCount('review', pending.length + leads.filter(l=>l.stage==='new').length + bankLines.length + orders.filter(needsWork).length);
+
+  const newLeads = leads.filter(l=>l.stage==='new').length;
+  const overdue  = leads.filter(isOverdue).length;
+  document.getElementById('statRow').innerHTML = [
+    ['Pending review', pending.length, false],
+    ['New leads', newLeads, false],
+    ['Waiting over 48h', overdue, overdue>0],
+    ['Active listings', active.length, false],
+  ].map(s=>`<div class="stat"><div class="num"${s[2]?' style="color:#B91C1C"':''}>${s[1]}</div><div class="lab">${s[0]}</div></div>`).join('');
+
+  // pending
+  document.getElementById('pendingPanel').innerHTML = pending.length ? pending.map(l=>`
+    <div class="rev" data-id="${l.id}">
+      ${l.img?`<img class="thumb" src="${l.img}" alt="" onerror="this.style.display='none'">`:'<div class="thumb"></div>'}
+      <div class="info">
+        <h3>${l.title}</h3>
+        <div class="meta">${money(l.price)} · ${l.area} · ${l.beds||0} bd · ${l.sqm||0} m²</div>
+        ${plusOf(l)?`<div class="pc">▣ ${plusOf(l)}</div>`:''}
+        <div class="tags">
+          <span class="badge ${l.kind==='sale'?'badge-sale':'badge-rent'}">${l.kind==='sale'?'For sale':'For rent'}</span>
+          ${l.hasDoc?'<span class="docpill">📄 Title document attached</span>':'<span class="docpill" style="background:#FBEEEA;color:#C2533A">No document</span>'}
+        </div>
+      </div>
+      <div class="acts">
+        <button class="btn btn-primary btn-sm" onclick="approve('${l.id}')">Approve &amp; publish</button>
+        <button class="btn btn-ghost btn-sm" onclick="reject('${l.id}')">Reject</button>
+      </div>
+    </div>`).join('') : emptyState('No listings awaiting review','New submissions from the List flow appear here.');
+
+  // leads — oldest untouched enquiry first, with a 48-hour marker
+  const shown = visibleLeads();
+  const overdueList = leads.filter(isOverdue);
+  document.getElementById('leadsPanel').innerHTML = leads.length ? `
+    <div class="leadbar">
+      <div class="lseg" id="leadFilter">
+        <button data-f="action" class="${leadFilter==='action'?'on':''}">Needs action <b>${leads.filter(isOpen).length}</b></button>
+        <button data-f="all" class="${leadFilter==='all'?'on':''}">Everything <b>${leads.length}</b></button>
+      </div>
+      <span class="leadhint ${overdueList.length?'late':''}">${overdueList.length
+        ? overdueList.length+' enquir'+(overdueList.length===1?'y has':'ies have')+' been waiting longer than 48 hours'
+        : 'Nothing has been waiting longer than 48 hours'}</span>
+    </div>
+    ${shown.length ? `<div class="tablewrap"><table>
+      <tr><th>Waiting</th><th>Source</th><th>Lead</th><th>Area</th><th>Message</th><th>Stage</th><th></th></tr>
+      ${shown.map(l=>`<tr data-id="${l.id}" class="${isOverdue(l)?'od':''}">
+        <td>${waitChip(l)}</td>
+        <td><span class="src">${SRC_LABEL[l.source]||l.source}</span></td>
+        <td><b style="color:var(--ink)">${l.name||'—'}</b>${(l.email||l.phone)?`<div class="lcontact">${l.email||''}${l.phone?(l.email?'<br>':'')+l.phone:''}</div>`:''}</td>
+        <td>${l.area||'—'}</td>
+        <td>${l.message||'—'}</td>
+        <td><select class="stage-sel" onchange="setStage('${l.id}',this.value)">${STAGES.map(s=>`<option value="${s}" ${l.stage===s?'selected':''}>${s.replace('_',' ')}</option>`).join('')}</select></td>
+        <td><div class="rowacts">${l.stage==='new'?`<button class="btn-mark" onclick="markContacted('${l.id}')">Mark contacted</button>`:''}<button class="btn-del" onclick="deleteLead('${l.id}')" title="Delete lead">✕</button></div></td>
+      </tr>`).join('')}
+    </table></div>` : emptyState('Every enquiry has been picked up','Switch to Everything to see the leads that are already in progress.')}` : emptyState('No leads yet','Form submissions across the site will appear here.');
+
+  // active
+  document.getElementById('activePanel').innerHTML = active.length ? active.map(l=>`
+    <div class="rev">
+      ${l.img?`<img class="thumb" src="${l.img}" alt="" onerror="this.style.display='none'">`:'<div class="thumb"></div>'}
+      <div class="info"><h3>${l.title}</h3><div class="meta">${money(l.price)} · ${l.area}</div>${plusOf(l)?`<div class="pc">▣ ${plusOf(l)}</div>`:''}</div>
+      <div class="acts"><a class="btn btn-ghost btn-sm" href="property.html?id=${l.id}">View live</a></div>
+    </div>`).join('') : emptyState('No active listings yet','Approved listings show here.');
+
+  renderBank();
+  renderOrders();
+}
+function emptyState(h,p){ return `<div class="empty"><h3>${h}</h3><p>${p}</p></div>`; }
+
+/* ============================================================
+   Orders — betaald werk dat nog gedaan moet worden.
+
+   payments.status zegt of het GELD binnen is; fulfilment_status
+   of het WERK gedaan is. Die twee staan bewust los van elkaar:
+   de betaalwebhook stuurt de eerste aan, deze pagina de tweede.
+   NULL in fulfilment_status leest als 'new'.
+   ============================================================ */
+const ORDER_STAGES = [
+  ['new',         'New — not started'],
+  ['in_progress', 'In progress'],
+  ['report_sent', 'Report sent'],
+  ['done',        'Done'],
+  ['cancelled',   'Cancelled / refunded']
+];
+const PAY_CHIP = {
+  succeeded:'ok', pending:'warn', processing:'warn',
+  failed:'bad', cancelled:'bad', expired:'bad', refunded:'bad'
+};
+const METHOD_LABEL = {
+  card:'Card', bank_transfer:'Bank transfer', wave:'Wave',
+  afrimoney:'Afrimoney', qmoney:'QMoney', aps:'APS'
+};
+const INTAKE_LABEL = {
+  where:'Where the property is', property_type:'Property type', source:'Where they found it',
+  link:'Listing link', docs:'Documents they have', name:'Name on the report',
+  phone:'Phone / WhatsApp', urgency:'How urgent', notes:'What they told us',
+  tier:'Tier chosen', submitted_at:'Form submitted'
+};
+const INTAKE_ORDER = ['where','property_type','source','link','docs','name','phone','urgency','notes'];
+
+/* Bedragen staan in butut. money() hierboven is voor vraagprijzen in
+   dollars — die niet gebruiken, dat zou een factor 100 én het verkeerde
+   valutateken opleveren. De bankafletter heeft al een eigen gmd() voor
+   hele eenheden; die laten staan, vandaar een eigen naam hier. */
+const orderAmt = minor => 'D' + (Number(minor||0)/100).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+const stageOf = o => o.fulfilment_status || 'new';
+/* Alleen betaald werk telt als werk. Een mislukte of nog niet betaalde
+   bestelling hoort niet op de stapel "moet gedaan worden". */
+const isPaid   = o => o.status === 'succeeded';
+const needsWork = o => isPaid(o) && stageOf(o) !== 'done' && stageOf(o) !== 'cancelled';
+let orderFilter = 'action';
+
+function planNameOf(o){
+  const m = o.metadata || {};
+  return m.plan_name || o.plan_id || 'MyKunda service';
+}
+
+function intakeHTML(o){
+  const m = o.metadata || {};
+  const it = m.ownership_intake;
+  if(!it || typeof it !== 'object'){
+    return `<div class="onone">No request details were captured with this order. Orders placed before 23 August 2026 predate the form being passed through, so the property and documents were never stored.</div>`;
+  }
+  const rows = INTAKE_ORDER.filter(k => it[k] != null && it[k] !== '' && !(Array.isArray(it[k]) && !it[k].length)).map(k => {
+    const v = Array.isArray(it[k]) ? it[k].join(', ') : String(it[k]);
+    const shown = (k === 'link') ? `<a href="${esc(v)}" target="_blank" rel="noopener">${esc(v)}</a>` : esc(v);
+    return `<dt>${esc(INTAKE_LABEL[k] || k)}</dt><dd>${shown}</dd>`;
+  }).join('');
+  if(!rows) return `<div class="onone">The request form was submitted but every field came through empty.</div>`;
+  return `<details class="ointake" open><summary>Request details</summary><dl>${rows}</dl></details>`;
+}
+
+function orderCard(o){
+  const st = stageOf(o);
+  const chip = PAY_CHIP[o.status] || '';
+  const acct = (o.metadata||{}).account_email;
+  const viaForm = (o.metadata||{}).contact_email_source === 'form';
+  return `
+  <div class="ocard" id="ord-${esc(o.reference)}" data-ref="${esc(o.reference)}">
+    <div class="ohead">
+      <div>
+        <h3>${esc(planNameOf(o))}</h3>
+        <div class="oref">${esc(o.reference)}</div>
+      </div>
+      <div class="oamt">${orderAmt(o.amount_minor)}</div>
+    </div>
+    <div class="ometa">
+      <span class="ochip ${chip}">${esc(o.status)}</span>
+      <span class="ochip">${esc(METHOD_LABEL[o.method] || o.method)}</span>
+      <span class="ochip">${esc(ago(o.created_at))}</span>
+      ${o.listing_id ? `<span class="ochip">Attached to a listing</span>` : `<span class="ochip">Buyer order</span>`}
+    </div>
+    <div class="obuyer">
+      ${o.customer_email
+        ? `Confirmation went to <a href="mailto:${esc(o.customer_email)}">${esc(o.customer_email)}</a>${viaForm ? ' (from the request form)' : ' (account address)'}`
+        : 'No email address on this order'}
+      ${acct && acct !== o.customer_email ? `<br>Ordered from the account ${esc(acct)}` : ''}
+    </div>
+    ${intakeHTML(o)}
+    ${badgeHTML(o)}
+    <div class="oacts">
+      <label for="os-${esc(o.reference)}">Progress</label>
+      <select id="os-${esc(o.reference)}" onchange="setOrderStage('${esc(o.reference)}', this.value)">
+        ${ORDER_STAGES.map(s=>`<option value="${s[0]}" ${st===s[0]?'selected':''}>${s[1]}</option>`).join('')}
+      </select>
+      ${o.fulfilment_updated_at ? `<span class="owhen">Last moved ${esc(ago(o.fulfilment_updated_at))}</span>` : ''}
+    </div>
+    <div class="onote">
+      <textarea id="on-${esc(o.reference)}" placeholder="Internal note — what you found, who is doing the search, what you are waiting for.">${esc(o.admin_note||'')}</textarea>
+      <div class="row">
+        <button class="btn btn-ghost btn-sm" onclick="saveOrderNote('${esc(o.reference)}')">Save note</button>
+        <span class="saved" id="ok-${esc(o.reference)}">Saved</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* Het Verified-badge.
+
+   apply_paid_plan() verlengt bij een betaalde titelcontrole alleen de
+   PERIODE (verified_until). Het vinkje zelf blijft staan tot iemand de
+   titel werkelijk heeft bekeken — dat is de hele waarde van het badge.
+   Deze knop is die "iemand".
+
+   Alleen zichtbaar bij een verkoperbestelling: een titelcontrole die aan
+   een listing hangt. Een Document Check of Full Ownership Check is een
+   koperproduct zonder listing; daar is geen badge om te zetten. */
+function isBadgeOrder(o){
+  return !!o.listing_id && (o.metadata||{}).plan_kind === 'title_check';
+}
+
+function badgeHTML(o){
+  if(!isBadgeOrder(o)) return '';
+  const l = o.listings || null;
+  const on = !!(l && l.is_verified_title);
+  const paid = o.status === 'succeeded';
+  return `
+    <div class="obadge${on?' on':''}">
+      <div class="bstate">
+        <span class="ochip ${on?'ok':'warn'}">${on?'Verified badge is live':'Badge not granted yet'}</span>
+        ${l && l.title ? `<span class="btitle">${esc(l.title)}</span>` : ''}
+        ${on && l && l.verified_at ? `<span class="bwhen">granted ${esc(ago(l.verified_at))}</span>` : ''}
+      </div>
+      <p class="bhint">${on
+        ? 'The badge shows on the listing. Withdraw it if the check turned out badly or the documents were pulled.'
+        : (paid
+            ? 'The customer has paid for the check and the period is running, but the badge is not showing. Grant it once you have actually read the title.'
+            : 'This order has not been paid, so the badge cannot be granted yet.')}</p>
+      ${paid ? `<button class="btn ${on?'btn-ghost':'btn-primary'} btn-sm" onclick="setBadge('${esc(o.reference)}','${esc(o.listing_id)}',${on?'false':'true'})">${on?'Withdraw badge':'Grant Verified badge'}</button>` : ''}
+    </div>`;
+}
+
+async function setBadge(ref, listingId, granted){
+  if(granted && !confirm('Grant the Verified badge to this listing?\n\nOnly do this once you have actually checked the title. The badge is what buyers trust — it is not a receipt for the payment.')) return;
+  if(!granted && !confirm('Withdraw the Verified badge from this listing?\n\nIt disappears from the listing straight away.')) return;
+  const o = orders.find(x=>x.reference===ref);
+  if(!LIVE){
+    if(o && o.listings){ o.listings.is_verified_title = granted; o.listings.verified_at = granted ? new Date().toISOString() : null; }
+    renderOrders();
+    return;
+  }
+  try{
+    const { error } = await sb.rpc('set_listing_verified_badge', {
+      p_listing_id: listingId, p_granted: granted, p_reference: ref
+    });
+    if(error) throw error;
+    if(o && o.listings){ o.listings.is_verified_title = granted; o.listings.verified_at = granted ? new Date().toISOString() : null; }
+    renderOrders();
+  }catch(e){
+    alert('Could not change the badge: ' + (e.message || e));
+  }
+}
+
+function visibleOrders(){
+  const rows = orderFilter==='action' ? orders.filter(needsWork) : orders.slice();
+  /* Oudste openstaande bestelling bovenaan — die wacht het langst op
+     een rapport. Afgeronde bestellingen nieuwste eerst. */
+  return rows.sort((a,b)=>{
+    const an = needsWork(a), bn = needsWork(b);
+    if(an!==bn) return an ? -1 : 1;
+    const at = new Date(a.created_at).getTime(), bt = new Date(b.created_at).getTime();
+    return an ? at-bt : bt-at;
+  });
+}
+
+function renderOrders(){
+  const panel = document.getElementById('ordersPanel');
+  if(!panel) return;
+  const todo = orders.filter(needsWork).length;
+  document.getElementById('cOrders').textContent = todo;
+
+  if(ordersError){
+    panel.innerHTML = emptyState('Could not load orders', esc(ordersError));
+    return;
+  }
+  if(!orders.length){
+    panel.innerHTML = emptyState('No orders yet','Every paid listing plan, Verified badge and ownership check appears here once the payment goes through.');
+    return;
+  }
+  const shown = visibleOrders();
+  panel.innerHTML = `
+    <div class="obar">
+      <div class="oseg" id="orderFilter">
+        <button data-f="action" class="${orderFilter==='action'?'on':''}">Needs action <b>${todo}</b></button>
+        <button data-f="all" class="${orderFilter==='all'?'on':''}">Everything <b>${orders.length}</b></button>
+      </div>
+    </div>
+    ${shown.length ? shown.map(orderCard).join('')
+      : emptyState('Nothing waiting','Every paid order has been dealt with. Switch to Everything to see the finished ones.')}`;
+}
+
+async function setOrderStage(ref, stage){
+  const o = orders.find(x=>x.reference===ref);
+  if(!o) return;
+  const before = o.fulfilment_status;
+  o.fulfilment_status = stage;
+  o.fulfilment_updated_at = new Date().toISOString();
+  renderOrders();
+  if(!LIVE) return;
+  try{
+    const { error } = await sb.rpc('set_payment_fulfilment', { p_reference: ref, p_status: stage });
+    if(error) throw error;
+  }catch(e){
+    o.fulfilment_status = before;
+    renderOrders();
+    alert('Could not save that: ' + (e.message || e));
+  }
+}
+
+async function saveOrderNote(ref){
+  const box = document.getElementById('on-'+ref);
+  const ok  = document.getElementById('ok-'+ref);
+  if(!box) return;
+  const note = box.value.trim();
+  const o = orders.find(x=>x.reference===ref);
+  if(!LIVE){ if(o) o.admin_note = note; if(ok){ ok.classList.add('on'); setTimeout(()=>ok.classList.remove('on'),1800); } return; }
+  try{
+    const { error } = await sb.rpc('set_payment_fulfilment', {
+      p_reference: ref, p_status: stageOf(o||{}), p_note: note
+    });
+    if(error) throw error;
+    if(o) o.admin_note = note;
+    if(ok){ ok.classList.add('on'); setTimeout(()=>ok.classList.remove('on'),1800); }
+  }catch(e){
+    alert('Could not save that note: ' + (e.message || e));
+  }
+}
+
+/* admin.html?ref=MK-XXXXXXX — de knop in de backoffice-mail. Opent de
+   Orders-weergave en licht die ene bestelling op, zodat de mail en het
+   scherm over hetzelfde gaan. */
+function openDeepLink(){
+  const ref = (new URLSearchParams(location.search).get('ref')||'').toUpperCase().trim();
+  if(!ref) return;
+  const tab = document.querySelector('.vbtn[data-view="orders"]');
+  if(tab) tab.click();
+  /* Altijd naar 'Everything'. De vraag is niet of de bestelling in de data
+     zit, maar of de kaart in het scherm staat — en dat hangt van het filter
+     af. Een afgehandelde of nog niet betaalde bestelling valt buiten
+     'Needs action', en dat is juist het soort bestelling waarvoor je deze
+     link aanklikt. */
+  orderFilter = 'all';
+  renderOrders();
+  const card = document.getElementById('ord-'+ref);
+  if(!card) return;
+  card.classList.add('hit');
+  const y = card.getBoundingClientRect().top + window.pageYOffset - (window.innerHeight/2) + (card.offsetHeight/2);
+  window.scrollTo({top: Math.max(0, y), behavior:'smooth'});
+}
+
+/* ============================================================
+   Bank transfers — the lines the daily reconciliation could not
+   settle on its own. A transfer whose MK- reference AND amount
+   both match is confirmed without a human; everything else waits
+   here for a decision.
+
+   Reading: the view public.bank_reconciliation_inbox, with the
+   signed-in admin's own session (security_invoker + is_admin()).
+   Writing: the bank-confirm edge function, never confirm_bank_line
+   directly, and never a service-role key in the browser.
+   ============================================================ */
+const FN_BASE = (typeof MYKUNDA_FN_URL === 'string' && MYKUNDA_FN_URL)
+  ? MYKUNDA_FN_URL
+  : 'https://jejaerpqltqryqzjvbjp.supabase.co/functions/v1';
+
+/* Every error the function can return, in words the reader can act on. */
+const BANK_ERR = {
+  ongeldige_referentie:  'That is not a valid reference. It looks like MK- followed by seven characters.',
+  betaling_niet_gevonden:'No payment exists with that reference. Check it against the customer\u2019s email.',
+  geen_bankoverschrijving:'That payment was not made by bank transfer, so this line cannot settle it.',
+  betaling_niet_meer_open:'That payment is no longer open \u2014 it has already been settled or cancelled.',
+  forbidden:             'This account is not allowed to confirm bank lines.',
+  unauthorized:          'Your session has expired. Sign in again and reopen this page.'
+};
+
+const MATCH_LABEL = { exact:['Exact','ok'], reference:['Reference','part'], amount_only:['Amount only','part'], none:['No match',''] };
+const gmd = n => (n===null||n===undefined||n==='') ? '\u2014' : Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+function bankDiff(l){
+  if(l.verwacht_gmd===null||l.verwacht_gmd===undefined) return null;
+  const d = Number(l.ontvangen_gmd) - Number(l.verwacht_gmd);
+  return Math.abs(d) < 0.005 ? 0 : d;
+}
+function shortDate(d){
+  const t = new Date(d);
+  if(isNaN(t)) return String(d||'\u2014');
+  return ['<b>'+t.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+'</b>','<span>'+t.getFullYear()+'</span>'].join('');
+}
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* Example rows for the design/preview host, where there is no session to
+   read a real inbox with. Actions are refused there. */
+const DEMO_BANK = [
+  {regel:'demo-1',datum:'2026-08-21',ontvangen_gmd:4450,van:'A. Ceesay',omschrijving:'TRF MK-A2B3C4D LISTING FEE',zekerheid:'reference',status:'suggested',voorgestelde_betaling:'MK-A2B3C4D',verwacht_gmd:4500,toelichting:'Referentie klopt, bedrag niet: verwacht 4.500,00 GMD, ontvangen 4.450,00 GMD'},
+  {regel:'demo-2',datum:'2026-08-22',ontvangen_gmd:12000,van:'',omschrijving:'INWARD TRF EUR CONVERSION FEATURED PLAN',zekerheid:'amount_only',status:'suggested',voorgestelde_betaling:'MK-9X8Y7Z6',verwacht_gmd:12000,toelichting:'Bedrag klopt, geen referentie in de omschrijving'},
+  {regel:'demo-3',datum:'2026-08-22',ontvangen_gmd:2500,van:'M. Jallow',omschrijving:'CASH DEPOSIT BRANCH SENEGAMBIA',zekerheid:'none',status:'unmatched',voorgestelde_betaling:'',verwacht_gmd:null,toelichting:'Geen referentie en geen openstaande betaling met dit bedrag'}
+];
+
+async function loadBank(){
+  bankError = null;
+  if(!LIVE){ bankLines = DEMO_BANK.slice(); return; }
+  try{
+    const { data, error } = await sb.from('bank_reconciliation_inbox').select('*').order('datum',{ascending:true});
+    if(error) throw error;
+    bankLines = data || [];
+  }catch(e){
+    bankLines = [];
+    bankError = e.message || 'unknown error';
+  }
+}
+
+function renderBank(){
+  const panel = document.getElementById('bankPanel');
+  if(bankError){
+    panel.innerHTML = emptyState('Could not load bank transfers', esc(bankError));
+    return;
+  }
+  if(!bankLines.length){
+    panel.innerHTML = emptyState('Nothing to review','Transfers that match on both reference and amount are confirmed automatically. Only the ones that need a decision appear here.');
+    return;
+  }
+  panel.innerHTML = `
+    <div class="bankbar">
+      <span class="bl">${bankLines.length} transfer${bankLines.length===1?'':'s'} waiting for a decision</span>
+      <span class="br">Confirming is immediate and cannot be undone</span>
+    </div>
+    <div class="tablewrap"><table class="btab">
+      <tr><th>Date</th><th>From &amp; description</th><th>Received / expected</th><th>Match</th><th>Note</th><th></th></tr>
+      ${bankLines.map(l=>{
+        const d = bankDiff(l), m = MATCH_LABEL[l.zekerheid] || [l.zekerheid||'\u2014',''];
+        return `<tr data-id="${esc(l.regel)}">
+        <td class="bdate">${shortDate(l.datum)}</td>
+        <td class="bfrom"><b>${esc(l.van) || '<span style="color:var(--muted-2);font-weight:600">Not stated</span>'}</b><div class="desc">${esc(l.omschrijving) || '\u2014'}</div></td>
+        <td class="bamt">
+          <div class="got">${gmd(l.ontvangen_gmd)} <span class="cur">GMD</span></div>
+          <div class="exp">expected ${gmd(l.verwacht_gmd)}</div>
+          ${d===null?'':`<span class="dchip ${d===0?'':'off'}">${d===0?'amount matches':(d>0?'+':'\u2212')+gmd(Math.abs(d))}</span>`}
+        </td>
+        <td>
+          <span class="mchip ${m[1]}">${esc(m[0])}</span>
+          ${l.voorgestelde_betaling?`<span class="bref">${esc(l.voorgestelde_betaling)}</span>`:''}
+          <span class="bstat">${l.status==='suggested'?'Suggested':'Unmatched'}</span>
+        </td>
+        <td class="bnote">${esc(l.toelichting) || '\u2014'}</td>
+        <td><div class="bacts">
+          <button class="go" data-act="confirm">Confirm</button>
+          <button class="lk" data-act="link">Link to reference</button>
+          <button class="ig" data-act="ignore">Ignore</button>
+        </div></td>
+      </tr>`;}).join('')}
+    </table></div>`;
+}
+
+/* One POST to bank-confirm, with the signed-in admin's access token. */
+async function bankPost(body){
+  if(!LIVE) throw new Error('This is the example view \u2014 confirming works on mykunda.com, signed in as admin.');
+  const { data: sess } = await sb.auth.getSession();
+  const token = sess && sess.session ? sess.session.access_token : null;
+  if(!token) throw new Error(BANK_ERR.unauthorized);
+  let r;
+  try{
+    r = await fetch(FN_BASE + '/bank-confirm', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+token, 'apikey':MYKUNDA_SUPABASE_ANON },
+      body: JSON.stringify(body)
+    });
+  }catch(e){ throw new Error('The bank-confirm function could not be reached. Nothing was changed.'); }
+  const out = await r.json().catch(()=>({}));
+  const code = out && (out.error || out.code) || '';
+  if(!r.ok || out.ok === false){
+    if(BANK_ERR[code]) throw new Error(BANK_ERR[code]);
+    if(r.status===401) throw new Error(BANK_ERR.unauthorized);
+    if(r.status===403) throw new Error(BANK_ERR.forbidden);
+    throw new Error(code || ('The request failed (' + r.status + '). Nothing was changed.'));
+  }
+  return out;
+}
+
+/* A step between the click and the request, so the amount, the reference and
+   the counterparty can be read once more. The button locks on submit — a
+   double click can never send two requests — and the list is re-fetched
+   afterwards rather than patched locally. */
+function bankDialog(o){
+  const ov = document.createElement('div');
+  ov.className = 'confirm-overlay bank-ov';
+  ov.innerHTML = '<div class="confirm-box bdlg" role="dialog" aria-modal="true">'
+    + '<h3>' + o.title + '</h3>'
+    + (o.intro ? '<p>' + o.intro + '</p>' : '')
+    + '<div class="bfacts">' + o.facts.map(f=>'<div><i>'+f[0]+'</i><b>'+f[1]+'</b></div>').join('') + '</div>'
+    + (o.warn ? '<div class="bwarn">' + o.warn + '</div>' : '')
+    + (o.fields || '')
+    + '<div class="bdlg-err"></div>'
+    + '<div class="confirm-btns right"><button class="btn-cancel" type="button">Cancel</button>'
+    + '<button class="btn-go" type="button">' + o.action + '</button></div>'
+    + '</div>';
+  document.body.appendChild(ov);
+  requestAnimationFrame(()=>ov.classList.add('show'));
+
+  const go = ov.querySelector('.btn-go'), errBox = ov.querySelector('.bdlg-err');
+  let busy = false;
+  const showErr = m => { errBox.textContent = m; errBox.classList.add('on'); };
+  const close = () => { if(busy) return; ov.classList.remove('show'); setTimeout(()=>ov.remove(),200); document.removeEventListener('keydown', onKey); };
+  function onKey(e){ if(e.key==='Escape') close(); }
+  document.addEventListener('keydown', onKey);
+  ov.querySelector('.btn-cancel').onclick = close;
+  ov.addEventListener('click', e=>{ if(e.target===ov) close(); });
+  if(o.ready) o.ready(ov, go);
+
+  go.onclick = async ()=>{
+    if(busy) return;
+    errBox.classList.remove('on');
+    const vals = o.read ? o.read(ov, showErr) : {};
+    if(vals === false) return;
+    busy = true; go.disabled = true;
+    const label = go.textContent; go.textContent = 'Working\u2026';
+    try{
+      await o.run(vals);
+      busy = false; close();
+      await loadBank(); render();
+    }catch(e){
+      busy = false; go.disabled = false; go.textContent = label;
+      showErr(e.message || 'Something went wrong. Nothing was changed.');
+    }
+  };
+}
+
+const noteField = (label, ph) => '<div class="bfield"><label>' + label + '</label><textarea placeholder="' + ph + '"></textarea></div>';
+function lineFacts(l){
+  const d = bankDiff(l), f = [
+    ['Received', gmd(l.ontvangen_gmd) + ' GMD'],
+    ['Expected', l.verwacht_gmd==null ? 'unknown' : gmd(l.verwacht_gmd) + ' GMD']
+  ];
+  if(d) f.push(['Difference', (d>0?'+':'\u2212') + gmd(Math.abs(d)) + ' GMD']);
+  f.push(['From', esc(l.van) || 'not stated']);
+  f.push(['Date', esc(l.datum)]);
+  if(l.voorgestelde_betaling) f.push(['Reference', esc(l.voorgestelde_betaling)]);
+  return f;
+}
+
+function bankConfirm(l){
+  bankDialog({
+    title: 'Confirm this payment?',
+    intro: 'Read the amount and the reference once more before this goes out.',
+    facts: lineFacts(l),
+    warn: 'The customer receives their receipt and their plan goes live the moment you confirm. This cannot be undone.',
+    fields: noteField('Note (optional)', 'Why you are confirming this line'),
+    action: 'Confirm payment',
+    read: ov => ({ note: ov.querySelector('textarea').value.trim() }),
+    run: v => bankPost(Object.assign({ line_id: l.regel, action: 'confirm' }, v.note ? { note: v.note } : {}))
+  });
+}
+
+function bankLink(l){
+  bankDialog({
+    title: 'Link to a reference',
+    intro: 'Use this when the customer forgot to put their MK- reference on the transfer.',
+    facts: lineFacts(l),
+    fields: '<div class="bfield"><label>Payment reference</label><input placeholder="MK-XXXXXXX" autocomplete="off" spellcheck="false"></div>'
+      + '<label class="bcheck"><input type="checkbox" checked>Confirm the payment straight away \u2014 the receipt goes out and the plan goes live immediately, and that cannot be undone.</label>',
+    action: 'Link &amp; confirm',
+    ready: (ov, go) => {
+      const cb = ov.querySelector('.bcheck input');
+      cb.onchange = () => { go.textContent = cb.checked ? 'Link & confirm' : 'Link only'; };
+      ov.querySelector('.bfield input').focus();
+    },
+    read: (ov, err) => {
+      const ref = ov.querySelector('.bfield input').value.trim().toUpperCase();
+      if(!ref){ err('Fill in the reference the payment should be linked to.'); return false; }
+      return { ref, confirm: ov.querySelector('.bcheck input').checked };
+    },
+    run: v => bankPost({ line_id: l.regel, action: 'link', payment_reference: v.ref, confirm: v.confirm })
+  });
+}
+
+function bankIgnore(l){
+  bankDialog({
+    title: 'Ignore this line?',
+    intro: 'The line stays in the books but drops off this list. Say why, so it still makes sense in six months.',
+    facts: lineFacts(l),
+    fields: noteField('Reason (required)', 'e.g. Not a MyKunda payment \u2014 rent for the office'),
+    action: 'Ignore line',
+    ready: ov => ov.querySelector('textarea').focus(),
+    read: (ov, err) => {
+      const note = ov.querySelector('textarea').value.trim();
+      if(!note){ err('A reason is required before a line can be ignored.'); return false; }
+      return { note };
+    },
+    run: v => bankPost({ line_id: l.regel, action: 'ignore', note: v.note })
+  });
+}
+
+document.getElementById('bankPanel').addEventListener('click', e=>{
+  const b = e.target.closest('button[data-act]'); if(!b) return;
+  const row = b.closest('tr'), l = bankLines.find(x=>String(x.regel)===row.dataset.id);
+  if(!l) return;
+  if(b.dataset.act==='confirm') bankConfirm(l);
+  else if(b.dataset.act==='link') bankLink(l);
+  else bankIgnore(l);
+});
+
+async function approve(id){
+  if(LIVE){ try{ await sb.from('listings').update({status:'active'}).eq('id',id); }catch(e){ alert('Could not approve: '+e.message); return; } }
+  pending = pending.filter(l=>l.id!==id);
+  render();
+}
+async function reject(id){
+  if(LIVE){ try{ await sb.from('listings').update({status:'rejected'}).eq('id',id); }catch(e){ alert('Could not reject: '+e.message); return; } }
+  pending = pending.filter(l=>l.id!==id);
+  render();
+}
+async function setStage(id, stage){
+  if(LIVE){ try{ await sb.from('leads').update({stage, contacted_at: stage!=='new'? new Date().toISOString():null}).eq('id',id); }catch(e){ console.warn(e); } }
+  const l = leads.find(x=>x.id===id);
+  if(l){ l.stage=stage; l.contacted_at = stage!=='new' ? new Date().toISOString() : null; }
+  render();
+}
+/* One click, so following up is never more work than ignoring it. */
+async function markContacted(id){ await setStage(id,'contacted'); }
+
+function showConfirm(title, msg, onConfirm){
+  var ov = document.createElement('div');
+  ov.className = 'confirm-overlay';
+  ov.innerHTML = '<div class="confirm-box"><h3>'+title+'</h3><p>'+msg+'</p><div class="confirm-btns"><button class="btn-cancel">Cancel</button><button class="btn-confirm-del">Delete</button></div></div>';
+  document.body.appendChild(ov);
+  requestAnimationFrame(function(){ ov.classList.add('show'); });
+  ov.querySelector('.btn-cancel').onclick = function(){ ov.classList.remove('show'); setTimeout(function(){ ov.remove(); },200); };
+  ov.querySelector('.btn-confirm-del').onclick = function(){ ov.classList.remove('show'); setTimeout(function(){ ov.remove(); },200); onConfirm(); };
+  ov.addEventListener('click', function(e){ if(e.target===ov){ ov.classList.remove('show'); setTimeout(function(){ ov.remove(); },200); } });
+}
+
+async function deleteLead(id){
+  var lead = leads.find(x=>x.id===id);
+  var name = lead ? (lead.name||lead.email||'this lead') : 'this lead';
+  showConfirm('Delete lead?', 'Are you sure you want to delete <b>'+name+'</b>? This action cannot be undone.', async function(){
+    if(LIVE){ try{ await sb.from('leads').delete().eq('id',id); }catch(e){ console.warn(e); } }
+    leads = leads.filter(x=>x.id!==id);
+    document.getElementById('cLeads').textContent = leads.length;
+    render();
+  });
+}
+
+// lead filter (delegated — the bar is re-rendered on every change)
+document.getElementById('leadsPanel').addEventListener('click', e=>{
+  const b = e.target.closest('#leadFilter button'); if(!b) return;
+  leadFilter = b.dataset.f; render();
+});
+
+// order filter — zelfde patroon, de balk wordt bij elke wijziging opnieuw getekend
+document.getElementById('ordersPanel').addEventListener('click', e=>{
+  const b = e.target.closest('#orderFilter button'); if(!b) return;
+  orderFilter = b.dataset.f; renderOrders();
+});
+
+// in-page view switcher
+document.querySelectorAll('.vbtn').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.vbtn').forEach(x=>{ x.classList.remove('on'); x.setAttribute('aria-selected','false'); });
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  t.classList.add('on'); t.setAttribute('aria-selected','true');
+  document.querySelector(`.view[data-view="${t.dataset.view}"]`).classList.add('on');
+}));
+
+load();
+
+</script>
+</body>
+</html>

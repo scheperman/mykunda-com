@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyKunda — Partnership Prospectus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green-900:#0E2E25;
+  --green-800:#123A2E;
+  --green-700:#15463A;
+  --green-600:#1C5848;
+  --green-500:#2A7561;
+  --green-200:#BEDACE;
+  --green-100:#DCEAE3;
+  --green-50:#EAF2ED;
+  --amber-600:#B45F22;
+  --amber-500:#C8702D;
+  --amber-400:#DD8A45;
+  --amber-100:#F6E6D4;
+  --amber-50:#FBF1E6;
+  --paper:#FAF8F3;
+  --white:#FFFFFF;
+  --ink:#18201D;
+  --ink-2:#384640;
+  --muted:#5C6B64;
+  --muted-2:#8A958E;
+  --line:#E5E1D6;
+  --line-2:#EFEBE1;
+  --serif:'Mulish', -apple-system, BlinkMacSystemFont, sans-serif;
+  --sans:'Hanken Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body { margin: 0; background: #fff; }
+.doc { box-sizing: border-box; max-width: 8.5in; margin: 0 auto;
+       background: inherit;
+       padding: 0 clamp(24px, 5vw, 0.75in) 96px; }
+.doc-frame { width: 100%; border-collapse: collapse; }
+.doc-frame td { padding: 0; }
+.running-hdr, .running-ftr, .hdr-space, .ftr-space { display: none; }
+h1, h2, h3 { text-wrap: balance; }
+p, li { text-wrap: pretty; }
+
+@page { size: letter; margin: 0; }
+@media print {
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; padding: 0; }
+  .doc { max-width: none !important; margin: 0 !important;
+         padding: 0 0.75in !important; box-shadow: none !important;
+         border: none !important; }
+  #dc-root, .sc-host { height: auto !important; }
+  .hdr-space, .ftr-space { display: table-cell;
+         height: 0.75in !important; }
+  .running-hdr, .running-ftr { display: flex !important;
+         justify-content: space-between; align-items: baseline;
+         position: fixed !important; left: 0; right: 0;
+         margin: 0 !important; font-size: 11px;
+         letter-spacing: 0.05em; text-transform: uppercase; }
+  .running-hdr { top: 0; padding: 0.35in 0.75in 0 !important; }
+  .running-ftr { bottom: 0; padding: 0 0.75in 0.35in !important; }
+  h1, h2, h3, h4, h5, h6 { break-after: avoid; }
+  figure, pre, blockquote, img, svg, tr, .stat-grid, .step-card, .rev-card, .opp-card, .partner-card { break-inside: avoid; }
+  p, li { orphans: 3; widows: 3; }
+  .screen-only { display: none !important; }
+  .cover { min-height: 0 !important; padding-top: 2in !important; padding-bottom: 1.5in !important; }
+}
+
+/* ---- Fonts ---- */
+* { box-sizing: border-box; }
+body { font-family: var(--sans); color: var(--ink); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+/* ---- Cover ---- */
+.cover {
+  background: linear-gradient(160deg, var(--green-900) 0%, var(--green-700) 60%, var(--green-500) 100%);
+  color: #fff;
+  padding: 120px clamp(32px, 5vw, 0.75in) 80px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.cover::before {
+  content: "";
+  position: absolute;
+  top: -20%;
+  right: -15%;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(200, 112, 45, .12) 0%, transparent 70%);
+}
+.cover-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--serif);
+  font-weight: 800;
+  font-size: 26px;
+  letter-spacing: -.02em;
+  margin-bottom: 48px;
+}
+.cover-logo img { width: 38px; height: 38px; border-radius: 9px; }
+.cover h1 {
+  font-family: var(--serif);
+  font-size: clamp(36px, 5vw, 54px);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -.02em;
+  color: #fff;
+  max-width: 580px;
+}
+.cover h1 em { font-style: italic; color: var(--amber-400); }
+.cover-sub {
+  font-size: 18px;
+  color: rgba(255,255,255,.82);
+  margin-top: 20px;
+  max-width: 520px;
+  line-height: 1.6;
+}
+.cover-meta {
+  margin-top: 52px;
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: rgba(255,255,255,.6);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.cover-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,.12);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: .02em;
+  text-transform: none;
+  margin-top: 28px;
+}
+.cover-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--amber-400); }
+
+/* ---- Body ---- */
+.body-content { padding-top: 52px; }
+.body-content h2 {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.15;
+  margin: 52px 0 8px;
+  letter-spacing: -.01em;
+}
+.body-content h2:first-child { margin-top: 0; }
+.body-content h3 {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 32px 0 6px;
+}
+.body-content p {
+  font-size: 15px;
+  color: var(--ink-2);
+  line-height: 1.7;
+  margin: 10px 0;
+}
+.body-content ul, .body-content ol {
+  padding-left: 22px;
+  margin: 10px 0;
+}
+.body-content li {
+  font-size: 15px;
+  color: var(--ink-2);
+  line-height: 1.65;
+  margin-bottom: 6px;
+}
+.body-content strong { color: var(--ink); }
+
+/* ---- Eyebrow ---- */
+.eyebrow {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--amber-600);
+  margin-bottom: 8px;
+}
+
+/* ---- Stat grid ---- */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: 24px 0 32px;
+}
+.stat {
+  background: var(--green-50);
+  border-radius: 14px;
+  padding: 22px 20px;
+  text-align: center;
+}
+.stat-val {
+  font-family: var(--serif);
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--green-700);
+  line-height: 1.1;
+}
+.stat-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-top: 6px;
+  line-height: 1.35;
+}
+.stat-src {
+  font-size: 10px;
+  color: var(--muted-2);
+  margin-top: 3px;
+}
+
+/* ---- Opportunity cards ---- */
+.opp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 20px 0 28px;
+}
+.opp-card {
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  padding: 24px;
+  background: var(--white);
+}
+.opp-card .opp-ic {
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+.opp-card h4 {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+.opp-card p {
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ---- Revenue cards ---- */
+.rev-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+  margin: 20px 0 28px;
+}
+.rev-card {
+  border-radius: 14px;
+  padding: 22px 20px;
+  background: var(--white);
+  border: 1.5px solid var(--line);
+}
+.rev-card .rev-name {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.rev-card .rev-desc {
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+.rev-card .rev-price {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--green-700);
+  margin-top: 10px;
+}
+.rev-card .rev-freq {
+  font-size: 12px;
+  color: var(--muted-2);
+}
+
+/* ---- Steps (How it works) ---- */
+.steps {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+  margin: 20px 0 28px;
+}
+.step-card {
+  background: var(--paper);
+  border-radius: 14px;
+  padding: 22px 20px;
+  position: relative;
+}
+.step-num {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--green-700);
+  color: #fff;
+  font-weight: 800;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+.step-card h4 {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 5px;
+}
+.step-card p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ---- Partnership cards ---- */
+.partner-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 20px 0 28px;
+}
+.partner-card {
+  border-radius: 14px;
+  padding: 26px 24px;
+  border: 1.5px solid var(--line);
+  background: var(--white);
+}
+.partner-card .p-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+.partner-card h4 {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+.partner-card p {
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.55;
+  margin: 0;
+}
+.partner-card ul {
+  margin: 10px 0 0;
+  padding-left: 18px;
+}
+.partner-card li {
+  font-size: 13px;
+  color: var(--ink-2);
+  line-height: 1.5;
+  margin-bottom: 4px;
+}
+
+/* ---- Highlight box ---- */
+.highlight {
+  background: linear-gradient(135deg, var(--green-900), var(--green-700));
+  color: #fff;
+  border-radius: 16px;
+  padding: 34px 32px;
+  margin: 32px 0;
+}
+.highlight h3 {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 12px;
+}
+.highlight p {
+  color: rgba(255,255,255,.82);
+  font-size: 15px;
+  line-height: 1.65;
+  margin: 0;
+}
+.highlight .h-stats {
+  display: flex;
+  gap: 32px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+.highlight .h-stat {
+  text-align: center;
+}
+.highlight .h-stat-val {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--amber-400);
+}
+.highlight .h-stat-label {
+  font-size: 12px;
+  color: rgba(255,255,255,.65);
+  font-weight: 600;
+}
+
+/* ---- Table ---- */
+.doc-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0 24px;
+  font-size: 13.5px;
+}
+.doc-table th {
+  text-align: left;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--muted);
+  padding: 10px 14px;
+  border-bottom: 2px solid var(--line);
+  background: var(--paper);
+}
+.doc-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line-2);
+  color: var(--ink-2);
+}
+.doc-table tr:last-child td { border-bottom: none; }
+.doc-table .val { font-weight: 700; color: var(--ink); font-family: var(--serif); }
+
+/* ---- Footer / contact ---- */
+.doc-footer {
+  margin-top: 48px;
+  padding: 32px;
+  background: var(--paper);
+  border-radius: 16px;
+  border: 1.5px solid var(--line);
+}
+.doc-footer h3 {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+.doc-footer p {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 4px 0;
+  line-height: 1.55;
+}
+.doc-footer .contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 18px;
+}
+.doc-footer .c-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--ink-2);
+  font-weight: 600;
+}
+.doc-footer .c-item .c-ic {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: var(--green-50);
+  color: var(--green-700);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.disclaimer {
+  font-size: 11px;
+  color: var(--muted-2);
+  line-height: 1.55;
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line-2);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 640px) {
+  .stat-grid { grid-template-columns: 1fr 1fr; }
+  .opp-grid, .partner-grid { grid-template-columns: 1fr; }
+  .rev-grid, .steps { grid-template-columns: 1fr; }
+  .doc-footer .contact-grid { grid-template-columns: 1fr; }
+  .highlight .h-stats { gap: 20px; }
+}
+</style>
+</head>
+<body>
+
+<main class="doc" style="padding:0; max-width:8.5in;">
+  <table class="doc-frame" role="presentation">
+    <thead><tr><td class="hdr-space"></td></tr></thead>
+    <tbody><tr><td>
+
+<!-- ============================================
+     COVER
+     ============================================ -->
+<div class="cover">
+  <div class="cover-logo">
+    <img src="images/mykunda-icon.png" alt="MyKunda" onerror="this.style.display='none'">
+    MyKunda
+  </div>
+  <h1>The Gambia's first digital <em>property platform</em></h1>
+  <p class="cover-sub">A partnership prospectus for banks, financial institutions and strategic investors. Bringing proven, professional transparency standards to West Africa's fastest-growing real estate market.</p>
+  <div class="cover-badge"><span class="dot"></span> Confidential — June 2026</div>
+  <div class="cover-meta">
+    <span>MyKunda Ltd · The Gambia</span>
+    <span>mykunda.com</span>
+  </div>
+</div>
+
+<!-- ============================================
+     BODY
+     ============================================ -->
+<div class="body-content" style="padding: 52px clamp(24px, 5vw, 0.75in) 48px;">
+
+<!-- ---- Executive Summary ---- -->
+<div class="eyebrow">Executive Summary</div>
+<h2>Bridging the trust gap in Gambian real estate</h2>
+<p>The Gambia's property market is valued at <strong>over $26 billion</strong> and growing at <strong>6.7% annually</strong> — yet it has no centralised, trustworthy digital platform for buyers, sellers, or investors. Title fraud, opaque pricing, and fragmented listings prevent billions of dollars in diaspora capital from flowing into real estate.</p>
+<p><strong>MyKunda</strong> is the first digital property platform for The Gambia. We combine proven real estate technology and verification processes with deep local knowledge of the Kombo coast. Our platform offers verified title deeds, transparent pricing, professional photography, and integrated digital payments via <strong>Modem Pay</strong> — the country's first licensed fintech gateway.</p>
+<p>We are seeking <strong>strategic partnerships</strong> with Gambian banks, financial institutions, and investors to scale the platform, launch mortgage products, and capture the enormous opportunity at the intersection of a $776M diaspora remittance economy and a booming property market.</p>
+
+<!-- ---- Market Opportunity ---- -->
+<div class="eyebrow" style="margin-top:48px">Market Opportunity</div>
+<h2>A $26B market with zero digital infrastructure</h2>
+
+<div class="stat-grid">
+  <div class="stat">
+    <div class="stat-val">$26.9B</div>
+    <div class="stat-label">Total real estate market value</div>
+    <div class="stat-src">Statista 2024</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val">6.7%</div>
+    <div class="stat-label">Annual market growth (CAGR '24–'29)</div>
+    <div class="stat-src">Statista forecast</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val">$776M</div>
+    <div class="stat-label">Diaspora remittances in 2024</div>
+    <div class="stat-src">Central Bank of The Gambia</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val">31.5%</div>
+    <div class="stat-label">Remittances as share of GDP</div>
+    <div class="stat-src">CBG / Africa Briefing</div>
+  </div>
+</div>
+
+<div class="opp-grid">
+  <div class="opp-card">
+    <div class="opp-ic" style="background:var(--green-50);color:var(--green-700)">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    </div>
+    <h4>Young, growing population</h4>
+    <p>2.8 million people with a median age under 20. Population growing at 2.2% annually — one of the highest in West Africa. 65% urbanised, driving massive housing demand.</p>
+  </div>
+  <div class="opp-card">
+    <div class="opp-ic" style="background:var(--amber-50);color:var(--amber-500)">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    </div>
+    <h4>Diaspora investment appetite</h4>
+    <p>$776M in remittances — largely used for private construction, land acquisition and family upkeep. The CBG itself recommends better channels for diaspora real estate investment.</p>
+  </div>
+  <div class="opp-card">
+    <div class="opp-ic" style="background:var(--green-50);color:var(--green-700)">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    </div>
+    <h4>Government-backed land reform</h4>
+    <p>The National Land Policy 2026–2035 will digitise land records, create a National Land Administration System, and reduce title verification times — aligned exactly with MyKunda's mission.</p>
+  </div>
+  <div class="opp-card">
+    <div class="opp-ic" style="background:var(--amber-50);color:var(--amber-500)">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+    </div>
+    <h4>6% GDP growth trajectory</h4>
+    <p>Gambia's GDP projected to grow 5.5–6% annually through 2028, supported by the $96M OIC road infrastructure project and increased foreign direct investment.</p>
+  </div>
+</div>
+
+<!-- ---- What is MyKunda ---- -->
+<div class="eyebrow" style="margin-top:48px">The Platform</div>
+<h2>What is MyKunda?</h2>
+<p>MyKunda is a full-service digital property platform for The Gambia. We don't just list properties — we verify, professionalise and transact them. Our core promise: <strong>every listing is real, every title is checked, every price is transparent.</strong></p>
+
+<div class="steps">
+  <div class="step-card">
+    <div class="step-num">1</div>
+    <h4>Verified listings</h4>
+    <p>Every property gets a title deed check, GPS coordinates (Google Plus Code), professional photos, and accurate pricing based on market data.</p>
+  </div>
+  <div class="step-card">
+    <div class="step-num">2</div>
+    <h4>Digital transactions</h4>
+    <p>Buyers pay deposits and listing fees via Wave, QMoney, Africell, Orange Money, or Visa/Mastercard — processed by Modem Pay (CBG-licensed).</p>
+  </div>
+  <div class="step-card">
+    <div class="step-num">3</div>
+    <h4>End-to-end service</h4>
+    <p>From search to signing: managed viewings, legal coordination, escrow via Trust Bank, and post-sale support. WhatsApp-native for diaspora buyers.</p>
+  </div>
+</div>
+
+<!-- ---- Competitive Edge ---- -->
+<div class="highlight">
+  <h3>Why MyKunda wins</h3>
+  <p>There is currently no comparable platform operating in The Gambia. Traditional agents operate via word-of-mouth and Facebook groups. MyKunda is the first to bring institutional-grade processes to this market.</p>
+  <div class="h-stats">
+    <div class="h-stat"><div class="h-stat-val">1st</div><div class="h-stat-label">Digital property platform in Gambia</div></div>
+    <div class="h-stat"><div class="h-stat-val">1st</div><div class="h-stat-label">Title verification system</div></div>
+    <div class="h-stat"><div class="h-stat-val">1st</div><div class="h-stat-label">Integrated mobile money checkout</div></div>
+    <div class="h-stat"><div class="h-stat-val">1st</div><div class="h-stat-label">Diaspora-focused UX</div></div>
+  </div>
+</div>
+
+<!-- ---- Revenue Model ---- -->
+<div class="eyebrow" style="margin-top:48px">Revenue Model</div>
+<h2>Multiple revenue streams, one platform</h2>
+
+<div class="rev-grid">
+  <div class="rev-card">
+    <div class="rev-name">Verified Listing</div>
+    <div class="rev-desc">Title check + verified badge + priority placement</div>
+    <div class="rev-price">$99</div>
+    <div class="rev-freq">per listing · 6 months</div>
+  </div>
+  <div class="rev-card">
+    <div class="rev-name">Managed Service</div>
+    <div class="rev-desc">Full photography, copywriting, viewings & sale coordination</div>
+    <div class="rev-price">$499</div>
+    <div class="rev-freq">per listing · until sold</div>
+  </div>
+  <div class="rev-card">
+    <div class="rev-name">Featured Boost</div>
+    <div class="rev-desc">Top of search results & homepage for 30 days</div>
+    <div class="rev-price">$49</div>
+    <div class="rev-freq">per listing · 30 days</div>
+  </div>
+</div>
+
+<table class="doc-table">
+  <thead>
+    <tr><th>Additional revenue stream</th><th>Model</th><th>Launch</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Transaction fees</td><td class="val">1.5–3.5% via Modem Pay</td><td>Active</td></tr>
+    <tr><td>Mortgage referral commission</td><td class="val">0.5–1% of loan value</td><td>Partnership dependent</td></tr>
+    <tr><td>Lead generation for agents</td><td class="val">$15–25 per qualified lead</td><td>Q3 2026</td></tr>
+    <tr><td>Premium services (legal, survey, photography)</td><td class="val">$50–200 per service</td><td>Q4 2026</td></tr>
+    <tr><td>Market data & valuation reports</td><td class="val">Subscription / per report</td><td>2027</td></tr>
+  </tbody>
+</table>
+
+<!-- ---- Partnership Opportunities ---- -->
+<div class="eyebrow" style="margin-top:48px">Partnership Opportunities</div>
+<h2>How we can work together</h2>
+<p>We are actively seeking partnerships across four categories. Each model is designed for mutual value creation — not dependency.</p>
+
+<div class="partner-grid">
+  <div class="partner-card">
+    <span class="p-tag" style="background:var(--green-50);color:var(--green-700)">Banking</span>
+    <h4>Mortgage products via MyKunda</h4>
+    <p>Offer home loans directly to pre-qualified MyKunda buyers. We deliver verified properties, title-checked buyers, and digital applications — you provide the capital.</p>
+    <ul>
+      <li>Access to verified, title-checked property pipeline</li>
+      <li>Digital mortgage application embedded in platform</li>
+      <li>Diaspora-specific products (dual-currency, remote approval)</li>
+      <li>Revenue share on originated loans</li>
+    </ul>
+  </div>
+  <div class="partner-card">
+    <span class="p-tag" style="background:var(--amber-50);color:var(--amber-600)">Investment</span>
+    <h4>Equity investment in MyKunda</h4>
+    <p>Participate in our growth as The Gambia's property market digitalises. We offer equity positions for strategic investors aligned with our mission.</p>
+    <ul>
+      <li>First-mover advantage in $26B+ market</li>
+      <li>Technology-driven, scalable platform</li>
+      <li>Clear path to profitability via multiple revenue streams</li>
+      <li>Expansion potential: Senegal, Guinea-Bissau, Sierra Leone</li>
+    </ul>
+  </div>
+  <div class="partner-card">
+    <span class="p-tag" style="background:var(--green-50);color:var(--green-700)">Escrow</span>
+    <h4>Escrow & trust account partnership</h4>
+    <p>Hold buyer deposits in escrow accounts, providing the trust layer that enables remote property transactions for the diaspora.</p>
+    <ul>
+      <li>Escrow accounts for property deposits (10–25% of sale price)</li>
+      <li>Interest income on held deposits</li>
+      <li>Increased account openings from transaction flow</li>
+      <li>Brand association with trusted platform</li>
+    </ul>
+  </div>
+  <div class="partner-card">
+    <span class="p-tag" style="background:var(--amber-50);color:var(--amber-600)">Fintech</span>
+    <h4>Payment processing partnership</h4>
+    <p>We process all payments via Modem Pay's CBG-licensed gateway. Banks can participate as settlement partners or co-brand the checkout experience.</p>
+    <ul>
+      <li>Mobile money settlement (Wave, QMoney, Africell, Orange)</li>
+      <li>Card processing for international buyers</li>
+      <li>Co-branded checkout for bank customers</li>
+      <li>Transaction data for credit scoring</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ---- Traction & Roadmap ---- -->
+<div class="eyebrow" style="margin-top:48px">Traction & Roadmap</div>
+<h2>Where we are and where we're going</h2>
+
+<table class="doc-table">
+  <thead>
+    <tr><th>Milestone</th><th>Status</th><th>Timeline</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Platform MVP (search, listings, verification flow)</td><td class="val" style="color:var(--green-600)">✓ Complete</td><td>Q1 2026</td></tr>
+    <tr><td>Modem Pay integration (4 mobile money + card)</td><td class="val" style="color:var(--green-600)">✓ Complete</td><td>Q2 2026</td></tr>
+    <tr><td>SMS + WhatsApp transaction confirmations</td><td class="val" style="color:var(--green-600)">✓ Complete</td><td>Q2 2026</td></tr>
+    <tr><td>Title verification workflow with legal counsel</td><td class="val" style="color:var(--green-600)">✓ Complete</td><td>Q2 2026</td></tr>
+    <tr><td>Initial listings onboarding (Kombo coast)</td><td class="val" style="color:var(--amber-500)">In progress</td><td>Q2–Q3 2026</td></tr>
+    <tr><td>Banking partnerships (escrow + mortgage)</td><td class="val" style="color:var(--amber-500)">Seeking partners</td><td>Q3 2026</td></tr>
+    <tr><td>Agent network (Kololi, Brufut, Bijilo, Fajara)</td><td class="val">Planned</td><td>Q3 2026</td></tr>
+    <tr><td>Market data & valuation tool</td><td class="val">Planned</td><td>Q4 2026</td></tr>
+    <tr><td>Expansion to Banjul, Brikama, upcountry</td><td class="val">Planned</td><td>2027</td></tr>
+    <tr><td>Regional expansion (Senegal, Guinea-Bissau)</td><td class="val">Vision</td><td>2028+</td></tr>
+  </tbody>
+</table>
+
+<!-- ---- Technology ---- -->
+<div class="eyebrow" style="margin-top:48px">Technology</div>
+<h2>Built for Gambian infrastructure</h2>
+<p>MyKunda is designed from the ground up for the realities of West African internet: lightweight pages, offline-capable, WhatsApp-native communication, and mobile-first responsive design. Our technology stack:</p>
+<ul>
+  <li><strong>Supabase (PostgreSQL)</strong> — Scalable database with real-time sync and row-level security</li>
+  <li><strong>Modem Pay SDK</strong> — Custom integration for Wave, QMoney, Africell Money, Orange Money + Visa/Mastercard</li>
+  <li><strong>WhatsApp Business API</strong> — Transaction confirmations, viewing bookings, agent communication</li>
+  <li><strong>Google Plus Codes</strong> — Precise location for every listing, even where street addresses don't exist</li>
+  <li><strong>Server-side rendering</strong> — Fast load times on 3G/4G Gambian networks</li>
+  <li><strong>Multi-currency</strong> — Prices in USD, GMD, EUR, GBP with live conversion rates</li>
+</ul>
+
+<!-- ---- Contact ---- -->
+<div class="doc-footer">
+  <h3>Let's talk partnership</h3>
+  <p>We welcome conversations with banks, financial institutions, and strategic investors interested in shaping the future of Gambian real estate together.</p>
+  <div class="contact-grid">
+    <div class="c-item">
+      <span class="c-ic">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      </span>
+      mykunda.com
+    </div>
+    <div class="c-item">
+      <span class="c-ic">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+      </span>
+      partnerships@mykunda.com
+    </div>
+    <div class="c-item">
+      <span class="c-ic">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.81.36 1.6.66 2.36a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.76.3 1.55.53 2.36.66A2 2 0 0 1 22 16.92z"/></svg>
+      </span>
+      +220 228 2717
+    </div>
+    <div class="c-item">
+      <span class="c-ic" style="background:#DCFCE7;color:#25D366">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2Zm5.5 14c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.2-.7-2.7-1.1-4.4-3.8-4.5-4-.1-.2-1.1-1.4-1.1-2.7s.7-1.9.9-2.1c.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.5c-.2.2-.3.4-.1.7.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.2 0 .4 0 .6-.2l.7-.8c.2-.2.4-.2.6-.1l1.9.9c.2.1.4.2.5.3.1.3.1.7-.1 1.2Z"/></svg>
+      </span>
+      +220 228 2717 (WhatsApp)
+    </div>
+  </div>
+  <div class="disclaimer">
+    This document is confidential and intended solely for the recipient. It contains forward-looking statements based on current market data and management projections. Actual results may differ. Market data sourced from Statista, Central Bank of The Gambia, Africa Briefing, and World Bank. MyKunda Ltd is registered in The Gambia. All payment processing via Modem Pay, licensed by the Central Bank of The Gambia (Reg. No. 2025/C25067).
+  </div>
+</div>
+
+</div><!-- /body-content -->
+
+    </td></tr></tbody>
+    <tfoot><tr><td class="ftr-space"></td></tr></tfoot>
+  </table>
+
+  <!-- Running header/footer (print only) -->
+  <div class="running-hdr" style="color:var(--muted-2);font-family:var(--sans)">
+    <span>MyKunda — Partnership Prospectus</span>
+    <span>Confidential · June 2026</span>
+  </div>
+  <div class="running-ftr" style="color:var(--muted-2);font-family:var(--sans)">
+    <span>mykunda.com</span>
+    <span>partnerships@mykunda.com</span>
+  </div>
+</main>
+
+</body>
+</html>

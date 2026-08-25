@@ -1,0 +1,65 @@
+User-agent: *
+Allow: /
+
+# Prive gedeelten worden NIET geblokkeerd, maar dragen zelf noindex,nofollow:
+#   admin.html · sources.html · rates.html · title-verification.html
+#   auth.html · dashboard.html · list.html · checkout.html · messages.html
+# Dat is bewust. Een Disallow hier zou Googlebot beletten die noindex te lezen,
+# waarna de URL alsnog kaal in de resultaten kan verschijnen zodra iemand ernaar
+# linkt — en er niet meer uit te krijgen is. noindex verwijdert hem echt.
+
+# Interne werkdocumenten (handleidingen, bouwplannen, prompts, prospectus,
+# e-mailvoorbeelden, logo-opties) dragen sinds 13 augustus 2026 zelf
+# noindex,nofollow. Ze horen niet in het uploadpakket; de tag is het vangnet.
+
+# market.html is sinds 13 augustus 2026 wel indexeerbaar: unieke marktdata
+# (prijs per m² per gebied), gelinkt vanuit de footer en opgenomen in de sitemap.
+
+# Mappen zonder HTML kunnen geen metatag dragen; die blokkeren we hier wel.
+Disallow: /uploads/
+Disallow: /backend/
+Disallow: /edge-functions/
+
+# Let op: oude URL's met hoofdletters (/Home.html, /Legal.html, ...) zijn
+# bewust NIET geblokkeerd — die geven een 301 naar de kleine-letterversie en
+# Googlebot moet ze kunnen crawlen om die redirect te zien.
+
+# ---------------------------------------------------------------------------
+# AI-crawlers die materiaal ophalen om modellen te trainen. Ze leveren geen
+# bezoekers op, maar nemen wel de teksten, foto's en marktcijfers mee.
+# De crawlers die wél verkeer opleveren (OAI-SearchBot, ChatGPT-User,
+# PerplexityBot, Googlebot, Bingbot) staan hier bewust niet tussen.
+# ---------------------------------------------------------------------------
+User-agent: GPTBot
+User-agent: CCBot
+User-agent: ClaudeBot
+User-agent: anthropic-ai
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: Bytespider
+User-agent: Amazonbot
+User-agent: Meta-ExternalAgent
+User-agent: FacebookBot
+User-agent: Diffbot
+User-agent: omgili
+User-agent: ImagesiftBot
+User-agent: img2dataset
+User-agent: YouBot
+User-agent: Timpibot
+User-agent: cohere-ai
+User-agent: Kangaroo Bot
+Disallow: /
+
+# SEO-harvesters: crawlen de hele site voor commerciele databases.
+User-agent: AhrefsBot
+User-agent: SemrushBot
+User-agent: MJ12bot
+User-agent: DotBot
+User-agent: BLEXBot
+User-agent: dataforseo-bot
+User-agent: PetalBot
+User-agent: Barkrowler
+User-agent: SeekportBot
+Disallow: /
+
+Sitemap: https://mykunda.com/sitemap.xml

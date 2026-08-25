@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en" data-no-wa>
+<head>
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1qcwxho--><!--/mk-mark-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
+<link rel="apple-touch-icon" href="images/mykunda-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#15463A">
+<title>Sign in — MyKunda</title>
+<noscript></noscript>
+<link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
+<link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.min.css?v=1787660000000">
+<style>
+body{min-height:100vh;display:flex}
+.auth-wrap{display:grid;grid-template-columns:1fr 1fr;width:100%;min-height:100vh}
+
+/* left brand panel */
+.brand-panel{position:relative;color:#fff;display:flex;flex-direction:column;padding:48px 56px;isolation:isolate;overflow:hidden}
+.brand-panel .bg{position:absolute;inset:0;z-index:0;background:linear-gradient(150deg,#0E2E25,#15463A 60%,#1C5848)}
+.brand-panel .bg img{width:100%;height:100%;object-fit:cover;opacity:.34;mix-blend-mode:luminosity}
+.brand-panel .bg::after{content:"";position:absolute;inset:0;background:linear-gradient(150deg,rgba(14,46,37,.7),rgba(28,88,72,.55))}
+.brand-panel > *{position:relative;z-index:1}
+.brand-panel .logo{color:#fff;font-size:25px;margin-bottom:auto}
+.brand-quote{max-width:420px;margin:40px 0}
+.brand-quote h2{color:#fff;font-size:34px;line-height:1.18;font-weight:600;letter-spacing:-.01em}
+.brand-quote p{color:rgba(255,255,255,.82);font-size:16px;margin-top:18px;line-height:1.6}
+.brand-points{display:flex;flex-direction:column;gap:14px}
+.bp{display:flex;align-items:center;gap:13px;font-size:15.5px;color:rgba(255,255,255,.92);font-weight:500}
+.bp .ic{width:32px;height:32px;border-radius:9px;background:rgba(200,112,45,.24);color:var(--amber-400);display:flex;align-items:center;justify-content:center;flex:none}
+
+/* right form panel */
+.form-panel{display:flex;align-items:center;justify-content:center;padding:40px;background:var(--paper)}
+.form-card{width:100%;max-width:400px}
+.form-card .top{text-align:center;margin-bottom:30px}
+.form-card .top .m-logo{display:none}
+.form-card h1{font-size:29px;margin-bottom:8px}
+.form-card .top p{color:var(--muted);font-size:15px}
+.form-card .top p a{color:var(--green-700);font-weight:700}
+
+/* tabs */
+.auth-tabs{display:flex;background:var(--paper-2);border-radius:var(--r-pill);padding:4px;margin-bottom:26px}
+.auth-tabs button{flex:1;height:42px;border-radius:var(--r-pill);font-weight:700;font-size:14.5px;color:var(--muted);transition:.15s}
+.auth-tabs button.on{background:var(--white);color:var(--green-700);box-shadow:var(--sh-sm)}
+
+/* social */
+.social{display:flex;flex-direction:column;gap:11px}
+.social-btn{display:flex;align-items:center;justify-content:center;gap:11px;height:50px;border-radius:var(--r-pill);box-shadow:inset 0 0 0 1.5px var(--line);font-weight:700;font-size:15px;color:var(--ink);background:var(--white);transition:.15s}
+.social-btn:hover{box-shadow:inset 0 0 0 1.5px var(--green-500);background:var(--white)}
+.divider{display:flex;align-items:center;gap:14px;color:var(--muted-2);font-size:13px;font-weight:600;margin:24px 0 20px}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* fields */
+.fld{margin-bottom:16px}
+.fld label{display:block;font-size:13.5px;font-weight:700;color:var(--ink-2);margin-bottom:7px}
+.fld input{width:100%;border:1.5px solid var(--line);border-radius:var(--r-md);padding:14px 15px;font-size:15px;outline:none;transition:.15s;font-family:var(--sans);background:var(--white)}
+.fld input:focus{border-color:var(--green-500)}
+.fld-hint{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted);margin-top:9px;line-height:1.45}
+
+/* OTP */
+.otp-back{display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:600;color:var(--muted);margin-bottom:20px}
+.otp-back:hover{color:var(--green-700)}
+.otp-inputs{display:flex;gap:10px;justify-content:center;margin:8px 0 22px}
+.otp-inputs input{width:54px;height:62px;border:1.5px solid var(--line);border-radius:var(--r-md);text-align:center;font-size:24px;font-weight:700;font-family:var(--serif);outline:none;transition:.15s;color:var(--ink)}
+.otp-inputs input:focus{border-color:var(--green-700);box-shadow:0 0 0 3px var(--green-100)}
+.otp-sent{text-align:center;color:var(--muted);font-size:14.5px;margin-bottom:6px;line-height:1.6}
+.otp-sent b{color:var(--ink)}
+.otp-via{font-size:13px;font-weight:600;color:var(--muted-2)}
+.otp-resend{text-align:center;font-size:13.5px;color:var(--muted);margin-top:18px;line-height:1.7}
+.otp-resend button{font-weight:700;color:var(--green-700)}
+.otp-demo{text-align:center;font-size:12px;color:var(--amber-600);background:var(--amber-50);border:1px solid var(--amber-100);border-radius:var(--r-pill);padding:7px 14px;margin-top:16px;font-weight:600}
+
+.terms{font-size:12px;color:var(--muted-2);text-align:center;margin-top:20px;line-height:1.5}
+.consent{display:flex;flex-direction:column;gap:10px;margin:2px 0 18px}
+.consent label{display:flex;gap:9px;align-items:flex-start;font-size:12.5px;color:var(--muted);line-height:1.5;cursor:pointer}
+.consent input{width:17px;height:17px;flex:0 0 auto;margin:1px 0 0;accent-color:var(--green-700)}
+.consent a{color:var(--green-700);font-weight:600}
+.consent.warn label:first-child{color:#C2533A}
+.consent.warn input{outline:2px solid #C2533A;outline-offset:2px}
+.terms a{color:var(--green-700);font-weight:600}
+.step{display:none}.step.on{display:block}
+
+@media(max-width:840px){
+  .auth-wrap{grid-template-columns:1fr}
+  .brand-panel{display:none}
+  .form-card .top .m-logo{display:flex;justify-content:center;margin-bottom:18px;font-size:24px}
+}
+
+@media(max-width:480px){
+  .form-panel{padding:24px 16px}
+  .form-card{padding:28px 18px}
+  .form-card .top h2{font-size:22px}
+}
+</style>
+<meta property="fb:pages" content="61593360783009">
+<meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
+</head>
+<body>
+<div class="auth-wrap">
+  <!-- brand side -->
+  <div class="brand-panel">
+    <div class="bg"><img src="images/home-hero-tablet.webp" alt="" onerror="this.style.display='none'"></div>
+    <a class="logo" id="brandLogo" href="/"></a>
+    <div class="brand-quote">
+      <h2>The Gambia's home for property.</h2>
+      <p>Join thousands of buyers, renters and sellers across the Smiling Coast and the diaspora.</p>
+    </div>
+    <div class="brand-points">
+      <div class="bp"><span class="ic" id="bp1"></span> Save your favourite homes &amp; searches</div>
+      <div class="bp"><span class="ic" id="bp2"></span> List your property or land for free</div>
+      <div class="bp"><span class="ic" id="bp3"></span> Message buyers &amp; sellers directly</div>
+    </div>
+  </div>
+
+  <!-- form side -->
+  <div class="form-panel">
+    <div class="form-card">
+
+      <!-- STEP 1: identify -->
+      <div class="step on" id="stepCreds">
+        <div class="top">
+          <a class="logo m-logo" href="/" id="mLogo"></a>
+          <h1 id="authTitle">Welcome back</h1>
+          <p id="authSwitchLine"></p>
+        </div>
+
+        <div class="auth-tabs">
+          <button class="on" data-tab="signin">Sign in</button>
+          <button data-tab="signup">Create account</button>
+        </div>
+
+        <!-- name (signup only) -->
+        <div class="fld" id="nameFld" style="display:none">
+          <label>Full name</label>
+          <input type="text" id="nameIn" placeholder="Your name">
+        </div>
+
+        <div class="fld">
+          <label>Email address</label>
+          <input type="email" id="emailIn" placeholder="you@email.com" autocomplete="email">
+          <p class="fld-hint">We'll email you a sign-in code. No password to remember.</p>
+        </div>
+
+        <div class="consent" id="consentBlock" style="display:none">
+          <label><input type="checkbox" id="consentIn"><span>I agree to MyKunda's <a href="legal-terms.html">Terms</a> and <a href="legal-privacy.html">Privacy Policy</a>, and to being contacted about my account.</span></label>
+          <label><input type="checkbox" id="consentMktIn"><span>Also email me new listings and area alerts. Optional — unsubscribe any time.</span></label>
+        </div>
+
+        <button class="btn btn-primary btn-block" id="continueBtn" style="height:52px;font-size:16px">Send my code</button>
+
+        <div class="divider">or</div>
+
+        <div class="social">
+          <button class="social-btn" id="googleBtn"><span id="gIc"></span> <span class="lbl">Continue with Google</span></button>
+        </div>
+
+        <div class="terms" id="termsLine" style="display:none">Questions? <a href="contact.html">Contact us</a>.</div>
+      </div>
+
+      <!-- STEP 2: OTP -->
+      <div class="step" id="stepOtp">
+        <a class="otp-back" id="otpBack"><span id="otpBackIc"></span> Back</a>
+        <div class="top">
+          <h1>Enter the code</h1>
+        </div>
+        <p class="otp-sent">We sent a <span id="otpLenTxt">6</span>-digit code to<br><b id="otpDest">you@email.com</b><br><span class="otp-via">by email</span></p>
+        <div class="otp-inputs" id="otpInputs">
+          <input maxlength="1" inputmode="numeric" autocomplete="one-time-code"><input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric">
+          <input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric">
+        </div>
+        <button class="btn btn-primary btn-block" id="verifyBtn" style="height:52px;font-size:16px">Verify &amp; continue</button>
+        <div class="otp-resend">Didn't get it? <button id="resendBtn">Resend code</button><br>Check your spam folder too.</div>
+        <div class="otp-demo" id="otpDemo" style="display:none"></div>
+      </div>
+
+      <!-- STEP: set new password (only reached by a recovery link still in flight
+           from the old password flow — passwords are no longer used to sign in) -->
+      <div class="step" id="stepNewPw">
+        <div class="top">
+          <h1>Choose a new password</h1>
+          <p>Pick a strong password (at least 6 characters).</p>
+        </div>
+        <div class="fld">
+          <label>New password</label>
+          <input type="password" id="newPwIn" placeholder="New password (min 6 chars)" autocomplete="new-password">
+        </div>
+        <div class="fld">
+          <label>Confirm password</label>
+          <input type="password" id="newPwConfirm" placeholder="Repeat your new password" autocomplete="new-password">
+        </div>
+        <button class="btn btn-primary btn-block" id="setNewPwBtn" style="height:52px;font-size:16px">Save new password</button>
+        <p id="newPwMsg" style="text-align:center;margin-top:14px;font-size:14px;display:none"></p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="app.min.js?v=1787660000000"></script>
+<script>
+/* 4G: the Supabase client (~205 KB) is not needed to show the sign-in form.
+   It downloads in parallel; everything that talks to the backend awaits it. */
+window.__sbReady=new Promise(function(res){
+  var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
+  s1.onerror=function(){ window.supabase=null; res(); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=1787660000000'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  document.head.appendChild(s1);
+});
+</script>
+<script>
+brandLogo.innerHTML = mLogo.innerHTML = LOGO_MARK + ' MyKunda';
+bp1.innerHTML='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 5.5a5 5 0 0 0-7.1 0l-.4.4-.4-.4a5 5 0 1 0-7.1 7.1l7.5 7.5 7.5-7.5a5 5 0 0 0 0-7.1Z"/></svg>';
+bp2.innerHTML='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>';
+bp3.innerHTML='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
+gIc.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.5 12.2c0-.7-.1-1.4-.2-2H12v4h5.9a5 5 0 0 1-2.2 3.3v2.7h3.6c2.1-1.9 3.2-4.7 3.2-8Z"/><path fill="#34A853" d="M12 23c2.9 0 5.4-1 7.2-2.6l-3.6-2.7c-1 .7-2.3 1.1-3.6 1.1-2.8 0-5.1-1.9-6-4.4H2.3v2.8A11 11 0 0 0 12 23Z"/><path fill="#FBBC05" d="M6 14.4a6.6 6.6 0 0 1 0-4.2V7.4H2.3a11 11 0 0 0 0 9.8L6 14.4Z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3 .5 4.1 1.6l3.1-3.1A11 11 0 0 0 12 1a11 11 0 0 0-9.7 6l3.7 2.8c.9-2.5 3.2-4.4 6-4.4Z"/></svg>';
+otpBackIc.innerHTML='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>';
+
+const nextUrl = qs('next') || 'dashboard.html';
+let mode='signin';      // signin | signup
+let pendingUser=null;
+let otpVerifyType='email';
+let otpLen=6;   // Supabase's OTP length is configurable — the email tells us the real one
+try{ const s=parseInt(localStorage.getItem('mk_otp_len'),10); if(s>=4&&s<=10) otpLen=s; }catch(e){}
+
+function live(){ return typeof backendReady==='function' && backendReady(); }
+async function liveReady(){ try{ await window.__sbReady; }catch(e){} return live(); }
+
+function applyMode(){
+  const signup = mode==='signup';
+  document.getElementById('authTitle').textContent = signup ? 'Create your account' : 'Welcome back';
+  document.getElementById('nameFld').style.display = signup ? 'block' : 'none';
+  document.getElementById('termsLine').style.display = signup ? 'block' : 'none';
+  document.getElementById('consentBlock').style.display = signup ? 'flex' : 'none';
+  document.getElementById('consentBlock').classList.remove('warn');
+  document.querySelector('#googleBtn .lbl').textContent = signup ? 'Sign up with Google' : 'Continue with Google';
+  document.getElementById('authSwitchLine').innerHTML = signup
+    ? `Already have an account? <a href="#" id="goSignin">Sign in</a>`
+    : `New to MyKunda? <a href="#" id="goSignup">Create an account</a>`;
+  document.querySelectorAll('.auth-tabs button').forEach(b=>b.classList.toggle('on', b.dataset.tab===mode));
+  wireSwitchLinks();
+}
+function wireSwitchLinks(){
+  const s1=document.getElementById('goSignup'), s2=document.getElementById('goSignin');
+  if(s1) s1.onclick=e=>{e.preventDefault();mode='signup';applyMode();};
+  if(s2) s2.onclick=e=>{e.preventDefault();mode='signin';applyMode();};
+}
+document.querySelectorAll('.auth-tabs button').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.tab;applyMode();}));
+
+function flash(el){el.style.borderColor='#C2533A';el.focus();setTimeout(()=>el.style.borderColor='',1500);}
+function authErr(msg){
+  let err=document.getElementById('authErr');
+  if(!err){
+    err=document.createElement('div'); err.id='authErr';
+    err.style.cssText='color:#C2533A;font-size:13.5px;font-weight:600;margin-top:12px;text-align:center;line-height:1.5';
+    document.getElementById('continueBtn').after(err);
+  }
+  err.textContent=msg||''; err.style.display=msg?'block':'none';
+}
+function friendly(e){
+  const m=(e&&e.message)||'';
+  if(/rate|too many|seconds/i.test(m)) return 'Too many attempts. Wait a minute and try again.';
+  if(/invalid.*email|email.*invalid/i.test(m)) return 'That email address doesn\u2019t look right. Check it and try again.';
+  if(/signups not allowed|not found/i.test(m)) return 'No account on that email yet — switch to Create account.';
+  return m || 'Something went wrong. Please try again.';
+}
+
+// ---- send the code ----
+async function sendCode(isResend){
+  const name = document.getElementById('nameIn').value.trim();
+  const email = document.getElementById('emailIn').value.trim();
+  if(mode==='signup' && !name && !isResend){ flash(document.getElementById('nameIn')); return false; }
+  if(!/.+@.+\..+/.test(email)){ flash(document.getElementById('emailIn')); return false; }
+  const consent = document.getElementById('consentIn').checked;
+  const consentMarketing = document.getElementById('consentMktIn').checked;
+  if(mode==='signup' && !consent){
+    document.getElementById('consentBlock').classList.add('warn');
+    authErr('Please agree to the Terms and Privacy Policy to continue.');
+    return false;
+  }
+  document.getElementById('consentBlock').classList.remove('warn');
+
+  pendingUser = {
+    name: name || email.split('@')[0].replace(/[._]/g,' ').replace(/\b\w/g,c=>c.toUpperCase()),
+    email: email,
+    phone: ''
+  };
+  authErr('');
+
+  const btn=document.getElementById('continueBtn');
+  if(!isResend){ btn.textContent='Sending\u2026'; btn.style.opacity='.75'; }
+
+  if(await liveReady()){
+    try{
+      // Our own function mails the sign-in code from noreply@mykunda.com.
+      const r = await sendEmailCode(email, { name: pendingUser.name, mode, consent, consentMarketing });
+      // Wrong tab for this address — say so instead of mailing a code.
+      if(r && r.no_account){
+        btn.textContent='Send my code'; btn.style.opacity='';
+        mode='signup'; applyMode();
+        document.getElementById('emailIn').value = email;
+        authErr('No account on that email yet — create one below.');
+        return false;
+      }
+      if(r && r.already_exists){
+        btn.textContent='Send my code'; btn.style.opacity='';
+        mode='signin'; applyMode();
+        document.getElementById('emailIn').value = email;
+        authErr('You already have an account with this email — sign in instead.');
+        return false;
+      }
+      otpVerifyType = (r && r.verify_type) || 'email';
+      if(r && r.code_length) setOtpLength(r.code_length);
+      document.getElementById('otpDemo').style.display='none';
+    }catch(e){
+      // auth-email unreachable: do NOT fall back to Supabase's own mailer — that would
+      // create accounts on the Sign-in tab and mail from a supabase.co sender.
+      btn.textContent='Send my code'; btn.style.opacity='';
+      authErr(friendly(e) || 'We could not send a code right now. Please try again in a moment.');
+      return false;
+    }
+  } else {
+    btn.textContent='Send my code'; btn.style.opacity='';
+    authErr('Sign-in is temporarily unavailable. Please try again in a moment.');
+    return false;
+  }
+  btn.textContent='Send my code'; btn.style.opacity='';
+  showOtpStep();
+  return true;
+}
+document.getElementById('continueBtn').addEventListener('click',()=>sendCode(false));
+
+function showOtpStep(){
+  document.getElementById('otpDest').textContent = document.getElementById('emailIn').value.trim() || 'your email';
+  document.getElementById('stepCreds').classList.remove('on');
+  document.getElementById('stepOtp').classList.add('on');
+  setTimeout(()=>document.querySelector('#otpInputs input').focus(),100);
+}
+
+// ---- OAuth (Google) ----
+async function oauth(provider){
+  if(await liveReady()){
+    try{
+      const { error } = await sb.auth.signInWithOAuth({
+        provider,
+        options:{ redirectTo: location.origin + '/auth.html?oauth=1' + (qs('next') ? '&next='+encodeURIComponent(qs('next')) : '') }
+      });
+      if(error) throw error;
+      return; // page unloads into the provider
+    }catch(e){
+      authErr((e.message||'Sign-in failed.') + ' Try an email code instead.');
+      return;
+    }
+  }
+  authErr('Sign-in is temporarily unavailable. Please try again in a moment.');
+}
+document.getElementById('googleBtn').addEventListener('click',()=>{
+  if(mode==='signup'){
+    const consent = document.getElementById('consentIn').checked;
+    if(!consent){
+      document.getElementById('consentBlock').classList.add('warn');
+      authErr('Please accept the Terms and Privacy Policy to create an account.');
+      return;
+    }
+    document.getElementById('consentBlock').classList.remove('warn');
+    // Kept for the moment we come back from Google, where the checkbox no longer exists.
+    try{
+      localStorage.setItem('mk_pending_consent', JSON.stringify({
+        consent: true,
+        marketing: document.getElementById('consentMktIn').checked,
+        name: document.getElementById('nameIn').value.trim(),
+        ts: Date.now()
+      }));
+    }catch(e){}
+  }
+  oauth('google');
+});
+
+// return from an OAuth redirect (?oauth=1, plus ?google=1 for links already in flight)
+(async function handleOAuthReturn(){
+  if(qs('oauth')!=='1' && qs('google')!=='1') return;
+  if(!(await liveReady())) return;
+  try{
+    const { data } = await sb.auth.getSession();
+    if(data.session){
+      const u=data.session.user;
+      const name = u.user_metadata?.full_name || u.user_metadata?.name || (u.email?u.email.split('@')[0]:'MyKunda User');
+      // Store the consent given on the Create-account tab before the Google redirect,
+      // then let the backend send the welcome + team emails (idempotent, once per user).
+      try{
+        const pend = JSON.parse(localStorage.getItem('mk_pending_consent')||'null');
+        localStorage.removeItem('mk_pending_consent');
+        if(pend && pend.consent && Date.now()-(pend.ts||0) < 30*60*1000){
+          const patch = { consent_contact:true, consent_marketing:!!pend.marketing, consent_at:new Date().toISOString() };
+          if(pend.name) patch.full_name = pend.name;
+          await sb.from('profiles').update(patch).eq('id', u.id);
+        }
+        fetch(MYKUNDA_SUPABASE_URL.replace(/\/+$/,'') + '/functions/v1/notify-signup', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ user_id: u.id }), keepalive:true
+        }).catch(function(){});
+      }catch(e){ console.warn('post-OAuth consent/notify:', e.message); }
+      setUser({ name, email: u.email||'', phone: u.phone||'', via: u.app_metadata?.provider||'oauth' });
+      location.href = nextUrl;
+    }
+  }catch(e){ console.warn('OAuth return handling:', e.message); }
+})();
+
+// ---- OTP entry ----
+let otpEls=[];
+function wireOtpInputs(){
+  otpEls=[...document.querySelectorAll('#otpInputs input')];
+  const last=otpEls.length-1;
+  otpEls.forEach((inp,i)=>{
+    inp.addEventListener('input',()=>{
+      const v=inp.value.replace(/\D/g,'');
+      if(v.length>1){ // pasted / autofilled full code
+        v.split('').slice(0,otpEls.length-i).forEach((c,k)=>{ if(otpEls[i+k]) otpEls[i+k].value=c; });
+        otpEls[Math.min(last,i+v.length-1)].focus();
+      } else { inp.value=v; if(v&&i<last) otpEls[i+1].focus(); }
+      checkOtp();
+    });
+    inp.addEventListener('keydown',e=>{
+      if(e.key==='Backspace'&&!inp.value&&i>0) otpEls[i-1].focus();
+      if(e.key==='Enter'){ e.preventDefault(); document.getElementById('verifyBtn').click(); }
+    });
+  });
+}
+function setOtpLength(n){
+  n=Math.max(4,Math.min(10,parseInt(n,10)||6));
+  try{ localStorage.setItem('mk_otp_len', String(n)); }catch(e){}
+  if(n===otpLen && otpEls.length===n) return;
+  otpLen=n;
+  const box=document.getElementById('otpInputs');
+  box.innerHTML='';
+  for(let i=0;i<n;i++){
+    const inp=document.createElement('input');
+    inp.maxLength=1; inp.inputMode='numeric';
+    if(i===0) inp.autocomplete='one-time-code';
+    box.appendChild(inp);
+  }
+  if(n>6) box.style.gap='7px';
+  document.getElementById('otpLenTxt').textContent=n;
+  wireOtpInputs();
+}
+wireOtpInputs();
+if(otpLen!==6) setOtpLength(otpLen);   // remembered from a previous sign-in
+function otpValue(){ return otpEls.map(e=>e.value).join(''); }
+function checkOtp(){ if(otpValue().length===otpLen) document.getElementById('verifyBtn').focus(); }
+
+document.getElementById('verifyBtn').addEventListener('click',async ()=>{
+  if(otpValue().length<otpLen){ otpEls.find(e=>!e.value).focus(); return; }
+  const btn=document.getElementById('verifyBtn');
+  btn.textContent='Verifying\u2026'; btn.style.opacity='.75';
+  if(await liveReady()){
+    try{
+      const res = await verifyEmailOtp(pendingUser.email, otpValue(), otpVerifyType);
+      if(res.error) throw res.error;
+      setUser(pendingUser);
+      location.href=nextUrl; return;
+    }catch(e){
+      btn.textContent='Verify & continue'; btn.style.opacity='';
+      const d=document.getElementById('otpDemo');
+      d.style.display='block'; d.textContent='That code didn\u2019t match. Please try again.';
+      return;
+    }
+  }
+  btn.textContent='Verify & continue'; btn.style.opacity='';
+  const dd=document.getElementById('otpDemo');
+  dd.style.display='block'; dd.textContent='Sign-in is temporarily unavailable. Please try again in a moment.';
+});
+
+document.getElementById('otpBack').addEventListener('click',()=>{
+  document.getElementById('stepOtp').classList.remove('on');
+  document.getElementById('stepCreds').classList.add('on');
+});
+document.getElementById('resendBtn').addEventListener('click',async function(){
+  const b=this; b.textContent='Sending\u2026';
+  await sendCode(true);
+  b.textContent='Code sent \u2713';
+  setTimeout(()=>b.textContent='Resend code',2200);
+});
+// start on signup if requested
+if(qs('mode')==='signup') mode='signup';
+applyMode();
+
+function showAuthStep(id){
+  document.querySelectorAll('.form-card > .step').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+}
+
+// ---- Auth-link redirect (magic link / confirmation / leftover recovery link) ----
+(async function checkAuthLinkRedirect(){
+  if(!(await liveReady())) return;
+  const tokenHash = qs('token_hash'), linkType = qs('type');
+  if(tokenHash && linkType){
+    try{
+      const { data, error } = await sb.auth.verifyOtp({ token_hash: tokenHash, type: linkType });
+      if(error) throw error;
+      if(linkType === 'recovery'){ showAuthStep('stepNewPw'); return; }
+      const u = data.user;
+      if(u) setUser({ name: u.user_metadata?.full_name || (u.email?u.email.split('@')[0]:'MyKunda User'), email: u.email||'' });
+      location.href = nextUrl;
+    }catch(e){
+      showAuthStep('stepCreds');
+      authErr('That link has expired or was already used. Sign in with an email code instead.');
+    }
+    return;
+  }
+  sb.auth.onAuthStateChange((event)=>{ if(event === 'PASSWORD_RECOVERY') showAuthStep('stepNewPw'); });
+})();
+
+document.getElementById('setNewPwBtn').addEventListener('click',async ()=>{
+  const pw=document.getElementById('newPwIn').value;
+  const pw2=document.getElementById('newPwConfirm').value;
+  const msg=document.getElementById('newPwMsg');
+  if(!pw||pw.length<6){ flash(document.getElementById('newPwIn')); msg.style.display='block'; msg.style.color='#C2533A'; msg.textContent='Password must be at least 6 characters.'; return; }
+  if(pw!==pw2){ flash(document.getElementById('newPwConfirm')); msg.style.display='block'; msg.style.color='#C2533A'; msg.textContent='Passwords don\u2019t match.'; return; }
+  const btn=document.getElementById('setNewPwBtn');
+  btn.textContent='Saving\u2026'; btn.style.opacity='.75';
+  try{
+    const { error } = await sb.auth.updateUser({ password: pw });
+    if(error) throw error;
+    msg.style.display='block'; msg.style.color='var(--green-700)';
+    msg.innerHTML='<b>Password updated!</b> Redirecting\u2026';
+    const { data } = await sb.auth.getUser();
+    if(data.user){ setUser({ name: data.user.user_metadata?.full_name||'', email: data.user.email||'' }); }
+    setTimeout(()=>{ location.href='dashboard.html'; },1500);
+  }catch(e){
+    msg.style.display='block'; msg.style.color='#C2533A';
+    msg.textContent=e.message||'Could not update password. Try again.';
+    btn.textContent='Save new password'; btn.style.opacity='';
+  }
+});
+
+// Enter key shortcuts
+document.querySelectorAll('#emailIn, #nameIn').forEach(function(inp){
+  inp.addEventListener('keydown', function(e){
+    if(e.key==='Enter'){ e.preventDefault(); document.getElementById('continueBtn').click(); }
+  });
+});
+document.querySelectorAll('#newPwIn, #newPwConfirm').forEach(function(inp){
+  inp.addEventListener('keydown', function(e){
+    if(e.key==='Enter'){ e.preventDefault(); document.getElementById('setNewPwBtn').click(); }
+  });
+});
+</script>
+</body>
+</html>

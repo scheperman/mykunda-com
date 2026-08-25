@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0n2gh56--><!--/mk-mark-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
+<link rel="apple-touch-icon" href="images/mykunda-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#15463A">
+<title>Sources — MyKunda</title>
+<link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
+<link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.min.css?v=1787660000000">
+<style>
+body{background:var(--paper-2)}
+.admin{max-width:1180px;margin:0 auto;padding:34px 28px 70px}
+.admin-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:22px;flex-wrap:wrap}
+.admin-head h1{font-size:32px;line-height:1.1}
+.admin-head p{color:var(--muted);font-size:15px;margin-top:5px;max-width:64ch}
+.note{background:var(--amber-50);border:1px solid var(--amber-100);border-radius:var(--r-md);padding:14px 18px;font-size:13.5px;color:var(--amber-600);margin-bottom:22px;line-height:1.5}
+.card{background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-sm);padding:22px 24px;margin-bottom:20px}
+.card h2{font-size:18px;margin:0}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.stat-row{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:22px}
+.stat{background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-sm);padding:16px 18px}
+.stat .lab{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;line-height:1.3}
+.stat .num{font-family:var(--serif);font-size:26px;font-weight:800;color:var(--ink);line-height:1;font-variant-numeric:tabular-nums}
+.stat .sub{font-size:12px;color:var(--muted);margin-top:7px;font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{background:var(--green-700);color:#fff;text-align:left;padding:11px 16px;font-family:var(--serif);font-weight:700;font-size:12.5px;white-space:nowrap}
+td{padding:11px 16px;border-top:1px solid var(--line-2);color:var(--ink-2);vertical-align:middle}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
+td.right{text-align:right;white-space:nowrap}
+td.right>span{display:inline-flex;gap:6px}
+tr:nth-child(even) td{background:var(--paper)}
+.muted-cell{color:var(--muted);font-weight:600}
+.tablewrap{overflow-x:auto;margin:0 -24px -22px}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;vertical-align:1px;background:var(--muted-2)}
+.dot.ok{background:var(--green-600)}.dot.bad{background:var(--amber-600)}.dot.stale{background:var(--amber-500)}.dot.idle{background:var(--muted-2)}.dot.manual{background:var(--line)}
+.wctl{display:flex;align-items:center;gap:10px}
+.wctl input[type=range]{width:104px;accent-color:var(--green-700)}
+.wctl b{font-variant-numeric:tabular-nums;font-size:13px;color:var(--ink);min-width:22px}
+.flag{display:inline-block;margin-left:8px;border-radius:99px;padding:2px 9px;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.flag.warn{background:var(--amber-50);color:var(--amber-600)}
+tr.errrow td{background:var(--amber-50)!important;color:var(--amber-600);font-size:13px;border-top:none;padding-top:0}
+.logrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line-2);font-size:13.5px;color:var(--ink)}
+.logrow:last-child{border-bottom:none}
+.logrow b{font-weight:700;flex:none}
+.logmeta{color:var(--muted);font-weight:600;font-size:12.5px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.logrow.bad .logmeta{color:var(--amber-600)}
+.logtime{margin-left:auto;color:var(--muted-2);font-weight:600;font-size:12.5px;flex:none}
+.grid2{display:grid;grid-template-columns:1.45fr 1fr;gap:20px;align-items:start}
+.mover{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line-2);font-size:14px;font-weight:700;color:var(--ink)}
+.mover:last-child{border-bottom:none}
+.mover .mv{font-weight:600;color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums;display:flex;gap:8px;align-items:center}
+.how{font-size:13px;color:var(--muted);line-height:1.65;margin:0}
+.how b{color:var(--ink-2)}
+.how code{background:var(--paper-2);border-radius:5px;padding:1px 5px;font-size:12px}
+.empty{padding:44px 24px;text-align:center;color:var(--muted)}
+.empty h3{font-size:17px;color:var(--ink-2);margin-bottom:6px}
+#testOut{display:none;background:var(--paper);border-radius:var(--r-md);padding:16px 18px;margin-top:16px}
+.testhead{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--ink-2);margin-bottom:12px}
+.testhead b{color:var(--ink)}
+.testhead .btn{margin-left:auto}
+#testOut table{background:var(--white);border-radius:var(--r-sm);overflow:hidden}
+pre.reject{background:var(--white);border:1px solid var(--line-2);border-radius:var(--r-sm);padding:9px 11px;font-size:11.5px;color:var(--muted);white-space:pre-wrap;margin:8px 0 0;line-height:1.5}
+.seg{display:flex;background:var(--paper);border-radius:var(--r-pill);padding:3px;gap:2px}
+.seg button{height:32px;padding:0 14px;border-radius:var(--r-pill);border:none;background:none;font-size:13.5px;font-weight:700;color:var(--ink-2);cursor:pointer;transition:.15s}
+.seg button.on{background:var(--green-700);color:#fff}
+#flash{font-size:13px;font-weight:700;min-height:18px}
+@media(max-width:980px){.stat-row{grid-template-columns:repeat(3,1fr)}.grid2{grid-template-columns:1fr}}
+@media(max-width:620px){.admin{padding:20px 16px 50px}.stat-row{grid-template-columns:1fr 1fr}.card{padding:18px 16px}.tablewrap{margin:0 -16px -18px}}
+</style>
+<meta property="fb:pages" content="61593360783009">
+<meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
+</head>
+<body>
+<div id="header"></div>
+<div id="adminNav"></div>
+
+<div class="admin">
+  <div class="admin-head">
+    <div>
+      <h1>Sources</h1>
+      <p>Everything the market index is built from. Our own listings, the Gambian portals, agent lists, registry deals and the official statistics — each with a weight that decides how far it can move the curve.</p>
+    </div>
+    <div id="flash"></div>
+  </div>
+
+  <div class="note" id="demoNote">
+    <b>Demo mode.</b> A stand-in registry so the screen reads. Run <code>backend/market-sources.sql</code> once and deploy the <code>market-sources</code> function; this fills with the real harvest.
+  </div>
+
+  <div class="stat-row" id="statRow"></div>
+
+  <div class="card">
+    <div class="card-head">
+      <h2>The registry</h2>
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <div class="seg" id="srcFilter"><button data-v="all" class="on">All</button><button data-v="priced">Priced in</button><button data-v="context">Context only</button><button data-v="failing">Failing</button></div>
+        <button class="btn btn-ghost btn-sm" id="runAll">Harvest everything now</button>
+      </div>
+    </div>
+    <div class="tablewrap" id="srcTable"></div>
+    <div id="testOut"></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-head" style="margin-bottom:10px"><h2>Last harvests</h2></div>
+      <div id="runLog"></div>
+    </div>
+    <div class="card">
+      <div class="card-head" style="margin-bottom:10px"><h2>Official series</h2></div>
+      <div id="macroList"></div>
+      <p class="how" style="margin-top:14px">Never priced into the index — these deflate it (the real index on the market screen) and give the rates context underneath the chart.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head" style="margin-bottom:12px"><h2>How a source earns its weight</h2></div>
+    <p class="how">Every row of evidence carries a weight between 0 and 1, and the medians are <b>weighted</b> medians. A closed deal we witnessed counts 1.00; a notary figure 0.95; our own asking price 0.90; an agency's own list 0.85; a Gambian portal 0.60–0.65; an international aggregator 0.40, because that stock is wide but often years stale. Multiply that by how confident the parser was about the row itself, and a half-read listing can never outvote a real deal.<br><br>
+    <b>The same villa on four portals is one villa.</b> Rows are fingerprinted on market, type, area, size to the nearest 25 m² and price to about 5% — anything matching keeps only the copy from the most trusted source, and anything matching one of our own listings loses outright. That number is on the counter above; if it ever collapses to nothing, a portal has changed its markup and the fingerprints stopped landing.<br><br>
+    <b>Harvesting is polite and internal.</b> Every run reads <code>robots.txt</code> first and skips what it disallows, identifies itself, and waits between requests. Sourcing stays in the backoffice — no attribution is published on the public site, and no external listing is ever shown as ours.<br><br>
+    <b>When a portal redesigns, the parse breaks.</b> That is the normal failure here, and it is meant to be loud: the source goes red, the log says what happened, and <b>Test</b> shows you the blocks it could not read so the pattern can be fixed in the console without a redeploy.</p>
+  </div>
+</div>
+
+<div id="footer"></div>
+
+<script src="vendor/supabase-js-2.umd.js"></script>
+<script src="supabase.js?v=1787660000000"></script>
+<script src="app.min.js?v=1787660000000"></script>
+<script src="admin-nav.js?v=1787900000000"></script>
+<script src="admin-guard.js?v=1787660000000"></script>
+<script src="market-sources.js?v=1787660000000"></script>
+<script>
+document.getElementById('header').innerHTML = headerHTML('', false);
+document.getElementById('footer').innerHTML = footerHTML();
+document.getElementById('adminNav').innerHTML = adminNavHTML('sources');
+
+MSRC.live = (typeof backendReady === 'function' && backendReady());
+if (MSRC.live) {
+  document.getElementById('modeFlag').className = 'mode-flag live';
+  document.getElementById('modeFlag').textContent = 'Live · connected';
+  document.getElementById('demoNote').style.display = 'none';
+}
+
+document.getElementById('srcFilter').addEventListener('click', function (e) {
+  var b = e.target.closest('button'); if (!b) return;
+  this.querySelectorAll('button').forEach(function (x) { x.classList.remove('on'); });
+  b.classList.add('on'); MSRC.filter = b.dataset.v; msrcRender();
+});
+
+document.getElementById('runAll').addEventListener('click', function () { msrcRun('all', this); });
+
+(async function boot() {
+  try { await msrcLoad(); }
+  catch (e) {
+    console.warn('sources load failed:', e.message);
+    MSRC.live = false;
+    var flag = document.getElementById('modeFlag');
+    flag.className = 'mode-flag demo'; flag.textContent = 'Demo data';
+    var note = document.getElementById('demoNote');
+    note.style.display = '';
+    note.innerHTML = '<b>The source tables aren\'t in the database yet.</b> Showing a stand-in registry. Run <code>backend/market-sources.sql</code> in the Supabase SQL editor and deploy the <code>market-sources</code> edge function.';
+    await msrcLoad();
+  }
+})();
+</script>
+</body>
+</html>

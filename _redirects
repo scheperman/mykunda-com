@@ -1,0 +1,38 @@
+# MyKunda redirects — Netlify / Cloudflare Pages format
+# Place this file (named exactly "_redirects", no extension) in the site root.
+# Rules are evaluated top to bottom; the first match wins.
+
+# --- Legal documents: old ?doc= parameter URLs -> real pages ---------------
+/legal.html    doc=terms      /legal-terms.html      301!
+/legal.html    doc=privacy    /legal-privacy.html    301!
+/legal.html    doc=cookies    /legal-cookies.html    301!
+/Legal.html    doc=terms      /legal-terms.html      301!
+/Legal.html    doc=privacy    /legal-privacy.html    301!
+/Legal.html    doc=cookies    /legal-cookies.html    301!
+
+# --- Legacy capitalised URLs -> lowercase ---------------------------------
+/Home.html            /                     301!
+/Index.html           /                     301!
+/About.html           /about.html           301!
+/Legal.html           /legal.html           301!
+/Search.html          /search.html          301!
+/Guide.html           /guide.html           301!
+/Guides.html          /guides.html          301!
+/Property.html        /property.html        301!
+/Messages.html        /messages.html        301!
+/Buy.html             /buy.html             301!
+/Rent.html            /rent.html            301!
+/Sell.html            /sell.html            301!
+/Safe.html            /safe.html            301!
+/Agent.html           /agent.html           301!
+/Contact.html         /contact.html         301!
+/Faq.html             /faq.html             301!
+/FAQ.html             /faq.html             301!
+/Neighborhood.html    /kololi.html          301!
+/neighborhood.html    /kololi.html          301!
+
+# --- home.html duplicates the homepage ------------------------------------
+/home.html            /                     301!
+
+# --- Everything else that does not exist gets the real 404 page -----------
+/*                    /404.html             404

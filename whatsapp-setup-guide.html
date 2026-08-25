@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyKunda — WhatsApp Business API Setup Guide</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Mulish:wght@400;500;600;700;800;900&display=swap">
+<style>
+:root{
+  --green-900:#0E2E25;--green-800:#123A2E;--green-700:#15463A;--green-600:#1C5848;--green-500:#2A7561;
+  --green-200:#BEDACE;--green-100:#DCEAE3;--green-50:#EAF2ED;
+  --amber-600:#B45F22;--amber-500:#C8702D;--amber-400:#DD8A45;--amber-100:#F6E6D4;--amber-50:#FBF1E6;
+  --paper:#FAF8F3;--paper-2:#F3F0E8;--white:#FFFFFF;--ink:#18201D;--ink-2:#384640;
+  --muted:#5C6B64;--muted-2:#8A958E;--line:#E5E1D6;--line-2:#EFEBE1;
+  --serif:'Mulish',sans-serif;--sans:'Hanken Grotesk',sans-serif;
+  --r-sm:8px;--r-md:12px;--r-lg:18px;
+  --sh-sm:0 1px 2px rgba(24,32,29,.06),0 1px 3px rgba(24,32,29,.05);
+  --sh-md:0 4px 14px rgba(24,32,29,.07),0 2px 6px rgba(24,32,29,.05);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--paper-2);color:var(--ink);line-height:1.62;-webkit-font-smoothing:antialiased}
+.doc{max-width:920px;margin:0 auto;background:var(--paper);box-shadow:var(--sh-md)}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:800;line-height:1.14;letter-spacing:-.015em;color:var(--ink)}
+p{margin:11px 0;color:var(--ink-2)}
+a{color:var(--green-700)}
+strong{color:var(--ink);font-weight:700}
+code{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.85em;background:var(--green-50);color:var(--green-700);padding:2px 6px;border-radius:5px;font-weight:600}
+pre{background:var(--green-900);color:#C8E6DC;padding:18px 22px;border-radius:var(--r-md);font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:13px;line-height:1.7;overflow-x:auto;margin:14px 0}
+pre b{color:var(--amber-400);font-weight:700}
+
+.cover{background:linear-gradient(150deg,#075E54,#128C7E);color:#fff;padding:64px 64px 50px;position:relative;overflow:hidden}
+.cover::after{content:"";position:absolute;right:40px;bottom:30px;width:120px;height:120px;background:rgba(255,255,255,.06);border-radius:50%}
+.cover .logo{display:flex;align-items:center;gap:11px;font-family:var(--serif);font-weight:800;font-size:23px;letter-spacing:-.02em;margin-bottom:42px}
+.cover .logo svg{width:36px;height:36px}
+.cover .kicker{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#25D366;margin-bottom:15px}
+.cover h1{color:#fff;font-size:38px;font-weight:900;max-width:640px}
+.cover .lede{font-size:17px;color:rgba(255,255,255,.86);margin-top:17px;max-width:600px;line-height:1.55}
+.cover .meta{display:flex;gap:34px;margin-top:36px;padding-top:24px;border-top:1px solid rgba(255,255,255,.18);flex-wrap:wrap}
+.cover .meta div span{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.6);font-weight:700;margin-bottom:4px}
+.cover .meta div b{font-family:var(--serif);font-size:16px;font-weight:700;color:#fff}
+
+.body{padding:52px 64px 64px}
+section{margin-bottom:48px}
+.num{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;background:#128C7E;color:#fff;font-family:var(--serif);font-weight:800;font-size:16px;margin-right:13px;flex:none}
+.h-row{display:flex;align-items:center;margin-bottom:8px}
+.h-row h2{font-size:26px}
+.lead-line{color:var(--muted);font-size:16px;margin:0 0 22px 47px}
+section > p,section > .steps,section > .note,section > .goal,section > pre,section > .tablewrap{margin-left:47px}
+
+.goal{background:var(--green-50);border:1px solid var(--green-100);border-radius:var(--r-lg);padding:22px 26px;margin:0 0 6px 47px}
+.goal h4{font-size:16px;margin-bottom:6px;color:var(--green-700)}
+.goal p{margin:0;font-size:15px}
+
+.note{border-left:4px solid var(--amber-500);background:var(--amber-50);padding:15px 20px;border-radius:0 var(--r-md) var(--r-md) 0;margin:18px 0}
+.note b{color:var(--amber-600)}
+
+.warn{border-left:4px solid #C2533A;background:#FEF2F2;padding:15px 20px;border-radius:0 var(--r-md) var(--r-md) 0;margin:18px 0}
+.warn b{color:#C2533A}
+
+.steps{counter-reset:step}
+.s{display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line-2);align-items:flex-start}
+.s:last-child{border-bottom:none}
+.s::before{counter-increment:step;content:counter(step);width:30px;height:30px;border-radius:8px;background:#128C7E;color:#fff;font-family:var(--serif);font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;flex:none;margin-top:2px}
+.s .tx{flex:1}
+.s .tx b{color:var(--ink)}
+.s .tx p{margin:4px 0 0;font-size:14.5px}
+.s .tx code{font-size:12px}
+
+.tablewrap{margin:18px 0;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{background:#128C7E;color:#fff;text-align:left;padding:11px 15px;font-family:var(--serif);font-weight:700;font-size:13px}
+td{padding:10px 15px;border-top:1px solid var(--line-2);color:var(--ink-2);vertical-align:top}
+tr:nth-child(even) td{background:var(--paper)}
+
+ul.chk{list-style:none;margin:6px 0 0 0}
+ul.chk li{position:relative;padding-left:30px;margin:11px 0;font-size:14.5px;color:var(--ink-2)}
+ul.chk li::before{content:"";position:absolute;left:0;top:1px;width:19px;height:19px;border-radius:5px;border:2px solid #128C7E}
+ul.chk li b{color:var(--ink)}
+
+.foot{background:var(--green-900);color:#9FB6AC;padding:28px 64px;font-size:13px;display:flex;gap:14px;align-items:center}
+.foot b{color:#fff;font-family:var(--serif)}
+.foot .sp{margin-left:auto}
+
+@media print{body{background:#fff}.doc{box-shadow:none;max-width:none}section{break-inside:avoid}.cover{break-after:page}}
+@media(max-width:720px){.cover{padding:42px 26px}.cover h1{font-size:30px}.body{padding:36px 26px}section > p,section > .steps,section > .note,section > .goal,section > pre,section > .tablewrap,.lead-line{margin-left:0}.foot{padding:24px 26px;flex-wrap:wrap}}
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <div class="cover">
+    <div class="logo">
+      <svg viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="11" fill="#fff" opacity=".12"/><path d="M11 20.5 20 12l9 8.5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 19v9h14v-9" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.5 28v-5h5v5" stroke="#25D366" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      MyKunda
+    </div>
+    <div class="kicker">Setup Guide</div>
+    <h1>WhatsApp Business API — stap voor stap</h1>
+    <p class="lede">Alles wat je moet doen om WhatsApp-notificaties en inbound lead capture live te zetten voor MyKunda. Van Meta-account tot deployment.</p>
+    <div class="meta">
+      <div><span>Geschatte tijd</span><b>~2 uur + wachttijd</b></div>
+      <div><span>Vereist</span><b>Meta Business account</b></div>
+      <div><span>Kosten</span><b>Gratis (eerste 1000/maand)</b></div>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <!-- OVERVIEW -->
+    <section>
+      <div class="h-row"><span class="num">★</span><h2>Wat wordt er live?</h2></div>
+      <div class="goal">
+        <h4>Na deze setup</h4>
+        <p>✅ Agents krijgen een WhatsApp-bericht bij elke nieuwe lead of viewing request<br>
+           ✅ Gebruikers kiezen zelf of ze notificaties via email, WhatsApp, of beide willen<br>
+           ✅ Kopers die het MyKunda WhatsApp-nummer berichten, worden automatisch als lead aangemaakt in Supabase</p>
+      </div>
+    </section>
+
+    <!-- STEP 1: META BUSINESS -->
+    <section>
+      <div class="h-row"><span class="num">1</span><h2>Meta Business account aanmaken</h2></div>
+      <p class="lead-line">Dit is de basis — je hebt dit nodig voor de WhatsApp Business API.</p>
+      <div class="steps">
+        <div class="s"><div class="tx"><b>Ga naar <a href="https://business.facebook.com" target="_blank">business.facebook.com</a></b><p>Log in met een Facebook-account (of maak er een aan). Klik op "Create Account" en vul de bedrijfsgegevens in: <strong>MyKunda</strong>, mykunda.com, The Gambia.</p></div></div>
+        <div class="s"><div class="tx"><b>Verifieer je bedrijf</b><p>Meta vraagt om verificatie (passport/ID + bedrijfsdocument). Dit duurt <strong>1–3 werkdagen</strong>. Begin hier dus als eerste.</p></div></div>
+        <div class="s"><div class="tx"><b>Voeg WhatsApp toe als product</b><p>In het Meta Business dashboard → <strong>All Tools → WhatsApp</strong> (of zoek op "WhatsApp Manager"). Klik "Get Started" om een WhatsApp Business Account aan te maken.</p></div></div>
+      </div>
+    </section>
+
+    <!-- STEP 2: PHONE NUMBER -->
+    <section>
+      <div class="h-row"><span class="num">2</span><h2>Telefoonnummer koppelen</h2></div>
+      <p class="lead-line">Het nummer waarop kopers MyKunda kunnen bereiken.</p>
+      <div class="steps">
+        <div class="s"><div class="tx"><b>Kies een nummer</b><p>Gebruik het bestaande MyKunda-nummer: <strong>+220 228 2717</strong>. Of koop een nieuw nummer. Het nummer mag <u>niet</u> al gekoppeld zijn aan een persoonlijke WhatsApp.</p></div></div>
+        <div class="s"><div class="tx"><b>Registreer in WhatsApp Manager</b><p>WhatsApp Manager → Phone Numbers → <strong>Add Phone Number</strong>. Kies verificatie via SMS of voice call.</p></div></div>
+        <div class="s"><div class="tx"><b>Stel het profiel in</b><p>Upload het MyKunda-logo, vul in:<br>
+          • <strong>Display name:</strong> MyKunda<br>
+          • <strong>Category:</strong> Real Estate<br>
+          • <strong>Description:</strong> Property platform for The Gambia<br>
+          • <strong>Website:</strong> https://mykunda.com</p></div></div>
+      </div>
+      <div class="note"><b>Let op:</b> als je +220 228 2717 nu al als persoonlijke WhatsApp gebruikt, moet je dat eerst verwijderen (WhatsApp → Settings → Account → Delete Account). Je kunt het nummer daarna koppelen aan de Business API.</div>
+    </section>
+
+    <!-- STEP 3: API ACCESS -->
+    <section>
+      <div class="h-row"><span class="num">3</span><h2>API-toegang instellen</h2></div>
+      <p class="lead-line">De credentials die de Edge Functions nodig hebben.</p>
+      <div class="steps">
+        <div class="s"><div class="tx"><b>Maak een System User aan</b><p>Meta Business → Settings → Business Settings → Users → <strong>System Users</strong> → Add. Geef het de naam "MyKunda API" en rol <strong>Admin</strong>.</p></div></div>
+        <div class="s"><div class="tx"><b>Genereer een permanente token</b><p>Klik op de System User → <strong>Generate New Token</strong>. Selecteer je WhatsApp app en voeg deze permission toe:<br>
+          • <code>whatsapp_business_messaging</code><br>
+          • <code>whatsapp_business_management</code><br><br>
+          Klik Generate. <strong>Kopieer de token — je ziet hem maar één keer.</strong></p></div></div>
+        <div class="s"><div class="tx"><b>Noteer het Phone Number ID</b><p>WhatsApp Manager → Phone Numbers → klik op je nummer → het <strong>Phone Number ID</strong> staat bovenaan (een getal als <code>123456789012345</code>).</p></div></div>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <tr><th>Wat</th><th>Waar te vinden</th><th>Voorbeeld</th></tr>
+          <tr><td><code>WA_ACCESS_TOKEN</code></td><td>System User → Generate Token</td><td><code>EAABs…(lang)</code></td></tr>
+          <tr><td><code>WA_PHONE_NUMBER_ID</code></td><td>WhatsApp Manager → Phone Numbers</td><td><code>123456789012345</code></td></tr>
+          <tr><td><code>WA_VERIFY_TOKEN</code></td><td>Kies zelf (bv. <code>mykunda_wa_2026</code>)</td><td><code>mykunda_wa_2026</code></td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- STEP 4: MESSAGE TEMPLATES -->
+    <section>
+      <div class="h-row"><span class="num">4</span><h2>Message Templates aanmaken</h2></div>
+      <p class="lead-line">WhatsApp vereist goedgekeurde templates voor het eerste bericht aan een gebruiker.</p>
+      <p>WhatsApp Manager → <strong>Message Templates</strong> → Create Template</p>
+      <div class="tablewrap">
+        <table>
+          <tr><th>Template naam</th><th>Category</th><th>Body tekst</th></tr>
+          <tr><td><code>lead_notification</code></td><td>UTILITY</td><td>
+            <code>New enquiry from {{1}} about {{2}} on MyKunda. Log in to your dashboard to respond.</code></td></tr>
+          <tr><td><code>viewing_request</code></td><td>UTILITY</td><td>
+            <code>{{1}} has requested a viewing for {{2}}. Open your dashboard to accept or propose times.</code></td></tr>
+          <tr><td><code>listing_alert</code></td><td>UTILITY</td><td>
+            <code>New property in {{1}}: {{2}} — {{3}}. View it on MyKunda: {{4}}</code></td></tr>
+        </table>
+      </div>
+      <div class="note"><b>Goedkeuringstijd:</b> templates worden door Meta gereviewd. Dit duurt meestal <strong>enkele minuten tot 24 uur</strong>. De status is zichtbaar in WhatsApp Manager.</div>
+    </section>
+
+    <!-- STEP 5: SUPABASE SECRETS -->
+    <section>
+      <div class="h-row"><span class="num">5</span><h2>Secrets instellen in Supabase</h2></div>
+      <p class="lead-line">De Edge Functions lezen deze secrets automatisch.</p>
+      <pre>supabase secrets set <b>WA_PHONE_NUMBER_ID</b>=123456789012345
+supabase secrets set <b>WA_ACCESS_TOKEN</b>=EAABs...jouw_token_hier
+supabase secrets set <b>WA_VERIFY_TOKEN</b>=mykunda_wa_2026</pre>
+      <p>Controleer met:</p>
+      <pre>supabase secrets list</pre>
+    </section>
+
+    <!-- STEP 6: DEPLOY FUNCTIONS -->
+    <section>
+      <div class="h-row"><span class="num">6</span><h2>Edge Functions deployen</h2></div>
+      <p class="lead-line">Twee nieuwe functies naast de bestaande notify-lead en notify-viewing.</p>
+      <pre>cd backend
+
+supabase functions deploy <b>wa-notify</b>    --no-verify-jwt
+supabase functions deploy <b>wa-inbound</b>   --no-verify-jwt</pre>
+      <p>Test of <code>wa-notify</code> werkt:</p>
+      <pre>curl -X POST https://YOUR-PROJECT.supabase.co/functions/v1/wa-notify \
+  -H "Authorization: Bearer YOUR_ANON_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"to": "+220XXXXXXX", "template": "lead_notification", "params": ["Test User", "Test Property"]}'</pre>
+    </section>
+
+    <!-- STEP 7: WEBHOOK -->
+    <section>
+      <div class="h-row"><span class="num">7</span><h2>Inbound webhook configureren</h2></div>
+      <p class="lead-line">Zodat inkomende WhatsApp-berichten automatisch leads worden.</p>
+      <div class="steps">
+        <div class="s"><div class="tx"><b>Open WhatsApp Manager → Configuration</b><p>Scroll naar <strong>Webhook</strong> en klik <strong>Edit</strong>.</p></div></div>
+        <div class="s"><div class="tx"><b>Vul de Callback URL in</b>
+          <pre style="margin:8px 0">https://YOUR-PROJECT.supabase.co/functions/v1/wa-inbound</pre>
+          <p>Vervang <code>YOUR-PROJECT</code> door je Supabase project ref (bijv. <code>jejaerpqltqryqzjvbjp</code>).</p></div></div>
+        <div class="s"><div class="tx"><b>Verify Token</b><p>Vul exact dezelfde waarde in als je <code>WA_VERIFY_TOKEN</code> secret: <code>mykunda_wa_2026</code></p></div></div>
+        <div class="s"><div class="tx"><b>Subscribe to: messages</b><p>Vink <strong>messages</strong> aan. De andere velden (message_deliveries, message_reads) zijn optioneel.</p></div></div>
+        <div class="s"><div class="tx"><b>Klik Verify and Save</b><p>Meta stuurt een GET request naar je webhook — de <code>wa-inbound</code> Edge Function beantwoordt dit automatisch.</p></div></div>
+      </div>
+    </section>
+
+    <!-- STEP 8: SCHEMA -->
+    <section>
+      <div class="h-row"><span class="num">8</span><h2>Database-migratie uitvoeren</h2></div>
+      <p class="lead-line">De notification_prefs tabel moet aangemaakt worden.</p>
+      <p>Open Supabase → <strong>SQL Editor</strong> → New Query. Plak en run het onderste deel van <code>schema.sql</code> (alles onder het kopje <strong>"SPRINT 5 — WHATSAPP & NOTIFICATION PREFERENCES"</strong>).</p>
+      <p>Dit maakt de <code>notification_prefs</code> tabel aan met RLS policies en een auto-create trigger.</p>
+    </section>
+
+    <!-- STEP 9: TEST -->
+    <section>
+      <div class="h-row"><span class="num">9</span><h2>Testen</h2></div>
+      <p class="lead-line">Stap voor stap checken of alles werkt.</p>
+      <ul class="chk">
+        <li><b>Outbound test:</b> Ga naar Dashboard → Notifications → selecteer "WhatsApp" → vul je nummer in. Dien een testformulier in (valuation of contact) en check of je een WhatsApp ontvangt.</li>
+        <li><b>Inbound test:</b> Stuur een WhatsApp naar het MyKunda-nummer (bijv. "Hallo, ik zoek een huis in Kololi"). Check in Supabase → <code>leads</code> tabel of er een nieuwe rij is met <code>source = 'whatsapp_inbound'</code>.</li>
+        <li><b>Template test:</b> Controleer in WhatsApp Manager → Message Templates dat alle drie templates status <strong>APPROVED</strong> hebben.</li>
+        <li><b>Dashboard:</b> Log in, ga naar Dashboard, en schakel tussen Email / WhatsApp / Both. Check of de keuze wordt opgeslagen in <code>notification_prefs</code>.</li>
+      </ul>
+    </section>
+
+    <!-- COSTS -->
+    <section>
+      <div class="h-row"><span class="num">$</span><h2>Kosten</h2></div>
+      <p class="lead-line">WhatsApp Business API pricing is per gesprek, niet per bericht.</p>
+      <div class="tablewrap">
+        <table>
+          <tr><th>Type</th><th>Prijs (The Gambia)</th><th>Toelichting</th></tr>
+          <tr><td>Utility (templates)</td><td>~$0.004 / gesprek</td><td>Lead notifications, viewing alerts</td></tr>
+          <tr><td>Service (reacties)</td><td>Gratis</td><td>Antwoord binnen 24 uur op inbound</td></tr>
+          <tr><td>Gratis tier</td><td>1.000 gesprekken/maand</td><td>Meer dan genoeg voor de start</td></tr>
+        </table>
+      </div>
+      <p>Bij 100 leads per maand kost dit ~$0,40 per maand. De gratis tier dekt dit ruim.</p>
+    </section>
+
+    <!-- CHECKLIST -->
+    <section style="margin-bottom:0">
+      <div class="h-row"><span class="num">✓</span><h2>Go-live checklist</h2></div>
+      <ul class="chk">
+        <li><b>Meta Business account</b> aangemaakt en geverifieerd</li>
+        <li><b>WhatsApp Business Account</b> aangemaakt in WhatsApp Manager</li>
+        <li><b>Telefoonnummer</b> gekoppeld en profiel ingesteld</li>
+        <li><b>System User</b> met permanent token aangemaakt</li>
+        <li><b>3 message templates</b> aangemaakt en goedgekeurd</li>
+        <li><b>Supabase secrets</b> ingesteld (WA_PHONE_NUMBER_ID, WA_ACCESS_TOKEN, WA_VERIFY_TOKEN)</li>
+        <li><b>Edge Functions</b> wa-notify + wa-inbound gedeployed</li>
+        <li><b>Webhook</b> geconfigureerd in Meta met correcte URL + verify token</li>
+        <li><b>Schema migratie</b> uitgevoerd (notification_prefs tabel)</li>
+        <li><b>Outbound test</b> geslaagd — je ontvangt een WhatsApp bij een nieuwe lead</li>
+        <li><b>Inbound test</b> geslaagd — een bericht naar het nummer maakt een lead aan</li>
+      </ul>
+    </section>
+
+  </div>
+
+  <div class="foot">
+    <b>MyKunda</b>
+    <span>WhatsApp Business API Setup Guide</span>
+    <span class="sp">v1 · juni 2026</span>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyKunda — Phase 1 Build Plan</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Mulish:wght@400;500;600;700;800;900&display=swap">
+<style>
+:root{
+  --green-900:#0E2E25;--green-800:#123A2E;--green-700:#15463A;--green-600:#1C5848;--green-500:#2A7561;
+  --green-200:#BEDACE;--green-100:#DCEAE3;--green-50:#EAF2ED;
+  --amber-600:#B45F22;--amber-500:#C8702D;--amber-400:#DD8A45;--amber-100:#F6E6D4;--amber-50:#FBF1E6;
+  --paper:#FAF8F3;--paper-2:#F3F0E8;--white:#FFFFFF;--ink:#18201D;--ink-2:#384640;
+  --muted:#5C6B64;--muted-2:#8A958E;--line:#E5E1D6;--line-2:#EFEBE1;
+  --serif:'Mulish',sans-serif;--sans:'Hanken Grotesk',sans-serif;
+  --r-sm:8px;--r-md:12px;--r-lg:18px;
+  --sh-sm:0 1px 2px rgba(24,32,29,.06),0 1px 3px rgba(24,32,29,.05);
+  --sh-md:0 4px 14px rgba(24,32,29,.07),0 2px 6px rgba(24,32,29,.05);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--paper-2);color:var(--ink);line-height:1.62;-webkit-font-smoothing:antialiased}
+.doc{max-width:920px;margin:0 auto;background:var(--paper);box-shadow:var(--sh-md)}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:800;line-height:1.14;letter-spacing:-.015em;color:var(--ink)}
+p{margin:11px 0;color:var(--ink-2)}
+a{color:var(--green-700)}
+strong{color:var(--ink);font-weight:700}
+code{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.85em;background:var(--green-50);color:var(--green-700);padding:2px 6px;border-radius:5px;font-weight:600}
+
+.cover{background:linear-gradient(150deg,var(--green-800),var(--green-600));color:#fff;padding:64px 64px 50px}
+.cover .logo{display:flex;align-items:center;gap:11px;font-family:var(--serif);font-weight:800;font-size:23px;letter-spacing:-.02em;margin-bottom:42px}
+.cover .logo svg{width:36px;height:36px}
+.cover .kicker{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--amber-400);margin-bottom:15px}
+.cover h1{color:#fff;font-size:42px;font-weight:900;max-width:640px}
+.cover .lede{font-size:17.5px;color:rgba(255,255,255,.86);margin-top:17px;max-width:600px;line-height:1.55}
+.cover .meta{display:flex;gap:34px;margin-top:36px;padding-top:24px;border-top:1px solid rgba(255,255,255,.18)}
+.cover .meta div span{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.6);font-weight:700;margin-bottom:4px}
+.cover .meta div b{font-family:var(--serif);font-size:16px;font-weight:700;color:#fff}
+
+.body{padding:52px 64px 64px}
+section{margin-bottom:48px}
+.num{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;background:var(--green-700);color:#fff;font-family:var(--serif);font-weight:800;font-size:16px;margin-right:13px;flex:none}
+.h-row{display:flex;align-items:center;margin-bottom:8px}
+.h-row h2{font-size:26px}
+.lead-line{color:var(--muted);font-size:16px;margin:0 0 22px 47px}
+section > p,section > .grid,section > .tablewrap,section > .note,section > .goal{margin-left:47px}
+
+.goal{background:var(--green-50);border:1px solid var(--green-100);border-radius:var(--r-lg);padding:22px 26px;margin:0 0 6px 47px}
+.goal h4{font-size:16px;margin-bottom:6px;color:var(--green-700)}
+.goal p{margin:0;font-size:15px}
+
+.note{border-left:4px solid var(--amber-500);background:var(--amber-50);padding:15px 20px;border-radius:0 var(--r-md) var(--r-md) 0;margin:18px 0}
+.note b{color:var(--amber-600)}
+
+/* sprint week blocks */
+.week{display:grid;grid-template-columns:120px 1fr;gap:22px;padding:22px 0;border-top:1px solid var(--line)}
+.week:first-of-type{border-top:none}
+.week .wmeta .wk{font-family:var(--serif);font-weight:800;font-size:17px;color:var(--green-700)}
+.week .wmeta .wt{font-size:12.5px;color:var(--muted);font-weight:600;margin-top:3px;text-transform:uppercase;letter-spacing:.04em}
+.week .wmeta .tag{display:inline-block;margin-top:10px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:var(--green-700);color:#fff;letter-spacing:.03em}
+.week .wbody h4{font-size:16px;margin-bottom:9px}
+.task{display:flex;gap:11px;align-items:flex-start;margin:8px 0}
+.task .box{width:18px;height:18px;border-radius:5px;border:2px solid var(--green-500);flex:none;margin-top:2px}
+.task .tx{font-size:14.5px;color:var(--ink-2)}
+.task .tx b{color:var(--ink)}
+.deliver{margin-top:13px;font-size:13.5px;color:var(--green-700);font-weight:700;display:flex;align-items:center;gap:8px}
+.deliver::before{content:"▸";color:var(--amber-500)}
+
+/* schema table */
+.tablewrap{margin:18px 0;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{background:var(--green-700);color:#fff;text-align:left;padding:11px 15px;font-family:var(--serif);font-weight:700;font-size:13px}
+td{padding:10px 15px;border-top:1px solid var(--line-2);color:var(--ink-2);vertical-align:top}
+tr:nth-child(even) td{background:var(--paper)}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}
+.mini{background:var(--white);border:1px solid var(--line);border-radius:var(--r-md);padding:18px}
+.mini h4{font-size:15px;margin-bottom:5px}
+.mini p{font-size:13.5px;margin:0;color:var(--muted)}
+.mini .ic{width:36px;height:36px;border-radius:9px;background:var(--green-50);color:var(--green-700);display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:18px}
+
+ul.chk{list-style:none;margin:6px 0 0 0}
+ul.chk li{position:relative;padding-left:30px;margin:11px 0;font-size:14.5px;color:var(--ink-2)}
+ul.chk li::before{content:"";position:absolute;left:0;top:1px;width:19px;height:19px;border-radius:5px;border:2px solid var(--amber-500)}
+ul.chk li b{color:var(--ink)}
+
+.timeline{display:flex;gap:0;margin:20px 0 4px 47px;flex-wrap:wrap}
+.tl{flex:1;min-width:96px;position:relative;background:var(--white);border:1px solid var(--line);padding:13px 12px 13px 20px}
+.tl:first-child{border-radius:var(--r-md) 0 0 var(--r-md)}
+.tl:last-child{border-radius:0 var(--r-md) var(--r-md) 0}
+.tl .tn{font-size:11px;font-weight:700;color:var(--amber-600);text-transform:uppercase;letter-spacing:.04em}
+.tl .tt{font-family:var(--serif);font-weight:700;font-size:13.5px;margin-top:3px;color:var(--ink)}
+.tl::after{content:"";position:absolute;right:-9px;top:50%;transform:translateY(-50%) rotate(45deg);width:16px;height:16px;background:var(--white);border-right:1px solid var(--line);border-top:1px solid var(--line);z-index:2}
+.tl:last-child::after{display:none}
+
+.foot{background:var(--green-900);color:#9FB6AC;padding:28px 64px;font-size:13px;display:flex;gap:14px;align-items:center}
+.foot b{color:#fff;font-family:var(--serif)}
+.foot .sp{margin-left:auto}
+
+@media print{body{background:#fff}.doc{box-shadow:none;max-width:none}section,.week{break-inside:avoid}.cover{break-after:page}}
+@media(max-width:720px){
+  .cover{padding:42px 26px}.cover h1{font-size:30px}.body{padding:36px 26px}
+  section > p,section > .grid,section > .tablewrap,section > .note,section > .goal,.lead-line,.timeline{margin-left:0}
+  .week{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.foot{padding:24px 26px;flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <div class="cover">
+    <div class="logo">
+      <svg viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="11" fill="#fff" opacity=".12"/><path d="M11 20.5 20 12l9 8.5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 19v9h14v-9" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.5 28v-5h5v5" stroke="#DD8A45" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      MyKunda
+    </div>
+    <div class="kicker">Build Plan · Phase 1 — MVP</div>
+    <h1>Make it real: the 4-week launch sprint</h1>
+    <p class="lede">A week-by-week plan to take MyKunda from prototype to a live platform that stores listings and captures every lead — the smallest complete step that stops it being a demo.</p>
+    <div class="meta">
+      <div><span>Phase</span><b>1 of 3 — MVP</b></div>
+      <div><span>Duration</span><b>~4 weeks</b></div>
+      <div><span>Outcome</span><b>Live listings + leads</b></div>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <!-- GOAL -->
+    <section>
+      <div class="h-row"><span class="num">★</span><h2>The one goal</h2></div>
+      <div class="goal">
+        <h4>Definition of done</h4>
+        <p>A seller can create a real listing through the wizard; an admin reviews and publishes it; it appears on the live site &amp; map; and <strong>every form submission lands in your inbox as a trackable lead</strong>. No more browser-only confirmations.</p>
+      </div>
+      <p>Everything not needed to hit that goal — search engine, WhatsApp, payments, title workflow — is deliberately deferred to Phase 2. We ship the spine first.</p>
+      <div class="timeline">
+        <div class="tl"><div class="tn">Wk 1</div><div class="tt">Foundation</div></div>
+        <div class="tl"><div class="tn">Wk 2</div><div class="tt">Listings live</div></div>
+        <div class="tl"><div class="tn">Wk 3</div><div class="tt">Forms &amp; leads</div></div>
+        <div class="tl"><div class="tn">Wk 4</div><div class="tt">Admin &amp; launch</div></div>
+      </div>
+    </section>
+
+    <!-- WEEK BY WEEK -->
+    <section>
+      <div class="h-row"><span class="num">1</span><h2>The sprint, week by week</h2></div>
+      <p class="lead-line">Each week ends on a working, demoable milestone.</p>
+
+      <div class="week">
+        <div class="wmeta"><div class="wk">Week 1</div><div class="wt">Foundation</div><span class="tag">Setup</span></div>
+        <div class="wbody">
+          <h4>Database, auth &amp; storage standing up</h4>
+          <div class="task"><span class="box"></span><span class="tx"><b>Create the Supabase project</b> — enable PostGIS, set regions, secrets.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Build the schema</b> — all core tables with row-level security.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Auth</b> — email + phone OTP sign-in, user roles (buyer / seller / agent / admin).</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Storage buckets</b> — public for photos, private for documents.</span></div>
+          <div class="task"><span class="box"></span><span class="tx">Wire the existing <code>auth.html</code> to real sign-in / sign-up.</span></div>
+          <div class="deliver">Milestone: you can create an account and log in for real.</div>
+        </div>
+      </div>
+
+      <div class="week">
+        <div class="wmeta"><div class="wk">Week 2</div><div class="wt">Listings live</div><span class="tag">Core</span></div>
+        <div class="wbody">
+          <h4>The wizard writes real properties</h4>
+          <div class="task"><span class="box"></span><span class="tx"><b>Listings API</b> — create, read, update, delete with ownership rules.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Photo &amp; document upload</b> from <code>list.html</code> straight to storage.</span></div>
+          <div class="task"><span class="box"></span><span class="tx">Save the drawn pin, Google Plus Code &amp; all details to the database.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Search &amp; Property pages read from the database</b> instead of the demo array.</span></div>
+          <div class="task"><span class="box"></span><span class="tx">Status lifecycle: draft → pending review → active.</span></div>
+          <div class="deliver">Milestone: a property listed through the wizard appears on the live site.</div>
+        </div>
+      </div>
+
+      <div class="week">
+        <div class="wmeta"><div class="wk">Week 3</div><div class="wt">Forms &amp; leads</div><span class="tag">Capture</span></div>
+        <div class="wbody">
+          <h4>Every form becomes a lead + an email</h4>
+          <div class="task"><span class="box"></span><span class="tx"><b>Connect email</b> (Resend/Postmark) with a verified sending domain.</span></div>
+          <div class="task"><span class="box"></span><span class="tx">Wire <b>valuation, viewing request, message agent, area alerts</b> → <code>leads</code>.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Team notification email</b> on every new lead &amp; new listing.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Auto-reply</b> to the user (valuation estimate, viewing confirmation).</span></div>
+          <div class="task"><span class="box"></span><span class="tx">Favorites &amp; saved searches persist to the account.</span></div>
+          <div class="deliver">Milestone: submitting any form really emails your team &amp; the user.</div>
+        </div>
+      </div>
+
+      <div class="week">
+        <div class="wmeta"><div class="wk">Week 4</div><div class="wt">Admin &amp; launch</div><span class="tag">Ship</span></div>
+        <div class="wbody">
+          <h4>Review, approve, go live</h4>
+          <div class="task"><span class="box"></span><span class="tx"><b>Admin board</b> — review &amp; approve/reject listings, view documents, see all leads.</span></div>
+          <div class="task"><span class="box"></span><span class="tx">Seller <code>dashboard.html</code> shows real status, views &amp; leads.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Security pass</b> — RLS review, consent capture, rate limiting, spam guard.</span></div>
+          <div class="task"><span class="box"></span><span class="tx">Deploy to your domain, configure email DNS, lock the MapTiler key.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Smoke test &amp; soft launch</b> with a handful of real listings.</span></div>
+          <div class="deliver">Milestone: MyKunda is live and generating leads.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCHEMA -->
+    <section>
+      <div class="h-row"><span class="num">2</span><h2>Week-1 schema (what gets built first)</h2></div>
+      <p class="lead-line">The minimum tables to hit the Phase 1 goal.</p>
+      <div class="tablewrap">
+        <table>
+          <tr><th>Table</th><th>Phase 1 scope</th></tr>
+          <tr><td><code>users</code></td><td>Auth, role, name, email, phone, consent</td></tr>
+          <tr><td><code>listings</code></td><td>Full property/land record + lat/lng + plus_code + status</td></tr>
+          <tr><td><code>listing_media</code></td><td>Photos (public) &amp; documents (private)</td></tr>
+          <tr><td><code>leads</code></td><td>All form submissions + pipeline stage</td></tr>
+          <tr><td><code>viewings</code></td><td>Requests &amp; proposed slots</td></tr>
+          <tr><td><code>favorites</code> · <code>saved_searches</code></td><td>Per-account, basic</td></tr>
+        </table>
+      </div>
+      <div class="note"><b>Deferred to Phase 2:</b> <code>payments</code>, <code>title_verifications</code> workflow, <code>messages</code> real-time threads, and the Meilisearch index. The tables can exist now; the features come later.</div>
+    </section>
+
+    <!-- WHAT I NEED -->
+    <section>
+      <div class="h-row"><span class="num">3</span><h2>To start — your checklist</h2></div>
+      <p class="lead-line">Five things unblock Week 1. Most take minutes.</p>
+      <ul class="chk">
+        <li><b>Lead email address</b> — where team notifications &amp; enquiries should arrive.</li>
+        <li><b>Supabase account</b> — sign up (free); add me, or share project keys securely.</li>
+        <li><b>Email sender</b> — a Resend or Postmark account, plus the domain you'll send from.</li>
+        <li><b>Domain</b> — confirm the final domain so auth, links &amp; email DNS are set up once.</li>
+        <li><b>Admin contacts</b> — who reviews listings &amp; documents (names + emails).</li>
+      </ul>
+      <div class="note"><b>Not blocking Week 1:</b> payment-provider choice (Wave / QMoney / cards) and the WhatsApp Business number — those are needed for Phase 2.</div>
+    </section>
+
+    <!-- HOW WE WORK -->
+    <section style="margin-bottom:0">
+      <div class="h-row"><span class="num">4</span><h2>How we'll run it</h2></div>
+      <div class="grid">
+        <div class="mini"><div class="ic">📍</div><h4>Weekly demo</h4><p>End of each week: a live, clickable milestone you can test yourself.</p></div>
+        <div class="mini"><div class="ic">🔁</div><h4>Staging first</h4><p>Everything lands on a staging URL before it touches the live domain.</p></div>
+        <div class="mini"><div class="ic">🧩</div><h4>Frontend stays</h4><p>We reuse the site you've approved — only the data layer is added beneath it.</p></div>
+        <div class="mini"><div class="ic">🔒</div><h4>Your keys</h4><p>All accounts &amp; secrets remain yours; nothing locked to a third party.</p></div>
+      </div>
+      <div class="goal" style="margin-left:47px;margin-top:8px">
+        <h4>Kickoff</h4>
+        <p>Send the checklist items above and I'll stand up the Supabase project and schema in Week 1 — with a working login to test by the end of it.</p>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="foot">
+    <b>MyKunda</b>
+    <span>Phase 1 Build Plan · MVP</span>
+    <span class="sp">~4 weeks to launch · v1</span>
+  </div>
+
+</div>
+</body>
+</html>

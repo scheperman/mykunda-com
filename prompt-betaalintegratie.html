@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt — betaalmethoden inrichten bij de leverancier</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="styles.min.css?v=1791580000000">
+<style>
+body{background:var(--paper-2)}
+.pw{max-width:880px;margin:0 auto;padding:48px 24px 80px}
+.ph{margin-bottom:32px}
+.ph .kick{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--green-700);margin-bottom:11px}
+.ph h1{font-family:var(--serif);font-size:38px;font-weight:600;color:var(--ink);line-height:1.15;letter-spacing:-.01em}
+.ph p{font-size:16.5px;color:var(--muted);line-height:1.65;margin-top:13px;max-width:640px}
+.howto{background:var(--white);border:1.5px solid var(--line);border-radius:var(--r-lg);padding:24px 28px;margin-bottom:26px}
+.howto h2{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:14px}
+.howto ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:9px}
+.howto li{font-size:14.5px;color:var(--ink-2);line-height:1.6}
+.howto b{font-weight:700;color:var(--ink)}
+.fill{background:var(--paper-2);border:1.5px solid var(--line);border-radius:var(--r-md);padding:15px 18px;margin-top:16px}
+.fill p{font-size:13.5px;color:var(--ink-2);line-height:1.6;margin:0}
+.fill b{color:var(--ink);font-weight:700}
+.pbar{display:flex;align-items:center;justify-content:space-between;gap:16px;background:var(--ink);border-radius:var(--r-lg) var(--r-lg) 0 0;padding:14px 20px}
+.pbar span{font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#8FA79C}
+.pbtn{font-size:13px;font-weight:700;background:var(--green-500);color:#fff;border:none;border-radius:var(--r-pill);padding:9px 20px;cursor:pointer;transition:.15s;flex:none}
+.pbtn:hover{filter:brightness(1.08)}
+.pbtn.done{background:#fff;color:var(--ink)}
+pre.prompt{background:#0E1714;color:#D6E4DD;border-radius:0 0 var(--r-lg) var(--r-lg);padding:26px 24px;margin:0;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.72;white-space:pre-wrap;word-wrap:break-word}
+pre.prompt b{color:#FFD98A;font-weight:600}
+.after{margin-top:30px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.acard{background:var(--white);border:1.5px solid var(--line);border-radius:var(--r-md);padding:20px 22px}
+.acard h3{font-size:14.5px;font-weight:700;color:var(--ink);margin-bottom:8px}
+.acard p{font-size:13.5px;color:var(--ink-2);line-height:1.6}
+@media(max-width:720px){.pw{padding:32px 16px 60px}.ph h1{font-size:29px}.after{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="pw">
+<div class="ph">
+<div class="kick">Voor een nieuw gesprek met Claude</div>
+<h1>Betaalmethoden inrichten bij de leverancier</h1>
+<p>Deze prompt bevat alle context van MyKunda die nodig is om de betaalintegratie aan de leverancierskant op te zetten: welke wallets, welke limieten, welke bankgegevens, en wat er al gebouwd is. Zonder die context begint Claude bij nul en krijg je algemene adviezen.</p>
+</div>
+
+<div class="howto">
+<h2>Zo gebruik je hem</h2>
+<ol>
+<li>Klik op <b>Prompt kopiëren</b> hieronder.</li>
+<li>Open een <b>nieuw gesprek</b> met Claude — niet dit gesprek, want daar zit al veel context in die de antwoorden kan vertroebelen.</li>
+<li>Plak de prompt en vul de drie regels tussen vierkante haken in.</li>
+<li>Claude begint met vragen. Beantwoord die eerst; ga niet meteen om code vragen.</li>
+</ol>
+<div class="fill">
+<p><b>Drie dingen moet je zelf invullen</b> — ze staan geel in de prompt: je technische niveau, waar je site nu gehost wordt, en je gewenste livegang-datum. Die bepalen welk advies je krijgt. Weet je het hostingantwoord niet, schrijf dan "weet ik niet, help me dit uitzoeken".</p>
+</div>
+</div>
+
+<div class="pbar">
+<span>Prompt</span>
+<button type="button" class="pbtn" id="copyBtn">Prompt kopiëren</button>
+</div>
+<pre class="prompt" id="promptText">Ik ga de betaalintegratie van mijn website live zetten en wil dat jij me daarin stap voor stap begeleidt, aan de kant van de betaalleverancier.
+
+=== OVER HET PROJECT ===
+
+MyKunda (mykunda.com) is een vastgoedplatform voor Gambia: woningen en grond te koop en te huur, met verkopers en agents in Gambia en kopers zowel lokaal als in de diaspora (Nederland, VK, VS).
+
+Technisch: statische HTML-site, geen build-stap, geen framework. Supabase voor authenticatie en data. Vanilla JavaScript.
+
+=== WAT KLANTEN BETALEN ===
+
+Alleen listing- en servicekosten: listing plans, uitgelichte plaatsingen, taxaties en title checks. Bedragen liggen tussen ongeveer GMD 500 en GMD 25.000.
+
+Belangrijk: MyKunda int NOOIT aanbetalingen, deposito's of koopsommen van woningen. Die gaan altijd via de escrowrekening van een advocaat of notaris. Dit is een harde grens — adviseer me niets dat daarvan afwijkt, want dan word ik aansprakelijk en trek ik fraudeclaims aan.
+
+=== GEKOZEN GATEWAY ===
+
+Modem Pay (modempay.com), gelicentieerd door de Central Bank of The Gambia als payment aggregator, Reg. No. 2025/C25067. Geen maandkosten, afrekening per transactie. REST API plus TypeScript SDK, CLI en sandbox.
+
+Alternatief dat ik nog wil vergelijken: Waychit (waychit.com), tweede aggregator in Gambia met vergelijkbare dekking en een self-serve sandbox.
+
+=== BETAALMETHODEN DIE IK WIL AANBIEDEN ===
+
+Mobile money, vier wallets, met de transactielimieten die ik nu in de code heb staan:
+- Wave — GMD 100.000 per transactie — belangrijkste wallet
+- Afrimoney (Africell) — GMD 50.000
+- QMoney (QCell) — GMD 50.000
+- APS Wallet — GMD 50.000 — sterk bij agents en buiten Greater Banjul
+
+Let op: Orange Money bestaat NIET in Gambia. Als je die tegenkomt in documentatie of voorbeelden, negeer hem.
+QMoney en Afrimoney hebben geen publieke self-serve API. Dat is precies waarom ik via een aggregator werk en niet per wallet integreer.
+
+Kaart: Visa en Mastercard met 3-D Secure, inclusief buitenlandse kaarten, voor diaspora-klanten.
+
+Bankoverschrijving, voor bedragen boven de wallet-limieten en voor overboekingen uit het buitenland:
+- Guaranty Trust Bank (Gambia) Ltd
+- Rekeningnaam MyKunda.com, rekeningnummer 005201300100074795 (filiaal Kairaba, code 201)
+- SWIFT/BIC GTBGGMGM (11-tekens variant GTBGGMGMXXX)
+- 56 Kairaba Avenue, Fajara, KSMD, Banjul
+
+Valuta: prijzen standaard in GMD, USD-toggle voor diaspora, settlement in GMD op één zakelijke rekening.
+
+=== WAT ER AL GEBOUWD IS ===
+
+De frontend is klaar en draait in sandbox-modus:
+- checkout.html — drie betaalroutes, wallet-keuze, kaartformulier, en bankoverschrijving met automatisch gegenereerde referentiecode (formaat MK-XXXXXXX)
+- modempay.js — wrapper om de Modem Pay API, met de providerlijst en limieten in een CONFIG-object
+- De limieten worden in de frontend afgedwongen: boven de limiet verwijst de checkout naar bank of kaart in plaats van de betaling te laten mislukken
+
+Bankoverschrijving werkt in de praktijk al zonder gateway: de klant krijgt een referentiecode en de rekeninggegevens, ik controleer handmatig mijn bankafschrift.
+
+Er is nog GEEN backend. De secret key staat nog nergens. Er gaat nog geen echt geld door de checkout.
+
+=== WAT IK VAN JOU NODIG HEB ===
+
+1. Merchant onboarding — wat vraagt Modem Pay precies aan documenten voor een in Gambia geregistreerde Ltd, hoe lang duurt KYC, en waar loopt dit meestal vast
+
+2. Backend — welke endpoints ik minimaal nodig heb, waar ik die het beste host gegeven mijn huidige hosting, en hoe de secret key veilig blijft
+
+3. Webhooks — endpoint opzetten, signature verifiëren, en omgaan met dubbele of te laat binnenkomende webhooks (idempotency)
+
+4. Database — schema voor een payments-tabel in Supabase, inclusief de statusovergangen en wat ik moet vastleggen voor de boekhouding
+
+5. Bankoverschrijvingen matchen — hoe ik van handmatig afschrift-controleren naar iets betrouwbaarders ga, zonder meteen een bankkoppeling nodig te hebben
+
+6. Testen — concrete testscenario's per betaalroute in de sandbox, inclusief de gevallen die misgaan: klant annuleert op zijn telefoon, timeout, onvoldoende saldo, 3DS afgebroken, dubbele betaling
+
+7. Tarieven — welke vragen ik precies moet stellen aan Modem Pay én Waychit om ze eerlijk te kunnen vergelijken. Het verschil tussen 1,5% en 3% op wallet-collecties bepaalt mijn marge op een listing van GMD 500, dus dit moet scherp
+
+8. Go-live checklist — wat er af moet zijn voordat er echt geld door de checkout gaat
+
+=== HOE IK WIL DAT JE WERKT ===
+
+Stel eerst je vragen. Als je iets nodig hebt wat ik niet heb verteld, vraag het voordat je begint.
+
+Werk daarna één onderdeel per keer af en wacht op mijn bevestiging voordat je doorgaat. Geen lange code-dumps zonder uitleg van wat het doet en waarom.
+
+Wees eerlijk over wat je niet zeker weet. Modem Pay is een kleine, jonge aanbieder; als je de details van hun API niet kent, zeg dat en vertel me welke vraag ik aan hun support moet stellen in plaats van iets aannemelijks te verzinnen. Verzin geen endpoint-namen, veldnamen of tariefpercentages.
+
+Denk mee over wat er misgaat, niet alleen over het gelukkige scenario. Klanten in Gambia zitten vaak op een trage of wegvallende 4G-verbinding.
+
+Antwoord in het Nederlands.
+
+=== DIT MOET IK NOG INVULLEN ===
+
+<b>Mijn technische niveau: [vul in — bijvoorbeeld: ik ben geen developer en heb iemand die dit voor me bouwt / ik kan HTML en CSS maar geen backend / ik programmeer zelf]</b>
+
+<b>Waar mijn site nu gehost wordt: [vul in — bijvoorbeeld Vercel, Netlify, Cloudflare Pages, of een klassieke webhoster met cPanel. Weet je het niet: schrijf "weet ik niet, help me dit uitzoeken"]</b>
+
+<b>Wanneer ik live wil: [vul in — bijvoorbeeld: binnen twee weken / geen harde deadline]</b>
+
+Begin met je vragen.</pre>
+
+<div class="after">
+<div class="acard">
+<h3>Neem dit mee naar het gesprek</h3>
+<p>Claude in dat nieuwe gesprek kan jouw bestanden niet zien. Heb je vragen over de bestaande code, kopieer dan <b>modempay.js</b> en het betaalgedeelte van <b>checkout.html</b> erbij.</p>
+</div>
+<div class="acard">
+<h3>Wat hier al klaar is</h3>
+<p>Het volledige stappenplan aan onze kant staat in <b>werkplan-betalingen.md</b>. Kom je terug met antwoorden van Modem Pay, dan werk ik de frontend en <b>modempay.js</b> hier verder bij.</p>
+</div>
+</div>
+</div>
+<script>
+document.getElementById('copyBtn').addEventListener('click',async function(){
+  var b=this,t=document.getElementById('promptText').innerText;
+  try{await navigator.clipboard.writeText(t);}catch(e){
+    var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();
+  }
+  b.textContent='Gekopieerd';b.classList.add('done');
+  setTimeout(function(){b.textContent='Prompt kopiëren';b.classList.remove('done');},1800);
+});
+</script>
+</body>
+</html>

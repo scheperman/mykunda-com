@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Valuation Request — MyKunda</title>
+<style>
+/* Email-safe inline approach, but structured for preview */
+body{margin:0;padding:0;background:#FAF8F3;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#1A1814;-webkit-text-size-adjust:100%}
+.wrapper{max-width:640px;margin:0 auto;padding:24px 16px}
+.card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+
+/* Header */
+.header{background:#15463A;padding:28px 32px;display:flex;align-items:center;gap:16px}
+.header-logo{font-size:22px;font-weight:800;color:#fff;letter-spacing:-.02em}
+.header-logo span{color:#CE1126}
+.header-tag{margin-left:auto;background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:5px 12px;border-radius:99px}
+
+/* Title bar */
+.title-bar{padding:22px 32px;border-bottom:1px solid #EDEBE4;display:flex;align-items:center;gap:14px}
+.title-bar h1{font-size:20px;font-weight:800;margin:0;color:#1A1814}
+.badge{display:inline-flex;align-items:center;gap:5px;background:#EAF2ED;color:#15463A;font-size:11.5px;font-weight:700;padding:4px 11px;border-radius:99px;text-transform:uppercase;letter-spacing:.04em}
+.badge svg{width:13px;height:13px}
+
+/* Contact section */
+.contact{padding:24px 32px;border-bottom:1px solid #EDEBE4}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.contact-item{display:flex;flex-direction:column;gap:3px}
+.contact-item .label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#8A8478}
+.contact-item .val{font-size:15px;font-weight:600;color:#1A1814}
+.contact-item .val a{color:#15463A;text-decoration:none}
+
+/* Estimate banner */
+.estimate{margin:20px 32px;background:linear-gradient(135deg,#15463A,#1C5848);border-radius:10px;padding:22px 26px;color:#fff}
+.est-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#E04458;margin-bottom:6px}
+.est-range{font-size:28px;font-weight:800;letter-spacing:-.01em;line-height:1.15}
+.est-sub{font-size:13px;color:rgba(255,255,255,.72);font-weight:500;margin-top:6px}
+
+/* Property details */
+.details{padding:24px 32px;border-bottom:1px solid #EDEBE4}
+.details h2{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#8A8478;margin:0 0 16px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.detail-card{background:#FAF8F3;border-radius:8px;padding:14px 16px}
+.detail-card .dc-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#8A8478;margin-bottom:3px}
+.detail-card .dc-val{font-size:15px;font-weight:700;color:#1A1814}
+
+/* Factors */
+.factors{padding:24px 32px;border-bottom:1px solid #EDEBE4}
+.factors h2{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#8A8478;margin:0 0 14px}
+.factor-list{display:flex;flex-wrap:wrap;gap:8px}
+.factor{display:inline-flex;align-items:center;gap:5px;background:#FAF8F3;border:1px solid #EDEBE4;border-radius:6px;padding:7px 12px;font-size:13px;font-weight:600;color:#4A463C}
+.factor.pos{background:#EAF2ED;border-color:#BEDACE;color:#15463A}
+.factor.neg{background:#FDF0EE;border-color:#F5B8BF;color:#A81020}
+
+/* Message */
+.message{padding:24px 32px;border-bottom:1px solid #EDEBE4}
+.message h2{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#8A8478;margin:0 0 10px}
+.message p{font-size:14.5px;line-height:1.55;color:#4A463C;margin:0}
+
+/* Raw JSON */
+.raw{padding:24px 32px}
+.raw summary{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#8A8478;cursor:pointer;margin-bottom:10px}
+.raw pre{background:#FAF8F3;border:1px solid #EDEBE4;border-radius:8px;padding:16px;font-size:12.5px;line-height:1.5;color:#4A463C;overflow-x:auto;white-space:pre-wrap;margin:0}
+
+/* Footer */
+.footer{padding:20px 32px;text-align:center}
+.footer p{font-size:12px;color:#8A8478;margin:0;line-height:1.5}
+.footer a{color:#15463A;font-weight:600;text-decoration:none}
+
+/* CTA */
+.cta-row{padding:8px 32px 24px;display:flex;gap:10px}
+.cta{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:42px;padding:0 22px;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;transition:.15s}
+.cta-primary{background:#15463A;color:#fff}
+.cta-primary:hover{background:#123A2E}
+.cta-secondary{background:#EAF2ED;color:#15463A}
+.cta-secondary:hover{background:#DCEAE3}
+
+@media(max-width:520px){
+  .wrapper{padding:12px 8px}
+  .header,.title-bar,.contact,.details,.factors,.message,.raw,.footer,.cta-row,.estimate{padding-left:20px;padding-right:20px}
+  .estimate{margin-left:20px;margin-right:20px}
+  .contact-grid{grid-template-columns:1fr}
+  .detail-grid{grid-template-columns:1fr 1fr}
+  .est-range{font-size:22px}
+}
+</style>
+</head>
+<body>
+<div class="wrapper">
+<div class="card">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-logo">My<span>Kunda</span></div>
+    <div class="header-tag">Internal notification</div>
+  </div>
+
+  <!-- Title -->
+  <div class="title-bar">
+    <h1>New Valuation Request</h1>
+    <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26z"/></svg>Valuation</span>
+  </div>
+
+  <!-- Contact info -->
+  <div class="contact">
+    <div class="contact-grid">
+      <div class="contact-item">
+        <span class="label">Name</span>
+        <span class="val">Edwin</span>
+      </div>
+      <div class="contact-item">
+        <span class="label">Area</span>
+        <span class="val">Sanyang</span>
+      </div>
+      <div class="contact-item">
+        <span class="label">Email</span>
+        <span class="val"><a href="mailto:edwinscheperman@gmail.com">edwinscheperman@gmail.com</a></span>
+      </div>
+      <div class="contact-item">
+        <span class="label">Phone</span>
+        <span class="val">—</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estimate banner -->
+  <div class="estimate">
+    <div class="est-label">Indicative estimate</div>
+    <div class="est-range">D4,665,000 – D6,310,000</div>
+    <div class="est-sub">Based on 145 m² house in Sanyang · approx. €56,202 – €76,038</div>
+  </div>
+
+  <!-- Property details -->
+  <div class="details">
+    <h2>Property details</h2>
+    <div class="detail-grid">
+      <div class="detail-card">
+        <div class="dc-label">Type</div>
+        <div class="dc-val">House</div>
+      </div>
+      <div class="detail-card">
+        <div class="dc-label">Built area</div>
+        <div class="dc-val">145 m²</div>
+      </div>
+      <div class="detail-card">
+        <div class="dc-label">Plot size</div>
+        <div class="dc-val">600 m²</div>
+      </div>
+      <div class="detail-card">
+        <div class="dc-label">Bedrooms</div>
+        <div class="dc-val">3</div>
+      </div>
+      <div class="detail-card">
+        <div class="dc-label">Bathrooms</div>
+        <div class="dc-val">2</div>
+      </div>
+      <div class="detail-card">
+        <div class="dc-label">Floors</div>
+        <div class="dc-val">1</div>
+      </div>
+      <div class="detail-card">
+        <div class="dc-label">Condition</div>
+        <div class="dc-val">Good</div>
+      </div>
+      <div class="detail-card">
+        <div class="dc-label">Furnished</div>
+        <div class="dc-val">Unfurnished</div>
+      </div>
+      <div class="detail-card">
+        <div class="dc-label">Pool</div>
+        <div class="dc-val">No</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Factors -->
+  <div class="factors">
+    <h2>Location &amp; features</h2>
+    <div class="factor-list">
+      <span class="factor">Beach: Inland</span>
+      <span class="factor">View: None</span>
+      <span class="factor pos">Solar: Both panels &amp; battery</span>
+      <span class="factor pos">Water: Borehole</span>
+      <span class="factor pos">Security: Gated compound</span>
+      <span class="factor">Furnished: No</span>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-row">
+    <a href="mailto:edwinscheperman@gmail.com?subject=Your%20MyKunda%20valuation%20for%20Sanyang" class="cta cta-primary">Reply to Edwin</a>
+    <a href="#" class="cta cta-secondary">View in admin</a>
+  </div>
+
+  <!-- Raw data -->
+  <div class="raw">
+    <details>
+      <summary>Raw submission data</summary>
+      <pre>{
+  "sqm": 145,
+  "area": "Sanyang",
+  "beds": "3",
+  "pool": "no",
+  "type": "house",
+  "view": "none",
+  "baths": "2",
+  "beach": "inland",
+  "solar": "both",
+  "water": "borehole",
+  "floors": "1",
+  "security": "gated",
+  "condition": "good",
+  "furnished": "unfurnished",
+  "plot_size": 600,
+  "estimate_low": 56202,
+  "raw_location": "Sanyang",
+  "estimate_high": 76038
+}</pre>
+    </details>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>This is an automated notification from <a href="#">MyKunda</a><br>Do not forward — contains personal data</p>
+  </div>
+
+</div>
+</div>
+</body>
+</html>

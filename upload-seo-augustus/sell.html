@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--mk-mark--><meta name="copyright" content="© MyKunda Ltd — mykunda.com. Alle rechten voorbehouden."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:0wacsb9--><!--/mk-mark-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
+<link rel="apple-touch-icon" href="images/mykunda-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#15463A">
+<title>List your property in The Gambia — MyKunda</title>
+<meta name="description" content="List your home, compound or land in The Gambia on MyKunda. Reach buyers across the country and the diaspora. Free to start, with optional title checks.">
+<meta name="keywords" content="sell property Gambia, sell house Gambia, sell land Gambia, rent out property Gambia, list property online Gambia, easy property listing Gambia, list property Gambia, FSBO Gambia, diaspora sell property">
+<meta property="og:site_name" content="MyKunda">
+<meta property="og:locale" content="en_GB">
+<meta property="og:image" content="https://mykunda.com/images/og/home-hero.jpg">
+<meta property="og:image:secure_url" content="https://mykunda.com/images/og/home-hero.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://mykunda.com/images/og/home-hero.jpg">
+<meta property="og:image:alt" content="MyKunda — property in The Gambia">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://mykunda.com/sell.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="List your property in The Gambia — MyKunda">
+<meta property="og:description" content="List your home or land in The Gambia. Free to start, optional title verification, or full listing management.">
+<meta property="og:url" content="https://mykunda.com/sell.html">
+<meta name="twitter:title" content="List your property in The Gambia — MyKunda">
+<meta name="twitter:description" content="List free, add title verification, or let an established Gambian estate agent manage your listing for you.">
+<link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
+<link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.min.css?v=1791000000000">
+<style>
+/* hero */
+.shero{position:relative;color:#fff;margin-top:calc(-1 * var(--header-h));isolation:isolate;overflow:hidden}
+.shero-bg{position:absolute;inset:0;z-index:0;background:linear-gradient(135deg,#0E2E25 0%,#15463A 55%,#1C5848 100%)}
+.shero-bg::after{content:"";position:absolute;inset:0;opacity:.16;background-image:radial-gradient(circle at 20% 30%,#fff 0,transparent 8%),radial-gradient(circle at 80% 60%,#fff 0,transparent 6%);background-size:cover}
+.shero-inner{position:relative;z-index:2;padding-block:calc(var(--header-h) + 70px) 80px;display:grid;grid-template-columns:1.1fr .9fr;gap:50px;align-items:center}
+.shero h1{font-size:54px;line-height:1.04;color:#fff;letter-spacing:-.02em}
+.shero h1 em{font-style:italic;color:var(--amber-400)}
+.shero .sub{font-size:19px;color:rgba(255,255,255,.9);margin-top:20px;max-width:520px;line-height:1.55}
+.shero-cta{display:flex;gap:13px;margin-top:30px;flex-wrap:wrap}
+.shero-points{display:flex;flex-direction:column;gap:14px;margin-top:34px}
+.spoint{display:flex;align-items:center;gap:13px;font-size:16px;color:rgba(255,255,255,.94);font-weight:500}
+.spoint .ic{width:30px;height:30px;border-radius:50%;background:rgba(200,112,45,.22);color:var(--amber-400);display:flex;align-items:center;justify-content:center;flex:none}
+
+/* hero card — quick estimate */
+.estimate{background:var(--white);border-radius:var(--r-xl);box-shadow:var(--sh-lg);padding:30px;color:var(--ink)}
+.estimate h3{font-size:21px;margin-bottom:6px}
+.estimate p.lead{font-size:14px;color:var(--muted);margin-bottom:20px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:13px;font-weight:700;color:var(--ink-2);margin-bottom:7px}
+.price-input{display:flex;align-items:center;gap:10px;height:54px;border-radius:var(--r-md);box-shadow:inset 0 0 0 1.5px var(--line);padding:0 16px}
+.price-input span{font-size:18px;font-weight:700;color:var(--green-700)}
+.price-input input{border:none;outline:none;font-size:18px;font-weight:700;color:var(--ink);width:100%;background:none}
+.estimate-out{background:var(--green-50);border-radius:var(--r-md);padding:18px 20px;margin-top:4px}
+.estimate-out .row{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:6px 0;font-size:14px;color:var(--ink-2)}
+.estimate-out .row > span:first-child{flex:1}
+.estimate-out .row b{font-weight:700;white-space:nowrap}
+.estimate-out .save{border-top:1px solid var(--green-200);margin-top:8px;padding-top:14px}
+.estimate-out .save .amt{font-family:var(--serif);font-size:30px;font-weight:700;color:var(--green-700);white-space:nowrap}
+.need-list{list-style:none;display:flex;flex-direction:column;gap:14px;margin:0 0 22px}
+.need-list li{display:flex;gap:12px;align-items:flex-start}
+.need-list .ck{width:26px;height:26px;border-radius:50%;background:var(--green-50);color:var(--green-700);display:flex;align-items:center;justify-content:center;flex:none;margin-top:1px}
+.need-list li div{display:flex;flex-direction:column;gap:2px}
+.need-list li b{font-size:14.5px;color:var(--ink);font-weight:700}
+.need-list li span{font-size:13px;color:var(--muted);line-height:1.45}
+.estimate small{display:block;font-size:11.5px;color:var(--muted-2);margin-top:12px;line-height:1.5}
+
+/* generic section bits */
+.eyebrow{font-family:var(--sans);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--amber-600)}
+.center-head{text-align:center;max-width:680px;margin:0 auto 44px}
+.center-head .eyebrow{margin-bottom:12px}
+.center-head h2{font-size:38px;line-height:1.1}
+.center-head p{color:var(--muted);font-size:17px;margin-top:13px}
+
+/* how it works */
+.steps3{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.step3{position:relative;background:var(--white);border-radius:var(--r-lg);padding:32px 28px;box-shadow:var(--sh-sm)}
+.step3 .n{width:46px;height:46px;border-radius:13px;background:var(--green-700);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:21px;font-weight:600;margin-bottom:18px}
+.step3 h3{font-size:21px;margin-bottom:9px}
+.step3 p{color:var(--muted);font-size:15px;line-height:1.6}
+.step3 .ar-link{margin-top:14px}
+
+/* pricing */
+.pricing{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;align-items:stretch}
+.plan{background:var(--white);border-radius:var(--r-lg);border:1.5px solid var(--line);padding:28px 24px;display:flex;flex-direction:column}
+.plan.feat{border-color:var(--green-700);box-shadow:var(--sh-lg);position:relative}
+.plan.feat::before{content:"Most popular";position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--green-700);color:#fff;font-size:12px;font-weight:700;letter-spacing:.03em;padding:5px 15px;border-radius:var(--r-pill);text-transform:uppercase}
+.plan .pname{font-family:var(--serif);font-size:23px;font-weight:600;color:var(--ink)}
+.plan .ptag{font-size:14px;color:var(--muted);margin-top:4px;min-height:42px}
+.plan .price{display:flex;align-items:baseline;gap:6px;margin:16px 0 4px}
+.plan .price .amt{font-family:var(--sans);font-size:32px;font-weight:800;color:var(--green-700);letter-spacing:-.02em}
+.plan .price .per{font-size:14px;color:var(--muted);font-weight:600;white-space:nowrap}
+.plan .pnote{font-size:13px;color:var(--muted-2);margin-bottom:20px}
+.plan ul{list-style:none;display:flex;flex-direction:column;gap:11px;margin-bottom:24px;flex:1}
+.plan li{display:flex;align-items:flex-start;gap:10px;font-size:14.5px;color:var(--ink-2);line-height:1.45}
+.plan li .ck{color:var(--green-600);flex:none;margin-top:1px}
+.plan li.off{color:var(--muted-2)}
+.plan li.off .ck{color:var(--muted-2)}
+
+.plan .price .from{font-size:13px;font-weight:700;color:var(--muted);align-self:center}
+.partners{margin-top:46px;background:var(--paper-2);border-radius:var(--r-xl);padding:38px 40px}
+.pt-head{max-width:720px;margin:0 auto 26px;text-align:center}
+.pt-head h3{font-size:24px;margin-bottom:10px;letter-spacing:-.01em}
+.pt-head p{color:var(--muted);font-size:15.5px;line-height:1.65;text-wrap:pretty}
+.pt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.pt-card{background:var(--white);border-radius:var(--r-md);padding:20px 22px;border:1px solid var(--line)}
+.pt-card b{display:block;font-family:var(--serif);font-size:16.5px;font-weight:600;margin-bottom:7px}
+.pt-card p{font-size:14px;color:var(--muted);line-height:1.55}
+@media(max-width:1080px){.pt-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.partners{padding:26px 22px}.pt-grid{grid-template-columns:1fr}}
+.bands{margin-top:46px}
+.bands-head{text-align:center;max-width:620px;margin:0 auto 22px}
+.bands-head h3{font-size:23px;margin-bottom:8px}
+.bands-head p{color:var(--muted);font-size:15px;line-height:1.6;text-wrap:pretty}
+.bsub{display:block;font-size:13px;color:var(--muted);font-weight:500}
+.bands-note{text-align:center;font-size:12.5px;color:var(--muted-2);margin:14px auto 0;line-height:1.55;max-width:660px}
+
+/* asking-price picker — turns the band into the seller's own number */
+.bandpick{background:var(--green-50);border:1.5px solid var(--green-200);border-radius:var(--r-lg);padding:24px 28px;max-width:900px;margin:0 auto 30px}
+.bandpick .bp-top{display:grid;grid-template-columns:1fr auto;gap:18px 30px;align-items:center}
+.bp-q b{display:block;font-family:var(--serif);font-size:19px;font-weight:600;color:var(--green-800);line-height:1.3}
+.bp-q span{display:block;font-size:14px;color:var(--green-700);line-height:1.5;margin-top:5px;max-width:430px}
+.bp-in{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.bp-seg{display:flex;background:var(--white);border:1.5px solid var(--green-200);border-radius:var(--r-pill);padding:3px;gap:2px}
+.bp-seg button{border:none;background:none;font-family:var(--sans);font-size:13.5px;font-weight:700;color:var(--muted);padding:8px 15px;border-radius:var(--r-pill);cursor:pointer;transition:.13s;white-space:nowrap}
+.bp-seg button.on{background:var(--green-700);color:#fff}
+.bp-field{display:flex;align-items:center;background:var(--white);border:1.5px solid var(--green-200);border-radius:var(--r-md);padding:0 14px;transition:.15s}
+.bp-field:focus-within{border-color:var(--green-700)}
+.bp-sym{font-weight:800;color:var(--green-700);font-size:16px;padding-right:6px}
+.bp-field input{border:none;outline:none;background:none;font-family:var(--sans);font-size:17px;font-weight:700;color:var(--ink);padding:12px 0;width:150px}
+.bp-field input::placeholder{font-weight:500;color:var(--muted-2);font-size:15px}
+.bp-field.off{background:var(--paper-2);border-color:var(--line)}
+.bp-field.off .bp-sym{color:var(--muted-2)}
+.bp-field input:disabled{color:var(--muted-2);cursor:not-allowed}
+.bp-clear{border:none;background:none;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;text-decoration:underline;padding:6px}
+.bp-out{margin-top:18px;padding-top:16px;border-top:1px solid var(--green-200);font-size:15px;line-height:1.6;color:var(--green-800)}
+.bp-out b{font-weight:800}
+.plan .pband{align-self:flex-start;white-space:nowrap;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:5px 11px;border-radius:var(--r-pill);background:var(--paper-2);color:var(--muted);border:1px solid transparent;margin-bottom:14px;line-height:1.3}
+.plan .pband.live{background:var(--green-700);color:#fff}
+.plan .pband.flat{background:transparent;border:1px solid var(--line);color:var(--muted-2)}
+.rrow.on{background:var(--green-50);box-shadow:inset 3px 0 0 var(--green-700)}
+.rrow.on b{color:var(--green-800)}
+@media(max-width:1080px){.pricing{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){.bandpick{padding:20px 20px}.bandpick .bp-top{grid-template-columns:1fr}.bp-field input{width:120px}}
+
+/* how you can pay */
+.paysec{margin-top:52px;background:var(--white);border:1.5px solid var(--line);border-radius:var(--r-lg);padding:34px 36px}
+.paysec-head{max-width:640px;margin-bottom:22px}
+.paysec-head h3{font-family:var(--serif);font-size:25px;font-weight:600;color:var(--ink)}
+.paysec-head p{font-size:15px;color:var(--muted);margin-top:7px;line-height:1.6}
+.paysec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:28px;padding-top:26px;border-top:1px solid var(--line-2)}
+.paycol h4{font-size:15.5px;font-weight:700;color:var(--ink);margin-bottom:7px}
+.paycol p{font-size:14.5px;color:var(--ink-2);line-height:1.6}
+.paysec-note{display:flex;gap:13px;align-items:flex-start;margin-top:26px;padding-top:22px;border-top:1px solid var(--line-2)}
+.paysec-note .ic{color:var(--green-600);flex:none;margin-top:2px}
+.paysec-note p{font-size:13.5px;color:var(--muted);line-height:1.65}
+.paysec-note b{color:var(--ink-2);font-weight:700}
+@media(max-width:860px){.paysec{padding:28px 22px}.paysec-grid{grid-template-columns:1fr;gap:20px}}
+
+/* title verification highlight */
+.verify{background:linear-gradient(135deg,var(--green-800),var(--green-700));border-radius:var(--r-xl);overflow:hidden;color:#fff;display:grid;grid-template-columns:1fr 1fr}
+.verify-text{padding:56px 52px}
+.verify-text .eyebrow{color:var(--amber-400);margin-bottom:14px}
+.verify-text h2{color:#fff;font-size:34px;line-height:1.12}
+.verify-text p{color:rgba(255,255,255,.86);font-size:16.5px;margin-top:15px;line-height:1.6;max-width:440px}
+.verify-list{display:flex;flex-direction:column;gap:13px;margin-top:24px}
+.verify-list .v{display:flex;align-items:center;gap:13px;font-size:15.5px;font-weight:500}
+.verify-list .v .ic{width:32px;height:32px;border-radius:9px;background:rgba(255,255,255,.14);color:var(--amber-400);display:flex;align-items:center;justify-content:center;flex:none}
+.verify-visual{position:relative;display:flex;align-items:center;justify-content:center;padding:40px}
+.verify-badge{background:var(--white);color:var(--ink);border-radius:var(--r-lg);box-shadow:var(--sh-lg);padding:28px;width:100%;max-width:320px}
+.verify-badge .top{display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid var(--line-2)}
+.verify-badge .seal{width:50px;height:50px;border-radius:50%;background:var(--green-50);color:var(--green-700);display:flex;align-items:center;justify-content:center;flex:none}
+.verify-badge .top b{font-family:var(--serif);font-size:18px}
+.verify-badge .top span{font-size:13px;color:var(--muted)}
+.verify-badge .chk{display:flex;align-items:center;gap:10px;padding:10px 0;font-size:14px;color:var(--ink-2);font-weight:600}
+.verify-badge .chk .ic{color:var(--green-600)}
+
+/* who for */
+.who{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.who-card{background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-sm);padding:32px;display:flex;gap:20px;align-items:flex-start}
+.who-card .ic{width:54px;height:54px;border-radius:15px;background:var(--amber-50);color:var(--amber-600);display:flex;align-items:center;justify-content:center;flex:none}
+.who-card h3{font-size:21px;margin-bottom:8px}
+.who-card p{color:var(--muted);font-size:15px;line-height:1.6}
+.guide-teaser{display:flex;align-items:center;gap:18px;background:var(--green-50);border:1.5px solid var(--green-200);border-radius:var(--r-lg);padding:22px 26px;transition:.15s}
+.guide-teaser:hover{border-color:var(--green-500);box-shadow:var(--sh-sm)}
+.guide-teaser .ic{width:44px;height:44px;border-radius:12px;background:var(--white);color:var(--green-700);display:flex;align-items:center;justify-content:center;flex:none}
+.guide-teaser b{font-family:var(--serif);font-size:17px;font-weight:600;color:var(--ink);display:block}
+.guide-teaser p{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.5}
+.guide-teaser .go{margin-left:auto;font-weight:700;font-size:14.5px;color:var(--green-700);white-space:nowrap;display:flex;align-items:center;gap:6px;flex:none}
+
+/* faq */
+.faq{max-width:780px;margin:0 auto}
+.qa{border-bottom:1px solid var(--line);padding:4px 0}
+.qa summary{list-style:none;cursor:pointer;padding:20px 4px;display:flex;align-items:center;justify-content:space-between;gap:20px;font-family:var(--serif);font-size:19px;font-weight:600;color:var(--ink)}
+.qa summary::-webkit-details-marker{display:none}
+.qa summary .ic{flex:none;color:var(--green-700);transition:transform .2s}
+.qa[open] summary .ic{transform:rotate(45deg)}
+.qa .ans{padding:0 4px 22px;color:var(--ink-2);font-size:15.5px;line-height:1.65;max-width:680px}
+
+/* cta band */
+.cta-band{background:var(--amber-500);border-radius:var(--r-xl);padding:54px;text-align:center;color:#fff;position:relative;overflow:hidden}
+
+/* consultation */
+.consult{display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--white);border-radius:var(--r-xl);overflow:hidden;box-shadow:var(--sh-md);border:1px solid var(--line)}
+.consult-info{padding:46px 44px;background:linear-gradient(160deg,var(--green-800),var(--green-700));color:#fff}
+.consult-info .eyebrow{color:var(--amber-400);margin-bottom:13px}
+.consult-info h2{color:#fff;font-size:32px;line-height:1.12}
+.consult-info p{color:rgba(255,255,255,.85);font-size:16px;margin-top:14px;line-height:1.6;max-width:380px}
+.consult-points{display:flex;flex-direction:column;gap:13px;margin-top:26px}
+.consult-points .cp{display:flex;align-items:center;gap:12px;font-size:15px;font-weight:500}
+.consult-points .cp .ic{width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.13);color:var(--amber-400);display:flex;align-items:center;justify-content:center;flex:none}
+.consult-form{padding:42px 44px}
+.consult-form h3{font-size:21px;margin-bottom:6px}
+.consult-form .sub{font-size:14px;color:var(--muted);margin-bottom:22px}
+.cfield{margin-bottom:15px}
+.cfield label{display:block;font-size:13px;font-weight:700;color:var(--ink-2);margin-bottom:7px}
+.cfield input,.cfield select{width:100%;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:12px 14px;font-size:14.5px;outline:none;transition:.15s;font-family:var(--sans);background:var(--white)}
+.cfield input:focus,.cfield select:focus{border-color:var(--green-500)}
+.cfield-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.slot-row{display:flex;gap:8px;flex-wrap:wrap}
+.tslot{flex:1;min-width:70px;height:40px;border-radius:var(--r-sm);box-shadow:inset 0 0 0 1.5px var(--line);font-weight:600;font-size:13.5px;color:var(--ink-2);transition:.13s}
+.tslot.sel{background:var(--green-700);color:#fff;box-shadow:none}
+.consult-note{font-size:12px;color:var(--muted-2);margin-top:13px;text-align:center;line-height:1.5}
+.cta-band h2{color:#fff;font-size:36px;line-height:1.1}
+.cta-band p{color:rgba(255,255,255,.92);font-size:17px;margin:13px auto 26px;max-width:520px}
+
+@media(max-width:480px){
+  .shero h1{font-size:32px}
+  .shero .sub{font-size:16px}
+  .shero-inner{padding-block:calc(var(--header-h) + 36px) 48px;grid-template-columns:1fr;gap:24px}
+  .sell-wrap,.sell-sect{padding-left:20px!important;padding-right:20px!important}
+  .pkg-grid{grid-template-columns:1fr}
+  .steps-grid,.trust-cards{grid-template-columns:1fr}
+  .faq-grid{grid-template-columns:1fr}
+  .guide-teaser{flex-direction:column;align-items:flex-start;text-align:left}
+  .guide-teaser .go{margin-left:0}
+}
+
+@media(max-width:960px){
+  .shero-inner{grid-template-columns:1fr;gap:36px}
+  .shero h1{font-size:40px}
+  .steps3,.pricing,.who{grid-template-columns:1fr}
+  .verify{grid-template-columns:1fr}.verify-text{padding:40px 32px}
+  .center-head h2{font-size:30px}
+  .consult{grid-template-columns:1fr}.consult-info{padding:36px 32px}.consult-form{padding:32px 32px}
+}
+/* valuation tool */
+.value{background:var(--green-700);border-radius:var(--r-xl);overflow:hidden;display:grid;grid-template-columns:1.15fr .85fr;color:#fff}
+.value-text{padding:58px 56px}
+.value-text .eyebrow{color:var(--amber-400);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px}
+.value-text h2{color:#fff;font-size:38px;line-height:1.1}
+.value-text p{color:rgba(255,255,255,.84);font-size:16.5px;margin-top:16px;max-width:420px;line-height:1.55}
+.value-form{margin-top:26px;display:flex;flex-direction:column;gap:10px;max-width:480px}
+.vf-row{display:flex;gap:10px}
+.vf-row.two{display:grid;grid-template-columns:1fr 1fr}
+.vf-row.three{display:grid;grid-template-columns:1fr 1fr 1fr}
+[hidden]{display:none!important}
+.value-form input,.value-form select{width:100%;height:54px;border-radius:var(--r-pill);border:none;padding:0 22px;font-size:15px;font-weight:500;outline:none;box-shadow:0 0 0 2px transparent;transition:box-shadow .15s;background:#fff;color:var(--ink);font-family:var(--sans)}
+.value-form select{appearance:none;-webkit-appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235C6B64' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 18px center;padding-right:42px}
+.value-form input:focus,.value-form select:focus{box-shadow:0 0 0 2px var(--amber-400)}
+.value-form input.bad,.value-form select.bad{box-shadow:0 0 0 2px #E8674C}
+.value-form .btn{height:54px;white-space:nowrap}
+.vf-err{min-height:0;margin:0;font-size:13.5px;font-weight:600;color:#FFD9CE}
+.vf-err:empty{display:none}
+.value-done{margin-top:24px;max-width:480px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);border-radius:var(--r-lg);padding:24px 26px}
+.vd-est{display:flex;flex-direction:column;gap:3px;padding-bottom:16px;margin-bottom:16px;border-bottom:1px solid rgba(255,255,255,.2)}
+.vd-est-lab{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--amber-400)}
+.vd-est-range{font-family:var(--serif);font-size:34px;font-weight:800;color:#fff;line-height:1.1;letter-spacing:-.01em}
+.vd-est-sub{font-size:13.5px;color:rgba(255,255,255,.78);font-weight:600}
+.value-done p{color:rgba(255,255,255,.9);font-size:14.5px;line-height:1.55;margin-bottom:14px}
+.vd-disc{font-size:12px!important;color:rgba(255,255,255,.82)!important;line-height:1.5!important}
+.value-img{position:relative}
+.value-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.value-map .leaflet-container{position:absolute;inset:0;width:100%;height:100%;background:#0e2e25}
+.vmap-tools{position:absolute;left:56px;right:14px;top:14px;z-index:1000;display:flex;flex-wrap:wrap;gap:7px}
+.vmt{height:34px;padding:0 13px;border-radius:99px;border:none;background:rgba(255,255,255,.94);color:#15463A;font-family:var(--sans);font-size:12.5px;font-weight:700;white-space:nowrap;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.22)}
+.vmt.sel{background:var(--amber-400);color:#1A1814}
+.vmt:disabled{opacity:.45;cursor:default}
+.vmap-read{position:absolute;left:56px;right:14px;top:58px;z-index:1000;background:rgba(14,46,37,.92);color:#fff;padding:9px 13px;border-radius:10px;font-size:12.5px;font-weight:600;line-height:1.45}
+#ldMapBox .value-map-tag{left:auto;right:14px;top:auto;bottom:32px}
+#ldMapBox.drawing{cursor:crosshair}
+#ldMapBox.drawing .leaflet-grab{cursor:crosshair}
+.bnd-handle{background:#fff;border:2.5px solid #1F7BFF;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.bnd-len{display:flex;align-items:center;justify-content:center;overflow:visible;pointer-events:none}
+.bnd-len span{background:rgba(24,32,29,.85);color:#fff;font-family:var(--sans);font-size:11.5px;font-weight:800;padding:2px 7px;border-radius:99px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.bnd-len.live span{background:#1F7BFF}
+.vf-note{font-size:12.5px;color:rgba(255,255,255,.86);line-height:1.45;margin:-2px 2px 0}
+.value-form input[readonly]{background:rgba(255,255,255,.86);font-weight:700}
+.value-map-tag{position:absolute;top:14px;left:14px;z-index:1000;background:rgba(14,46,37,.88);color:#fff;padding:7px 14px;border-radius:99px;font-size:13px;font-weight:700;pointer-events:none;box-shadow:0 2px 10px rgba(0,0,0,.3);max-width:calc(100% - 28px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:960px){
+  .value{grid-template-columns:1fr}.value-img{height:240px;position:relative}
+  #ldMapBox{height:400px}
+  .value-text{padding:44px 36px}
+  .value-form{max-width:100%}
+  .vf-row.three{grid-template-columns:1fr 1fr;gap:8px}
+  .value-form input,.value-form select{height:50px;font-size:14.5px}
+}
+@media(max-width:480px){
+  .value{border-radius:var(--r-lg)}
+  .value-text{padding:32px 20px}
+  .value-text h2{font-size:28px}
+  .value-text p{font-size:14.5px}
+  .value-form input,.value-form select{height:48px;font-size:14px;padding:0 16px;border-radius:var(--r-md)}
+  .value-form select{padding-right:36px;background-position:right 14px center}
+  .vf-row{flex-direction:column;gap:8px}
+  .vf-row.two,.vf-row.three{grid-template-columns:1fr;gap:8px}
+  .value-form .btn{height:48px;font-size:15px;border-radius:var(--r-md)}
+  .vd-est-range{font-size:26px}
+  .value-done{padding:20px 18px}
+}
+.value-head{margin-bottom:22px;max-width:640px}
+.value-head .value-lead{color:var(--muted);font-size:16px;margin-top:8px;line-height:1.55}
+.value-toggle{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+.vtab{height:46px;padding:0 22px;border-radius:var(--r-pill);border:1.5px solid var(--line);background:var(--white);font-weight:700;font-size:14.5px;color:var(--ink-2);cursor:pointer;transition:.15s}
+.vtab:hover{border-color:var(--green-500)}
+.vtab.sel{background:var(--green-700);color:#fff;border-color:var(--green-700)}
+.vd-source{font-size:12px!important;color:rgba(255,255,255,.68)!important;margin-top:-6px!important;margin-bottom:14px!important;line-height:1.5!important}
+@media(max-width:480px){.vtab{flex:1;padding:0 10px;font-size:13px;text-align:center}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://mykunda.com/"},{"@type":"ListItem","position":2,"name":"Sell","item":"https://mykunda.com/sell.html"}]}
+</script>
+<meta property="fb:pages" content="61593360783009">
+<meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
+</head>
+<body>
+<div id="header"></div>
+
+<!-- HERO -->
+<section class="shero">
+  <div class="shero-bg"></div>
+  <div class="wrap shero-inner">
+    <div>
+      <h1>List your property to sell or <em>rent out</em></h1>
+      <p class="sub">List your home, compound or land on The Gambia's newest property platform. Reach buyers and renters across the country and the diaspora. We handle the listing, verification and promotion — you handle the deal directly.</p>
+      <div class="shero-cta">
+        <a class="btn btn-amber" href="list.html" style="height:54px;padding:0 28px;font-size:16px">List your property</a>
+        <a class="btn btn-light" href="#consult" style="height:54px;padding:0 24px;font-size:16px">Book a free call</a>
+      </div>
+      <div class="shero-points">
+        <div class="spoint"><span class="ic" id="p1"></span> List it yourself in about ten minutes, from any phone</div>
+        <div class="spoint"><span class="ic" id="p2"></span> You deal directly with buyers — we facilitate, not transact</div>
+        <div class="spoint"><span class="ic" id="p3"></span> Optional title check so buyers trust your listing</div>
+      </div>
+    </div>
+
+    <!-- what you need to start -->
+    <div class="estimate">
+      <h3>Everything you need to start</h3>
+      <p class="lead">No paperwork run, no waiting on an agent — do the whole thing from your phone.</p>
+      <ul class="need-list">
+        <li><span class="ck" id="n1"></span><div><b>A few photos</b><span>Taken on your phone is fine — better ones can be arranged later.</span></div></li>
+        <li><span class="ck" id="n2"></span><div><b>The location</b><span>Pin it on a map or drop a Google Plus Code. No street address needed.</span></div></li>
+        <li><span class="ck" id="n3"></span><div><b>Your asking price</b><span>Not sure yet? Use the free valuation just below.</span></div></li>
+        <li><span class="ck" id="n4"></span><div><b>A phone number</b><span>Enquiries reach you on WhatsApp — nothing to install.</span></div></li>
+      </ul>
+      <a class="btn btn-primary btn-block" href="list.html" style="height:50px">Start your listing</a>
+      <small>In English, on any phone, from anywhere in the world.</small>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="sec wrap" data-screen-label="Sell / How it works">
+  <div class="center-head">
+    <div class="eyebrow">How it works</div>
+    <h2>Listed in minutes, live to thousands</h2>
+    <p>Three simple steps — designed with the clarity and efficiency of a proven, professional real estate process, adapted for The Gambia.</p>
+  </div>
+  <div class="steps3">
+    <div class="step3"><div class="n">1</div><h3>Create your listing</h3><p>Add your property or plot, drop in photos and set your price. Our guided form walks you through every field — or let an agent do it for you.</p></div>
+    <div class="step3"><div class="n">2</div><h3>Get verified &amp; seen</h3><p>Add an optional title &amp; document check to earn a Verified badge. Your listing goes live on MyKunda — seen by local and diaspora buyers searching the coast.</p></div>
+    <div class="step3"><div class="n">3</div><h3>Connect directly</h3><p>Receive messages and viewing requests straight to your phone via WhatsApp. You deal directly with interested buyers or tenants — we facilitate, you decide.</p></div>
+  </div>
+</section>
+
+<!-- VALUATION -->
+<section id="value" class="wrap" style="padding-top:56px;padding-bottom:0" data-screen-label="Sell / Valuation">
+<div class="value-head">
+<div class="eyebrow">Step one</div>
+<p class="value-lead">Two calculators, because a house and a bare plot price very differently — pick the one that matches what you're selling.</p>
+<div class="value-toggle" id="valueToggle">
+<button class="vtab sel" type="button" data-panel="property">🏠 Home, villa or apartment</button>
+<button class="vtab" type="button" data-panel="land">🌍 Land / plot</button>
+</div>
+</div>
+
+<div class="value" id="panelProperty" data-screen-label="Sell / Valuation / Property">
+<div class="value-text">
+<h2>What's your home worth today?</h2>
+<p>Enter a few details and get an <b>instant, data-driven estimate</b> from recent coastal sales — then a valuer we work with refines it for free. No strings attached.</p>
+<form class="value-form" id="propForm" novalidate>
+<div class="vf-row"><input type="text" id="pfLocation" placeholder="Area, Plus Code or coordinates (e.g. Kololi)" required></div>
+<div class="vf-row two">
+<select id="pfType"><option value="apartment">Apartment</option><option value="house" selected>House / villa</option></select>
+<input type="number" id="pfSize" min="1" placeholder="Built area in m²" required>
+</div>
+<div class="vf-row two">
+<select id="pfBeds"><option value="" disabled selected>Bedrooms</option><option value="1">1 bedroom</option><option value="2">2 bedrooms</option><option value="3">3 bedrooms</option><option value="4">4 bedrooms</option><option value="5">5+ bedrooms</option></select>
+<select id="pfBaths"><option value="" disabled selected>Bathrooms</option><option value="1">1 bathroom</option><option value="2">2 bathrooms</option><option value="3">3 bathrooms</option><option value="4">4+ bathrooms</option></select>
+</div>
+<div class="vf-row two">
+<select id="pfCondition"><option value="good" selected>Good condition</option><option value="new">New build (0–5 yr)</option><option value="renovation">Needs renovation</option></select>
+<select id="pfFloors"><option value="1" selected>Single storey</option><option value="2">2 storeys</option><option value="3">3+ storeys</option></select>
+</div>
+<div class="vf-row three">
+<select id="pfPool"><option value="no" selected>No pool</option><option value="yes">Pool</option></select>
+<select id="pfSolar"><option value="no" selected>No solar / generator</option><option value="solar">Solar panels</option><option value="generator">Generator</option><option value="both">Solar + generator</option></select>
+<select id="pfSecurity"><option value="none" selected>No compound wall</option><option value="wall">Walled compound</option><option value="gated">Gated + security</option></select>
+</div>
+<div class="vf-row three">
+<select id="pfFurnished"><option value="unfurnished" selected>Unfurnished</option><option value="semi">Semi-furnished</option><option value="furnished">Fully furnished</option></select>
+<select id="pfWater"><option value="nawec" selected>Nawec water</option><option value="borehole">Own borehole</option><option value="both">Nawec + borehole</option><option value="none">No running water</option></select>
+<input type="number" id="pfPlot" min="1" placeholder="Total land / plot m² (optional)">
+</div>
+<div class="vf-row two">
+<select id="pfBeach"><option value="walking">Walking to beach (&lt; 1 km)</option><option value="beachfront">Beachfront / &lt; 200m</option><option value="inland" selected>Inland (&gt; 1 km)</option></select>
+<select id="pfView"><option value="none" selected>No special view</option><option value="ocean">Ocean view</option><option value="garden">Garden / nature view</option></select>
+</div>
+<div class="vf-row two"><input type="text" id="pfName" placeholder="Your name" required><input type="email" id="pfEmail" placeholder="Email address" required></div>
+<div class="vf-row two"><input type="tel" id="pfPhone" placeholder="Phone / WhatsApp (optional)"><button class="btn btn-amber" type="submit">Get my estimate</button></div>
+<p class="vf-err" id="pfErr"></p>
+<p class="form-legal on-dark">Estimates are indicative only — <a href="legal-terms.html#terms-6">no rights can be derived from them</a>. We use your details to send the estimate and follow up; see our <a href="legal-privacy.html">Privacy Policy</a>.</p>
+</form>
+<div class="value-done" id="propDone" hidden>
+<div class="vd-est"><span class="vd-est-lab">Indicative market estimate</span><span class="vd-est-range" id="pdRange"></span><span class="vd-est-sub" id="pdSub"></span></div>
+<p class="vd-source">Based on current listings and realised sale prices from Gamrealty, Blue Ocean and Realting, cross-checked against MyKunda's own closed deals.</p>
+<div class="vd-breakdown" id="pdBreakdown" style="margin:16px 0 12px;padding:14px 16px;background:rgba(21,70,58,.06);border-radius:8px;font-size:13.5px;line-height:1.7;color:#FFD700;display:none">
+<div style="font-weight:700;color:#1A1814;margin-bottom:6px;font-size:12px;text-transform:uppercase;letter-spacing:.04em">How we calculated this</div>
+<div id="pdBreakdownList"></div>
+</div>
+<p id="pdMsg"></p>
+<p class="vd-disc">⚠ This is an automated indicative estimate based on average market data for the area — not a formal appraisal or valuation. Actual property values depend on many factors including exact location, condition, legal status, and current market conditions. No rights can be derived from this estimate. For an accurate valuation, a MyKunda expert can assess your property in person on request.</p>
+<button class="btn btn-light btn-sm" id="pdAgain" type="button">Value another property</button>
+<a class="btn btn-amber btn-sm" id="pdListBtn" href="list.html" style="margin-top:10px;display:none">List this property on MyKunda →</a>
+</div>
+</div>
+<div class="value-img value-map" id="pdMapBox"><div class="value-map-tag">📍 <span id="pdMapLabel">The Gambia</span></div></div>
+</div>
+
+<div class="value" id="panelLand" data-screen-label="Sell / Valuation / Land" hidden>
+<div class="value-text">
+<h2>What's your land worth today?</h2>
+<p>Bare plots are priced mostly on title, road access and services — not bedrooms. Get an <b>instant, data-driven estimate</b>, then a valuer we work with confirms it for free.</p>
+<form class="value-form" id="landForm" novalidate>
+<div class="vf-row"><input type="text" id="lfLocation" placeholder="Area, Plus Code or coordinates (13.3071, -16.7984)" required></div>
+<div class="vf-row two">
+<input type="number" id="lfSize" min="1" placeholder="Plot size in m²" required>
+<select id="lfTitle"><option value="alkalalo" selected>Customary / Alkalalo</option><option value="leasehold">State lease (99 years)</option><option value="sublease">Sublease / transfer of a lease</option><option value="freehold">Freehold (title deed)</option><option value="unclear">Title unclear</option></select>
+</div>
+<p class="vf-note" id="lfSizeNote">Draw the plot on the map and the size is measured for you — otherwise type it in m².</p>
+<div class="vf-row three">
+<select id="lfRoad"><option value="tarmac">Tarmac road</option><option value="laterite" selected>Dirt road</option><option value="none">No road</option></select>
+<select id="lfFencing"><option value="full">Fully fenced</option><option value="partial" selected>Partly fenced</option><option value="none">Not fenced</option></select>
+<select id="lfCleared"><option value="cleared">Cleared plot</option><option value="partial" selected>Partly cleared</option><option value="bush">Bush / trees</option></select>
+</div>
+<div class="vf-row three">
+<select id="lfElectricity"><option value="present">Power on site</option><option value="nearby" selected>Power nearby</option><option value="none">No power</option></select>
+<select id="lfWater"><option value="nawec">Nawec water</option><option value="borehole">Own borehole</option><option value="nearby" selected>Water nearby</option><option value="none">No water</option></select>
+<select id="lfCorner"><option value="no" selected>Not a corner plot</option><option value="yes">Corner plot</option></select>
+</div>
+<div class="vf-row two">
+<select id="lfPlotShape"><option value="regular" selected>Regular shape</option><option value="irregular">Irregular shape</option></select>
+<select id="lfFlood"><option value="no" selected>No flood risk</option><option value="low">Low flood risk</option><option value="high">High flood risk</option></select>
+</div>
+<div class="vf-row two">
+<input type="text" id="lfBeachDist" readonly hidden placeholder="Distance to the sea">
+<select id="lfBeach"><option value="walking">Walking to beach (&lt; 1 km)</option><option value="beachfront">Beachfront / &lt; 200m</option><option value="inland" selected>Inland (&gt; 1 km)</option></select>
+<select id="lfView"><option value="none" selected>No special view</option><option value="ocean">Ocean view</option><option value="garden">Garden / nature view</option></select>
+</div>
+<div class="vf-row two"><input type="text" id="lfName" placeholder="Your name" required><input type="email" id="lfEmail" placeholder="Email address" required></div>
+<div class="vf-row two"><input type="tel" id="lfPhone" placeholder="Phone / WhatsApp (optional)"><button class="btn btn-amber" type="submit">Get my estimate</button></div>
+<p class="vf-err" id="lfErr"></p>
+<p class="form-legal on-dark">Estimates are indicative only — <a href="legal-terms.html#terms-6">no rights can be derived from them</a>. We use your details to send the estimate and follow up; see our <a href="legal-privacy.html">Privacy Policy</a>.</p>
+</form>
+<div class="value-done" id="landDone" hidden>
+<div class="vd-est"><span class="vd-est-lab">Indicative market estimate</span><span class="vd-est-range" id="ldRange"></span><span class="vd-est-sub" id="ldSub"></span></div>
+<p class="vd-source">Based on Gamrealty's land market guide, current plot listings and realised sales across the coast, cross-checked against MyKunda's own closed deals.</p>
+<div class="vd-breakdown" id="ldBreakdown" style="margin:16px 0 12px;padding:14px 16px;background:rgba(21,70,58,.06);border-radius:8px;font-size:13.5px;line-height:1.7;color:#FFD700;display:none">
+<div style="font-weight:700;color:#1A1814;margin-bottom:6px;font-size:12px;text-transform:uppercase;letter-spacing:.04em">How we calculated this</div>
+<div id="ldBreakdownList"></div>
+</div>
+<p id="ldMsg"></p>
+<p class="vd-disc">⚠ This is an automated indicative estimate based on average market data for the area — not a formal appraisal or valuation. Actual land values depend on many factors including exact location, title status, and current market conditions. No rights can be derived from this estimate. For an accurate valuation, a valuer we work with can assess your plot in person on request.</p>
+<button class="btn btn-light btn-sm" id="ldAgain" type="button">Value another plot</button>
+<a class="btn btn-amber btn-sm" id="ldListBtn" href="list.html" style="margin-top:10px;display:none">List this plot on MyKunda →</a>
+</div>
+</div>
+<div class="value-img value-map" id="ldMapBox"><div class="value-map-tag">📍 <span id="ldMapLabel">The Gambia</span></div>
+<div class="vmap-read" id="ldRead" hidden></div>
+<div class="vmap-tools" id="ldTools">
+<button type="button" class="vmt sel" data-ldmode="pin">Pin only</button>
+<button type="button" class="vmt" data-ldmode="draw">Draw the plot</button>
+<button type="button" class="vmt sel" id="ldSnap" title="Snap corners to 15° steps and 5 m lengths">Snap 90°</button>
+<button type="button" class="vmt" id="ldUndo" disabled>Undo</button>
+<button type="button" class="vmt" id="ldClear" disabled>Clear</button>
+</div></div>
+</div>
+</section>
+
+<!-- PRICING -->
+<section class="sec wrap" id="pricing" data-screen-label="Sell / Pricing">
+  <div class="center-head">
+    <div class="eyebrow">Clear, flat pricing</div>
+    <h2>Pick how much help you want</h2>
+    <p>Listing is free. Two of the paid plans — Verified and Managed — cost less for a cheaper property and more for an expensive one, in three published bands. Every price is a flat amount in dalasi, never a percentage of your sale.</p>
+  </div>
+
+  <div class="bandpick">
+    <div class="bp-top">
+      <div class="bp-q">
+        <b>What are you asking for it?</b>
+        <span>Tell us and the prices below become your prices — no band to work out, and nothing new to discover at checkout.</span>
+      </div>
+      <div class="bp-in">
+        <div class="bp-seg" id="bpDeal">
+          <button type="button" class="on" data-deal="sale">For sale</button>
+          <button type="button" data-deal="rent">To rent</button>
+        </div>
+        <div class="bp-field"><span class="bp-sym" id="bpSym">D</span><input type="text" id="bpAsk" inputmode="numeric" placeholder="Asking price"></div>
+        <button type="button" class="bp-clear" id="bpClear" hidden>Clear</button>
+      </div>
+    </div>
+    <div class="bp-out" id="bpOut" hidden></div>
+  </div>
+
+  <div class="pricing">
+    <div class="plan">
+      <div class="pname">Basic</div>
+      <div class="ptag">List it yourself and talk to buyers directly.</div>
+      <div class="price"><span class="amt">Free</span></div>
+      <span class="pband flat">Always free</span>
+      <div class="pnote">No card required</div>
+      <ul id="plan1"></ul>
+      <a class="btn btn-ghost btn-block" href="list.html" data-plan-cta="basic">Start for free</a>
+    </div>
+    <div class="plan">
+      <div class="pname">Verified</div>
+      <div class="ptag">A checked title — the listings buyers take seriously.</div>
+      <div class="price"><span class="from" id="fromVer">from</span><span class="amt" id="pVer">—</span></div>
+      <span class="pband" id="bVer">Set by your asking price</span>
+      <div class="pnote">Valid 6 months · <a href="#bands" style="color:inherit;text-decoration:underline">see the three bands</a></div>
+      <ul id="plan2"></ul>
+      <a class="btn btn-ghost btn-block" href="list.html?plan=verified" data-plan-cta="verified">Get verified</a>
+    </div>
+    <div class="plan feat">
+      <div class="pname">Promoted</div>
+      <div class="ptag">We arrange the photos and the write-up; you keep the viewings.</div>
+      <div class="price"><span class="amt" id="pProm">—</span></div>
+      <span class="pband flat">One price, any property</span>
+      <div class="pnote">One-time payment</div>
+      <ul id="plan3"></ul>
+      <a class="btn btn-primary btn-block" href="list.html?plan=promoted" data-plan-cta="promoted">Get promoted</a>
+    </div>
+    <div class="plan">
+      <div class="pname">Managed</div>
+      <div class="ptag">An established Gambian agent runs it, viewings included.</div>
+      <div class="price"><span class="from" id="fromMan">from</span><span class="amt" id="pMan">—</span></div>
+      <span class="pband" id="bMan">Set by your asking price</span>
+      <div class="pnote">Two instalments · <a href="#bands" style="color:inherit;text-decoration:underline">see the three bands</a></div>
+      <ul id="plan4"></ul>
+      <a class="btn btn-ghost btn-block" href="list.html?plan=managed" data-plan-cta="managed">Go managed</a>
+    </div>
+  </div>
+
+  <div class="partners">
+    <div class="pt-head">
+      <div class="eyebrow">Who actually does the work</div>
+      <h3>Managed is run by established Gambian estate agents — not by us</h3>
+      <p>MyKunda is a platform, not an agency. We have no agents of our own and no sales staff on the ground. When you choose Managed, your property is handed to an independent estate agency that has been selling in The Gambia for years and has a name to protect here.</p>
+    </div>
+    <div class="pt-grid">
+      <div class="pt-card"><b>Who they are</b><p>Established Gambian agencies with a track record we can check — years of completed sales, real clients we can call, and a reputation in the Kombos that predates us.</p></div>
+      <div class="pt-card"><b>What we do</b><p>We select them, agree what the service must include, hold the standard, and step in if it slips. You have one contract and one price — ours.</p></div>
+      <div class="pt-card"><b>What you get</b><p>One named agent from that agency, start to finish. You know who is showing your property, who is negotiating, and who to call.</p></div>
+      <div class="pt-card"><b>Why not our own staff</b><p>Because the people who already know your street, your buyers and the Lands Office are better at this than anyone we could hire. We would rather partner with them than compete badly.</p></div>
+    </div>
+  </div>
+
+  <div class="bands" id="bands">
+    <div class="bands-head">
+      <h3>The three bands, in full</h3>
+      <p>Checking a single plot document takes less work than checking a compound with three, so a smaller property costs less. There are exactly three bands, they are set by your own asking price, and this table is the whole of it — the price you see here is the price you pay.</p>
+    </div>
+    <div class="rtable" style="max-width:none" id="bandRows"></div>
+    <p class="bands-note">Promoted is <b id="promoNote">—</b> for every property, whatever it is worth. Managed runs for six months of active work and can be renewed; you pay half when we start and half at completion. Amounts in other currencies are indicative — the fee is charged in dalasi.</p>
+  </div>
+
+  <div class="paysec">
+    <div class="paysec-head">
+      <h3>How you can pay</h3>
+      <p>Pay however suits you — a wallet on your phone here in The Gambia, or a card from wherever you are. Every fee is charged in dalasi and confirmed in writing.</p>
+    </div>
+    <div id="sellPayStrip"></div>
+    <div class="paysec-grid">
+      <div class="paycol">
+        <h4>Mobile money</h4>
+        <p>Wave, Afrimoney, QMoney and APS Wallet. You approve the payment on your own phone and your listing activates as soon as the payment is confirmed. Best for everyday amounts.</p>
+      </div>
+      <div class="paycol">
+        <h4>Card</h4>
+        <p>Visa and Mastercard with 3-D Secure, including cards issued abroad. The obvious choice if you are selling from the UK, US, Europe or elsewhere in the diaspora.</p>
+      </div>
+      <div class="paycol">
+        <h4>Bank transfer</h4>
+        <p>Straight into our GT Bank account with a reference code we generate for you. Sensible for Managed plans and other larger amounts. Sending from abroad? Our SWIFT code is on the checkout page.</p>
+      </div>
+    </div>
+    <div class="paysec-note">
+      <span class="ic" id="payLock"></span>
+      <p>Payments are handled by <b>Modem Pay</b>, licensed by the Central Bank of The Gambia as a payment aggregator (Reg. No. 2025/C25067). We charge listing and service fees only — <b>MyKunda never collects a deposit, down payment or the purchase price</b>. That money belongs in your lawyer's or notary's escrow account, never in ours.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TITLE VERIFICATION -->
+<section class="wrap" style="padding-top:30px;padding-bottom:30px" data-screen-label="Sell / Verification">
+  <div class="verify">
+    <div class="verify-text">
+      <div class="eyebrow">Why verification matters</div>
+      <h2>Build trust before the first viewing</h2>
+      <p>Land disputes and unclear ownership are the biggest worry for property buyers in The Gambia. A MyKunda title check puts that worry to rest — and makes your listing the one buyers take seriously.</p>
+      <div class="verify-list">
+        <div class="v"><span class="ic" id="v1"></span> A qualified specialist reviews your title deed &amp; ownership documents</div>
+        <div class="v"><span class="ic" id="v2"></span> We confirm the document type — freehold, leasehold or customary</div>
+        <div class="v"><span class="ic" id="v3"></span> Verified listings get a badge and priority placement</div>
+        <div class="v"><span class="ic" id="v4"></span> For land, we flag if a boundary survey is needed before you list</div>
+      </div>
+      <p style="margin-top:20px;padding:16px 20px;background:var(--paper-2);border-radius:var(--r-md);font-size:14.5px;line-height:1.6;color:var(--ink-2)">Buying rather than selling? <b>Ownership Verification</b> is a separate product you order for yourself — on any property in The Gambia, listed here or not. <a href="verify.html" style="font-weight:700">See how it works →</a></p>
+    </div>
+    <div class="verify-visual">
+      <div class="verify-badge">
+        <div class="top">
+          <span class="seal" id="seal"></span>
+          <div><b>Verified listing</b><br><span>Checked by MyKunda</span></div>
+        </div>
+        <div class="chk"><span class="ic" id="c1"></span> Title deed reviewed</div>
+        <div class="chk"><span class="ic" id="c2"></span> Ownership confirmed</div>
+        <div class="chk"><span class="ic" id="c3"></span> Documents on file</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LAND & PLOTS -->
+<section class="sec wrap" id="land" data-screen-label="Sell / Land">
+  <div class="landband">
+    <div class="landband-text">
+      <div class="eyebrow">Land &amp; plots</div>
+      <h2>Selling land is different — we treat it that way</h2>
+      <p>Plots are the most-searched category on MyKunda, and land in fast-growing areas like Brufut, Bijilo and Sanyang has appreciated strongly — buyers increasingly see it as an investment, not just a building site. Our listing flow is built for that: plot size, frontage, road access, services and document type all get their own fields.</p>
+      <div class="landband-list">
+        <div class="v"><span class="ic" id="lb1"></span> Freehold, leasehold or customary — stated clearly</div>
+        <div class="v"><span class="ic" id="lb2"></span> Upload a sketch plan and Google Plus Code location</div>
+        <div class="v"><span class="ic" id="lb3"></span> Title check matters most here — verified plots sell faster</div>
+      </div>
+      <a class="btn btn-amber" href="list.html?cat=land" style="height:52px;padding:0 26px;font-size:15.5px">List your plot</a>
+    </div>
+    <div class="landband-img">
+      <img src="images/sanyang.webp" alt="Beachfront land in Sanyang" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<!-- LAND GUIDE TEASER -->
+<section class="wrap" style="padding-top:0;padding-bottom:0" data-screen-label="Sell / Land guide">
+  <a class="guide-teaser" href="guide-how-to-verify-land-title-in-the-gambia.html">
+    <span class="ic" id="gtIc"></span>
+    <div><b>What makes a land listing stand out</b><p>Pinning the exact plot, a sketch plan, and how to photograph boundaries so buyers trust what they see — our full land guide.</p></div>
+    <span class="go">Read the guide <span id="gtArrow"></span></span>
+  </a>
+</section>
+
+<!-- WHO FOR -->
+<section class="sec wrap" data-screen-label="Sell / Who for">
+  <div class="center-head">
+    <div class="eyebrow">Made for everyone</div>
+    <h2>Whoever you are, wherever you are</h2>
+  </div>
+  <div class="who">
+    <div class="who-card">
+      <span class="ic" id="w1"></span>
+      <div><h3>Living in The Gambia</h3><p>Selling the family compound or renting out a room? List it in minutes from your phone, pay with mobile money, and talk to buyers over WhatsApp.</p></div>
+    </div>
+    <div class="who-card">
+      <span class="ic" id="w2"></span>
+      <div><h3>Diaspora &amp; abroad</h3><p>Managing inherited land or an investment from London, Stockholm or New York? List remotely, get your title verified, and let a partner agent handle viewings on the ground.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONSULTATION -->
+<section class="sec wrap" id="consult" data-screen-label="Sell / Consultation">
+  <div class="consult">
+    <div class="consult-info">
+      <div class="eyebrow">Free &amp; no obligation</div>
+      <h2>Talk to an advisor first</h2>
+      <p>Not sure where to start, what your property is worth, or which plan fits? Book a free call with a MyKunda advisor — in English, at a time that works across timezones.</p>
+      <div class="consult-points">
+        <div class="cp"><span class="ic" id="cp1"></span> A free, no-strings 20-minute call</div>
+        <div class="cp"><span class="ic" id="cp2"></span> Honest advice on price &amp; plan</div>
+        <div class="cp"><span class="ic" id="cp3"></span> Guidance on title &amp; documents</div>
+      </div>
+    </div>
+    <div class="consult-form">
+      <h3>Book your consultation</h3>
+      <div class="sub">We'll confirm by email and send a calendar invite.</div>
+      <form id="consultForm" onsubmit="event.preventDefault();bookConsult(this)">
+        <div class="cfield-row">
+          <div class="cfield"><label>Full name</label><input type="text" name="name" required placeholder="Your name"></div>
+          <div class="cfield"><label>Email</label><input type="email" name="email" required placeholder="you@email.com"></div>
+        </div>
+        <div class="cfield-row">
+          <div class="cfield"><label>I want to</label>
+            <select name="intent"><option>Sell a property</option><option>Rent out a property</option><option>Sell land / a plot</option><option>Just exploring</option></select>
+          </div>
+          <div class="cfield"><label>Where are you?</label>
+            <select name="location"><option>In The Gambia</option><option>UK</option><option>Europe</option><option>USA / Canada</option><option>Elsewhere</option></select>
+          </div>
+        </div>
+        <div class="cfield"><label>Preferred time</label>
+          <div class="slot-row" id="slotRow">
+            <button type="button" class="tslot sel">Morning</button>
+            <button type="button" class="tslot">Afternoon</button>
+            <button type="button" class="tslot">Evening</button>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-block" type="submit" style="height:52px;margin-top:6px">Book free consultation</button>
+        <div class="consult-note">Prefer to chat now? <a href="https://wa.me/2202282717" target="_blank" rel="noopener" style="color:inherit;font-weight:700;text-decoration:underline">Message us on WhatsApp</a> — we pick up messages through the day.</div>
+        <p class="form-legal" style="text-align:center">By booking you agree to our <a href="legal-terms.html">Terms of Service</a> and <a href="legal-privacy.html">Privacy Policy</a>.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec wrap" data-screen-label="Sell / FAQ">
+  <div class="center-head">
+    <div class="eyebrow">Good to know</div>
+    <h2>Frequently asked questions</h2>
+  </div>
+  <div class="faq" id="faq"></div>
+</section>
+
+<!-- CTA -->
+<section class="wrap" style="padding-top:20px;padding-bottom:0">
+  <div class="cta-band">
+    <h2>Ready to list your property?</h2>
+    <p>It's free to start. Add verification or full service whenever you're ready.</p>
+    <a class="btn btn-primary" href="list.html" style="height:54px;padding:0 30px;font-size:16px;background:var(--green-800)">List your property</a>
+  </div>
+</section>
+
+<div id="footer"></div>
+
+<script src="image-slot.js?v=1791000000000" defer></script>
+<script>
+/* Supabase is not needed for first paint — load it after the page is interactive.
+   On a 4G handset this takes ~260 KB off the critical path. */
+window.__sbReady=new Promise(function(res){window.addEventListener('load',function(){
+  var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js';
+  s1.onerror=function(){ window.supabase=null; res(); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=1791000000000'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
+  document.body.appendChild(s1);
+});});
+</script>
+<script src="app.min.js?v=1791000000000"></script>
+<script>
+document.getElementById('header').innerHTML = headerHTML('List', false);
+document.getElementById('footer').innerHTML = footerHTML();
+
+// icons
+const checkSm = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+const shield = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6z"/><path d="m9 12 2 2 4-4"/></svg>';
+p1.innerHTML=p2.innerHTML=p3.innerHTML=checkSm;
+n1.innerHTML=n2.innerHTML=n3.innerHTML=n4.innerHTML=checkSm;
+v1.innerHTML=v2.innerHTML=v3.innerHTML=v4.innerHTML=checkSm;
+gtIc.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>';
+gtArrow.innerHTML=ICON.arrow;
+c1.innerHTML=c2.innerHTML=c3.innerHTML=checkSm;
+seal.innerHTML='<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6z"/><path d="m9 12 2 2 4-4"/></svg>';
+w1.innerHTML='<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg>';
+w2.innerHTML='<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M2 12h20M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>';
+
+// accepted payment methods (shared component in app.js)
+document.getElementById('sellPayStrip').innerHTML = payChipsHTML();
+payLock.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+
+// plan features
+const plans = [
+  ['plan1', [[1,'Listing live on MyKunda'],[1,'Up to 10 photos'],[1,'In-app &amp; WhatsApp enquiries'],[1,'Edit anytime'],[0,'Title verification'],[0,'Photos and copy written for you']]],
+  ['plan2', [[1,'Everything in Basic'],[1,'Title &amp; document check'],[1,'Verified badge on your listing'],[1,'Priority in search results'],[1,'Up to 20 photos'],[0,'Photos and copy written for you']]],
+  ['plan3', [[1,'Everything in Verified'],[1,'Professional photos &amp; write-up'],[1,'Featured for 60 days'],[1,'Shared on our own channels'],[1,'Enquiries still come to you'],[0,'Agent handles viewings']]],
+  ['plan4', [[1,'Everything in Promoted'],[1,'An established local agency runs it'],[1,'One named agent, start to finish'],[1,'Viewings and negotiation handled'],[1,'Remote handling if you live abroad'],[1,'Six months active, renewable']]],
+];
+plans.forEach(([id,items])=>{
+  document.getElementById(id).innerHTML = items.map(([on,t])=>`<li class="${on?'':'off'}"><span class="ck">${on?checkSm:'<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\"><path d=\"M18 6 6 18M6 6l12 12\"/></svg>'}</span> ${t}</li>`).join('');
+});
+
+// plan prices (currency-aware)
+function ccySym(){ return CURRENCIES[getCurrency()].symbol; }
+function fmtCcy(v){ return ccySym() + Math.round(v).toLocaleString('en-US'); }
+function gmdToCcy(gmd){ return Math.round(gmd / CURRENCIES.GMD.rate * CURRENCIES[getCurrency()].rate); }
+/* The seller's own asking price, so no band is ever a surprise. */
+var bpDeal = 'sale', bpGMD = 0;
+function ccyToGmd(v){ return v / CURRENCIES[getCurrency()].rate * CURRENCIES.GMD.rate; }
+function bpActiveIndex(){
+  if(bpDeal === 'rent') return 0;
+  if(!bpGMD) return -1;
+  return PRICING.bands.indexOf(planBandFor(bpGMD, 'sale'));
+}
+function bandRange(i){
+  const B = PRICING.bands;
+  if(i===0) return 'under ' + fmtCcy(gmdToCcy(B[0].max));
+  if(i===B.length-1) return 'above ' + fmtCcy(gmdToCcy(B[i-1].max));
+  return fmtCcy(gmdToCcy(B[i-1].max)) + ' – ' + fmtCcy(gmdToCcy(B[i].max));
+}
+function updateSellPrices(){
+  const B = PRICING.bands;
+  const i = bpActiveIndex();
+  const b = i < 0 ? B[0] : B[i];
+  document.getElementById('pVer').textContent  = fmtCcy(gmdToCcy(b.verified.gmd));
+  document.getElementById('pMan').textContent  = fmtCcy(gmdToCcy(b.managed.gmd));
+  document.getElementById('pProm').textContent = fmtCcy(gmdToCcy(PRICING.promoted.gmd));
+  document.getElementById('promoNote').textContent = fmtCcy(gmdToCcy(PRICING.promoted.gmd));
+  document.getElementById('fromVer').hidden = i >= 0;
+  document.getElementById('fromMan').hidden = i >= 0;
+  var chip = i < 0 ? 'Set by your asking price' : 'Your band: ' + (i+1) + ' of 3';
+  ['bVer','bMan'].forEach(function(id){
+    var el = document.getElementById(id);
+    el.textContent = chip;
+    el.classList.toggle('live', i >= 0);
+  });
+  document.getElementById('bpSym').textContent = ccySym();
+  var out = document.getElementById('bpOut');
+  if(i < 0){ out.hidden = true; }
+  else {
+    out.hidden = false;
+    out.innerHTML = bpDeal === 'rent'
+      ? 'Rentals always sit in <b>band 1</b>, whatever the rent — a monthly rent is not a sale value. That puts Verified at <b>' + fmtCcy(gmdToCcy(b.verified.gmd)) + '</b> and Managed at <b>' + fmtCcy(gmdToCcy(b.managed.gmd)) + '</b>.'
+      : 'That is <b>band ' + (i+1) + ' of 3</b> (' + bandRange(i) + '). Verified costs you <b>' + fmtCcy(gmdToCcy(b.verified.gmd)) + '</b>, Managed <b>' + fmtCcy(gmdToCcy(b.managed.gmd)) + '</b>, Promoted <b>' + fmtCcy(gmdToCcy(PRICING.promoted.gmd)) + '</b>. Those are the amounts you will see at checkout.';
+  }
+  /* Carry what the seller just typed into the listing wizard, so the band
+     they were shown here is the band they land on there. */
+  document.querySelectorAll('[data-plan-cta]').forEach(function(a){
+    var plan = a.getAttribute('data-plan-cta'), q = [];
+    if(plan !== 'basic') q.push('plan=' + plan);
+    if(bpDeal === 'rent') q.push('deal=rent');
+    else if(bpGMD) { q.push('deal=sale'); q.push('price=' + bpGMD); }
+    a.href = 'list.html' + (q.length ? '?' + q.join('&') : '');
+  });
+  document.getElementById('bandRows').innerHTML =
+    '<div class="rrow rhead"><span>Your asking price</span><span>Verified</span><span>Managed</span></div>' +
+    B.map(function(b,i){
+      var range = i===0
+        ? 'Under ' + fmtCcy(gmdToCcy(b.max))
+        : (i===B.length-1
+            ? 'Above ' + fmtCcy(gmdToCcy(B[i-1].max))
+            : fmtCcy(gmdToCcy(B[i-1].max)) + ' – ' + fmtCcy(gmdToCcy(b.max)));
+      return '<div class="rrow' + (i===bpActiveIndex()?' on':'') + '"><div><b>' + range + '</b><span class="bsub">' + b.sub + '</span></div>'
+        + '<span>' + fmtCcy(gmdToCcy(b.verified.gmd)) + '</span>'
+        + '<span>' + fmtCcy(gmdToCcy(b.managed.gmd)) + '</span></div>';
+    }).join('');
+}
+(function wireBandPicker(){
+  var ask = document.getElementById('bpAsk'), clr = document.getElementById('bpClear');
+  var field = ask.closest('.bp-field'), saleValue = '';
+  function read(){
+    var n = parseInt(ask.value.replace(/[^0-9]/g,''), 10) || 0;
+    bpGMD = n ? Math.round(ccyToGmd(n)) : 0;
+    if(bpDeal === 'sale') saleValue = ask.value;
+    clr.hidden = !n && bpDeal === 'sale';
+    if(n) ask.value = n.toLocaleString('en-US');
+    updateSellPrices();
+  }
+  ask.addEventListener('input', read);
+  clr.addEventListener('click', function(){
+    ask.value = ''; saleValue = ''; bpGMD = 0; bpDeal = 'sale';
+    field.classList.remove('off'); ask.placeholder = 'Asking price';
+    document.querySelectorAll('#bpDeal button').forEach(function(x){ x.classList.toggle('on', x.dataset.deal==='sale'); });
+    clr.hidden = true; ask.disabled = false; updateSellPrices();
+  });
+  document.querySelectorAll('#bpDeal button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('#bpDeal button').forEach(function(x){ x.classList.remove('on'); });
+      btn.classList.add('on');
+      bpDeal = btn.dataset.deal;
+      if(bpDeal === 'rent'){
+        saleValue = ask.value;   // remember it, but never show a number we are not using
+        ask.value = '';
+      } else if(saleValue){
+        ask.value = saleValue;
+      }
+      ask.disabled = (bpDeal === 'rent');
+      field.classList.toggle('off', bpDeal === 'rent');
+      ask.placeholder = bpDeal === 'rent' ? 'Not needed for rentals' : 'Asking price';
+      clr.hidden = false;
+      read();
+    });
+  });
+})();
+
+updateSellPrices();
+window.addEventListener('storage',function(e){ if(e.key==='mykunda_ccy') updateSellPrices(); });
+
+// FAQ
+const faqs=[
+  ['Is it really free to list?','Yes. A Basic listing on MyKunda is completely free — add your property, photos and price, and start receiving enquiries. You only pay if you choose Verified (a one-time title check) or Managed, where an established Gambian estate agency takes the whole thing on.'],
+  ['Do I need to visit an office?','No — MyKunda has no walk-in office. Everything happens online: creating the listing, uploading photos, answering enquiries. Viewings happen on-site at the property itself, not at an office. If you would rather have help, book a free call and an advisor will walk through it with you, or set the listing up on your behalf.'],
+  ['Why does the price depend on my property value?','Because the work does. Checking one plot document is quicker than checking a compound with three titles, and marketing a villa takes more of our time than marketing a small plot. Rather than charge everyone the higher price, we set three bands from your own asking price. You always see which band you are in before you pay, and it is a flat amount either way — never a percentage of your sale.'],
+  ['Can I pay for Managed in instalments?','Yes. Managed is split in two: half when we start work and half at completion. It covers six months of active management and can be renewed if your property needs longer.'],
+  ['Can I list land or a plot?','Absolutely. Our listing form has a dedicated path for land and plots — you can add the plot size, frontage, document type (freehold, leasehold or customary) and a sketch plan. Verification is especially valuable for land.'],
+  ['What is title verification?','We commission the check and a qualified specialist carries it out — reviewing your title deed and ownership documents and confirming the document type. Verified listings carry a badge and rank higher in search — giving buyers the confidence to move forward, which is the biggest hurdle in Gambian property.'],
+  ['I live abroad — can I still list?','Yes. Many of our sellers are diaspora managing inherited land or investments. You can list entirely online, get your title verified remotely, and choose the Managed plan so a partner agency on the ground handles photos and viewings for you. You stay in control of the deal.'],
+  ['How do buyers contact me?','Enquiries and viewing requests come to you directly — by in-app message and WhatsApp. With a Managed listing, the partner agent handling your property fields enquiries and arranges viewings on your behalf.'],
+  ['How do I show buyers the boundaries of my land if there is no fence?','Pin the exact corners on the map when you create your listing — this generates a Google Plus Code for each edge that buyers can navigate to. Photos taken from each corner and a simple sketch plan help too. If boundaries are genuinely unclear, a licensed surveyor can peg them before you list, which we can arrange.'],
+  ['Is now a good time to sell land, or should I wait?','That depends on the area and your own plans. Land in fast-growing areas like Brufut, Bijilo and Sanyang has appreciated strongly in recent years, but no one can time a local market precisely. Our free valuation gives you a current, data-based estimate so you can decide with real numbers rather than guesswork.'],
+];
+document.getElementById('faq').innerHTML = faqs.map(([q,a])=>`<details class="qa"><summary>${q} <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary><div class="ans">${a}</div></details>`).join('');
+
+// FAQ structured data (rich result in Google)
+addJsonLd({
+  "@context":"https://schema.org","@type":"FAQPage",
+  "mainEntity":faqs.map(([q,a])=>({"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}}))
+});
+addJsonLd({
+  "@context":"https://schema.org","@type":"Service",
+  "serviceType":"Property listing & facilitation",
+  "provider":{"@id":SITE_URL+"/#organization"},
+  "areaServed":{"@type":"Country","name":"The Gambia"},
+  "offers":[
+    {"@type":"Offer","name":"Basic","price":"0","priceCurrency":"GMD","description":"List your property yourself for free"},
+    {"@type":"Offer","name":"Verified","price":"4500","priceCurrency":"GMD","description":"Title check, Verified badge and priority placement — priced by property value band"},
+    {"@type":"Offer","name":"Promoted","price":"20000","priceCurrency":"GMD","description":"Professional photos, written listing and 60 days featured placement"},
+    {"@type":"Offer","name":"Managed","price":"30000","priceCurrency":"GMD","description":"Six months of full listing management by a partner estate agency in The Gambia, viewings included — priced by property value band"}
+  ]
+});
+
+lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
+
+// ---- valuation tools: two separate instant data-driven estimators + expert follow-up ----
+(function(){
+  // ============================================================
+  // Basistarieven in EUR per m² — worden via convert() naar de gekozen weergavevaluta omgezet.
+  // Bronnen: Gamrealty 2026, Blue Ocean 2025, Realting, Songhai Properties, lokale listing-analyse juni 2026.
+  // Gevalideerd tegen: Gamrealty land guide maart 2026, gerealiseerde verkoopprijzen (D→EUR @ 84 GMD/EUR).
+  // Herijkt aug 2026 tegen actuele plot-listings (Songhai/Premier @ ~85 GMD/EUR): Brikama D450-750k,
+  // Busumbala D500-650k, Jabang D650-850k, Lamin Village ~D500k, Sanyang dorp D180-240k per plot (~500 m²).
+  // Upcountry (Barra/Farafenni/Soma/Basse) toegevoegd; spellingsynoniemen 'serekunda' en 'kartung'.
+  // HERIJKING: tarieven en FX-koers periodiek controleren tegen gerealiseerde verkoopprijzen van eigen listings.
+  // ============================================================
+  const HOUSE={'brufut heights':720,kololi:900,senegambia:940,kotu:730,bijilo:700,'cape point':940,fajara:820,bakau:620,brufut:540,brusubi:450,sanyang:320,tanji:290,kartong:250,sukuta:350,banjul:580,serrekunda:390,gunjur:270,sambuya:270,'kerr serign':430,lamin:360,tujereng:240,serekunda:390,kartung:250,brikama:280,batokunku:280,yundum:300,jabang:300,busumbala:270,barra:200,farafenni:170,soma:160,basse:170,'kanifing':340,'faji kunda':320,'talinding':345,'bundung':330,'latri kunda':375,'pipeline':335,'bakoteh':375,'tabokoto':340,'new jeshwang':705,'old jeshwang':720,'dippa kunda':345,'ebou town':375,'abuko':260,'churchills town':310,'sinchu alagie':300,'ebo town':375,'manjai kunda':305,'tallinding kunjang':375,'nema kunku':290,'banjulunding':255,'bwiam':140,'sibanor':140,'kafuta':180,'somita':140,'marakissa':240,'pirang':170,'faraba banta':165,'nyambai':235,'jambur':440,'ghana town':445,'wellingara':280,'sifoe':195,'old yundum':260,'sinchu baliya':265,'berending (kombo)':355,'kitty':210,'mandinaba':285,'bonto':250,'darsilami':150,'mandina ba':160,'kembujeh':215,'madiana':245,'berefet':170,'bondali':225,'bakindick':170,'bambali':180,'bulok':145,'brifu':170,'essau':160,'kerewan':150,'selikene':100,'albreda':95,'juffureh':95,'illiassa':105,'sabach sanjal':115,'njau':95,'brikama ba':100,'kuntair':100,'no kunda':95,'medina serign mass':105,'berending (niumi)':135,'pakalinding':125,'mansa konko':140,'keneba':95,'kwinella':90,'bureng':90,'jattaba':120,'sankuia':125,'baro kunda':90,'genieri':100,'karantaba':145,'jali':110,'japineh':110,'kaiaf':110,'kuntaur':140,'kaur':90,'wassu':125,'brikama ba (crr)':95,'njau (crr)':125,'janjanbureh':180,'bansang':140,'kudang':125,'brikamaba':145,'basse santa su':165,'gambissara':90,'garowol':90,'sabi':115,'baja kunda':95,'koina':90,'kulari':100,'allunhari':140,'fatoto':90,'sudowol':90,'sandu':115,'wuli':100,'kantora':95,'badarri':95,'bakadaji':100,'bani':105,'banni':110,'bantango koto':135,'bantanto':175,'bantunding':140,'banyakang':100,'barajally':145,'barrow kunda':100,'barry nabeh':150,'basse nding':310,'besang dugu':130,'bohum kunda':90,'boro dampha kunda':125,'boro kanda kassy':95,'busura alieu':95,'jumangsarr':120,'jajari':130,'bakindick mandinka':165,'boro modi bane':110,'kuloro':190,'giboro koto':170,'sotokoi':180,'faraba sutu':165,'bessi nding':190,'tunjina':185,'folonko':205,'jambanjelly':245,'kabafita':220,'kalagi':140,'kansala':140,'bintang':140,'kanilai':140,'sintet':140,'njaba kunda':100,'medina serigne mass':115,'katchang':115,'jappineh':105,'jareng':130,'kunting':120,'niani sukuta':135,'sambang':125,'demba kunda':100,'sutukoba':95,'diabugu':110,'chamoi':95,'kaiaf niji':95,'fass':95,'jiffarong':95,'dankunku':90,'nianija':100,'basse mansajang':160,'numuyel':115,'konteh kunda':95};
+  const APT  ={'brufut heights':830,kololi:1080,senegambia:1120,kotu:850,bijilo:820,'cape point':1080,fajara:950,bakau:720,brufut:630,brusubi:520,sanyang:370,tanji:340,kartong:290,sukuta:400,banjul:670,serrekunda:450,gunjur:310,sambuya:310,'kerr serign':500,lamin:420,tujereng:280,serekunda:450,kartung:290,brikama:330,batokunku:330,yundum:350,jabang:350,busumbala:320,barra:240,farafenni:200,soma:190,basse:200,'kanifing':390,'faji kunda':370,'talinding':400,'bundung':385,'latri kunda':435,'pipeline':385,'bakoteh':435,'tabokoto':390,'new jeshwang':810,'old jeshwang':825,'dippa kunda':400,'ebou town':435,'abuko':300,'churchills town':355,'sinchu alagie':345,'ebo town':430,'manjai kunda':350,'tallinding kunjang':430,'nema kunku':335,'banjulunding':295,'bwiam':160,'sibanor':160,'kafuta':210,'somita':160,'marakissa':280,'pirang':195,'faraba banta':190,'nyambai':275,'jambur':510,'ghana town':520,'wellingara':330,'sifoe':225,'old yundum':300,'sinchu baliya':305,'berending (kombo)':415,'kitty':245,'mandinaba':335,'bonto':290,'darsilami':175,'mandina ba':185,'kembujeh':255,'madiana':285,'berefet':195,'bondali':260,'bakindick':200,'bambali':210,'bulok':165,'brifu':200,'essau':185,'kerewan':175,'selikene':120,'albreda':110,'juffureh':110,'illiassa':125,'sabach sanjal':135,'njau':115,'brikama ba':120,'kuntair':115,'no kunda':110,'medina serign mass':125,'berending (niumi)':155,'pakalinding':150,'mansa konko':165,'keneba':110,'kwinella':110,'bureng':110,'jattaba':140,'sankuia':145,'baro kunda':105,'genieri':120,'karantaba':175,'jali':125,'japineh':130,'kaiaf':130,'kuntaur':165,'kaur':105,'wassu':150,'brikama ba (crr)':115,'njau (crr)':150,'janjanbureh':210,'bansang':165,'kudang':145,'brikamaba':170,'basse santa su':195,'gambissara':105,'garowol':105,'sabi':135,'baja kunda':110,'koina':105,'kulari':115,'allunhari':165,'fatoto':105,'sudowol':110,'sandu':135,'wuli':115,'kantora':115,'badarri':115,'bakadaji':115,'bani':120,'banni':130,'bantango koto':160,'bantanto':205,'bantunding':165,'banyakang':120,'barajally':170,'barrow kunda':115,'barry nabeh':170,'basse nding':360,'besang dugu':155,'bohum kunda':105,'boro dampha kunda':150,'boro kanda kassy':115,'busura alieu':110,'jumangsarr':140,'jajari':155,'bakindick mandinka':195,'boro modi bane':130,'kuloro':225,'giboro koto':195,'sotokoi':210,'faraba sutu':190,'bessi nding':225,'tunjina':215,'folonko':240,'jambanjelly':280,'kabafita':255,'kalagi':165,'kansala':160,'bintang':160,'kanilai':160,'sintet':160,'njaba kunda':115,'medina serigne mass':135,'katchang':130,'jappineh':120,'jareng':155,'kunting':140,'niani sukuta':160,'sambang':145,'demba kunda':120,'sutukoba':110,'diabugu':125,'chamoi':110,'kaiaf niji':110,'fass':115,'jiffarong':110,'dankunku':105,'nianija':115,'basse mansajang':185,'numuyel':135,'konteh kunda':115};
+  // Grondprijzen — EUR/m² — Kololi €80-200, Bijilo/BH €40-120, Brufut €25-70, Tanji €15-35, Sanyang €10-30, Tujereng/Gunjur/Kartong €8-20 (Gamrealty land guide maart 2026)
+  const LAND ={'brufut heights':80,kololi:140,senegambia:130,kotu:110,bijilo:80,'cape point':100,fajara:120,bakau:90,brufut:48,brusubi:38,sanyang:18,tanji:25,kartong:14,sukuta:30,banjul:90,serrekunda:50,gunjur:14,sambuya:14,'kerr serign':65,lamin:15,tujereng:13,serekunda:50,kartung:14,brikama:13,batokunku:18,yundum:15,jabang:17,busumbala:13,barra:7,farafenni:4,soma:3,basse:4,'kanifing':41,'faji kunda':37.5,'talinding':42,'bundung':39.5,'latri kunda':47.5,'pipeline':40,'bakoteh':47.5,'tabokoto':41,'new jeshwang':72,'old jeshwang':73.5,'dippa kunda':42,'ebou town':47.5,'abuko':14,'churchills town':35.5,'sinchu alagie':33.5,'ebo town':47,'manjai kunda':35,'tallinding kunjang':47,'nema kunku':23,'banjulunding':12,'bwiam':5,'sibanor':5,'kafuta':7.5,'somita':5,'marakissa':11,'pirang':6.5,'faraba banta':6.5,'nyambai':11,'jambur':37,'ghana town':38,'wellingara':15.5,'sifoe':9,'old yundum':12.5,'sinchu baliya':12.5,'berending (kombo)':28,'kitty':9,'mandinaba':14,'bonto':11,'darsilami':5.5,'mandina ba':6,'kembujeh':9.5,'madiana':18.5,'berefet':7,'bondali':10.5,'bakindick':7,'bambali':7.5,'bulok':5.5,'brifu':7,'essau':5,'kerewan':4,'selikene':2,'albreda':1.5,'juffureh':1.5,'illiassa':2,'sabach sanjal':2.5,'njau':1.5,'brikama ba':2,'kuntair':2,'no kunda':1.5,'medina serign mass':2,'berending (niumi)':3.5,'pakalinding':2.5,'mansa konko':3,'keneba':1.5,'kwinella':1.5,'bureng':1.5,'jattaba':2,'sankuia':2.5,'baro kunda':1.5,'genieri':2,'karantaba':2.5,'jali':2,'japineh':2,'kaiaf':2,'kuntaur':3,'kaur':1.5,'wassu':2.5,'brikama ba (crr)':1.5,'njau (crr)':2.5,'janjanbureh':5,'bansang':3,'kudang':3,'brikamaba':3.5,'basse santa su':4,'gambissara':1.5,'garowol':1.5,'sabi':2.5,'baja kunda':1.5,'koina':1.5,'kulari':2,'allunhari':3,'fatoto':1.5,'sudowol':1.5,'sandu':2.5,'wuli':1.5,'kantora':1.5,'badarri':1.5,'bakadaji':2,'bani':2,'banni':2,'bantango koto':3.5,'bantanto':7,'bantunding':3.5,'banyakang':2,'barajally':3.5,'barrow kunda':2,'barry nabeh':5.5,'basse nding':12.5,'besang dugu':3,'bohum kunda':1.5,'boro dampha kunda':3,'boro kanda kassy':1.5,'busura alieu':1.5,'jumangsarr':2.5,'jajari':3,'bakindick mandinka':6.5,'boro modi bane':2,'kuloro':8,'giboro koto':6.5,'sotokoi':7.5,'faraba sutu':6.5,'bessi nding':8,'tunjina':7.5,'folonko':10.5,'jambanjelly':12,'kabafita':10,'kalagi':5,'kansala':5,'bintang':5,'kanilai':5,'sintet':5,'njaba kunda':2,'medina serigne mass':2.5,'katchang':2.5,'jappineh':2,'jareng':2.5,'kunting':2.5,'niani sukuta':3.5,'sambang':3,'demba kunda':2,'sutukoba':1.5,'diabugu':2,'chamoi':1.5,'kaiaf niji':2,'fass':2,'jiffarong':1.5,'dankunku':1.5,'nianija':1.5,'basse mansajang':3.5,'numuyel':2.5,'konteh kunda':1.5};
+  const HOUSE_DEF=350, APT_DEF=400, LAND_DEF=20; // fallback voor niet-herkende gebieden (midden-Kombo niveau)
+  const AREA_LABELS={'brufut heights':'Brufut Heights',kololi:'Kololi',senegambia:'Senegambia',kotu:'Kotu',bijilo:'Bijilo',bakau:'Bakau','cape point':'Cape Point',fajara:'Fajara',brufut:'Brufut',brusubi:'Brusubi',sanyang:'Sanyang',tanji:'Tanji',kartong:'Kartong',sukuta:'Sukuta',banjul:'Banjul',serrekunda:'Serrekunda',gunjur:'Gunjur',sambuya:'Sambuya','kerr serign':'Kerr Serign',lamin:'Lamin',tujereng:'Tujereng',serekunda:'Serekunda',kartung:'Kartong',brikama:'Brikama',batokunku:'Batokunku',yundum:'Yundum',jabang:'Jabang',busumbala:'Busumbala',barra:'Barra',farafenni:'Farafenni',soma:'Soma',basse:'Basse','kanifing':'Kanifing','faji kunda':'Faji Kunda','talinding':'Talinding','bundung':'Bundung','latri kunda':'Latri Kunda','pipeline':'Pipeline','bakoteh':'Bakoteh','tabokoto':'Tabokoto','new jeshwang':'New Jeshwang','old jeshwang':'Old Jeshwang','dippa kunda':'Dippa Kunda','ebou town':'Ebou Town','abuko':'Abuko','churchills town':'Churchills Town','sinchu alagie':'Sinchu Alagie','ebo town':'Ebo Town','manjai kunda':'Manjai Kunda','tallinding kunjang':'Tallinding Kunjang','nema kunku':'Nema Kunku','banjulunding':'Banjulunding','bwiam':'Bwiam','sibanor':'Sibanor','kafuta':'Kafuta','somita':'Somita','marakissa':'Marakissa','pirang':'Pirang','faraba banta':'Faraba Banta','nyambai':'Nyambai','jambur':'Jambur','ghana town':'Ghana Town','wellingara':'Wellingara','sifoe':'Sifoe','old yundum':'Old Yundum','sinchu baliya':'Sinchu Baliya','berending (kombo)':'Berending (Kombo)','kitty':'Kitty','mandinaba':'Mandinaba','bonto':'Bonto','darsilami':'Darsilami','mandina ba':'Mandina Ba','kembujeh':'Kembujeh','madiana':'Madiana','berefet':'Berefet','bondali':'Bondali','bakindick':'Bakindick','bambali':'Bambali','bulok':'Bulok','brifu':'Brifu','essau':'Essau','kerewan':'Kerewan','selikene':'Selikene','albreda':'Albreda','juffureh':'Juffureh','illiassa':'Illiassa','sabach sanjal':'Sabach Sanjal','njau':'Njau','brikama ba':'Brikama Ba','kuntair':'Kuntair','no kunda':'No Kunda','medina serign mass':'Medina Serign Mass','berending (niumi)':'Berending (Niumi)','pakalinding':'Pakalinding','mansa konko':'Mansa Konko','keneba':'Keneba','kwinella':'Kwinella','bureng':'Bureng','jattaba':'Jattaba','sankuia':'Sankuia','baro kunda':'Baro Kunda','genieri':'Genieri','karantaba':'Karantaba','jali':'Jali','japineh':'Japineh','kaiaf':'Kaiaf','kuntaur':'Kuntaur','kaur':'Kaur','wassu':'Wassu','brikama ba (crr)':'Brikama Ba (CRR)','njau (crr)':'Njau (CRR)','janjanbureh':'Janjanbureh','bansang':'Bansang','kudang':'Kudang','brikamaba':'Brikamaba','basse santa su':'Basse Santa Su','gambissara':'Gambissara','garowol':'Garowol','sabi':'Sabi','baja kunda':'Baja Kunda','koina':'Koina','kulari':'Kulari','allunhari':'Allunhari','fatoto':'Fatoto','sudowol':'Sudowol','sandu':'Sandu','wuli':'Wuli','kantora':'Kantora','badarri':'Badarri','bakadaji':'Bakadaji','bani':'Bani','banni':'Banni','bantango koto':'Bantango Koto','bantanto':'Bantanto','bantunding':'Bantunding','banyakang':'Banyakang','barajally':'Barajally','barrow kunda':'Barrow Kunda','barry nabeh':'Barry Nabeh','basse nding':'Basse Nding','besang dugu':'Besang Dugu','bohum kunda':'Bohum Kunda','boro dampha kunda':'Boro Dampha Kunda','boro kanda kassy':'Boro Kanda Kassy','busura alieu':'Busura Alieu','jumangsarr':'Jumangsarr','jajari':'Jajari','bakindick mandinka':'Bakindick Mandinka','boro modi bane':'Boro Modi Bane','kuloro':'Kuloro','giboro koto':'Giboro Koto','sotokoi':'Sotokoi','faraba sutu':'Faraba Sutu','bessi nding':'Bessi Nding','tunjina':'Tunjina','folonko':'Folonko','jambanjelly':'Jambanjelly','kabafita':'Kabafita','kalagi':'Kalagi','kansala':'Kansala','bintang':'Bintang','kanilai':'Kanilai','sintet':'Sintet','njaba kunda':'Njaba Kunda','medina serigne mass':'Medina Serigne Mass','katchang':'Katchang','jappineh':'Jappineh','jareng':'Jareng','kunting':'Kunting','niani sukuta':'Niani Sukuta','sambang':'Sambang','demba kunda':'Demba Kunda','sutukoba':'Sutukoba','diabugu':'Diabugu','chamoi':'Chamoi','kaiaf niji':'Kaiaf Niji','fass':'Fass','jiffarong':'Jiffarong','dankunku':'Dankunku','nianija':'Nianija','basse mansajang':'Basse Mansajang','numuyel':'Numuyel','konteh kunda':'Konteh Kunda'};
+  function rateFor(locStr,t){
+    const s=(locStr||'').toLowerCase();
+    const table = t==='land'?LAND : t==='apartment'?APT : HOUSE;
+    const def = t==='land'?LAND_DEF : t==='apartment'?APT_DEF : HOUSE_DEF;
+    const keys = Object.keys(table).sort((a,b)=>b.length-a.length);
+    for(const k of keys){ if(s.indexOf(k)>-1) return table[k]; }
+    return def;
+  }
+  function areaName(locStr){
+    const s=(locStr||'').toLowerCase();
+    for(const k in AREA_LABELS){ if(s.indexOf(k)>-1) return AREA_LABELS[k]; }
+    return null;
+  }
+  const PLUS_RE=/[23456789cfghjmpqrvwx]{4,8}\+[23456789cfghjmpqrvwx]{2,3}/i;
+  const emailOk=v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  function money(eurVal){
+    const c=CURRENCIES[getCurrency()];
+    const v=convert(eurVal);
+    const step = v>=200000?5000 : v>=50000?1000 : v>=2000?500 : v>=100?10 : 1;
+    const r=Math.round(v/step)*step;
+    return c.symbol + r.toLocaleString('en-US');
+  }
+  // Degressieve oppervlakte voor gebouwen (afnemende meeropbrengst): tot 150 m² vol tarief, 150-300 m² 90%, boven 300 m² 80%.
+  function effectiveArea(s){ if(s<=150) return s; if(s<=300) return 150+(s-150)*0.9; return 150+150*0.9+(s-300)*0.8; }
+  // Bulk-korting voor grond: grote kavels doen een lager gemiddeld €/m² dan bouwkavels (minder kopers voor grote percelen).
+  function effectiveLandArea(s){ if(s<=500) return s; if(s<=1500) return 500+(s-500)*0.92; return 500+1000*0.92+(s-1500)*0.82; }
+  function row(label,val){ return '<span style="display:flex;justify-content:space-between"><span>'+label+'</span><b>'+val+'</b></span>'; }
+  function rowStrong(label,val){ return '<span style="display:flex;justify-content:space-between;font-weight:700;color:#FFD700"><span>'+label+'</span><b>'+val+'</b></span>'; }
+  function rowMuted(label,val){ return '<span style="display:flex;justify-content:space-between;color:rgba(255,255,255,.75);font-size:12px"><span>'+label+'</span><b>'+val+'</b></span>'; }
+  function pct(mult){ const p=Math.round((mult-1)*100); return (p>0?'+':'')+p+'%'; }
+
+  let pdMap=null,pdMarker=null,ldMap=null,ldMarker=null;
+  const VAL_MAP_DEFAULT=[13.45,-16.70];
+  function initValMaps(){
+    function mk(id,live){
+      const el=document.getElementById(id); if(!el||!window.L) return null;
+      const opts = live
+        ? {zoomControl:true,scrollWheelZoom:false}
+        : {zoomControl:false,dragging:false,scrollWheelZoom:false,doubleClickZoom:false,touchZoom:false,boxZoom:false,keyboard:false};
+      const m=L.map(el,opts).setView(VAL_MAP_DEFAULT,9);
+      L.tileLayer(mapTilerUrl('hybrid'),{maxZoom:20,tileSize:512,zoomOffset:-1,crossOrigin:true,attribution:'\u00a9 MapTiler \u00a9 OpenStreetMap'}).addTo(m);
+      const mkr=L.marker(VAL_MAP_DEFAULT,{draggable:!!live,autoPan:!!live}).addTo(m);
+      return {m,mkr};
+    }
+    const pd=mk('pdMapBox');
+    if(pd){ pdMap=pd.m; pdMarker=pd.mkr; const saved=window._lastValProperty; if(saved&&saved.mapLL){ pdMap.setView([saved.mapLL.lat,saved.mapLL.lng],15); pdMarker.setLatLng([saved.mapLL.lat,saved.mapLL.lng]); document.getElementById('pdMapLabel').textContent=saved.mapPlace||'Location'; } }
+    const ld=mk('ldMapBox',true);
+    if(ld){ ldMap=ld.m; ldMarker=ld.mkr; ldWireMap(); const saved=window._lastValLand; if(saved&&saved.mapLL){ ldMap.setView([saved.mapLL.lat,saved.mapLL.lng],15); ldMarker.setLatLng([saved.mapLL.lat,saved.mapLL.lng]); document.getElementById('ldMapLabel').textContent=saved.mapPlace||'Location'; } if(!document.getElementById('panelLand').hidden) ldMap.invalidateSize(); }
+  }
+  /* ---- Plot drawing on the land map — same behaviour as the List page ----
+     Tap corners to outline the plot; the area feeds the m² field and the centre
+     of the plot is what the distance to the sea is measured from. */
+  const BEACH_LABEL={beachfront:'Beachfront',walking:'Walking distance to the beach',inland:'Inland'};
+  const LD={draw:false,pts:[],poly:null,line:null,handles:[],labels:[],rubber:null,rubberLbl:null,snap:true,sqm:0,ll:null,seaM:null,band:null};
+  const D2R=Math.PI/180, ER=6371008.8, MPD=ER*D2R;
+  function ldMPerDeg(lat){ return {lat:MPD,lng:MPD*Math.cos(lat*D2R)}; }
+  function ldSegM(a,b){ const m=ldMPerDeg(a[0]); const dx=(b[1]-a[1])*m.lng, dy=(b[0]-a[0])*m.lat; return Math.sqrt(dx*dx+dy*dy); }
+  function ldBearing(a,b){ const m=ldMPerDeg(a[0]); return (Math.atan2((b[1]-a[1])*m.lng,(b[0]-a[0])*m.lat)*180/Math.PI+360)%360; }
+  function ldDest(a,d,brg){ const m=ldMPerDeg(a[0]), r=brg*D2R; return [a[0]+d*Math.cos(r)/m.lat, a[1]+d*Math.sin(r)/m.lng]; }
+  function ldArea(pts){
+    if(pts.length<3) return 0;
+    let a=0;
+    for(let i=0,l=pts.length;i<l;i++){ const p1=pts[i],p2=pts[(i+1)%l]; a+=(p2[1]-p1[1])*D2R*(2+Math.sin(p1[0]*D2R)+Math.sin(p2[0]*D2R)); }
+    return Math.abs(a*ER*ER/2);
+  }
+  function ldCentroid(pts){ let x=0,y=0; pts.forEach(p=>{x+=p[0];y+=p[1];}); return [x/pts.length,y/pts.length]; }
+  function ldSnapPoint(latlng){
+    const raw=[latlng.lat,latlng.lng];
+    if(!LD.snap || !LD.pts.length) return raw;
+    const A=LD.pts[LD.pts.length-1];
+    if(LD.pts.length===3){
+      const P0=LD.pts[0],P1=LD.pts[1],P2=LD.pts[2];
+      const ideal=[P0[0]+(P2[0]-P1[0]), P0[1]+(P2[1]-P1[1])];
+      if(ldSegM(ideal,raw)<12) return ideal;
+    }
+    let dist=ldSegM(A,raw); if(dist<1) return raw;
+    const ref = LD.pts.length>=2 ? ldBearing(LD.pts[LD.pts.length-2],A) : 0;
+    const rel = ((ldBearing(A,raw)-ref)%360+360)%360;
+    return ldDest(A, Math.max(5,Math.round(dist/5)*5), ref+Math.round(rel/15)*15);
+  }
+  function ldFmtM(m){ return m>=1000 ? (m/1000).toFixed(2)+' km' : (m<10?m.toFixed(1):Math.round(m))+' m'; }
+  /* A label pinned to the middle of each side — the only way to trace a plot to
+     its real dimensions rather than by eye. */
+  function ldLenLabel(a,b,cls,text){
+    return L.marker([(a[0]+b[0])/2,(a[1]+b[1])/2],{interactive:false,keyboard:false,zIndexOffset:650,
+      icon:L.divIcon({className:'bnd-len'+(cls?' '+cls:''),html:'<span>'+(text||ldFmtM(ldSegM(a,b)))+'</span>',iconSize:[0,0],iconAnchor:[0,0]})});
+  }
+  function ldClearLabels(){ LD.labels.forEach(l=>ldMap.removeLayer(l)); LD.labels=[]; }
+  function ldRenderLabels(){
+    if(!ldMap) return;
+    ldClearLabels();
+    const n=LD.pts.length;
+    if(n<2) return;
+    const last = n>=3 ? n : n-1;   // 3+ corners: label the closing side too
+    for(let i=0;i<last;i++) LD.labels.push(ldLenLabel(LD.pts[i],LD.pts[(i+1)%n]).addTo(ldMap));
+  }
+  function ldClearRubber(){
+    if(LD.rubber){ ldMap.removeLayer(LD.rubber); LD.rubber=null; }
+    if(LD.rubberLbl){ ldMap.removeLayer(LD.rubberLbl); LD.rubberLbl=null; }
+  }
+  function ldUpdateRubber(latlng){
+    if(!LD.pts.length){ ldClearRubber(); return; }
+    const a=LD.pts[LD.pts.length-1], b=ldSnapPoint(latlng);
+    if(LD.rubber) LD.rubber.setLatLngs([a,b]);
+    else LD.rubber=L.polyline([a,b],{color:'#1F7BFF',weight:2,dashArray:'4 5',interactive:false}).addTo(ldMap);
+    if(LD.rubberLbl) ldMap.removeLayer(LD.rubberLbl);
+    let extra='';
+    if(LD.pts.length>=2){
+      const prev=LD.pts[LD.pts.length-2];
+      const ang=Math.abs(((ldBearing(a,b)-ldBearing(a,prev))%360+360)%360);
+      extra=' · '+Math.round(ang>180?360-ang:ang)+'°';
+    }
+    LD.rubberLbl=ldLenLabel(a,b,'live',ldFmtM(ldSegM(a,b))+extra).addTo(ldMap);
+  }
+  function ldClearLayers(){
+    if(!ldMap) return;
+    if(LD.poly){ ldMap.removeLayer(LD.poly); LD.poly=null; }
+    if(LD.line){ ldMap.removeLayer(LD.line); LD.line=null; }
+    LD.handles.forEach(h=>ldMap.removeLayer(h)); LD.handles=[];
+    ldClearLabels();
+  }
+  function ldRedraw(){
+    if(!ldMap) return;
+    ldClearLayers();
+    if(LD.pts.length>=3) LD.poly=L.polygon(LD.pts,{color:'#1F7BFF',weight:3,fillColor:'#1F7BFF',fillOpacity:.22,interactive:false}).addTo(ldMap);
+    else if(LD.pts.length===2) LD.line=L.polyline(LD.pts,{color:'#1F7BFF',weight:3,dashArray:'6 5',interactive:false}).addTo(ldMap);
+    LD.pts.forEach((p,i)=>{
+      const h=L.marker(p,{draggable:true,icon:L.divIcon({className:'bnd-handle',iconSize:[16,16],iconAnchor:[8,8]}),zIndexOffset:700}).addTo(ldMap);
+      h.on('drag',e=>{ const c=e.target.getLatLng(); LD.pts[i]=[c.lat,c.lng]; if(LD.poly) LD.poly.setLatLngs(LD.pts); else if(LD.line) LD.line.setLatLngs(LD.pts); ldRenderLabels(); });
+      h.on('dragend',ldCommit);
+      h.on('dblclick',ev=>{ L.DomEvent.stop(ev); LD.pts.splice(i,1); ldRedraw(); ldCommit(); });
+      LD.handles.push(h);
+    });
+    ldRenderLabels();
+    ldCommit();
+  }
+  function ldCommit(){
+    const read=document.getElementById('ldRead');
+    document.getElementById('ldUndo').disabled = LD.pts.length===0;
+    document.getElementById('ldClear').disabled = LD.pts.length===0;
+    if(LD.pts.length>=3){
+      const sqm=ldArea(LD.pts);
+      let per=0; for(let i=0;i<LD.pts.length;i++) per+=ldSegM(LD.pts[i],LD.pts[(i+1)%LD.pts.length]);
+      const c=ldCentroid(LD.pts);
+      LD.ll={lat:c[0],lng:c[1]};
+      if(ldMarker) ldMarker.setLatLng(c);
+      read.hidden=false;
+      read.innerHTML='<b>'+Math.round(sqm).toLocaleString('en-US')+' m²</b> · perimeter '+Math.round(per)+' m · '+LD.pts.length+' corners';
+    } else if(LD.pts.length>0){
+      read.hidden=false;
+      read.textContent=LD.pts.length+' of at least 3 corners placed — keep tapping the map';
+    } else {
+      read.hidden=true;
+    }
+    ldSyncSize();
+    ldApplyGeo();
+  }
+  /* The m² field is filled from the drawing when there is one, and typed in by
+     hand when there is not. */
+  function ldSyncSize(){
+    const size=document.getElementById('lfSize'), note=document.getElementById('lfSizeNote');
+    if(!size||!note) return;
+    if(LD.pts.length>=3){
+      const sqm=Math.round(ldArea(LD.pts));
+      LD.sqm=sqm; size.value=sqm; size.readOnly=true; size.classList.remove('bad');
+      note.innerHTML='✓ Measured from your outline: <b>'+sqm.toLocaleString('en-US')+' m²</b> — clear the outline to type a size instead.';
+    } else {
+      if(LD.sqm && size.readOnly){ size.value=''; }
+      LD.sqm=0; size.readOnly=false;
+      note.textContent='Draw the plot on the map and the size is measured for you — otherwise type it in m².';
+    }
+  }
+  /* Distance to the sea is measured, never picked: from the drawn plot's centre
+     when there is an outline, otherwise from the Plus Code / area location. */
+  function ldApplyGeo(){
+    const sel=document.getElementById('lfBeach'), fld=document.getElementById('lfBeachDist');
+    if(!sel||!fld||!window.mkSeaDistance) return;
+    if(!LD.ll){ fld.hidden=true; sel.hidden=false; LD.seaM=null; LD.band=null; return; }
+    const m=window.mkSeaDistance(LD.ll.lat,LD.ll.lng), band=window.mkSeaBand(m);
+    LD.seaM=Math.round(m); LD.band=band; sel.value=band;
+    fld.value=window.mkFmtSeaDist(m)+' to the sea · '+BEACH_LABEL[band];
+    fld.hidden=false; sel.hidden=true;
+  }
+  function ldSetDraw(on){
+    LD.draw=on;
+    document.querySelectorAll('#ldTools [data-ldmode]').forEach(b=>b.classList.toggle('sel',(b.dataset.ldmode==='draw')===on));
+    const box=document.getElementById('ldMapBox'); if(box) box.classList.toggle('drawing',on);
+    if(ldMarker) ldMarker.setOpacity(on?.55:1);
+    if(ldMap){ if(on) ldMap.doubleClickZoom.disable(); else ldMap.doubleClickZoom.enable(); }
+    const read=document.getElementById('ldRead');
+    if(on && !LD.pts.length){ read.hidden=false; read.textContent='Tap each corner of the plot — every side shows its length in metres as you go.'; }
+    if(!on) ldClearRubber();
+  }
+  function ldWireMap(){
+    if(!ldMap) return;
+    /* The toolbar sits on top of the map, so its clicks must not also land on
+       the map underneath (they would drop a corner or move the pin). */
+    ['ldTools','ldRead'].concat([]).forEach(function(id){
+      const el=document.getElementById(id);
+      if(el){ L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el); }
+    });
+    document.querySelectorAll('#ldMapBox .value-map-tag').forEach(function(el){ L.DomEvent.disableClickPropagation(el); });
+    ldMap.on('click',e=>{
+      if(LD.draw){ LD.pts.push(ldSnapPoint(e.latlng)); ldClearRubber(); ldRedraw(); return; }
+      ldMarker.setLatLng(e.latlng); LD.ll={lat:e.latlng.lat,lng:e.latlng.lng}; ldApplyGeo();
+    });
+    ldMap.on('mousemove',e=>{ if(LD.draw) ldUpdateRubber(e.latlng); });
+    ldMap.on('mouseout',ldClearRubber);
+    ldMarker.on('dragend',()=>{ const c=ldMarker.getLatLng(); if(!LD.pts.length){ LD.ll={lat:c.lat,lng:c.lng}; ldApplyGeo(); } });
+    document.querySelectorAll('#ldTools [data-ldmode]').forEach(b=>b.addEventListener('click',()=>ldSetDraw(b.dataset.ldmode==='draw')));
+    document.getElementById('ldSnap').addEventListener('click',function(){ LD.snap=!LD.snap; this.classList.toggle('sel',LD.snap); });
+    document.getElementById('ldUndo').addEventListener('click',()=>{ LD.pts.pop(); ldClearRubber(); ldRedraw(); });
+    document.getElementById('ldClear').addEventListener('click',()=>{ LD.pts=[]; ldClearRubber(); ldRedraw(); });
+  }
+  function ldResetDrawing(){
+    LD.pts=[]; LD.ll=null; LD.seaM=null; LD.band=null;
+    if(ldMap){ ldClearLayers(); ldClearRubber(); }
+    ldSetDraw(false);
+    const read=document.getElementById('ldRead'); if(read) read.hidden=true;
+    document.getElementById('ldUndo').disabled=true;
+    document.getElementById('ldClear').disabled=true;
+    ldSyncSize(); ldApplyGeo();
+  }
+
+  if(window.ensureLeaflet) window.ensureLeaflet(initValMaps);
+  /* Plain "13.307136, -16.798362" coordinates are as exact as a Plus Code, and
+     are what people paste out of Google Maps most often. */
+  const LATLNG_RE=/^\s*(-?\d{1,2}(?:\.\d+)?)\s*[,;\s]\s*(-?\d{1,3}(?:\.\d+)?)\s*$/;
+  function parseLatLng(str){
+    const m=(str||'').match(LATLNG_RE);
+    if(!m) return null;
+    const lat=parseFloat(m[1]), lng=parseFloat(m[2]);
+    if(!isFinite(lat)||!isFinite(lng)||Math.abs(lat)>90||Math.abs(lng)>180) return null;
+    return {lat,lng};
+  }
+  /* Exact = a spot, not a neighbourhood: worth zooming right in on. */
+  function isExactLoc(str){ return !!parseLatLng(str) || PLUS_RE.test(str||''); }
+  /* With exact coordinates but no recognisable name, fall back to the nearest
+     known area so the price rate still has something to stand on. */
+  function nearestArea(ll){
+    if(!ll || typeof AREA_COORDS==='undefined') return null;
+    let best=null, bestD=Infinity;
+    for(const k in AREA_COORDS){
+      const c=AREA_COORDS[k];
+      const d=Math.pow(c[0]-ll.lat,2)+Math.pow((c[1]-ll.lng)*Math.cos(ll.lat*Math.PI/180),2);
+      if(d<bestD){ bestD=d; best=k; }
+    }
+    return bestD<0.0025 ? best : null;   // ~5 km
+  }
+  function resolveLatLng(locStr){
+    const val=(locStr||'').trim();
+    const coords=parseLatLng(val);
+    if(coords) return coords;
+    const m=val.match(PLUS_RE);
+    if(m){
+      const codeStr=m[0].toUpperCase();
+      let decoded = codeStr.indexOf('+')>=8 ? plusCodeDecode(codeStr) : null;
+      if(!decoded){ const ex=expandShortPlusCode(codeStr,val); if(ex) decoded={lat:ex.lat,lng:ex.lng}; }
+      if(decoded) return decoded;
+    }
+    return null;
+  }
+  function updateValMap(map,marker,labelId,locStr,area,place){
+    const ll=resolveLatLng(locStr) || (area && typeof AREA_COORDS!=='undefined' && AREA_COORDS[area] ? {lat:AREA_COORDS[area][0],lng:AREA_COORDS[area][1]} : null);
+    const lab=document.getElementById(labelId); if(lab) lab.textContent=place||area||'Location';
+    if(!map||!marker||!ll) return null;
+    map.setView([ll.lat,ll.lng], isExactLoc(locStr) ? 18 : 15);
+    marker.setLatLng([ll.lat,ll.lng]);
+    return ll;
+  }
+
+  function saveValState(tool,data){ try{ sessionStorage.setItem('mykunda_val_'+tool, JSON.stringify(data)); }catch(e){} }
+  function clearValState(tool){ try{ sessionStorage.removeItem('mykunda_val_'+tool); }catch(e){} window[tool==='land'?'_lastValLand':'_lastValProperty']=null; }
+  function restoreValState(tool){
+    try{
+      const raw=sessionStorage.getItem('mykunda_val_'+tool); if(!raw) return;
+      const v=JSON.parse(raw);
+      const pfx = tool==='land'?'ld':'pd';
+      document.getElementById(pfx+'Range').textContent=v.vdRangeText;
+      document.getElementById(pfx+'Sub').textContent=v.vdSubText;
+      if(v.breakdownHTML){ document.getElementById(pfx+'BreakdownList').innerHTML=v.breakdownHTML; document.getElementById(pfx+'Breakdown').style.display='block'; }
+      document.getElementById(pfx+'Msg').innerHTML=v.msgHTML;
+      if(v.listHref){ const b=document.getElementById(pfx+'ListBtn'); b.href=v.listHref; b.style.display='inline-flex'; }
+      document.getElementById(tool==='land'?'landForm':'propForm').hidden=true;
+      document.getElementById(tool==='land'?'landDone':'propDone').hidden=false;
+      window[tool==='land'?'_lastValLand':'_lastValProperty']=v;
+      if(v.mapLL){
+        const mp=tool==='land'?ldMap:pdMap, mk2=tool==='land'?ldMarker:pdMarker;
+        if(mp&&mk2){ mp.setView([v.mapLL.lat,v.mapLL.lng],15); mk2.setLatLng([v.mapLL.lat,v.mapLL.lng]); }
+        const lab=document.getElementById(pfx+'MapLabel'); if(lab) lab.textContent=v.mapPlace||'Location';
+      }
+    }catch(e){}
+  }
+
+  // ---------------- TOOL 1: home, villa or apartment ----------------
+  function initPropertyValuation(){
+    const form=document.getElementById('propForm'); if(!form) return;
+    const loc=document.getElementById('pfLocation'), type=document.getElementById('pfType'), size=document.getElementById('pfSize'),
+          name=document.getElementById('pfName'), email=document.getElementById('pfEmail'), phone=document.getElementById('pfPhone'),
+          beds=document.getElementById('pfBeds'), baths=document.getElementById('pfBaths'), condition=document.getElementById('pfCondition'),
+          floors=document.getElementById('pfFloors'), pool=document.getElementById('pfPool'), solar=document.getElementById('pfSolar'),
+          security=document.getElementById('pfSecurity'), furnished=document.getElementById('pfFurnished'), water=document.getElementById('pfWater'),
+          plotSizeEl=document.getElementById('pfPlot'), beach=document.getElementById('pfBeach'), view=document.getElementById('pfView'),
+          err=document.getElementById('pfErr'), done=document.getElementById('propDone'),
+          vdRange=document.getElementById('pdRange'), vdSub=document.getElementById('pdSub'), vdMsg=document.getElementById('pdMsg'),
+          vdBreakdown=document.getElementById('pdBreakdown'), vdBreakdownList=document.getElementById('pdBreakdownList');
+
+    function toggleType(){
+      const isApt=type.value==='apartment';
+      plotSizeEl.hidden=isApt;
+      if(isApt) pool.value='no';
+    }
+    type.addEventListener('change', toggleType); toggleType();
+    [loc,size,name,email].forEach(i=>i.addEventListener('input',()=>{ i.classList.remove('bad'); err.textContent=''; }));
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      err.textContent='';
+      const miss=[];
+      if(!loc.value.trim()){ loc.classList.add('bad'); miss.push({f:loc,label:'the location'}); }
+      if(!size.value || +size.value<=0){ size.classList.add('bad'); miss.push({f:size,label:'the size'}); }
+      if(!name.value.trim()){ name.classList.add('bad'); miss.push({f:name,label:'your name'}); }
+      if(!emailOk(email.value.trim())){ email.classList.add('bad'); miss.push({f:email,label:'a valid email'}); }
+      if(miss.length){ const parts=miss.map(m=>m.label); const list=parts.length>1?parts.slice(0,-1).join(', ')+' and '+parts[parts.length-1]:parts[0]; err.textContent='Please add '+list+' so we can send your valuation.'; miss[0].f.focus(); return; }
+
+      let area=areaName(loc.value);
+      if(!area && PLUS_RE.test(loc.value)) area=areaFromPlusCode(loc.value);
+      if(!area) area=nearestArea(parseLatLng(loc.value));
+      const place = area || (isExactLoc(loc.value) ? 'this area' : loc.value.trim());
+      const _pdLL=updateValMap(pdMap,pdMarker,'pdMapLabel',loc.value,area,place);
+      const sqm=+size.value, baseRate=rateFor(area||loc.value, type.value);
+
+      const condMult=({new:1.15,good:1.0,renovation:0.72}[condition.value]||1);
+      const beachMult=({beachfront:1.40,walking:1.10,inland:1.0}[beach.value]||1);
+      const bedMult=beds.value?({1:0.97,2:1.0,3:1.0,4:1.02,5:1.03}[beds.value]||1):1;
+      const bathMult=baths.value?({1:0.97,2:1.0,3:1.04,4:1.08}[baths.value]||1):1;
+      const floorMult=({1:1.0,2:1.05,3:1.08}[floors.value]||1);
+      const poolMult=pool.value==='yes'?1.15:1.0;
+      const solarMult=({no:1.0,solar:1.06,generator:1.03,both:1.10}[solar.value]||1);
+      const secMult=({none:1.0,wall:1.06,gated:1.12}[security.value]||1);
+      const furnMult=({unfurnished:1.0,semi:1.04,furnished:1.10}[furnished.value]||1);
+      const viewMult=(view.value==='ocean'&&beach.value==='beachfront')?1.08:({none:1.0,ocean:1.20,garden:1.05}[view.value]||1);
+      const plotSqm=parseInt(plotSizeEl.value)||0;
+      const buildWaterMult=({nawec:1.0,borehole:0.97,both:1.05,none:0.82}[water.value]||1);
+
+      const buildMult=bathMult*floorMult*poolMult*solarMult*secMult*furnMult*buildWaterMult;
+      const rawMult=condMult*beachMult*bedMult*viewMult*buildMult;
+      const damp=0.75;
+      const dampedMult=rawMult>=1?1+(rawMult-1)*damp:1-(1-rawMult)*0.9;
+      const RATE_CEIL=Math.min(baseRate*2.0, type.value==='apartment'?2000:1800);
+      const RATE_FLOOR=baseRate*0.5;
+      const uncapped=baseRate*dampedMult;
+      const adjusted=Math.round(Math.min(Math.max(uncapped,RATE_FLOOR),RATE_CEIL));
+      const rateCapped=uncapped>RATE_CEIL+1;
+
+      function plotRate(base){ const m=beachMult*viewMult; const d=m>=1?1+(m-1)*0.70:m; return Math.round(Math.min(base*d, Math.min(base*1.6,400))); }
+      const lRate=(type.value==='house'&&plotSqm>0)?plotRate(rateFor(area||loc.value,'land')):0;
+
+      const effSqm=effectiveArea(sqm), effPlot=effectiveLandArea(plotSqm);
+      let mid;
+      if(type.value==='house' && plotSqm>0){ mid=Math.round(effPlot*lRate + effSqm*adjusted); }
+      else { mid=Math.round(effSqm*adjusted); }
+
+      const knownArea=!!area;
+      let uncertainCount=0;
+      if(!knownArea) uncertainCount++;
+      if(!size.value||+size.value<=0) uncertainCount++;
+      if(condition.value==='') uncertainCount++;
+      if(type.value==='house' && plotSqm<=0) uncertainCount++;
+      const marginDown=Math.min(0.15+uncertainCount*0.05,0.30);
+      const marginUp=Math.min(0.22+uncertainCount*0.06,0.42);
+
+      const stepSize=mid>=200000?5000:mid>=50000?1000:500;
+      const low=Math.round(mid*(1-marginDown)/stepSize)*stepSize;
+      const high=Math.round(mid*(1+marginUp)/stepSize)*stepSize;
+
+      vdRange.textContent=money(mid);
+      let factors=[];
+      if(condition.value==='new') factors.push('new build premium');
+      if(condition.value==='renovation') factors.push('renovation discount');
+      if(pool.value==='yes') factors.push('swimming pool');
+      if(security.value==='gated') factors.push('gated compound');
+      if(security.value==='wall') factors.push('walled compound');
+      if(solar.value!=='no') factors.push(solar.value==='both'?'solar + generator':solar.value);
+      if(furnished.value==='furnished') factors.push('fully furnished');
+      if(floors.value>='2') factors.push(floors.value+'+ storeys');
+      if(water.value==='none') factors.push('no running water');
+      if(water.value==='both') factors.push('Nawec + borehole');
+      if(water.value==='borehole') factors.push('borehole only');
+      if(view.value==='ocean') factors.push('ocean view');
+      if(view.value==='garden') factors.push('garden view');
+      if(beach.value==='beachfront') factors.push('beachfront location');
+      else if(beach.value==='walking') factors.push('near-beach premium');
+      const factorStr=factors.length?' · Adjusted for: '+factors.join(', '):'';
+      vdSub.textContent='Based on ~'+money(adjusted)+'/m² for a '+sqm.toLocaleString()+' m² home in '+place+factorStr;
+      if(type.value==='house' && plotSqm>0) vdSub.textContent+=' + '+plotSqm.toLocaleString()+' m² land at ~'+money(lRate)+'/m²';
+
+      let bLines=[];
+      bLines.push(row('Base rate for '+place, money(baseRate)+'/m²'));
+      if(condMult!==1) bLines.push(row(condition.value==='new'?'New build premium':'Renovation discount', pct(condMult)));
+      if(beachMult!==1) bLines.push(row(beach.value==='beachfront'?'Beachfront location':'Near-beach premium', pct(beachMult)));
+      if(bedMult!==1) bLines.push(row('Bedroom count ('+(beds.value||'?')+')', pct(bedMult)));
+      if(viewMult!==1) bLines.push(row(view.value==='ocean'?'Ocean view':'Garden view', pct(viewMult)));
+      if(bathMult!==1) bLines.push(row('Bathrooms ('+(baths.value||'?')+')', pct(bathMult)));
+      if(floorMult!==1) bLines.push(row(floors.value+'+ storeys', pct(floorMult)));
+      if(poolMult!==1) bLines.push(row('Swimming pool', pct(poolMult)));
+      if(solarMult!==1) bLines.push(row('Solar / generator', pct(solarMult)));
+      if(secMult!==1) bLines.push(row('Security / compound', pct(secMult)));
+      if(furnMult!==1) bLines.push(row('Furnished', pct(furnMult)));
+      if(buildWaterMult!==1) bLines.push(row('Water supply', pct(buildWaterMult)));
+      if(rawMult>1.15) bLines.push(row('Damping on stacked features', '×'+damp.toFixed(2)));
+      if(rateCapped) bLines.push(row('Capped at local market ceiling', money(RATE_CEIL)+'/m²'));
+      if(sqm>150) bLines.push(row('Larger build priced degressively', sqm.toLocaleString()+' m² priced as '+Math.round(effSqm).toLocaleString()+' m²'));
+      bLines.push(rowStrong('Adjusted rate', money(adjusted)+'/m²'));
+      if(type.value==='house' && plotSqm>0){
+        bLines.push(rowStrong('Building: '+Math.round(effSqm).toLocaleString()+' m² × '+money(adjusted), money(effSqm*adjusted)));
+        if(plotSqm>500) bLines.push(row('Bulk pricing on larger plot', plotSqm.toLocaleString()+' m² priced as '+Math.round(effPlot).toLocaleString()+' m²'));
+        bLines.push(rowStrong('Land: '+Math.round(effPlot).toLocaleString()+' m² × '+money(lRate), money(effPlot*lRate)));
+        bLines.push(rowStrong('Total (building + land)', money(mid)));
+      } else {
+        bLines.push(rowStrong(Math.round(effSqm).toLocaleString()+' m² × '+money(adjusted), money(mid)));
+      }
+      bLines.push(rowMuted('-'+Math.round(marginDown*100)+'% / +'+Math.round(marginUp*100)+'% uncertainty', money(low)+' – '+money(high)));
+      vdBreakdownList.innerHTML=bLines.join('');
+      vdBreakdown.style.display='block';
+
+      const fname=name.value.trim().split(' ')[0];
+      vdMsg.innerHTML='Thanks '+fname+' — here is your instant estimate for a property in <b>'+place+'</b>. A valuer we work with can review it in person and confirm the exact figure — available on request.';
+
+      sendLead('valuation', {
+        name:name.value.trim(), email:email.value.trim(), phone:phone.value.trim(), area:place,
+        message:'Valuation: '+type.value+', '+(beds.value||'?')+'bed/'+(baths.value||'?')+'bath, '+condition.value+', '+floors.value+'fl, pool:'+pool.value+', solar:'+solar.value+', sec:'+security.value+', furn:'+furnished.value+(plotSqm?', plot:'+plotSqm+'m²':'')+', view:'+view.value+', beach:'+beach.value+', '+sqm+'m², est. '+vdRange.textContent,
+        payload:{ type:type.value, sqm, area:place, view:view.value, beach:beach.value, estimate_low:low, estimate_high:high, raw_location:loc.value.trim(), beds:beds.value||null, baths:baths.value||null, condition:condition.value, floors:floors.value, pool:pool.value, solar:solar.value, security:security.value, furnished:furnished.value, water:water.value, plot_size:plotSqm||null }
+      }).catch(function(vErr){
+        console.warn('valuation lead error:', vErr);
+        vdMsg.innerHTML='This is an automated estimate from recent sales — but your request did <b>not</b> reach us.';
+        let vw=document.getElementById('pdLeadWarn');
+        if(!vw){ vw=document.createElement('div'); vw.id='pdLeadWarn'; done.appendChild(vw); }
+        vw.innerHTML=contactFallbackHTML('Hello MyKunda! I requested a valuation on the website for a property in '+place+' (estimate '+vdRange.textContent+'), but the form did not go through. My name is '+name.value.trim()+'.', "Send us the details directly and we'll confirm the exact figure:");
+      });
+
+      form.hidden=true; done.hidden=false;
+
+      const listParams=new URLSearchParams();
+      listParams.set('cat', type.value==='house'?'villa':type.value);
+      if(place) listParams.set('area', place);
+      if(sqm) listParams.set('sqm', sqm);
+      if(beds.value) listParams.set('beds', beds.value);
+      if(baths.value) listParams.set('baths', baths.value);
+      if(condition.value) listParams.set('condition', condition.value);
+      if(floors.value) listParams.set('floors', floors.value);
+      if(view.value) listParams.set('view', view.value);
+      if(beach.value) listParams.set('beach', beach.value);
+      if(security.value) listParams.set('security', security.value);
+      if(furnished.value) listParams.set('furnished', furnished.value);
+      if(water.value) listParams.set('water', water.value);
+      if(pool.value==='yes') listParams.set('feat','Private pool');
+      if(solar.value && solar.value!=='no') listParams.set('power', solar.value);
+      if(plotSqm) listParams.set('plot', plotSqm);
+      listParams.set('price', Math.round(mid));
+      const btn=document.getElementById('pdListBtn');
+      btn.href='list.html?'+listParams.toString();
+      btn.style.display='inline-flex';
+
+      window._lastValProperty={vdRangeText:vdRange.textContent,vdSubText:vdSub.textContent,breakdownHTML:vdBreakdownList.innerHTML,msgHTML:vdMsg.innerHTML,listHref:btn.href,mapLL:_pdLL,mapPlace:place};
+      saveValState('property', window._lastValProperty);
+    });
+
+    document.getElementById('pdAgain').addEventListener('click', function(){
+      clearValState('property');
+      form.reset(); [loc,size,name,email].forEach(i=>i.classList.remove('bad'));
+      err.textContent=''; done.hidden=true; form.hidden=false;
+      toggleType(); loc.focus();
+    });
+  }
+
+  // ---------------- TOOL 2: land / plot ----------------
+  function initLandValuation(){
+    const form=document.getElementById('landForm'); if(!form) return;
+    const loc=document.getElementById('lfLocation'), size=document.getElementById('lfSize'),
+          name=document.getElementById('lfName'), email=document.getElementById('lfEmail'), phone=document.getElementById('lfPhone'),
+          road=document.getElementById('lfRoad'), title=document.getElementById('lfTitle'), fencing=document.getElementById('lfFencing'),
+          elec=document.getElementById('lfElectricity'), water=document.getElementById('lfWater'), cleared=document.getElementById('lfCleared'),
+          corner=document.getElementById('lfCorner'), plotShape=document.getElementById('lfPlotShape'), flood=document.getElementById('lfFlood'),
+          beach=document.getElementById('lfBeach'), view=document.getElementById('lfView'),
+          err=document.getElementById('lfErr'), done=document.getElementById('landDone'),
+          vdRange=document.getElementById('ldRange'), vdSub=document.getElementById('ldSub'), vdMsg=document.getElementById('ldMsg'),
+          vdBreakdown=document.getElementById('ldBreakdown'), vdBreakdownList=document.getElementById('ldBreakdownList');
+
+    [loc,size,name,email].forEach(i=>i.addEventListener('input',()=>{ i.classList.remove('bad'); err.textContent=''; }));
+
+    /* Typing a Plus Code or an area name moves the map and re-measures the sea
+       distance straight away — no button, no guessing. */
+    let locTimer=null;
+    loc.addEventListener('input',function(){
+      clearTimeout(locTimer);
+      locTimer=setTimeout(function(){
+        if(LD.pts.length>=3) return;
+        let a=areaName(loc.value);
+        if(!a && PLUS_RE.test(loc.value)) a=areaFromPlusCode(loc.value);
+        if(!a) a=nearestArea(parseLatLng(loc.value));
+        const ll=updateValMap(ldMap,ldMarker,'ldMapLabel',loc.value,a,a||loc.value.trim());
+        if(ll){
+          LD.ll=ll; ldApplyGeo();
+          /* An exact location — coordinates or a Plus Code — goes in close enough
+             to trace the plot. A bare area name only places you nearby. */
+          if(ldMap) ldMap.setView([ll.lat,ll.lng], isExactLoc(loc.value) ? 18 : 15);
+        }
+      },450);
+    });
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      err.textContent='';
+      const miss=[];
+      if(!loc.value.trim()){ loc.classList.add('bad'); miss.push({f:loc,label:'the location'}); }
+      if(!size.value || +size.value<=0){ size.classList.add('bad'); miss.push({f:size,label:'the plot size'}); }
+      if(!name.value.trim()){ name.classList.add('bad'); miss.push({f:name,label:'your name'}); }
+      if(!emailOk(email.value.trim())){ email.classList.add('bad'); miss.push({f:email,label:'a valid email'}); }
+      if(miss.length){ const parts=miss.map(m=>m.label); const list=parts.length>1?parts.slice(0,-1).join(', ')+' and '+parts[parts.length-1]:parts[0]; err.textContent='Please add '+list+' so we can send your valuation.'; miss[0].f.focus(); return; }
+
+      let area=areaName(loc.value);
+      if(!area && PLUS_RE.test(loc.value)) area=areaFromPlusCode(loc.value);
+      if(!area) area=nearestArea(parseLatLng(loc.value));
+      const place = area || (isExactLoc(loc.value) ? 'this area' : loc.value.trim());
+      const _ldLL = LD.pts.length>=3 ? LD.ll : updateValMap(ldMap,ldMarker,'ldMapLabel',loc.value,area,place);
+      if(LD.pts.length>=3){ const lab=document.getElementById('ldMapLabel'); if(lab) lab.textContent=place; }
+      else if(_ldLL){ LD.ll=_ldLL; ldApplyGeo(); }
+      const sqm=+size.value, baseRate=rateFor(area||loc.value,'land');
+
+      const elecMult=({present:1.15,nearby:1.0,none:0.82}[elec.value]||1);
+      const fenceMult=({full:1.12,partial:1.0,none:0.90}[fencing.value]||1);
+      const clearMult=({cleared:1.08,partial:1.0,bush:0.88}[cleared.value]||1);
+      const roadMult=({tarmac:1.30,laterite:1.0,none:0.65}[road.value]||1);
+      const waterMult=({nawec:1.15,borehole:1.12,nearby:1.0,none:0.85}[water.value]||1);
+      const titleMult=({freehold:1.25,leasehold:1.22,sublease:1.15,alkalalo:1.0,unclear:0.60}[title.value]||1);
+      const cornerMult=corner.value==='yes'?1.10:1.0;
+      const shapeMult=plotShape.value==='irregular'?0.90:1.0;
+      const floodMult=({no:1.0,low:0.90,high:0.70}[flood.value]||1);
+      const beachMult=({beachfront:1.60,walking:1.15,inland:1.0}[beach.value]||1);
+      const viewMult=(view.value==='ocean'&&beach.value==='beachfront')?1.08:({none:1.0,ocean:1.20,garden:1.05}[view.value]||1);
+
+      const landMult=elecMult*fenceMult*clearMult*roadMult*waterMult*titleMult*cornerMult*shapeMult*floodMult;
+      const rawMult=beachMult*viewMult*landMult;
+      const damp=0.70;
+      const dampedMult=rawMult>=1?1+(rawMult-1)*damp:1-(1-rawMult)*0.9;
+      const RATE_CEIL=Math.min(baseRate*1.6,400);
+      const RATE_FLOOR=Math.max(baseRate*0.30,3);
+      const uncapped=baseRate*dampedMult;
+      const adjusted=Math.round(Math.min(Math.max(uncapped,RATE_FLOOR),RATE_CEIL));
+      const rateCapped=uncapped>RATE_CEIL+1;
+
+      const effSqm=effectiveLandArea(sqm);
+      const mid=Math.round(effSqm*adjusted);
+
+      const knownArea=!!area;
+      let uncertainCount=0;
+      if(!knownArea) uncertainCount++;
+      if(!size.value||+size.value<=0) uncertainCount++;
+      if(title.value==='unclear') uncertainCount++;
+      const marginDown=Math.min(0.15+uncertainCount*0.05,0.30);
+      const marginUp=Math.min(0.22+uncertainCount*0.06,0.42);
+
+      const stepSize=mid>=200000?5000:mid>=50000?1000:500;
+      const low=Math.round(mid*(1-marginDown)/stepSize)*stepSize;
+      const high=Math.round(mid*(1+marginUp)/stepSize)*stepSize;
+
+      vdRange.textContent=money(mid);
+      let factors=[];
+      if(elec.value==='present') factors.push('power on site');
+      if(elec.value==='none') factors.push('no power');
+      if(fencing.value==='full') factors.push('fully fenced');
+      if(fencing.value==='none') factors.push('not fenced');
+      if(cleared.value==='cleared') factors.push('cleared plot');
+      if(cleared.value==='bush') factors.push('uncleared bush');
+      if(road.value==='tarmac') factors.push('tarmac road');
+      if(road.value==='none') factors.push('no road access');
+      if(water.value==='nawec') factors.push('Nawec water');
+      if(water.value==='borehole') factors.push('own borehole');
+      if(water.value==='none') factors.push('no water');
+      if(title.value==='freehold') factors.push('freehold title');
+      if(title.value==='leasehold') factors.push('state lease');
+      if(title.value==='sublease') factors.push('sublease');
+      if(title.value==='unclear') factors.push('unclear title');
+      if(corner.value==='yes') factors.push('corner plot');
+      if(plotShape.value==='irregular') factors.push('irregular shape');
+      if(flood.value!=='no') factors.push(flood.value+' flood risk');
+      if(view.value==='ocean') factors.push('ocean view');
+      if(view.value==='garden') factors.push('garden view');
+      if(beach.value==='beachfront') factors.push('beachfront location');
+      else if(beach.value==='walking') factors.push('near-beach premium');
+      const factorStr=factors.length?' · Adjusted for: '+factors.join(', '):'';
+      vdSub.textContent='Based on ~'+money(adjusted)+'/m² for a '+sqm.toLocaleString()+' m² plot in '+place+factorStr;
+
+      let bLines=[];
+      bLines.push(row('Base land rate for '+place, money(baseRate)+'/m²'));
+      if(titleMult!==1) bLines.push(row('Title type', pct(titleMult)));
+      if(roadMult!==1) bLines.push(row('Road access', pct(roadMult)));
+      if(elecMult!==1) bLines.push(row('Electricity', pct(elecMult)));
+      if(waterMult!==1) bLines.push(row('Water supply', pct(waterMult)));
+      if(fenceMult!==1) bLines.push(row('Fencing', pct(fenceMult)));
+      if(clearMult!==1) bLines.push(row('Land clearing', pct(clearMult)));
+      if(cornerMult!==1) bLines.push(row('Corner plot', pct(cornerMult)));
+      if(shapeMult!==1) bLines.push(row('Plot shape', pct(shapeMult)));
+      if(floodMult!==1) bLines.push(row('Flood risk', pct(floodMult)));
+      if(LD.seaM!=null) bLines.push(rowMuted('Measured distance to the sea', window.mkFmtSeaDist(LD.seaM)));
+      if(LD.sqm) bLines.push(rowMuted('Plot size measured from your outline', LD.sqm.toLocaleString('en-US')+' m²'));
+      if(beachMult!==1) bLines.push(row(beach.value==='beachfront'?'Beachfront location':'Near-beach premium', pct(beachMult)));
+      if(viewMult!==1) bLines.push(row(view.value==='ocean'?'Ocean view':'Garden view', pct(viewMult)));
+      if(rawMult>1.15) bLines.push(row('Damping on stacked features', '×'+damp.toFixed(2)));
+      if(rateCapped) bLines.push(row('Capped at local market ceiling', money(RATE_CEIL)+'/m²'));
+      if(sqm>500) bLines.push(row('Bulk pricing on larger plot', sqm.toLocaleString()+' m² priced as '+Math.round(effSqm).toLocaleString()+' m²'));
+      bLines.push(rowStrong('Adjusted rate', money(adjusted)+'/m²'));
+      bLines.push(rowStrong(Math.round(effSqm).toLocaleString()+' m² × '+money(adjusted), money(mid)));
+      bLines.push(rowMuted('-'+Math.round(marginDown*100)+'% / +'+Math.round(marginUp*100)+'% uncertainty', money(low)+' – '+money(high)));
+      vdBreakdownList.innerHTML=bLines.join('');
+      vdBreakdown.style.display='block';
+
+      const fname=name.value.trim().split(' ')[0];
+      vdMsg.innerHTML='Thanks '+fname+' — here is your instant estimate for a plot in <b>'+place+'</b>. A valuer we work with can review it in person — including title and boundaries — available on request.';
+
+      sendLead('valuation', {
+        name:name.value.trim(), email:email.value.trim(), phone:phone.value.trim(), area:place,
+        message:'Valuation: land, road:'+road.value+', title:'+title.value+', fence:'+fencing.value+', elec:'+elec.value+', water:'+water.value+', cleared:'+cleared.value+', corner:'+corner.value+', shape:'+plotShape.value+', flood:'+flood.value+', view:'+view.value+', beach:'+beach.value+', '+sqm+'m², est. '+vdRange.textContent,
+        payload:{ type:'land', sqm, area:place, view:view.value, beach:beach.value, beach_m:LD.seaM, boundary: LD.pts.length>=3 ? {type:'polygon',points:LD.pts.map(p=>({lat:+p[0].toFixed(6),lng:+p[1].toFixed(6)})),area_m2:LD.sqm,centroid:LD.ll} : null, estimate_low:low, estimate_high:high, raw_location:loc.value.trim(), electricity:elec.value, fencing:fencing.value, cleared:cleared.value, road:road.value, water:water.value, title_type:title.value, corner:corner.value, plot_shape:plotShape.value, flood_risk:flood.value }
+      }).catch(function(vErr){
+        console.warn('valuation lead error:', vErr);
+        vdMsg.innerHTML='This is an automated estimate from recent land sales — but your request did <b>not</b> reach us.';
+        let vw=document.getElementById('ldLeadWarn');
+        if(!vw){ vw=document.createElement('div'); vw.id='ldLeadWarn'; done.appendChild(vw); }
+        vw.innerHTML=contactFallbackHTML('Hello MyKunda! I requested a land valuation on the website for a plot in '+place+' (estimate '+vdRange.textContent+'), but the form did not go through. My name is '+name.value.trim()+'.', "Send us the details directly and we'll confirm the exact figure:");
+      });
+
+      form.hidden=true; done.hidden=false;
+
+      const listParams=new URLSearchParams();
+      listParams.set('cat','land');
+      if(place) listParams.set('area',place);
+      if(sqm) listParams.set('sqm',sqm);
+      if(road.value) listParams.set('road',road.value);
+      if(title.value) listParams.set('titleType',title.value);
+      if(elec.value) listParams.set('elec',elec.value);
+      if(water.value) listParams.set('landWater',water.value);
+      if(fencing.value) listParams.set('fence',fencing.value);
+      if(flood.value) listParams.set('flood',flood.value);
+      if(plotShape.value) listParams.set('shape',plotShape.value);
+      if(beach.value) listParams.set('landBeach',beach.value);
+      listParams.set('price', Math.round(mid));
+      const btn=document.getElementById('ldListBtn');
+      btn.href='list.html?'+listParams.toString();
+      btn.style.display='inline-flex';
+
+      window._lastValLand={vdRangeText:vdRange.textContent,vdSubText:vdSub.textContent,breakdownHTML:vdBreakdownList.innerHTML,msgHTML:vdMsg.innerHTML,listHref:btn.href,mapLL:_ldLL,mapPlace:place};
+      saveValState('land', window._lastValLand);
+    });
+
+    document.getElementById('ldAgain').addEventListener('click', function(){
+      clearValState('land');
+      form.reset(); [loc,size,name,email].forEach(i=>i.classList.remove('bad'));
+      ldResetDrawing();
+      err.textContent=''; done.hidden=true; form.hidden=false;
+      loc.focus();
+    });
+  }
+
+  initPropertyValuation();
+  initLandValuation();
+  restoreValState('property');
+  restoreValState('land');
+  window.addEventListener('beforeunload', function(){
+    if(window._lastValProperty) saveValState('property', window._lastValProperty);
+    if(window._lastValLand) saveValState('land', window._lastValLand);
+  });
+
+  // ---- toggle between the two tools (persists across a currency-switch reload) ----
+  let savedTab=null; try{ savedTab=sessionStorage.getItem('mykunda_val_tab'); }catch(e){}
+  function showPanel(p){
+    document.getElementById('panelProperty').hidden = p!=='property';
+    document.getElementById('panelLand').hidden = p!=='land';
+    if(p==='land' && ldMap){ ldMap.invalidateSize(); ldMap.setView(ldMarker.getLatLng(), ldMap.getZoom()); }
+    if(p==='property' && pdMap){ pdMap.invalidateSize(); pdMap.setView(pdMarker.getLatLng(), pdMap.getZoom()); }
+    document.querySelectorAll('#valueToggle .vtab').forEach(function(b){ b.classList.toggle('sel', b.dataset.panel===p); });
+    try{ sessionStorage.setItem('mykunda_val_tab', p); }catch(e){}
+  }
+  document.querySelectorAll('#valueToggle .vtab').forEach(function(b){ b.addEventListener('click', function(){ showPanel(b.dataset.panel); }); });
+  showPanel(savedTab==='land'?'land':'property');
+})();
+
+// consultation
+cp1.innerHTML=cp2.innerHTML=cp3.innerHTML=checkSm;
+document.querySelectorAll('#slotRow .tslot').forEach(s=>s.addEventListener('click',()=>{document.querySelectorAll('#slotRow .tslot').forEach(x=>x.classList.remove('sel'));s.classList.add('sel');}));
+window.bookConsult=async function(form){
+  const slot = document.querySelector('#slotRow .tslot.sel').textContent.toLowerCase();
+  const fd = new FormData(form);
+  const name = fd.get('name') || '';
+  const email = fd.get('email') || '';
+  const intent = fd.get('intent') || '';
+  const location = fd.get('location') || '';
+
+  // Disable submit button while sending
+  const btn = form.querySelector('button[type="submit"]');
+  const btnText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+
+  try {
+    // Save the lead + fire the emails. sendLead() throws when the backend is
+    // offline or in demo mode, so "You're booked in" only ever follows a real save.
+    if (window.__sbReady) await window.__sbReady;
+    await (typeof sendLead === 'function' ? sendLead : submitLead)('consultation', {
+      name: name,
+      email: email,
+      message: 'Consultation booking — wants to: ' + intent + ' | Location: ' + location + ' | Preferred time: ' + slot,
+      payload: {
+        intent: intent,
+        location: location,
+        preferred_time: slot,
+        form: 'sell-consultation'
+      }
+    });
+  } catch(e) {
+    console.warn('Consultation lead save failed:', e.message || e);
+    btn.disabled = false; btn.textContent = btnText;
+    let cErr = form.querySelector('.form-err');
+    if(!cErr){ cErr = document.createElement('div'); cErr.className='form-err'; cErr.style.cssText='margin-top:10px'; form.appendChild(cErr); }
+    cErr.innerHTML = contactFallbackHTML('Hello MyKunda! I would like to book a free consultation. Name: ' + name + ', I want to: ' + intent + ', preferred time: ' + slot + '.', "We couldn't book that just now. Please reach us directly \u2014 these all work right now:");
+    return;
+  }
+
+  // Show confirmation
+  form.innerHTML=`<div style="text-align:center;padding:22px 10px"><div style="width:58px;height:58px;border-radius:50%;background:var(--green-50);color:var(--green-700);display:flex;align-items:center;justify-content:center;margin:0 auto 16px"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div><div style="font-family:var(--serif);font-size:21px;font-weight:600;margin-bottom:8px">You're booked in</div><p style="font-size:15px;color:var(--muted);line-height:1.55;max-width:340px;margin:0 auto">Thanks${name ? ', '+name.split(' ')[0] : ''}! An advisor will email you at <strong>${email||'your address'}</strong> to confirm a ${slot} slot and send a calendar invite. No obligation at all.</p></div>`;
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyKunda — E-mailinstellingen in de Google Admin console</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Mulish:wght@400;500;600;700;800;900&display=swap">
+<style>
+:root{--green-900:#0E2E25;--green-800:#123A2E;--green-700:#15463A;--green-600:#1C5848;--green-500:#2A7561;--green-200:#BEDACE;--green-100:#DCEAE3;--green-50:#EAF2ED;--amber-600:#B45F22;--amber-500:#C8702D;--amber-400:#DD8A45;--amber-100:#F6E6D4;--amber-50:#FBF1E6;--paper:#FAF8F3;--paper-2:#F3F0E8;--white:#fff;--ink:#18201D;--ink-2:#384640;--muted:#5C6B64;--muted-2:#8A958E;--line:#E5E1D6;--line-2:#EFEBE1;--serif:'Mulish',sans-serif;--sans:'Hanken Grotesk',sans-serif;--r-sm:8px;--r-md:12px;--r-lg:18px;--sh-md:0 4px 14px rgba(24,32,29,.07),0 2px 6px rgba(24,32,29,.05)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--paper-2);color:var(--ink);line-height:1.62;-webkit-font-smoothing:antialiased}
+.doc{max-width:920px;margin:0 auto;background:var(--paper);box-shadow:var(--sh-md)}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:800;line-height:1.14;letter-spacing:-.015em;color:var(--ink)}
+p{margin:11px 0;color:var(--ink-2)}
+a{color:var(--green-700)}
+a:hover{color:var(--green-500)}
+strong{color:var(--ink);font-weight:700}
+code{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.85em;background:var(--green-50);color:var(--green-700);padding:2px 6px;border-radius:5px;font-weight:600}
+pre{background:var(--green-900);color:#C8E6DC;padding:18px 22px;border-radius:var(--r-md);font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:13px;line-height:1.7;overflow-x:auto;margin:14px 0;white-space:pre}
+pre b,.s .tx pre b{color:var(--amber-400);font-weight:700}
+.codewrap{position:relative;margin:14px 0}
+.codewrap pre{margin:0}
+.copy{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.12);color:#DCEAE3;border:1px solid rgba(255,255,255,.22);border-radius:7px;padding:6px 12px;font-family:var(--sans);font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.02em}
+.copy:hover{background:rgba(255,255,255,.2)}
+.copy.done{background:var(--green-500);border-color:var(--green-500);color:#fff}
+.cover{background:linear-gradient(150deg,var(--green-800),var(--green-600));color:#fff;padding:64px 64px 50px;position:relative;overflow:hidden}
+.cover::after{content:"";position:absolute;right:40px;bottom:30px;width:120px;height:120px;background:rgba(255,255,255,.06);border-radius:50%}
+.cover .logo{font-family:var(--serif);font-weight:800;font-size:23px;letter-spacing:-.02em;margin-bottom:42px}
+.cover .kicker{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--amber-400);margin-bottom:15px}
+.cover h1{color:#fff;font-size:38px;font-weight:900;max-width:660px}
+.cover .lede{font-size:17px;color:rgba(255,255,255,.86);margin-top:17px;max-width:660px;line-height:1.55}
+.cover .meta{display:flex;gap:34px;margin-top:36px;padding-top:24px;border-top:1px solid rgba(255,255,255,.18);flex-wrap:wrap}
+.cover .meta div span{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.6);font-weight:700;margin-bottom:4px}
+.cover .meta div b{font-family:var(--serif);font-size:16px;font-weight:700;color:#fff}
+.body{padding:52px 64px 64px}
+section{margin-bottom:46px}
+.num{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;background:var(--green-600);color:#fff;font-family:var(--serif);font-weight:800;font-size:16px;margin-right:13px;flex:none}
+.h-row{display:flex;align-items:center;margin-bottom:8px}
+.h-row h2{font-size:26px}
+.lead-line{color:var(--muted);font-size:16px;margin:0 0 22px 47px}
+section>p,section>.steps,section>.note,section>.warn,section>.goal,section>.codewrap,section>.tablewrap,section>ul.chk{margin-left:47px}
+.goal{background:var(--green-50);border:1px solid var(--green-100);border-radius:var(--r-lg);padding:22px 26px;margin:0 0 6px 47px}
+.goal h4{font-size:16px;margin-bottom:6px;color:var(--green-700)}
+.goal p{margin:0;font-size:15px}
+.note{border-left:4px solid var(--amber-500);background:var(--amber-50);padding:15px 20px;border-radius:0 var(--r-md) var(--r-md) 0;margin:18px 0}
+.note b{color:var(--amber-600)}
+.warn{border-left:4px solid #C2533A;background:#FEF2F2;padding:15px 20px;border-radius:0 var(--r-md) var(--r-md) 0;margin:18px 0}
+.warn b{color:#C2533A}
+.steps{counter-reset:step}
+.s{display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line-2);align-items:flex-start}
+.s:last-child{border-bottom:none}
+.s::before{counter-increment:step;content:counter(step);width:30px;height:30px;border-radius:8px;background:var(--green-600);color:#fff;font-family:var(--serif);font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;flex:none;margin-top:2px}
+.s .tx{flex:1}
+.s .tx b{color:var(--ink)}
+.s .tx p{margin:4px 0 0;font-size:14.5px}
+.s .tx code{font-size:12px}
+.s .tx .codewrap{margin:10px 0 0}
+.s .tx .warn,.s .tx .note{margin:10px 0 0}
+.tablewrap{margin:18px 0;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{background:var(--green-600);color:#fff;text-align:left;padding:11px 15px;font-family:var(--serif);font-weight:700;font-size:13px}
+td{padding:10px 15px;border-top:1px solid var(--line-2);color:var(--ink-2);vertical-align:top}
+td code{font-size:12px}
+tr:nth-child(even) td{background:var(--paper)}
+.ok{color:var(--green-500);font-weight:700}
+.fix{color:var(--amber-600);font-weight:700}
+.todo{color:#C2533A;font-weight:700}
+ul.chk{list-style:none;margin:6px 0 0 0}
+ul.chk li{position:relative;padding-left:30px;margin:11px 0;font-size:14.5px;color:var(--ink-2)}
+ul.chk li::before{content:"";position:absolute;left:0;top:1px;width:19px;height:19px;border-radius:5px;border:2px solid var(--green-600)}
+ul.chk li b{color:var(--ink)}
+ul.plain{margin:10px 0 0 20px}
+ul.plain li{margin:7px 0;font-size:14.5px;color:var(--ink-2)}
+.close{background:var(--green-900);color:#DCEAE3;padding:34px 64px;font-size:14.5px}
+.close b{color:#fff}
+@media(max-width:700px){.cover,.body,.close{padding-left:26px;padding-right:26px}.cover h1{font-size:29px}section>p,section>.steps,section>.note,section>.warn,section>.goal,section>.codewrap,section>.tablewrap,section>ul.chk,.lead-line{margin-left:0}}
+</style>
+</head>
+<body>
+<div class="doc">
+
+<div class="cover">
+  <div class="logo">MyKunda</div>
+  <div class="kicker">Backoffice · Google Workspace + Resend</div>
+  <h1>E-mailinstellingen in de Google Admin console</h1>
+  <p class="lede">Twee verzenders op één domein: Workspace stuurt jullie eigen post vanaf <code>info@</code>, Resend stuurt de automatische mail vanaf <code>noreply@</code>. Het DMARC-record staat al op <code>p=quarantine</code> met strikte DKIM-uitlijning — dat legt eisen op aan de Workspace-kant die Google standaard níet vervult. Drie kritieke punten, negen controles.</p>
+  <div class="meta">
+    <div><span>Datum</span><b>14 augustus 2026</b></div>
+    <div><span>Domein</span><b>mykunda.com</b></div>
+    <div><span>Verzenders</span><b>Workspace + Resend</b></div>
+    <div><span>Kritieke punten</span><b>3</b></div>
+  </div>
+</div>
+
+<div class="body">
+
+<section>
+  <div class="h-row"><span class="num">1</span><h2>Hoe de post nu loopt</h2></div>
+  <p class="lead-line">Uit de code van de site en de edge functions. Dit is de situatie waar de Workspace-instellingen op moeten passen.</p>
+  <div class="tablewrap">
+    <table>
+      <tr><th>Soort mail</th><th>Afzender</th><th>Verstuurd door</th><th>Ingesteld in</th></tr>
+      <tr><td>Jullie eigen post en antwoorden op leads</td><td><code>info@mykunda.com</code></td><td>Google Workspace</td><td>admin.google.com</td></tr>
+      <tr><td>Leadmelding aan het team</td><td><code>noreply@mykunda.com</code> · reply-to = bezoeker</td><td>Resend · <code>notify-lead</code></td><td>Supabase-secret <code>FROM_EMAIL</code></td></tr>
+      <tr><td>Bevestiging aan de klant, bon, bezichtiging</td><td><code>noreply@</code> · reply-to <code>info@</code></td><td>Resend · <code>notify-*</code></td><td>idem</td></tr>
+      <tr><td>Wachtwoord vergeten, magic link</td><td><code>noreply@</code></td><td>Resend · <code>auth-email</code></td><td>idem</td></tr>
+      <tr><td>Alles wat binnenkomt — leads, antwoorden, DMARC-rapporten</td><td>—</td><td>Google Workspace (MX)</td><td>admin.google.com</td></tr>
+    </table>
+  </div>
+  <div class="note"><b>De verdeling in één regel.</b> Resend verstuurt alleen; álle inkomende mail loopt via Workspace. Beide verzenders moeten onder <code>mykunda.com</code> authenticeren, want het DMARC-record geldt voor het hele domein — niet per verzender.</div>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">2</span><h2>Drie punten die het snelst stukgaan</h2></div>
+  <p class="lead-line">Dit zijn de plekken waar een Workspace-domein naast een externe verzender vrijwel altijd mis zit.</p>
+  <div class="steps">
+
+    <div class="s"><div class="tx"><b>DKIM staat in Workspace standaard uit — en jullie DMARC eist strikte uitlijning</b>
+      <p>Google ondertekent uitgaande mail pas met <code>d=mykunda.com</code> nadat je in de console zelf een sleutel genereert en op <b>Start authentication</b> klikt. Tot dat moment ondertekent Google met een adres als <code>mykunda-com.20230601.gappssmtp.com</code>. Dat is een ándere domeinnaam dan de afzender, en jullie record staat op <code>adkim=s</code> (strikt): dan geldt DKIM als mislukt. De mail leunt dan volledig op SPF — en SPF sneuvelt bij elke doorgestuurde mail en elke mailinglijst. Gevolg: post die je zelf vanaf <code>info@</code> naar een klant stuurt, kan bij <code>p=quarantine</code> in de spammap belanden.</p>
+      <div class="warn"><b>Eerste ding om te controleren.</b> Apps → Google Workspace → Gmail → <b>Authenticate email</b>. Er moet staan: <i>Authenticating email</i> met selector <code>google</code>. Staat er <i>Not authenticating email</i>, dan is dit het gat.</div></div></div>
+
+    <div class="s"><div class="tx"><b>Eén SPF-record, en de Resend-records op de juiste hoogte</b>
+      <p>Een domein mag maar één <code>v=spf1</code>-record hebben. Staan er twee — bijvoorbeeld het Google-record plus een los <code>include:amazonses.com</code> dat er ooit voor Resend bij is gezet — dan is het resultaat <code>permerror</code> en faalt SPF voor <b>alle</b> mail, van Workspace én van Resend. Resend hoort zijn eigen SPF en zijn bounce-MX op <code>send.mykunda.com</code> te hebben; de root houdt alleen het Google-record.</p>
+      <div class="note"><b>Alleen als Resend bij jullie op de root verstuurt</b> in plaats van op <code>send.</code>, dan één samengevoegd record: <code>v=spf1 include:_spf.google.com include:amazonses.com ~all</code> — nooit twee losse regels.</div></div></div>
+
+    <div class="s"><div class="tx"><b><code>noreply@</code> en <code>team@</code> bestaan waarschijnlijk niet als adres</b>
+      <p>Verzenden vanaf <code>noreply@mykunda.com</code> kan zonder mailbox — Resend vraagt Google niets. Maar klanten antwoorden nu eenmaal op de afzender in plaats van op reply-to, en dan stuurt Workspace een "address not found" terug naar de klant. Los dat op met een <b>alias</b> op de <code>info@</code>-gebruiker (Directory → Users → info@ → Alternate email addresses), niet met een zwart gat. En: in Resend stond <code>team@mykunda.com</code> gesuppressed na een bounce — dat adres bestaat kennelijk niet in Workspace. Maak het aan als groep, of haal het uit alles waar het nog in staat; anders bounct het bij de eerste verzending opnieuw.</p></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">3</span><h2>Na te lopen in admin.google.com</h2></div>
+  <p class="lead-line">Van boven naar beneden. Bij elke stap staat wat je moet zien, niet alleen waar je moet klikken.</p>
+  <div class="steps">
+
+    <div class="s"><div class="tx"><b>Account → Domains → Manage domains</b>
+      <p><code>mykunda.com</code> als primair domein, status verified, en Gmail geactiveerd voor dat domein. Zonder die activering zijn MX-records in DNS wél goed maar levert Google niets af.</p></div></div>
+
+    <div class="s"><div class="tx"><b>MX-records: één set, niet twee</b>
+      <p>Nieuwe opzet is één record: <code>smtp.google.com</code> op prioriteit 1. Oudere domeinen hebben de vijf <code>aspmx</code>-hosts. Beide werken, maar nooit door elkaar. Let vooral op resten van een vorige mailhoster — die vangen dan stil jullie leads af.</p>
+      <div class="warn"><b>Valkuil met Resend.</b> Resend geeft ook een MX-record (<code>feedback-smtp.…amazonses.com</code>). Dat hoort <b>uitsluitend</b> op <code>send.mykunda.com</code>. Staat het per ongeluk op de root, dan gaat inkomende mail naar Amazon in plaats van naar Gmail en ontvangt <code>info@</code> niets meer.</div></div></div>
+
+    <div class="s"><div class="tx"><b>Apps → Google Workspace → Gmail → Authenticate email</b>
+      <p>Domein kiezen, <b>Generate new record</b>, sleutellengte <b>2048</b>, prefix <code>google</code> laten staan. Google toont dan een TXT-record; die zet je bij de domeinhoster op <code>google._domainkey.mykunda.com</code>. Kom daarna terug en klik op <b>Start authentication</b> — die laatste klik wordt het vaakst vergeten en zonder die klik ondertekent Google nog steeds op de verkeerde naam.</p></div></div>
+
+    <div class="s"><div class="tx"><b>Directory → Users en Directory → Groups</b>
+      <p>Controleer drie adressen: <code>info@</code> is een echte mailbox die gelezen wordt · <code>noreply@</code> bestaat als alias op <code>info@</code> · <code>team@</code> bestaat óf komt nergens meer voor. Aliassen kosten geen extra licentie.</p></div></div>
+
+    <div class="s"><div class="tx"><b>Apps → Gmail → Safety → Spoofing and authentication</b>
+      <p>Laat deze bescherming <b>aan</b>, maar weet wat hij doet: een leadmelding komt van <code>noreply@mykunda.com</code>, wordt van buiten aangeleverd door Resend, en gaat naar <code>info@mykunda.com</code> — precies het patroon waar "inbound spoofing van je eigen domein" op mikt. Zolang de DKIM van Resend op <code>mykunda.com</code> uitlijnt, gaat dat goed. Landen leadmeldingen in quarantaine, kijk hier als eerste — en los het op door de authenticatie te repareren, niet door de bescherming uit te zetten.</p></div></div>
+
+    <div class="s"><div class="tx"><b>Reporting → Email log search</b>
+      <p>De enige plek met hard bewijs. Zoek op afzender <code>noreply@mykunda.com</code> over de laatste 30 dagen. Je ziet per bericht of het is afgeleverd bij <code>info@</code>, en met welk oordeel (inbox, spam, quarantaine). Nul resultaten betekent dat de meldingen jullie mailbox nooit hebben bereikt — dan zit het probleem vóór Google.</p></div></div>
+
+    <div class="s"><div class="tx"><b>Apps → Gmail → Routing</b>
+      <p>Geen catch-all default routing aanzetten: dat maakt elk verzonnen adres op het domein geldig en trekt spam aan. En de <b>SMTP relay service</b> hoeft niet aan — de site verstuurt niets via Google, alles gaat via Resend. Staat hij aan zonder reden, zet hem uit.</p></div></div>
+
+    <div class="s"><div class="tx"><b>Apps → Gmail → Compliance en Content compliance</b>
+      <p>Kijk of er geen regel is die mail van het eigen domein of van <code>noreply@</code> filtert, doorstuurt of vasthoudt. Zulke regels zijn de stille oorzaak van "we krijgen geen leads binnen" terwijl Resend netjes <i>delivered</i> meldt.</p></div></div>
+
+    <div class="s"><div class="tx"><b>Postmaster Tools — buiten de console, wel nodig</b>
+      <p>Voeg <code>mykunda.com</code> toe op <code>postmaster.google.com</code>. Dat is de enige gratis meter voor jullie spamklachtpercentage en de pass-rate van SPF, DKIM en DMARC bij Gmail-ontvangers. Met <code>p=quarantine</code> al live wil je dit kunnen zien in plaats van gokken.</p></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">4</span><h2>Hoe het DNS-geheel eruit hoort te zien</h2></div>
+  <p class="lead-line">Workspace en Resend naast elkaar, zonder elkaar in de weg te zitten. Alles bij de domeinhoster, niet in de console.</p>
+  <div class="tablewrap">
+    <table>
+      <tr><th>Host</th><th>Type</th><th>Waarde</th><th>Van wie</th></tr>
+      <tr><td><code>mykunda.com</code></td><td>MX 1</td><td><code>smtp.google.com</code> (of de vijf <code>aspmx</code>-hosts — niet beide)</td><td>Google</td></tr>
+      <tr><td><code>mykunda.com</code></td><td>TXT</td><td><code>v=spf1 include:_spf.google.com ~all</code> — precies één zo'n regel</td><td>Google</td></tr>
+      <tr><td><code>google._domainkey</code></td><td>TXT</td><td><code>v=DKIM1; k=rsa; p=…</code></td><td>Google, na Generate</td></tr>
+      <tr><td><code>resend._domainkey</code></td><td>TXT</td><td><code>p=…</code> — op <code>mykunda.com</code>, niet op <code>send.</code></td><td>Resend</td></tr>
+      <tr><td><code>send.mykunda.com</code></td><td>TXT</td><td><code>v=spf1 include:amazonses.com ~all</code></td><td>Resend</td></tr>
+      <tr><td><code>send.mykunda.com</code></td><td>MX 10</td><td><code>feedback-smtp.&lt;regio&gt;.amazonses.com</code></td><td>Resend</td></tr>
+      <tr><td><code>_dmarc</code></td><td>TXT</td><td><code>v=DMARC1; p=quarantine; rua=mailto:info@mykunda.com; adkim=s</code></td><td>huidige stand</td></tr>
+    </table>
+  </div>
+  <div class="warn"><b>Over die <code>adkim=s</code>.</b> Strikt betekent: de DKIM-ondertekening moet exact <code>mykunda.com</code> zijn. Dat klopt voor Resend (mits het domein daar als <code>mykunda.com</code> is toegevoegd), maar níet voor Workspace zolang DKIM daar niet is aangezet. Zet dus eerst DKIM aan in de console. Kan dat niet meteen, zet het record dan tijdelijk terug op de standaard-uitlijning — dat is veiliger dan strikt met een halve ondertekening:</div>
+  <div class="codewrap"><pre>v=DMARC1; p=quarantine; rua=mailto:info@mykunda.com</pre><button class="copy">Kopieer</button></div>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">5</span><h2>Testronde — twee mails, vijf minuten</h2></div>
+  <p class="lead-line">Test altijd naar een adres buiten het domein (gmail, outlook). Mail van <code>mykunda.com</code> naar <code>mykunda.com</code> gaat langs de filters heen en bewijst niets.</p>
+  <div class="steps">
+    <div class="s"><div class="tx"><b>Stuur vanaf <code>info@</code> een mail naar een Gmail-adres</b>
+      <p>Open daar de mail → drie puntjes → <b>Origineel weergeven</b>. Dit moet er staan; <code>header.d</code> is het veld dat alles bepaalt:</p>
+      <div class="codewrap"><pre>spf=pass    (mykunda.com)
+dkim=pass   header.i=@<b>mykunda.com</b>  header.s=google
+dmarc=<b>pass</b> (p=QUARANTINE) header.from=mykunda.com</pre><button class="copy">Kopieer</button></div>
+      <p>Staat er <code>header.d=…gappssmtp.com</code> of <code>dkim=fail</code>, dan is stap 3 van deel 3 nog niet gedaan.</p></div></div>
+
+    <div class="s"><div class="tx"><b>Vul een formulier op de site in met dat externe adres</b>
+      <p>Verwacht twee mails: de bevestiging bij het testadres, de melding bij <code>info@</code>. Controleer de melding óók in Email log search — inbox of spam. Bij de bevestiging: zelfde headercheck, maar dan met <code>header.s=resend</code> en weer <code>header.d=mykunda.com</code>.</p></div></div>
+
+    <div class="s"><div class="tx"><b>Kijk of de DMARC-rapporten binnenkomen</b>
+      <p><code>rua=mailto:info@mykunda.com</code> betekent dat Google, Microsoft en anderen dagelijks een XML-bestand naar die mailbox sturen. Komen die er niet, dan is het adres of het record niet in orde. Maak er een filter met label voor, anders vervuilen ze de inbox waar de leads in komen.</p></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">6</span><h2>Wat ik niet kan zien — en wat ik nodig heb</h2></div>
+  <p class="lead-line">Vanuit het project lees ik de code en de configuratie van de site; de Google Admin console en jullie DNS-zone kan ik niet inzien.</p>
+  <ul class="chk">
+    <li><b>Authenticate email:</b> staat er <i>Authenticating email</i> of <i>Not authenticating email</i>?</li>
+    <li><b>De TXT-regels op de root:</b> hoeveel regels beginnen met <code>v=spf1</code>, en wat staat er precies in?</li>
+    <li><b>De MX-set:</b> één <code>smtp.google.com</code>, de vijf <code>aspmx</code>-hosts, of iets ertussenin?</li>
+    <li><b>De drie adressen:</b> bestaan <code>noreply@</code> en <code>team@</code>, en wie leest <code>info@</code>?</li>
+    <li><b>De headertest</b> uit deel 5: de drie regels <code>spf=</code>, <code>dkim=</code>, <code>dmarc=</code> letterlijk overgenomen.</li>
+  </ul>
+  <div class="goal" style="margin-top:22px">
+    <h4>Uploaden</h4>
+    <p>Niets. Dit is een intern document — geen sitebestand gewijzigd, <code>deploy/</code> ongemoeid.</p>
+  </div>
+</section>
+
+</div>
+
+<div class="close">
+  <p><b>De kern:</b> <code>p=quarantine</code> met <code>adkim=s</code> is ingesteld toen de Resend-kant klopte, en voor Resend klopt het ook. Maar dat record geldt voor het hele domein — óók voor de mail die jij zelf vanuit Gmail verstuurt. Google ondertekent die pas op naam van <code>mykunda.com</code> ná één klik in de console. Zolang die klik ontbreekt, is jullie eigen post het zwakste onderdeel van een streng ingestelde configuratie.</p>
+</div>
+
+</div>
+<script>
+document.querySelectorAll('.copy').forEach(function(b){
+  b.addEventListener('click', function(){
+    var pre = b.parentElement.querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(function(){
+      b.textContent = 'Gekopieerd'; b.classList.add('done');
+      setTimeout(function(){ b.textContent = 'Kopieer'; b.classList.remove('done'); }, 1600);
+    });
+  });
+});
+</script>
+</body>
+</html>

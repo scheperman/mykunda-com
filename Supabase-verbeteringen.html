@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>MyKunda — Supabase-audit doorgevoerd, augustus 2026</title>
+<script src="doc-page.js"></script>
+<style>
+doc-page:not(:defined){visibility:hidden}
+:root{--g9:#0E2E25;--g7:#1C5848;--g2:#DCEAE3;--am:#B4711C;--am-bg:#FBF3E7;--ink:#16211D;--ink2:#3D4B45;--mut:#6B7B74;--line:#E2E8E4}
+doc-page{font-family:"Hanken Grotesk",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:var(--ink2);font-size:10.5pt;line-height:1.62}
+h1{font-size:26pt;line-height:1.1;letter-spacing:-.02em;color:var(--g9);margin:0 0 6px}
+.sub{font-size:11.5pt;color:var(--mut);margin:0 0 4px;line-height:1.5}
+.stamp{font-size:8.5pt;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:var(--am);margin-bottom:12px}
+h2{font-size:15pt;color:var(--g9);margin:30px 0 10px;letter-spacing:-.01em;padding-bottom:7px;border-bottom:2px solid var(--g2)}
+h3{font-size:11.5pt;color:var(--g7);margin:20px 0 6px}
+p{margin:0 0 9px}
+ul,ol{margin:0 0 10px;padding-left:19px}
+li{margin-bottom:5px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:9pt;background:#F1F5F3;padding:1px 5px;border-radius:3px;color:var(--g9);word-break:break-word}
+pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:8.5pt;line-height:1.5;background:var(--g9);color:#D9E7E1;padding:13px 15px;border-radius:6px;overflow-wrap:break-word;white-space:pre-wrap;margin:0 0 12px;break-inside:avoid}
+pre b{color:#F3C77A;font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:9pt;margin:0 0 14px}
+th{background:var(--g7);color:#fff;text-align:left;padding:8px 10px;font-weight:700;font-size:8pt;text-transform:uppercase;letter-spacing:.04em}
+td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.45}
+tr:nth-child(even) td{background:#F7FAF8}
+td code{background:none;padding:0;font-size:8.5pt}
+.tag{display:inline-block;font-size:7.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 7px;border-radius:20px;white-space:nowrap}
+.tfix{background:#DFF3E5;color:#1D6B36}
+.tkeep{background:#E8EDF5;color:#3A5378}
+.tno{background:#FDEBD4;color:#8A5510}
+.box{background:var(--am-bg);border:1px solid #F0DCC0;border-radius:7px;padding:14px 17px;margin:0 0 14px;break-inside:avoid;orphans:3;widows:3}
+.box b{color:var(--am)}
+.box.g{background:#F2F8F4;border-color:#D3E6D9}
+.box.g b{color:var(--g7)}
+.file{background:#F7FAF8;border-left:3px solid var(--g2);padding:11px 15px;margin:0 0 9px;break-inside:avoid;orphans:3;widows:3}
+.file b{color:var(--g9);font-size:10pt}
+.file p{margin:3px 0 0;font-size:9.5pt;color:var(--ink2)}
+.check{list-style:none;padding-left:0;counter-reset:c}
+.check li{position:relative;padding-left:30px;margin-bottom:9px;counter-increment:c;break-inside:avoid;orphans:3;widows:3}
+.check li::before{content:counter(c);position:absolute;left:0;top:1px;width:20px;height:20px;border-radius:50%;background:var(--g7);color:#fff;font-size:8.5pt;font-weight:700;display:flex;align-items:center;justify-content:center}
+.lead{font-size:11pt;color:var(--ink2);line-height:1.65;margin-bottom:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.kpi{background:#F7FAF8;border:1px solid var(--line);border-radius:7px;padding:12px 14px}
+.kpi .n{font-size:19pt;font-weight:700;color:var(--g9);line-height:1.1}
+.kpi .l{font-size:8.5pt;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-top:3px}
+hr{border:0;border-top:1px solid var(--line);margin:26px 0}
+.foot{font-size:8.5pt;color:var(--mut)}
+a{color:var(--g7)}
+a:hover{color:var(--g9)}
+</style>
+</head>
+<body>
+<doc-page margin="0.7in">
+
+<div class="stamp">MyKunda · mykunda.com</div>
+<h1>Supabase-audit: wat er nu gemaakt is</h1>
+<p class="sub">14 augustus 2026 — de bevindingen uit het auditrapport doorgevoerd waar dat kon. Vier bestanden in de site aangepast, één SQL-script met zeven secties klaargezet, en één punt dat open blijft omdat de code er niet ligt.</p>
+
+<div class="grid2" style="margin-top:20px">
+  <div class="kpi"><div class="n">4</div><div class="l">gewijzigde sitebestanden</div></div>
+  <div class="kpi"><div class="n">5 / 7</div><div class="l">SQL-secties gedraaid en bevestigd</div></div>
+</div>
+
+<div class="box"><b>Nagerekend tegen de levende database.</b><p style="margin-top:6px">Dit script is na oplevering regel voor regel tegen de echte policies, functierechten en cronjob-commando's gelegd. Dat leverde één echte fout op — <b>sectie 5 zou de nachtelijke marktindex-taak permanent hebben gebroken</b> in plaats van hem te repareren — plus twee kleinere afwijkingen. Alle drie zijn hieronder verwerkt; het losse vervolgscript <code>backend/audit-fixes-2.sql</code> bevat wat nog moet draaien. De correctie staat bij <i>Het SQL-script</i>.</p></div>
+
+<h2>De vier bevindingen met impact</h2>
+<p class="lead">Het rapport noemt drie zaken met directe impact op de website, plus een reeks technische adviezen. Hieronder per punt wat er nu staat.</p>
+
+<h3>1 · Bijna 7 op de 10 concepten bleef leeg <span class="tag tfix">opgelost</span></h3>
+<p><b>De oorzaak.</b> <code>list.html</code> riep <code>autoSaveDraft()</code> aan bij elke stapwissel — ook bij de eerste. Het moment dat iemand een woningtype aanklikte, stond er dus een rij in <code>listings</code> met als titel <code>" Villa"</code> (categorienaam, voorloopspatie) en prijs 0. Van de 24 concepten waren er 22 exact dat.</p>
+<p><b>Wat er nu gebeurt.</b> Opslaan in twee trappen. Alles wat de verkoper intypt staat vanaf de eerste toetsaanslag in zijn eigen browser; er komt pas een rij in de database zodra er een <b>gebied én een vraagprijs</b> is — stap 2 en stap 6. Tot dat moment meldt de balk bovenin <i>"Kept on this device"</i> in plaats van <i>"Progress saved"</i>, want dat laatste was een belofte die de site niet kon nakomen.</p>
+<p><b>En de naam.</b> De titel werd opgebouwd als <code>(feats[0]||'') + ' ' + catLabel()</code> — zonder kenmerk levert dat een spatie plus de categorie op. Er is nu één functie <code>draftTitle()</code>: de eigen titel van de verkoper als die er is, anders <code>"Villa in Kololi"</code>, en nooit meer een voorloopspatie.</p>
+<p><b>Verder gaan waar je gebleven was.</b> Onder de stapindicator staat een balk: <i>"Continue your draft — Villa in Kololi · Last edited 2 hours ago. Nothing is published until you finish the last step."</i> met <i>Continue</i> en <i>Start fresh</i>. Hij kijkt eerst naar het concept op het toestel (dat weet ook bij welke stap je was), anders naar het nieuwste concept in de database.</p>
+
+<h3>2 · 106 leads, allemaal nog op 'new' <span class="tag tfix">opgelost</span></h3>
+<p>Het leadoverzicht in de console was gesorteerd op nieuwste eerst, met een keuzelijst voor de fase. Prima om te lezen, onwerkbaar om af te handelen. Het is nu een werkblad:</p>
+<ul>
+<li><b>Standaard het filter "Needs action"</b> — alles wat nog open staat, met de <b>oudste onaangeraakte aanvraag bovenaan</b>. Dat is de aanvraag die het meeste geld kost. Naast het filter staat "Everything".</li>
+<li><b>Een wachttijd-chip als eerste kolom</b>: grijs, amber na 24 uur, rood na 48 uur. Rijen boven de 48 uur krijgen bovendien een lichte rode achtergrond.</li>
+<li><b>Eén knop "Mark contacted"</b> per nieuwe lead. De keuzelijst blijft staan voor de rest van de trechter, maar de eerste stap is nu één klik — opvolgen mag niet meer werk zijn dan negeren.</li>
+<li><b>Het kengetal "Total leads" is vervangen door "Waiting over 48h"</b>, in rood zodra het niet nul is.</li>
+</ul>
+
+<h3>3 · De marktindex mislukte stil <span class="tag tfix">opgelost</span></h3>
+<p>Twee kanten aan dit punt. <b>In de database</b>: de dubbele cronjob gaat eruit en de overgebleven nachtelijke taak draait binnen een advisory lock, zodat een volgende overlap wacht in plaats van te breken. Dit is het enige onderdeel dat <b>nog moet draaien</b> — de eerste versie van die sectie was fout, zie het kader hieronder. <b>Op het scherm</b>: <code>market.html</code> heeft naast de titel een versheidsbadge gekregen. Groen <i>"Updated 14 Aug 02:45 · nightly job on schedule"</i>, amber <i>"Last updated … · 2 days behind — the nightly job may have failed"</i>, rood <i>"Never calculated"</i>. De regel "Last calculated" bestond al, maar stond onderaan de pagina onder <i>How the index is built</i> — precies de plek waar niemand kijkt.</p>
+
+<h3>4 · Vier bevestigde betalingen die nooit verwerkt zijn <span class="tag tno">niet gedaan</span></h3>
+<p>Hier houd ik op, en dat is een bewuste keuze. De betaalkant zit <b>niet in dit project</b>: er is geen <code>payments</code>-tabel in <code>backend/</code>, en de edge functions <code>create-payment</code>, <code>modem-webhook</code> en <code>payment-status</code> staan in Supabase maar zijn hier nooit geschreven — <code>modempay.js</code> in de webroot is nog de sandbox-simulatie. Matching-logica repareren die ik niet kan lezen, is gokken met vier echte betalingen. Wat ik nodig heb, staat in <i>Drie dingen voor jou</i>.</p>
+
+<h2>Twee kleinere dingen die opvielen</h2>
+
+<h3>5 · Het prefill-blok stond er twee keer <span class="tag tfix">opgelost</span></h3>
+<p>Het blok dat de URL-parameters van de taxatietool uitleest (<code>?cat=&amp;area=&amp;price=</code>) stond twee keer in <code>list.html</code>: één keer correct op hoofdniveau, en één keer per ongeluk <i>binnen</i> <code>loadDraft()</code>. Die tweede kon een hervat concept overschrijven met oude URL-waarden. Er is nu één kopie, één keer aangeroepen.</p>
+
+<h3>6 · <code>market.html</code> werd op het toestel bewaard <span class="tag tfix">opgelost</span></h3>
+<p><code>sw.js</code> houdt ingelogde pagina's uit de cache — admin, dashboard, messages, list, checkout, auth, rates, sources, title-verification. <code>market.html</code> ontbrak in die lijst, terwijl het dezelfde soort pagina is: adminnavigatie, admin-guard, cijfers die niemand anders hoort te zien op een gedeelde telefoon. Toegevoegd. Bijeffect: de console is nooit meer een dag oud.</p>
+
+<hr>
+
+<h2>Het SQL-script</h2>
+<p><code>backend/audit-fixes.sql</code> — één bestand, zeven secties, idempotent: twee keer draaien verandert niets. Draai het in de SQL-editor van Supabase als <code>postgres</code> en lees de <code>NOTICE</code>-regels; die vertellen per sectie wat er gebeurd is.</p>
+
+<table>
+<tr><th style="width:52px">Sectie</th><th>Wat het doet</th></tr>
+<tr><td><b>1</b></td><td><code>spatial_ref_sys</code>: RLS aan met een publiek leesbeleid. <b>Werkt hier niet</b> — de tabel is eigendom van <code>supabase_admin</code> (de PostGIS-extensie), niet van <code>postgres</code>. De sectie slaat zichzelf over met een melding. Blijft dus een keuze: eigenaarschap laten overzetten via Supabase support, of het risico bewust accepteren. Bedenk daarbij dat de tabel nu niet alleen leesbaar maar ook <i>schrijfbaar</i> is met de anon-sleutel; dat is het punt, niet het lezen.</td></tr>
+<tr><td><b>2</b></td><td>De zes beheerfuncties van de publieke API af. Let op de valkuil: Postgres geeft <code>EXECUTE</code> standaard aan <code>PUBLIC</code>, dus alleen intrekken bij <code>anon</code> doet niets — de <code>PUBLIC</code>-grant moet eerst weg. <code>rebuild_market_index</code> houdt zijn recht voor <code>authenticated</code>, want de knop "Recalculate now" gebruikt hem en de functie controleert zelf al op <code>role='admin'</code> zodra er een token is. Het gat was juist de anonieme route: met <code>auth.uid()</code> leeg werd die controle overgeslagen.</td></tr>
+<tr><td><b>3</b></td><td>De ontbrekende indexen op foreign keys — vijf uit het rapport, plus <code>viewings.buyer_id</code> die de adviseur ná de eerste ronde meldde. Onschuldig bij 35 advertenties, een tabelscan per join bij 3.500.</td></tr>
+<tr><td><b>4</b></td><td><code>search_path</code> vastgezet op <code>wmedian</code>, <code>market_fingerprint</code> en <code>external_fingerprint</code>.</td></tr>
+<tr><td><b>5</b></td><td><b>Herschreven na controle — dit was fout.</b> De eerste versie las het bestaande cron-commando en herschreef het met een reguliere expressie. Dat commando bestaat uit vier losse <code>select …();</code>-regels, en de expressie was verankerd aan het begin van de tekst: alleen de eerste werd <code>perform</code>. PL/pgSQL weigert een kale <code>SELECT</code> zonder bestemming, dus de taak zou daarna <b>elke</b> nacht op een syntaxfout zijn gevallen, in plaats van ongeveer om de dag. Erger dan de fout die hij moest oplossen. Het commando staat nu voluit — alle vier de aanroepen als <code>perform</code>, gecontroleerd tegen de echte job. Slim parsen is hier vervangen door opschrijven wat er moet staan.</td></tr>
+<tr><td><b>6</b></td><td>RLS-prestaties: <code>auth.uid()</code> en <code>is_admin()</code> in een <code>(select …)</code>, zodat ze één keer per query worden uitgevoerd in plaats van per rij. Overlappende permissive policies samengevoegd tot één per actie. Rechten ongewijzigd — met één uitzondering die de controle vond: bij <code>profiles</code> stond de nieuwe insert-policy ook de gebruiker zelf toe. Onschuldig in de praktijk (de aanmeldtrigger is <code>security definer</code> en gaat buiten RLS om), maar het was een wijziging waar er geen hoorde te zijn. Staat weer op admin-only. Ook toegevoegd: de policy op <code>fx_rate_rejects</code>, de enige die de adviseur nog meldde.</td></tr>
+<tr><td><b>7</b></td><td>De 22 lege concepten naar <code>archived</code>, niet verwijderd: niets kwijt, en de reviewschermen tellen ze niet meer mee. De <code>select</code> om eerst te kijken staat er als commentaar boven.</td></tr>
+</table>
+
+<h3>Wat er inmiddels gedraaid is</h3>
+<p>Secties 2, 3, 4, 6 en 7 staan live en zijn door de beveiligings- en prestatieadviseur bevestigd: de zes beheerfuncties hebben geen anon- of <code>PUBLIC</code>-rechten meer (en de knop "Recalculate now" werkt nog), de indexen staan er, <code>search_path</code> staat vast, alle negen policies met de per-rij herevaluatie zijn opgelost en de meldingen over overlappende policies zijn verdwenen. De 22 lege concepten staan op <code>archived</code>: de verdeling is nu 6 actief, 4 in review, 2 concept, 1 afgewezen, 22 gearchiveerd — samen nog steeds 35.</p>
+<p><b>Wat nog moet draaien staat in <code>backend/audit-fixes-2.sql</code></b>: de gecorrigeerde cronjob-fix, <code>profiles insert</code> terug naar admin-only, de policy op <code>fx_rate_rejects</code> en de index op <code>viewings.buyer_id</code>. Vier korte secties, idempotent.</p>
+
+<h2>Bewust niet gedaan</h2>
+
+<div class="box"><b>PostGIS naar een eigen schema verhuizen.</b> <span class="tag tno">niet gedaan</span><p style="margin-top:6px">Dit is de gangbare aanbeveling en het advies klopt, maar het raakt elke verwijzing naar een <code>geography</code>-kolom in de database, in de views en in de edge functions. Dat hoort in een gepland onderhoudsmoment met een test erna, niet tussen de andere fixes.</p></div>
+
+<div class="box"><b>De RLS-policies automatisch laten herschrijven.</b> <span class="tag tkeep">bewust zo</span><p style="margin-top:6px">Je kunt met één <code>DO</code>-blok elke policy in het schema langslopen en <code>auth.uid()</code> met een reguliere expressie vervangen. Dat is precies het soort slimme oplossing waarvan je een half jaar later ontdekt dat één policy stiekem iets anders is gaan betekenen. Alle acht policies staan daarom voluit in het script, met <code>drop policy if exists</code> ervoor, zodat je ze kunt lezen.</p></div>
+
+<div class="box"><b>Een betaalstatuspagina op een schema dat ik niet ken.</b> <span class="tag tno">niet gedaan</span><p style="margin-top:6px">Een pagina "Betaling wordt verwerkt" die elke paar seconden een tabel bevraagt die misschien anders heet, is erger dan geen pagina: dan lijkt het te werken. Zie het punt hieronder — met de echte namen is dit een halve dag werk, inclusief de badge in het beheerpaneel voor webhooks die langer dan een kwartier onverwerkt blijven.</p></div>
+
+<h2>Drie dingen voor jou</h2>
+<ol class="check">
+<li><b>Draai <code>backend/audit-fixes-2.sql</code></b> in de SQL-editor van Supabase. Dat is de rest: de gecorrigeerde cronjob, de twee policies en de index. Controleer de volgende ochtend <code>cron.job_run_details</code> — de query staat als commentaar onder sectie 1. Dat is de eerste keer dat je kunt zien dát de nachtelijke taak slaagt, en niet alleen dat hij bestaat.</li>
+<li><b>Zet "Leaked password protection" aan</b> onder Authentication → Policies. Eén vinkje, en het enige auditpunt dat geen code kan oplossen.</li>
+<li><b>Stuur me de betaalkant.</b> Concreet: hoe heet de tabel met de ModemPay-webhookevents en welke kolommen heeft hij (<code>applied</code>, <code>payment_id</code>, <code>provider_intent_id</code>?), en hoe ziet <code>payments</code> eruit. Met die twee schema's bouw ik de statuspagina, de e-mailbevestiging die pas afgaat ná koppeling, en het signaal in het beheerpaneel — dan valt zo'n vastgelopen betaling niet meer pas bij een audit op.</li>
+</ol>
+
+<hr>
+
+<h2>Uploaden</h2>
+<p>Vier bestanden, allemaal al bijgewerkt in <code>deploy/</code>. Upload ze naar de webroot met overschrijven aan:</p>
+
+<div class="file"><b>list.html</b><p>De opslag in twee trappen, <code>draftTitle()</code>, de hervat-balk en het opgeruimde prefill-blok.</p></div>
+<div class="file"><b>admin.html</b><p>Het leadwerkblad: filter, sortering op ouderdom, 48-uursmarkering, "Mark contacted" en het nieuwe kengetal.</p></div>
+<div class="file"><b>market.html</b><p>De versheidsbadge naast de titel.</p></div>
+<div class="file"><b>sw.js</b><p><code>market.html</code> uit de cache. <b>Geen nieuwe cacheversie</b>: het versiestempel en <code>mk-v15</code> blijven staan, dus terugkerende bezoekers halen geen enkel bestand opnieuw op. Dat is bewust — een bump kost iedereen op 4G een volledige herdownload van css en js voor een wijziging van één regel.</p></div>
+
+<div class="box g"><b>Niet uploaden:</b> <code>backend/audit-fixes.sql</code> en <code>backend/audit-fixes-2.sql</code> horen niet in de webroot. Die draaien in de SQL-editor van Supabase.</div>
+
+<div class="box g"><b>Na het uploaden, twee controles.</b> Open <code>list.html</code>, kies een woningtype en klik door naar stap 2: rechtsboven moet <i>"Kept on this device"</i> staan. Kijk daarna in Supabase of <code>select count(*) from listings where status = 'draft'</code> stil blijft staan terwijl je doorklikt — pas na het invullen van gebied én prijs komt er een rij bij.</div>
+
+<p class="foot">Supabase-audit doorgevoerd · 14 augustus 2026 · gewijzigd: list.html, admin.html, market.html, sw.js · toegevoegd: backend/audit-fixes.sql, backend/audit-fixes-2.sql · gedraaid: secties 2, 3, 4, 6, 7 · open: de cronjob-fix, het vinkje bij Auth, spatial_ref_sys en de betaalkoppeling.</p>
+
+</doc-page>
+</body>
+</html>

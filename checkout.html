@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0y7xtz6--><!--/mk-mark-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
+<link rel="apple-touch-icon" href="images/mykunda-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#15463A">
+<title>Checkout — MyKunda</title>
+<meta name="description" content="Secure MyKunda checkout. Pay with Wave, Afrimoney, QMoney, APS Wallet, Visa/Mastercard or bank transfer — online payments processed by Waychit, a licensed Gambian payment provider.">
+<noscript></noscript>
+<link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
+<link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.min.css?v=1787660000000">
+<style>
+body{background:var(--paper-2)}
+.co{max-width:1040px;margin:0 auto;padding:34px 28px 70px}
+.co-back{display:inline-flex;align-items:center;gap:8px;font-size:14.5px;font-weight:600;color:var(--muted);margin-bottom:20px}
+.co-back:hover{color:var(--green-700)}
+.co-head{margin-bottom:28px}
+.co-head .eyebrow{font-family:var(--sans);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--amber-600);margin-bottom:9px}
+.co-head h1{font-size:32px}
+.co-head p{color:var(--muted);font-size:15.5px;margin-top:6px}
+
+.co-grid{display:grid;grid-template-columns:1fr 360px;gap:34px;align-items:start}
+
+.block{background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-sm);padding:26px 28px;margin-bottom:22px}
+.block > h2{font-size:19px;margin-bottom:4px}
+.block > .sub{font-size:14px;color:var(--muted);margin-bottom:20px;text-wrap:pretty}
+
+/* one flat list of the six methods the server accepts — no group tiles to
+   pick first, so every wallet is named exactly once on the page */
+.paylist{display:grid;gap:8px;margin-bottom:16px}
+.pl-group{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:14px 0 2px}
+.pl-group:first-child{margin-top:0}
+.payopt{display:flex;align-items:center;gap:13px;width:100%;text-align:left;border:1.5px solid var(--line);border-radius:var(--r-md);padding:12px 16px;background:var(--white);cursor:pointer;transition:.15s;min-height:62px;font-family:var(--sans)}
+.payopt:hover{border-color:var(--green-500)}
+.payopt.sel{border-color:var(--green-700);background:var(--green-50);box-shadow:inset 0 0 0 1px var(--green-700)}
+.payopt .radio{width:21px;height:21px;border-radius:50%;border:2px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;transition:.13s}
+.payopt.sel .radio{border-color:var(--green-700)}
+.payopt.sel .radio::after{content:"";width:11px;height:11px;border-radius:50%;background:var(--green-700)}
+.po-logo{width:36px;height:36px;border-radius:9px;flex:none;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:700;font-size:15px;color:#fff}
+.po-logo.sm{font-size:11px;letter-spacing:.02em}
+.po-cards{background:var(--paper-2);gap:3px}
+.po-cards i{width:11px;height:11px;border-radius:3px;display:block}
+.po-txt{display:flex;flex-direction:column;gap:1px}
+.po-txt b{font-size:15px;color:var(--ink);font-weight:700}
+.po-txt small{font-size:12.5px;color:var(--muted)}
+
+/* hosted-page explainer for the selected method */
+.hosted{display:flex;gap:12px;align-items:flex-start;background:var(--paper);border-radius:var(--r-md);padding:15px 17px}
+.hosted svg{color:var(--green-600);flex:none;margin-top:2px}
+.hosted p{font-size:13.5px;color:var(--ink-2);line-height:1.55;margin:0;text-wrap:pretty}
+.hosted b{color:var(--ink);font-weight:700}
+
+.pay-flag{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted);margin-top:18px;text-wrap:pretty}
+.pay-flag svg{color:var(--green-600);flex:none}
+
+/* error box */
+.co-err{display:flex;gap:11px;align-items:flex-start;background:var(--amber-50);border:1.5px solid var(--amber-200);border-radius:var(--r-md);padding:14px 16px;margin-bottom:16px;font-size:14px;line-height:1.55;color:var(--amber-900);text-wrap:pretty}
+.co-err[hidden]{display:none}
+.co-err svg{flex:none;margin-top:2px}
+
+/* order summary */
+.summary{position:sticky;top:28px;background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-md);overflow:hidden;border:1px solid var(--line)}
+.summary-head{padding:22px 24px 18px;border-bottom:1px solid var(--line-2)}
+.summary-head h3{font-size:18px}
+.plan-line{display:flex;align-items:flex-start;gap:14px;padding:20px 24px;border-bottom:1px solid var(--line-2)}
+.plan-line .badge-ic{width:44px;height:44px;border-radius:12px;background:var(--green-50);color:var(--green-700);display:flex;align-items:center;justify-content:center;flex:none}
+.plan-line .pl-info{flex:1}
+.plan-line .pl-name{font-family:var(--serif);font-size:17px;font-weight:600}
+.plan-line .pl-desc{font-size:13px;color:var(--muted);margin-top:2px;line-height:1.45}
+.plan-line .pl-price{font-weight:800;font-size:17px;color:var(--ink)}
+.sum-rows{padding:18px 24px}
+.sum-row{display:flex;justify-content:space-between;font-size:14px;color:var(--ink-2);padding:6px 0}
+.sum-row .muted{color:var(--muted)}
+.sum-total{display:flex;justify-content:space-between;align-items:baseline;padding:18px 24px;border-top:1.5px solid var(--line);background:var(--paper)}
+.sum-total .k{font-weight:700;font-size:15px}
+.sum-total .v{font-family:var(--serif);font-size:28px;font-weight:700;color:var(--green-700)}
+.sum-foot{padding:0 24px 24px}
+.trust-line{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);margin-top:14px}
+.trust-line svg{color:var(--green-600);flex:none}
+
+/* bank transfer details (returned by the server) */
+.bank-ref{background:var(--green-50);border:1.5px dashed var(--green-500);border-radius:var(--r-md);padding:16px 18px;margin-bottom:18px;text-align:left}
+.bank-ref .brk{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--green-700)}
+.bank-ref .brv{font-family:var(--sans);font-size:24px;font-weight:800;color:var(--ink);letter-spacing:.04em;margin-top:4px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cpy{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-2);background:var(--white);border:1.5px solid var(--line);border-radius:var(--r-pill);padding:4px 11px;cursor:pointer;transition:.15s;flex:none}
+.cpy:hover{border-color:var(--green-500);color:var(--green-700)}
+.cpy.done{background:var(--green-600);border-color:var(--green-600);color:#fff}
+.swift-tip{background:var(--paper-2);border-radius:var(--r-md);padding:13px 16px;margin-top:12px;font-size:13px;color:var(--ink-2);line-height:1.6;text-align:left}
+.swift-tip b{color:var(--ink);font-weight:700}
+.bank-ref .brn{font-size:12.5px;color:var(--ink-2);margin-top:7px;line-height:1.5}
+.bank-det{border:1.5px solid var(--line);border-radius:var(--r-md);overflow:hidden;text-align:left}
+.bank-det .bd-row{display:flex;justify-content:space-between;gap:16px;padding:12px 16px;font-size:14px;border-bottom:1px solid var(--line-2)}
+.bank-det .bd-row:last-child{border-bottom:none}
+.bank-det .bd-row span{color:var(--muted)}
+.bank-det .bd-row b{color:var(--ink);font-weight:700;text-align:right;display:flex;align-items:center;justify-content:flex-end;gap:9px;flex-wrap:wrap}
+
+/* escrow / trust notices */
+.notice{display:flex;gap:12px;align-items:flex-start;background:var(--paper);border-radius:var(--r-md);padding:15px 17px;margin-top:18px}
+.notice svg{color:var(--amber-600);flex:none;margin-top:1px}
+.notice p{font-size:13.5px;color:var(--ink-2);line-height:1.55;margin:0}
+.notice b{font-weight:700;color:var(--ink)}
+.mp-line{display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-top:16px;padding-top:16px;border-top:1px solid var(--line-2);text-wrap:pretty}
+.mp-badge{display:inline-flex;align-items:center;gap:7px;font-weight:700;color:var(--ink-2)}
+.mp-badge .mp-dot{width:8px;height:8px;border-radius:50%;background:var(--green-600)}
+
+/* result screen */
+.success{max-width:620px;margin:40px auto;background:var(--white);border-radius:var(--r-xl);box-shadow:var(--sh-md);padding:44px;text-align:center}
+@media(max-width:560px){.success{padding:30px 22px;border-radius:var(--r-lg)}}
+.success .seal{width:80px;height:80px;border-radius:50%;background:var(--green-50);color:var(--green-700);display:flex;align-items:center;justify-content:center;margin:0 auto 22px}
+.success h1{font-size:29px;margin-bottom:12px}
+.success p{color:var(--muted);font-size:15.5px;line-height:1.6;margin-bottom:18px;text-wrap:pretty}
+.success-actions{display:flex;gap:12px;justify-content:center;margin-top:22px;flex-wrap:wrap}
+
+@media(max-width:480px){
+  .co{padding:28px 16px 50px}
+  .block{padding:22px 18px}
+}
+
+@media(max-width:880px){
+  .co-grid{grid-template-columns:1fr}
+  .summary{position:static}
+}
+</style>
+<meta property="fb:pages" content="61593360783009">
+<meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
+</head>
+<body>
+<div id="header"></div>
+
+<div class="co" id="coRoot">
+  <a class="co-back" id="coBack" href="sell.html#pricing"><span id="backIc"></span> Back to plans</a>
+  <div class="co-head">
+    <div class="eyebrow">Secure checkout</div>
+    <h1 id="coTitle">Complete your purchase</h1>
+    <p id="coSubtitle">Pay once — no commission, no recurring fees.</p>
+  </div>
+
+  <div class="co-grid">
+    <div class="co-main">
+      <!-- payment method -->
+      <div class="block">
+        <h2>Payment method</h2>
+        <div class="sub">Pay by mobile money or card, or by bank transfer. Online payments are processed by Waychit, a licensed Gambian payment provider. MyKunda never sees your card or wallet details.</div>
+        <div class="paylist" id="payList">
+          <div class="pl-group">Mobile money</div>
+          <button type="button" class="payopt sel" data-m="wave">
+            <span class="radio"></span>
+            <span class="po-logo" style="background:#1DC8FF"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M3 12c2-4.5 5-4.5 6 0s4 4.5 6 0 4-4.5 6 0"/></svg></span>
+            <span class="po-txt"><b>Wave</b><small>Most used in The Gambia</small></span>
+          </button>
+          <button type="button" class="payopt" data-m="afrimoney">
+            <span class="radio"></span>
+            <span class="po-logo" style="background:#5B2D8E">A</span>
+            <span class="po-txt"><b>Afrimoney</b><small>Africell wallet</small></span>
+          </button>
+          <button type="button" class="payopt" data-m="qmoney">
+            <span class="radio"></span>
+            <span class="po-logo" style="background:#E2231A">Q</span>
+            <span class="po-txt"><b>QMoney</b><small>QCell wallet</small></span>
+          </button>
+          <button type="button" class="payopt" data-m="aps">
+            <span class="radio"></span>
+            <span class="po-logo sm" style="background:#0E7A4F">APS</span>
+            <span class="po-txt"><b>APS Wallet</b><small>Agents and upcountry</small></span>
+          </button>
+          <div class="pl-group">Card and bank</div>
+          <button type="button" class="payopt" data-m="card">
+            <span class="radio"></span>
+            <span class="po-logo po-cards"><i style="background:#1A1F71"></i><i style="background:#EB001B"></i></span>
+            <span class="po-txt"><b>Card</b><small>Visa or Mastercard, also issued abroad</small></span>
+          </button>
+          <button type="button" class="payopt" data-m="bank_transfer">
+            <span class="radio"></span>
+            <span class="po-logo" style="background:#3A5247"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M3 10h18M12 3l9 7H3z"/><path d="M6 10v8M10 10v8M14 10v8M18 10v8"/></svg></span>
+            <span class="po-txt"><b>Bank transfer</b><small>From any bank, in The Gambia or abroad</small></span>
+          </button>
+        </div>
+
+        <div class="hosted">
+          <span id="noteIc"></span>
+          <p id="noteText"></p>
+        </div>
+
+        <div class="notice">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+          <p><b>MyKunda only charges listing and service fees.</b> We never collect a deposit, down payment or the purchase price of a property. Anyone asking you to send property money through this site or to a personal account is committing fraud — pay through your lawyer's or notary's escrow account and tell us immediately.</p>
+        </div>
+
+        <div class="mp-line">
+          <span class="mp-badge"><span class="mp-dot"></span> Waychit</span>
+          <span>Online payments are processed by Waychit, a licensed Gambian payment provider. MyKunda never sees your card or wallet details.</span>
+        </div>
+      </div>
+
+      <div class="co-err" id="coErr" hidden>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4.5"/><path d="M12 16h.01"/></svg>
+        <span id="coErrText"></span>
+      </div>
+
+      <button class="btn btn-primary" id="payBtn" style="width:100%;height:56px;font-size:16.5px">Continue to payment <span id="payAmt"></span></button>
+      <div class="pay-flag"><span id="lockIc"></span> <span><span id="payFlagText"></span> <span id="payAcct"></span></span></div>
+      <p class="form-legal">By paying you agree to our <a href="legal-terms.html">Terms of Service</a> — including <a href="legal-terms.html#terms-4">plans, fees &amp; payments</a> — and to our <a href="legal-privacy.html">Privacy Policy</a>.</p>
+    </div>
+
+    <!-- order summary -->
+    <aside class="summary">
+      <div class="summary-head"><h3>Order summary</h3></div>
+      <div class="plan-line">
+        <span class="badge-ic" id="planIc"></span>
+        <div class="pl-info">
+          <div class="pl-name" id="sumPlanName">Verified listing</div>
+          <div class="pl-desc" id="sumPlanDesc">Title check, Verified badge &amp; priority placement</div>
+        </div>
+        <div class="pl-price" id="sumPlanPrice">$99</div>
+      </div>
+      <div class="sum-rows">
+        <div class="sum-row"><span class="muted">Subtotal</span><span id="sumSub">$99.00</span></div>
+        <div class="sum-row"><span class="muted">Processing fee</span><span id="sumFee">$0.00</span></div>
+      </div>
+      <div class="sum-total"><span class="k">Total due</span><span class="v" id="sumTotal">$99.00</span></div>
+      <div class="sum-foot">
+        <div class="trust-line"><span id="t1"></span> One-time payment · valid 6 months</div>
+        <div class="trust-line"><span id="t2"></span> Verified badge goes live once the check is complete</div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<div id="footer"></div>
+
+<script src="app.min.js?v=1787660000000"></script>
+<script src="image-slot.js?v=1787660000000" defer></script>
+<script>
+/* 4G: the Supabase client (~205 KB) is not needed to paint this page. It downloads
+   in parallel and every backend call awaits window.__sbReady. */
+window.__sbReady=new Promise(function(res){
+  var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
+  s1.onerror=function(){ window.supabase=null; res(); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=1787660000000'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  document.head.appendChild(s1);
+});
+</script>
+<script>
+document.getElementById('header').innerHTML = headerHTML('List', false);
+document.getElementById('footer').innerHTML = footerHTML();
+
+backIc.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>';
+lockIc.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+const checkSm='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+t1.innerHTML=t2.innerHTML=checkSm;
+planIc.innerHTML='<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6z"/><path d="m9 12 2 2 4-4"/></svg>';
+
+// ---- plan config ----
+const PLANS={
+  verified:{name:'Verified listing',desc:'Title check, Verified badge & priority placement',priceGMD:4500,foot:['Priced by your asking price · valid 6 months','Verified badge goes live once the check is complete']},
+  boost:{name:'Boost',desc:'Top of search & homepage for 30 days',priceGMD:2500,foot:['One-time payment · 30 days · renewable','Live as soon as the payment is confirmed']},
+  /* Parked — Managed returns once a partner estate agency is signed:
+  managed:{name:'Managed service',desc:'An established Gambian estate agency runs your listing, viewings included',priceGMD:30000,foot:['Priced by your asking price · listed until sold','A partner agency and your named agent are assigned once the payment lands']}, */
+  /* Buyer-side product — bought on verify.html, not part of a listing plan. */
+  'ownership-standard':{name:'Ownership Verification · Document Check',desc:'Independent check of the documents on a property you are buying',priceGMD:3500,foot:['One flat fee · never a percentage of the price','The report is addressed to you, not to a listing']},
+  'ownership-full':{name:'Ownership Verification · Full Check',desc:'Documents, registry search and a site inspection, reported to you',priceGMD:20000,foot:['Base fee · the site visit is quoted per property','The report is addressed to you, not to a listing']},
+};
+// De front-end sleutels hierboven zijn niet dezelfde als de id's in de tabel
+// listing_plans op de server. De server zoekt plan_id letterlijk op, dus
+// vertaal hier voordat het verzoek de deur uit gaat. `verified` gaat bewust
+// ongewijzigd mee: de server kiest zelf de band (verified_s/m/l) aan de hand
+// van de vraagprijs van de listing.
+const SERVER_PLAN_IDS = {
+  'verified':            'verified',
+  'boost':               'boost_30',
+  'ownership-standard':  'doc_check',
+  'ownership-full':      'ownership_check',
+};
+const planKey = (qs('plan')&&PLANS[qs('plan')])?qs('plan'):'verified';
+const plan = PLANS[planKey];
+const isOwnership = planKey.indexOf('ownership')===0;
+const listingId = qs('listing') || null;
+
+/* De aanvraag die verify.html in localStorage achterliet. Alleen bij de
+   koperproducten: een verkoperplan hangt aan een listing en heeft geen
+   intake. Ouder dan een etmaal negeren we — dan hoort hij bij een eerdere
+   sessie en zou hij aan de verkeerde bestelling geplakt worden. */
+const OWNERSHIP_KEY = 'mykunda_ownership_request';
+const intake = (function readIntake(){
+  if(!isOwnership) return null;
+  try{
+    const raw = localStorage.getItem(OWNERSHIP_KEY);
+    if(!raw) return null;
+    const o = JSON.parse(raw);
+    if(!o || typeof o !== 'object') return null;
+    const at = Date.parse(o.at || '');
+    if(isFinite(at) && Date.now() - at > 86400000) return null;
+    return o;
+  }catch(e){ return null; }
+})();
+const contactEmail = (intake && typeof intake.email === 'string' && intake.email.trim()) ? intake.email.trim() : null;
+
+/* The listing wizard passes the value band and the exact amount it quoted, so
+   checkout always shows what the seller was shown. The amount that is CHARGED
+   comes from listing_plans on the server — the browser never sends a price. */
+(function applyBand(){
+  if(typeof PRICING !== 'undefined'){
+    if(PLANS.verified) PLANS.verified.priceGMD = PRICING.bands[0].verified.gmd;
+    if(PLANS.boost && PRICING.boost) PLANS.boost.priceGMD = PRICING.boost.gmd;
+    if(PRICING.ownership){
+      if(PLANS['ownership-standard']) PLANS['ownership-standard'].priceGMD = PRICING.ownership.standard.gmd;
+      if(PLANS['ownership-full'])     PLANS['ownership-full'].priceGMD     = PRICING.ownership.full.gmd;
+    }
+  }
+  var amt = parseInt(qs('amount')||'',10);
+  var band = parseInt(qs('band')||'',10);
+  if(amt>0) plan.priceGMD = amt;
+  plan.fullGMD = plan.priceGMD;
+  if(band>=1 && band<=3 && planKey==='verified'){
+    plan.foot[0] = 'Band ' + band + ' of 3 · set by your asking price · valid 6 months';
+  }
+})();
+
+document.getElementById('sumPlanName').textContent=plan.name;
+document.getElementById('sumPlanDesc').textContent=plan.desc;
+document.getElementById('sumPlanPrice').textContent=CURRENCIES[getCurrency()].symbol+Math.round(plan.priceGMD/CURRENCIES.GMD.rate*CURRENCIES[getCurrency()].rate).toLocaleString();
+document.getElementById('coTitle').textContent = isOwnership ? 'Pay for your ownership check' : 'Get '+plan.name.replace(' listing','').replace(' service','');
+if(isOwnership){
+  var coBack=document.getElementById('coBack');
+  coBack.href='verify.html#pricing'; coBack.lastChild.textContent=' Back to ownership checks';
+  document.getElementById('coSubtitle').textContent='One flat fee for this property — never a percentage of what you pay the seller.';
+}
+t1.parentElement.childNodes[1].textContent=' '+plan.foot[0];
+t2.parentElement.childNodes[1].textContent=' '+plan.foot[1];
+
+function money(n){ var c=CURRENCIES[getCurrency()]; return c.symbol+Math.round(n/CURRENCIES.GMD.rate*c.rate).toLocaleString(); }
+function recalc(){
+  document.getElementById('sumSub').textContent=money(plan.priceGMD);
+  document.getElementById('sumFee').textContent=money(0);
+  document.getElementById('sumTotal').textContent=money(plan.priceGMD);
+  document.getElementById('payAmt').textContent='';
+}
+recalc();
+
+// ---- accepted payment strip: the list below IS the accepted list ----
+
+/* ---- payment method ----
+   The data-m on each row is the value create-payment accepts, verbatim:
+   wave, afrimoney, qmoney, aps, card, bank_transfer. Nothing else. */
+const NOTES = {
+  wallet: ["<b>You'll confirm the payment on Waychit's secure page.</b> Your choice here tells us which wallet you meant to use \u2014 on Waychit's page you can still pick another one.", 'lock'],
+  card:   ["<b>You'll enter your card details on Waychit's secure page.</b> Your bank may ask you to confirm the payment with 3-D Secure. MyKunda never sees your card number.", 'lock'],
+  bank:   ['<b>We show the account details and your payment reference on the next step</b> \u2014 and email them to you. Quote that reference exactly when you make the transfer; without it we cannot match your payment to your listing.', 'bank']
+};
+const NOTE_IC = {
+  lock: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>',
+  bank: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M3 10h18M12 3l9 7H3z"/><path d="M6 10v8M10 10v8M14 10v8M18 10v8"/></svg>'
+};
+const FLAG = {
+  wallet: "You approve the payment on Waychit's secure page. Your plan activates as soon as the payment is confirmed.",
+  card:   "You enter your card details on Waychit's secure page. Your plan activates as soon as the payment is confirmed.",
+  bank:   'We confirm your transfer by email as soon as it lands. You can cancel a listing any time.'
+};
+let selMethod = 'wave';
+function kindOf(m){ return m === 'bank_transfer' ? 'bank' : m === 'card' ? 'card' : 'wallet'; }
+function paint(){
+  const kind = kindOf(selMethod);
+  document.getElementById('noteText').innerHTML = NOTES[kind][0];
+  document.getElementById('noteIc').innerHTML = NOTE_IC[NOTES[kind][1]];
+  document.getElementById('payBtn').firstChild.textContent = kind === 'bank' ? 'Show my transfer details ' : 'Continue to payment ';
+  document.getElementById('payFlagText').textContent = FLAG[kind];
+}
+document.querySelectorAll('.payopt').forEach(o => o.addEventListener('click', () => {
+  document.querySelectorAll('.payopt').forEach(x => x.classList.remove('sel'));
+  o.classList.add('sel'); selMethod = o.dataset.m; hideError(); paint();
+}));
+paint();
+
+function methodValue(){ return selMethod; }
+
+/* ---- errors ----
+   Every message the server can return, in the customer's words. An unknown
+   error falls back to one plain line — never a raw code on the screen. */
+const ERRORS={
+  gateway_rejected:            d => 'The payment provider declined this request.' + (d && d.message ? ' ' + d.message : ''),
+  /* A bank transfer never touches the provider — naming it there sends the
+     customer looking for a problem on the wrong side. */
+  gateway_unreachable:         () => kindOf(selMethod)==='bank'
+    ? "We couldn't put your transfer details together just now. Nothing has been charged. Please try again in a minute — if it keeps failing, email info@mykunda.com and we will send them to you by hand."
+    : "We couldn't reach the payment provider. Please try again.",
+  gateway_not_configured:      () => 'Card and mobile money are temporarily unavailable. Please use bank transfer.',
+  amount_exceeds_wallet_limit: () => 'This amount is above the limit for that wallet. Please use card or bank transfer.',
+  listing_required_for_verified: () => 'Select the listing you want to verify first.',
+  verified_is_for_sale_listings_only: () => 'Verified is only available for properties for sale.',
+  invalid_contact_email: () => 'The email address on your request does not look right. Please go back and check it.',
+  too_many_payments_today: () => 'You have started a lot of payments today. Please wait a while, or email info@mykunda.com and we will help you finish this one by hand.'
+};
+function showError(d){
+  const key = d && d.error;
+  let text;
+  if(key && ERRORS[key]) text = ERRORS[key](d);
+  else text = "We couldn't start this payment." + (d && d.reference ? ' Nothing has been charged. Quote reference ' + d.reference + ' if you contact us.' : ' Nothing has been charged — please try again, or contact us and we will help.');
+  document.getElementById('coErrText').textContent = text;
+  document.getElementById('coErr').hidden = false;
+}
+function hideError(){ document.getElementById('coErr').hidden = true; }
+function busy(on){
+  const b=document.getElementById('payBtn');
+  b.disabled=on; b.style.opacity=on?'.72':'';
+  if(on){ b.dataset.label=b.firstChild.textContent; b.firstChild.textContent='One moment… '; }
+  else if(b.dataset.label){ b.firstChild.textContent=b.dataset.label; }
+}
+
+function signInAndReturn(){
+  location.href = 'auth.html?next=' + encodeURIComponent('checkout.html' + location.search);
+}
+async function session(){
+  if(window.__sbReady) await window.__sbReady;
+  try{
+    if(typeof sb!=='undefined' && sb){
+      const { data } = await sb.auth.getSession();
+      if(data && data.session) return data.session;
+    }
+  }catch(e){}
+  return null;
+}
+
+/* Show where the confirmation goes, once the session is known. Its own
+   element, so switching method does not wipe it. For an ownership check the
+   buyer typed an address on verify.html — that one wins over the account he
+   happens to be signed in with. */
+(async function whoami(){
+  if(contactEmail){
+    document.getElementById('payAcct').textContent = 'Confirmation goes to ' + contactEmail + '.';
+    return;
+  }
+  const s = await session();
+  if(s && s.user && s.user.email){
+    document.getElementById('payAcct').textContent = 'Confirmation goes to ' + s.user.email + '.';
+  }
+})();
+
+// ---- pay ----
+document.getElementById('payBtn').addEventListener('click', async () => {
+  hideError();
+  const s = await session();
+  if(!s) return signInAndReturn();
+  busy(true);
+  let data = {}, status = 0;
+  try{
+    const base = (typeof MYKUNDA_FN_URL!=='undefined' && MYKUNDA_FN_URL) ? MYKUNDA_FN_URL : 'https://jejaerpqltqryqzjvbjp.supabase.co/functions/v1';
+    const headers = { 'Authorization':'Bearer '+s.access_token, 'Content-Type':'application/json' };
+    if(typeof MYKUNDA_SUPABASE_ANON!=='undefined') headers.apikey = MYKUNDA_SUPABASE_ANON;
+    const r = await fetch(base+'/create-payment', {
+      method:'POST', headers: headers,
+      body: JSON.stringify({
+        plan_id: SERVER_PLAN_IDS[planKey] || planKey,
+        method: methodValue(),
+        listing_id: listingId,
+        display_currency: getCurrency(),
+        /* Beide optioneel. Zonder deze twee viel de server terug op het
+           accountadres en verdween de aanvraag; zie de toelichting bovenaan
+           create-payment. De server valideert de vorm en snoeit de intake. */
+        ...(contactEmail ? { contact_email: contactEmail } : {}),
+        ...(intake ? { intake: intake } : {})
+      })
+    });
+    status = r.status;
+    data = await r.json().catch(()=>({}));
+  }catch(e){
+    busy(false);
+    return showError({ error:'gateway_unreachable' });
+  }
+  if(status===401 || status===403 || data.error==='unauthorized') return signInAndReturn();
+  /* De aanvraag staat nu bij de betaling in de database. Laten staan zou
+     betekenen dat een volgende ownership check de gegevens van deze erbij
+     krijgt. */
+  function clearIntake(){ try{ localStorage.removeItem(OWNERSHIP_KEY); }catch(e){} }
+  if(data.mode==='redirect' && data.payment_link){
+    /* A plain navigation, not a form post — Waychit's own hosted page takes over. */
+    clearIntake();
+    location.href = data.payment_link;
+    return;
+  }
+  if(data.mode==='bank_transfer'){ clearIntake(); return showBank(data); }
+  busy(false);
+  showError(data);
+});
+
+/* ---- bank transfer: the details as the server issued them ---- */
+function showBank(d){
+  const bank = d.bank || {};
+  /* amount_gmd is in the contract for both modes — without it on the screen the
+     customer has to guess what to transfer. */
+  const amtN = Number(d.amount_gmd);
+  const amt  = amtN > 0 ? 'D' + amtN.toLocaleString('en-US') : '';
+  const rows = [
+    ['Bank', bank.bank],
+    ['Account name', bank.account_name],
+    ['Account number', bank.account_number],
+    ['SWIFT / BIC', bank.swift],
+    ['Bank address', bank.address]
+  ].filter(r => r[1]);
+  const ref = d.reference || '';
+  document.getElementById('coRoot').innerHTML = `
+    <div class="success">
+      <div class="seal"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M3 10h18M12 3l9 7H3z"/><path d="M6 10v8M10 10v8M14 10v8M18 10v8"/></svg></div>
+      <h1>Your transfer details</h1>
+      <p>${d.instruction ? esc(d.instruction) : (amt ? 'Transfer the amount below and quote the reference exactly. Your ' : 'Quote the reference exactly when you make the transfer. Your ') + esc(plan.name) + ' activates as soon as the money lands.'}</p>
+      ${amt ? `<div class="bank-ref">
+        <div class="brk">Amount to transfer</div>
+        <div class="brv">${esc(amt)}</div>
+        <div class="brn">Transfer this exact amount in dalasi. Any fee your own bank charges is on top of this — it is not part of what reaches us.</div>
+      </div>` : ''}
+      ${ref ? `<div class="bank-ref">
+        <div class="brk">Your payment reference</div>
+        <div class="brv"><span id="bankRef">${esc(ref)}</span><button type="button" class="cpy" data-cpy="bankRef">Copy</button></div>
+        <div class="brn">Quote this reference exactly when you make the transfer. Without it we cannot match your payment to your listing.</div>
+      </div>` : ''}
+      ${rows.length ? `<div class="bank-det">${rows.map((r,i)=>`<div class="bd-row"><span>${r[0]}</span><b><span id="bd${i}">${esc(String(r[1]))}</span><button type="button" class="cpy" data-cpy="bd${i}">Copy</button></b></div>`).join('')}</div>` : ''}
+      ${bank.swift ? `<div class="swift-tip"><b>Sending from Europe, the UK or the US?</b> Most banks want the 8-character code <b>${esc(bank.swift)}</b>. If the form insists on 11 characters, add three X's: <b>${esc(bank.swift)}XXX</b>. Both reach the same head office.</div>` : ''}
+      <div class="swift-tip"><b>Sending US dollars?</b> Route them via the intermediary bank <b>Guaranty Trust Bank (UK) Limited</b>, SWIFT <b>GTBIGB2L</b>${bank.bank?`, beneficiary bank ${esc(bank.bank)}`:''}${bank.swift?` (SWIFT ${esc(bank.swift)})`:''}${bank.account_name?`, beneficiary ${esc(bank.account_name)}`:''}${bank.account_number?`, a/c ${esc(bank.account_number)}`:''}.</div>
+      <div class="swift-tip">${d.instructions_emailed === true ? ('These details are also on their way to you by email' + (d.confirmation_email ? ' at ' + esc(d.confirmation_email) : '') + '.') : d.instructions_emailed === false ? 'We could not email these details just now — copy them before you leave this page.' : 'Copy these details before you leave this page.'} Clearing times are set by the banks, not by us: a transfer from abroad takes longer than a local one, and your own bank may charge a fee.</div>
+      <div class="success-actions">
+        ${ref ? `<a class="btn btn-primary" href="betaling-status.html?ref=${encodeURIComponent(ref)}">Track this payment</a>` : ''}
+        <a class="btn btn-ghost" href="dashboard.html">Go to My MyKunda</a>
+      </div>
+    </div>`;
+  document.querySelectorAll('.cpy').forEach(b=>b.addEventListener('click', async ()=>{
+    const t=document.getElementById(b.dataset.cpy).textContent.trim();
+    try{ await navigator.clipboard.writeText(t.replace(/\s/g,'')); }catch(e){}
+    const o=b.textContent; b.textContent='Copied'; b.classList.add('done');
+    setTimeout(()=>{ b.textContent=o; b.classList.remove('done'); },1600);
+  }));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+</script>
+</body>
+</html>

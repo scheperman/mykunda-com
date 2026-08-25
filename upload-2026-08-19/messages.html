@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en" data-no-wa>
+<head>
+<!--mk-mark--><meta name="copyright" content="© MyKunda Ltd — mykunda.com. Alle rechten voorbehouden."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:16x09se--><!--/mk-mark-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
+<link rel="apple-touch-icon" href="images/mykunda-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#15463A">
+<title>Messages — MyKunda</title>
+<noscript></noscript>
+<link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
+<link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.min.css?v=1787479200000">
+<style>
+body{background:var(--paper-2);height:100vh;overflow:hidden;display:flex;flex-direction:column}
+.msg-shell{flex:1;max-width:1180px;width:100%;margin:0 auto;padding:22px 28px 28px;display:flex;flex-direction:column;min-height:0}
+.msg-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.msg-head h1{font-size:27px}
+.msg-head .role{display:flex;background:var(--white);border-radius:var(--r-pill);padding:4px;box-shadow:var(--sh-sm)}
+.msg-head .role button{height:36px;padding:0 18px;border-radius:var(--r-pill);font-weight:700;font-size:13.5px;color:var(--muted);transition:.15s}
+.msg-head .role button.on{background:var(--green-700);color:#fff}
+
+.msg-panel{flex:1;display:grid;grid-template-columns:330px 1fr;background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-sm);overflow:hidden;min-height:0}
+
+/* conversation list */
+.convo-list{border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+.convo-search{padding:16px 18px;border-bottom:1px solid var(--line-2)}
+.convo-search .box{display:flex;align-items:center;gap:9px;height:42px;padding:0 14px;border-radius:var(--r-pill);background:var(--paper);box-shadow:inset 0 0 0 1.5px var(--line)}
+.convo-search input{border:none;outline:none;background:none;font-size:14px;width:100%}
+.convo-search svg{color:var(--muted-2);flex:none}
+.convos{overflow-y:auto;flex:1}
+.convo{display:flex;gap:12px;padding:14px 18px;cursor:pointer;border-bottom:1px solid var(--line-2);transition:background .12s;position:relative}
+.convo:hover{background:var(--paper)}
+.convo.active{background:var(--green-50)}
+.convo.active::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--green-700)}
+.convo .av{width:46px;height:46px;border-radius:50%;background:var(--green-700);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:17px;flex:none}
+.convo .av.buyer{background:var(--amber-500)}
+.convo .mid{flex:1;min-width:0}
+.convo .top{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.convo .nm{font-weight:700;font-size:14.5px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.convo .time{font-size:11.5px;color:var(--muted-2);white-space:nowrap;flex:none}
+.convo .prop{font-size:12px;color:var(--green-700);font-weight:600;margin:1px 0 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.convo .snippet{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.convo .unread{position:absolute;right:18px;bottom:16px;width:19px;height:19px;border-radius:50%;background:var(--amber-500);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+
+/* thread */
+.thread{display:flex;flex-direction:column;min-width:0;min-height:0}
+.thread-head{display:flex;align-items:center;gap:14px;padding:15px 22px;border-bottom:1px solid var(--line);flex:none}
+.thread-head .av{width:44px;height:44px;border-radius:50%;background:var(--amber-500);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;flex:none}
+.thread-head .who{flex:1;min-width:0}
+.thread-head .who .nm{font-weight:700;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.thread-head .who .meta{white-space:nowrap}
+.thread-head .who .meta{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.thread-head .who .meta .on{color:var(--green-600);font-weight:600}
+.thread-head .actions{margin-left:auto;display:flex;gap:9px}
+
+/* property context bar */
+.prop-bar{display:flex;align-items:center;gap:13px;padding:12px 22px;background:var(--paper);border-bottom:1px solid var(--line-2);flex:none}
+.prop-bar img{width:50px;height:40px;border-radius:8px;object-fit:cover;flex:none;background:var(--paper-2)}
+.prop-bar .ph{width:50px;height:40px;border-radius:8px;background:linear-gradient(135deg,#DCEAE3,#F6E6D4);flex:none}
+.prop-bar .pinfo{flex:1;min-width:0}
+.prop-bar .pt{font-weight:700;font-size:14px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prop-bar .pp{font-size:13px;color:var(--green-700);font-weight:700}
+.prop-bar a.viewp{font-size:13px;font-weight:700;color:var(--green-700);display:flex;align-items:center;gap:6px;white-space:nowrap}
+
+/* messages */
+.msgs{flex:1;overflow-y:auto;padding:22px;display:flex;flex-direction:column;gap:12px;background:var(--paper-2)}
+.daydiv{text-align:center;font-size:12px;color:var(--muted-2);font-weight:600;margin:6px 0}
+.bubble{max-width:72%;padding:11px 15px;border-radius:16px;font-size:14.5px;line-height:1.5;position:relative}
+.bubble .t{display:block;font-size:11px;margin-top:5px;opacity:.7}
+.bubble.them{align-self:flex-start;background:var(--white);color:var(--ink);border-bottom-left-radius:5px;box-shadow:var(--sh-sm)}
+.bubble.me{align-self:flex-end;background:var(--green-700);color:#fff;border-bottom-right-radius:5px}
+.bubble.me .t{text-align:right}
+.sys-msg{align-self:center;background:var(--amber-50);color:var(--amber-600);font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:var(--r-pill);border:1px solid var(--amber-100)}
+
+/* viewing-time proposal card */
+.propose-card{align-self:flex-start;max-width:80%;background:var(--white);border:1.5px solid var(--green-200);border-radius:16px;border-bottom-left-radius:5px;padding:14px 15px;box-shadow:var(--sh-sm);position:relative}
+.pc-h{font-weight:700;font-size:14px;color:var(--green-800);margin-bottom:11px;line-height:1.3}
+.pc-h .pc-sub{display:block;font-weight:600;font-size:12.5px;color:var(--muted);margin-top:2px}
+.pc-slots{display:flex;flex-direction:column;gap:8px}
+.pc-slot{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;height:46px;padding:0 8px 0 15px;border-radius:var(--r-md);box-shadow:inset 0 0 0 1.5px var(--line);background:var(--paper);transition:.14s;text-align:left}
+.pc-slot:hover{box-shadow:inset 0 0 0 1.5px var(--green-500);background:var(--green-50)}
+.pc-slot.read{cursor:default;background:var(--paper)}
+.pc-slot.read:hover{box-shadow:inset 0 0 0 1.5px var(--line);background:var(--paper)}
+.pc-when{font-weight:700;font-size:14px;color:var(--ink)}
+.pc-go{display:inline-flex;align-items:center;height:32px;padding:0 14px;border-radius:var(--r-pill);background:var(--green-700);color:#fff;font-weight:700;font-size:12.5px;flex:none}
+.pc-slot:hover .pc-go{background:var(--green-800)}
+.pc-decline{width:100%;margin-top:10px;height:38px;border-radius:var(--r-sm);font-size:13px;font-weight:700;color:var(--muted);box-shadow:inset 0 0 0 1.5px var(--line);transition:.14s}
+.pc-decline:hover{box-shadow:inset 0 0 0 1.5px var(--amber-500);color:var(--amber-600)}
+.pc-t{display:block;font-size:11px;color:var(--muted-2);margin-top:9px}
+.propose-card.done{flex-direction:row;align-items:center;gap:12px;display:flex;border-color:var(--green-200);background:var(--green-50);color:var(--green-700)}
+.propose-card.done b{display:block;font-size:14px;color:var(--green-800)}
+.propose-card.done span{font-size:13px;color:var(--green-700);font-weight:600}
+.propose-card.done.declined{border-color:var(--line);background:var(--paper-2);color:var(--muted)}
+.propose-card.done.declined b{color:var(--ink-2)}
+.propose-card.done.declined span{color:var(--muted)}
+
+/* composer */
+.composer{flex:none;padding:14px 18px;border-top:1px solid var(--line);display:flex;align-items:flex-end;gap:11px}
+.composer .ta{flex:1;display:flex;align-items:center;background:var(--paper);border-radius:22px;box-shadow:inset 0 0 0 1.5px var(--line);padding:0 6px 0 16px}
+.composer textarea{flex:1;border:none;outline:none;background:none;resize:none;font-family:var(--sans);font-size:14.5px;padding:13px 0;max-height:120px;line-height:1.4}
+.composer .send{width:46px;height:46px;border-radius:50%;background:var(--green-700);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;transition:.15s}
+.composer .send:hover{background:var(--green-800)}
+.composer .wa{width:46px;height:46px;border-radius:50%;background:#25D366;color:#fff;display:flex;align-items:center;justify-content:center;flex:none;transition:.15s}
+.composer .wa:hover{background:#1FB855}
+.quick-replies{display:flex;gap:8px;padding:0 18px 12px;flex-wrap:wrap}
+.qr{height:32px;padding:0 13px;border-radius:var(--r-pill);background:var(--paper);box-shadow:inset 0 0 0 1.5px var(--line);font-size:12.5px;font-weight:600;color:var(--ink-2);transition:.13s;white-space:nowrap}
+.qr:hover{box-shadow:inset 0 0 0 1.5px var(--green-500);color:var(--green-700)}
+
+@media(max-width:480px){
+  .msg-shell{padding:16px 20px 20px}
+  .msg-head h1{font-size:23px}
+  .chat-wrap{padding:0 16px}
+  .msg-sidebar{min-width:0}
+  .msg-body{padding:16px}
+}
+
+@media(max-width:820px){
+  .msg-panel{grid-template-columns:1fr}
+  .convo-list{display:none}
+  .convo-list.show{display:flex;position:absolute;inset:0;z-index:5;background:var(--white)}
+}
+</style>
+<meta property="fb:pages" content="61593360783009">
+<meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
+</head>
+<body>
+<div id="header"></div>
+
+<div class="msg-shell">
+  <div class="msg-head">
+    <h1>Messages</h1>
+    <div class="role">
+      <button class="on" data-role="seller">As seller</button>
+      <button data-role="buyer">As buyer</button>
+    </div>
+  </div>
+
+  <div class="msg-panel">
+    <!-- conversation list -->
+    <div class="convo-list">
+      <div class="convo-search">
+        <div class="box"><span id="csIc"></span><input type="text" placeholder="Search messages" id="convoSearch"></div>
+      </div>
+      <div class="convos" id="convos"></div>
+    </div>
+
+    <!-- thread -->
+    <div class="thread">
+      <div class="thread-head">
+        <div class="av" id="thAv">F</div>
+        <div class="who">
+          <div class="nm" id="thName">—</div>
+          <div class="meta"><span class="on">●</span> <span id="thStatus">Online now</span></div>
+        </div>
+      </div>
+      <div class="prop-bar" id="propBar"></div>
+      <div class="msgs" id="msgs"></div>
+      <div class="quick-replies" id="quickReplies"></div>
+      <div class="composer">
+        <button class="wa" id="waBtn" aria-label="WhatsApp"></button>
+        <div class="ta"><textarea id="input" rows="1" placeholder="Write a message…"></textarea></div>
+        <button class="send" id="sendBtn" aria-label="Send"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.min.js?v=1787479200000"></script>
+<script src="image-slot.js?v=1787479200000" defer></script>
+<script>
+/* 4G: the Supabase client (~205 KB) is not needed to paint this page. It downloads
+   in parallel and every backend call awaits window.__sbReady. */
+window.__sbReady=new Promise(function(res){
+  var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
+  s1.onerror=function(){ window.supabase=null; res(); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=1787500800000'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  document.head.appendChild(s1);
+});
+</script>
+<script>
+document.getElementById('header').innerHTML = headerHTML('', false);
+csIc.innerHTML = ICON.search;
+waBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2Zm5.5 14c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.2-.7-2.7-1.1-4.4-3.8-4.5-4-.1-.2-1.1-1.4-1.1-2.7s.7-1.9.9-2.1c.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.5c-.2.2-.3.4-.1.7.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.2 0 .4 0 .6-.2l.7-.8c.2-.2.4-.2.6-.1l1.9.9c.2.1.4.2.5.3.1.3.1.7-.1 1.2Z"/></svg>';
+sendBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7Z"/></svg>';
+
+// resolve a property for context — may be null (listing removed or not loaded yet)
+function findProp(id){ return allListings().find(p=>p.id===id) || null; }
+const ctxId = qs('id');
+
+// conversations come from the database — never seeded with examples
+const SELLER_CONVOS = [];
+const BUYER_CONVOS = [];
+
+let role='seller';
+let convos = SELLER_CONVOS;
+let activeId = convos.length ? convos[0].id : null;
+// thread state lives on the convo objects so it persists when switching
+
+function avatarClass(){ return role==='seller' ? 'buyer' : ''; }
+
+// ----- viewing-time proposal card (buyer picks / declines; seller sees read-only) -----
+function proposeCardHTML(m, mi){
+  const isBuyer = role==='buyer';
+  if(m.status==='accepted'){
+    return `<div class="propose-card done">${ICON.check}<div><b>Viewing confirmed</b><span>${m.chosen}</span></div></div>`;
+  }
+  if(m.status==='declined'){
+    return `<div class="propose-card done declined">✕<div><b>None of these worked</b><span>${isBuyer?'You asked for other times':'Buyer asked for other times'}</span></div></div>`;
+  }
+  const head = isBuyer
+    ? `<div class="pc-h">Proposed viewing times <span class="pc-sub">Pick one that suits you</span></div>`
+    : `<div class="pc-h">You proposed these times <span class="pc-sub">Waiting for the buyer to choose…</span></div>`;
+  const slots = m.slots.map((s,si)=>
+    isBuyer
+      ? `<button class="pc-slot" onclick="pickSlot(${mi},${si})"><span class="pc-when">${s}</span><span class="pc-go">Choose</span></button>`
+      : `<div class="pc-slot read"><span class="pc-when">${s}</span></div>`
+  ).join('');
+  const footer = isBuyer
+    ? `<button class="pc-decline" onclick="declineSlots(${mi})">None of these work — suggest others</button>`
+    : '';
+  return `<div class="propose-card">${head}<div class="pc-slots">${slots}</div>${footer}<span class="pc-t">${m.tm||''}</span></div>`;
+}
+
+window.pickSlot=function(mi,si){
+  const c=convos.find(x=>x.id===activeId);
+  const m=c.msgs[mi];
+  m.status='accepted'; m.chosen=m.slots[si];
+  c.msgs.push({f:'me', t:`Perfect — ${m.slots[si]} works for me. See you then!`, tm:nowTime()});
+  c.msgs.push({f:'sys', t:`Viewing confirmed for ${m.slots[si]}`});
+  renderThread(); renderConvos();
+};
+
+window.declineSlots=function(mi){
+  const c=convos.find(x=>x.id===activeId);
+  const m=c.msgs[mi];
+  m.status='declined';
+  c.msgs.push({f:'me', t:'Sorry, none of those work for me — could you suggest a few other times?', tm:nowTime()});
+  renderThread(); renderConvos();
+};
+
+function nowTime(){ return new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}); }
+
+
+function emptyConvoText(){
+  return role==='seller'
+    ? 'No conversations yet. When a buyer messages you about a listing, it shows up here.'
+    : 'No conversations yet. When you message a seller about a listing, it shows up here.';
+}
+function renderConvos(){
+  const q=(document.getElementById('convoSearch').value||'').toLowerCase();
+  if(!convos.length){
+    document.getElementById('convos').innerHTML = '<div style="padding:28px 20px;color:var(--muted);font-size:14px;line-height:1.5">'+emptyConvoText()+'</div>';
+    return;
+  }
+  document.getElementById('convos').innerHTML = convos.filter(c=>c.name.toLowerCase().includes(q)).map(c=>{
+    const p=findProp(c.prop) || {title:c.propTitle||'Listing'};
+    const last=c.msgs[c.msgs.length-1];
+    const preview = !last ? (c.preview||'')
+                  : last.f==='propose' ? '📅 Proposed viewing times'
+                  : last.f==='sys' ? last.t
+                  : (last.f==='me'?'You: ':'')+last.t;
+    return `<div class="convo ${c.id===activeId?'active':''}" data-id="${c.id}">
+      <div class="av ${avatarClass()}">${c.initial}</div>
+      <div class="mid">
+        <div class="top"><span class="nm">${c.name}</span><span class="time">${c.time}</span></div>
+        <div class="prop">${p.title}</div>
+        <div class="snippet">${preview}</div>
+      </div>
+      ${c.unread?`<span class="unread">${c.unread}</span>`:''}
+    </div>`;
+  }).join('');
+  document.querySelectorAll('.convo').forEach(el=>el.addEventListener('click',()=>{activeId=el.dataset.id;openActiveConvo();}));
+}
+
+function renderThread(){
+  const c=convos.find(x=>x.id===activeId);
+  const head = document.querySelector('.thread-head');
+  if(!c){
+    document.getElementById('thAv').style.display='none';
+    if(head) head.querySelector('.meta').style.display='none';
+    document.getElementById('thName').textContent='Messages';
+    document.getElementById('propBar').innerHTML='';
+    document.getElementById('msgs').innerHTML='<div style="padding:60px 26px;text-align:center;color:var(--muted);font-size:14px;line-height:1.6">'+emptyConvoText()+'</div>';
+    document.getElementById('quickReplies').innerHTML='';
+    return;
+  }
+  const p=findProp(c.prop) || {title:c.propTitle||'Listing', price:c.propPrice||0, type:c.propKind||'sale', img:'', id:c.prop||''};
+  document.getElementById('thAv').style.display='';
+  if(head) head.querySelector('.meta').style.display='';
+  document.getElementById('thAv').textContent=c.initial;
+  document.getElementById('thAv').className='av '+avatarClass();
+  document.getElementById('thName').textContent=c.name;
+  document.getElementById('thStatus').textContent=c.online?'Online now':'Last seen recently';
+  document.querySelector('.thread-head .meta .on').style.color=c.online?'var(--green-600)':'var(--muted-2)';
+
+  // property context bar
+  const cover=p.img?`<img src="${p.img}" alt="" onerror="this.outerHTML='<div class=&quot;ph&quot;></div>'">`:'<div class="ph"></div>';
+  document.getElementById('propBar').innerHTML=`${cover}
+    <div class="pinfo"><div class="pt">${p.title}</div><div class="pp">${fmtPrice(p.price,p.type)}</div></div>
+    <a class="viewp" href="property.html?id=${p.id}">View listing ${ICON.arrow}</a>`;
+
+  // messages
+  document.getElementById('msgs').innerHTML = `<div class="daydiv">Today</div>` + c.msgs.map((m,mi)=>{
+    if(m.f==='sys') return `<div class="sys-msg">${m.t}</div>`;
+    if(m.f==='propose') return proposeCardHTML(m, mi);
+    return `<div class="bubble ${m.f}">${m.t}<span class="t">${m.tm||''}</span></div>`;
+  }).join('');
+  document.getElementById('msgs').scrollTop = 999999;
+
+  // quick replies
+  document.getElementById('quickReplies').innerHTML = (c.quick||[]).map(q=>`<button class="qr">${q}</button>`).join('');
+  document.querySelectorAll('.qr').forEach(b=>b.addEventListener('click',()=>{document.getElementById('input').value=b.textContent;document.getElementById('input').focus();}));
+}
+
+function demoSend(){
+  const inp=document.getElementById('input');
+  const txt=inp.value.trim();
+  if(!txt) return;
+  const c=convos.find(x=>x.id===activeId);
+  if(!c) return;
+  const now=new Date();
+  const tm=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+  c.msgs.push({f:'me',t:txt,tm});
+  inp.value=''; inp.style.height='auto';
+  renderThread(); renderConvos();
+  // simulate a reply
+  setTimeout(()=>{
+    const replies = role==='seller'
+      ? ['Great, thank you!','Perfect — looking forward to it.','Sounds good. See you then!','Thanks for the quick reply.']
+      : ['Thank you! That\'s helpful.','Great — I\'ll be in touch.','Perfect, thanks so much.','Appreciate it!'];
+    c.msgs.push({f:'them',t:replies[Math.floor(Math.random()*replies.length)],tm:tm});
+    if(c.id!==activeId) c.unread=(c.unread||0)+1;
+    renderThread(); renderConvos();
+  }, 1400);
+}
+document.getElementById('input').addEventListener('input',e=>{e.target.style.height='auto';e.target.style.height=Math.min(120,e.target.scrollHeight)+'px';});
+document.getElementById('convoSearch').addEventListener('input',renderConvos);
+waBtn.addEventListener('click',()=>{ waBtn.style.transform='scale(.9)';setTimeout(()=>waBtn.style.transform='',150); });
+
+// role toggle
+document.querySelectorAll('.role button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.role button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); role=b.dataset.role;
+  convos = role==='seller'?SELLER_CONVOS:BUYER_CONVOS;
+  activeId = convos.length ? convos[0].id : null;
+  openActiveConvo();
+}));
+
+// open a specific conversation if arriving from a listing / enquiry
+// arriving via ?id (from a property page) → you're the buyer contacting the seller
+if(ctxId){
+  role='buyer';
+  document.querySelectorAll('.role button').forEach(x=>x.classList.toggle('on',x.dataset.role==='buyer'));
+  convos = BUYER_CONVOS;
+  const match = convos.find(c=>c.prop===ctxId);
+  activeId = match ? match.id : (convos.length ? convos[0].id : null);
+}
+const startConvo = qs('c');
+if(startConvo && convos.find(c=>c.id===startConvo)) activeId=startConvo;
+
+renderConvos();
+renderThread();
+
+// ============================================================
+//  DB wiring — live backend (contract 19-08-2026)
+//  Tables conversations/messages, RPCs start_conversation and
+//  mark_conversation_read. Counters, previews and the e-mail
+//  notification are database-side; the page never writes them.
+// ============================================================
+let _realtimeChannel = null;
+let _myUserId = null;
+
+function fmtTm(iso){ return new Date(iso).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}); }
+function timeAgoShort(dateStr){
+  const ms = Date.now() - new Date(dateStr).getTime();
+  const h = Math.floor(ms/3600000);
+  if(h<1) return 'now';
+  if(h<24) return h+'h';
+  const d = Math.floor(h/24);
+  if(d<7) return d+'d';
+  return Math.floor(d/7)+'w';
+}
+
+function dbConvoToUi(c){
+  const other = c._other || {};
+  const otherName = other.full_name || 'MyKunda user';
+  const listing = c.listing || {};
+  return {
+    id: c.id, dbId: c.id,
+    name: otherName,
+    initial: (otherName[0]||'?').toUpperCase(),
+    prop: listing.id || c.listing_id || null,
+    propTitle: listing.title || '', propPrice: listing.price || 0, propKind: listing.kind || 'sale',
+    online: false,
+    unread: c._unread || 0,
+    time: c.last_message_at ? timeAgoShort(c.last_message_at) : '',
+    preview: (c.last_sender_id===_myUserId?'You: ':'')+(c.last_message_preview||''),
+    msgs: [], _loaded: false,
+    quick: c._isBuyer ? ['Is this still available?','Can I arrange a viewing?','Thank you!'] : ['Yes, it\'s available','Can we arrange a viewing?','Thank you!'],
+    _isDb: true, _isBuyer: !!c._isBuyer
+  };
+}
+
+async function loadConvoMsgs(rc){
+  if(!rc || rc._loaded || !rc._isDb) return;
+  const dbMsgs = typeof fetchMessages==='function' ? await fetchMessages(rc.dbId) : null;
+  if(dbMsgs){
+    rc.msgs = dbMsgs.map(m=>({ f: m.sender_id===_myUserId?'me':'them', t: m.body, tm: fmtTm(m.created_at), _id: m.id, _read: !!m.read_at }));
+    rc._loaded = true;
+  }
+}
+
+async function openActiveConvo(){
+  const ac = convos.find(c=>c.id===activeId);
+  if(ac) ac.unread = 0;
+  if(ac && ac._isDb){
+    await loadConvoMsgs(ac);
+    if(ac.dbId && typeof markConversationRead==='function') markConversationRead(ac.dbId);
+    subscribeToActive();
+  }
+  renderConvos(); renderThread();
+}
+
+function subscribeToActive(){
+  if(_realtimeChannel){ unsubscribeChannel(_realtimeChannel); _realtimeChannel=null; }
+  const ac = convos.find(c=>c.id===activeId);
+  if(!ac || !ac._isDb || !ac.dbId) return;
+  _realtimeChannel = subscribeToConversation(ac.dbId, (msg, evt)=>{
+    if(evt==='UPDATE'){
+      const mine = ac.msgs.find(x=>x._id===msg.id);
+      if(mine) mine._read = !!msg.read_at;
+      return;
+    }
+    if(msg.sender_id === _myUserId){
+      const optimistic = ac.msgs.slice().reverse().find(x=>x.f==='me' && !x._id);
+      if(optimistic) optimistic._id = msg.id;
+      return;
+    }
+    if(ac.msgs.some(x=>x._id===msg.id)) return;
+    ac.msgs.push({ f:'them', t:msg.body, tm:fmtTm(msg.created_at), _id:msg.id });
+    renderThread(); renderConvos();
+    // conversation is open on screen — mark the new message read right away
+    markConversationRead(ac.dbId);
+  });
+}
+
+// Demo mode: ONLY on a real connection failure, and clearly labelled.
+function enterDemoMode(){
+  if(!document.getElementById('demoBanner')){
+    const b=document.createElement('div');
+    b.id='demoBanner';
+    b.style.cssText='margin:-4px 0 14px;padding:10px 16px;border-radius:12px;background:var(--amber-50);border:1px solid var(--amber-100);color:var(--amber-600);font-size:13.5px;font-weight:600';
+    b.textContent='Couldn\'t reach the server — this is example data. Your real conversations will appear once the connection is back.';
+    document.querySelector('.msg-head').insertAdjacentElement('afterend', b);
+  }
+  SELLER_CONVOS.push({id:'demo-s1',name:'Example buyer',initial:'E',prop:null,propTitle:'Example listing',online:false,unread:0,time:'',msgs:[{f:'sys',t:'Example conversation — not a real message'},{f:'them',t:'Hello! Is this listing still available?',tm:'10:24'},{f:'me',t:'Yes, it is — would you like to arrange a viewing?',tm:'10:31'}],quick:['Yes, it\'s available','Can we arrange a viewing?']});
+  BUYER_CONVOS.push({id:'demo-b1',name:'Example seller',initial:'E',prop:null,propTitle:'Example listing',online:false,unread:0,time:'',msgs:[{f:'sys',t:'Example conversation — not a real message'},{f:'me',t:'Hi, I\'m interested in your listing.',tm:'09:12'},{f:'them',t:'Great — happy to answer any questions.',tm:'09:20'}],quick:['Is it still available?','Can I arrange a viewing?']});
+  convos = role==='seller'?SELLER_CONVOS:BUYER_CONVOS;
+  activeId = convos.length ? convos[0].id : null;
+  renderConvos(); renderThread();
+}
+
+(async function initDbMessaging(){
+  try{ await window.__sbReady; }catch(e){}
+  if(typeof backendReady!=='function' || !backendReady()){ enterDemoMode(); return; }
+  const u = typeof currentUser==='function' ? await currentUser() : null;
+  if(!u){
+    document.getElementById('msgs').innerHTML='<div style="padding:60px 26px;text-align:center;color:var(--muted);font-size:14.5px;line-height:1.7">You need an account to send and read messages.<br>Your conversations are private between you and the other user.<br><a class="btn btn-primary btn-sm" href="auth.html" style="margin-top:16px">Sign in or create an account</a></div>';
+    document.getElementById('input').disabled=true;
+    document.getElementById('sendBtn').disabled=true;
+    return;
+  }
+  _myUserId = u.id;
+
+  const dbConvos = typeof fetchConversations==='function' ? await fetchConversations() : null;
+  if(dbConvos === null){ enterDemoMode(); return; } // query/connection failure — labelled example data
+
+  const sellers=[], buyers=[];
+  dbConvos.forEach(c=>{ const rc=dbConvoToUi(c); (rc._isBuyer?buyers:sellers).push(rc); });
+  SELLER_CONVOS.length=0; sellers.forEach(c=>SELLER_CONVOS.push(c));
+  BUYER_CONVOS.length=0; buyers.forEach(c=>BUYER_CONVOS.push(c));
+
+  // Arriving from a listing (?id=...): start or reuse the conversation via the RPC.
+  // The RPC picks the seller and dedupes — no client-side existence check.
+  if(ctxId && typeof startConversationForListing==='function'){
+    try{
+      const convo = await startConversationForListing(ctxId);
+      if(convo && convo.id){
+        let existing = BUYER_CONVOS.find(c=>c.dbId===convo.id);
+        if(!existing){
+          let otherName='Agent';
+          try{
+            const { data:p } = await sb.from('conversation_people').select('full_name').eq('id', convo.seller_id).single();
+            if(p && p.full_name) otherName = p.full_name;
+          }catch(e){}
+          existing = dbConvoToUi(Object.assign({_other:{full_name:otherName},_isBuyer:true,_unread:0}, convo));
+          existing.prop = ctxId; existing._loaded = false;
+          BUYER_CONVOS.unshift(existing);
+        }
+        role='buyer'; activeId = existing.id;
+      }
+    }catch(e){ console.warn('startConversation:', e.message); }
+  }
+
+  // Deep link from the notification e-mail (?c=<conversation_id>)
+  if(startConvo){
+    const inBuyer = BUYER_CONVOS.find(c=>c.dbId===startConvo);
+    const inSeller = SELLER_CONVOS.find(c=>c.dbId===startConvo);
+    if(inBuyer){ role='buyer'; activeId=inBuyer.id; }
+    else if(inSeller){ role='seller'; activeId=inSeller.id; }
+  }
+
+  document.querySelectorAll('.role button').forEach(x=>x.classList.toggle('on', x.dataset.role===role));
+  convos = role==='seller'?SELLER_CONVOS:BUYER_CONVOS;
+  if(!activeId || !convos.find(c=>c.id===activeId)) activeId = convos.length ? convos[0].id : null;
+  await openActiveConvo();
+})();
+
+// Send: DB mode for real conversations, demo behaviour otherwise
+function send(){
+  const ac = convos.find(c=>c.id===activeId);
+  if(!ac || !ac._isDb){ demoSend(); return; }
+  const inp = document.getElementById('input');
+  const txt = inp.value.trim().slice(0, 4000);
+  if(!txt) return;
+  const optimistic = { f:'me', t:txt, tm:nowTime() }; // realtime echo attaches the id
+  ac.msgs.push(optimistic);
+  inp.value=''; inp.style.height='auto';
+  renderThread(); renderConvos();
+  sendMessage(ac.dbId, txt).then(m=>{ if(m && m.id && !optimistic._id) optimistic._id = m.id; })
+    .catch(e=>{
+      console.warn('sendMessage:', e.message);
+      const i = ac.msgs.indexOf(optimistic);
+      if(i>-1) ac.msgs.splice(i,1);
+      ac.msgs.push({ f:'sys', t:'Message not sent — please try again.' });
+      inp.value = txt;
+      renderThread(); renderConvos();
+    });
+}
+document.getElementById('sendBtn').addEventListener('click', send);
+document.getElementById('input').addEventListener('keydown', function(e){
+  if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); send(); }
+});
+</script>
+</body>
+</html>

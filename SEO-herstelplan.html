@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyKunda — SEO-herstelplan (indexering)</title>
+<style>
+doc-page:not(:defined){visibility:hidden}
+:root{--g9:#0E2E25;--g7:#1C5848;--g2:#DCEAE3;--am:#B4711C;--am-bg:#FBF3E7;--ink:#16211D;--ink2:#3D4B45;--mut:#6B7B74;--line:#E2E8E4}
+doc-page{font-family:"Hanken Grotesk",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:var(--ink2);font-size:10.5pt;line-height:1.62}
+h1{font-size:26pt;line-height:1.1;letter-spacing:-.02em;color:var(--g9);margin:0 0 6px}
+.sub{font-size:11.5pt;color:var(--mut);margin:0 0 4px;line-height:1.5}
+.stamp{font-size:8.5pt;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:var(--am);margin-bottom:12px}
+h2{font-size:15pt;color:var(--g9);margin:30px 0 10px;letter-spacing:-.01em;padding-bottom:7px;border-bottom:2px solid var(--g2)}
+h3{font-size:11.5pt;color:var(--g7);margin:20px 0 6px}
+p{margin:0 0 9px}
+ul,ol{margin:0 0 10px;padding-left:19px}
+li{margin-bottom:5px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:9pt;background:#F1F5F3;padding:1px 5px;border-radius:3px;color:var(--g9);word-break:break-word}
+pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:8.5pt;line-height:1.5;background:var(--g9);color:#D9E7E1;padding:13px 15px;border-radius:6px;overflow-wrap:break-word;white-space:pre-wrap;margin:0 0 12px;break-inside:avoid}
+pre b{color:#F3C77A;font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:9pt;margin:0 0 14px}
+th{background:var(--g7);color:#fff;text-align:left;padding:8px 10px;font-weight:700;font-size:8pt;text-transform:uppercase;letter-spacing:.04em}
+td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.45}
+tr:nth-child(even) td{background:#F7FAF8}
+td code{background:none;padding:0;font-size:8.5pt}
+.tag{display:inline-block;font-size:7.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 7px;border-radius:20px;white-space:nowrap}
+.t301{background:#FDEBD4;color:#8A5510}
+.tcan{background:var(--g2);color:var(--g7)}
+.tkeep{background:#E8EDF5;color:#3A5378}
+.tnew{background:#DFF3E5;color:#1D6B36}
+.tdel{background:#F7E1E1;color:#8C3131}
+.box{background:var(--am-bg);border:1px solid #F0DCC0;border-radius:7px;padding:14px 17px;margin:0 0 14px;break-inside:avoid;orphans:3;widows:3}
+.box b{color:var(--am)}
+.box.g{background:#F2F8F4;border-color:#D3E6D9}
+.box.g b{color:var(--g7)}
+.file{background:#F7FAF8;border-left:3px solid var(--g2);padding:11px 15px;margin:0 0 9px;break-inside:avoid;orphans:3;widows:3}
+.file b{color:var(--g9);font-size:10pt}
+.file p{margin:3px 0 0;font-size:9.5pt;color:var(--ink2)}
+.check{list-style:none;padding-left:0;counter-reset:c}
+.check li{position:relative;padding-left:30px;margin-bottom:9px;counter-increment:c;break-inside:avoid;orphans:3;widows:3}
+.check li::before{content:counter(c);position:absolute;left:0;top:1px;width:20px;height:20px;border-radius:50%;background:var(--g7);color:#fff;font-size:8.5pt;font-weight:700;display:flex;align-items:center;justify-content:center}
+.lead{font-size:11pt;color:var(--ink2);line-height:1.65;margin-bottom:14px}
+hr{border:0;border-top:1px solid var(--line);margin:26px 0}
+.foot{font-size:8.5pt;color:var(--mut)}
+</style>
+</head>
+<body>
+<doc-page margin="0.7in">
+
+<div class="stamp">MyKunda · mykunda.com</div>
+<h1>SEO-herstelplan: indexering</h1>
+<p class="sub">Antwoord op de Search Console-melding van 5 augustus 2026 — 21 pagina's geïndexeerd, 20 niet. Alle aanpassingen zijn doorgevoerd in de bestanden; deze notitie legt uit wat, waarom en wat jij daarna in Search Console doet.</p>
+
+<div class="box g">
+<p><b>Kern van de diagnose.</b> De hoofdletter-URL's staan <i>nergens meer</i> in de huidige broncode — ik heb alle 43 pagina's, <code>app.js</code>, de sitemap en alle JSON-LD doorzocht. Ze komen uit een oudere versie van de site die Google ooit heeft gecrawld, plus externe links. Dat is goed nieuws: er valt niets te "repareren" in de links, maar je moet die oude URL's wél netjes afhandelen met 301-redirects, anders blijft Google ze jaren proberen.</p>
+<p>De vijf "alternatieve pagina met correcte canonieke tag" komen wél uit de code: <code>property.html</code> had een hardgecodeerde canonical naar de <i>parameterloze</i> URL, en <code>legal.html</code> ook. Elke <code>?id=</code>- en <code>?doc=</code>-variant vertelde Google dus letterlijk "indexeer mij niet, indexeer die andere pagina". Dát is nu opgelost.</p>
+</div>
+
+<h2>1 · Wat er is gewijzigd, per bestand</h2>
+
+<h3>Nieuwe bestanden</h3>
+<div class="file"><b>legal-terms.html · legal-privacy.html · legal-cookies.html</b>
+<p>De drie juridische documenten zijn nu echte, losse pagina's in plaats van tabbladen achter <code>?doc=</code>. Elk heeft een eigen <code>&lt;title&gt;</code>, eigen meta description, eigen H1, eigen zichtbare tekst en een self-referencing canonical. De volledige tekst staat statisch in de HTML — Google hoeft geen JavaScript te draaien om hem te zien.</p></div>
+<div class="file"><b>_redirects</b><p>Redirect-configuratie voor Netlify en Cloudflare Pages.</p></div>
+<div class="file"><b>vercel.json</b><p>Dezelfde redirects voor Vercel, plus <code>cleanUrls</code> en de security-headers.</p></div>
+
+<h3>Gewijzigde bestanden</h3>
+<div class="file"><b>property.html</b>
+<p>De vaste regel <code>&lt;link rel="canonical" href=".../property.html"&gt;</code> is vervangen door een klein script bovenin de <code>&lt;head&gt;</code> dat de canonical opbouwt uit de <code>?id=</code>-parameter. <code>property.html?id=feat-1</code> verwijst nu naar zichzelf in plaats van naar de lege sjabloonpagina. Het script draait synchroon tijdens het parsen van de head, dus de canonical staat in de DOM vóór de rest laadt.</p></div>
+<div class="file"><b>guide.html</b>
+<p>Had helemaal geen canonical. Nu hetzelfde patroon op basis van <code>?slug=</code>, met de eerste gids als fallback wanneer er geen slug is.</p></div>
+<div class="file"><b>legal.html</b>
+<p>Omgebouwd van tabbladen-viewer naar een korte <i>overzichtspagina</i> met drie kaarten die naar de nieuwe documentpagina's linken. Zo is er geen dubbele content meer tussen <code>legal.html</code> en de drie documenten, en houdt de al geïndexeerde URL een eigen, unieke rol.</p></div>
+<div class="file"><b>search.html</b>
+<p>Zoekresultaten met filters (<code>?q=</code>, <code>?type=</code>, <code>?cat=</code> …) krijgen nu <code>noindex, follow</code>; de kale <code>search.html</code> blijft indexeerbaar. Dit is Google's eigen richtlijn voor interne zoekresultaten en het maakt meteen een einde aan <code>Search.html?q={search_term_string}</code> als indexkandidaat. De gebiedspagina's bedienen die zoekintentie beter.</p></div>
+<div class="file"><b>app.js · app.min.js</b>
+<p>Het logo in de header en het mobiele menu linkte naar <code>home.html</code>; dat is nu <code>/</code>. De footer- en cookiebanner-links naar <code>legal.html?doc=…</code> wijzen naar de nieuwe pagina's.</p></div>
+<div class="file"><b>Alle 43 pagina's</b>
+<p>Elke <code>href="home.html"</code> — de "Home"-kruimel op de twintig gebiedspagina's, de 404-pagina, <code>property.html</code>, <code>auth.html</code>, <code>list.html</code> — verwijst nu naar <code>/</code>. Interne links naar <code>/home.html</code> bestaan niet meer. Cachebuster opgehoogd naar <code>?v=1791580000000</code>.</p></div>
+<div class="file"><b>404.html</b>
+<p>Uitgebreid met negen hoofdsecties en tien populaire gebieden, zodat een verdwaalde bezoeker (en Googlebot) er niet doodloopt. Staat op <code>noindex, follow</code>. De echte 404-<i>status</i> komt uit de serverconfiguratie: <code>ErrorDocument 404 /404.html</code> in <code>.htaccess</code>, de <code>/* → /404.html 404</code>-regel in <code>_redirects</code>, of automatisch bij Vercel omdat het bestand <code>404.html</code> heet.</p></div>
+<div class="file"><b>.htaccess</b>
+<p>Alle 301-redirects toegevoegd, vóór de bestaande regel die <code>.html</code> weghaalt. Plus <code>CheckSpelling On</code> + <code>CheckCaseOnly On</code> als vangnet: elke andere URL die alleen in hoofdletters afwijkt wordt automatisch 301'd naar het juiste bestand.</p></div>
+<div class="file"><b>sitemap.xml</b>
+<p>Van 18 naar 44 URL's, allemaal bestaand, lowercase, 200 en self-canonical: de homepage, de tien hoofdpagina's, de vier juridische pagina's, de zes gidsen met hun slug, de drie uitgelichte woningen en alle twintig gebiedspagina's. Met <code>lastmod</code>. Geen 404's, geen redirects, geen noindex, geen parametervarianten die naar een andere canonical wijzen.</p>
+<p><b>Correctie 8 augustus:</b> <code>title-verification.html</code> stond aanvankelijk in deze lijst. Dat was fout — de pagina heeft <code>noindex, nofollow</code> en is een intern verificatiedashboard. De entry is verwijderd. Zie paragraaf 9.</p></div>
+<div class="file"><b>robots.txt</b>
+<p>Blokkades gecontroleerd — de zes afgeschermde pagina's zijn allemaal terecht privé, en geen enkele pagina die wél in Google moet staan wordt geblokkeerd. Toelichting toegevoegd dat de hoofdletter-URL's bewust <i>niet</i> geblokkeerd worden: Googlebot moet ze kunnen crawlen om de 301 te zien.</p></div>
+
+<h2>2 · Overzichtstabel: oude URL → nieuwe URL → actie</h2>
+<table>
+<thead><tr><th style="width:34%">Oude / gemelde URL</th><th style="width:30%">Nieuwe URL</th><th style="width:13%">Actie</th><th>Toelichting</th></tr></thead>
+<tbody>
+<tr><td><code>/Home.html</code></td><td><code>/</code></td><td><span class="tag t301">301</span></td><td>Bestand bestond nooit; homepage is de juiste bestemming</td></tr>
+<tr><td><code>/About.html</code></td><td><code>/about.html</code></td><td><span class="tag t301">301</span></td><td>Alleen hoofdletterverschil</td></tr>
+<tr><td><code>/Legal.html</code></td><td><code>/legal.html</code></td><td><span class="tag t301">301</span></td><td>Alleen hoofdletterverschil</td></tr>
+<tr><td><code>/Search.html</code></td><td><code>/search.html</code></td><td><span class="tag t301">301</span></td><td>Alleen hoofdletterverschil</td></tr>
+<tr><td><code>/Guide.html</code></td><td><code>/guide.html</code></td><td><span class="tag t301">301</span></td><td>Alleen hoofdletterverschil</td></tr>
+<tr><td><code>/Legal.html?doc=terms</code></td><td><code>/legal-terms.html</code></td><td><span class="tag t301">301</span></td><td>Naar de nieuwe eigen pagina, parameter vervalt</td></tr>
+<tr><td><code>/Legal.html?doc=cookies</code></td><td><code>/legal-cookies.html</code></td><td><span class="tag t301">301</span></td><td>Idem</td></tr>
+<tr><td><code>/Search.html?q=Brufut</code></td><td><code>/brufut.html</code></td><td><span class="tag t301">301</span></td><td>Redirect naar <code>/search.html?q=Brufut</code> (noindex); de gebiedspagina Brufut is de indexeerbare pagina voor die zoekvraag</td></tr>
+<tr><td><code>/Search.html?q={search_term_string}</code></td><td>—</td><td><span class="tag tdel">geen index</span></td><td>Placeholder uit de SearchAction. 301 naar lowercase, daar <code>noindex, follow</code>. De SearchAction zelf is correct schema en blijft staan</td></tr>
+<tr><td><code>/Guide.html?slug=cost-of-buying-…</code></td><td><code>/guide-cost-of-buying-property-in-the-gambia.html</code></td><td><span class="tag t301">301</span></td><td>Querystring blijft behouden bij de redirect</td></tr>
+<tr><td><code>/Guide.html?slug=buying-property-…</code></td><td><code>/guide-buying-property-in-the-gambia-as-a-foreigner.html</code></td><td><span class="tag t301">301</span></td><td>Idem</td></tr>
+<tr><td><code>/home.html</code></td><td><code>/</code></td><td><span class="tag t301">301</span></td><td>Identiek aan de homepage. Canonical stond al goed; nu ook 301 en géén interne links meer</td></tr>
+<tr><td><code>/legal.html?doc=privacy</code></td><td><code>/legal-privacy.html</code></td><td><span class="tag t301">301</span></td><td>Eigen pagina met eigen title, description, H1 en canonical</td></tr>
+<tr><td><code>/legal.html?doc=cookies</code></td><td><code>/legal-cookies.html</code></td><td><span class="tag t301">301</span></td><td>Idem</td></tr>
+<tr><td><code>/legal.html?doc=terms</code></td><td><code>/legal-terms.html</code></td><td><span class="tag t301">301</span></td><td>Idem</td></tr>
+<tr><td><code>/legal.html</code></td><td><code>/legal.html</code></td><td><span class="tag tkeep">behouden</span></td><td>Wordt overzichtspagina met drie kaarten — eigen unieke inhoud, blijft geïndexeerd</td></tr>
+<tr><td><code>/property.html?id=feat-1</code></td><td>zelfde URL</td><td><span class="tag tcan">canonical</span></td><td>Self-referencing canonical; title, description en H1 komen uit de listing</td></tr>
+<tr><td><code>/property.html?id=feat-2</code></td><td>zelfde URL</td><td><span class="tag tcan">canonical</span></td><td>Idem</td></tr>
+<tr><td><code>/property.html?id=feat-3</code></td><td>zelfde URL</td><td><span class="tag tcan">canonical</span></td><td>Stond nog niet in Search Console; nu in de sitemap</td></tr>
+<tr><td><code>/property.html</code> (zonder id)</td><td>—</td><td><span class="tag tdel">uit sitemap</span></td><td>Toont een willekeurige listing en canonicaliseert naar die listing. Geen eigen zoekresultaat waard</td></tr>
+<tr><td><code>/guide.html</code> (zonder slug)</td><td>—</td><td><span class="tag tdel">uit sitemap</span></td><td>Idem: valt terug op de eerste gids en canonicaliseert daarheen</td></tr>
+<tr><td><code>/guide.html?slug=…</code> (6×)</td><td>zelfde URL's</td><td><span class="tag tnew">nieuw in sitemap</span></td><td>Self-referencing canonical; zes gidsen die er nog niet in stonden</td></tr>
+<tr><td><code>/legal-terms.html</code> …<code>-privacy</code> …<code>-cookies</code></td><td>nieuw</td><td><span class="tag tnew">nieuw</span></td><td>Drie echte pagina's, apart indexeerbaar</td></tr>
+<tr><td><code>/title-verification.html</code></td><td>—</td><td><span class="tag tdel">uit sitemap</span></td><td>Intern dashboard met <code>noindex</code>; hoort niet in Google. Zie paragraaf 9</td></tr>
+<tr><td><code>/search.html?…</code> (filters)</td><td>—</td><td><span class="tag tdel">noindex</span></td><td>Interne zoekresultaten; canonical wijst naar de kale <code>/search.html</code></td></tr>
+<tr><td><code>/messages.html?id=pr2</code></td><td>—</td><td><span class="tag tkeep">noindex blijft</span></td><td>Zie paragraaf 4</td></tr>
+</tbody>
+</table>
+
+<h2>3 · Advies: van <code>?doc=</code> en <code>?id=</code> naar echte paden</h2>
+<p class="lead">Kort antwoord: <b>ja voor de juridische pagina's — dat heb ik gedaan. Nee voor de woningen en gidsen, zeker niet nu.</b></p>
+
+<h3>Waarom wél bij de juridische documenten</h3>
+<p>Het zijn drie stuks, ze veranderen nooit, en de inhoud stond al volledig in de HTML. Er is dus geen reden om ze achter een parameter te verstoppen. Ze zijn nu <code>/legal-terms</code>, <code>/legal-privacy</code> en <code>/legal-cookies</code> — met de bestaande regel die <code>.html</code> weghaalt werken die URL's zonder extensie.</p>
+
+<h3>Waarom platte namen en geen map <code>/legal/privacy</code></h3>
+<div class="box">
+<p><b>Dit is de belangrijkste technische afweging.</b> De header en footer van je site worden door <code>app.min.js</code> opgebouwd met <i>relatieve</i> links: <code>buy.html</code>, <code>search.html</code>, <code>guides.html</code>. In een map <code>/legal/</code> zou <code>buy.html</code> uitkomen op <code>/legal/buy.html</code> — dus élke navigatielink op die pagina's zou breken. Dat is alleen op te lossen door de hele site om te zetten naar root-absolute links (<code>/buy.html</code>). Dat is een prima opruiming voor later, maar het is een aparte klus met eigen risico, en <code>/legal-privacy</code> scoort in Google precies even goed als <code>/legal/privacy</code>. Voor SEO telt dat de URL lowercase, leesbaar en stabiel is — niet of er een schuine streep in zit.</p>
+</div>
+
+<h3>Waarom niet bij woningen en gidsen</h3>
+<p>Woningen komen uit de database in Supabase en veranderen dagelijks. Een echt pad zoals <code>/property/feat-1</code> vereist óf een buildstap die per listing een HTML-bestand genereert, óf server-side rendering. Zolang de site puur statisch is, betekent dat: bij elke nieuwe listing handmatig een bestand aanmaken. Dat gaat mis. En het is niet nodig: Google indexeert parameter-URL's prima, mits de canonical klopt — en dat is precies wat er kapot was.</p>
+<p>De zes gidsen zouden wél kunnen (vaste set, vaste teksten). Maar de artikelteksten staan nu als JavaScript-strings in <code>guide.html</code>; die uit elkaar trekken naar zes bestanden is een echte verhuizing. Mijn advies: doe dat pas als de gidsen goed beginnen te ranken, en dan meteen goed — met root-absolute links en <code>/guides/slug</code>-paden.</p>
+
+<h2>4 · Advies: <code>messages.html?id=pr2</code></h2>
+<p>De <code>noindex</code> is <b>terecht — laat hem staan</b>. Dit is het privéberichtenscherm tussen een koper en een verkoper over één specifieke woning. Er staat geen publieke content op; wie niet is ingelogd ziet niets bruikbaars. Dat is bij uitstek een pagina die Google moet negeren.</p>
+<p>Eén klein aandachtspunt: <code>messages.html</code> staat óók in <code>robots.txt</code> op <code>Disallow</code>. Dat is de juiste keuze — maar besef dat Google een geblokkeerde URL nooit crawlt en de <code>noindex</code> dus nooit léést. Als de URL toch ergens vandaan wordt gelinkt, kan hij als kale URL zonder omschrijving in de index belanden. De berichten-icoon in je header linkt ernaar. Zodra Search Console <code>messages.html</code> ooit meldt als "geïndexeerd hoewel geblokkeerd door robots.txt", is de oplossing: haal de <code>Disallow</code> weg zodat Google de <code>noindex</code> kan zien. Nu is er geen probleem — dus niets doen.</p>
+
+<h2>5 · Advies: content zonder JavaScript zichtbaar</h2>
+<p>De juridische pagina's staan nu volledig statisch in de HTML. Voor woningen en gidsen wordt de tekst nog door JavaScript ingeladen — dat is technisch acceptabel, want Google rendert JavaScript. De pagina's die uitvielen, vielen ook niet uit door rendering: ze hadden een verkeerde canonical, en dat is een signaal dat Google leest vóór rendering. Wat wel belangrijk was en nu geregeld is: <b>canonical, title en description worden gezet door een script bovenin de <code>&lt;head&gt;</code>, synchroon, vóór de rest van de pagina laadt</b> — niet pas nadat <code>app.min.js</code> en Supabase klaar zijn.</p>
+<p>Wil je op termijn zekerheid: laat een buildscript bij het publiceren per woning en per gids de titel, beschrijving en de eerste alinea statisch in de HTML zetten. Dat is de enige echte oplossing, en het is een project op zich.</p>
+
+<h2>6 · Redirect-configuratie — kies er één</h2>
+<p>Alle drie de bestanden staan klaar in de uploadmap. Je hebt er precies één nodig, afhankelijk van je hosting.</p>
+<table>
+<thead><tr><th style="width:22%">Hosting</th><th style="width:22%">Bestand</th><th>Waar plaatsen</th></tr></thead>
+<tbody>
+<tr><td>Apache, cPanel, DirectAdmin, de meeste klassieke webhosters</td><td><code>.htaccess</code></td><td>In de webroot, naast <code>index.html</code></td></tr>
+<tr><td>Netlify, Cloudflare Pages</td><td><code>_redirects</code></td><td>In de gepubliceerde map, zonder extensie</td></tr>
+<tr><td>Vercel</td><td><code>vercel.json</code></td><td>In de root van het project</td></tr>
+</tbody>
+</table>
+<div class="box">
+<p><b>Let op de volgorde in <code>.htaccess</code>.</b> De redirect-regels moeten vóór de bestaande regel staan die <code>.html</code> weghaalt, anders wordt <code>/Home.html</code> eerst intern afgehandeld en zie je nooit een 301. In het geleverde bestand staat het al goed.</p>
+</div>
+<p>Controleer na het uploaden of het werkt — dit is één commando:</p>
+<pre><b>curl</b> -I https://mykunda.com/Home.html
+<i># verwacht: HTTP/1.1 301 Moved Permanently</i>
+<i>#           Location: https://mykunda.com/</i>
+
+<b>curl</b> -I https://mykunda.com/deze-pagina-bestaat-niet
+<i># verwacht: HTTP/1.1 404 Not Found  (niet 200!)</i></pre>
+
+<h2>7 · Checklist voor Search Console</h2>
+<p class="lead">In deze volgorde. Stap 1 en 2 op dezelfde dag; de rest daarna.</p>
+<ol class="check">
+<li><b>Upload alles en leeg de cache.</b> Alle bestanden uit de uploadmap naar de webroot, plus het redirect-bestand dat bij jouw hosting past. Leeg daarna de cache van je host of CDN — anders serveert die de oude pagina's mét de foute canonical nog dagen door.</li>
+<li><b>Controleer met curl of het live is</b> (zie de commando's hierboven). Doe dit vóór je iets in Search Console aanraakt. Als de 301's niet werken, heeft alles wat hierna komt geen zin.</li>
+<li><b>Dien de sitemap opnieuw in.</b> Sitemaps → verwijder de bestaande regel <code>sitemap.xml</code> en voeg hem opnieuw toe. Zo forceer je een nieuwe uitlezing; hij is voor het laatst gelezen op 21 juni. Verwacht binnen enkele dagen "Geslaagd — 44 URL's ontdekt".</li>
+<li><b>Valideer de 404-fouten.</b> Pagina-indexering → "Niet gevonden (404)" → knop <b>Correctie valideren</b>. Google hercontroleert alle elf URL's. Ze blijven daarna in het rapport staan als "301", en dat is de bedoeling — een 301 is geen fout.</li>
+<li><b>Valideer "Alternatieve pagina met correcte canonieke tag".</b> Zelfde knop. Vijf URL's: <code>/home.html</code> blijft terecht uitgesloten (die 301't nu), de vier andere moeten omschakelen naar geïndexeerd.</li>
+<li><b>Vraag handmatig indexering aan voor zes URL's.</b> Via URL-inspectie → <b>Indexering aanvragen</b>, één voor één. Dit zijn de pagina's die het meest opleveren: <code>/legal-terms.html</code>, <code>/legal-privacy.html</code>, <code>/legal-cookies.html</code>, <code>/property.html?id=feat-1</code>, <code>/property.html?id=feat-2</code> en <code>/legal.html</code>. Er geldt een dagelijkse limiet van ongeveer tien, dus dit past in één sessie. Vraag <b>geen</b> indexering aan voor <code>/title-verification.html</code> — die hoort niet in Google.</li>
+<li><b>Controleer twee URL's met "Live URL testen".</b> Inspecteer <code>/property.html?id=feat-1</code> en klik op "Live URL testen" → "Bekeken pagina". Kijk of bij <b>Door gebruiker gedeclareerde canonieke URL</b> nu de volledige URL mét <code>?id=feat-1</code> staat. Doe hetzelfde voor een gids. Staat er nog de kale URL, dan is de cache niet geleegd.</li>
+<li><b>Wacht twee weken en kijk terug.</b> Validaties duren doorgaans één tot twee weken. Verwacht daarna: de elf 404's verplaatst naar "Pagina met omleiding", de vier canonical-uitsluitingen geïndexeerd, en tien à vijftien nieuwe pagina's uit de sitemap erbij.</li>
+<li><b>Controleer de gestructureerde data.</b> Verbeteringen → Broodkruimels en Producten. De <code>?id=</code>-pagina's leveren <code>Product</code>-markering; nu ze indexeerbaar zijn, kunnen daar voor het eerst waarschuwingen opduiken (meestal over ontbrekende <code>aggregateRating</code> of <code>review</code> — die zijn optioneel en niet urgent).</li>
+</ol>
+
+<h2>8 · Zo voorkom je dat de hoofdletter-mismatch terugkomt</h2>
+<p>Het probleem is bijna altijd hetzelfde: je ontwikkelt op Windows of macOS, waar het bestandssysteem géén verschil ziet tussen <code>Home.html</code> en <code>home.html</code>. Je server draait Linux en ziet dat verschil wél. Een link met een hoofdletter werkt dus lokaal prima en geeft live een 404 — precies wat hier gebeurd is.</p>
+<h3>Vier maatregelen, van simpel naar structureel</h3>
+<ul>
+<li><b>Eén regel, altijd: bestandsnamen en links zijn volledig lowercase, woorden gescheiden door een koppelteken.</b> Dus <code>cape-point.html</code>, nooit <code>CapePoint.html</code> of <code>Cape_Point.html</code>. Geen uitzonderingen, ook niet voor nieuwe pagina's.</li>
+<li><b>Het vangnet staat al aan.</b> De <code>CheckCaseOnly</code>-regel in <code>.htaccess</code> vangt elke toekomstige hoofdletterfout op met een automatische 301 naar het juiste bestand. Het is een vangnet, geen vrijbrief — een 301 kost altijd wat.</li>
+<li><b>Controleer voor elke upload met één zoekopdracht.</b> Zoek in je editor door alle bestanden op deze reguliere expressie: <code>href="[A-Z]</code>. Nul resultaten betekent nul hoofdletter-links. Doe dit ook op <code>app.js</code> en <code>app.min.js</code>.</li>
+<li><b>Denk aan de tweede bron: JSON-LD en meta-tags.</b> De 404's ontstonden niet alleen door <code>&lt;a href&gt;</code>, maar ook door canonicals, Open Graph-URL's en de <code>SearchAction</code>. Bouw die altijd op uit <code>SITE_URL</code> plus een lowercase pad, nooit met een handmatig ingetypte URL. In <code>app.js</code> gebeurt dat al goed; houd dat zo.</li>
+</ul>
+<div class="box g">
+<p><b>Nog één ding, na het uploaden.</b> Controleer of <code>https://mykunda.com</code>, <code>https://www.mykunda.com</code> en de <code>http://</code>-varianten allemaal op één versie uitkomen. HTTPS wordt al afgedwongen in <code>.htaccess</code>; de <code>www</code>-variant niet. Als je host beide serveert, ziet Google twee sites met identieke inhoud. Eén regel bij je DNS- of hostingprovider lost dat op — laat me weten welke hosting je gebruikt, dan zet ik de regel erbij.</p>
+</div>
+
+<h2>9 · Correctie: <code>title-verification.html</code> en de audit van alle 46 pagina's</h2>
+<p class="lead">De pagina stond in de sitemap én had <code>noindex, nofollow</code>. Dat is een tegenstrijdig signaal: de sitemap vraagt om indexering, de pagina weigert die. Search Console meldt dan terecht "Uitgesloten door tag noindex". <b>De noindex is de juiste keuze en blijft staan; de sitemap-entry is verwijderd</b> — in de root, in <code>deploy/</code> en in <code>upload-pakket/</code>. De sitemap telt nu 44 URL's.</p>
+
+<h3>Volledige audit — alle 46 pagina's gecontroleerd</h3>
+<p>Ik heb elke pagina in de root vergeleken met de sitemap. Uitkomst:</p>
+<table>
+<thead><tr><th style="width:28%">Categorie</th><th style="width:10%">Aantal</th><th>Bevinding</th></tr></thead>
+<tbody>
+<tr><td>In sitemap mét noindex</td><td><b>1</b></td><td><code>title-verification.html</code> — nu verwijderd. Verder geen enkele</td></tr>
+<tr><td>Noindex, niet in sitemap</td><td><b>13</b></td><td>Allemaal correct afgeschermd — zie lijst hieronder</td></tr>
+<tr><td>Indexeerbaar, niet in sitemap</td><td><b>1</b></td><td><code>home.html</code> — correct, die 301't nu naar <code>/</code></td></tr>
+<tr><td>Géén robots-tag, niet in sitemap</td><td><b>9</b></td><td>Aandachtspunt — zie hieronder</td></tr>
+<tr><td>In sitemap, bestand ontbreekt</td><td><b>0</b></td><td>Geen dode entries</td></tr>
+</tbody>
+</table>
+
+<h3>Correct op noindex (13) — niets doen</h3>
+<p><code>admin.html</code>, <code>auth.html</code>, <code>dashboard.html</code>, <code>list.html</code>, <code>messages.html</code>, <code>checkout.html</code>, <code>checkout v2.html</code>, <code>checkout v3.html</code>, <code>title-verification.html</code>, <code>backend-architecture.html</code>, <code>phase-1-build-plan.html</code>, <code>phase-2-build-plan.html</code>, <code>whatsapp-setup-guide.html</code>. Plus <code>404.html</code> op <code>noindex, follow</code>, wat precies goed is.</p>
+
+<h3>Publieke pagina's met onterechte noindex: geen</h3>
+<p>Ik heb hier expliciet op gecontroleerd, want dit is de vervelendste categorie — een pagina die wél moet ranken maar zichzelf uitsluit. <b>Er is er geen enkele.</b> Alle publieke pagina's — de tien hoofdpagina's, de twintig gebiedspagina's, de vier juridische pagina's, <code>guide.html</code>, <code>guides.html</code>, <code>property.html</code> — staan op <code>index, follow</code>. Er is dus niets dat overleg vraagt.</p>
+
+<div class="box">
+<p><b>Wél een aandachtspunt: negen pagina's zonder robots-tag.</b> <code>MyKunda Prospectus.html</code>, <code>deploy-handleiding.html</code>, <code>email-previews.html</code>, <code>email-valuation.html</code>, <code>email-valuation-customer.html</code>, <code>logo-options.html</code>, <code>logo-preview.html</code>, <code>photo-brief.html</code> en <code>SEO-herstelplan.html</code>. Ze staan niet in de sitemap, dus Google zoekt ze niet actief op — maar zonder <code>noindex</code> mág Google ze indexeren zodra hij ze ergens vindt. Een prospectus of e-mailpreview in de zoekresultaten is geen ramp, maar ook niet de bedoeling.</p>
+<p>Twee opties, allebei prima: geef ze <code>&lt;meta name="robots" content="noindex, nofollow"&gt;</code>, of — netter — upload ze helemaal niet naar de live server. Ze staan al niet in het uploadpakket. <b>Ik heb ze niet aangepast</b>, conform je instructie. Zeg het als je de tag er alsnog in wilt.</p>
+</div>
+
+<h3>Over de veiligheid van <code>title-verification.html</code></h3>
+<p>Dat is een groter onderwerp dan een SEO-correctie, en het antwoord is niet wat je verwachtte. Zie paragraaf 10.</p>
+
+<h2>10 · Beveiligingsanalyse: welke pagina's staan open?</h2>
+<p class="lead">Je vermoeden was terecht, maar de pagina die je noemde is niet de gevaarlijke. Ik heb alle afgeschermde pagina's nagelopen op twee dingen: is er een auth-guard, en haalt de pagina echte data op uit Supabase?</p>
+
+<table>
+<thead><tr><th style="width:24%">Pagina</th><th style="width:15%">Auth-guard</th><th style="width:18%">Echte data?</th><th>Risico</th></tr></thead>
+<tbody>
+<tr><td><code>admin.html</code></td><td><b style="color:#8C3131">Geen</b></td><td><b style="color:#8C3131">Ja — live</b></td><td><b style="color:#8C3131">Ernstig.</b> Leest <code>listings</code> en <code>leads</code> (namen, e-mailadressen, telefoonnummers) en kan listings goedkeuren, afwijzen en leads verwijderen</td></tr>
+<tr><td><code>messages.html</code></td><td><b style="color:#8C3131">Geen</b></td><td>Ja — <code>fetchConversations()</code></td><td><b style="color:#8C3131">Hoog.</b> Privégesprekken tussen kopers en verkopers</td></tr>
+<tr><td><code>checkout.html</code></td><td><b style="color:#8C3131">Geen</b></td><td>Nee — localStorage</td><td>Middel. Betaalscherm zonder inlogcontrole</td></tr>
+<tr><td><code>title-verification.html</code></td><td><b style="color:#8C3131">Geen</b></td><td><b style="color:#1D6B36">Nee — demo</b></td><td>Laag — zie hieronder</td></tr>
+<tr><td><code>dashboard.html</code></td><td><b style="color:#1D6B36">Ja</b></td><td>Ja</td><td>Geïmplementeerd via <code>requireAuth()</code></td></tr>
+<tr><td><code>list.html</code></td><td><b style="color:#1D6B36">Ja</b></td><td>Ja</td><td>Geïmplementeerd via <code>requireAuth()</code></td></tr>
+</tbody>
+</table>
+
+<h3>Antwoord op je vraag: demo-data of echte data?</h3>
+<div class="box g">
+<p><b><code>title-verification.html</code> bevat uitsluitend demo-data.</b> Alle verzoeken, namen van indieners, adressen, vraagprijzen en documentaantallen komen uit twee hardgecodeerde arrays in <code>title-verification-app.js</code>: <code>DEMO_VERIFICATIONS</code> en <code>DEMO_LISTINGS</code>. Er staat geen enkele <code>sb.from(...)</code>-aanroep in het bestand — de pagina praat niet met Supabase. De gegevens die je op het scherm ziet zijn verzonnen. Er lekt op dit moment niets.</p>
+</div>
+
+<div class="box">
+<p><b>Maar <code>admin.html</code> wél, en die is veel erger.</b> Die pagina heeft geen <code>requireAuth()</code>, opent voor iedereen die de URL kent, en doet direct live queries:</p>
+<pre>sb.from('listings').select('*, listing_media(*)').eq('status','pending_review')
+sb.from('leads').select('*').order('created_at').limit(100)</pre>
+<p>Daar staan namen, e-mailadressen en telefoonnummers van je leads in. En het is niet alleen lezen — de knoppen doen <code>update</code> en <code>delete</code> op je productiedatabase. Iemand die de URL raadt kan leads verwijderen. De URL staat bovendien in <code>robots.txt</code> onder <code>Disallow</code>, en dat bestand is publiek: het is letterlijk een lijst met interessante paden.</p>
+<p>Of dit nu al misgaat hangt volledig af van je Supabase Row Level Security. Staat die goed, dan geeft de anon-key niets terug en zie je een leeg scherm. Staat die niet goed, dan ligt je leaddatabase open. <b>Controleer dat vandaag</b> — open <code>admin.html</code> in een privévenster zonder in te loggen en kijk of er data verschijnt.</p>
+</div>
+
+<h3>Wat er nodig is — voorstel, nog niet uitgevoerd</h3>
+<p>Drie lagen, in volgorde van belang. De eerste is de enige die echt telt.</p>
+<ol class="check">
+<li><b>Row Level Security in Supabase.</b> Dit is de enige echte beveiliging — alle andere lagen zijn cosmetisch, want je publieke anon-key staat in <code>supabase.js</code> en is voor iedereen leesbaar. Zet RLS aan op <code>listings</code>, <code>leads</code>, <code>conversations</code>, <code>messages</code> en <code>verifications</code>. Beleid: een verkoper ziet alleen rijen waar <code>owner_id = auth.uid()</code>; leads en het adminoverzicht alleen voor een rol <code>admin</code> (een <code>profiles</code>-tabel met een <code>role</code>-kolom, uitgelezen via een <code>security definer</code>-functie). Zonder dit is de rest zinloos.</li>
+<li><b>Auth-guard bovenin elke afgeschermde pagina.</b> De functie bestaat al en werkt — <code>requireAuth()</code> in <code>app.js</code> stuurt niet-ingelogde bezoekers naar <code>auth.html</code>. Hij staat alleen niet overal. Toevoegen aan <code>admin.html</code>, <code>messages.html</code>, <code>checkout.html</code> en <code>title-verification.html</code>. Voor de twee adminpagina's is een gewone <code>requireAuth()</code> niet genoeg — daar moet ook de rol gecontroleerd worden, anders komt elke ingelogde verkoper in het adminoverzicht.</li>
+<li><b>Documenten in een private storage-bucket.</b> Zodra er echte titelaktes geüpload worden: private bucket, toegang via tijdelijke signed URL's. Een publieke bucket betekent dat iedereen met de link de akte kan downloaden, voorgoed.</li>
+</ol>
+<p>Kleine bijkomstigheid: <code>admin.html</code> heeft een tabblad dat naar <code>title-verification.html</code> linkt. Zodra de eerste pagina achter een rolcontrole staat, is de tweede niet langer vindbaar zonder de URL te kennen — maar dat is verstopping, geen beveiliging. Beide pagina's hebben hun eigen guard nodig.</p>
+<p><b>Ik heb hier niets van uitgevoerd</b>, conform je verzoek. Zeg welke laag je eerst wilt; punt 2 is een kwestie van minuten, punt 1 is werk in Supabase zelf dat ik niet vanaf hier kan doen.</p>
+
+<h2>11 · Advies: is een publieke pagina over titelverificatie zinvol?</h2>
+<p class="lead">Ja — en het is waarschijnlijk je sterkste ongebruikte SEO-kans. Maar niet als aparte pagina.</p>
+
+<h3>Wat er nu al staat</h3>
+<p>Het onderwerp is verspreid over vier pagina's, en de dekking is beter dan je zou denken:</p>
+<ul>
+<li><b><code>safe.html</code></b> — verreweg het sterkst. Een volledige sectie "How title verification works" met vier stappen, plus een eerlijk kader over wat verificatie <i>niet</i> is, plus vier FAQ-vragen. Dit is in feite al de uitlegpagina.</li>
+<li><b><code>faq.html</code></b> — twee losse vragen: wat "verified title" betekent en hoe MyKunda fraude tegengaat.</li>
+<li><b><code>sell.html</code></b> — verificatie als onderdeel van de Verified- en Managed-plannen.</li>
+<li><b><code>about.html</code></b> — zijdelingse vermelding.</li>
+</ul>
+
+<h3>Waarom geen aparte pagina</h3>
+<div class="box">
+<p>Een nieuwe pagina over titelverificatie zou voor negentig procent overlappen met <code>safe.html</code>. Je zou twee pagina's krijgen die op dezelfde zoekwoorden mikken en elkaar verdringen — precies het kannibalisatieprobleem dat je net hebt opgeruimd. <code>safe.html</code> staat al in de sitemap, heeft al autoriteit opgebouwd en heeft een sterke <code>&lt;title&gt;</code>.</p>
+</div>
+
+<h3>Wat ik in plaats daarvan zou doen</h3>
+<p>De echte kans zit niet in "wat is titelverificatie" — dat is een merkvraag die alleen mensen stellen die je site al kennen. De kans zit in de vraag die mensen in Google typen <i>voordat</i> ze van MyKunda gehoord hebben:</p>
+<ul>
+<li><i>how to check land ownership in the Gambia</i></li>
+<li><i>is my Gambian land title genuine</i></li>
+<li><i>Gambia land dispute / double sale</i></li>
+<li><i>land registry Gambia how to search</i></li>
+</ul>
+<p>Dat is een <b>gids</b>, geen dienstpagina. Concreet voorstel: een zevende gids onder je bestaande structuur, op <code>guide-how-to-verify-land-title-in-the-gambia.html</code>. Insteek: het proces zoals een koper het zelf doorloopt — welke documenttypes er bestaan (freehold, leasehold, customary), waar je ze laat controleren, wat een dubbele verkoop is en hoe je die herkent, welke rode vlaggen er zijn. Praktisch en onafhankelijk geschreven, met aan het eind één verwijzing naar je Verified-plan. Niet andersom.</p>
+<p>Dat past in de sitemap zonder overlap, bedient een zoekintentie die je nu niet dekt, en linkt natuurlijk naar <code>safe.html</code> en <code>sell.html</code>. Twee kleine dingen daarnaast: geef <code>safe.html</code> een duidelijke ankerlink naar de verificatiesectie, en verwijs vanuit de twee FAQ-antwoorden door naar <code>safe.html</code> — dat kost tien minuten en die interne links ontbreken nu.</p>
+<p><b>Zal ik die gids schrijven?</b> Zeg het maar, dan lever ik hem in dezelfde opzet als je zes bestaande gidsen.</p>
+
+<hr>
+<p class="foot">MyKunda · SEO-herstelplan · 8 augustus 2026 · Gebaseerd op Search Console-rapport van 5 augustus 2026 · Paragraaf 9 toegevoegd 8 augustus 2026</p>
+
+</doc-page>
+<script src="doc-page.js"></script>
+</body>
+</html>

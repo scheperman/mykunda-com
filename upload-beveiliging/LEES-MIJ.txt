@@ -1,0 +1,40 @@
+MyKunda — beveiligingsronde 15 augustus 2026
+============================================
+
+Upload deze 8 bestanden naar de webroot van mykunda.com, overschrijven AAN.
+Ze horen allemaal in de hoofdmap, niet in een submap.
+
+  .htaccess     blokkade van mirror-tools, scrapers, AI-crawlers;
+                hotlinkbeveiliging; mapoverzichten uit; CSP-header
+  _headers      dezelfde headers, voor Netlify/Vercel
+  vercel.json   idem
+  robots.txt    AI-trainingscrawlers en SEO-harvesters geweerd
+  app.js        contentguard (foto's, kopieer-bronvermelding)
+  app.min.js    idem — dit is het bestand dat de site echt laadt
+  sw.js         bugfix: "Response body is already used" in de console
+  image-slot.js bugfix: 404 op .image-slots.state.json bij elke pageview;
+                scheelt meteen een verzoek per pagina
+
+NOG DOEN, HANDMATIG
+-------------------
+1. Verwijder Technische-controle.html van de server. Een upload overschrijft
+   dat bestand wel, maar verwijdert het niet — en het legt uit hoe de site
+   in elkaar zit.
+
+2. Zet de MapTiler-sleutel vast op je domein:
+   cloud.maptiler.com -> Keys -> Allowed origins ->
+   https://mykunda.com/*  en  https://www.mykunda.com/*
+   Zonder dit kan iedereen kaarten laden op jouw rekening.
+
+NA DE UPLOAD
+------------
+Open de site, F12 -> Console, klik door home, search, property, een
+kaartpagina, inloggen en checkout. Meldingen die met "Refused to load"
+beginnen: doorgeven, dan vul ik de policy aan.
+
+Geeft de site een 500-fout? Haal dan de regel "Options -Indexes" uit
+.htaccess (regel ~14) en upload opnieuw. Niet elke host staat die toe.
+
+De .html-bestanden hoeven nu NIET mee. De copyright-meta en de
+vingerafdruk komen erin zodra je 'node build.mjs' draait; upload dan de
+hele inhoud van deploy/.

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>MyKunda — Analyse: aanmelden van een nieuwe gebruiker</title>
+<script src="doc-page.js"></script>
+<style>
+doc-page:not(:defined){visibility:hidden}
+:root{--g9:#0E2E25;--g7:#1C5848;--g2:#DCEAE3;--am:#B4711C;--am-bg:#FBF3E7;--ink:#16211D;--ink2:#3D4B45;--mut:#6B7B74;--line:#E2E8E4}
+doc-page{font-family:"Hanken Grotesk",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:var(--ink2);font-size:10.5pt;line-height:1.62}
+h1{font-size:26pt;line-height:1.1;letter-spacing:-.02em;color:var(--g9);margin:0 0 6px}
+.sub{font-size:11.5pt;color:var(--mut);margin:0 0 4px;line-height:1.5}
+.stamp{font-size:8.5pt;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:var(--am);margin-bottom:12px}
+h2{font-size:15pt;color:var(--g9);margin:30px 0 10px;letter-spacing:-.01em;padding-bottom:7px;border-bottom:2px solid var(--g2)}
+h3{font-size:11.5pt;color:var(--g7);margin:20px 0 6px}
+p{margin:0 0 9px}
+ul,ol{margin:0 0 10px;padding-left:19px}
+li{margin-bottom:5px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:9pt;background:#F1F5F3;padding:1px 5px;border-radius:3px;color:var(--g9);word-break:break-word}
+pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:8.5pt;line-height:1.5;background:var(--g9);color:#D9E7E1;padding:13px 15px;border-radius:6px;overflow-wrap:break-word;white-space:pre-wrap;margin:0 0 12px;break-inside:avoid}
+pre b{color:#F3C77A;font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:9pt;margin:0 0 14px}
+th{background:var(--g7);color:#fff;text-align:left;padding:8px 10px;font-weight:700;font-size:8pt;text-transform:uppercase;letter-spacing:.04em}
+td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.45}
+tr:nth-child(even) td{background:#F7FAF8}
+td code{background:none;padding:0;font-size:8.5pt}
+.tag{display:inline-block;font-size:7.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 7px;border-radius:20px;white-space:nowrap}
+.tok{background:#DFF3E5;color:#1D6B36}
+.tlet{background:#FDEBD4;color:#8A5510}
+.tbad{background:#F9DEDA;color:#96341F}
+.box{background:var(--am-bg);border:1px solid #F0DCC0;border-radius:7px;padding:14px 17px;margin:0 0 14px;break-inside:avoid;orphans:3;widows:3}
+.box b{color:var(--am)}
+.box.g{background:#F2F8F4;border-color:#D3E6D9}
+.box.g b{color:var(--g7)}
+.flow{list-style:none;padding-left:0;counter-reset:c;margin:0 0 14px}
+.flow li{position:relative;padding-left:30px;margin-bottom:9px;counter-increment:c;break-inside:avoid;orphans:3;widows:3}
+.flow li::before{content:counter(c);position:absolute;left:0;top:1px;width:20px;height:20px;border-radius:50%;background:var(--g7);color:#fff;font-size:8.5pt;font-weight:700;display:flex;align-items:center;justify-content:center}
+.lead{font-size:11pt;color:var(--ink2);line-height:1.65;margin-bottom:14px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px}
+.kpi{background:#F7FAF8;border:1px solid var(--line);border-radius:7px;padding:12px 14px}
+.kpi .n{font-size:19pt;font-weight:700;color:var(--g9);line-height:1.1}
+.kpi .l{font-size:8.5pt;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-top:3px}
+hr{border:0;border-top:1px solid var(--line);margin:26px 0}
+.foot{font-size:8.5pt;color:var(--mut)}
+a{color:var(--g7)}
+a:hover{color:var(--g9)}
+</style>
+</head>
+<body>
+<doc-page margin="0.7in">
+
+<div class="stamp">MyKunda · mykunda.com</div>
+<h1>Aanmelden van een nieuwe gebruiker</h1>
+<p class="sub">15 augustus 2026 — de hele keten nagelopen: het inlogscherm, de Edge Function die de code mailt, de aanmaak in <code>auth.users</code> en de profielrij in de database. De techniek werkt; er zitten vier gaten in, waarvan één principieel.</p>
+
+<div class="grid3" style="margin-top:20px">
+  <div class="kpi"><div class="n">Werkt</div><div class="l">code, account, profiel</div></div>
+  <div class="kpi"><div class="n">4</div><div class="l">aandachtspunten</div></div>
+  <div class="kpi"><div class="n">1</div><div class="l">echt risico</div></div>
+</div>
+
+<h2>Wat er nu precies gebeurt</h2>
+<ol class="flow">
+<li>Bezoeker kiest <b>Create account</b>, vult naam + e-mail in en klikt <i>Send my code</i>. Er is geen wachtwoordveld: het is een code-flow.</li>
+<li><code>auth.html</code> roept <code>sendEmailCode()</code> aan → Edge Function <code>auth-email</code> met <code>type: "email_code"</code>.</li>
+<li>De functie probeert eerst <code>generateLink({type:"magiclink"})</code>. Bestaat het account niet, dan valt zij terug op <code>generateLink({type:"signup"})</code> met een willekeurig wachtwoord en <code>data:{full_name}</code>. <b>Op dat moment wordt de gebruiker aangemaakt in <code>auth.users</code></b> — nog onbevestigd.</li>
+<li>De trigger <code>on_auth_user_created</code> (SECURITY DEFINER, gaat dus buiten RLS om) zet meteen een rij in <code>public.profiles</code> met rol <code>buyer</code>, e-mail en <code>full_name</code>.</li>
+<li>Alleen de code uit <code>generateLink</code> wordt gemaild via Resend vanaf <code>noreply@mykunda.com</code>; het antwoord bevat <code>verify_type</code> en de echte codelengte, waar het scherm zijn invoervakjes op afstemt.</li>
+<li>Bezoeker typt de code, <code>verifyEmailOtp()</code> wisselt die in voor een sessie, e-mail is daarmee bevestigd, en de browser gaat naar <code>dashboard.html</code>.</li>
+</ol>
+
+<div class="box g"><b>Dit klopt en is goed geregeld.</b> De code komt van je eigen domein, de lengte is flexibel, plakken van de volledige code werkt, de profielrij ontstaat automatisch en kan niet mislukken op RLS, de rol staat veilig op <code>buyer</code> (niemand kan zich tot admin of agent aanmelden), en er is een terugval op Supabase's eigen mailer als de functie onbereikbaar is.</div>
+
+<h2>De vier aandachtspunten</h2>
+
+<h3>1 · Inloggen en aanmelden zijn technisch hetzelfde <span class="tag tbad">risico</span></h3>
+<p>De tabs <i>Sign in</i> en <i>Create account</i> verschillen alleen in of het naamveld zichtbaar is. Beide sturen exact dezelfde aanvraag, en de functie maakt een account aan zodra het e-mailadres onbekend is. Gevolgen:</p>
+<ul>
+<li>Wie bij <b>Sign in</b> een typefout maakt in zijn e-mailadres, krijgt stil een nieuw, leeg account — en snapt niet waarom zijn favorieten weg zijn.</li>
+<li>De foutmelding <i>"No account on that email yet — switch to Create account"</i> kan nooit meer verschijnen; die tekst is dode letter.</li>
+<li>Elk willekeurig e-mailadres dat iemand invult, levert een rij in <code>auth.users</code> én in <code>profiles</code> op, ook als de code nooit wordt ingevoerd. Bij misbruik groeit je gebruikerstabel met spookaccounts.</li>
+</ul>
+<p><b>Oplossing:</b> geef de aanvraag mee in welke modus de bezoeker zit (<code>mode:"signin"|"signup"</code>). Bij <code>signin</code> maakt de functie géén account aan, maar antwoordt met <code>no_account</code>, waarop het scherm netjes voorstelt over te stappen naar <i>Create account</i>. Bij <code>signup</code> mag zij aanmaken — en meldt zij als het adres al bestaat dat inloggen de bedoeling is.</p>
+
+<h3>2 · De toestemming voor de voorwaarden wordt niet vastgelegd <span class="tag tlet">AVG</span></h3>
+<p>Onder het formulier staat "By creating an account you agree to MyKunda's Terms and Privacy Policy". In de database blijven <code>consent_contact</code>, <code>consent_marketing</code> en <code>consent_at</code> echter op <code>false</code> / <code>null</code>. Er is dus geen enkel bewijs van het moment van toestemming, terwijl de kolommen er wél voor gemaakt zijn.</p>
+<p><b>Oplossing:</b> stuur bij aanmelden <code>consent: true</code> mee in de metadata en laat de trigger <code>consent_contact = true, consent_at = now()</code> vullen. Wil je ook marketing (de nieuwsbrief / area alerts), dan hoort daar een aparte, niet-voorafgevinkte checkbox bij — die mag nooit met de voorwaarden in één zin.</p>
+
+<h3>3 · Een afgebroken aanmelding kan zichzelf blokkeren <span class="tag tlet">let op</span></h3>
+<p>Wie een code aanvraagt maar nooit invoert, houdt een onbevestigd account. Bij een tweede poging kiest de functie de <code>magiclink</code>-route (het account bestáát immers), en die weigert bij een onbevestigd adres met een fout die niet als "not found" wordt herkend. Het scherm valt dan terug op Supabase's eigen mailer — en dat is precies de magic link in plaats van een code, het probleem dat we net hebben opgelost.</p>
+<p><b>Oplossing:</b> laat de functie eerst opzoeken of het account bestaat én bevestigd is, en kies daarop de route: <code>signup</code> voor onbevestigd of nieuw, <code>magiclink</code> voor bevestigd. Dat maakt tegelijk punt&nbsp;1 schoon oplosbaar.</p>
+
+<h3>4 · Kleinere punten <span class="tag tok">geen haast</span></h3>
+<ul>
+<li><code>signUpEmail()</code> in <code>supabase.js</code> wordt nergens meer gebruikt: de wachtwoord-aanmelding is verdwenen. Dode code, verwijderen of bewust laten staan.</li>
+<li>Nieuwe accounts krijgen een willekeurig wachtwoord dat niemand kent. Onschadelijk, en <i>wachtwoord vergeten</i> werkt gewoon — maar er is geen enkele plek in de site waar met een wachtwoord ingelogd kan worden. Kies één lijn: alleen codes, of codes én wachtwoord.</li>
+<li>Aanmelden als <b>verkoper of makelaar</b> kan niet: iedereen wordt <code>buyer</code> en jij moet de rol handmatig omzetten. Prima voor nu, maar het is een handmatige stap zodra er makelaars bijkomen.</li>
+<li>De rem in de functie zit in het geheugen van één instantie (20&nbsp;seconden per adres). Bij meerdere instanties of na een herstart werkt hij niet. Voldoende tegen dubbelklikken, niet tegen misbruik — daarvoor is een tabelletje in de database nodig.</li>
+<li>Google-aanmelding gaat langs dezelfde trigger en is goed; die werkt alleen als de Google-provider in Supabase daadwerkelijk aan staat met de juiste redirect-URL's. Niet vanaf hier te controleren.</li>
+</ul>
+
+<h2>Nog te draaien in Supabase</h2>
+<p><code>backend/audit-fixes-2.sql</code> staat nog open. Voor het aanmelden maakt dat niets uit — de profieltrigger gaat buiten RLS om — maar punt&nbsp;2 daarin (<code>profiles insert</code> terug naar admin-only) hoort wel bij dit onderwerp en is nog niet uitgevoerd.</p>
+
+<hr>
+<p class="foot">Nagelopen bestanden: <code>auth.html</code>, <code>supabase.js</code>, <code>edge-functions/auth-email/index.ts</code>, <code>edge-functions/_shared/email-template.ts</code>, <code>backend/schema.sql</code>, <code>backend/audit-fixes-2.sql</code>. <code>auth.html</code> en <code>supabase.js</code> in <code>deploy/</code> zijn gelijk aan de projectversie. Dit document is een analyse — er is nog niets gewijzigd.</p>
+
+</doc-page>
+</body>
+</html>

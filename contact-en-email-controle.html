@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyKunda — Contact &amp; e-mail: controle en herstelplan</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Mulish:wght@400;500;600;700;800;900&display=swap">
+<style>
+:root{--green-900:#0E2E25;--green-800:#123A2E;--green-700:#15463A;--green-600:#1C5848;--green-500:#2A7561;--green-200:#BEDACE;--green-100:#DCEAE3;--green-50:#EAF2ED;--amber-600:#B45F22;--amber-500:#C8702D;--amber-400:#DD8A45;--amber-100:#F6E6D4;--amber-50:#FBF1E6;--paper:#FAF8F3;--paper-2:#F3F0E8;--white:#fff;--ink:#18201D;--ink-2:#384640;--muted:#5C6B64;--muted-2:#8A958E;--line:#E5E1D6;--line-2:#EFEBE1;--serif:'Mulish',sans-serif;--sans:'Hanken Grotesk',sans-serif;--r-sm:8px;--r-md:12px;--r-lg:18px;--sh-md:0 4px 14px rgba(24,32,29,.07),0 2px 6px rgba(24,32,29,.05)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--paper-2);color:var(--ink);line-height:1.62;-webkit-font-smoothing:antialiased}
+.doc{max-width:920px;margin:0 auto;background:var(--paper);box-shadow:var(--sh-md)}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:800;line-height:1.14;letter-spacing:-.015em;color:var(--ink)}
+p{margin:11px 0;color:var(--ink-2)}
+a{color:var(--green-700)}
+a:hover{color:var(--green-500)}
+strong{color:var(--ink);font-weight:700}
+code{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.85em;background:var(--green-50);color:var(--green-700);padding:2px 6px;border-radius:5px;font-weight:600}
+pre{background:var(--green-900);color:#C8E6DC;padding:18px 22px;border-radius:var(--r-md);font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:13px;line-height:1.7;overflow-x:auto;margin:14px 0;white-space:pre}
+pre b{color:var(--amber-400);font-weight:700}
+.codewrap{position:relative;margin:14px 0}
+.codewrap pre{margin:0}
+.copy{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.12);color:#DCEAE3;border:1px solid rgba(255,255,255,.22);border-radius:7px;padding:6px 12px;font-family:var(--sans);font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.02em}
+.copy:hover{background:rgba(255,255,255,.2)}
+.copy.done{background:var(--green-500);border-color:var(--green-500);color:#fff}
+.cover{background:linear-gradient(150deg,var(--green-800),var(--green-600));color:#fff;padding:64px 64px 50px;position:relative;overflow:hidden}
+.cover::after{content:"";position:absolute;right:40px;bottom:30px;width:120px;height:120px;background:rgba(255,255,255,.06);border-radius:50%}
+.cover .logo{font-family:var(--serif);font-weight:800;font-size:23px;letter-spacing:-.02em;margin-bottom:42px}
+.cover .kicker{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--amber-400);margin-bottom:15px}
+.cover h1{color:#fff;font-size:38px;font-weight:900;max-width:640px}
+.cover .lede{font-size:17px;color:rgba(255,255,255,.86);margin-top:17px;max-width:640px;line-height:1.55}
+.cover .meta{display:flex;gap:34px;margin-top:36px;padding-top:24px;border-top:1px solid rgba(255,255,255,.18);flex-wrap:wrap}
+.cover .meta div span{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.6);font-weight:700;margin-bottom:4px}
+.cover .meta div b{font-family:var(--serif);font-size:16px;font-weight:700;color:#fff}
+.body{padding:52px 64px 64px}
+section{margin-bottom:46px}
+.num{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;background:var(--green-600);color:#fff;font-family:var(--serif);font-weight:800;font-size:16px;margin-right:13px;flex:none}
+.h-row{display:flex;align-items:center;margin-bottom:8px}
+.h-row h2{font-size:26px}
+.lead-line{color:var(--muted);font-size:16px;margin:0 0 22px 47px}
+section>p,section>.steps,section>.note,section>.warn,section>.goal,section>.codewrap,section>.tablewrap,section>ul.chk{margin-left:47px}
+.goal{background:var(--green-50);border:1px solid var(--green-100);border-radius:var(--r-lg);padding:22px 26px;margin:0 0 6px 47px}
+.goal h4{font-size:16px;margin-bottom:6px;color:var(--green-700)}
+.goal p{margin:0;font-size:15px}
+.note{border-left:4px solid var(--amber-500);background:var(--amber-50);padding:15px 20px;border-radius:0 var(--r-md) var(--r-md) 0;margin:18px 0}
+.note b{color:var(--amber-600)}
+.warn{border-left:4px solid #C2533A;background:#FEF2F2;padding:15px 20px;border-radius:0 var(--r-md) var(--r-md) 0;margin:18px 0}
+.warn b{color:#C2533A}
+.steps{counter-reset:step}
+.s{display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line-2);align-items:flex-start}
+.s:last-child{border-bottom:none}
+.s::before{counter-increment:step;content:counter(step);width:30px;height:30px;border-radius:8px;background:var(--green-600);color:#fff;font-family:var(--serif);font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;flex:none;margin-top:2px}
+.s .tx{flex:1}
+.s .tx b{color:var(--ink)}
+.s .tx p{margin:4px 0 0;font-size:14.5px}
+.s .tx code{font-size:12px}
+.s .tx .codewrap{margin:10px 0 0}
+.tablewrap{margin:18px 0;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{background:var(--green-600);color:#fff;text-align:left;padding:11px 15px;font-family:var(--serif);font-weight:700;font-size:13px}
+td{padding:10px 15px;border-top:1px solid var(--line-2);color:var(--ink-2);vertical-align:top}
+td code{font-size:12px}
+tr:nth-child(even) td{background:var(--paper)}
+.ok{color:var(--green-500);font-weight:700}
+.fix{color:var(--amber-600);font-weight:700}
+.todo{color:#C2533A;font-weight:700}
+ul.chk{list-style:none;margin:6px 0 0 0}
+ul.chk li{position:relative;padding-left:30px;margin:11px 0;font-size:14.5px;color:var(--ink-2)}
+ul.chk li::before{content:"";position:absolute;left:0;top:1px;width:19px;height:19px;border-radius:5px;border:2px solid var(--green-600)}
+ul.chk li b{color:var(--ink)}
+ul.plain{margin:10px 0 0 20px}
+ul.plain li{margin:7px 0;font-size:14.5px;color:var(--ink-2)}
+.close{background:var(--green-900);color:#DCEAE3;padding:34px 64px;font-size:14.5px}
+.close b{color:#fff}
+@media(max-width:700px){.cover,.body,.close{padding-left:26px;padding-right:26px}.cover h1{font-size:29px}section>p,section>.steps,section>.note,section>.warn,section>.goal,section>.codewrap,section>.tablewrap,section>ul.chk,.lead-line{margin-left:0}}
+</style>
+</head>
+<body>
+<div class="doc">
+
+<div class="cover">
+  <div class="logo">MyKunda</div>
+  <div class="kicker">Backoffice · Resend + Supabase</div>
+  <h1>Contact &amp; e-mail: controle en herstelplan</h1>
+  <p class="lede">Elk contactpad op de site nagelopen — van het formulier tot de mail die eruit moet komen. Vier fouten zitten in de code en zijn hier gerepareerd; de rest zit in Supabase en Resend en staat als uitvoerbaar plan in deel 3 en 4.</p>
+  <div class="meta">
+    <div><span>Datum</span><b>14 augustus 2026</b></div>
+    <div><span>Gerepareerd in code</span><b>4 van 4</b></div>
+    <div><span>Supabase</span><b>Afgerond 14 aug</b></div>
+    <div><span>Nog te doen</span><b>FTP-upload · sleutelrotatie</b></div>
+  </div>
+</div>
+
+<div class="body">
+
+<section>
+  <div class="h-row"><span class="num">1</span><h2>Wat er is nagelopen</h2></div>
+  <p class="lead-line">Alle plekken waar een bezoeker contact opneemt, en de route die dat bericht aflegt.</p>
+  <div class="tablewrap">
+    <table>
+      <tr><th>Formulier</th><th>Pagina</th><th>Route</th><th>Status</th></tr>
+      <tr><td>Contactformulier</td><td>contact.html</td><td><code>sendLead('contact')</code> → <code>create_lead</code> → <code>notify-lead</code></td><td class="fix">Gerepareerd</td></tr>
+      <tr><td>Gratis adviesgesprek</td><td>sell.html</td><td><code>sendLead('consultation')</code></td><td class="fix">Gerepareerd</td></tr>
+      <tr><td>Launch-notificatie</td><td>under-construction.html</td><td><code>submitLead('area_alert')</code></td><td class="fix">Gerepareerd</td></tr>
+      <tr><td>Waardebepaling huis / grond</td><td>sell.html</td><td><code>sendLead('valuation')</code></td><td class="ok">In orde</td></tr>
+      <tr><td>Bezichtiging aanvragen</td><td>property.html</td><td><code>sendLead('viewing')</code></td><td class="ok">In orde</td></tr>
+      <tr><td>Bericht aan de agent</td><td>agent.html</td><td><code>sendLead('contact')</code></td><td class="ok">In orde</td></tr>
+      <tr><td>Nieuwsbrief / area alert</td><td>footer, elke pagina</td><td><code>sendLead('area_alert')</code></td><td class="ok">In orde</td></tr>
+      <tr><td>Advertentie plaatsen</td><td>list.html</td><td><code>createListing</code> → <code>notify-listing</code></td><td class="ok">In orde</td></tr>
+      <tr><td>Wachtwoord vergeten</td><td>auth.html</td><td><code>auth-email</code> → Resend</td><td class="ok">In orde</td></tr>
+      <tr><td>Bounces &amp; spamklachten</td><td>—</td><td>Resend webhook → <code>resend-webhook</code></td><td class="todo">Verifiëren</td></tr>
+      <tr><td>Lead verwijderen in console</td><td>admin.html</td><td><code>delete from leads</code></td><td class="todo">SQL nodig</td></tr>
+    </table>
+  </div>
+  <div class="note"><b>Wat ik niet kan zien.</b> Vanuit het project kijk ik in de code, niet in jullie Supabase-project of Resend-account. Of de functies écht gedeployed zijn, of de secrets kloppen en of <code>mykunda.com</code> geverifieerd is in Resend — dat moet in die twee dashboards worden nagekeken. Daar gaat deel 3 en 4 over.</div>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">2</span><h2>Wat ik heb gerepareerd</h2></div>
+  <p class="lead-line">Vier fouten in de site-code, plus twee documentatiefouten.</p>
+  <div class="steps">
+    <div class="s"><div class="tx"><b>Contactformulier kon een bericht weigeren dat prima verstuurd kon worden</b>
+      <p>De pagina laadt de Supabase-client pas ná het eerste beeld. Het formulier keek dáár niet op te wachten: wie binnen die paar seconden op verzenden drukte, kreeg "ons contactsysteem is tijdelijk niet beschikbaar" terwijl er niets aan de hand was. Het wacht nu op <code>__sbReady</code> en gebruikt <code>sendLead()</code>, dat een foutmelding geeft in plaats van een valse bevestiging als de backend uit staat. Onderwerp uit de keuzelijst gaat nu ook als apart veld mee in de lead.</p></div></div>
+    <div class="s"><div class="tx"><b>"Gratis adviesgesprek" kon bevestigen zonder op te slaan</b>
+      <p>Dit formulier gebruikte <code>submitLead()</code> rechtstreeks. Die geeft in demomodus netjes <code>{demo:true}</code> terug in plaats van een fout — het formulier toonde dan "You're booked in" terwijl er niets was opgeslagen en niemand een mail kreeg. Nu via <code>sendLead()</code>, dat in dat geval afbreekt en de WhatsApp/e-mail-terugvaloptie toont.</p></div></div>
+    <div class="s"><div class="tx"><b>Hetzelfde risico op de launch-pagina</b>
+      <p><code>under-construction.html</code> controleert nu op <code>demo</code> voordat het "je staat op de lijst" toont.</p></div></div>
+    <div class="s"><div class="tx"><b>Telefoonnummer in de zoekmachine-data van contact.html stond op een placeholder</b>
+      <p>Er stond <code>+220-000-0000</code> in het schema.org-blok. Nu het echte nummer, plus een <code>contactPoint</code> met e-mailadres — dat is wat Google in de resultaten kan tonen.</p></div></div>
+    <div class="s"><div class="tx"><b><code>notify-lead</code> herschreven op de gedeelde huisstijl-template</b>
+      <p>Deze functie had als enige nog zijn eigen, oudere e-mailopmaak: andere kleuren, andere koptekst en een agentnaam ("Awa Camara") die nergens anders op de site voorkomt. Hij gebruikt nu <code>_shared/email-template.ts</code>, net als de andere functies. Verder: <b>reply-to op het adres van de bezoeker</b> (antwoorden gaat direct naar de klant), de bevestigingsmail wordt óók verstuurd als de teammail faalt, HTML in een bericht wordt onschadelijk gemaakt vóór het in de mail komt, <code>consultation</code> heeft eigen teksten, en elke verzending wordt op de lead-rij geschreven. <b>Deze functie moet opnieuw gedeployed worden</b> — zie deel 3.</p></div></div>
+    <div class="s"><div class="tx"><b>Resend-sleutel uit <code>backend/README.md</code> gehaald</b>
+      <p>De echte API-sleutel stond letterlijk in het instructiebestand. Vervangen door een placeholder. De sleutel zelf moet nog geroteerd worden — zie deel 4.</p></div></div>
+  </div>
+  <div class="goal" style="margin-top:22px">
+    <h4>Uploaden</h4>
+    <p>Map <code>upload-contact-fix/</code> → webroot, overschrijven aan: <code>contact.html</code> · <code>sell.html</code> · <code>under-construction.html</code>. Verder niets — er zijn geen JS- of CSS-bestanden gewijzigd, dus de cache-stempel hoeft niet omhoog. <code>deploy/</code> is al bijgewerkt.</p>
+  </div>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">3</span><h2>Uit te voeren in Supabase</h2></div>
+  <p class="lead-line">Voor Claude met toegang tot het Supabase-project <code>jejaerpqltqryqzjvbjp</code>. Werk van boven naar beneden; elke stap is los te controleren.</p>
+
+  <div class="goal">
+    <h4>Uitgevoerd op 14 augustus, 12:50</h4>
+    <p>Alle stappen hieronder zijn gedaan. <code>notify-lead</code> staat live als <b>versie 19</b> met <code>verify_jwt: false</code>, op de gedeelde huisstijl-template. Een testlead (<code>consultation</code>) liep volledig door: <code>{"ok":true,"sent":{"team":true,"reply":true}}</code>, <code>notified_at</code> gevuld, <code>notify_error</code> leeg — de testrij is daarna weer verwijderd. Kolommen, delete-policy, <code>create_lead</code>-RPC en de zeven enum-waarden staan alle vier geverifieerd live.</p>
+  </div>
+
+  <div class="steps">
+    <div class="s"><div class="tx"><b>Controleer welke edge functions live staan</b>
+      <p>Verwacht: <code>notify-lead</code>, <code>notify-viewing</code>, <code>notify-listing</code>, <code>auth-email</code>, <code>resend-webhook</code>, <code>fx-rates</code>, <code>market-sources</code>. Ontbreekt er één, dan faalt het bijbehorende formulier stil: de lead wordt wél opgeslagen, maar er gaat geen mail uit.</p>
+      <div class="codewrap"><pre>supabase functions list</pre><button class="copy">Kopieer</button></div></div></div>
+
+    <div class="s"><div class="tx"><b>Deploy de herschreven <code>notify-lead</code></b>
+      <p>Bron staat in het project onder <code>edge-functions/notify-lead/index.ts</code> en gebruikt <code>../_shared/email-template.ts</code> — die map moet meegedeployed worden (dat gaat vanzelf bij deploy vanuit de projectmap).</p>
+      <div class="codewrap"><pre>supabase functions deploy notify-lead --no-verify-jwt</pre><button class="copy">Kopieer</button></div></div></div>
+
+    <div class="s"><div class="tx"><b>Controleer de secrets</b>
+      <p><code>RESEND_API_KEY</code>, <code>FROM_EMAIL</code>, <code>LEAD_EMAIL</code> en <code>RESEND_WEBHOOK_SECRET</code> moeten alle vier gezet zijn. <code>LEAD_EMAIL</code> is de bepalende naam; <code>ADMIN_EMAIL</code> wordt nog als alias geaccepteerd. Staat er niets, dan valt alles terug op <code>info@mykunda.com</code> — dat werkt, maar dan is niet zichtbaar dat het niet ingesteld is.</p>
+      <div class="codewrap"><pre>supabase secrets list
+supabase secrets set FROM_EMAIL="MyKunda &lt;noreply@mykunda.com&gt;"
+supabase secrets set LEAD_EMAIL=info@mykunda.com</pre><button class="copy">Kopieer</button></div></div></div>
+
+    <div class="s"><div class="tx"><b>Draai de openstaande SQL</b>
+      <p><code>backend/lead-notify-status.sql</code> — voegt <code>notified_at</code> en <code>notify_error</code> toe aan <code>leads</code>, en de ontbrekende delete-policy waar de verwijderknop in de admin-console op stukloopt (de rij verdween van het scherm en stond na verversen weer terug).</p>
+      <div class="codewrap"><pre>alter table public.leads add column if not exists notified_at  timestamptz;
+alter table public.leads add column if not exists notify_error text;
+
+drop policy if exists "leads admin delete" on public.leads;
+create policy "leads admin delete" on public.leads for delete using (public.is_admin());</pre><button class="copy">Kopieer</button></div></div></div>
+
+    <div class="s"><div class="tx"><b>Controleer dat de <code>create_lead</code>-RPC bestaat</b>
+      <p>Zonder die functie valt <code>submitLead()</code> terug op een gewone insert: de lead wordt opgeslagen maar krijgt geen id terug, en zonder id wordt <code>notify-lead</code> nooit aangeroepen — leads komen dan wél in de console, maar er gaat nooit een mail uit. Ontbreekt hij: draai <code>backend/fix-lead-insert.sql</code>.</p>
+      <div class="codewrap"><pre>select p.proname, pg_get_function_identity_arguments(p.oid) as args
+  from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+ where n.nspname = 'public' and p.proname = 'create_lead';</pre><button class="copy">Kopieer</button></div></div></div>
+
+    <div class="s"><div class="tx"><b>Controleer de enum en de policies op <code>leads</code></b>
+      <p><code>lead_source</code> moet alle zeven waarden kennen — mist <code>consultation</code>, dan faalt het adviesgesprek-formulier met een enum-fout. Policies: insert voor iedereen, select/update/delete voor admin.</p>
+      <div class="codewrap"><pre>select enumlabel from pg_enum
+ where enumtypid = 'lead_source'::regtype order by enumsortorder;
+
+select policyname, cmd from pg_policies
+ where schemaname='public' and tablename='leads';</pre><button class="copy">Kopieer</button></div></div></div>
+
+    <div class="s"><div class="tx"><b>Kijk of er leads zijn die nooit gemaild zijn</b>
+      <p>Na stap 4 vult <code>notify-lead</code> deze velden. Draai deze query een dag na de eerste testronde: alles wat terugkomt is een bezoeker die een bevestiging zag maar geen mail kreeg.</p>
+      <div class="codewrap"><pre>select id, source, email, created_at, notify_error
+  from public.leads
+ where created_at &gt; now() - interval '30 days'
+   and (notified_at is null or notify_error is not null)
+ order by created_at desc;</pre><button class="copy">Kopieer</button></div></div></div>
+
+    <div class="s"><div class="tx"><b>Lees de functielogs van de laatste week</b>
+      <p>In Supabase → Edge Functions → <code>notify-lead</code> → Logs. Zoek op <code>Resend</code> en op <code>403</code>/<code>422</code>: dat zijn afgewezen verzendingen (niet-geverifieerd domein, of een afzender die niet bij het geverifieerde domein hoort).</p></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">4</span><h2>Uit te voeren in Resend</h2></div>
+  <p class="lead-line">Alles wat bepaalt of de mail daadwerkelijk aankomt — en niet in de spammap.</p>
+
+  <div class="warn"><b>Nog open — enige echte restpunt.</b> De nieuwe sleutel <code>MyKunda-Supabase-rotated-2026-08-14</code> is aangemaakt, maar Supabase gebruikt nog steeds de oude, gelekte <code>re_82A1…</code>. Zet eerst <code>supabase secrets set RESEND_API_KEY=&lt;nieuwe token&gt;</code>, test één formulier, en verwijder daarna pas <code>MyKunda-Supabase</code> en <code>MyKunda</code> in Resend. Niet andersom — anders staat de mail stil tussen de twee stappen in.</div>
+
+  <div class="steps">
+    <div class="s"><div class="tx"><b>Domeinverificatie</b>
+      <p>Resend → Domains → <code>mykunda.com</code> moet op <b>Verified</b> staan, met een groen vinkje bij SPF én DKIM. Staat er één op pending, dan komt de mail óf niet aan óf in de spammap. De DNS-records staan bij de domeinhoster.</p></div></div>
+
+    <div class="s"><div class="tx"><b>DMARC-record <span class="ok">— staat al</span></b>
+      <p>Geverifieerd op 14 augustus: <code>v=DMARC1; p=quarantine; rua=mailto:info@mykunda.com; adkim=s</code>. Dat is strenger dan het geadviseerde startpunt <code>p=none</code> — prima, mits SPF en DKIM blijven kloppen (dat doen ze).</p></div></div>
+
+    <div class="s"><div class="tx"><b>Afzender en antwoordadres</b>
+      <p>Alle functies versturen vanaf <code>noreply@mykunda.com</code>. Dat adres hoeft geen mailbox te zijn, maar <code>info@mykunda.com</code> wél: daar landen de leads en daar gaan antwoorden van klanten heen. Controleer dat die mailbox bestaat, gelezen wordt, en dat mail van jullie eigen domein er niet als spam in valt. Resend verstuurt alleen — inkomende mail loopt via de mailhosting, niet via Resend.</p></div></div>
+
+    <div class="s"><div class="tx"><b>Webhook</b>
+      <p>Resend → Webhooks. Eén endpoint, met deze vijf events: <code>email.bounced</code>, <code>email.complained</code>, <code>email.delivery_delayed</code>, <code>email.failed</code>, <code>email.suppressed</code>. Gebruik de standaard-URL hieronder, niet de oude <code>*.functions.supabase.co</code>-variant. Het signing secret dat Resend toont moet als <code>RESEND_WEBHOOK_SECRET</code> in Supabase staan, anders weigert de functie elke melding met een 401.</p>
+      <div class="codewrap"><pre>https://jejaerpqltqryqzjvbjp.supabase.co/functions/v1/resend-webhook</pre><button class="copy">Kopieer</button></div></div></div>
+
+    <div class="s"><div class="tx"><b>Logboek en onderdrukte adressen</b>
+      <p>Resend → Emails: bekijk de laatste 30 dagen. Let op adressen met status <code>bounced</code> of <code>complained</code> — die staan op de suppression list en krijgen niets meer, ook geen bevestigingsmail. Meld terug hoeveel het er zijn en welke.</p></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">5</span><h2>Testronde na afloop</h2></div>
+  <p class="lead-line">Zes formulieren, één testadres. Verwacht per keer: een rij in <code>leads</code>, een mail in <code>info@</code>, en een bevestiging bij de afzender.</p>
+  <div class="tablewrap">
+    <table>
+      <tr><th>Test</th><th>Waar</th><th>Verwacht</th></tr>
+      <tr><td>Contactformulier</td><td>/contact.html</td><td>lead <code>contact</code> · teammail met reply-to = testadres · bevestiging</td></tr>
+      <tr><td>Waardebepaling</td><td>/sell.html</td><td>lead <code>valuation</code> · bevestiging met de geschatte bandbreedte</td></tr>
+      <tr><td>Adviesgesprek</td><td>/sell.html</td><td>lead <code>consultation</code> · bevestiging "consultation booked"</td></tr>
+      <tr><td>Bezichtiging</td><td>/property.html?id=…</td><td>lead <code>viewing</code> · bevestiging met datum/tijd</td></tr>
+      <tr><td>Nieuwsbrief in de footer</td><td>willekeurige pagina</td><td>lead <code>area_alert</code> · knop wordt "Subscribed ✓"</td></tr>
+      <tr><td>Wachtwoord vergeten</td><td>/auth.html</td><td>mail van <code>noreply@mykunda.com</code>, link naar <code>mykunda.com/auth.html</code> — niet naar supabase.co</td></tr>
+    </table>
+  </div>
+  <div class="note"><b>Test met een adres buiten het eigen domein</b> (gmail, outlook). Mail van <code>mykunda.com</code> naar <code>mykunda.com</code> gaat vaak intern langs de spamfilters heen en zegt dus niets over de echte bezorging. Kijk ook in de spammap.</div>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">6</span><h2>Teruggemeld — 14 augustus</h2></div>
+  <p class="lead-line">Wat er is uitgevoerd, en wat er nog open staat.</p>
+  <div class="tablewrap">
+    <table>
+      <tr><th>Onderdeel</th><th>Uitkomst</th></tr>
+      <tr><td>Functies</td><td>Veertien stonden live; <code>notify-lead</code> is opnieuw gedeployed als <b>v19</b> met <code>verify_jwt: false</code> en de gedeelde template. <span class="ok">Klaar</span></td></tr>
+      <tr><td>Secrets</td><td><code>FROM_EMAIL</code>, <code>LEAD_EMAIL</code> en <code>RESEND_API_KEY</code> zijn gezet en werken — de testmail ging door zonder fout. <b>Rotatie nog niet doorgevoerd:</b> Supabase gebruikt nog de oude sleutel. <span class="todo">Open</span></td></tr>
+      <tr><td>SQL</td><td><code>create_lead</code> aanwezig met juiste signature, <code>notified_at</code> + <code>notify_error</code> live, delete-policy live, enum kent alle zeven waarden incl. <code>consultation</code>. <span class="ok">Klaar</span></td></tr>
+      <tr><td>Resend</td><td>Domein Verified, SPF ✓, DKIM ✓, DMARC op <code>p=quarantine</code>, webhook-URL bijgewerkt, <code>team@mykunda.com</code> van de suppressielijst gehaald. <span class="ok">Klaar</span></td></tr>
+      <tr><td>Leads zonder mail</td><td>Geen achterstand gevonden — de nieuwe kolommen waren nog leeg omdat ze pas net bestaan. Draai de query uit stap 7 over een maand nog eens.</td></tr>
+      <tr><td>Dubbele functie</td><td><code>swift-responder</code> is een woord-voor-woord kopie van <code>market-sources</code>, per ongeluk gedeployed op 9 augustus onder een automatisch gegenereerde naam. Geen cron-job roept hem aan en <code>verify_jwt</code> staat op <code>true</code>, dus hij draait niet. Weghalen in Supabase → Edge Functions. <span class="todo">Open</span></td></tr>
+      <tr><td>Testronde</td><td>Eén end-to-end test gedaan op de gedeployde functie: teammail én bevestiging verstuurd, <code>notified_at</code> gevuld. De zes formulieren in de browser moeten nog gelopen worden ná de FTP-upload. <span class="fix">Deels</span></td></tr>
+    </table>
+  </div>
+  <div class="note"><b>Twee dingen liggen bij jou.</b> De drie HTML-bestanden uit <code>upload-contact-fix/</code> naar de webroot uploaden, en de Resend-sleutel roteren — die laatste vraagt om de tokenwaarde, die alleen jij hebt.</div>
+</section>
+
+</div>
+
+<div class="close">
+  <p><b>Kern van het probleem dat hieronder zat:</b> een lead die wordt opgeslagen maar niet gemaild, ziet er in de console precies zo uit als een lead die keurig is afgehandeld. Met <code>notified_at</code> en <code>notify_error</code> op de rij is dat verschil voortaan zichtbaar, en de query uit stap 7 maakt er een controle van die je maandelijks kunt draaien.</p>
+</div>
+
+</div>
+<script>
+document.querySelectorAll('.copy').forEach(function(b){
+  b.addEventListener('click', function(){
+    var pre = b.parentElement.querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(function(){
+      b.textContent = 'Gekopieerd'; b.classList.add('done');
+      setTimeout(function(){ b.textContent = 'Kopieer'; b.classList.remove('done'); }, 1600);
+    });
+  });
+});
+</script>
+</body>
+</html>

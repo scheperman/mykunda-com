@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyKunda — E-mail notificaties deployen</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hanken Grotesk',-apple-system,BlinkMacSystemFont,sans-serif;background:#FAF8F3;color:#18201D;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+.page{max-width:720px;margin:0 auto;padding:40px 24px 80px}
+
+/* Header */
+.hero{background:linear-gradient(135deg,#0E2E25,#1C5848);border-radius:18px;padding:44px 38px;margin-bottom:36px;color:#fff}
+.hero .badge{display:inline-block;background:rgba(221,138,69,.2);color:#DD8A45;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:5px 12px;border-radius:999px;margin-bottom:14px}
+.hero h1{font-size:32px;font-weight:800;line-height:1.15;margin-bottom:10px}
+.hero p{color:rgba(255,255,255,.78);font-size:16px;line-height:1.55}
+
+/* Progress bar */
+.progress-bar{display:flex;gap:6px;margin-bottom:36px}
+.progress-step{flex:1;height:6px;border-radius:3px;background:#E5E1D6}
+.progress-step.done{background:#2A7561}
+.progress-step.current{background:#DD8A45}
+
+/* Steps */
+.step{background:#fff;border-radius:16px;border:1.5px solid #E5E1D6;padding:30px 32px;margin-bottom:20px;position:relative}
+.step.done{border-color:#BEDACE;background:#f8fcf9}
+.step-num{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:10px;background:#15463A;color:#fff;font-weight:800;font-size:14px;margin-bottom:14px}
+.step.done .step-num{background:#2A7561}
+.step h2{font-size:20px;font-weight:800;margin-bottom:8px;color:#18201D}
+.step .desc{color:#5C6B64;font-size:15px;margin-bottom:18px}
+.step .done-badge{position:absolute;top:24px;right:24px;background:#DCEAE3;color:#15463A;font-size:12px;font-weight:700;padding:4px 12px;border-radius:999px;display:none}
+.step.done .done-badge{display:block}
+
+/* Sub-steps */
+.substeps{list-style:none;counter-reset:sub}
+.substeps li{position:relative;padding:12px 0 12px 36px;border-bottom:1px solid #EFEBE1;font-size:15px;color:#384640}
+.substeps li:last-child{border-bottom:none}
+.substeps li::before{counter-increment:sub;content:counter(sub);position:absolute;left:0;top:12px;width:24px;height:24px;border-radius:7px;background:#EAF2ED;color:#15463A;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+
+/* Code blocks */
+.code-block{background:#1a1f1d;border-radius:10px;padding:16px 18px;margin:12px 0;overflow-x:auto;position:relative}
+.code-block code{color:#BEDACE;font-family:'SF Mono',Menlo,Consolas,monospace;font-size:13.5px;line-height:1.7;white-space:pre}
+.code-block .comment{color:#5C6B64}
+.code-block .string{color:#DD8A45}
+.copy-btn{position:absolute;top:10px;right:10px;background:#2a332f;border:none;color:#8A958E;font-size:11px;font-weight:600;padding:5px 10px;border-radius:6px;cursor:pointer;transition:all .15s}
+.copy-btn:hover{background:#384640;color:#fff}
+
+/* Info boxes */
+.info-box{border-radius:10px;padding:16px 18px;margin:14px 0;font-size:14px;line-height:1.55}
+.info-box.tip{background:#EAF2ED;color:#15463A;border-left:4px solid #2A7561}
+.info-box.warn{background:#FBF1E6;color:#8B5E2F;border-left:4px solid #DD8A45}
+.info-box.danger{background:#FDE8E8;color:#9B2C2C;border-left:4px solid #C2533A}
+.info-box strong{font-weight:700}
+
+/* Links */
+a{color:#15463A;font-weight:600;text-decoration:underline;text-decoration-color:rgba(21,70,58,.3);text-underline-offset:2px}
+a:hover{text-decoration-color:#15463A}
+
+/* Final checklist */
+.checklist{list-style:none;margin:14px 0}
+.checklist li{padding:10px 0 10px 32px;position:relative;font-size:15px;border-bottom:1px solid #EFEBE1}
+.checklist li::before{content:'';position:absolute;left:0;top:12px;width:20px;height:20px;border-radius:6px;border:2px solid #E5E1D6}
+.checklist li.checked::before{background:#15463A;border-color:#15463A;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='white'%3E%3Cpath d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z'/%3E%3C/svg%3E");background-size:14px;background-position:center;background-repeat:no-repeat}
+
+/* Responsive */
+@media(max-width:520px){
+  .page{padding:20px 14px 60px}
+  .hero{padding:28px 22px;border-radius:14px}
+  .hero h1{font-size:24px}
+  .step{padding:22px 18px}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hero">
+    <div class="badge">Handleiding</div>
+    <h1>E-mail notificaties deployen</h1>
+    <p>Volg deze 4 stappen om automatische e-mails werkend te krijgen. Na afloop ontvangen gebruikers een bevestiging en krijg jij een notificatie bij elke lead.</p>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-step done"></div>
+    <div class="progress-step done"></div>
+    <div class="progress-step current"></div>
+    <div class="progress-step"></div>
+  </div>
+
+  <!-- ======== STAP 1 ======== -->
+  <div class="step done">
+    <span class="done-badge">✓ Klaar</span>
+    <div class="step-num">1</div>
+    <h2>Database aanmaken</h2>
+    <p class="desc">De tabellen in Supabase waar leads worden opgeslagen.</p>
+    <div class="info-box tip"><strong>Dit heb je al gedaan.</strong> Het schema.sql is uitgevoerd en leads worden opgeslagen in de <code>leads</code> tabel.</div>
+  </div>
+
+  <!-- ======== STAP 2 ======== -->
+  <div class="step done">
+    <span class="done-badge">✓ Klaar</span>
+    <div class="step-num">2</div>
+    <h2>Supabase koppelen</h2>
+    <p class="desc">De API-keys zijn al ingevuld in supabase.js.</p>
+    <div class="info-box tip"><strong>Dit heb je al gedaan.</strong> Project URL en anon key staan in <code>supabase.js</code>.</div>
+  </div>
+
+  <!-- ======== STAP 3 ======== -->
+  <div class="step">
+    <div class="step-num">3</div>
+    <h2>Resend instellen (e-maildienst)</h2>
+    <p class="desc">Resend is de dienst die de e-mails daadwerkelijk verstuurt. Gratis tot 3.000 e-mails/maand.</p>
+
+    <ol class="substeps">
+      <li>
+        Ga naar <a href="https://resend.com/signup" target="_blank">resend.com/signup</a> en maak een gratis account aan
+      </li>
+      <li>
+        Ga naar <strong>Domains</strong> in het menu en klik <strong>Add Domain</strong>
+        <div class="code-block"><code>mykunda.com</code></div>
+      </li>
+      <li>
+        Resend geeft je <strong>DNS-records</strong> (SPF + DKIM). Log in bij je domeinregistrar (waar je mykunda.com hebt gekocht) en voeg deze records toe.<br><br>
+        <div class="info-box tip"><strong>Tip:</strong> Dit zijn meestal 2–3 TXT-records. Het kan 5–30 minuten duren voordat ze actief zijn. Resend laat een groen vinkje zien als het klaar is.</div>
+      </li>
+      <li>
+        Ga naar <strong>API Keys</strong> in het Resend-menu en klik <strong>Create API Key</strong>. Geef hem de naam <code>mykunda-production</code> en kopieer de key (begint met <code>re_...</code>).
+        <div class="info-box warn"><strong>Bewaar deze key!</strong> Je ziet hem maar één keer. Je hebt hem nodig in stap 4.</div>
+      </li>
+    </ol>
+  </div>
+
+  <!-- ======== STAP 4 ======== -->
+  <div class="step">
+    <div class="step-num">4</div>
+    <h2>Edge Functions deployen</h2>
+    <p class="desc">Dit plaatst de e-mailcode op de Supabase-server zodat elke lead automatisch e-mails triggert.</p>
+
+    <ol class="substeps">
+      <li>
+        <strong>Installeer de Supabase CLI</strong><br>
+        Open een terminal (Mac: Terminal app, Windows: PowerShell) en voer uit:
+        <div class="code-block"><code>npm install -g supabase</code><button class="copy-btn" onclick="copyCode(this)">Kopieer</button></div>
+        <div class="info-box tip"><strong>Geen npm?</strong> Installeer eerst <a href="https://nodejs.org" target="_blank">Node.js</a> (LTS-versie). Dat installeert npm automatisch mee.</div>
+      </li>
+      <li>
+        <strong>Log in bij Supabase</strong>
+        <div class="code-block"><code>supabase login</code><button class="copy-btn" onclick="copyCode(this)">Kopieer</button></div>
+        Er opent een browserpagina — klik op <strong>Authorize</strong>.
+      </li>
+      <li>
+        <strong>Koppel je project</strong>
+        <div class="code-block"><code>supabase link --project-ref jejaerpqltqryqzjvbjp</code><button class="copy-btn" onclick="copyCode(this)">Kopieer</button></div>
+        Als er om een database-wachtwoord wordt gevraagd, vul het wachtwoord in dat je hebt gekozen bij het aanmaken van je Supabase-project.
+      </li>
+      <li>
+        <strong>Stel de geheime sleutels in</strong><br>
+        Vervang <code>re_JOUW_KEY_HIER</code> door de Resend API key uit stap 3:
+        <div class="code-block"><code><span class="comment"># Voer deze 3 commando's één voor één uit:</span>
+
+supabase secrets set RESEND_API_KEY=<span class="string">re_JOUW_KEY_HIER</span>
+
+supabase secrets set LEAD_EMAIL=<span class="string">info@mykunda.com</span>
+
+supabase secrets set FROM_EMAIL=<span class="string">"MyKunda &lt;noreply@mykunda.com&gt;"</span></code><button class="copy-btn" onclick="copyCode(this)">Kopieer</button></div>
+      </li>
+      <li>
+        <strong>Navigeer naar de backend-map</strong><br>
+        Ga in de terminal naar de map waar je project staat:
+        <div class="code-block"><code>cd /pad/naar/jouw/project/backend</code><button class="copy-btn" onclick="copyCode(this)">Kopieer</button></div>
+        <div class="info-box tip"><strong>Tip:</strong> Op Mac kun je <code>cd </code> typen (met spatie) en dan de map vanuit Finder naar de terminal slepen.</div>
+      </li>
+      <li>
+        <strong>Deploy de functies</strong>
+        <div class="code-block"><code><span class="comment"># Lead-notificaties (contact, valuation, etc.)</span>
+supabase functions deploy notify-lead --no-verify-jwt
+
+<span class="comment"># Viewing-notificaties</span>
+supabase functions deploy notify-viewing --no-verify-jwt</code><button class="copy-btn" onclick="copyCode(this)">Kopieer</button></div>
+        Als je <code>Function deployed successfully</code> ziet, is het gelukt!
+      </li>
+    </ol>
+  </div>
+
+  <!-- ======== TESTEN ======== -->
+  <div class="step">
+    <div class="step-num">✓</div>
+    <h2>Testen</h2>
+    <p class="desc">Controleer of alles werkt.</p>
+
+    <ol class="substeps">
+      <li>Ga naar de <a href="contact.html">Contact-pagina</a> en vul het formulier in met je eigen e-mailadres</li>
+      <li>Je zou nu <strong>twee e-mails</strong> moeten ontvangen:
+        <ul style="margin:8px 0 0 20px;list-style:disc">
+          <li style="border:none;padding:4px 0"><strong>info@mykunda.com</strong> — team-notificatie met alle ingevulde gegevens</li>
+          <li style="border:none;padding:4px 0"><strong>Jouw e-mailadres</strong> — bevestigingsmail ("Thank you, [naam]!")</li>
+        </ul>
+      </li>
+      <li>Check ook de <a href="/">Home-pagina</a> → valuatie-formulier. Daar zou je een bevestiging met prijsschatting moeten ontvangen.</li>
+    </ol>
+
+    <div class="info-box warn"><strong>Geen e-mail?</strong> Check je spam-map. Als Resend nog niet je domein heeft geverifieerd, kunnen e-mails geweigerd worden. Wacht tot het groene vinkje verschijnt bij Domains in Resend.</div>
+  </div>
+
+  <!-- ======== CHECKLIST ======== -->
+  <div class="step">
+    <div class="step-num">☐</div>
+    <h2>Afvink-checklist</h2>
+    <ul class="checklist">
+      <li class="checked">Database schema uitgevoerd (leads tabel bestaat)</li>
+      <li class="checked">Supabase keys ingevuld in supabase.js</li>
+      <li>Resend account aangemaakt</li>
+      <li>mykunda.com geverifieerd in Resend (groen vinkje)</li>
+      <li>Resend API key aangemaakt</li>
+      <li>Supabase CLI geïnstalleerd</li>
+      <li>Secrets ingesteld (RESEND_API_KEY, LEAD_EMAIL, FROM_EMAIL)</li>
+      <li>notify-lead gedeployed</li>
+      <li>notify-viewing gedeployed</li>
+      <li>Test-email ontvangen op info@mykunda.com</li>
+      <li>Test-bevestiging ontvangen als gebruiker</li>
+    </ul>
+  </div>
+
+  <div class="info-box danger" style="margin-top:24px">
+    <strong>Belangrijk voor go-live:</strong> De Resend API key die eerder in de README stond is gedeeld in chat — maak een <strong>nieuwe key</strong> aan in Resend en verwijder de oude voordat je live gaat.
+  </div>
+
+</div>
+
+<script>
+function copyCode(btn) {
+  const block = btn.closest('.code-block');
+  const code = block.querySelector('code').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    btn.textContent = '✓ Gekopieerd';
+    setTimeout(() => { btn.textContent = 'Kopieer'; }, 2000);
+  });
+}
+</script>
+</body>
+</html>

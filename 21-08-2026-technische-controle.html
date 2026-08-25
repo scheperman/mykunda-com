@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>MyKunda — Technische controle 21 augustus 2026</title>
+<script src="doc-page.js"></script>
+<style>
+doc-page:not(:defined){visibility:hidden}
+:root{--g9:#0E2E25;--g7:#1C5848;--g2:#DCEAE3;--am:#B4711C;--am-bg:#FBF3E7;--ink:#16211D;--ink2:#3D4B45;--mut:#6B7B74;--line:#E2E8E4}
+doc-page{font-family:"Hanken Grotesk",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:var(--ink2);font-size:10.5pt;line-height:1.62}
+h1{font-size:26pt;line-height:1.1;letter-spacing:-.02em;color:var(--g9);margin:0 0 6px}
+.sub{font-size:11.5pt;color:var(--mut);margin:0 0 4px;line-height:1.5}
+.stamp{font-size:8.5pt;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:var(--am);margin-bottom:12px}
+h2{font-size:15pt;color:var(--g9);margin:30px 0 10px;letter-spacing:-.01em;padding-bottom:7px;border-bottom:2px solid var(--g2)}
+h3{font-size:11.5pt;color:var(--g7);margin:22px 0 6px}
+p{margin:0 0 9px}
+ul,ol{margin:0 0 10px;padding-left:19px}
+li{margin-bottom:5px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:9pt;background:#F1F5F3;padding:1px 5px;border-radius:3px;color:var(--g9);word-break:break-word}
+pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:8.5pt;line-height:1.5;background:var(--g9);color:#D9E7E1;padding:13px 15px;border-radius:6px;overflow-wrap:break-word;white-space:pre-wrap;margin:0 0 12px;break-inside:avoid}
+pre b{color:#F3C77A;font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:9pt;margin:0 0 14px}
+th{background:var(--g7);color:#fff;text-align:left;padding:8px 10px;font-weight:700;font-size:8pt;text-transform:uppercase;letter-spacing:.04em}
+td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.45}
+tr:nth-child(even) td{background:#F7FAF8}
+td code{background:none;padding:0;font-size:8.5pt}
+.tag{display:inline-block;font-size:7.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 7px;border-radius:20px;white-space:nowrap}
+.thoog{background:#FADFD9;color:#8E2C1B}
+.tmid{background:#FDEBD4;color:#8A5510}
+.tlaag{background:#E8EDF5;color:#3A5378}
+.tok{background:#DFF3E5;color:#1D6B36}
+.box{background:var(--am-bg);border:1px solid #F0DCC0;border-radius:7px;padding:14px 17px;margin:0 0 14px;break-inside:avoid;orphans:3;widows:3}
+.box b{color:var(--am)}
+.box.g{background:#F2F8F4;border-color:#D3E6D9}
+.box.g b{color:var(--g7)}
+.item{break-inside:avoid;orphans:3;widows:3}
+.lead{font-size:11pt;color:var(--ink2);line-height:1.65;margin-bottom:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0 16px}
+.kpi{background:#F7FAF8;border:1px solid var(--line);border-radius:7px;padding:12px 14px}
+.kpi .n{font-size:19pt;font-weight:700;color:var(--g9);line-height:1.1}
+.kpi .l{font-size:8.5pt;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-top:3px}
+hr{border:0;border-top:1px solid var(--line);margin:26px 0}
+.foot{font-size:8.5pt;color:var(--mut)}
+a{color:var(--g7)}
+a:hover{color:var(--g9)}
+</style>
+</head>
+<body>
+<doc-page margin="0.7in">
+
+<div class="stamp">MyKunda · mykunda.com</div>
+<h1>Technische controle: tien punten doorgevoerd, vijf vals alarm</h1>
+<p class="sub">21 augustus 2026 — alle pagina's van het uploadpakket doorgemeten op meta-tags, Open Graph, canonicals, structured data, interne verwijzingen, cachestempels, formulierlabels en bestandsgroottes, plus een vergelijking van de projectbestanden met het pakket. Er was niets stuk. Het zwaarste punt bleek geen paginafout maar de bouwstap: <code>build.mjs</code> draaide de opschoning van 17 augustus stil terug. Dat is opgelost, samen met negen andere punten.</p>
+
+<div class="grid4">
+  <div class="kpi"><div class="n">0</div><div class="l">storingen</div></div>
+  <div class="kpi"><div class="n">10</div><div class="l">doorgevoerd</div></div>
+  <div class="kpi"><div class="n">2</div><div class="l">als advies</div></div>
+  <div class="kpi"><div class="n">5</div><div class="l">vals alarm</div></div>
+</div>
+
+<h2>Eerst het goede nieuws</h2>
+<p>De belangrijkste hygiënecontrole van dit project — lopen de projectbestanden en het uploadpakket nog gelijk? — was schoon:</p>
+<ul>
+<li><b>Root en <code>deploy/</code> waren byte-voor-byte identiek.</b> Alle 109 bestanden vergeleken: geen enkel verschil. Er is dus niets rechtstreeks op de server gewijzigd.</li>
+<li><b>Open Graph is compleet</b> op alle publieke pagina's, en alle 40 <code>og:image</code>-bestanden bestaan echt in <code>/images/og/</code>.</li>
+<li><b>De negen afgeschermde pagina's dragen alle <code>noindex, nofollow</code></b> en hebben géén Open Graph-tags. Geen regressie.</li>
+<li><b>De sitemap klopt.</b> 71 URL's, alle 71 bestaan als bestand, en geen publieke pagina ontbreekt.</li>
+<li><b>De precache van de service worker leeft.</b> <code>STAMP</code> in <code>sw.js</code> is gelijk aan de <code>?v=</code>-stempel van <code>styles.min.css</code> en <code>app.min.js</code> op alle 86 pagina's.</li>
+<li><b>Canonical en JSON-LD staan overal</b> waar ze horen, inclusief de twaalf gidsen en de 41 plaatsgidsen. Eén kapotte verwijzing in het hele pakket, en die zat in een conceptbestand (punt 1).</li>
+</ul>
+
+<h2>Doorgevoerd — hoog</h2>
+
+<div class="item">
+<h3>1 · <code>build.mjs</code> draaide de opschoning van 17 augustus terug <span class="tag thoog">hoog</span></h3>
+<p>Op 17 augustus zijn <code>checkout v2.html</code>, <code>checkout v3.html</code>, <code>app.js</code>, <code>styles.css</code>, <code>home.html</code> en <code>neighborhood.html</code> uit <code>deploy/</code> gehaald, met een keurig verslag in <code>deploy-opschoning.md</code>. Ze stonden er alle zes weer in. Niet omdat iemand ze heeft teruggezet, maar omdat de bouwstap ze elke keer opnieuw meeneemt: de paginalus kopieert álle niet-interne <code>.html</code> uit de root, en <code>app.js</code>, <code>styles.css</code>, <code>doc-page.js</code>, <code>modempay.js</code>, <code>guide-bodies-2.js</code>, <code>email-preview.js</code>, <code>vercel.json</code>, <code>_headers</code> en <code>_redirects</code> stonden allemaal in <code>SITE_ASSETS</code>. De opruiming daarna keek alleen naar <code>.html</code> met een intern-patroon, dus een achtergebleven <code>app.js</code> bleef staan.</p>
+<p>Gevolgen zoals ze nu live staan: <code>/checkout%20v2.html</code> en <code>/checkout%20v3.html</code> zijn publiek op te vragen — conceptcode rond betalingen, met een 404 op <code>modempay.js</code> erbij, de enige kapotte verwijzing in het pakket. En de onverkleinde <code>app.js</code> (99 kB) plus <code>styles.css</code> (41 kB) staan leesbaar in de webroot, precies wat sectie 0 van <code>.htaccess</code> juist probeert te voorkomen.</p>
+<p><b>Opgelost in de bouwstap zelf</b>, zodat het niet terug kan komen. <code>SITE_ASSETS</code> bevat nu alleen wat de site echt opvraagt, er is een <code>NOT_UPLOADED</code>-lijst voor pagina's die 301'en of concept zijn, en de opruiming aan het eind is strak geworden: <i>alles</i> in <code>deploy/</code> wat niet op de uploadlijst staat gaat eruit, ongeacht extensie.</p>
+<pre>const NOT_UPLOADED = new Set([
+  'home.html',          /* .htaccess 301 naar /            */
+  'neighborhood.html',  /* .htaccess 301 naar /kololi.html */
+  'guide.html',         /* .htaccess 301 naar /guides.html */
+  'checkout v2.html', 'checkout v3.html'
+]);</pre>
+<p>Tien bestanden zijn uit <code>deploy/</code> verwijderd. Het bijbehorende vangnet in <code>.htaccess</code> staat hieronder als eigen punt.</p>
+</div>
+
+<div class="item">
+<h3>2 · <code>guide.html</code> liet zich indexeren als lege pagina <span class="tag thoog">hoog</span></h3>
+<p>Sinds de gidsen op 15 augustus statisch zijn voorgerenderd, is <code>guide.html</code> een overblijfsel dat zijn inhoud client-side uit <code>guide-bodies-2.js</code> haalt. Een crawler zag een <code>&lt;h1&gt;</code> met "Loading…", geen canonical, geen Open Graph — en toch <code>index, follow</code>, want <code>robotsFor()</code> in de bouwstap zet die tag er elke build opnieuw op. Geen enkele pagina linkte er nog naar, dus indexering was nog niet gebeurd, maar de deur stond open voor een dunne pagina naast <code>guides.html</code>.</p>
+<p>De oude <code>guide.html?slug=…</code>-URL's gingen al naar de juiste statische gids; wat ontbrak was de kale URL. Nu, direct achter die regel:</p>
+<pre>RewriteRule ^guide\.html$ /guides.html [R=301,L]</pre>
+<p><code>guide.html</code> en <code>guide-bodies-2.js</code> (44 kB) zijn uit het pakket. Ze blijven in de projectroot staan als bron.</p>
+</div>
+
+<h2>Doorgevoerd — middel</h2>
+
+<div class="item">
+<h3>3 · De hero werd niet gepreload <span class="tag tmid">middel</span></h3>
+<p>De hero-afbeelding had netjes <code>fetchpriority="high"</code> en <code>loading="eager"</code>, maar de browser kwam die regel pas tegen ná de complete header en navigatie: op byte 41.493 in <code>index.html</code> en byte 29.094 in <code>kololi.html</code>. Een 4G-verbinding levert HTML in porties van ongeveer 14 kB per heen-en-weer, dus het beeldverzoek startte twee tot drie retourtijden later dan nodig — op het enige element dat de bezoeker op dat moment wil zien.</p>
+<p>Nu staat het preload-verzoek in de <code>&lt;head&gt;</code>, in de eerste kilobyte, op <b>44 pagina's</b>: de homepage, <code>buy</code>, <code>rent</code> en alle 41 plaatsgidsen. De <code>media</code>-voorwaarden lopen exact gelijk met de <code>&lt;picture&gt;</code> van die pagina, zodat een telefoon niet alsnog de desktopversie binnenhaalt:</p>
+<pre>&lt;link rel="preload" href="images/home-hero-mobile.webp" as="image" media="(max-width:480px)" fetchpriority="high"&gt;
+&lt;link rel="preload" href="images/home-hero-tablet.webp" as="image" media="(min-width:481px) and (max-width:1024px)" fetchpriority="high"&gt;
+&lt;link rel="preload" href="images/home-hero.webp" as="image" media="(min-width:1025px)" fetchpriority="high"&gt;</pre>
+<p>Nagelopen op alle 44: elk gepreload beeld is de hero van díe pagina en komt overeen met de <code>&lt;source&gt;</code> die op die breedte geldt.</p>
+</div>
+
+<div class="item">
+<h3>4 · Een foto van 342 kB werd als kaart-thumbnail gebruikt <span class="tag tmid">middel</span></h3>
+<p><code>images/home-hero.webp</code> is 342 kB — logisch voor een hero van 1600×899, maar hij stond ook als afbeelding bij de eerste gids in <code>GUIDES</code>. Daardoor werd hij binnengehaald als <i>thumbnail</i> in de gidsenkaartjes op de homepage en op <code>guides.html</code>, en in de "verder lezen"-kaartjes van twee gidsen. Dezelfde foto bestaat als <code>home-hero-mobile.webp</code> van 53 kB, ruim genoeg voor een kaartje van een paar honderd pixels. Ook <code>auth.html</code> laadde de 342 kB-versie als achtergrond van de inlogpagina; die staat nu op de tabletvariant (145 kB).</p>
+<p>Samen scheelt dat ongeveer 290 kB op de homepage en op <code>guides.html</code> — meer dan de hele rest van de pagina bij elkaar.</p>
+</div>
+
+<h2>Doorgevoerd — laag</h2>
+<table>
+<thead><tr><th>Punt</th><th>Wat er is gedaan</th></tr></thead>
+<tbody>
+<tr><td>Een gepubliceerde gids linkte via een 301</td><td><code>guide-best-areas…</code> verwees naar <code>neighborhood.html</code>, dat met een 301 naar <code>kololi.html</code> gaat. Nu direct naar <code>kololi.html</code> — één retourtijd minder en Google ziet een echte link.</td></tr>
+<tr><td>Twee velden zonder toegankelijke naam</td><td><code>property.html</code>: het datumveld van "Request a viewing" had een <code>&lt;label&gt;</code> zonder koppeling (nu <code>for="vDate"</code>) en de bezettingsschuif had geen naam (nu <code>aria-label="Occupancy"</code>).</td></tr>
+<tr><td><code>agent.html</code>: description 182 tekens</td><td>Ingekort naar 149 tekens, zodat Google hem niet afkapt. Inhoud gelijk gebleven.</td></tr>
+<tr><td><code>dashboard.html</code> droeg een derde cachestempel</td><td><code>supabase.js?v=1787515200000</code> tegen <code>…500800000</code> elders — het gevolg van een handmatige aanpassing zonder <code>node build.mjs</code>. Gelijkgetrokken. Onschuldig, want <code>supabase.js</code> staat op <code>no-cache</code>; het was een symptoom.</td></tr>
+<tr><td>Vangnet in <code>.htaccess</code> voor conceptpagina's</td><td>Mocht er ooit tóch een conceptversie of een Netlify-configuratiebestand meegaan in een upload, dan geeft de server een 404 in plaats van het bestand: <code>RedirectMatch 404 (?i)^/[a-z0-9-]+(\s|%20)v[0-9]+\.html$</code> en <code>RedirectMatch 404 ^/(_headers|_redirects|vercel\.json)$</code>.</td></tr>
+<tr><td>Sitemap-data liepen achter</td><td>48 <code>lastmod</code>-data op <code>2026-08-21</code> gezet: precies de pagina's die vandaag zijn gewijzigd, de rest bewust ongemoeid.</td></tr>
+</tbody>
+</table>
+
+<h2>Bewust niet doorgevoerd</h2>
+
+<div class="item">
+<h3><code>areas.css</code> samenvoegen met <code>styles.min.css</code> <span class="tag tlaag">advies</span></h3>
+<p>De 41 plaatsgidsen laden na <code>styles.min.css</code> nog eens <code>areas.css</code> (9 kB), en de browser moet allebei binnen hebben voordat hij iets tekent: een hele extra retourtijd op de pagina's die het meeste zoekverkeer trekken. De schone oplossing is samenvoegen in de minify-stap van <code>build.mjs</code> en de tweede <code>&lt;link&gt;</code> uit 41 pagina's halen. Dat raakt de bouwstap én elke plaatsgids, dus dat hoort een eigen wijziging te zijn, niet een bijproduct van deze controle. Zeg het maar, dan doe ik hem los.</p>
+</div>
+
+<div class="item">
+<h3>De hero van 342 kB kleiner maken <span class="tag tlaag">geen actie</span></h3>
+<p>Dit stond in de eerste versie van dit rapport als het zwaarste punt. Bij nameten klopte de aanname niet. Telefoons krijgen <code>home-hero-mobile.webp</code> (53 kB) en tablets <code>home-hero-tablet.webp</code> (145 kB); de 342 kB gaat alleen naar desktopbrowsers boven 1024 px. En 145 kB op 1024 px breed schaalt naar ongeveer 350 kB op 1600 px — de compressie is dus consistent, niet te ruim. Opnieuw comprimeren kwam in de test niet lager dan 308 kB, met kwaliteitsverlies. Alleen een kleinere desktopvariant (bijvoorbeeld 1280 px) zou echt helpen, en dat is een keuze over beeldkwaliteit, niet een technische fout. De responsieve varianten doen hun werk al.</p>
+</div>
+
+<h2>Vals alarm — gemeten, nagekeken, in orde</h2>
+<p>Vijf punten uit de eerste meetronde bleken meetfouten. Ze staan hier omdat ze anders bij een volgende controle weer opduiken.</p>
+<table>
+<thead><tr><th>Leek</th><th>Was</th></tr></thead>
+<tbody>
+<tr><td>Tien descriptions van 51 tot 67 tekens</td><td>Mijn meting stopte bij de apostrof in <i>capital's</i>, <i>country's</i>, <i>Bank's</i>. Alle tien zijn in werkelijkheid 140 tot 160 tekens. Precies goed.</td></tr>
+<tr><td>Een gidstitel van 67 tekens</td><td>63 tekens zodra <code>&amp;amp;</code> als één teken telt. Binnen de maat.</td></tr>
+<tr><td>Hero zonder <code>width</code>/<code>height</code> op 41 plaatsgidsen</td><td>De hero's hebben ze wél. Wat ze mist, is een door JavaScript ingevoegd thumbnail in een kaartje met een vaste CSS-maat — dus geen layoutverschuiving.</td></tr>
+<tr><td>Negentien formuliervelden zonder label</td><td>Zeventien zitten in een omsluitend <code>&lt;label&gt;Maand&lt;input&gt;&lt;/label&gt;</code>. Dat is een geldige koppeling die een schermlezer gewoon voorleest. Alleen de twee op <code>property.html</code> waren echt, en die zijn opgelost.</td></tr>
+<tr><td><code>&lt;main&gt;</code> ontbreekt op twaalf app-pagina's</td><td>Bewust: die pagina's staan in <code>HANDS_OFF</code> in <code>build.mjs</code> en hebben hun eigen shell. Het landmark hoort bij de statisch voorgerenderde publieke pagina's, en daar staat het.</td></tr>
+</tbody>
+</table>
+<p>Dit is precies waarom een bevinding pas een bevinding is nadat hij met de hand is nagekeken. Een meetscript is een instrument, geen oordeel.</p>
+
+<h2>Wat er geüpload moet worden</h2>
+<div class="box">
+<p><b>1 · Upload de inhoud van <code>deploy/</code> naar de webroot, met overschrijven aan.</b> Er zijn 54 bestanden gewijzigd: <code>index.html</code>, <code>buy</code>, <code>rent</code>, <code>property</code>, <code>agent</code>, <code>auth</code>, <code>dashboard</code>, alle 41 plaatsgidsen, drie gidsen, <code>app.min.js</code>, <code>sitemap.xml</code> en <code>.htaccess</code>.</p>
+<p><b>2 · Verwijder deze tien bestanden met de hand op de server.</b> Een FTP-upload verwijdert niets — wat daar staat, blijft staan tot je het weghaalt. Dit is het belangrijkste deel van punt 1:</p>
+<pre>checkout v2.html    home.html            app.js
+checkout v3.html    neighborhood.html    styles.css
+guide.html          _headers
+guide-bodies-2.js   _redirects</pre>
+<p><b>3 · Cloudflare: niets nodig.</b> Er is geen bestandsnaam gewijzigd, dus er hoeft niets gepurged te worden. HTML staat op <code>max-age=0</code> en komt dus meteen door.</p>
+<p><b>4 · <code>node build.mjs</code> hoeft niet, maar mag.</b> Het pakket is nu al kloppend gespiegeld. Draai je hem wel, dan krijgt alles één nieuwe stempel — upload dan de hele <code>deploy/</code> opnieuw. De bouwstap ruimt de tien bestanden hierboven vanaf nu zelf uit <code>deploy/</code>.</p>
+</div>
+<p>De cacheversie <code>V</code> in <code>sw.js</code> is bewust níet opgehoogd. Terugkerende bezoekers zien door stale-while-revalidate één keer nog de oude pagina en daarna de nieuwe; dat is bij een snelheidsverbetering geen bezwaar. Ophogen zou iedereen de complete shell laten herdownloaden — duurder dan de winst.</p>
+
+<h2>Wat ik niet heb kunnen meten</h2>
+<p>Deze controle is gedaan op de bestanden. Zonder shell kon ik geen HTTP-statussen en headers per URL uitlezen. Buiten beeld bleven dus: <code>cf-cache-status</code> en eventueel gecachte foutantwoorden, de Cloudflare-instellingen, DNS met SPF/DKIM/DMARC, de PageSpeed-scores en de JavaScript-console van de live site. Eén punt is een aanname op basis van de configuratie, niet een meting: dat <code>/_headers</code> als platte tekst wordt uitgeleverd. Het vangnet in <code>.htaccess</code> maakt dat nu hoe dan ook onmogelijk.</p>
+
+<hr>
+<p class="foot">Intern document — niet uploaden naar de webroot. Onderzocht: 87 HTML-pagina's in <code>deploy/</code>, 109 bestanden root versus pakket, <code>build.mjs</code>, <code>sw.js</code>, <code>.htaccess</code>, <code>_headers</code>, <code>robots.txt</code>, <code>sitemap.xml</code>, <code>app.js</code>/<code>app.min.js</code>, alle 40 <code>og:image</code>-bestanden en de bestandsgroottes van de hero-afbeeldingen.</p>
+
+</doc-page>
+</body>
+</html>

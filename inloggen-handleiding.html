@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyKunda — Inloggen aanzetten</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hanken Grotesk',-apple-system,BlinkMacSystemFont,sans-serif;background:#FAF8F3;color:#18201D;line-height:1.6;-webkit-font-smoothing:antialiased}
+.page{max-width:720px;margin:0 auto;padding:40px 24px 80px}
+.hero{background:linear-gradient(135deg,#0E2E25,#1C5848);border-radius:18px;padding:44px 38px;margin-bottom:36px;color:#fff}
+.hero .badge{display:inline-block;background:rgba(221,138,69,.2);color:#DD8A45;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:5px 12px;border-radius:999px;margin-bottom:14px}
+.hero h1{font-size:32px;font-weight:800;line-height:1.15;margin-bottom:10px}
+.hero p{color:rgba(255,255,255,.78);font-size:16px;line-height:1.55}
+.progress-bar{display:flex;gap:6px;margin-bottom:36px}
+.progress-step{flex:1;height:6px;border-radius:3px;background:#E5E1D6}
+.progress-step.done{background:#2A7561}
+.progress-step.current{background:#DD8A45}
+.step{background:#fff;border-radius:16px;border:1.5px solid #E5E1D6;padding:30px 32px;margin-bottom:20px;position:relative}
+.step.done{border-color:#BEDACE;background:#f8fcf9}
+.step-num{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:10px;background:#15463A;color:#fff;font-weight:800;font-size:14px;margin-bottom:14px}
+.step.done .step-num{background:#2A7561}
+.step h2{font-size:20px;font-weight:800;margin-bottom:8px;color:#18201D}
+.step .desc{color:#5C6B64;font-size:15px;margin-bottom:18px}
+.step .done-badge{position:absolute;top:24px;right:24px;background:#DCEAE3;color:#15463A;font-size:12px;font-weight:700;padding:4px 12px;border-radius:999px;display:none}
+.step.done .done-badge{display:block}
+.substeps{list-style:none;counter-reset:sub}
+.substeps li{position:relative;padding:12px 0 12px 36px;border-bottom:1px solid #EFEBE1;font-size:15px;color:#384640}
+.substeps li:last-child{border-bottom:none}
+.substeps li::before{counter-increment:sub;content:counter(sub);position:absolute;left:0;top:12px;width:24px;height:24px;border-radius:7px;background:#EAF2ED;color:#15463A;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.code-block{background:#1a1f1d;border-radius:10px;padding:16px 18px;margin:12px 0;overflow-x:auto;position:relative}
+.code-block code{color:#BEDACE;font-family:'SF Mono',Menlo,Consolas,monospace;font-size:13.5px;line-height:1.7;white-space:pre-wrap;word-break:break-all;display:block;padding-right:70px}
+.copy-btn{position:absolute;top:10px;right:10px;background:#2a332f;border:none;color:#8A958E;font-size:11px;font-weight:600;padding:5px 10px;border-radius:6px;cursor:pointer;transition:all .15s}
+.copy-btn:hover{background:#384640;color:#fff}
+.info-box{border-radius:10px;padding:16px 18px;margin:14px 0;font-size:14px;line-height:1.55}
+.info-box.tip{background:#EAF2ED;color:#15463A;border-left:4px solid #2A7561}
+.info-box.warn{background:#FBF1E6;color:#8B5E2F;border-left:4px solid #DD8A45}
+.info-box.danger{background:#FDE8E8;color:#9B2C2C;border-left:4px solid #C2533A}
+.info-box strong{font-weight:700}
+code{font-family:'SF Mono',Menlo,Consolas,monospace;font-size:.92em;background:#EFEBE1;border-radius:4px;padding:1px 5px}
+.info-box code{background:rgba(0,0,0,.06)}
+a{color:#15463A;font-weight:600;text-decoration:underline;text-decoration-color:rgba(21,70,58,.3);text-underline-offset:2px}
+a:hover{text-decoration-color:#15463A}
+.checklist{list-style:none;margin:14px 0}
+.checklist li{padding:10px 0 10px 32px;position:relative;font-size:15px;border-bottom:1px solid #EFEBE1}
+.checklist li:last-child{border-bottom:none}
+.checklist li::before{content:'';position:absolute;left:0;top:12px;width:20px;height:20px;border-radius:6px;border:2px solid #E5E1D6}
+.checklist li.checked::before{background:#15463A;border-color:#15463A;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='white'%3E%3Cpath d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z'/%3E%3C/svg%3E");background-size:14px;background-position:center;background-repeat:no-repeat}
+.cost{width:100%;border-collapse:collapse;margin:14px 0;font-size:14.5px}
+.cost th{text-align:left;font-weight:700;color:#5C6B64;font-size:12px;text-transform:uppercase;letter-spacing:.07em;padding:0 0 9px;border-bottom:1.5px solid #E5E1D6}
+.cost td{padding:11px 0;border-bottom:1px solid #EFEBE1;color:#384640;vertical-align:top}
+.cost td:last-child{text-align:right;white-space:nowrap;font-weight:700;color:#15463A;padding-left:16px}
+.cost tr:last-child td{border-bottom:none}
+@media(max-width:520px){.page{padding:20px 14px 60px}.hero{padding:28px 22px;border-radius:14px}.hero h1{font-size:24px}.step{padding:22px 18px}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hero">
+    <div class="badge">Handleiding</div>
+    <h1>Inloggen aanzetten</h1>
+    <p>Drie stappen om het inlogscherm van demo naar echt te brengen. De gratis routes eerst — Google, Facebook en de e-mailcode — zodat je pas betaalt op het moment dat iemand een woning gaat plaatsen.</p>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-step done"></div>
+    <div class="progress-step current"></div>
+    <div class="progress-step"></div>
+    <div class="progress-step"></div>
+  </div>
+
+  <div class="step done">
+    <span class="done-badge">✓ Klaar</span>
+    <div class="step-num">1</div>
+    <h2>Het scherm zelf</h2>
+    <p class="desc">De volgorde in <code>auth.html</code> staat goed.</p>
+    <div class="info-box tip"><strong>Dit is al gebouwd.</strong> E-mailcode staat voorop, Google en Facebook staan eronder, en telefoon springt vanzelf naar voren zodra iemand vanaf <code>list.html</code>, <code>sell.html</code> of <code>agent.html</code> binnenkomt. Zolang de providers hieronder niet aanstaan, blijft het scherm in demo-modus: elke zes cijfers worden geaccepteerd.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <h2>Facebook-login aanzetten</h2>
+    <p class="desc">Gratis en onbeperkt. In West-Afrika heeft bijna iedereen Facebook, ook wie zelden e-mail leest — dit wordt waarschijnlijk je meest gebruikte route.</p>
+
+    <ol class="substeps">
+      <li>Ga naar <a href="https://developers.facebook.com/apps" target="_blank" rel="noopener">developers.facebook.com/apps</a> en klik op <strong>Create App</strong>. Kies als doel <strong>Authenticate and request data from users with Facebook Login</strong>, en als type <strong>Consumer</strong>.</li>
+      <li>Geef de app de naam <strong>MyKunda</strong> en vul je contact-e-mailadres in.</li>
+      <li>Voeg in het linkermenu het product <strong>Facebook Login</strong> toe. Kies <strong>Web</strong> als platform en vul <code>https://mykunda.com</code> in als Site URL.</li>
+      <li>Open <strong>Facebook Login → Settings</strong> en zet deze redirect-URI erbij:
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Kopieer</button><code>https://jejaerpqltqryqzjvbjp.supabase.co/auth/v1/callback</code></div>
+      </li>
+      <li>Ga naar <strong>App settings → Basic</strong> en kopieer de <strong>App ID</strong> en de <strong>App Secret</strong>.</li>
+      <li>Open in Supabase <strong>Authentication → Providers → Facebook</strong>, zet de schakelaar aan, plak App ID en App Secret, en klik op Save.</li>
+      <li>Zet de app in Facebook bovenin van <strong>Development</strong> naar <strong>Live</strong>. Zolang hij op Development staat, kan alleen jij inloggen.</li>
+    </ol>
+
+    <div class="info-box warn"><strong>Meta vraagt om een privacybeleid-URL</strong> voordat je live mag. Die heb je al: <code>https://mykunda.com/legal-privacy.html</code>. Vul ook de URL voor gegevensverwijdering in — <code>https://mykunda.com/contact.html</code> volstaat, met een regel op die pagina dat mensen hun account daar kunnen laten verwijderen.</div>
+    <div class="info-box tip"><strong>Google staat al klaar in de code</strong>, maar controleer of de provider in Supabase aanstaat en of diezelfde callback-URL bij de Google Cloud OAuth-client als redirect-URI is toegevoegd.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <h2>Custom SMTP voor de e-mailcode</h2>
+    <p class="desc">Zonder deze stap werkt de e-mailcode alleen voor jezelf: de ingebouwde mailserver van Supabase levert uitsluitend aan adressen van je eigen team, en is beperkt tot twee berichten per uur.</p>
+
+    <ol class="substeps">
+      <li>Je hebt al een Resend-account voor de lead-notificaties. Ga daar naar <strong>API Keys</strong> en maak een key aan met de naam <code>supabase-smtp</code>. Kopieer hem meteen — hij is daarna niet meer zichtbaar.</li>
+      <li>Controleer bij <strong>Domains</strong> dat <code>mykunda.com</code> een groen vinkje heeft. Zonder geverifieerd domein komen de codes in de spam-map terecht.</li>
+      <li>Open in Supabase <strong>Project Settings → Authentication → SMTP Settings</strong> en zet <strong>Enable Custom SMTP</strong> aan.</li>
+      <li>Vul deze gegevens in:
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Kopieer</button><code>Host:      smtp.resend.com
+Port:      587
+Username:  resend
+Password:  [je Resend API key]
+Sender:    login@mykunda.com
+Name:      MyKunda</code></div>
+      </li>
+      <li>Ga naar <strong>Authentication → Rate Limits</strong> en zet <strong>Rate limit for sending emails</strong> op 60 per uur. De standaard is 30, en dat loopt vol op een drukke dag.</li>
+      <li>Open <strong>Authentication → Email Templates → Magic Link</strong> en zorg dat de tekst de code <code>{{ .Token }}</code> bevat in plaats van alleen een link — het inlogscherm vraagt om zes cijfers, niet om een klik. Dit is alleen nog de <em>terugvaloptie</em>: sinds 15 augustus 2026 genereert de Edge Function <code>auth-email</code> de zescijferige code zelf en stuurt die via Resend vanaf <code>noreply@mykunda.com</code>. Supabase's eigen mailer komt alleen in actie als die functie niet bereikbaar is.</li>
+    </ol>
+    <div class="info-box tip"><strong>Zie je toch een inloglink in plaats van een code?</strong> Dan is <code>auth-email</code> niet (opnieuw) uitgerold. Draai <code>supabase functions deploy auth-email --no-verify-jwt</code> en probeer opnieuw.</div>
+
+    <div class="info-box tip"><strong>Gratis tot 3.000 e-mails per maand</strong> bij Resend, met een dagplafond van 100. Dat zijn ruim honderd logins per dag; ver boven wat je de eerste maanden nodig hebt.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <h2>Testen</h2>
+    <p class="desc">Vijf minuten werk, en je weet of het echt loopt.</p>
+
+    <ol class="substeps">
+      <li>Open <a href="auth.html">auth.html</a> in een incognitovenster. Het oranje balkje <em>"Demo: enter any 6 digits"</em> hoort te verdwijnen zodra er een echte code verstuurd is.</li>
+      <li>Vraag een code aan op een e-mailadres dat níet in je Supabase-team zit. Komt hij aan, dan staat SMTP goed.</li>
+      <li>Klik op <strong>Continue with Facebook</strong>. Je hoort terug te keren op <code>auth.html?oauth=1</code> en door te schieten naar het dashboard.</li>
+      <li>Open <a href="list.html">list.html</a> uitgelogd. Je hoort op het inlogscherm te landen met het telefoonveld vooraan en de uitleg eronder — dat is de betaalde route, en die hoort alleen hier op te duiken.</li>
+    </ol>
+
+    <div class="info-box danger"><strong>Telefoon-OTP werkt hierna nog steeds niet.</strong> Daar is een provider voor nodig (Twilio of een alternatief) en dat kost per bericht. Zolang die niet is ingericht, blijft de telefoonroute in demo-modus. Gebruik de prompt in <a href="prompt-otp-tarieven.html">prompt-otp-tarieven.html</a> om eerst uit te zoeken wat dat je kost.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">€</div>
+    <h2>Wat dit kost</h2>
+    <table class="cost">
+      <thead><tr><th>Route</th><th>Per maand</th></tr></thead>
+      <tbody>
+        <tr><td>Google-login</td><td>Gratis</td></tr>
+        <tr><td>Facebook-login</td><td>Gratis</td></tr>
+        <tr><td>E-mailcode<br><span style="color:#5C6B64;font-size:13.5px">Resend, tot 3.000 stuks</span></td><td>Gratis</td></tr>
+        <tr><td>Supabase Auth<br><span style="color:#5C6B64;font-size:13.5px">tot 50.000 actieve gebruikers</span></td><td>Gratis</td></tr>
+        <tr><td>Telefooncode<br><span style="color:#5C6B64;font-size:13.5px">alleen voor verkopers, nog niet ingericht</span></td><td>Per bericht</td></tr>
+      </tbody>
+    </table>
+    <div class="info-box warn"><strong>Eén ding om in de gaten te houden:</strong> de truc waarbij de gebruiker eerst zelf een WhatsApp-bericht stuurt en jij binnen 24 uur gratis mag antwoorden, verdwijnt. Meta gaat vanaf 1 oktober 2026 ook die service-berichten per stuk in rekening brengen. Bouw daar dus niets op.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">☐</div>
+    <h2>Afvink-checklist</h2>
+    <ul class="checklist">
+      <li class="checked">Inlogscherm herbouwd: gratis routes voorop</li>
+      <li>Meta-app aangemaakt en op Live gezet</li>
+      <li>Redirect-URI toegevoegd in Facebook Login → Settings</li>
+      <li>Facebook-provider aan in Supabase, met App ID en Secret</li>
+      <li>Google-provider gecontroleerd in Supabase</li>
+      <li>Resend API key <code>supabase-smtp</code> aangemaakt</li>
+      <li>Custom SMTP ingevuld en aangezet</li>
+      <li>Rate limit verhoogd naar 60 per uur</li>
+      <li>Magic Link-template bevat <code>{{ .Token }}</code></li>
+      <li>Testcode ontvangen op een extern e-mailadres</li>
+      <li>Facebook-login getest in incognito</li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+function copyCode(btn){
+  var code = btn.closest('.code-block').querySelector('code').textContent;
+  navigator.clipboard.writeText(code).then(function(){
+    btn.textContent = '✓ Gekopieerd';
+    setTimeout(function(){ btn.textContent = 'Kopieer'; }, 2000);
+  });
+}
+</script>
+</body>
+</html>

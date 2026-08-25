@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--mk-mark--><meta name="copyright" content="© MyKunda Ltd — mykunda.com. Alle rechten voorbehouden."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:05i73px--><!--/mk-mark-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
+<link rel="apple-touch-icon" href="images/mykunda-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#15463A">
+<title>Checkout — MyKunda</title>
+<meta name="description" content="Secure MyKunda checkout. Pay with Wave, Afrimoney, QMoney, APS Wallet, Visa/Mastercard or bank transfer — processed by Modem Pay, licensed by the Central Bank of The Gambia.">
+<noscript></noscript>
+<link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
+<link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.min.css?v=1791100000000">
+<style>
+body{background:var(--paper-2)}
+.co{max-width:1040px;margin:0 auto;padding:34px 28px 70px}
+.co-back{display:inline-flex;align-items:center;gap:8px;font-size:14.5px;font-weight:600;color:var(--muted);margin-bottom:20px}
+.co-back:hover{color:var(--green-700)}
+.co-head{margin-bottom:28px}
+.co-head .eyebrow{font-family:var(--sans);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--amber-600);margin-bottom:9px}
+.co-head h1{font-size:32px}
+.co-head p{color:var(--muted);font-size:15.5px;margin-top:6px}
+
+.co-grid{display:grid;grid-template-columns:1fr 360px;gap:34px;align-items:start}
+
+.block{background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-sm);padding:26px 28px;margin-bottom:22px}
+.block > h2{font-size:19px;margin-bottom:4px}
+.block > .sub{font-size:14px;color:var(--muted);margin-bottom:20px}
+
+/* payment method tabs */
+.methods{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px}
+@media(max-width:680px){.methods{grid-template-columns:1fr}}
+.method{border:1.5px solid var(--line);border-radius:var(--r-md);padding:16px 18px;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:13px;background:var(--white)}
+.method:hover{border-color:var(--green-500)}
+.method.sel{border-color:var(--green-700);background:var(--green-50);box-shadow:inset 0 0 0 1px var(--green-700)}
+.method .radio{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;transition:.13s}
+.method.sel .radio{border-color:var(--green-700)}
+.method.sel .radio::after{content:"";width:11px;height:11px;border-radius:50%;background:var(--green-700)}
+.method .m-info b{font-size:15px;color:var(--ink);font-weight:700}
+.method .m-info span{font-size:12.5px;color:var(--muted);display:block;margin-top:1px}
+
+/* mobile money provider chips */
+.providers{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+@media(max-width:620px){.providers{grid-template-columns:1fr 1fr}}
+.provider{border:1.5px solid var(--line);border-radius:var(--r-md);padding:14px 10px;cursor:pointer;text-align:center;transition:.15s;background:var(--white)}
+.provider:hover{border-color:var(--green-500)}
+.provider.sel{border-color:var(--green-700);background:var(--green-50);box-shadow:inset 0 0 0 1px var(--green-700)}
+.provider .logo{width:42px;height:42px;border-radius:11px;margin:0 auto 9px;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:700;font-size:18px;color:#fff}
+.provider .pn{font-weight:700;font-size:14px;color:var(--ink)}
+.provider .pd{font-size:12px;color:var(--muted);margin-top:1px}
+
+/* fields */
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.fld{margin-bottom:16px}
+.fld.full{grid-column:1/3}
+.fld label{display:block;font-size:13.5px;font-weight:700;color:var(--ink-2);margin-bottom:7px}
+.fld input,.fld select{width:100%;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:13px 14px;font-size:15px;outline:none;transition:.15s;font-family:var(--sans);background:var(--white)}
+.fld input:focus,.fld select:focus{border-color:var(--green-500)}
+.fld .hint{font-size:12px;color:var(--muted-2);margin-top:6px}
+.card-row{display:flex;align-items:center;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:0 14px;transition:.15s}
+.card-row:focus-within{border-color:var(--green-500)}
+.card-row input{border:none;padding:13px 0}
+.card-row .brand{display:flex;gap:5px;flex:none}
+.card-row .brand i{width:30px;height:20px;border-radius:4px;display:block}
+
+/* phone prefix */
+.phone-row{display:flex;align-items:stretch;border:1.5px solid var(--line);border-radius:var(--r-sm);overflow:hidden;transition:.15s}
+.phone-row:focus-within{border-color:var(--green-500)}
+.phone-row .pre{display:flex;align-items:center;padding:0 14px;background:var(--paper);font-weight:700;color:var(--ink-2);font-size:15px;border-right:1.5px solid var(--line)}
+.phone-row input{border:none;flex:1;padding:13px 14px;font-size:15px;outline:none}
+
+.pay-flag{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted);margin-top:18px}
+.pay-flag svg{color:var(--green-600);flex:none}
+
+/* order summary */
+.summary{position:sticky;top:28px;background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-md);overflow:hidden;border:1px solid var(--line)}
+.summary-head{padding:22px 24px 18px;border-bottom:1px solid var(--line-2)}
+.summary-head h3{font-size:18px}
+.plan-line{display:flex;align-items:flex-start;gap:14px;padding:20px 24px;border-bottom:1px solid var(--line-2)}
+.plan-line .badge-ic{width:44px;height:44px;border-radius:12px;background:var(--green-50);color:var(--green-700);display:flex;align-items:center;justify-content:center;flex:none}
+.plan-line .pl-info{flex:1}
+.plan-line .pl-name{font-family:var(--serif);font-size:17px;font-weight:600}
+.plan-line .pl-desc{font-size:13px;color:var(--muted);margin-top:2px;line-height:1.45}
+.plan-line .pl-price{font-weight:800;font-size:17px;color:var(--ink)}
+.sum-rows{padding:18px 24px}
+.sum-row{display:flex;justify-content:space-between;font-size:14px;color:var(--ink-2);padding:6px 0}
+.sum-row .muted{color:var(--muted)}
+.sum-total{display:flex;justify-content:space-between;align-items:baseline;padding:18px 24px;border-top:1.5px solid var(--line);background:var(--paper)}
+.sum-total .k{font-weight:700;font-size:15px}
+.sum-total .v{font-family:var(--serif);font-size:28px;font-weight:700;color:var(--green-700)}
+.sum-foot{padding:0 24px 24px}
+.trust-line{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);margin-top:14px}
+.trust-line svg{color:var(--green-600);flex:none}
+
+.coupon{display:flex;gap:8px;padding:0 24px 18px}
+.coupon input{flex:1;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:10px 12px;font-size:13.5px;outline:none}
+.coupon button{padding:0 16px;border-radius:var(--r-sm);background:var(--paper-2);font-weight:700;font-size:13.5px;color:var(--ink-2)}
+
+/* bank transfer */
+.bank-ref{background:var(--green-50);border:1.5px dashed var(--green-500);border-radius:var(--r-md);padding:16px 18px;margin-bottom:18px}
+.bank-ref .brk{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--green-700)}
+.bank-ref .brv{font-family:var(--sans);font-size:24px;font-weight:800;color:var(--ink);letter-spacing:.04em;margin-top:4px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cpy{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2);background:var(--white);border:1.5px solid var(--line);border-radius:var(--r-pill);padding:4px 11px;cursor:pointer;letter-spacing:.05em;transition:.15s;flex:none}
+.cpy:hover{border-color:var(--green-500);color:var(--green-700)}
+.cpy.done{background:var(--green-600);border-color:var(--green-600);color:#fff}
+.swift-tip{background:var(--paper-2);border-radius:var(--r-md);padding:13px 16px;margin-top:12px;font-size:13px;color:var(--ink-2);line-height:1.6}
+.swift-tip b{color:var(--ink);font-weight:700}
+.bank-ref .brn{font-size:12.5px;color:var(--ink-2);margin-top:7px;line-height:1.5}
+.bank-det{border:1.5px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+.bank-det .bd-row{display:flex;justify-content:space-between;gap:16px;padding:12px 16px;font-size:14px;border-bottom:1px solid var(--line-2)}
+.bank-det .bd-row:last-child{border-bottom:none}
+.bank-det .bd-row span{color:var(--muted)}
+.bank-det .bd-row b{color:var(--ink);font-weight:700;text-align:right;display:flex;align-items:center;justify-content:flex-end;gap:9px;flex-wrap:wrap}
+
+/* escrow / trust notices */
+.notice{display:flex;gap:12px;align-items:flex-start;background:var(--paper);border-radius:var(--r-md);padding:15px 17px;margin-top:18px}
+.notice svg{color:var(--amber-600);flex:none;margin-top:1px}
+.notice p{font-size:13.5px;color:var(--ink-2);line-height:1.55;margin:0}
+.notice b{font-weight:700;color:var(--ink)}
+.mp-line{display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-top:16px;padding-top:16px;border-top:1px solid var(--line-2)}
+.mp-badge{display:inline-flex;align-items:center;gap:7px;font-weight:700;color:var(--ink-2)}
+.mp-badge .mp-dot{width:8px;height:8px;border-radius:50%;background:var(--green-600)}
+.accepted{margin-bottom:22px}
+.accepted .ac-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:11px}
+
+/* success */
+.success{max-width:560px;margin:40px auto;background:var(--white);border-radius:var(--r-xl);box-shadow:var(--sh-md);padding:48px;text-align:center}
+.success .seal{width:80px;height:80px;border-radius:50%;background:var(--green-50);color:var(--green-700);display:flex;align-items:center;justify-content:center;margin:0 auto 22px}
+.success h1{font-size:30px;margin-bottom:12px}
+.success p{color:var(--muted);font-size:16px;line-height:1.6;margin-bottom:6px}
+.receipt{background:var(--paper);border-radius:var(--r-md);padding:20px 24px;margin:26px 0;text-align:left}
+.receipt .r-row{display:flex;justify-content:space-between;font-size:14px;padding:6px 0;color:var(--ink-2)}
+.receipt .r-row .muted{color:var(--muted)}
+.receipt .r-row.tot{border-top:1px solid var(--line);margin-top:6px;padding-top:12px;font-weight:700}
+.success-actions{display:flex;gap:12px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+
+@media(max-width:480px){
+  .co-body{padding:28px 16px 50px;gap:24px}
+  .co-card{padding:22px 16px}
+}
+
+@media(max-width:880px){
+  .co-grid{grid-template-columns:1fr}
+  .summary{position:static}
+  .methods{grid-template-columns:1fr}
+}
+</style>
+<meta property="fb:pages" content="61593360783009">
+<meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
+</head>
+<body>
+<div id="header"></div>
+
+<div class="co" id="coRoot">
+  <a class="co-back" id="coBack" href="sell.html#pricing"><span id="backIc"></span> Back to plans</a>
+  <div class="co-head">
+    <div class="eyebrow">Secure checkout</div>
+    <h1 id="coTitle">Complete your purchase</h1>
+    <p id="coSubtitle">Pay once — no commission, no recurring fees.</p>
+  </div>
+
+  <div class="co-grid">
+    <div class="co-main">
+      <!-- payment method -->
+      <div class="block">
+        <h2>Payment method</h2>
+        <div class="sub">Pay with mobile money in The Gambia, or by card or bank transfer from anywhere.</div>
+        <div class="accepted">
+          <div class="ac-label">Accepted here</div>
+          <div id="acceptedStrip"></div>
+        </div>
+        <div class="methods" id="methods">
+          <div class="method sel" data-m="mobile">
+            <span class="radio"></span>
+            <div class="m-info"><b>Mobile money</b><span>Wave · Afrimoney · QMoney · APS</span></div>
+          </div>
+          <div class="method" data-m="card">
+            <span class="radio"></span>
+            <div class="m-info"><b>Card</b><span>Visa · Mastercard · 3-D Secure</span></div>
+          </div>
+          <div class="method" data-m="bank">
+            <span class="radio"></span>
+            <div class="m-info"><b>Bank transfer</b><span>Any Gambian bank · large amounts</span></div>
+          </div>
+        </div>
+
+        <!-- mobile money -->
+        <div id="payMobile">
+          <div class="providers" id="providers"></div>
+          <div class="fld">
+            <label>Mobile money number</label>
+            <div class="phone-row">
+              <span class="pre">+220</span>
+              <input type="tel" id="mmNumber" placeholder="7XX XXXX" inputmode="numeric">
+            </div>
+            <div class="hint">You'll get a prompt on your phone to approve the payment.</div>
+          </div>
+        </div>
+
+        <!-- card -->
+        <div id="payCard" style="display:none">
+          <div class="fld full">
+            <label>Card number</label>
+            <div class="card-row">
+              <input type="text" id="cardNum" placeholder="1234 5678 9012 3456" inputmode="numeric">
+              <span class="brand"><i style="background:#1A1F71"></i><i style="background:#EB001B"></i></span>
+            </div>
+          </div>
+          <div class="fgrid">
+            <div class="fld"><label>Expiry</label><input type="text" id="cardExp" placeholder="MM / YY"></div>
+            <div class="fld"><label>CVC</label><input type="text" id="cardCvc" placeholder="123" inputmode="numeric"></div>
+          </div>
+          <div class="fld full"><label>Name on card</label><input type="text" id="cardName" placeholder="Full name"></div>
+          <div class="hint" style="font-size:12.5px;color:var(--muted-2)">Your bank may ask you to confirm the payment with 3-D Secure. International cards are welcome — useful if you are paying from abroad.</div>
+        </div>
+
+        <!-- bank transfer -->
+        <div id="payBank" style="display:none">
+          <div class="bank-ref">
+            <div class="brk">Your payment reference</div>
+            <div class="brv"><span id="bankRef">—</span><button type="button" class="cpy" data-cpy="bankRef">Copy</button></div>
+            <div class="brn">Quote this reference exactly when you make the transfer. Without it we cannot match your payment to your listing.</div>
+          </div>
+          <div class="bank-det">
+            <div class="bd-row"><span>Bank</span><b>Guaranty Trust Bank (Gambia) Ltd</b></div>
+            <div class="bd-row"><span>Account name</span><b>MyKunda Ltd</b></div>
+            <div class="bd-row"><span>Account number</span><b><span id="bankAcct">0052 0631 0054 2110 53</span><button type="button" class="cpy" data-cpy="bankAcct">Copy</button></b></div>
+            <div class="bd-row"><span>SWIFT / BIC</span><b><span id="bankSwift">GTBGGMGM</span><button type="button" class="cpy" data-cpy="bankSwift">Copy</button></b></div>
+            <div class="bd-row"><span>Bank address</span><b>56 Kairaba Avenue, Fajara<br>KSMD, Banjul, The Gambia</b></div>
+          </div>
+          <div class="swift-tip">
+            <b>Sending from Europe, the UK or the US?</b> Most banks want the 8-character code <b>GTBGGMGM</b>. If the form insists on 11 characters, add three X's: <b>GTBGGMGMXXX</b>. Both reach the same head office.
+          </div>
+          <div class="hint" style="font-size:12.5px;color:var(--muted-2);margin-top:10px">Clearing times are set by the banks, not by us — a transfer from abroad takes longer than a local one, and your own bank may charge a fee. We confirm by email and WhatsApp as soon as the money lands.</div>
+        </div>
+
+        <div class="notice">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+          <p><b>MyKunda only charges listing and service fees.</b> We never collect a deposit, down payment or the purchase price of a property. Anyone asking you to send property money through this site or to a personal account is committing fraud — pay through your lawyer's or notary's escrow account and tell us immediately.</p>
+        </div>
+
+        <div class="mp-line">
+          <span class="mp-badge"><span class="mp-dot"></span> Modem Pay</span>
+          <span>Licensed by the Central Bank of The Gambia · Reg. No. 2025/C25067 · card data never touches MyKunda's servers</span>
+        </div>
+      </div>
+
+      <!-- billing -->
+      <div class="block">
+        <h2>Billing details</h2>
+        <div class="sub">For your receipt and listing confirmation.</div>
+        <div class="fgrid">
+          <div class="fld"><label>Full name</label><input type="text" id="billName" placeholder="Your name"></div>
+          <div class="fld"><label>Email</label><input type="email" id="billEmail" placeholder="you@email.com"></div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" id="payBtn" style="width:100%;height:56px;font-size:16.5px">Pay <span id="payAmt"></span></button>
+      <div class="pay-flag"><span id="lockIc"></span> Payments are encrypted and processed securely. You can cancel a listing any time.</div>
+      <p class="form-legal">By paying you agree to our <a href="legal-terms.html">Terms of Service</a> — including <a href="legal-terms.html#terms-4">plans, fees &amp; payments</a> — and to our <a href="legal-privacy.html">Privacy Policy</a>.</p>
+    </div>
+
+    <!-- order summary -->
+    <aside class="summary">
+      <div class="summary-head"><h3>Order summary</h3></div>
+      <div class="plan-line">
+        <span class="badge-ic" id="planIc"></span>
+        <div class="pl-info">
+          <div class="pl-name" id="sumPlanName">Verified listing</div>
+          <div class="pl-desc" id="sumPlanDesc">Title check, Verified badge &amp; priority placement</div>
+        </div>
+        <div class="pl-price" id="sumPlanPrice">$99</div>
+      </div>
+      <div class="coupon">
+        <input type="text" id="couponIn" placeholder="Promo code">
+        <button id="couponBtn">Apply</button>
+      </div>
+      <div class="sum-rows">
+        <div class="sum-row"><span class="muted">Subtotal</span><span id="sumSub">$99.00</span></div>
+        <div class="sum-row"><span class="muted">Processing fee</span><span id="sumFee">$0.00</span></div>
+        <div class="sum-row" id="discRow" style="display:none;color:var(--green-600)"><span>Discount</span><span id="sumDisc">-$0.00</span></div>
+      </div>
+      <div class="sum-total"><span class="k">Total due</span><span class="v" id="sumTotal">$99.00</span></div>
+      <div class="sum-foot">
+        <div class="trust-line"><span id="t1"></span> One-time payment · valid 6 months</div>
+        <div class="trust-line"><span id="t2"></span> Verified badge goes live once the check is complete</div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<div id="footer"></div>
+
+<script src="app.min.js?v=1791100000000"></script>
+<script src="image-slot.js?v=1791100000000" defer></script>
+<script>
+/* 4G: the Supabase client (~205 KB) is not needed to paint this page. It downloads
+   in parallel and every backend call awaits window.__sbReady. */
+window.__sbReady=new Promise(function(res){
+  var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
+  s1.onerror=function(){ window.supabase=null; res(); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=1791100000000'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  document.head.appendChild(s1);
+});
+</script>
+<script>
+document.getElementById('header').innerHTML = headerHTML('List', false);
+document.getElementById('footer').innerHTML = footerHTML();
+
+backIc.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>';
+lockIc.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+const checkSm='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+t1.innerHTML=t2.innerHTML=checkSm;
+planIc.innerHTML='<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6z"/><path d="m9 12 2 2 4-4"/></svg>';
+
+// ---- plan config ----
+const PLANS={
+  verified:{name:'Verified listing',desc:'Title check, Verified badge & priority placement',priceGMD:4500,foot:['Priced by your asking price · valid 6 months','Verified badge goes live once the check is complete']},
+  managed:{name:'Managed service',desc:'An established Gambian estate agency runs your listing, viewings included',priceGMD:30000,foot:['Priced by your asking price · listed until sold','A partner agency and your named agent are assigned once the payment lands']},
+  feature:{name:'Featured boost',desc:'Top of search & homepage for 30 days',priceGMD:4000,foot:['One-time payment · 30 days','Live as soon as the payment is confirmed']},
+  /* Buyer-side product — bought on verify.html, not part of a listing plan. */
+  'ownership-standard':{name:'Ownership Verification · Document Check',desc:'Independent check of the documents on a property you are buying',priceGMD:7500,foot:['One flat fee · never a percentage of the price','The report is addressed to you, not to a listing']},
+  'ownership-full':{name:'Ownership Verification · Full Check',desc:'Documents, registry search and a site inspection, reported to you',priceGMD:25000,foot:['Base fee · the site visit is quoted per property','The report is addressed to you, not to a listing']},
+};
+const planKey = (qs('plan')&&PLANS[qs('plan')])?qs('plan'):'verified';
+const plan = PLANS[planKey];
+const isOwnership = planKey.indexOf('ownership')===0;
+
+/* The listing wizard passes the value band and the exact amount it quoted, so
+   checkout always charges what the seller was shown. Managed is split in two. */
+(function applyBand(){
+  if(typeof PRICING !== 'undefined'){
+    if(PLANS.verified) PLANS.verified.priceGMD = PRICING.bands[0].verified.gmd;
+    if(PLANS.promoted) PLANS.promoted.priceGMD = PRICING.promoted.gmd;
+    if(PLANS.managed)  PLANS.managed.priceGMD  = PRICING.bands[0].managed.gmd;
+    if(PRICING.ownership){
+      if(PLANS['ownership-standard']) PLANS['ownership-standard'].priceGMD = PRICING.ownership.standard.gmd;
+      if(PLANS['ownership-full'])     PLANS['ownership-full'].priceGMD     = PRICING.ownership.full.gmd;
+    }
+  }
+  var amt = parseInt(qs('amount')||'',10);
+  var band = parseInt(qs('band')||'',10);
+  if(amt>0) plan.priceGMD = amt;
+  plan.fullGMD = plan.priceGMD;
+  if(planKey==='managed'){
+    plan.priceGMD = Math.round(plan.fullGMD/2);
+    plan.foot[0] = 'First instalment of two — the balance is due at completion';
+  } else if(band>=1 && band<=3 && planKey==='verified'){
+    plan.foot[0] = 'Band ' + band + ' of 3 · set by your asking price · valid 6 months';
+  }
+})();
+
+document.getElementById('sumPlanName').textContent=plan.name;
+document.getElementById('sumPlanDesc').textContent=plan.desc;
+document.getElementById('sumPlanPrice').textContent=CURRENCIES[getCurrency()].symbol+Math.round(plan.priceGMD/CURRENCIES.GMD.rate*CURRENCIES[getCurrency()].rate).toLocaleString();
+document.getElementById('coTitle').textContent = isOwnership ? 'Pay for your ownership check' : 'Get '+plan.name.replace(' listing','').replace(' service','');
+if(isOwnership){
+  var coBack=document.getElementById('coBack');
+  coBack.href='verify.html#pricing'; coBack.lastChild.textContent=' Back to ownership checks';
+  document.getElementById('coSubtitle').textContent='One flat fee for this property — never a percentage of what you pay the seller.';
+}
+t1.parentElement.childNodes[1].textContent=' '+plan.foot[0];
+t2.parentElement.childNodes[1].textContent=' '+plan.foot[1];
+
+let discount=0;
+function money(n){ var c=CURRENCIES[getCurrency()]; return c.symbol+Math.round(n/CURRENCIES.GMD.rate*c.rate).toLocaleString(); }
+function recalc(){
+  const sub=plan.priceGMD;
+  const fee=0;
+  const total=Math.max(0,sub+fee-discount);
+  document.getElementById('sumSub').textContent=money(sub);
+  document.getElementById('sumFee').textContent=money(fee);
+  document.getElementById('sumTotal').textContent=money(total);
+  document.getElementById('payAmt').textContent=money(total);
+  document.getElementById('discRow').style.display=discount>0?'flex':'none';
+  document.getElementById('sumDisc').textContent='-'+money(discount);
+}
+recalc();
+
+// ---- accepted payment strip (shared component in app.js) ----
+document.getElementById('acceptedStrip').innerHTML=payChipsHTML();
+
+// ---- mobile money providers ----
+// The Gambia has four live wallets. Orange Money does NOT operate here.
+const PROVIDERS=[['Wave','#1DC8FF','W','Most used'],['Afrimoney','#5B2D8E','A','Africell'],['QMoney','#E2231A','Q','QCell'],['APS Wallet','#0E7A4F','APS','Agents']];
+document.getElementById('providers').innerHTML=PROVIDERS.map((p,i)=>`<div class="provider ${i===0?'sel':''}" data-p="${p[0]}"><div class="logo" style="background:${p[1]}">${p[2]}</div><div class="pn">${p[0]}</div><div class="pd">${p[3]}</div></div>`).join('');
+document.querySelectorAll('.provider').forEach(el=>el.addEventListener('click',()=>{document.querySelectorAll('.provider').forEach(x=>x.classList.remove('sel'));el.classList.add('sel');}));
+
+// ---- bank transfer reference ----
+const BANK_REF='MK-'+Date.now().toString(36).toUpperCase()+Math.random().toString(36).slice(2,5).toUpperCase();
+document.getElementById('bankRef').textContent=BANK_REF;
+
+// copy-to-clipboard on bank details
+document.querySelectorAll('.cpy').forEach(b=>b.addEventListener('click',async()=>{
+  const t=document.getElementById(b.dataset.cpy).textContent.trim();
+  try{ await navigator.clipboard.writeText(t.replace(/\s/g,'')); }catch(e){}
+  const o=b.textContent; b.textContent='Copied'; b.classList.add('done');
+  setTimeout(()=>{b.textContent=o;b.classList.remove('done');},1600);
+}));
+
+// ---- method toggle ----
+document.querySelectorAll('.method').forEach(m=>m.addEventListener('click',()=>{
+  document.querySelectorAll('.method').forEach(x=>x.classList.remove('sel'));m.classList.add('sel');
+  const k=m.dataset.m;
+  document.getElementById('payMobile').style.display=k==='mobile'?'block':'none';
+  document.getElementById('payCard').style.display=k==='card'?'block':'none';
+  document.getElementById('payBank').style.display=k==='bank'?'block':'none';
+  const btn=document.getElementById('payBtn');
+  btn.firstChild.textContent=k==='bank'?'I have sent ':'Pay ';
+}));
+
+// ---- input formatting ----
+document.getElementById('cardNum').addEventListener('input',e=>{
+  let v=e.target.value.replace(/\D/g,'').slice(0,16);
+  e.target.value=v.replace(/(.{4})/g,'$1 ').trim();
+});
+document.getElementById('cardExp').addEventListener('input',e=>{
+  let v=e.target.value.replace(/\D/g,'').slice(0,4);
+  if(v.length>2)v=v.slice(0,2)+' / '+v.slice(2);
+  e.target.value=v;
+});
+
+// ---- coupon ----
+document.getElementById('couponBtn').addEventListener('click',()=>{
+  const code=document.getElementById('couponIn').value.trim().toUpperCase();
+  const btn=document.getElementById('couponBtn');
+  if(code==='MYKUNDA10'){ discount=plan.priceGMD*0.1; recalc(); btn.textContent='Applied ✓'; btn.style.color='var(--green-700)'; }
+  else if(code){ btn.textContent='Invalid'; setTimeout(()=>btn.textContent='Apply',1500); }
+});
+
+// ---- pay ----
+document.getElementById('payBtn').addEventListener('click',()=>{
+  const method=document.querySelector('.method.sel').dataset.m;
+  const btn=document.getElementById('payBtn');
+  // light validation
+  if(method==='mobile' && !document.getElementById('mmNumber').value){ flash('mmNumber'); return; }
+  if(method==='card' && !document.getElementById('cardNum').value){ flash('cardNum'); return; }
+  if(!document.getElementById('billEmail').value){ flash('billEmail'); return; }
+
+  btn.textContent=method==='bank'?'Recording…':'Processing…'; btn.style.opacity='.75'; btn.disabled=true;
+  // mark the most recent user listing as verified/paid
+  setTimeout(()=>{
+    try{
+      const all=getUserListings();
+      if(!isOwnership && all.length){ all[0].verified=true; all[0].plan=planKey; all[0].status=(planKey==='managed'?'In review':'Active'); localStorage.setItem('mykunda_listings',JSON.stringify(all)); }
+    }catch(e){}
+    showSuccess(method);
+  }, 1500);
+});
+function flash(id){const el=document.getElementById(id);el.style.borderColor='#C2533A';el.focus();setTimeout(()=>el.style.borderColor='',1500);}
+
+function showSuccess(method){
+  const total=document.getElementById('sumTotal').textContent;
+  const ref = method==='bank' ? BANK_REF : 'MK-'+Date.now().toString().slice(-8);
+  const methodLabel = method==='mobile' ? (document.querySelector('.provider.sel').dataset.p+' mobile money')
+    : method==='bank' ? 'Bank transfer · Guaranty Trust Bank (Gambia)'
+    : 'Card ending '+(document.getElementById('cardNum').value.replace(/\s/g,'').slice(-4)||'••••');
+  const billEmail=document.getElementById('billEmail').value.trim();
+  sendReceipt({ method:method, methodLabel:methodLabel, ref:ref, total:total, email:billEmail });
+  document.getElementById('coRoot').innerHTML=`
+    <div class="success">
+      <div class="seal"><svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+      <h1>${method==='bank'?'Transfer registered':'Payment successful'}</h1>
+      <p>${method==='bank'
+        ? `Thanks — we're watching for your transfer of <b>${total}</b> with reference <b>${ref}</b>. Your <b>${plan.name}</b> activates as soon as the money lands.`
+        : `Thank you! Your <b>${plan.name}</b> is confirmed. ${isOwnership?'We start on it straight away and email you the written report — plus a time for the call that goes with it.':(planKey==='managed'?'We will introduce you to the partner agency taking this on, and your named agent will be in touch to get started.':'Our team will review your documents and the Verified badge goes live once the check is complete.')}`}</p>
+      <div class="receipt">
+        <div class="r-row"><span class="muted">Reference</span><span>${ref}</span></div>
+        <div class="r-row"><span class="muted">${isOwnership?'Service':'Plan'}</span><span>${plan.name}</span></div>
+        ${planKey==='ownership-full'?'<div class="r-row"><span class="muted">Site visit</span><span>Quoted separately</span></div>':''}
+        <div class="r-row"><span class="muted">Payment method</span><span>${methodLabel}</span></div>
+        <div class="r-row"><span class="muted">Date</span><span>${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</span></div>
+        <div class="r-row tot"><span>${method==='bank'?'Amount due':'Total paid'}</span><span>${total}</span></div>
+      </div>
+      ${document.getElementById('billEmail').value.trim()?`<p style="font-size:14px;color:var(--muted);margin:-10px 0 22px">A ${method==='bank'?'confirmation with the transfer details':'receipt'} is on its way to <b>${document.getElementById('billEmail').value.trim()}</b>.</p>`:''}
+      <div class="success-actions">
+        <a class="btn btn-primary" href="dashboard.html">Go to My MyKunda</a>
+        <a class="btn btn-ghost" href="search.html">View listings</a>
+      </div>
+    </div>`;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* Receipt to the customer + an action-required mail to the backoffice, via the
+   notify-payment Edge Function. Fire-and-forget: an order confirmation screen
+   must never wait on, or fail because of, an email. */
+async function sendReceipt(o){
+  try{
+    if(window.__sbReady) await window.__sbReady;
+    if(typeof notifyPayment!=='function') return;
+    await notifyPayment({
+      listing_id: qs('listing') || null,
+      name:  document.getElementById('billName').value.trim() || null,
+      email: o.email || null,
+      plan:  plan.name,
+      planNote: plan.foot && plan.foot[1] ? plan.foot[1] : null,
+      reference: o.ref,
+      amount: o.total,
+      method: o.methodLabel,
+      awaitingTransfer: o.method==='bank',
+      bank: o.method==='bank' ? {
+        name: 'Guaranty Trust Bank (Gambia) Ltd · MyKunda Ltd',
+        account: '0052 0631 0054 2110 53',
+        swift: 'GTBGGMGM'
+      } : null,
+      date: new Date().toISOString()
+    });
+  }catch(e){ console.warn('receipt not sent:', e && e.message); }
+}
+</script>
+</body>
+</html>

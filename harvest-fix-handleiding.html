@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyKunda — Harvest-knop repareren</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Mulish:wght@400;500;600;700;800;900&display=swap">
+<style>
+:root{--green-900:#0E2E25;--green-800:#123A2E;--green-700:#15463A;--green-600:#1C5848;--green-500:#2A7561;--green-200:#BEDACE;--green-100:#DCEAE3;--green-50:#EAF2ED;--amber-600:#B45F22;--amber-500:#C8702D;--amber-400:#DD8A45;--amber-100:#F6E6D4;--amber-50:#FBF1E6;--paper:#FAF8F3;--paper-2:#F3F0E8;--white:#fff;--ink:#18201D;--ink-2:#384640;--muted:#5C6B64;--muted-2:#8A958E;--line:#E5E1D6;--line-2:#EFEBE1;--serif:'Mulish',sans-serif;--sans:'Hanken Grotesk',sans-serif;--r-sm:8px;--r-md:12px;--r-lg:18px;--sh-md:0 4px 14px rgba(24,32,29,.07),0 2px 6px rgba(24,32,29,.05)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--paper-2);color:var(--ink);line-height:1.62;-webkit-font-smoothing:antialiased}
+.doc{max-width:920px;margin:0 auto;background:var(--paper);box-shadow:var(--sh-md)}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:800;line-height:1.14;letter-spacing:-.015em;color:var(--ink)}
+p{margin:11px 0;color:var(--ink-2)}
+a{color:var(--green-700)}
+a:hover{color:var(--green-500)}
+strong{color:var(--ink);font-weight:700}
+code{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.85em;background:var(--green-50);color:var(--green-700);padding:2px 6px;border-radius:5px;font-weight:600}
+pre{background:var(--green-900);color:#C8E6DC;padding:18px 22px;border-radius:var(--r-md);font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:13px;line-height:1.7;overflow-x:auto;margin:14px 0;white-space:pre}
+pre b{color:var(--amber-400);font-weight:700}
+.codewrap{position:relative;margin:14px 0}
+.codewrap pre{margin:0}
+.copy{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.12);color:#DCEAE3;border:1px solid rgba(255,255,255,.22);border-radius:7px;padding:6px 12px;font-family:var(--sans);font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.02em}
+.copy:hover{background:rgba(255,255,255,.2)}
+.copy.done{background:var(--green-500);border-color:var(--green-500);color:#fff}
+pre.tall{max-height:300px;overflow-y:auto}
+.cover{background:linear-gradient(150deg,var(--green-800),var(--green-600));color:#fff;padding:64px 64px 50px;position:relative;overflow:hidden}
+.cover::after{content:"";position:absolute;right:40px;bottom:30px;width:120px;height:120px;background:rgba(255,255,255,.06);border-radius:50%}
+.cover .logo{font-family:var(--serif);font-weight:800;font-size:23px;letter-spacing:-.02em;margin-bottom:42px}
+.cover .kicker{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--amber-400);margin-bottom:15px}
+.cover h1{color:#fff;font-size:38px;font-weight:900;max-width:640px}
+.cover .lede{font-size:17px;color:rgba(255,255,255,.86);margin-top:17px;max-width:620px;line-height:1.55}
+.cover .meta{display:flex;gap:34px;margin-top:36px;padding-top:24px;border-top:1px solid rgba(255,255,255,.18);flex-wrap:wrap}
+.cover .meta div span{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.6);font-weight:700;margin-bottom:4px}
+.cover .meta div b{font-family:var(--serif);font-size:16px;font-weight:700;color:#fff}
+.body{padding:52px 64px 64px}
+section{margin-bottom:46px}
+.num{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;background:var(--green-600);color:#fff;font-family:var(--serif);font-weight:800;font-size:16px;margin-right:13px;flex:none}
+.h-row{display:flex;align-items:center;margin-bottom:8px}
+.h-row h2{font-size:26px}
+.lead-line{color:var(--muted);font-size:16px;margin:0 0 22px 47px}
+section>p,section>.steps,section>.note,section>.warn,section>.goal,section>.codewrap,section>.tablewrap,section>ul.chk{margin-left:47px}
+.goal{background:var(--green-50);border:1px solid var(--green-100);border-radius:var(--r-lg);padding:22px 26px;margin:0 0 6px 47px}
+.goal h4{font-size:16px;margin-bottom:6px;color:var(--green-700)}
+.goal p{margin:0;font-size:15px}
+.note{border-left:4px solid var(--amber-500);background:var(--amber-50);padding:15px 20px;border-radius:0 var(--r-md) var(--r-md) 0;margin:18px 0}
+.note b{color:var(--amber-600)}
+.warn{border-left:4px solid #C2533A;background:#FEF2F2;padding:15px 20px;border-radius:0 var(--r-md) var(--r-md) 0;margin:18px 0}
+.warn b{color:#C2533A}
+.steps{counter-reset:step}
+.s{display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line-2);align-items:flex-start}
+.s:last-child{border-bottom:none}
+.s::before{counter-increment:step;content:counter(step);width:30px;height:30px;border-radius:8px;background:var(--green-600);color:#fff;font-family:var(--serif);font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;flex:none;margin-top:2px}
+.s .tx{flex:1}
+.s .tx b{color:var(--ink)}
+.s .tx p{margin:4px 0 0;font-size:14.5px}
+.s .tx code{font-size:12px}
+.tablewrap{margin:18px 0;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{background:var(--green-600);color:#fff;text-align:left;padding:11px 15px;font-family:var(--serif);font-weight:700;font-size:13px}
+td{padding:10px 15px;border-top:1px solid var(--line-2);color:var(--ink-2);vertical-align:top}
+td code{font-size:12px}
+tr:nth-child(even) td{background:var(--paper)}
+ul.chk{list-style:none;margin:6px 0 0 0}
+ul.chk li{position:relative;padding-left:30px;margin:11px 0;font-size:14.5px;color:var(--ink-2)}
+ul.chk li::before{content:"";position:absolute;left:0;top:1px;width:19px;height:19px;border-radius:5px;border:2px solid var(--green-600)}
+ul.chk li b{color:var(--ink)}
+.close{background:var(--green-900);color:#DCEAE3;padding:34px 64px;font-size:14.5px}
+.close b{color:#fff}
+@media(max-width:700px){.cover,.body,.close{padding-left:26px;padding-right:26px}.cover h1{font-size:29px}section>p,section>.steps,section>.note,section>.warn,section>.goal,section>.codewrap,section>.tablewrap,section>ul.chk,.lead-line{margin-left:0}}
+</style>
+</head>
+<body>
+<div class="doc">
+
+<div class="cover">
+  <div class="logo">MyKunda</div>
+  <div class="kicker">Backoffice · Marktbronnen</div>
+  <h1>De harvest-knop repareren</h1>
+  <p class="lede">"Harvest failed" komt niet uit de knop, maar uit een Edge Function die nooit is uitgerold. Hieronder staat wat er precies mist, wat ik al in de code heb rechtgezet, en de vier stappen die jij nog moet doen — allemaal vanuit de browser.</p>
+  <div class="meta">
+    <div><span>Duur</span><b>± 15 minuten</b></div>
+    <div><span>Nodig</span><b>Supabase-dashboard + FTP</b></div>
+    <div><span>CLI nodig?</span><b>Nee</b></div>
+  </div>
+</div>
+
+<div class="body">
+
+<section>
+  <div class="h-row"><span class="num">!</span><h2>Wat er precies misgaat</h2></div>
+  <p class="lead-line">Eén hoofdoorzaak, één bijkomend detail.</p>
+  <div class="goal">
+    <h4>De functie <code>market-sources</code> bestaat niet op het Supabase-project</h4>
+    <p>De knop doet een POST naar die Edge Function. Er staan wel dertien functies op het project (auth-email, fx-rates, notify-lead, …), maar deze niet. De gateway antwoordt dan met een fout <em>zonder</em> CORS-headers, en dat vertaalt de browser naar de nietszeggende melding "Failed to fetch" — vandaar "Harvest failed".</p>
+  </div>
+  <p><strong>Detail twee:</strong> de frontend bouwde de URL op met de oude host <code>&lt;ref&gt;.functions.supabase.co/market-sources</code> in plaats van het standaardpad <code>&lt;ref&gt;.supabase.co/functions/v1/market-sources</code>. Die oude host werkt nog wel, maar slikt de statuscode in bij fouten. <strong>Dat heb ik al gecorrigeerd.</strong></p>
+  <div class="note"><b>Goed nieuws.</b> De functiecode zelf is compleet en staat al in het project (<code>edge-functions/market-sources/index.ts</code>), inclusief correcte CORS-headers op zowel de preflight als het antwoord. Er is niets te programmeren — alleen uit te rollen.</div>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">✓</span><h2>Wat ik al voor je heb gedaan</h2></div>
+  <p class="lead-line">Deze bestanden zijn aangepast en staan klaar in <code>upload-harvest-fix/</code>.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Bestand</th><th>Wijziging</th></tr>
+    <tr><td><code>supabase.js</code></td><td>Function-URL nu volgens standaard: <code>/functions/v1/…</code>. Harvest geeft voortaan een leesbare fout ("functie niet uitgerold", "niet geautoriseerd") in plaats van "Failed to fetch".</td></tr>
+    <tr><td><code>app.js</code> · <code>app.min.js</code></td><td>Zelfde correctie voor het valuta-endpoint <code>fx-rates</code>.</td></tr>
+    <tr><td><code>sources.html</code></td><td>Cache-versie opgehoogd, zodat browsers de nieuwe <code>supabase.js</code> ophalen.</td></tr>
+  </table></div>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">1</span><h2>Controleer de tabellen</h2></div>
+  <p class="lead-line">Supabase-dashboard → SQL Editor → plak en run.</p>
+  <div class="codewrap"><button class="copy">Kopieer</button><pre>select table_name from information_schema.tables
+where table_schema = 'public'
+  and table_name in ('market_sources','source_fetch_runs',
+                     'external_listings','market_macro','market_area_alias')
+order by table_name;</pre></div>
+  <p>Krijg je <strong>vijf rijen</strong> terug? Ga door naar stap 2. Krijg je er minder, dan is <code>backend/market-sources.sql</code> nog nooit gedraaid: open dat bestand in het project, plak de volledige inhoud in de SQL Editor en run het één keer. Het is veilig om opnieuw te draaien.</p>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">2</span><h2>Rol de functie uit — zonder CLI</h2></div>
+  <p class="lead-line">Dit kan volledig in het dashboard; je hoeft niets te installeren.</p>
+  <div class="steps">
+    <div class="s"><div class="tx"><b>Ga naar Edge Functions</b><p>Supabase-dashboard → linkerbalk → <strong>Edge Functions</strong> → knop <strong>Deploy a new function</strong> → kies <strong>Via editor</strong>.</p></div></div>
+    <div class="s"><div class="tx"><b>Naam exact overnemen</b><p>Vul in: <code>market-sources</code>. Precies zo, met streepje, kleine letters — de frontend roept die naam aan.</p></div></div>
+    <div class="s"><div class="tx"><b>Plak de code</b><p>Kopieer hieronder de volledige inhoud van <code>index.ts</code>, wis de voorbeeldcode in de editor en plak dit erin.</p></div></div>
+    <div class="s"><div class="tx"><b>Deploy</b><p>Klik <strong>Deploy function</strong>. Na ± 30 seconden staat hij in de lijst met status <em>Active</em>.</p></div></div>
+  </div>
+  <div class="codewrap"><button class="copy">Kopieer de functiecode</button><pre class="tall" id="fnCode">…</pre></div>
+  <p><strong>Liever de CLI?</strong> Dan is het één regel vanuit de projectmap:</p>
+  <div class="codewrap"><button class="copy">Kopieer</button><pre>supabase functions deploy <b>market-sources</b> --no-verify-jwt</pre></div>
+  <div class="note"><b>Secrets hoef je niet te zetten.</b> De functie gebruikt <code>SUPABASE_URL</code> en <code>SUPABASE_SERVICE_ROLE_KEY</code>; die injecteert Supabase automatisch in elke Edge Function van het eigen project.</div>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">3</span><h2>Zet "Verify JWT" uit</h2></div>
+  <p class="lead-line">Alleen nodig als je de nachtelijke cron wilt gebruiken.</p>
+  <p>Open de functie → <strong>Settings</strong> (of het tandwiel bij de functie) → schakel <strong>Verify JWT with legacy secret</strong> uit. De harvest vanuit de admin-console werkt met de schakelaar aan óók, want die stuurt jouw sessietoken mee — maar de cronjob doet dat niet en zou dan 401 krijgen.</p>
+  <div class="warn"><b>Let op.</b> De functie is daarmee publiek aanroepbaar. Ze schrijft alleen in eigen markttabellen en leest geen gebruikersdata, dus dat is hier acceptabel — hetzelfde geldt al voor <code>fx-rates</code>.</div>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">4</span><h2>Upload de vier bestanden</h2></div>
+  <p class="lead-line">Uit de map <code>upload-harvest-fix/webroot/</code> naar de webroot van mykunda.com.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Bestand</th><th>Doel op de server</th></tr>
+    <tr><td><code>supabase.js</code></td><td>/supabase.js — overschrijven</td></tr>
+    <tr><td><code>app.js</code></td><td>/app.js — overschrijven</td></tr>
+    <tr><td><code>app.min.js</code></td><td>/app.min.js — overschrijven</td></tr>
+    <tr><td><code>sources.html</code></td><td>/sources.html — overschrijven</td></tr>
+  </table></div>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">5</span><h2>Testen</h2></div>
+  <p class="lead-line">Open <code>sources.html</code>, log in als admin, ververs hard (Cmd/Ctrl + Shift + R).</p>
+  <div class="steps">
+    <div class="s"><div class="tx"><b>Eerst één bron droog draaien</b><p>Klik bij een bron op <strong>Test</strong>. Dat parseert wel, maar schrijft niets weg. Je ziet meteen of de selector rijen vindt.</p></div></div>
+    <div class="s"><div class="tx"><b>Dan de echte harvest</b><p>Klik <strong>Harvest everything now</strong>. Verwacht: "Harvest finished." en een verse regel in het runlog eronder.</p></div></div>
+    <div class="s"><div class="tx"><b>Controleer het label rechtsboven</b><p>Staat er <em>Demo data</em>, dan lukt het lezen van de tabellen niet en is stap 1 nog niet af.</p></div></div>
+  </div>
+  <p>Krijg je alsnog een melding, dan zegt de nieuwe tekst wat er aan de hand is:</p>
+  <div class="tablewrap"><table>
+    <tr><th>Melding</th><th>Oorzaak</th><th>Oplossing</th></tr>
+    <tr><td>could not be reached</td><td>Functie nog niet uitgerold, of naam verkeerd gespeld</td><td>Stap 2 herhalen; naam moet <code>market-sources</code> zijn</td></tr>
+    <tr><td>is not deployed (404)</td><td>Functie bestaat niet op dit project</td><td>Stap 2</td></tr>
+    <tr><td>not authorised (401)</td><td>Verify JWT staat aan en je bent niet ingelogd</td><td>Stap 3, of eerst inloggen als admin</td></tr>
+    <tr><td>no matching source</td><td>Tabel <code>market_sources</code> is leeg</td><td><code>backend/market-sources.sql</code> draaien</td></tr>
+    <tr><td>robots_disallow</td><td>De bron verbiedt crawlen</td><td>Bron op inactief zetten in de console</td></tr>
+  </table></div>
+  <p>Zie je nog iets anders, dan staat het antwoord in de logs: dashboard → Edge Functions → <code>market-sources</code> → <strong>Logs</strong>, terwijl je op de knop klikt.</p>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">6</span><h2>Nachtelijk laten draaien</h2></div>
+  <p class="lead-line">Optioneel, pas doen als de handmatige harvest werkt. Vereist pg_cron + pg_net.</p>
+  <div class="codewrap"><button class="copy">Kopieer</button><pre>select cron.schedule('market-sources-nightly', '20 1 * * *', $$
+  select net.http_post(
+    url := 'https://<b>jejaerpqltqryqzjvbjp</b>.supabase.co/functions/v1/market-sources',
+    headers := '{"Content-Type":"application/json"}'::jsonb,
+    body := '{"run":"due"}'::jsonb)
+$$);
+
+select cron.schedule('market-index-nightly', '45 2 * * *', $$
+  select public.market_dedup();
+  select public.market_build_month(current_date);
+  select public.market_recompute_derived();
+  select public.market_recompute_real();
+$$);</pre></div>
+  <p>De harvest draait om 01:20, de herberekening van de index om 02:45 — bewust uit elkaar, zodat de rollup verse rijen ziet.</p>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">✓</span><h2>Afvinklijst</h2></div>
+  <ul class="chk">
+    <li><b>Vijf tabellen</b> aanwezig in Supabase</li>
+    <li><b>market-sources</b> staat op Active in Edge Functions</li>
+    <li><b>Verify JWT</b> uit (alleen bij cron)</li>
+    <li><b>Vier bestanden</b> geüpload en hard ververst</li>
+    <li><b>Harvest finished</b> verschijnt, met een regel in het runlog</li>
+    <li><b>Cron</b> ingepland (optioneel)</li>
+  </ul>
+</section>
+
+</div>
+
+<div class="close">
+  <p><b>Kom je er niet uit?</b> Stuur me de inhoud van het Logs-tabblad van de functie op het moment dat je klikt — daarin staat of het verzoek de server haalt en waar het strandt.</p>
+</div>
+
+</div>
+
+<script type="text/plain" id="fnsrc">
+// Supabase Edge Function: market-sources
+//
+// Harvests every source in public.market_sources and normalises it into
+// public.external_listings (property evidence) or public.market_macro
+// (CPI, rates, materials). The rollup in backend/market-sources.sql then
+// takes a WEIGHTED median, so a thin aggregator adds coverage without
+// being able to drag the index around.
+//
+// Deploy:   supabase functions deploy market-sources --no-verify-jwt
+// Schedule: nightly, before the index rebuild
+//             select cron.schedule('market-sources-nightly','20 1 * * *', $$
+//               select net.http_post(
+//                 url := 'https://<project>.supabase.co/functions/v1/market-sources',
+//                 headers := '{"Content-Type":"application/json"}'::jsonb,
+//                 body := '{"run":"due"}'::jsonb) $$);
+//
+// GET                      → per-source health summary
+// POST {run:"due"}         → fetch every source whose cadence is due
+// POST {run:"all"}         → fetch everything active
+// POST {run:"gamrealty"}   → one source
+// POST {run:"x", dry:true} → parse but write nothing; returns samples,
+//                            which is how you tune a selector from the
+//                            console without redeploying
+//
+// Env vars: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
+
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+const UA = 'MyKundaMarketIndex/1.0 (+https://mykunda.com; internal market research)'
+const CRAWL_DELAY_MS = 1600      // between requests to the same host
+const MAX_PAGES = 8
+const TIMEOUT_MS = 20000
+const MIN_CONFIDENCE = 0.5       // below this a row is logged, not stored
+
+const cors = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+}
+
+function sb() {
+  return createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
+}
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
+
+/* ---------- fetching, politely ---------- */
+const robotsCache = new Map<string, string[]>()
+
+async function disallowedPaths(host: string): Promise<string[]> {
+  if (robotsCache.has(host)) return robotsCache.get(host)!
+  let rules: string[] = []
+  try {
+    const r = await fetch(`https://${host}/robots.txt`, {
+      headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(8000),
+    })
+    if (r.ok) {
+      const txt = await r.text()
+      let applies = false
+      for (const line of txt.split('\n')) {
+        const l = line.trim().toLowerCase()
+        if (l.startsWith('user-agent:')) applies = l.includes('*') || l.includes('mykunda')
+        else if (applies && l.startsWith('disallow:')) {
+          const p = line.split(':').slice(1).join(':').trim()
+          if (p) rules.push(p)
+        }
+      }
+    }
+  } catch (_e) { /* no robots.txt reachable — treat as open, but stay slow */ }
+  robotsCache.set(host, rules)
+  return rules
+}
+
+function robotsAllows(rules: string[], url: string): boolean {
+  try {
+    const path = new URL(url).pathname
+    return !rules.some((r) => r === '/' || (r.length > 1 && path.startsWith(r)))
+  } catch { return false }
+}
+
+async function getHtml(url: string): Promise<{ html: string; status: number }> {
+  const r = await fetch(url, {
+    headers: { 'User-Agent': UA, 'Accept': 'text/html,application/xhtml+xml' },
+    signal: AbortSignal.timeout(TIMEOUT_MS),
+  })
+  const html = r.ok ? await r.text() : ''
+  return { html, status: r.status }
+}
+
+/* ---------- normalising ---------- */
+const strip = (s: string) => s.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ')
+  .replace(/&amp;/g, '&').replace(/&#8217;|&rsquo;/g, "'").replace(/\s+/g, ' ').trim()
+
+const SYMBOL: Record<string, string> = {
+  'D': 'GMD', 'GMD': 'GMD', 'DALASI': 'GMD',
+  '$': 'USD', 'USD': 'USD', 'US$': 'USD',
+  '€': 'EUR', 'EUR': 'EUR', '£': 'GBP', 'GBP': 'GBP',
+}
+
+function parseNumber(raw: string): number | null {
+  // 1.250.000 · 1,250,000 · 1250000 · 138.000 — thousands separators only,
+  // because no listing in this market is priced with real decimals.
+  const cleaned = raw.replace(/[^0-9.,]/g, '')
+  if (!cleaned) return null
+  const digits = cleaned.replace(/[.,]/g, '')
+  const n = parseInt(digits, 10)
+  return Number.isFinite(n) && n > 0 ? n : null
+}
+
+function detectKind(text: string): 'sale' | 'rent' {
+  return /\b(for rent|to let|rental|rent(?:ing)?\b|per month|\/month|p\/m|monthly)\b/i.test(text)
+    ? 'rent' : 'sale'
+}
+
+function detectCategory(text: string): string {
+  const t = text.toLowerCase()
+  if (/\b(plot|land|acre|hectare|bare land|building plot)\b/.test(t)) return 'land'
+  if (/\bvilla\b/.test(t)) return 'villa'
+  if (/\b(apartment|flat|studio|penthouse)\b/.test(t)) return 'apartment'
+  if (/\btown\s?house\b/.test(t)) return 'townhouse'
+  if (/\bcompound\b/.test(t)) return 'compound'
+  if (/\b(commercial|office|shop|warehouse|factory|hotel|restaurant)\b/.test(t)) return 'commercial'
+  if (/\b(house|home|bungalow|duplex)\b/.test(t)) return 'house'
+  return 'house'
+}
+
+type Alias = { alias: string; area: string; region: string }
+function matchArea(text: string, aliases: Alias[]) {
+  const t = text.toLowerCase()
+  for (const a of aliases) if (t.includes(a.alias)) return a   // pre-sorted longest first
+  return null
+}
+
+async function fxToUsd(client: ReturnType<typeof sb>) {
+  const { data } = await client.from('fx_rates')
+    .select('*').order('as_at', { ascending: false }).limit(1).maybeSingle()
+  const eurGmd = data?.eur_gmd ?? 78, usdGmd = data?.usd_gmd ?? 72, gbpGmd = data?.gbp_gmd ?? 91
+  return (v: number, ccy: string) => {
+    if (ccy === 'USD') return v
+    if (ccy === 'GMD') return v / usdGmd
+    if (ccy === 'EUR') return v * (eurGmd / usdGmd)
+    if (ccy === 'GBP') return v * (gbpGmd / usdGmd)
+    return v
+  }
+}
+
+/* ---------- the generic HTML adapter ----------
+   Config-driven on purpose: when a portal redesigns, you fix a regex in
+   the console and press "Test", instead of waiting for a redeploy. */
+type Parsed = {
+  external_id: string; url: string | null; title: string | null
+  kind: string; category: string; area: string | null; region: string | null
+  price_usd: number | null; price_raw: string | null; currency: string | null
+  sqm: number | null; beds: number | null; confidence: number
+}
+
+function parseBlock(block: string, cfg: any, aliases: Alias[], toUsd: (v: number, c: string) => number, base: string): Parsed | null {
+  const f = cfg.fields || {}
+  const text = strip(block)
+  if (text.length < 12) return null
+
+  const pick = (pattern: string, group = 1): string | null => {
+    if (!pattern) return null
+    try {
+      const m = block.match(new RegExp(pattern, 'i')) || text.match(new RegExp(pattern, 'i'))
+      return m && m[group] ? m[group] : null
+    } catch { return null }
+  }
+
+  let url = pick(f.url)
+  if (url && url.startsWith('/')) { try { url = new URL(url, base).href } catch { /* keep as is */ } }
+  const title = f.title ? strip(pick(f.title) || '') : text.slice(0, 120)
+
+  // price: group 1 is the symbol, group 2 the number
+  let price: number | null = null, ccy: string | null = null, priceRaw: string | null = null
+  if (f.price) {
+    try {
+      const m = text.match(new RegExp(f.price, 'i'))
+      if (m) {
+        priceRaw = m[0]
+        ccy = SYMBOL[(m[1] || '').toUpperCase().trim()] || null
+        price = parseNumber(m[2] ?? m[1] ?? '')
+      }
+    } catch { /* bad regex — leaves price null, which the score punishes */ }
+  }
+  // A dalasi figure under 5,000 is a fee or a typo, not a property.
+  if (price && ccy === 'GMD' && price < 5000) price = null
+  if (price && ccy !== 'GMD' && price < 300) price = null
+
+  const sqmRaw = f.sqm ? pick(f.sqm) : null
+  const sqm = sqmRaw ? parseNumber(sqmRaw) : null
+  const bedsRaw = f.beds ? pick(f.beds) : null
+  const beds = bedsRaw ? parseInt(bedsRaw, 10) : null
+
+  const haystack = `${title} ${url || ''} ${text}`
+  const hit = matchArea(haystack, aliases)
+  const kind = cfg.kind && cfg.kind !== 'auto' ? cfg.kind : detectKind(haystack)
+  const category = cfg.category && cfg.category !== 'auto' ? cfg.category : detectCategory(haystack)
+
+  let confidence = 0
+  if (price) confidence += 0.40
+  if (ccy) confidence += 0.10
+  if (hit) confidence += 0.25
+  if (sqm && sqm >= 20 && sqm <= 100000) confidence += 0.15
+  if (url) confidence += 0.10
+
+  const external_id = url ? url.replace(/[?#].*$/, '').slice(-160)
+    : (title || text).slice(0, 120)
+
+  return {
+    external_id, url, title: title || null, kind, category,
+    area: hit?.area ?? null, region: hit?.region ?? null,
+    price_usd: price && ccy ? Math.round(toUsd(price, ccy)) : (price ? Math.round(toUsd(price, 'GMD')) : null),
+    price_raw: priceRaw, currency: ccy,
+    sqm: sqm && sqm >= 20 && sqm <= 100000 ? sqm : null,
+    beds: beds && beds > 0 && beds < 30 ? beds : null,
+    confidence: Math.min(1, +confidence.toFixed(2)),
+  }
+}
+
+async function runHtmlSource(client: ReturnType<typeof sb>, src: any, aliases: Alias[], dry: boolean) {
+  const cfg = src.parse || {}
+  const pages = Math.min(cfg.pages || 1, MAX_PAGES)
+  const urls: string[] = []
+  const templates: string[] = cfg.list || (src.url ? [src.url] : [])
+  for (const t of templates) {
+    if (t.includes('{page}')) for (let p = 1; p <= pages; p++) urls.push(t.replace('{page}', String(p)))
+    else urls.push(t)
+  }
+  if (!urls.length) throw new Error('no list url configured')
+
+  const host = src.host || new URL(urls[0]).host
+  const rules = await disallowedPaths(host)
+  const blocked = urls.filter((u) => !robotsAllows(rules, u))
+  if (blocked.length === urls.length) {
+    await client.from('market_sources').update({ robots_ok: false }).eq('key', src.key)
+    throw new Error('robots_disallow')
+  }
+  await client.from('market_sources').update({ robots_ok: true }).eq('key', src.key)
+
+  const toUsd = await fxToUsd(client)
+  const seen: Parsed[] = []
+  const rejected: any[] = []
+  let status = 0
+
+  for (const u of urls) {
+    if (!robotsAllows(rules, u)) continue
+    const got = await getHtml(u)
+    status = got.status
+    if (!got.html) { await sleep(CRAWL_DELAY_MS); continue }
+
+    let blocks: string[] = []
+    if (cfg.item) {
+      try { blocks = got.html.match(new RegExp(cfg.item, 'gi')) || [] } catch { blocks = [] }
+    }
+    // No item pattern (or it matched nothing): fall back to anchor blocks,
+    // which is crude but usually still finds prices.
+    if (!blocks.length) blocks = got.html.match(/<a[\s\S]{40,1400}?<\/a>/gi) || []
+
+    for (const b of blocks) {
+      const row = parseBlock(b, cfg, aliases, toUsd, u)
+      if (!row) continue
+      if (row.confidence < MIN_CONFIDENCE || !row.price_usd) {
+        if (rejected.length < 5) rejected.push({ confidence: row.confidence, text: strip(b).slice(0, 240) })
+        continue
+      }
+      if (!seen.some((s) => s.external_id === row.external_id)) seen.push(row)
+    }
+    await sleep(CRAWL_DELAY_MS)
+  }
+
+  if (dry) return { status, seen: seen.length, sample: seen.slice(0, 8), rejected, isNew: 0, updated: 0 }
+
+  const today = new Date().toISOString().slice(0, 10)
+  let isNew = 0, updated = 0
+  for (const row of seen) {
+    const { data: existing } = await client.from('external_listings')
+      .select('id, price_usd').eq('source_key', src.key).eq('external_id', row.external_id).maybeSingle()
+
+    if (existing) {
+      await client.from('external_listings').update({
+        ...row, last_seen: today, delisted_at: null, status: 'active',
+      }).eq('id', existing.id)
+      updated++
+    } else {
+      await client.from('external_listings').insert({
+        source_key: src.key, ...row, first_seen: today, last_seen: today, raw: null,
+      })
+      isNew++
+    }
+  }
+
+  // Anything this source stopped carrying is gone from the market, not
+  // gone from history: it stays, dated, so past months don't change.
+  if (seen.length > 3) {
+    await client.from('external_listings')
+      .update({ delisted_at: today, status: 'delisted' })
+      .eq('source_key', src.key).eq('status', 'active').lt('last_seen', today)
+  }
+
+  return { status, seen: seen.length, sample: seen.slice(0, 5), rejected, isNew, updated }
+}
+
+/* ---------- official series ---------- */
+const monthStart = (d: Date) => new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1)).toISOString().slice(0, 10)
+
+async function runCbg(client: ReturnType<typeof sb>, dry: boolean) {
+  const got = await getHtml('https://www.cbg.gm/')
+  const text = strip(got.html)
+  const out: any[] = []
+  const m = new Date()
+
+  const usd = text.match(/USD\s*:?\s*([0-9]+(?:\.[0-9]+)?)/i)
+  const eur = text.match(/EUR\s*:?\s*([0-9]+(?:\.[0-9]+)?)/i)
+  const policy = text.match(/(?:monetary policy rate|MPR)\D{0,30}([0-9]{1,2}(?:\.[0-9]+)?)\s*%/i)
+  const tbill = text.match(/91[\s-]?day\D{0,40}([0-9]{1,2}(?:\.[0-9]+)?)\s*%/i)
+
+  if (usd) out.push({ series: 'usd_gmd', value: +usd[1], unit: 'GMD per USD' })
+  if (eur) out.push({ series: 'eur_gmd', value: +eur[1], unit: 'GMD per EUR' })
+  if (policy) out.push({ series: 'policy_rate', value: +policy[1], unit: '%' })
+  if (tbill) out.push({ series: 'tbill_91', value: +tbill[1], unit: '%' })
+  if (!out.length) throw new Error('cbg_unparseable')
+
+  if (!dry) {
+    for (const o of out) {
+      await client.from('market_macro').upsert({
+        month: monthStart(m), ...o, source: 'Central Bank of The Gambia', source_url: 'https://www.cbg.gm/',
+        fetched_at: new Date().toISOString(),
+      }, { onConflict: 'month,series' })
+    }
+  }
+  return { status: got.status, seen: out.length, sample: out, rejected: [], isNew: out.length, updated: 0 }
+}
+
+async function runGbos(client: ReturnType<typeof sb>, dry: boolean) {
+  const got = await getHtml('https://www.gbos.gov.gm/cpi.php')
+  const text = strip(got.html)
+  const out: any[] = []
+
+  // "The CPI for March 2026 stood at 179.52" — and variants around it.
+  const idx = text.match(/(?:CPI|consumer price index)[^.]{0,120}?([12][0-9]{2}\.[0-9]{1,2})/i)
+  const infl = text.match(/inflation\s*rate[^.]{0,80}?([0-9]{1,2}\.[0-9]{1,2})\s*(?:percent|%)/i)
+  const when = text.match(/\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(20[2-9][0-9])\b/i)
+
+  let month = monthStart(new Date())
+  if (when) {
+    const d = new Date(`${when[1]} 1, ${when[2]} UTC`)
+    if (!isNaN(d.getTime())) month = monthStart(d)
+  }
+  if (idx) out.push({ series: 'cpi_all', value: +idx[1], unit: 'index 2020M1=100' })
+  if (infl) out.push({ series: 'inflation_yoy', value: +infl[1], unit: '%' })
+  if (!out.length) throw new Error('gbos_unparseable — enter CPI by hand in the console')
+
+  if (!dry) {
+    for (const o of out) {
+      await client.from('market_macro').upsert({
+        month, ...o, source: 'Gambia Bureau of Statistics', source_url: 'https://www.gbos.gov.gm/cpi.php',
+        fetched_at: new Date().toISOString(),
+      }, { onConflict: 'month,series' })
+    }
+  }
+  return { status: got.status, seen: out.length, sample: out, rejected: [], isNew: out.length, updated: 0 }
+}
+
+/* ---------- cadence ---------- */
+function isDue(src: any): boolean {
+  if (src.adapter === 'manual') return false
+  if (!src.last_ok_at) return true
+  const age = Date.now() - new Date(src.last_ok_at).getTime()
+  if (src.cadence === 'daily') return age > 20 * 3600e3
+  if (src.cadence === 'weekly') return age > 6.5 * 86400e3
+  if (src.cadence === 'monthly') return age > 27 * 86400e3
+  return false
+}
+
+/* ---------- entry ---------- */
+Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
+  const headers = { ...cors, 'Content-Type': 'application/json' }
+  const client = sb()
+
+  if (req.method === 'GET') {
+    const { data: sources } = await client.from('market_sources')
+      .select('key,name,kind,trust,active,cadence,adapter,last_ok_at,last_error,robots_ok').order('sort')
+    const { data: runs } = await client.from('source_fetch_runs')
+      .select('*').order('started_at', { ascending: false }).limit(30)
+    return new Response(JSON.stringify({ sources, runs }), { headers })
+  }
+
+  let body: any = {}
+  try { body = await req.json() } catch { /* empty body means run:"due" */ }
+  const which = body.run || 'due'
+  const dry = !!body.dry
+
+  const { data: aliasRows } = await client.from('market_area_alias').select('*')
+  const aliases: Alias[] = (aliasRows || []).sort((a, b) => b.alias.length - a.alias.length)
+
+  let q = client.from('market_sources').select('*').eq('active', true).order('sort')
+  if (which !== 'due' && which !== 'all') q = q.eq('key', which)
+  const { data: sources } = await q
+  if (!sources?.length) {
+    return new Response(JSON.stringify({ ok: false, error: 'no matching source' }), { status: 404, headers })
+  }
+
+  const results: any[] = []
+  for (const src of sources) {
+    if (which === 'due' && !isDue(src)) continue
+    if (src.adapter === 'manual' && which !== src.key) continue
+
+    const started = new Date().toISOString()
+    let run: any = null, err: string | null = null
+    try {
+      if (src.adapter === 'cbg') run = await runCbg(client, dry)
+      else if (src.adapter === 'gbos') run = await runGbos(client, dry)
+      else if (src.adapter === 'manual') { run = { status: 0, seen: 0, sample: [], rejected: [], isNew: 0, updated: 0 } }
+      else run = await runHtmlSource(client, src, aliases, dry)
+    } catch (e) {
+      err = String((e as Error)?.message || e)
+    }
+
+    if (!dry) {
+      await client.from('source_fetch_runs').insert({
+        source_key: src.key, started_at: started, finished_at: new Date().toISOString(),
+        ok: !err, http_status: run?.status ?? null,
+        items_seen: run?.seen ?? 0, items_new: run?.isNew ?? 0, items_updated: run?.updated ?? 0,
+        items_rejected: run?.rejected?.length ?? 0, error: err,
+        sample: err ? { rejected: run?.rejected ?? [] } : { parsed: run?.sample ?? [] },
+      })
+      await client.from('market_sources').update(
+        err ? { last_error: err } : { last_ok_at: new Date().toISOString(), last_error: null },
+      ).eq('key', src.key)
+    }
+
+    results.push({
+      source: src.key, ok: !err, error: err,
+      seen: run?.seen ?? 0, new: run?.isNew ?? 0, updated: run?.updated ?? 0,
+      rejected: run?.rejected?.length ?? 0,
+      sample: dry ? run?.sample ?? [] : undefined,
+      rejects: dry ? run?.rejected ?? [] : undefined,
+    })
+  }
+
+  // One de-dup pass over everything, then let the nightly rollup reprice.
+  let deduped = 0
+  if (!dry && results.some((r) => r.ok && (r.new || r.updated))) {
+    const { data } = await client.rpc('market_dedup')
+    deduped = typeof data === 'number' ? data : 0
+  }
+
+  return new Response(JSON.stringify({ ok: true, dry, deduped, results }), { headers })
+})
+
+</script>
+<script>
+document.getElementById('fnCode').textContent = document.getElementById('fnsrc').textContent.trim();
+document.querySelectorAll('.copy').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var pre = btn.parentNode.querySelector('pre');
+    navigator.clipboard.writeText(pre.textContent).then(function(){
+      var t = btn.textContent; btn.textContent = 'Gekopieerd ✓'; btn.classList.add('done');
+      setTimeout(function(){ btn.textContent = t; btn.classList.remove('done'); }, 1800);
+    });
+  });
+});
+</script>
+</body>
+</html>

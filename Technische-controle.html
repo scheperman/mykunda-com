@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>MyKunda — Technische controle augustus 2026</title>
+<script src="doc-page.js"></script>
+<style>
+doc-page:not(:defined){visibility:hidden}
+:root{--g9:#0E2E25;--g7:#1C5848;--g2:#DCEAE3;--am:#B4711C;--am-bg:#FBF3E7;--ink:#16211D;--ink2:#3D4B45;--mut:#6B7B74;--line:#E2E8E4}
+doc-page{font-family:"Hanken Grotesk",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:var(--ink2);font-size:10.5pt;line-height:1.62}
+h1{font-size:26pt;line-height:1.1;letter-spacing:-.02em;color:var(--g9);margin:0 0 6px}
+.sub{font-size:11.5pt;color:var(--mut);margin:0 0 4px;line-height:1.5}
+.stamp{font-size:8.5pt;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:var(--am);margin-bottom:12px}
+h2{font-size:15pt;color:var(--g9);margin:30px 0 10px;letter-spacing:-.01em;padding-bottom:7px;border-bottom:2px solid var(--g2)}
+h3{font-size:11.5pt;color:var(--g7);margin:20px 0 6px}
+p{margin:0 0 9px}
+ul,ol{margin:0 0 10px;padding-left:19px}
+li{margin-bottom:5px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:9pt;background:#F1F5F3;padding:1px 5px;border-radius:3px;color:var(--g9);word-break:break-word}
+pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:8.5pt;line-height:1.5;background:var(--g9);color:#D9E7E1;padding:13px 15px;border-radius:6px;overflow-wrap:break-word;white-space:pre-wrap;margin:0 0 12px;break-inside:avoid}
+pre b{color:#F3C77A;font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:9pt;margin:0 0 14px}
+th{background:var(--g7);color:#fff;text-align:left;padding:8px 10px;font-weight:700;font-size:8pt;text-transform:uppercase;letter-spacing:.04em}
+td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.45}
+tr:nth-child(even) td{background:#F7FAF8}
+td code{background:none;padding:0;font-size:8.5pt}
+.tag{display:inline-block;font-size:7.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 7px;border-radius:20px;white-space:nowrap}
+.tfix{background:#DFF3E5;color:#1D6B36}
+.tkeep{background:#E8EDF5;color:#3A5378}
+.tno{background:#FDEBD4;color:#8A5510}
+.box{background:var(--am-bg);border:1px solid #F0DCC0;border-radius:7px;padding:14px 17px;margin:0 0 14px;break-inside:avoid;orphans:3;widows:3}
+.box b{color:var(--am)}
+.box.g{background:#F2F8F4;border-color:#D3E6D9}
+.box.g b{color:var(--g7)}
+.file{background:#F7FAF8;border-left:3px solid var(--g2);padding:11px 15px;margin:0 0 9px;break-inside:avoid;orphans:3;widows:3}
+.file b{color:var(--g9);font-size:10pt}
+.file p{margin:3px 0 0;font-size:9.5pt;color:var(--ink2)}
+.check{list-style:none;padding-left:0;counter-reset:c}
+.check li{position:relative;padding-left:30px;margin-bottom:9px;counter-increment:c;break-inside:avoid;orphans:3;widows:3}
+.check li::before{content:counter(c);position:absolute;left:0;top:1px;width:20px;height:20px;border-radius:50%;background:var(--g7);color:#fff;font-size:8.5pt;font-weight:700;display:flex;align-items:center;justify-content:center}
+.lead{font-size:11pt;color:var(--ink2);line-height:1.65;margin-bottom:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.kpi{background:#F7FAF8;border:1px solid var(--line);border-radius:7px;padding:12px 14px}
+.kpi .n{font-size:19pt;font-weight:700;color:var(--g9);line-height:1.1}
+.kpi .l{font-size:8.5pt;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-top:3px}
+hr{border:0;border-top:1px solid var(--line);margin:26px 0}
+.foot{font-size:8.5pt;color:var(--mut)}
+a{color:var(--g7)}
+a:hover{color:var(--g9)}
+</style>
+</head>
+<body>
+<doc-page margin="0.7in">
+
+<div class="stamp">MyKunda · mykunda.com</div>
+<h1>Technische controle: wat er stuk was en nu gemaakt is</h1>
+<p class="sub">13 augustus 2026 — een volledige technische doorloop van alle 95 HTML-bestanden, de service worker, de serverconfiguratie en de stylesheet, plus het vervangen van de MapTiler-sleutel. Vijftien punten opgelost, drie bewust laten staan met uitleg waarom.</p>
+
+<div class="grid2" style="margin-top:20px">
+  <div class="kpi"><div class="n">15</div><div class="l">opgeloste punten</div></div>
+  <div class="kpi"><div class="n">82</div><div class="l">gewijzigde bestanden</div></div>
+</div>
+
+<h2>Eerst het goede nieuws</h2>
+<p>De basis is gezond. Dit is nagelopen en klopte al:</p>
+<ul>
+<li><b>Geen enkele JavaScript-fout.</b> Zes representatieve pagina's geladen en de console gecontroleerd: homepage, zoeken, gebiedspagina met kaart, marktindex, gids en detailpagina. Eén waarschuwing gevonden — die is opgelost, zie punt 3.</li>
+<li><b>Alle interne verwijzingen bestaan.</b> Elke <code>href</code> en <code>src</code> in alle 95 bestanden nagelopen: geen enkele link naar een bestand dat er niet is.</li>
+<li><b>Geen dubbele <code>id</code>'s, geen ontbrekende <code>lang</code>, <code>charset</code> of <code>viewport</code></b> op de publieke pagina's.</li>
+<li><b><code>styles.min.css</code> en <code>app.min.js</code> lopen niet achter.</b> Alle functienamen, teksten, klassen en CSS-variabelen uit de bronbestanden zitten er ook echt in — de klassieke valkuil van "bron aangepast, minified vergeten" is hier niet aan de orde.</li>
+<li><b>Serverconfiguratie klopt.</b> HTTPS forceren, <code>www</code> strippen, 301's voor oude hoofdletter-URL's, <code>.html</code> weglaten, echte 404-status, <code>.sql</code>/<code>.md</code> geblokkeerd, Brotli en GZIP aan, een jaar cache op afbeeldingen en fonts.</li>
+<li><b><code>robots.txt</code> en <code>sitemap.xml</code></b> zijn consistent met wat er staat en met de <code>noindex</code>-tags op de privépagina's.</li>
+</ul>
+
+<h2>Opgelost</h2>
+
+<h3>1 · Elk bezoek vroeg een favicon op die niet bestond <span class="tag tfix">opgelost</span></h3>
+<p>Het icoon, het <code>apple-touch-icon</code> en de PWA-manifest werden pas door <code>app.js</code> aan de pagina toegevoegd — en <code>app.js</code> staat onderaan de body. De browser vraagt een favicon al veel eerder op, vindt niets, en probeert <code>/favicon.ico</code>: een mislukt verzoek per verse pagina. Op een 4G-verbinding met 200–400 ms heenweg is dat pure verspilling. Bijkomend effect: de site was in de praktijk niet installeerbaar als app, omdat de manifest te laat kwam.</p>
+<p>Alle 73 sitepagina's hebben nu vier statische regels in de <code>&lt;head&gt;</code>:</p>
+<pre>&lt;link rel="icon" type="image/png" sizes="64x64" href="<b>images/mykunda-icon-sm.png</b>"&gt;
+&lt;link rel="apple-touch-icon" href="images/mykunda-icon.png"&gt;
+&lt;link rel="manifest" href="manifest.json"&gt;
+&lt;meta name="theme-color" content="#15463A"&gt;</pre>
+<p>Let op het icoonbestand: dat is de 64-pixelversie van <b>1 kB</b> in plaats van de 512-pixelversie van 18 kB. Die staat al in de precache van de service worker, dus bij een tweede bezoek kost het icoon geen netwerk meer. De injectie in <code>app.js</code> is niet verwijderd — die controleert of de tags er al staan en slaat zichzelf nu netjes over.</p>
+
+<h3>2 · De lichtbak downloadde de hele pagina opnieuw <span class="tag tfix">opgelost</span></h3>
+<p>In <code>property.html</code> stond de fotolichtbak klaar met <code>&lt;img id="lbImg" src="" alt=""&gt;</code>. Een leeg <code>src</code> is niet niets: de browser vult het aan met de huidige pagina-URL en downloadt <b>de complete HTML-pagina opnieuw</b> als afbeelding. Elke bezoeker van elke woningpagina betaalde daarvoor. Het <code>src</code>-attribuut is nu weg; het JavaScript zet het pas als de lichtbak opengaat.</p>
+
+<h3>3 · Elke demo-woning deed een databasevraag die altijd faalde <span class="tag tfix">opgelost</span></h3>
+<p>De id's in de database zijn UUID's. De voorbeeldwoningen heten <code>pr1</code> en <code>feat-1</code> — en die drie <code>feat</code>-URL's staan in je sitemap. Bij elk bezoek werd er alsnog een query op Supabase afgevuurd, die met een typefout-melding terugkwam en in de console belandde. Er zit nu een UUID-controle vóór de query: geen UUID, geen verzoek.</p>
+
+<h3>4 · Twee interne links liepen via een 301 <span class="tag tfix">opgelost</span></h3>
+<p><code>neighborhood.html</code> is vorige ronde vervangen door <code>kololi.html</code> en wordt door de server permanent doorgestuurd. Maar <code>property.html</code> ("Explore full neighborhood guide") en de FAQ linkten er nog naartoe. Een interne link naar een redirect kost een extra rondje server en verdunt de linkwaarde. Beide wijzen nu direct naar <code>kololi.html</code>.</p>
+
+<h3>5 · De offline-terugval van de service worker werkte niet <span class="tag tfix">opgelost</span></h3>
+<p>Als het netwerk wegvalt en de pagina niet in de cache zit, viel de service worker terug op <code>caches.match('index.html')</code>. Alleen: de homepage wordt geserveerd als <code>/</code>, niet als <code>/index.html</code> — die zoekopdracht vond dus nooit iets en de bezoeker kreeg een lege pagina. Juist op een wegvallende Gambiaanse verbinding is dat het moment waarop het moet werken. De terugval probeert nu eerst <code>/</code> en dan <code>index.html</code>.</p>
+
+<h3>6 · Privépagina's stonden in de cache van de telefoon <span class="tag tfix">opgelost</span></h3>
+<p>De service worker bewaarde élke HTML-pagina, inclusief <code>dashboard.html</code>, <code>messages.html</code>, <code>checkout.html</code> en <code>admin.html</code>. Op een gedeelde telefoon — en dat is in Gambia eerder regel dan uitzondering — kon de volgende gebruiker met de terugknop in iemands ingelogde omgeving belanden. Die pagina's gaan nu altijd rechtstreeks naar het netwerk en worden nooit opgeslagen, zowel op <code>/dashboard.html</code> als op <code>/dashboard</code> — je server serveert ze immers op beide adressen.</p>
+
+<h3>7 · Toetsenbordgebruikers zagen niet waar ze waren <span class="tag tfix">opgelost</span></h3>
+<p>De stylesheet had geen enkele focusregel. Wie met Tab door de site navigeert — uit gewoonte, met een schermlezer, of met een motorische beperking — zag geen enkele markering. Er is nu een duidelijke groene focusring, en een witte variant op donkere achtergronden. Via <code>:focus-visible</code>, dus muis- en aanraakgebruikers zien niets veranderen.</p>
+
+<h3>8 · "Beweging beperken" van de telefoon werd genegeerd <span class="tag tfix">opgelost</span></h3>
+<p>Zet iemand in de toegankelijkheidsinstellingen van zijn telefoon "beweging beperken" aan, dan liepen alle overgangen en animaties op de site gewoon door. Er is nu een <code>prefers-reduced-motion</code>-blok dat ze uitzet. Scheelt ook rekenwerk op goedkope Android-toestellen.</p>
+
+<h3>9 · Drie kleinere correcties <span class="tag tfix">opgelost</span></h3>
+<ul>
+<li><b><code>rel="noopener"</code></b> op de twee externe links in de FAQ (plus.codes en WhatsApp). Zonder dat krijgt de geopende pagina een verwijzing naar de jouwe.</li>
+<li><b><code>alt</code>-teksten</b> op drie afbeeldingen die door JavaScript worden opgebouwd, in de plaatsingswizard en het berichtenscherm.</li>
+<li><b>Drie te lange meta-descriptions</b> ingekort: <code>home.html</code> (255 tekens), <code>property.html</code> (165) en <code>legal-cookies.html</code> (164). Boven ongeveer 160 tekens kapt Google af.</li>
+</ul>
+
+<h3>10 · HSTS-header toegevoegd <span class="tag tfix">opgelost</span></h3>
+<p>De site dwong HTTPS af met een 301, maar vertelde de browser niet dat hij het mag onthouden. Gevolg: elke eerste aanvraag naar <code>http://</code> kostte een extra rondje. Met <code>Strict-Transport-Security: max-age=31536000</code> gaat de browser er na één bezoek meteen versleuteld naartoe. Bewust <b>zonder</b> <code>includeSubDomains</code>, zodat een subdomein zonder certificaat niet onbereikbaar wordt. Toegevoegd in <code>.htaccess</code> en, voor de volledigheid, in <code>_headers</code> en <code>vercel.json</code>.</p>
+
+<h3>11 · Manifest afgemaakt <span class="tag tfix">opgelost</span></h3>
+<p><code>manifest.json</code> heeft nu <code>scope</code> en <code>lang</code>. Zonder <code>scope</code> gokt de browser welke pagina's bij de app horen.</p>
+
+<h3>12 · Service worker-versie verhoogd <span class="tag tfix">opgelost</span></h3>
+<p><code>mk-v13</code> → <code>mk-v15</code>, in twee stappen deze sessie: v14 voor de reparaties hierboven, v15 voor de sleutelwissel uit punt 14. Zonder die verhoging blijven terugkerende bezoekers de oude service worker en de oude cache gebruiken. Er staat nu ook een waarschuwing in het bestand: de <code>?v=</code>-stempels in de precachelijst moeten mee als je die in de <code>&lt;head&gt;</code> van de pagina's bijwerkt — anders is de precache stil nutteloos.</p>
+
+<h3>13 · MapTiler-sleutel vervangen <span class="tag tfix">opgelost</span></h3>
+<p>De oude sleutel was de default van je account en kon door MapTiler niet beperkt worden. Hij stond leesbaar in 45 bestanden en was dus door iedereen te gebruiken op jouw tegoed. De nieuwe sleutel, beperkt tot <code>mykunda.com</code> en <code>*.mykunda.com</code>, staat nu in alle 45 bestanden.</p>
+<div class="box"><b>Let op bij het testen:</b> door de domeinrestrictie laden de kaarten alléén nog op mykunda.com. In een voorbeeldweergave of vanaf je bureaublad blijven ze leeg — dat is de restrictie die werkt, niet een fout.</div>
+
+<h3>14 · De sleutel staat nu op één plek <span class="tag tfix">opgelost</span></h3>
+<p>Hij stond hardgecodeerd in elke gebiedspagina, waardoor deze wissel 45 bestanden raakte en de volgende weer. Nu staat hij bovenaan <code>app.js</code> als <code>window.MAPTILER_KEY</code>, met een hulpfunctie <code>mapTilerUrl(stijl, extensie)</code> die de tegel-URL opbouwt. Alle 45 pagina's roepen die functie aan. Een volgende sleutelwissel is één regel in één bestand.</p>
+
+<h3>15 · Versiestempel site-wide bijgewerkt <span class="tag tfix">opgelost</span></h3>
+<p>Dit was geen keuze maar een noodzaak, en het bewijst punt 12. Omdat de pagina's nu een functie <i>uit</i> <code>app.min.js</code> nodig hebben, moest het versiestempel mee: anders haalt de service worker van een terugkerende bezoeker de oude <code>app.min.js</code> uit zijn cache, kent die <code>mapTilerUrl</code> niet, en blijft de kaart leeg. Dat gebeurde tijdens het testen ook echt. Het stempel is daarom overal <code>?v=1791580000000</code> geworden, in <code>sw.js</code> ook, en de cacheversie staat op <code>mk-v15</code>.</p>
+
+<h2>Bewust niet gedaan</h2>
+
+<div class="box"><b>app.min.js en styles.min.css echt minifyen.</b> <span class="tag tno">niet gedaan</span><p style="margin-top:6px">Deze bestanden zijn nu vrijwel identiek aan de bron: 87,8 kB tegenover 88,1 kB. "Min" is hier een naam, geen bewerking — commentaar en witruimte zitten er nog volledig in. Dat is ongeveer 6% aan commentaar. Ik heb het laten staan, en dat is een afweging die je moet kennen: de server comprimeert alles al met Brotli, waardoor commentaar bijna gratis wordt. De echte winst is een paar kB na compressie. Daar staat tegenover dat handmatig door 88 kB werkende code snijden een stille breuk kan opleveren die je pas weken later merkt. Wil je die winst wél, dan hoort dat in een echte bouwstap (esbuild of terser) met een test erna — niet in een regelspel.</p></div>
+
+<div class="box"><b>Een Content-Security-Policy.</b> <span class="tag tno">niet gedaan</span><p style="margin-top:6px">De site leunt op inline scripts en styles op vrijwel elke pagina. Een CSP die dat toestaat (<code>unsafe-inline</code>) haalt het grootste deel van de bescherming weg, en een strikte versie zou de kaarten, Supabase en de betaalintegratie breken. Zinvol op het moment dat de inline scripts naar losse bestanden verhuizen; nu niet.</p></div>
+
+<div class="box"><b><code>gate.js</code> blijft een blokkerend verzoek in de head.</b> <span class="tag tkeep">bewust zo</span><p style="margin-top:6px">De bouwpoort staat uit (<code>GATE_ON = false</code>), dus dit bestand van 1,7 kB doet niets — maar het houdt op elke pagina wel even de weergave vast. Ik laat het staan, want inline zetten betekent dat je de poort niet meer met één bestand aan en uit kunt zetten. Het bestand zit in de precache en heeft een maand cache, dus het kost alleen bij het állereerste bezoek iets.</p></div>
+
+<h2>Twee dingen voor jou</h2>
+<ol class="check">
+<li><b>Verwijder de oude MapTiler-sleutel in je dashboard.</b> Hij staat nergens meer in de webroot, maar zolang hij in je account bestaat blijft hij bruikbaar door iedereen die hem uit een oude, gearchiveerde pagina plukt. Laat MapTiler verwijderen niet toe omdat het de default is, dan is dit het maximum en is de nieuwe, beperkte sleutel je bescherming.</li>
+<li><b>Bump <code>?v=</code> en <code>sw.js</code> altijd samen.</b> Werk je de versiestempel in de <code>&lt;head&gt;</code> bij, pas dan dezelfde stempel aan in de <code>PRECACHE</code>-lijst in <code>sw.js</code> en verhoog de cacheversie (nu <code>mk-v15</code>). Vergeet je dat, dan blijven terugkerende bezoekers de oude <code>app.min.js</code> uit hun cache gebruiken — met een lege kaart als gevolg. Dat is geen theorie: precies dat gebeurde tijdens deze sessie.</li>
+</ol>
+
+<hr>
+
+<h2>Uploaden</h2>
+<p>82 bestanden gewijzigd: 73 sitepagina's en negen ondersteunende bestanden. De eenvoudigste en veiligste route: upload de <b>hele map <code>deploy/</code></b> naar de webroot met overschrijven aan. Wil je gericht werken, dan is dit de lijst:</p>
+
+<div class="file"><b>Alle 73 sitepagina's</b><p>Alle <code>.html</code>-bestanden in <code>deploy/</code> op <code>neighborhood.html</code> na — die is niet gewijzigd. Iedere pagina kreeg de vier icoon- en manifestregels en het nieuwe versiestempel; <code>property.html</code>, <code>faq.html</code>, <code>home.html</code>, <code>legal-cookies.html</code>, <code>list.html</code> en <code>messages.html</code> kregen daarnaast de correcties uit de punten 2, 3, 4 en 9. De 45 pagina's met een kaart halen hun sleutel nu uit <code>app.js</code>.</p></div>
+<div class="file"><b>styles.css · styles.min.css</b><p>Focusring en <code>prefers-reduced-motion</code>. Alleen <code>styles.min.css</code> wordt door de site geladen, maar houd de bron gelijk.</p></div>
+<div class="file"><b>sw.js</b><p>Cacheversie <code>mk-v15</code>, nieuw versiestempel in de precachelijst, offline-terugval gerepareerd, privépagina's uitgesloten (ook op hun extensieloze adres).</p></div>
+<div class="file"><b>app.js · app.min.js</b><p>De MapTiler-sleutel en <code>mapTilerUrl()</code>. Alleen <code>app.min.js</code> wordt geladen, maar houd de bron gelijk.</p></div>
+<div class="file"><b>manifest.json</b><p><code>scope</code> en <code>lang</code> toegevoegd.</p></div>
+<div class="file"><b>.htaccess</b><p>HSTS-header. Dit is het bestand dat op jouw server het werk doet.</p></div>
+<div class="file"><b>_headers · vercel.json</b><p>Dezelfde header voor Netlify en Vercel. Doen op jouw hosting niets, maar houden de drie configuraties gelijk.</p></div>
+
+<div class="box g"><b>Na het uploaden:</b> open de site één keer, ververs hard (Ctrl-Shift-R of Cmd-Shift-R) en controleer of het browsertabblad het MyKunda-icoon toont. Dat is het snelste bewijs dat de nieuwe <code>&lt;head&gt;</code> en de nieuwe service worker live staan.</div>
+
+<p class="foot">Technische controle · 13 augustus 2026 · alle 95 HTML-bestanden, sw.js, .htaccess, _headers, vercel.json, robots.txt, sitemap.xml, manifest.json, styles.css en app.js nagelopen.</p>
+
+</doc-page>
+</body>
+</html>

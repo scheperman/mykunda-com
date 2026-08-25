@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyKunda — automatische e-mail: controle en uitbreiding</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Mulish:wght@400;500;600;700;800;900&display=swap">
+<style>
+:root{--green-900:#0E2E25;--green-800:#123A2E;--green-700:#15463A;--green-600:#1C5848;--green-500:#2A7561;--green-200:#BEDACE;--green-100:#DCEAE3;--green-50:#EAF2ED;--amber-600:#B45F22;--amber-500:#C8702D;--amber-400:#DD8A45;--amber-100:#F6E6D4;--amber-50:#FBF1E6;--paper:#FAF8F3;--paper-2:#F3F0E8;--white:#fff;--ink:#18201D;--ink-2:#384640;--muted:#5C6B64;--muted-2:#8A958E;--line:#E5E1D6;--line-2:#EFEBE1;--serif:'Mulish',sans-serif;--sans:'Hanken Grotesk',sans-serif;--r-sm:8px;--r-md:12px;--r-lg:18px;--sh-md:0 4px 14px rgba(24,32,29,.07),0 2px 6px rgba(24,32,29,.05)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--paper-2);color:var(--ink);line-height:1.62;-webkit-font-smoothing:antialiased}
+.doc{max-width:920px;margin:0 auto;background:var(--paper);box-shadow:var(--sh-md)}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:800;line-height:1.14;letter-spacing:-.015em;color:var(--ink)}
+p{margin:11px 0;color:var(--ink-2)}
+a{color:var(--green-700)}
+a:hover{color:var(--green-500)}
+strong{color:var(--ink);font-weight:700}
+code{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.85em;background:var(--green-50);color:var(--green-700);padding:2px 6px;border-radius:5px;font-weight:600}
+pre{background:var(--green-900);color:#C8E6DC;padding:18px 22px;border-radius:var(--r-md);font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:13px;line-height:1.7;overflow-x:auto;margin:14px 0;white-space:pre}
+pre b{color:var(--amber-400);font-weight:700}
+.codewrap{position:relative;margin:14px 0}
+.codewrap pre{margin:0}
+.copy{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.12);color:#DCEAE3;border:1px solid rgba(255,255,255,.22);border-radius:7px;padding:6px 12px;font-family:var(--sans);font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.02em}
+.copy:hover{background:rgba(255,255,255,.2)}
+.copy.done{background:var(--green-500);border-color:var(--green-500);color:#fff}
+.cover{background:linear-gradient(150deg,var(--green-800),var(--green-600));color:#fff;padding:64px 64px 50px;position:relative;overflow:hidden}
+.cover::after{content:"";position:absolute;right:40px;bottom:30px;width:120px;height:120px;background:rgba(255,255,255,.06);border-radius:50%}
+.cover .logo{font-family:var(--serif);font-weight:800;font-size:23px;letter-spacing:-.02em;margin-bottom:42px}
+.cover .kicker{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--amber-400);margin-bottom:15px}
+.cover h1{color:#fff;font-size:38px;font-weight:900;max-width:660px}
+.cover .lede{font-size:17px;color:rgba(255,255,255,.86);margin-top:17px;max-width:650px;line-height:1.55}
+.cover .meta{display:flex;gap:34px;margin-top:36px;padding-top:24px;border-top:1px solid rgba(255,255,255,.18);flex-wrap:wrap}
+.cover .meta div span{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.6);font-weight:700;margin-bottom:4px}
+.cover .meta div b{font-family:var(--serif);font-size:16px;font-weight:700;color:#fff}
+.body{padding:52px 64px 64px}
+section{margin-bottom:46px}
+.num{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;background:var(--green-600);color:#fff;font-family:var(--serif);font-weight:800;font-size:16px;margin-right:13px;flex:none}
+.h-row{display:flex;align-items:center;margin-bottom:8px}
+.h-row h2{font-size:26px}
+.lead-line{color:var(--muted);font-size:16px;margin:0 0 22px 47px}
+section>p,section>.steps,section>.note,section>.warn,section>.goal,section>.codewrap,section>.tablewrap,section>ul.chk{margin-left:47px}
+.goal{background:var(--green-50);border:1px solid var(--green-100);border-radius:var(--r-lg);padding:22px 26px;margin:0 0 6px 47px}
+.goal h4{font-size:16px;margin-bottom:6px;color:var(--green-700)}
+.goal p{margin:0;font-size:15px}
+.note{border-left:4px solid var(--amber-500);background:var(--amber-50);padding:15px 20px;border-radius:0 var(--r-md) var(--r-md) 0;margin:18px 0}
+.note b{color:var(--amber-600)}
+.warn{border-left:4px solid #C2533A;background:#FEF2F2;padding:15px 20px;border-radius:0 var(--r-md) var(--r-md) 0;margin:18px 0}
+.warn b{color:#C2533A}
+.steps{counter-reset:step}
+.s{display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line-2);align-items:flex-start}
+.s:last-child{border-bottom:none}
+.s::before{counter-increment:step;content:counter(step);width:30px;height:30px;border-radius:8px;background:var(--green-600);color:#fff;font-family:var(--serif);font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;flex:none;margin-top:2px}
+.s.plain::before{background:var(--amber-500);content:"·";font-size:22px;line-height:0}
+.s .tx{flex:1}
+.s .tx b{color:var(--ink)}
+.s .tx p{margin:4px 0 0;font-size:14.5px}
+.s .tx code{font-size:12px}
+.s .tx .codewrap{margin:10px 0 0}
+.tablewrap{margin:18px 0;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{background:var(--green-600);color:#fff;text-align:left;padding:11px 15px;font-family:var(--serif);font-weight:700;font-size:13px}
+td{padding:10px 15px;border-top:1px solid var(--line-2);color:var(--ink-2);vertical-align:top}
+td code{font-size:12px}
+tr:nth-child(even) td{background:var(--paper)}
+.ok{color:var(--green-500);font-weight:700}
+.fix{color:var(--amber-600);font-weight:700}
+.todo{color:#C2533A;font-weight:700}
+.new{color:var(--green-700);font-weight:700}
+ul.chk{list-style:none;margin:6px 0 0 0}
+ul.chk li{position:relative;padding-left:30px;margin:11px 0;font-size:14.5px;color:var(--ink-2)}
+ul.chk li::before{content:"";position:absolute;left:0;top:1px;width:19px;height:19px;border-radius:5px;border:2px solid var(--green-600)}
+ul.chk li b{color:var(--ink)}
+ul.plain{margin:10px 0 0 20px}
+ul.plain li{margin:7px 0;font-size:14.5px;color:var(--ink-2)}
+.cta{display:inline-block;background:var(--green-700);color:#fff;font-weight:700;font-size:15px;text-decoration:none;padding:13px 26px;border-radius:10px;margin:6px 0 0 47px}
+.cta:hover{background:var(--green-600);color:#fff}
+.close{background:var(--green-900);color:#DCEAE3;padding:34px 64px;font-size:14.5px}
+.close b{color:#fff}
+@media(max-width:700px){.cover,.body,.close{padding-left:26px;padding-right:26px}.cover h1{font-size:29px}section>p,section>.steps,section>.note,section>.warn,section>.goal,section>.codewrap,section>.tablewrap,section>ul.chk,.lead-line,.cta{margin-left:0}}
+</style>
+</head>
+<body>
+<div class="doc">
+
+<div class="cover">
+  <div class="logo">MyKunda</div>
+  <div class="kicker">Backoffice · e-mailtemplates</div>
+  <h1>Automatische e-mail: controle en uitbreiding</h1>
+  <p class="lede">Elk moment waarop de site iemand automatisch antwoordt, nagelopen op opmaak én inhoud. De e-mail liep al over één huisstijltemplate — die is nu professioneel dichtgetimmerd, en de drie momenten die helemaal geen antwoord gaven, geven dat nu wel.</p>
+  <div class="meta">
+    <div><span>Datum</span><b>14 augustus 2026</b></div>
+    <div><span>Templates</span><b>21 in totaal</b></div>
+    <div><span>Nieuw gemaakt</span><b>6</b></div>
+    <div><span>Gerepareerd</span><b>4</b></div>
+  </div>
+</div>
+
+<div class="body">
+
+<section>
+  <div class="h-row"><span class="num">1</span><h2>De uitkomst in één alinea</h2></div>
+  <p class="lead-line">Kort antwoord op de vraag: grotendeels ja, met drie gaten.</p>
+  <p>Alle e-mail die de site verstuurt liep al via één gedeelde huisstijltemplate — dat is in juli en augustus rechtgezet en klopte. Maar "alle e-mail" bleek niet hetzelfde als "elke reactie". Op drie momenten kreeg iemand <strong>helemaal niets</strong>: na een betaling, na een bezichtigingsaanvraag via het dashboard, en na een WhatsApp-bericht. Bij dat laatste kreeg ook het team niets — de koppeling was verkeerd aangesloten. Die drie zijn gemaakt. Daarnaast miste de template zelf een aantal dingen die een mail professioneel én bezorgbaar maken: een preheader, een platte-tekstversie, een afmeldlink en een Outlook-vaste knop.</p>
+  <a class="cta" href="email-preview.html">Bekijk alle 21 e-mails →</a>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">2</span><h2>Alles wat de site automatisch beantwoordt</h2></div>
+  <p class="lead-line">Per moment: wie krijgt wat, en hoe het er nu voor staat.</p>
+  <div class="tablewrap">
+    <table>
+      <tr><th>Moment</th><th>Naar de bezoeker</th><th>Naar het team</th><th>Status</th></tr>
+      <tr><td>Contactformulier</td><td>Bevestiging</td><td>Melding, reply-to = bezoeker</td><td class="ok">Was in orde</td></tr>
+      <tr><td>Waardebepaling huis / grond</td><td>Bevestiging mét de schatting</td><td>Melding + schattingsblok</td><td class="ok">Was in orde</td></tr>
+      <tr><td>Gratis adviesgesprek</td><td>Bevestiging</td><td>Melding</td><td class="ok">Was in orde</td></tr>
+      <tr><td>Nieuwsbrief / area alert</td><td>Bevestiging</td><td>Melding</td><td class="fix">Afmeldlink toegevoegd</td></tr>
+      <tr><td>Bericht aan een agent</td><td>Bevestiging</td><td>Melding</td><td class="fix">Verstuurde de verkeerde tekst</td></tr>
+      <tr><td>Bezichtiging via de woningpagina</td><td>Bevestiging</td><td>Melding</td><td class="ok">Was in orde</td></tr>
+      <tr><td>Bezichtiging via het dashboard</td><td><b>Niets</b></td><td>Melding</td><td class="new">Bevestiging gemaakt</td></tr>
+      <tr><td>Verkoper stelt tijden voor</td><td>Mail met de tijden</td><td>—</td><td class="ok">Was in orde</td></tr>
+      <tr><td>Advertentie geplaatst</td><td>Bevestiging met alle details</td><td>Melding + actieblok</td><td class="ok">Was in orde</td></tr>
+      <tr><td>Betaling gelukt</td><td><b>Niets</b></td><td><b>Niets</b></td><td class="new">Bon + melding gemaakt</td></tr>
+      <tr><td>Bankoverschrijving geregistreerd</td><td><b>Niets</b></td><td><b>Niets</b></td><td class="new">Instructiemail gemaakt</td></tr>
+      <tr><td>WhatsApp-bericht binnen</td><td><b>Niets</b></td><td><b>Niets</b></td><td class="new">Beide gemaakt</td></tr>
+      <tr><td>Wachtwoord vergeten · inloglink</td><td>Mail met de link</td><td>—</td><td class="ok">Was in orde</td></tr>
+      <tr><td>Bounce of spamklacht</td><td>—</td><td>Signaalmail</td><td class="ok">Was in orde</td></tr>
+    </table>
+  </div>
+  <div class="note"><b>Waarom het niet opviel.</b> Een betaling die niets oplevert, ziet er voor de klant precies hetzelfde uit als een betaling die alles goed doet: hij ziet een bevestigingsscherm. Pas als hij het venster sluit, merkt hij dat hij geen enkel bewijs heeft — en dan is het jullie probleem geworden, niet dat van de code.</p></div>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">3</span><h2>Wat er aan de template zelf is verbeterd</h2></div>
+  <p class="lead-line">Zeven dingen die het verschil maken tussen "een mail" en "een mail van een bedrijf".</p>
+  <div class="steps">
+    <div class="s"><div class="tx"><b>Preheader — de grijze regel naast het onderwerp</b>
+      <p>Zonder preheader vult de inbox die regel zelf, meestal met de eerste tekst die hij tegenkomt: "You received this because…" of een stuk opmaak. Elke mail heeft nu een eigen samenvattende regel: <em>"Reference MK-LZ8Q2K3AB — quote it with your transfer of D 15,000."</em> Dat is de eerste indruk in de inbox, nog vóór iemand opent.</p></div></div>
+    <div class="s"><div class="tx"><b>Platte-tekstversie bij elke mail</b>
+      <p>Resend kreeg tot nu toe alleen HTML. Een mail zonder tekstalternatief scoort meetbaar slechter bij spamfilters en is onleesbaar in tekstclients en op sommige horloges. Elke verzending stuurt nu beide versies mee; de tekstversie wordt automatisch uit de HTML afgeleid, dus hij kan niet verouderen.</p></div></div>
+    <div class="s"><div class="tx"><b>Knop die ook in Outlook een knop is</b>
+      <p>Outlook op Windows negeert <code>border-radius</code> en achtergrondkleuren op links — de knop werd daar een kale blauwe onderstreepte tekst. Er zit nu een tweede, VML-versie van de knop in die alleen Outlook ziet.</p></div></div>
+    <div class="s"><div class="tx"><b>Donkere modus draait de mail niet meer om</b>
+      <p>Gmail en Apple Mail inverteren in dark mode alles wat ze niet kunnen plaatsen; witte kaarten worden dan grijsbruin met onleesbare tekst. De mail zet zich nu expliciet vast op licht.</p></div></div>
+    <div class="s"><div class="tx"><b>Afmeldlink onder de nieuwsbriefmail</b>
+      <p>De area-alertbevestiging is de enige mail die marketing is. Die heeft nu een afmeldregel — verplicht onder de AVG en onder de regels van Gmail en Outlook voor bulkverzenders, en het scheelt spamklachten, die veel schadelijker zijn dan een afmelding.</p></div></div>
+    <div class="s"><div class="tx"><b>Voettekst met echte gegevens</b>
+      <p>E-mailadres, WhatsApp-nummer, privacy, voorwaarden, cookies en de vestigingsregel staan nu onder elke mail. Een mail zonder herkenbare afzenderidentiteit is voor een filter een spamsignaal en voor een ontvanger een reden om te twijfelen.</p></div></div>
+    <div class="s"><div class="tx"><b>Bezoekerstekst kan de opmaak niet meer breken</b>
+      <p>Wat iemand in een formulier typt, komt in een HTML-mail terecht. Bij de leadmails werd dat al onschadelijk gemaakt, bij de advertentiemails niet — een verkoper die een <code>&lt;</code> in zijn omschrijving zette, kon de mail scheeftrekken. Dat gebeurt nu op één plek, in de template, voor alle mails tegelijk. Regelafbrekingen in een bericht blijven wél staan; die werden eerder platgeslagen tot één blok.</p></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">4</span><h2>De zes nieuwe mails</h2></div>
+  <p class="lead-line">Zelfde huisstijl, zelfde toon. Alle zes staan met voorbeeldgegevens op de <a href="email-preview.html">previewpagina</a>.</p>
+  <div class="steps">
+    <div class="s plain"><div class="tx"><b>Betaling gelukt — bon aan de klant</b>
+      <p>Referentie, dienst, betaalmethode, datum en bedrag, plus de waarschuwing die ook op de checkoutpagina staat: MyKunda vraagt nooit om geld voor een woning zelf. De mail is expliciet de bon — "bewaar deze mail".</p></div></div>
+    <div class="s plain"><div class="tx"><b>Bankoverschrijving — instructies aan de klant</b>
+      <p>Andere kop ("Transfer registered"), bedrag als <em>te betalen</em> in plaats van <em>betaald</em>, en de bankgegevens mét de referentie eronder. Dat was tot nu toe het grootste gat: iemand ziet de referentie één keer op het scherm, sluit het venster, en kan hem nergens meer terugvinden — waarna zijn overschrijving niet te matchen is.</p></div></div>
+    <div class="s plain"><div class="tx"><b>Betaling — melding aan de backoffice</b>
+      <p>Met actieblok bovenaan en de contactgegevens van de klant. Reply-to staat op de klant. Bij een bankoverschrijving staat er expliciet welk bedrag en welke referentie er op de rekening verwacht wordt.</p></div></div>
+    <div class="s plain"><div class="tx"><b>Bezichtiging — bevestiging aan de koper</b>
+      <p>De aanvraag via het dashboard ging alleen naar het team; de koper hoorde niets tot de verkoper reageerde. Nu krijgt hij direct een bevestiging met zijn voorkeurstijd en de veiligheidsregel over bezichtigingen (nooit geld meenemen, altijd naar de documenten vragen).</p></div></div>
+    <div class="s plain"><div class="tx"><b>WhatsApp — automatisch antwoord aan de afzender</b>
+      <p>Platte tekst, want WhatsApp kent geen opmaak. Bevestiging, openingstijden, en dezelfde waarschuwing over betalingen. Alleen bij het eerste bericht van een gesprek, niet bij elk vervolgbericht.</p></div></div>
+    <div class="s plain"><div class="tx"><b>WhatsApp — melding aan het team</b>
+      <p>Bestond op papier, werkte niet. Zie hieronder.</p></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">5</span><h2>Vier reparaties in de code</h2></div>
+  <p class="lead-line">Fouten die pas zichtbaar worden als je de route helemaal uitloopt.</p>
+  <div class="steps">
+    <div class="s"><div class="tx"><b>WhatsApp-berichten kwamen bij niemand aan</b>
+      <p><code>wa-inbound</code> riep de meldingsfunctie aan met <code>{type, name, phone, message}</code>, terwijl die alleen <code>{lead_id}</code> accepteert — elke aanroep kreeg keurig een <code>400 missing lead_id</code> terug en niemand las die log. Bovendien schreef de functie de lead weg met bron <code>whatsapp_inbound</code>, een waarde die niet in de database-enum staat: die insert faalde óók. Een WhatsApp-bericht verdween dus volledig. De functie maakt nu eerst de lead aan, geeft dat id door, en valt terug op bron <code>contact</code> zolang de enumwaarde nog niet is toegevoegd.</p></div></div>
+    <div class="s"><div class="tx"><b>Het agentformulier stuurde de verkeerde bevestiging</b>
+      <p><code>agent.html</code> verstuurde bron <code>contact</code>. De bezoeker kreeg daardoor "onze afdeling neemt binnen één werkdag contact op" in plaats van de tekst die voor dit formulier bedoeld is ("je bericht ligt bij de agent, meestal binnen een paar uur"). Die tekst stond er al, maar werd nooit gebruikt.</p></div></div>
+    <div class="s"><div class="tx"><b>Een mislukte teammail nam de rest mee</b>
+      <p>Bij advertenties en bezichtigingen werden beide mails in één keer verstuurd: viel de eerste om, dan ging de tweede ook niet meer. Nu wordt elke mail apart geprobeerd en meldt het antwoord precies welke van de twee gelukt is.</p></div></div>
+    <div class="s"><div class="tx"><b>Twee functies negeerden de instellingen</b>
+      <p><code>notify-listing</code> had het afzender- en ontvangstadres hard in de code staan. Wie <code>LEAD_EMAIL</code> in Supabase wijzigt, veranderde daarmee wél de leadmails maar niet de advertentiemails. Beide lezen nu dezelfde secrets.</p></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">6</span><h2>Uitrollen</h2></div>
+  <p class="lead-line">Drie stappen: Supabase, database, FTP. In deze volgorde.</p>
+
+  <div class="goal">
+    <h4>Stap 1 — Edge functions opnieuw uitrollen</h4>
+    <p>Alle vijf mailfuncties gebruiken de gedeelde template, dus ze moeten alle vijf opnieuw. <code>notify-payment</code> is nieuw. Deploy vanuit de projectmap, dan gaat <code>_shared/</code> automatisch mee.</p>
+  </div>
+  <div class="codewrap"><pre>supabase functions deploy notify-lead    --no-verify-jwt
+supabase functions deploy notify-viewing --no-verify-jwt
+supabase functions deploy notify-listing --no-verify-jwt
+supabase functions deploy notify-payment --no-verify-jwt
+supabase functions deploy wa-inbound     --no-verify-jwt
+supabase functions deploy resend-webhook</pre><button class="copy">Kopieer</button></div>
+  <div class="note"><b><code>resend-webhook</code> zonder <code>--no-verify-jwt</code></b> — die wordt door Resend aangeroepen met een eigen handtekening, niet met een Supabase-token. De andere vijf worden vanuit de browser aangeroepen en hebben de vlag wél nodig.</div>
+
+  <div class="goal">
+    <h4>Stap 2 — SQL</h4>
+    <p>Twee scripts, allebei één keer. Het eerste is nodig voor WhatsApp, het tweede is optioneel maar aan te raden.</p>
+  </div>
+  <div class="codewrap"><pre>-- backend/whatsapp-lead-source.sql
+alter type lead_source add value if not exists 'whatsapp_inbound';
+
+-- backend/payments.sql — legt elke bestelling vast, zodat je
+-- bankoverschrijvingen kunt afstrepen tegen de rekening.
+-- (De mails werken ook zonder deze tabel.)</pre><button class="copy">Kopieer</button></div>
+
+  <div class="goal">
+    <h4>Stap 3 — FTP</h4>
+    <p>Map <code>upload-email-templates/</code> → webroot, overschrijven aan. Drie bestanden: <code>checkout.html</code> · <code>agent.html</code> · <code>supabase.js</code>. In <code>checkout.html</code> is de cachestempel van <code>supabase.js</code> opgehoogd naar <code>v=1787961600000</code>, zodat browsers de nieuwe versie ophalen. <code>deploy/</code> is al bijgewerkt.</p>
+  </div>
+  <div class="warn"><b>Volgorde.</b> Eerst de functies, dan pas de FTP-upload. <code>checkout.html</code> roept <code>notify-payment</code> aan; staat die nog niet live, dan mislukt de aanroep stil (de bevestiging blijft gewoon werken, maar er gaat geen bon uit).</div>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">7</span><h2>Testronde</h2></div>
+  <p class="lead-line">Met een testadres buiten het eigen domein — gmail of outlook. Mail van mykunda.com naar mykunda.com zegt niets over de echte bezorging.</p>
+  <div class="tablewrap">
+    <table>
+      <tr><th>Test</th><th>Waar</th><th>Verwacht</th></tr>
+      <tr><td>Contactformulier</td><td>/contact.html</td><td>Teammail met reply-to = testadres · bevestiging bij de afzender</td></tr>
+      <tr><td>Bericht aan de agent</td><td>/agent.html</td><td>Bevestiging met de agenttekst, niet de algemene contacttekst</td></tr>
+      <tr><td>Nieuwsbrief in de footer</td><td>willekeurige pagina</td><td>Bevestiging <b>met</b> afmeldregel onderaan</td></tr>
+      <tr><td>Kaartbetaling</td><td>/checkout.html?plan=verified</td><td>Bon bij de klant · melding bij <code>info@</code> · beide met dezelfde referentie</td></tr>
+      <tr><td>Bankoverschrijving</td><td>/checkout.html?plan=managed</td><td>Mail met de bankgegevens én de referentie · backofficemail met "action required"</td></tr>
+      <tr><td>WhatsApp</td><td>+220 228 2717</td><td>Antwoord in WhatsApp binnen een paar seconden · lead in de console · teammail</td></tr>
+      <tr><td>Wachtwoord vergeten</td><td>/auth.html</td><td>Link naar mykunda.com/auth.html — niet naar supabase.co</td></tr>
+    </table>
+  </div>
+  <ul class="chk">
+    <li><b>Open één mail in Outlook of Gmail-web</b> en kijk of de groene knop een knop is.</li>
+    <li><b>Zet dark mode aan</b> in Gmail op de telefoon: de kaart moet wit blijven.</li>
+    <li><b>Kijk in de spammap</b> — met de platte-tekstversie erbij zou dat niet meer moeten gebeuren, maar controleer het één keer.</li>
+    <li><b>Draai daarna de leadquery</b> uit het vorige rapport: alles wat terugkomt is een bezoeker die wél bevestiging zag maar geen mail kreeg.</li>
+  </ul>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">8</span><h2>Nog open, van eerder</h2></div>
+  <p class="lead-line">Twee punten uit het vorige rapport staan nog.</p>
+  <div class="tablewrap">
+    <table>
+      <tr><th>Punt</th><th>Wat er moet gebeuren</th></tr>
+      <tr><td>Resend-sleutel roteren</td><td>De nieuwe sleutel <code>MyKunda-Supabase-rotated-2026-08-14</code> bestaat, maar Supabase gebruikt nog de oude, gelekte. Zet <code>supabase secrets set RESEND_API_KEY=&lt;nieuwe token&gt;</code>, test één formulier, verwijder pas dáárna de oude sleutels in Resend. <span class="todo">Open</span></td></tr>
+      <tr><td>Dubbele functie <code>swift-responder</code></td><td>Woord-voor-woord kopie van <code>market-sources</code>, draait niet, kan weg in Supabase → Edge Functions. <span class="todo">Open</span></td></tr>
+    </table>
+  </div>
+</section>
+
+</div>
+
+<div class="close">
+  <p><b>Wat dit oplevert.</b> Iemand die vandaag betaalt, een bezichtiging aanvraagt of ons appt, krijgt voortaan binnen enkele seconden iets in handen waar zijn referentie, zijn afspraak of zijn vraag in staat — in dezelfde huisstijl als de site, met een adres waar hij op kan antwoorden. En het team hoort van elk van die drie momenten, in plaats van van geen enkele.</p>
+</div>
+
+</div>
+<script>
+document.querySelectorAll('.copy').forEach(function(b){
+  b.addEventListener('click', function(){
+    var pre = b.parentElement.querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(function(){
+      b.textContent = 'Gekopieerd'; b.classList.add('done');
+      setTimeout(function(){ b.textContent = 'Kopieer'; b.classList.remove('done'); }, 1600);
+    });
+  });
+});
+</script>
+</body>
+</html>

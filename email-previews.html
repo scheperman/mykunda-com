@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyKunda — Email Template Previews</title>
+<style>
+  body,table,td{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif}
+  a{color:#15463A}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .preview-shell {
+    background: #1a1a1a;
+    min-height: 100vh;
+    padding: 40px 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  }
+  .preview-header {
+    max-width: 640px;
+    margin: 0 auto 32px;
+    text-align: center;
+  }
+  .preview-header h1 {
+    color: #fff;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .preview-header p {
+    color: #999;
+    font-size: 15px;
+  }
+  .nav-tabs {
+    display: flex;
+    gap: 6px;
+    max-width: 640px;
+    margin: 0 auto 28px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+  .nav-tab {
+    background: #2a2a2a;
+    color: #aaa;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all .15s;
+  }
+  .nav-tab:hover { background: #333; color: #ddd; }
+  .nav-tab.active { background: #15463A; color: #fff; }
+
+  .email-frame {
+    max-width: 640px;
+    margin: 0 auto;
+    background: #F3F0E8;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,.4);
+  }
+  .email-frame-bar {
+    background: #333;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .email-frame-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #555;
+  }
+  .email-frame-dot:nth-child(1) { background: #ff5f57; }
+  .email-frame-dot:nth-child(2) { background: #febc2e; }
+  .email-frame-dot:nth-child(3) { background: #28c840; }
+  .email-frame-label {
+    color: #999;
+    font-size: 12px;
+    margin-left: 8px;
+    font-weight: 500;
+  }
+  .email-meta {
+    background: #2a2a2a;
+    padding: 14px 18px;
+    border-bottom: 1px solid #333;
+  }
+  .email-meta-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 4px;
+    font-size: 13px;
+  }
+  .email-meta-label { color: #777; min-width: 50px; }
+  .email-meta-value { color: #ccc; }
+  .email-content {
+    display: none;
+  }
+  .email-content.active {
+    display: block;
+  }
+</style>
+</head>
+<body>
+<div class="preview-shell">
+  <div class="preview-header">
+    <h1>MyKunda Email Previews</h1>
+    <p>Preview of all automated emails — team notifications and user auto-replies</p>
+  </div>
+
+  <div class="nav-tabs" id="tabs">
+    <button class="nav-tab active" data-tab="contact-reply">Contact — Auto-reply</button>
+    <button class="nav-tab" data-tab="contact-team">Contact — Team</button>
+    <button class="nav-tab" data-tab="valuation-reply">Valuation — Auto-reply</button>
+    <button class="nav-tab" data-tab="valuation-team">Valuation — Team</button>
+    <button class="nav-tab" data-tab="viewing-team">Viewing — Team</button>
+    <button class="nav-tab" data-tab="viewing-slots">Viewing — Slots</button>
+  </div>
+
+  <div class="email-frame">
+    <div class="email-frame-bar">
+      <div class="email-frame-dot"></div>
+      <div class="email-frame-dot"></div>
+      <div class="email-frame-dot"></div>
+      <span class="email-frame-label" id="frameLabel">Email Preview</span>
+    </div>
+    <div class="email-meta" id="emailMeta">
+      <div class="email-meta-row"><span class="email-meta-label">From:</span><span class="email-meta-value" id="metaFrom">MyKunda &lt;noreply@mykunda.com&gt;</span></div>
+      <div class="email-meta-row"><span class="email-meta-label">To:</span><span class="email-meta-value" id="metaTo">john@email.com</span></div>
+      <div class="email-meta-row"><span class="email-meta-label">Subject:</span><span class="email-meta-value" id="metaSubject" style="font-weight:600;color:#eee">We've received your message — MyKunda</span></div>
+    </div>
+
+    <!-- ============ CONTACT — AUTO-REPLY ============ -->
+    <div class="email-content active" id="tab-contact-reply">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#F3F0E8;padding:32px 16px">
+        <tr><td align="center">
+          <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%">
+            <tr><td style="padding:0 0 24px">
+              <table cellpadding="0" cellspacing="0"><tr>
+                <td style="background:#15463A;width:32px;height:32px;border-radius:9px;text-align:center;vertical-align:middle">
+                  <span style="color:#DD8A45;font-size:18px;font-weight:800;line-height:32px">⌂</span>
+                </td>
+                <td style="padding-left:10px;font-weight:800;font-size:20px;color:#18201D;letter-spacing:-0.02em">MyKunda</td>
+              </tr></table>
+            </td></tr>
+            <tr><td style="background:#FFFFFF;border-radius:14px;box-shadow:0 2px 8px rgba(24,32,29,.06);padding:36px 34px">
+              <table cellpadding="0" cellspacing="0" width="100%">
+                <tr><td style="font-size:24px;font-weight:800;color:#18201D;line-height:1.2;padding:0 0 16px">Thank you, John!</td></tr>
+                <tr><td style="font-size:15.5px;color:#384640;line-height:1.65">
+                  <p style="margin:0 0 16px">Thanks for reaching out to MyKunda. We've received your message and a member of our team will get back to you within <strong>one working day</strong>.</p>
+                  <p style="margin:16px 0 0;color:#384640">In the meantime, browse properties and land across The Gambia at <a href="https://mykunda.com" style="color:#15463A;font-weight:700">mykunda.com</a>.</p>
+                  <div style="border-top:1px solid #EFEBE1;margin-top:24px;padding-top:18px">
+                    <p style="font-size:14px;color:#5C6B64;margin:0">Need urgent help? WhatsApp us at <a href="https://wa.me/2202282717" style="color:#15463A;font-weight:600">+220 228 2717</a></p>
+                  </div>
+                </td></tr>
+                <tr><td style="padding:28px 0 0">
+                  <a href="#" style="display:inline-block;background:#15463A;color:#ffffff;font-weight:700;font-size:15px;text-decoration:none;padding:14px 30px;border-radius:8px">Browse properties</a>
+                </td></tr>
+              </table>
+            </td></tr>
+            <tr><td style="padding:28px 0 0;text-align:center">
+              <p style="font-size:12px;color:#8A958E;line-height:1.55;margin:0">You received this because you submitted a request on MyKunda. We'll never spam you.</p>
+              <p style="font-size:12px;color:#8A958E;margin:8px 0 0">
+                <a href="#" style="color:#15463A;font-weight:600;text-decoration:none">mykunda.com</a> · 
+                <a href="#" style="color:#8A958E;text-decoration:underline">Privacy</a> · 
+                <a href="#" style="color:#8A958E;text-decoration:underline">info@mykunda.com</a>
+              </p>
+            </td></tr>
+          </table>
+        </td></tr>
+      </table>
+    </div>
+
+    <!-- ============ CONTACT — TEAM NOTIFICATION ============ -->
+    <div class="email-content" id="tab-contact-team">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#F3F0E8;padding:32px 16px">
+        <tr><td align="center">
+          <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%">
+            <tr><td style="padding:0 0 24px">
+              <table cellpadding="0" cellspacing="0"><tr>
+                <td style="background:#15463A;width:32px;height:32px;border-radius:9px;text-align:center;vertical-align:middle">
+                  <span style="color:#DD8A45;font-size:18px;font-weight:800;line-height:32px">⌂</span>
+                </td>
+                <td style="padding-left:10px;font-weight:800;font-size:20px;color:#18201D;letter-spacing:-0.02em">MyKunda</td>
+              </tr></table>
+            </td></tr>
+            <tr><td style="background:#FFFFFF;border-radius:14px;box-shadow:0 2px 8px rgba(24,32,29,.06);padding:36px 34px">
+              <table cellpadding="0" cellspacing="0" width="100%">
+                <tr><td style="font-size:24px;font-weight:800;color:#18201D;line-height:1.2;padding:0 0 16px">New Contact message</td></tr>
+                <tr><td style="font-size:15.5px;color:#384640;line-height:1.65">
+                  <table style="width:100%;border-collapse:collapse;background:#FAF8F3;border-radius:8px;overflow:hidden;margin-top:8px">
+                    <tr><td style="padding:10px 16px;color:#5C6B64;font-weight:600;border-bottom:1px solid #EFEBE1;width:100px;font-size:14px;vertical-align:top">Type</td><td style="padding:10px 16px;color:#18201D;border-bottom:1px solid #EFEBE1;font-size:14px">Contact message</td></tr>
+                    <tr><td style="padding:10px 16px;color:#5C6B64;font-weight:600;border-bottom:1px solid #EFEBE1;width:100px;font-size:14px;vertical-align:top">Name</td><td style="padding:10px 16px;color:#18201D;border-bottom:1px solid #EFEBE1;font-size:14px">John Smith</td></tr>
+                    <tr><td style="padding:10px 16px;color:#5C6B64;font-weight:600;border-bottom:1px solid #EFEBE1;width:100px;font-size:14px;vertical-align:top">Email</td><td style="padding:10px 16px;color:#18201D;border-bottom:1px solid #EFEBE1;font-size:14px">john@email.com</td></tr>
+                    <tr><td style="padding:10px 16px;color:#5C6B64;font-weight:600;border-bottom:1px solid #EFEBE1;width:100px;font-size:14px;vertical-align:top">Phone</td><td style="padding:10px 16px;color:#18201D;border-bottom:1px solid #EFEBE1;font-size:14px">+220 555 1234</td></tr>
+                    <tr><td style="padding:10px 16px;color:#5C6B64;font-weight:600;border-bottom:1px solid #EFEBE1;width:100px;font-size:14px;vertical-align:top">Message</td><td style="padding:10px 16px;color:#18201D;border-bottom:1px solid #EFEBE1;font-size:14px">[buying] I'm interested in buying a villa in Bijilo. Can you help me find available options?</td></tr>
+                  </table>
+                </td></tr>
+                <tr><td style="padding:28px 0 0">
+                  <a href="#" style="display:inline-block;background:#15463A;color:#ffffff;font-weight:700;font-size:15px;text-decoration:none;padding:14px 30px;border-radius:8px">Open admin console</a>
+                </td></tr>
+              </table>
+            </td></tr>
+            <tr><td style="padding:28px 0 0;text-align:center">
+              <p style="font-size:12px;color:#8A958E;line-height:1.55;margin:0">You received this because you interacted with MyKunda — the trusted property platform for The Gambia.</p>
+              <p style="font-size:12px;color:#8A958E;margin:8px 0 0">
+                <a href="#" style="color:#15463A;font-weight:600;text-decoration:none">mykunda.com</a> · 
+                <a href="#" style="color:#8A958E;text-decoration:underline">Privacy</a> · 
+                <a href="#" style="color:#8A958E;text-decoration:underline">info@mykunda.com</a>
+              </p>
+            </td></tr>
+          </table>
+        </td></tr>
+      </table>
+    </div>
+
+    <!-- ============ VALUATION — AUTO-REPLY ============ -->
+    <div class="email-content" id="tab-valuation-reply">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#F3F0E8;padding:32px 16px">
+        <tr><td align="center">
+          <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%">
+            <tr><td style="padding:0 0 24px">
+              <table cellpadding="0" cellspacing="0"><tr>
+                <td style="background:#15463A;width:32px;height:32px;border-radius:9px;text-align:center;vertical-align:middle">
+                  <span style="color:#DD8A45;font-size:18px;font-weight:800;line-height:32px">⌂</span>
+                </td>
+                <td style="padding-left:10px;font-weight:800;font-size:20px;color:#18201D;letter-spacing:-0.02em">MyKunda</td>
+              </tr></table>
+            </td></tr>
+            <tr><td style="background:#FFFFFF;border-radius:14px;box-shadow:0 2px 8px rgba(24,32,29,.06);padding:36px 34px">
+              <table cellpadding="0" cellspacing="0" width="100%">
+                <tr><td style="font-size:24px;font-weight:800;color:#18201D;line-height:1.2;padding:0 0 16px">Thank you, Sarah!</td></tr>
+                <tr><td style="font-size:15.5px;color:#384640;line-height:1.65">
+                  <p style="margin:0 0 16px">Thanks for requesting a property valuation. One of our experts will review your property and confirm the exact figure with you within <strong>one working day</strong>.</p>
+                  <div style="background:#FAF8F3;border-radius:10px;padding:20px 22px;margin:18px 0 6px;border-left:4px solid #DD8A45">
+                    <p style="font-size:13px;color:#5C6B64;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin:0 0 6px">Automated estimate</p>
+                    <p style="font-size:22px;font-weight:800;color:#18201D;margin:0">$85,000 – $105,000</p>
+                    <p style="font-size:13px;color:#8A958E;margin:6px 0 0">Based on recent sales data • subject to in-person review</p>
+                  </div>
+                  <p style="margin:16px 0 0;color:#384640">In the meantime, browse properties and land across The Gambia at <a href="https://mykunda.com" style="color:#15463A;font-weight:700">mykunda.com</a>.</p>
+                  <div style="border-top:1px solid #EFEBE1;margin-top:24px;padding-top:18px">
+                    <p style="font-size:14px;color:#5C6B64;margin:0">Need urgent help? WhatsApp us at <a href="https://wa.me/2202282717" style="color:#15463A;font-weight:600">+220 228 2717</a></p>
+                  </div>
+                </td></tr>
+                <tr><td style="padding:28px 0 0">
+                  <a href="#" style="display:inline-block;background:#15463A;color:#ffffff;font-weight:700;font-size:15px;text-decoration:none;padding:14px 30px;border-radius:8px">Explore similar properties</a>
+                </td></tr>
+              </table>
+            </td></tr>
+            <tr><td style="padding:28px 0 0;text-align:center">
+              <p style="font-size:12px;color:#8A958E;line-height:1.55;margin:0">You received this because you submitted a request on MyKunda. We'll never spam you.</p>
+              <p style="font-size:12px;color:#8A958E;margin:8px 0 0">
+                <a href="#" style="color:#15463A;font-weight:600;text-decoration:none">mykunda.com</a> · 
+                <a href="#" style="color:#8A958E;text-decoration:underline">Privacy</a> · 
+                <a href="#" style="color:#8A958E;text-decoration:underline">info@mykunda.com</a>
+              </p>
+            </td></tr>
+          </table>
+        </td></tr>
+      </table>
+    </div>
+
+    <!-- ============ VALUATION — TEAM ============ -->
+    <div class="email-content" id="tab-valuation-team">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#F3F0E8;padding:32px 16px">
+        <tr><td align="center">
+          <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%">
+            <tr><td style="padding:0 0 24px">
+              <table cellpadding="0" cellspacing="0"><tr>
+                <td style="background:#15463A;width:32px;height:32px;border-radius:9px;text-align:center;vertical-align:middle">
+                  <span style="color:#DD8A45;font-size:18px;font-weight:800;line-height:32px">⌂</span>
+                </td>
+                <td style="padding-left:10px;font-weight:800;font-size:20px;color:#18201D;letter-spacing:-0.02em">MyKunda</td>
+              </tr></table>
+            </td></tr>
+            <tr><td style="background:#FFFFFF;border-radius:14px;box-shadow:0 2px 8px rgba(24,32,29,.06);padding:36px 34px">
+              <table cellpadding="0" cellspacing="0" width="100%">
+                <tr><td style="font-size:24px;font-weight:800;color:#18201D;line-height:1.2;padding:0 0 16px">New Property valuation request</td></tr>
+                <tr><td style="font-size:15.5px;color:#384640;line-height:1.65">
+                  <table style="width:100%;border-collapse:collapse;background:#FAF8F3;border-radius:8px;overflow:hidden;margin-top:8px">
+                    <tr><td style="padding:10px 16px;color:#5C6B64;font-weight:600;border-bottom:1px solid #EFEBE1;width:100px;font-size:14px;vertical-align:top">Type</td><td style="padding:10px 16px;color:#18201D;border-bottom:1px solid #EFEBE1;font-size:14px">Property valuation request</td></tr>
+                    <tr><td style="padding:10px 16px;color:#5C6B64;font-weight:600;border-bottom:1px solid #EFEBE1;width:100px;font-size:14px;vertical-align:top">Name</td><td style="padding:10px 16px;color:#18201D;border-bottom:1px solid #EFEBE1;font-size:14px">Sarah Johnson</td></tr>
+                    <tr><td style="padding:10px 16px;color:#5C6B64;font-weight:600;border-bottom:1px solid #EFEBE1;width:100px;font-size:14px;vertical-align:top">Email</td><td style="padding:10px 16px;color:#18201D;border-bottom:1px solid #EFEBE1;font-size:14px">sarah@email.com</td></tr>
+                    <tr><td style="padding:10px 16px;color:#5C6B64;font-weight:600;border-bottom:1px solid #EFEBE1;width:100px;font-size:14px;vertical-align:top">Phone</td><td style="padding:10px 16px;color:#18201D;border-bottom:1px solid #EFEBE1;font-size:14px">+220 777 8899</td></tr>
+                    <tr><td style="padding:10px 16px;color:#5C6B64;font-weight:600;border-bottom:1px solid #EFEBE1;width:100px;font-size:14px;vertical-align:top">Area</td><td style="padding:10px 16px;color:#18201D;border-bottom:1px solid #EFEBE1;font-size:14px">Bijilo</td></tr>
+                    <tr><td style="padding:10px 16px;color:#5C6B64;font-weight:600;border-bottom:1px solid #EFEBE1;width:100px;font-size:14px;vertical-align:top">Message</td><td style="padding:10px 16px;color:#18201D;border-bottom:1px solid #EFEBE1;font-size:14px">Valuation request: house, 150 m², est. $85,000 – $105,000</td></tr>
+                  </table>
+                  <!-- Valuation-specific extras -->
+                  <table style="width:100%;border-collapse:collapse;background:#FBF1E6;border-radius:8px;overflow:hidden;margin-top:12px">
+                    <tr><td style="padding:10px 16px;color:#5C6B64;font-weight:600;border-bottom:1px solid #EFEBE1;width:100px;font-size:14px;vertical-align:top">Property type</td><td style="padding:10px 16px;color:#18201D;border-bottom:1px solid #EFEBE1;font-size:14px">house</td></tr>
+                    <tr><td style="padding:10px 16px;color:#5C6B64;font-weight:600;border-bottom:1px solid #EFEBE1;width:100px;font-size:14px;vertical-align:top">Size</td><td style="padding:10px 16px;color:#18201D;border-bottom:1px solid #EFEBE1;font-size:14px">150 m²</td></tr>
+                    <tr><td style="padding:10px 16px;color:#5C6B64;font-weight:600;border-bottom:1px solid #EFEBE1;width:100px;font-size:14px;vertical-align:top">Estimated range</td><td style="padding:10px 16px;color:#18201D;border-bottom:1px solid #EFEBE1;font-size:14px">$85,000 – $105,000</td></tr>
+                    <tr><td style="padding:10px 16px;color:#5C6B64;font-weight:600;border-bottom:1px solid #EFEBE1;width:100px;font-size:14px;vertical-align:top">Location input</td><td style="padding:10px 16px;color:#18201D;border-bottom:1px solid #EFEBE1;font-size:14px">Bijilo near the beach road</td></tr>
+                  </table>
+                </td></tr>
+                <tr><td style="padding:28px 0 0">
+                  <a href="#" style="display:inline-block;background:#15463A;color:#ffffff;font-weight:700;font-size:15px;text-decoration:none;padding:14px 30px;border-radius:8px">Open admin console</a>
+                </td></tr>
+              </table>
+            </td></tr>
+            <tr><td style="padding:28px 0 0;text-align:center">
+              <p style="font-size:12px;color:#8A958E;line-height:1.55;margin:0">You received this because you interacted with MyKunda — the trusted property platform for The Gambia.</p>
+              <p style="font-size:12px;color:#8A958E;margin:8px 0 0">
+                <a href="#" style="color:#15463A;font-weight:600;text-decoration:none">mykunda.com</a> · 
+                <a href="#" style="color:#8A958E;text-decoration:underline">Privacy</a> · 
+                <a href="#" style="color:#8A958E;text-decoration:underline">info@mykunda.com</a>
+              </p>
+            </td></tr>
+          </table>
+        </td></tr>
+      </table>
+    </div>
+
+    <!-- ============ VIEWING — TEAM ============ -->
+    <div class="email-content" id="tab-viewing-team">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#F3F0E8;padding:32px 16px">
+        <tr><td align="center">
+          <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%">
+            <tr><td style="padding:0 0 24px">
+              <table cellpadding="0" cellspacing="0"><tr>
+                <td style="background:#15463A;width:32px;height:32px;border-radius:9px;text-align:center;vertical-align:middle">
+                  <span style="color:#DD8A45;font-size:18px;font-weight:800;line-height:32px">⌂</span>
+                </td>
+                <td style="padding-left:10px;font-weight:800;font-size:20px;color:#18201D;letter-spacing:-0.02em">MyKunda</td>
+              </tr></table>
+            </td></tr>
+            <tr><td style="background:#FFFFFF;border-radius:14px;box-shadow:0 2px 8px rgba(24,32,29,.06);padding:36px 34px">
+              <table cellpadding="0" cellspacing="0" width="100%">
+                <tr><td style="font-size:24px;font-weight:800;color:#18201D;line-height:1.2;padding:0 0 16px">New viewing request</td></tr>
+                <tr><td style="font-size:15.5px;color:#384640;line-height:1.65">
+                  <p style="margin:0 0 14px"><strong>James Williams</strong> would like to view <strong>Modern 3-Bed Villa with Pool</strong>. Please respond to confirm or propose alternative times.</p>
+                  <table style="width:100%;border-collapse:collapse;background:#FAF8F3;border-radius:8px;overflow:hidden;margin-top:8px">
+                    <tr><td style="padding:10px 16px;color:#5C6B64;font-weight:600;border-bottom:1px solid #EFEBE1;width:110px;font-size:14px;vertical-align:top">Buyer</td><td style="padding:10px 16px;color:#18201D;border-bottom:1px solid #EFEBE1;font-size:14px">James Williams</td></tr>
+                    <tr><td style="padding:10px 16px;color:#5C6B64;font-weight:600;border-bottom:1px solid #EFEBE1;width:110px;font-size:14px;vertical-align:top">Property</td><td style="padding:10px 16px;color:#18201D;border-bottom:1px solid #EFEBE1;font-size:14px">Modern 3-Bed Villa with Pool (Bijilo)</td></tr>
+                    <tr><td style="padding:10px 16px;color:#5C6B64;font-weight:600;border-bottom:1px solid #EFEBE1;width:110px;font-size:14px;vertical-align:top">Preferred time</td><td style="padding:10px 16px;color:#18201D;border-bottom:1px solid #EFEBE1;font-size:14px">Saturday, 21 June 2025 at 10:00</td></tr>
+                    <tr><td style="padding:10px 16px;color:#5C6B64;font-weight:600;border-bottom:1px solid #EFEBE1;width:110px;font-size:14px;vertical-align:top">Email</td><td style="padding:10px 16px;color:#18201D;border-bottom:1px solid #EFEBE1;font-size:14px">james@email.com</td></tr>
+                    <tr><td style="padding:10px 16px;color:#5C6B64;font-weight:600;border-bottom:1px solid #EFEBE1;width:110px;font-size:14px;vertical-align:top">Phone</td><td style="padding:10px 16px;color:#18201D;border-bottom:1px solid #EFEBE1;font-size:14px">+220 333 4455</td></tr>
+                  </table>
+                </td></tr>
+                <tr><td style="padding:28px 0 0">
+                  <a href="#" style="display:inline-block;background:#15463A;color:#ffffff;font-weight:700;font-size:15px;text-decoration:none;padding:14px 30px;border-radius:8px">Respond in dashboard</a>
+                </td></tr>
+              </table>
+            </td></tr>
+            <tr><td style="padding:28px 0 0;text-align:center">
+              <p style="font-size:12px;color:#8A958E;line-height:1.55;margin:0">You received this because you interacted with MyKunda — the trusted property platform for The Gambia.</p>
+              <p style="font-size:12px;color:#8A958E;margin:8px 0 0">
+                <a href="#" style="color:#15463A;font-weight:600;text-decoration:none">mykunda.com</a> · 
+                <a href="#" style="color:#8A958E;text-decoration:underline">Privacy</a> · 
+                <a href="#" style="color:#8A958E;text-decoration:underline">info@mykunda.com</a>
+              </p>
+            </td></tr>
+          </table>
+        </td></tr>
+      </table>
+    </div>
+
+    <!-- ============ VIEWING — SLOTS PROPOSED ============ -->
+    <div class="email-content" id="tab-viewing-slots">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#F3F0E8;padding:32px 16px">
+        <tr><td align="center">
+          <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%">
+            <tr><td style="padding:0 0 24px">
+              <table cellpadding="0" cellspacing="0"><tr>
+                <td style="background:#15463A;width:32px;height:32px;border-radius:9px;text-align:center;vertical-align:middle">
+                  <span style="color:#DD8A45;font-size:18px;font-weight:800;line-height:32px">⌂</span>
+                </td>
+                <td style="padding-left:10px;font-weight:800;font-size:20px;color:#18201D;letter-spacing:-0.02em">MyKunda</td>
+              </tr></table>
+            </td></tr>
+            <tr><td style="background:#FFFFFF;border-radius:14px;box-shadow:0 2px 8px rgba(24,32,29,.06);padding:36px 34px">
+              <table cellpadding="0" cellspacing="0" width="100%">
+                <tr><td style="font-size:24px;font-weight:800;color:#18201D;line-height:1.2;padding:0 0 16px">Viewing times proposed</td></tr>
+                <tr><td style="font-size:15.5px;color:#384640;line-height:1.65">
+                  <p style="margin:0 0 14px">The seller has proposed new times for viewing <strong>Modern 3-Bed Villa with Pool</strong>:</p>
+                  <div style="background:#FAF8F3;border-radius:10px;padding:16px 20px;margin:8px 0">
+                    <ul style="padding-left:20px;margin:0">
+                      <li style="margin:8px 0;color:#18201D;font-weight:600;font-size:15px">Saturday, 21 June 2025 at 09:00</li>
+                      <li style="margin:8px 0;color:#18201D;font-weight:600;font-size:15px">Monday, 23 June 2025 at 14:00</li>
+                      <li style="margin:8px 0;color:#18201D;font-weight:600;font-size:15px">Wednesday, 25 June 2025 at 11:00</li>
+                    </ul>
+                  </div>
+                  <p style="margin:14px 0 0">Open MyKunda to choose a time or request alternatives.</p>
+                </td></tr>
+                <tr><td style="padding:28px 0 0">
+                  <a href="#" style="display:inline-block;background:#15463A;color:#ffffff;font-weight:700;font-size:15px;text-decoration:none;padding:14px 30px;border-radius:8px">Choose a time</a>
+                </td></tr>
+              </table>
+            </td></tr>
+            <tr><td style="padding:28px 0 0;text-align:center">
+              <p style="font-size:12px;color:#8A958E;line-height:1.55;margin:0">You received this because you interacted with MyKunda — the trusted property platform for The Gambia.</p>
+              <p style="font-size:12px;color:#8A958E;margin:8px 0 0">
+                <a href="#" style="color:#15463A;font-weight:600;text-decoration:none">mykunda.com</a> · 
+                <a href="#" style="color:#8A958E;text-decoration:underline">Privacy</a> · 
+                <a href="#" style="color:#8A958E;text-decoration:underline">info@mykunda.com</a>
+              </p>
+            </td></tr>
+          </table>
+        </td></tr>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const META = {
+  'contact-reply':    { to: 'john@email.com', subject: "We've received your message — MyKunda", label: 'Auto-reply to user' },
+  'contact-team':     { to: 'info@mykunda.com', subject: 'New Contact message — MyKunda', label: 'Team notification' },
+  'valuation-reply':  { to: 'sarah@email.com', subject: 'Your valuation request — MyKunda', label: 'Auto-reply to user' },
+  'valuation-team':   { to: 'info@mykunda.com', subject: 'New Property valuation request — MyKunda', label: 'Team notification' },
+  'viewing-team':     { to: 'info@mykunda.com', subject: 'New viewing request — Modern 3-Bed Villa with Pool', label: 'Team notification' },
+  'viewing-slots':    { to: 'james@email.com', subject: 'New viewing times for Modern 3-Bed Villa with Pool — MyKunda', label: 'Buyer notification' },
+};
+
+document.getElementById('tabs').addEventListener('click', (e) => {
+  const btn = e.target.closest('.nav-tab');
+  if (!btn) return;
+  const tab = btn.dataset.tab;
+  
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  
+  document.querySelectorAll('.email-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  
+  const meta = META[tab];
+  if (meta) {
+    document.getElementById('metaTo').textContent = meta.to;
+    document.getElementById('metaSubject').textContent = meta.subject;
+    document.getElementById('frameLabel').textContent = meta.label;
+  }
+});
+</script>
+</body>
+</html>

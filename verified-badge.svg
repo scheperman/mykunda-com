@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="32" viewBox="0 0 120 32" fill="none">
+  <rect width="120" height="32" rx="16" fill="#0D7C3E"></rect>
+  <g transform="translate(12, 10)">
+    <path d="M6 0.5l1.55 2.13L10 3.14l-1.09 2.17L9.68 8 6 9.14 2.32 8l.77-2.69L2 3.14l2.45-.51L6 .5z" fill="#fff"></path>
+    <path d="M4.75 5.75l1 1 1.75-2" fill="none" stroke="#0D7C3E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
+  </g>
+  <text x="30" y="21" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#fff">Verified</text>
+</svg>

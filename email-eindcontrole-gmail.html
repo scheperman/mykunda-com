@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyKunda — Loopt alle e-mail via Google Workspace?</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Mulish:wght@400;500;600;700;800;900&display=swap">
+<style>
+:root{--green-900:#0E2E25;--green-800:#123A2E;--green-700:#15463A;--green-600:#1C5848;--green-500:#2A7561;--green-200:#BEDACE;--green-100:#DCEAE3;--green-50:#EAF2ED;--amber-600:#B45F22;--amber-500:#C8702D;--amber-400:#DD8A45;--amber-100:#F6E6D4;--amber-50:#FBF1E6;--paper:#FAF8F3;--paper-2:#F3F0E8;--white:#fff;--ink:#18201D;--ink-2:#384640;--muted:#5C6B64;--muted-2:#8A958E;--line:#E5E1D6;--line-2:#EFEBE1;--serif:'Mulish',sans-serif;--sans:'Hanken Grotesk',sans-serif;--r-sm:8px;--r-md:12px;--r-lg:18px;--sh-md:0 4px 14px rgba(24,32,29,.07),0 2px 6px rgba(24,32,29,.05)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--paper-2);color:var(--ink);line-height:1.62;-webkit-font-smoothing:antialiased}
+.doc{max-width:920px;margin:0 auto;background:var(--paper);box-shadow:var(--sh-md)}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:800;line-height:1.14;letter-spacing:-.015em;color:var(--ink)}
+p{margin:11px 0;color:var(--ink-2)}
+a{color:var(--green-700)}
+a:hover{color:var(--green-500)}
+strong{color:var(--ink);font-weight:700}
+code{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.85em;background:var(--green-50);color:var(--green-700);padding:2px 6px;border-radius:5px;font-weight:600}
+pre{background:var(--green-900);color:#C8E6DC;padding:18px 22px;border-radius:var(--r-md);font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:13px;line-height:1.7;overflow-x:auto;margin:14px 0;white-space:pre}
+pre b{color:var(--amber-400);font-weight:700}
+.codewrap{position:relative;margin:14px 0}
+.codewrap pre{margin:0}
+.copy{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.12);color:#DCEAE3;border:1px solid rgba(255,255,255,.22);border-radius:7px;padding:6px 12px;font-family:var(--sans);font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.02em}
+.copy:hover{background:rgba(255,255,255,.2)}
+.copy.done{background:var(--green-500);border-color:var(--green-500);color:#fff}
+.cover{background:linear-gradient(150deg,var(--green-800),var(--green-600));color:#fff;padding:64px 64px 50px;position:relative;overflow:hidden}
+.cover::after{content:"";position:absolute;right:40px;bottom:30px;width:120px;height:120px;background:rgba(255,255,255,.06);border-radius:50%}
+.cover .logo{font-family:var(--serif);font-weight:800;font-size:23px;letter-spacing:-.02em;margin-bottom:42px}
+.cover .kicker{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--amber-400);margin-bottom:15px}
+.cover h1{color:#fff;font-size:38px;font-weight:900;max-width:640px}
+.cover .lede{font-size:17px;color:rgba(255,255,255,.86);margin-top:17px;max-width:660px;line-height:1.55}
+.cover .meta{display:flex;gap:34px;margin-top:36px;padding-top:24px;border-top:1px solid rgba(255,255,255,.18);flex-wrap:wrap}
+.cover .meta div span{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.6);font-weight:700;margin-bottom:4px}
+.cover .meta div b{font-family:var(--serif);font-size:16px;font-weight:700;color:#fff}
+.body{padding:52px 64px 64px}
+section{margin-bottom:46px}
+.num{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;background:var(--green-600);color:#fff;font-family:var(--serif);font-weight:800;font-size:16px;margin-right:13px;flex:none}
+.h-row{display:flex;align-items:center;margin-bottom:8px}
+.h-row h2{font-size:26px}
+.lead-line{color:var(--muted);font-size:16px;margin:0 0 22px 47px}
+section>p,section>.steps,section>.note,section>.warn,section>.goal,section>.codewrap,section>.tablewrap,section>ul.chk,section>.verdict,section>.split{margin-left:47px}
+.goal{background:var(--green-50);border:1px solid var(--green-100);border-radius:var(--r-lg);padding:22px 26px;margin:0 0 6px 47px}
+.goal h4{font-size:16px;margin-bottom:6px;color:var(--green-700)}
+.goal p{margin:0;font-size:15px}
+.note{border-left:4px solid var(--amber-500);background:var(--amber-50);padding:15px 20px;border-radius:0 var(--r-md) var(--r-md) 0;margin:18px 0}
+.note b{color:var(--amber-600)}
+.warn{border-left:4px solid #C2533A;background:#FEF2F2;padding:15px 20px;border-radius:0 var(--r-md) var(--r-md) 0;margin:18px 0}
+.warn b{color:#C2533A}
+.steps{counter-reset:step}
+.s{display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line-2);align-items:flex-start}
+.s:last-child{border-bottom:none}
+.s::before{counter-increment:step;content:counter(step);width:30px;height:30px;border-radius:8px;background:var(--green-600);color:#fff;font-family:var(--serif);font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;flex:none;margin-top:2px}
+.s .tx{flex:1}
+.s .tx b{color:var(--ink)}
+.s .tx p{margin:4px 0 0;font-size:14.5px}
+.s .tx code{font-size:12px}
+.s .tx .codewrap{margin:10px 0 0}
+.tablewrap{margin:18px 0;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{background:var(--green-600);color:#fff;text-align:left;padding:11px 15px;font-family:var(--serif);font-weight:700;font-size:13px}
+td{padding:10px 15px;border-top:1px solid var(--line-2);color:var(--ink-2);vertical-align:top}
+td code{font-size:12px}
+tr:nth-child(even) td{background:var(--paper)}
+.ok{color:var(--green-500);font-weight:700}
+.fix{color:var(--amber-600);font-weight:700}
+.todo{color:#C2533A;font-weight:700}
+ul.chk{list-style:none;margin:6px 0 0 0}
+ul.chk li{position:relative;padding-left:30px;margin:11px 0;font-size:14.5px;color:var(--ink-2)}
+ul.chk li::before{content:"";position:absolute;left:0;top:1px;width:19px;height:19px;border-radius:5px;border:2px solid var(--green-600)}
+ul.chk li b{color:var(--ink)}
+ul.plain{margin:10px 0 0 20px}
+ul.plain li{margin:7px 0;font-size:14.5px;color:var(--ink-2)}
+.verdict{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0 6px}
+.vc{border:1px solid var(--line);border-radius:var(--r-lg);padding:20px 22px;background:var(--white)}
+.vc .tag{font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted-2);margin-bottom:9px}
+.vc h4{font-size:17px;margin-bottom:5px}
+.vc p{margin:0;font-size:13.5px;line-height:1.5}
+.vc.yes{border-color:var(--green-200);background:var(--green-50)}
+.vc.yes h4{color:var(--green-700)}
+.vc.no{border-color:#F3C9BF;background:#FEF4F1}
+.vc.no h4{color:#C2533A}
+.vc.part{border-color:var(--amber-100);background:var(--amber-50)}
+.vc.part h4{color:var(--amber-600)}
+.flow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:20px 0 6px 47px;font-size:13px;font-weight:700}
+.flow span{background:var(--white);border:1px solid var(--line);border-radius:99px;padding:8px 15px;color:var(--ink-2)}
+.flow span.hl{background:var(--green-600);border-color:var(--green-600);color:#fff}
+.flow span.out{background:var(--amber-50);border-color:var(--amber-100);color:var(--amber-600)}
+.flow i{color:var(--muted-2);font-style:normal}
+.close{background:var(--green-900);color:#DCEAE3;padding:34px 64px;font-size:14.5px}
+.close b{color:#fff}
+@media(max-width:700px){.cover,.body,.close{padding-left:26px;padding-right:26px}.cover h1{font-size:29px}.verdict{grid-template-columns:1fr}section>p,section>.steps,section>.note,section>.warn,section>.goal,section>.codewrap,section>.tablewrap,section>ul.chk,section>.verdict,section>.split,.flow,.lead-line{margin-left:0}}
+</style>
+</head>
+<body>
+<div class="doc">
+
+<div class="cover">
+  <div class="logo">MyKunda</div>
+  <div class="kicker">Controle · Google Workspace, Resend, Supabase</div>
+  <h1>Loopt alle e-mail van de site nu via je Google&nbsp;Workspace-account?</h1>
+  <p class="lede">Kort antwoord: alles wat <em>binnenkomt</em> landt in je Gmail. Niets wat <em>uitgaat</em> komt uit Gmail — dat blijft Resend. Dat is bewust en goed, maar er zijn drie plekken waar post nu buiten Gmail om verdwijnt.</p>
+  <div class="meta">
+    <div><span>Contactpaden nagelopen</span><b>12</b></div>
+    <div><span>Komt aan in Gmail</span><b>10 van 12</b></div>
+    <div><span>Openstaande gaten</span><b>3</b></div>
+  </div>
+</div>
+
+<div class="body">
+
+<section>
+  <div class="h-row"><span class="num">1</span><h2>Het antwoord in één beeld</h2></div>
+  <p class="lead-line">De site heeft twee stromen. Ze horen niet bij dezelfde partij en dat is correct.</p>
+  <div class="verdict">
+    <div class="vc yes">
+      <div class="tag">Inkomend</div>
+      <h4>Ja — volledig Gmail</h4>
+      <p>Elk formulier en elke mailto-link op de site eindigt als mail naar <code>info@mykunda.com</code>. Dat is je Workspace-mailbox, dus je leest en beantwoordt alles in Gmail.</p>
+    </div>
+    <div class="vc no">
+      <div class="tag">Uitgaand</div>
+      <h4>Nee — dat is Resend</h4>
+      <p>Alle automatische mail wordt verstuurd door Resend vanaf <code>noreply@mykunda.com</code>. Gmail verstuurt niets en houdt er geen kopie van in <em>Verzonden</em>.</p>
+    </div>
+    <div class="vc part">
+      <div class="tag">Randgevallen</div>
+      <h4>Deels — hier lekt post</h4>
+      <p>Antwoorden op <code>noreply@</code>, bounces en de oude <code>team@</code>-fallback komen nergens aan. Drie kleine ingrepen dichten dat.</p>
+    </div>
+  </div>
+  <div class="flow">
+    <span>Bezoeker vult formulier in</span><i>→</i><span>Supabase <code>create_lead</code></span><i>→</i><span class="out">Edge Function → Resend verstuurt</span><i>→</i><span class="hl">Gmail info@mykunda.com</span>
+  </div>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">2</span><h2>Elk contactpad, en waar het aankomt</h2></div>
+  <p class="lead-line">Verzender is in alle gevallen Resend; de vraag is waar de mail landt.</p>
+  <div class="tablewrap">
+    <table>
+      <tr><th>Contactpad</th><th>Mail aan jou</th><th>Mail aan de bezoeker</th><th>In Gmail?</th></tr>
+      <tr><td>Contactformulier <code>contact.html</code></td><td>info@ — reply-to = bezoeker</td><td>auto-reply, reply-to = info@</td><td class="ok">Ja</td></tr>
+      <tr><td>Adviesgesprek <code>sell.html</code></td><td>info@</td><td>auto-reply</td><td class="ok">Ja</td></tr>
+      <tr><td>Waardebepaling <code>sell.html</code></td><td>info@</td><td>auto-reply</td><td class="ok">Ja</td></tr>
+      <tr><td>Bezichtiging <code>property.html</code></td><td>info@</td><td>bevestiging + tijdslots</td><td class="ok">Ja</td></tr>
+      <tr><td>Bericht aan agent <code>agent.html</code></td><td>info@</td><td>auto-reply</td><td class="ok">Ja</td></tr>
+      <tr><td>Area alert / nieuwsbrief</td><td>info@</td><td>—</td><td class="ok">Ja</td></tr>
+      <tr><td>Advertentie plaatsen <code>list.html</code></td><td>info@ (backoffice)</td><td>bevestiging</td><td class="ok">Ja</td></tr>
+      <tr><td>Betaling <code>checkout.html</code></td><td>info@ (backoffice)</td><td>kwitantie</td><td class="ok">Ja</td></tr>
+      <tr><td>Wachtwoord / inloglink <code>auth.html</code></td><td>—</td><td>vanaf noreply@</td><td class="ok">Ja</td></tr>
+      <tr><td>Bounce- en spam-alerts (Resend-webhook)</td><td>info@</td><td>—</td><td class="fix">Alleen als de webhook staat</td></tr>
+      <tr><td>Antwoord van bezoeker op <code>noreply@</code></td><td>nergens</td><td>—</td><td class="todo">Nee</td></tr>
+      <tr><td>Directe mailto-links (contact, legal, footer)</td><td>info@</td><td>—</td><td class="ok">Ja</td></tr>
+    </table>
+  </div>
+  <div class="note"><p><b>Belangrijk detail dat goed staat:</b> de interne meldmail zet <code>reply_to</code> op het adres van de bezoeker. Je drukt in Gmail op Antwoorden en de bezoeker krijgt je bericht — dan verstuurt Gmail hem wél, vanaf <code>info@mykunda.com</code>.</p></div>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">3</span><h2>De drie gaten</h2></div>
+  <p class="lead-line">Hier verdwijnt post buiten Gmail om. Geen van de drie kost meer dan een paar minuten.</p>
+  <div class="steps">
+    <div class="s"><div class="tx"><b><code>noreply@mykunda.com</code> heeft geen mailbox</b>
+      <p>Elke automatische mail komt hiervandaan. Antwoordt een bezoeker toch op de afzender in plaats van op reply-to, dan bounct dat bericht. Ook foutmeldingen van ontvangende servers (bounces, out-of-office, vakantieantwoorden) gaan hierheen en verdwijnen. <b>Oplossing:</b> maak <code>noreply@</code> in Workspace aan als alias of groep die doorstuurt naar <code>info@</code> — geen extra licentie nodig.</p></div></div>
+    <div class="s"><div class="tx"><b><code>team@mykunda.com</code> zit nog als terugvaladres in de live functie</b>
+      <p>De versie van <code>notify-lead</code> die live staat valt terug op <code>team@mykunda.com</code> als het secret niet gezet is. Dat adres bestaat niet en stond eerder al op de Resend-suppressielijst. De versie in dit project valt terug op <code>info@</code>. <b>Oplossing:</b> zet het secret expliciet én zet de nieuwe functieversie live.</p></div></div>
+    <div class="s"><div class="tx"><b>Geen archief van uitgaande mail in Gmail</b>
+      <p>Wat de site naar bezoekers stuurt, zie je alleen in het Resend-dashboard — niet in je map Verzonden. Bij een discussie over "wat heb ik precies gestuurd" heb je twee systemen nodig. <b>Oplossing:</b> zet <code>bcc: info@mykunda.com</code> op de mail aan bezoekers, of gebruik Gmail-routing om alle mail vanaf het domein te archiveren.</p></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">4</span><h2>Waarom uitgaand níet via Gmail moet</h2></div>
+  <div class="goal">
+    <h4>Gmail is je postbus, Resend is je postkamer</h4>
+    <p>Google Workspace mag geautomatiseerde mail versturen, maar dan via SMTP-relay met een dagelijkse limiet, zonder bounce-webhook, zonder inzicht per bericht, en met het risico dat een reeks bounces je hele mailbox raakt. Resend houdt de bezorging, klachten en suppressielijst gescheiden van je persoonlijke post. De huidige opzet is de juiste; ze moet alleen netjes op Gmail uitkomen.</p>
+  </div>
+</section>
+
+<section>
+  <div class="h-row"><span class="num">5</span><h2>Zelf te controleren — vijf punten</h2></div>
+  <p class="lead-line">Dit kan ik niet vanaf hier zien; het staat in je Admin-console en Supabase.</p>
+  <ul class="chk">
+    <li><b>MX-records</b> — staan de vijf (of één) Google-MX-records op <code>mykunda.com</code>? Zonder dat komt inkomende mail niet in Gmail aan, ongeacht de rest.</li>
+    <li><b>info@mykunda.com</b> — is dit je echte Workspace-gebruiker (en niet een alias op een ander domein of een doorstuur naar gmail.com)?</li>
+    <li><b>Aliassen</b> — bestaan <code>noreply@</code> en <code>team@</code> nu als alias of groep op <code>info@</code>?</li>
+    <li><b>Supabase secrets</b> — <code>LEAD_EMAIL=info@mykunda.com</code> en <code>FROM_EMAIL=MyKunda &lt;noreply@mykunda.com&gt;</code> expliciet gezet, zodat geen enkele functie op een terugvaladres leunt.</li>
+    <li><b>Testrondje</b> — één contactformulier insturen met je eigen adres, en controleren: melding in Gmail ✓, auto-reply ontvangen ✓, Antwoorden in Gmail komt bij de bezoeker aan ✓.</li>
+  </ul>
+</section>
+
+</div>
+
+<div class="close">
+  <p><b>Conclusie.</b> Alle contactpaden op de site komen bij elkaar in één Gmail-postbus — dat deel is af. Uitgaande automatische mail hoort bij Resend en moet daar blijven. Wat rest is drie keer een klein gaatje dichten zodat er ook langs de randen niets meer buiten Gmail valt.</p>
+</div>
+
+</div>
+</body>
+</html>

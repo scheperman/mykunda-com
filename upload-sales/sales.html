@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
+<link rel="apple-touch-icon" href="images/mykunda-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#15463A">
+<title>Sales &amp; revenue — MyKunda</title>
+<link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
+<link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.min.css?v=1787660000000">
+<style>
+body{background:var(--paper-2)}
+.admin{max-width:1180px;margin:0 auto;padding:34px 28px 70px}
+.admin-head{margin-bottom:22px}
+.admin-head h1{font-size:32px;line-height:1.1}
+.admin-head p{color:var(--muted);font-size:15px;margin-top:6px;max-width:70ch}
+.card{background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-sm);padding:22px 24px;margin-bottom:20px}
+.card-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.card-head h2{font-size:18px;margin:0}
+.card-head .sub{font-size:12.5px;color:var(--muted)}
+.card-head .spacer{flex:1}
+.pbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.pseg{display:inline-flex;background:var(--white);border-radius:99px;padding:4px;gap:3px;box-shadow:inset 0 0 0 1.5px var(--line);overflow-x:auto;max-width:100%;scrollbar-width:none}
+.pseg::-webkit-scrollbar{display:none}
+.pseg button{border:none;background:none;border-radius:99px;padding:8px 15px;font-family:var(--sans);font-size:13.5px;font-weight:700;color:var(--ink-2);cursor:pointer;white-space:nowrap}
+.pseg button:hover{color:var(--green-700)}
+.pseg button.on{background:var(--green-700);color:#fff}
+.pcustom{display:none;align-items:center;gap:8px;font-size:13px;color:var(--muted);font-weight:700}
+.pcustom.on{display:flex}
+.pcustom input{height:38px;border-radius:var(--r-sm);border:1.5px solid var(--line);padding:0 10px;font-family:var(--sans);font-size:13.5px;font-weight:600;color:var(--ink);background:var(--white)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.kpi{background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-sm);padding:17px 19px}
+.kpi .lab{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.kpi .val{font-family:var(--serif);font-size:27px;font-weight:800;color:var(--ink);line-height:1.05;font-variant-numeric:tabular-nums}
+.kpi .note{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.5}
+.kpi.hero{background:var(--green-700)}
+.kpi.hero .lab{color:#A9C6BB}.kpi.hero .val{color:#fff}.kpi.hero .note{color:#CFE0D8}
+.kpi.cost .val{color:var(--amber-600)}
+table.t{width:100%;border-collapse:collapse;font-size:13.5px}
+table.t th{text-align:left;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-bottom:1.5px solid var(--line);padding:0 12px 8px 0;white-space:nowrap}
+table.t td{border-bottom:1px solid var(--line-2);padding:10px 12px 10px 0;color:var(--ink-2);vertical-align:middle}
+table.t td.p{font-weight:700;color:var(--ink)}
+table.t th.n,table.t td.n{text-align:right;padding-right:0;font-variant-numeric:tabular-nums;white-space:nowrap}
+table.t tfoot td{border-bottom:none;border-top:1.5px solid var(--line);font-weight:800;color:var(--ink);padding-top:11px}
+table.t tbody tr:hover td{background:var(--paper)}
+.ref{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;font-weight:700;color:var(--ink-2)}
+.bar{height:6px;border-radius:99px;background:var(--paper-2);min-width:60px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--green-600);border-radius:99px}
+.pill{display:inline-block;padding:3px 9px;border-radius:99px;font-size:11.5px;font-weight:800;white-space:nowrap;background:var(--paper-2);color:var(--muted)}
+.pill.ok{background:var(--green-100);color:var(--green-700)}
+.pill.warn{background:var(--amber-50);color:var(--amber-600)}
+.pill.bad{background:#FEE2E2;color:#B91C1C}
+.scroll{overflow-x:auto}
+.chart{display:block;width:100%;height:auto;font-family:var(--sans)}
+.chart .gl{stroke:var(--line-2);stroke-width:1}
+.chart text{fill:var(--muted-2);font-size:10.5px}
+.chart .mlab{font-size:10px}
+.chart .net{fill:var(--green-600)}
+.chart .fee{fill:var(--amber-500)}
+.chart .val{fill:var(--ink);font-size:10.5px;font-weight:700;font-family:var(--serif)}
+.legend{display:flex;gap:18px;font-size:12px;color:var(--muted);margin-top:12px;flex-wrap:wrap;font-weight:600}
+.legend span:before{content:"";display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:7px;vertical-align:-1px}
+.legend .l-net:before{background:var(--green-600)}
+.legend .l-fee:before{background:var(--amber-500)}
+.rates{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:14px}
+.rate{background:var(--green-50);border:1.5px solid var(--green-200);border-radius:var(--r-md);padding:13px 15px}
+.rate .lab{font-size:11.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--green-700);margin-bottom:6px}
+.rate .in{display:flex;align-items:center;gap:8px}
+.rate input{width:88px;height:40px;border-radius:var(--r-sm);border:1.5px solid var(--line);padding:0 11px;font-family:var(--serif);font-size:20px;font-weight:800;color:var(--ink);background:var(--white)}
+.rate input:focus{outline:none;border-color:var(--green-500)}
+.rate .pc{font-family:var(--serif);font-size:19px;font-weight:800;color:var(--green-700)}
+.rate .who{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.45}
+.fine{font-size:12.5px;color:var(--muted);line-height:1.6;margin:0}
+.fine b{color:var(--ink-2)}
+.fine code{background:var(--paper-2);border-radius:5px;padding:1px 5px;font-size:11.5px}
+.saved{font-size:12.5px;font-weight:800;color:var(--green-700);opacity:0;transition:opacity .2s}
+.saved.on{opacity:1}
+.empty{text-align:center;padding:34px 20px;color:var(--muted)}
+.empty h3{font-size:16px;color:var(--ink-2);margin-bottom:5px}
+.empty p{font-size:13.5px;max-width:46ch;margin:0 auto}
+.note-demo{background:var(--amber-50);border-radius:var(--r-md);padding:13px 16px;font-size:13px;color:var(--amber-900,#7A4B0E);line-height:1.6;margin-bottom:20px}
+.savings{margin-top:14px;padding:13px 16px;background:var(--paper);border-radius:var(--r-md);font-size:13px;color:var(--ink-2);line-height:1.6}
+@media(max-width:900px){.kpis{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.admin{padding:20px 16px 50px}.card{padding:18px 16px}.kpis{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="header"></div>
+<div id="adminNav"></div>
+
+<div class="admin">
+  <div class="admin-head">
+    <h1>Sales &amp; revenue</h1>
+    <p>Every payment MyKunda has ever recorded, what it cost to collect, and what stayed. Fees are worked out from the rates at the bottom of this page — they are what Waychit keeps, not a MyKunda charge.</p>
+  </div>
+
+  <div class="note-demo" id="demoNote">Not connected to the backend, so these are example rows. The shape and the sums are real; the orders are not.</div>
+
+  <div class="pbar">
+    <div class="pseg" id="periodSeg"></div>
+    <div class="pcustom" id="pcustom">
+      <label for="dFrom">From</label><input type="date" id="dFrom">
+      <label for="dTo">to</label><input type="date" id="dTo">
+    </div>
+    <span class="spacer" style="flex:1"></span>
+    <button class="btn btn-ghost btn-sm" id="csvBtn">Download CSV</button>
+  </div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <div class="card" style="margin-top:20px">
+    <div class="card-head"><h2>What sold</h2><span class="sub" id="soldSub"></span></div>
+    <div class="scroll" id="byProduct"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Cost per payment method</h2><span class="sub">What each way of paying costs you to collect</span></div>
+    <div class="scroll" id="byMethod"></div>
+    <div class="savings" id="savings"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Month by month</h2><span class="sub">Net kept, with the fee stacked on top to show what came in</span></div>
+    <div id="chart"></div>
+    <div class="legend"><span class="l-net">Net kept</span><span class="l-fee">Provider fee</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Refunds, cancellations and failures</h2><span class="sub" id="refSub"></span></div>
+    <div class="scroll" id="refunds"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Every order</h2><span class="sub" id="allSub"></span></div>
+    <div class="scroll" id="allOrders"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Fee rates</h2><span class="sub">Change these and every number on this page follows</span><span class="spacer"></span><span class="saved" id="rateSaved">Saved</span></div>
+    <div class="rates">
+      <div class="rate"><div class="lab">Mobile money &amp; wallets</div><div class="in"><input type="number" id="rLocal" step="0.1" min="0" max="20"><span class="pc">%</span></div><div class="who">Wave, Afrimoney, QMoney, APS</div></div>
+      <div class="rate"><div class="lab">Card</div><div class="in"><input type="number" id="rCard" step="0.1" min="0" max="20"><span class="pc">%</span></div><div class="who">Visa and Mastercard, debit and credit</div></div>
+      <div class="rate"><div class="lab">Bank transfer</div><div class="in"><input type="number" id="rBank" step="0.1" min="0" max="20"><span class="pc">%</span></div><div class="who">Straight into the Ecobank account — no provider in between</div></div>
+    </div>
+    <p class="fine"><b>How the numbers are built.</b> <b>Sold</b> is every payment that reached <code>succeeded</code>, on the date it was paid. <b>Fee</b> is the rate above applied to that amount. <b>Net kept</b> is sold minus fees. A <b>refunded</b> payment leaves the sold total but keeps its fee as a cost, because the provider does not give that back. Payments that failed, expired or were cancelled cost nothing and count nowhere except in their own table. Rates are stored in this browser for now — see the note below.</p>
+  </div>
+
+  <p class="fine" style="max-width:74ch">Two things this page cannot do yet, both waiting on the database: the fee rates live in this browser instead of centrally, so a second computer starts from the defaults; and a refund is all-or-nothing, because there is no field for a partial amount. Both are written up for the server side.</p>
+</div>
+
+<div id="footer"></div>
+
+<script src="vendor/supabase-js-2.umd.js"></script>
+<script src="supabase.js?v=1787660000000"></script>
+<script src="app.min.js?v=1787660000000"></script>
+<script src="admin-nav.js?v=1787900000000"></script>
+<script src="admin-guard.js?v=1787660000000"></script>
+<script>
+document.getElementById('header').innerHTML = headerHTML('', false);
+document.getElementById('footer').innerHTML = footerHTML();
+document.getElementById('adminNav').innerHTML = adminNavHTML('sales');
+
+const LIVE = (typeof backendReady==='function' && backendReady());
+if(LIVE){
+  const f = document.getElementById('modeFlag');
+  f.className = 'mode-flag live'; f.textContent = 'Live · connected';
+  document.getElementById('demoNote').style.display = 'none';
+}
+
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* Bedragen uit payments staan in butut. Alles op deze pagina rekent in
+   butut en deelt pas bij het tonen, zodat er nooit met afgeronde dalasi
+   wordt doorgerekend. */
+const D  = b => 'D' + Math.round(Number(b||0)/100).toLocaleString('en-US');
+const D2 = b => (Number(b||0)/100).toFixed(2);
+const pct = (a,b) => b ? Math.round(a/b*1000)/10 : 0;
+
+/* ---- fee rates ----
+   Opgegeven door Edwin op 24-08-2026: alle lokale betalingen 3%, kaart
+   4,8%. Bank transfer komt rechtstreeks op de Ecobank-rekening, daar zit
+   geen provider tussen — vandaar 0. Aan te passen op deze pagina. */
+const RATE_DEFAULTS = { local:3, card:4.8, bank:0 };
+const RATE_KEY = 'mykunda_fee_rates';
+let RATES = Object.assign({}, RATE_DEFAULTS);
+try{ const s = JSON.parse(localStorage.getItem(RATE_KEY)||'null'); if(s && typeof s==='object') RATES = Object.assign(RATES, s); }catch(e){}
+
+const METHOD_LABEL = { card:'Card', bank_transfer:'Bank transfer', wave:'Wave', afrimoney:'Afrimoney', qmoney:'QMoney', aps:'APS Wallet' };
+const rateFor = m => m==='card' ? RATES.card : (m==='bank_transfer' ? RATES.bank : RATES.local);
+const feeOf = o => Math.round(Number(o.amount_minor||0) * rateFor(o.method) / 100);
+
+const PLAN_LABEL = {
+  verified_s:'Verified listing · S', verified_m:'Verified listing · M', verified_l:'Verified listing · L',
+  boost_30:'Boost · 30 days', doc_check:'Ownership · Document Check', ownership_check:'Ownership · Full Check',
+  managed:'Managed listing', promoted:'Promoted listing', featured:'Featured listing'
+};
+const planLabel = o => (o.metadata||{}).plan_name || PLAN_LABEL[o.plan_id] || o.plan_id || 'Unnamed service';
+
+const SOLD='succeeded', REFUND='refunded';
+const LOST = ['failed','cancelled','expired'];
+const OPEN = ['pending','processing','created','requires_action'];
+const isSold   = o => o.status===SOLD;
+const isRefund = o => o.status===REFUND;
+const isLost   = o => LOST.indexOf(o.status)>=0;
+const isOpen   = o => OPEN.indexOf(o.status)>=0;
+/* Op de dag dat het geld er was, niet op de dag dat de knop is ingedrukt. */
+const dayOf = o => new Date(o.paid_at || o.created_at);
+
+let all = [], loadError = null, period = 'month';
+
+/* ---- periods ---- */
+const PERIODS = [['month','This month'],['last','Last month'],['quarter','This quarter'],['year','This year'],['all','All time'],['custom','Pick dates']];
+function rangeFor(p){
+  const n = new Date(), y = n.getFullYear(), m = n.getMonth();
+  if(p==='month')   return [new Date(y,m,1), new Date(y,m+1,1)];
+  if(p==='last')    return [new Date(y,m-1,1), new Date(y,m,1)];
+  if(p==='quarter'){ const q = Math.floor(m/3)*3; return [new Date(y,q,1), new Date(y,q+3,1)]; }
+  if(p==='year')    return [new Date(y,0,1), new Date(y+1,0,1)];
+  if(p==='custom'){
+    const f = document.getElementById('dFrom').value, t = document.getElementById('dTo').value;
+    return [f?new Date(f+'T00:00:00'):new Date(2000,0,1), t?new Date(new Date(t+'T00:00:00').getTime()+86400000):new Date(2100,0,1)];
+  }
+  return [new Date(2000,0,1), new Date(2100,0,1)];
+}
+function inRange(o){ const [a,b] = rangeFor(period); const d = dayOf(o); return d>=a && d<b; }
+function rangeLabel(){
+  if(period==='all') return 'everything on record';
+  const [a,b] = rangeFor(period);
+  const f = d => d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+  return f(a) + ' – ' + f(new Date(b.getTime()-86400000));
+}
+
+/* ---- load ---- */
+async function load(){
+  if(!LIVE){ all = DEMO_SALES; render(); return; }
+  try{
+    const { data, error } = await sb.from('payments')
+      .select('reference,status,method,plan_id,amount_minor,currency,customer_email,listing_id,metadata,created_at,paid_at,fulfilment_status,admin_note')
+      .order('created_at',{ascending:false})
+      .limit(2000);
+    if(error) throw error;
+    all = data||[]; loadError = null;
+  }catch(e){ all = []; loadError = e.message || String(e); }
+  render();
+}
+
+function emptyState(h,p){ return '<div class="empty"><h3>'+h+'</h3><p>'+p+'</p></div>'; }
+
+/* ---- render ---- */
+function render(){
+  document.getElementById('periodSeg').innerHTML = PERIODS.map(p=>
+    '<button data-p="'+p[0]+'" class="'+(period===p[0]?'on':'')+'">'+p[1]+'</button>').join('');
+  document.getElementById('pcustom').classList.toggle('on', period==='custom');
+  document.getElementById('rLocal').value = RATES.local;
+  document.getElementById('rCard').value  = RATES.card;
+  document.getElementById('rBank').value  = RATES.bank;
+
+  if(loadError){
+    document.getElementById('kpis').innerHTML = '';
+    document.getElementById('byProduct').innerHTML = emptyState('Could not load payments', esc(loadError));
+    ['byMethod','refunds','allOrders','chart'].forEach(id=>document.getElementById(id).innerHTML='');
+    document.getElementById('savings').innerHTML = '';
+    return;
+  }
+
+  const rows = all.filter(inRange);
+  const sold = rows.filter(isSold), refs = rows.filter(isRefund), lost = rows.filter(isLost), open = rows.filter(isOpen);
+  const sum  = (a,f) => a.reduce((t,o)=>t+f(o),0);
+  const gross = sum(sold, o=>Number(o.amount_minor||0));
+  const feeSold = sum(sold, feeOf), feeRef = sum(refs, feeOf);
+  const refGross = sum(refs, o=>Number(o.amount_minor||0));
+  const net = gross - feeSold - feeRef;
+
+  document.getElementById('kpis').innerHTML = [
+    ['hero','Net kept', D(net), sold.length ? 'after D'+Math.round((feeSold+feeRef)/100).toLocaleString('en-US')+' of fees · '+rangeLabel() : rangeLabel()],
+    ['','Sold', D(gross), sold.length+' paid order'+(sold.length===1?'':'s')],
+    ['cost','Provider fees', D(feeSold+feeRef), gross ? pct(feeSold+feeRef, gross)+'% of what came in' : 'nothing collected yet'],
+    ['','Refunded', D(refGross), refs.length ? refs.length+' refunded · D'+Math.round(feeRef/100).toLocaleString('en-US')+' of fees not returned' : 'none'],
+    ['','Never collected', D(sum(lost,o=>Number(o.amount_minor||0))), lost.length+' failed, cancelled or expired'],
+    ['','Still open', D(sum(open,o=>Number(o.amount_minor||0))), open.length+' waiting to be paid']
+  ].map(k=>'<div class="kpi '+k[0]+'"><div class="lab">'+k[1]+'</div><div class="val">'+k[2]+'</div><div class="note">'+esc(k[3])+'</div></div>').join('');
+
+  renderGroup('byProduct', sold, refs, planLabel, 'Product', gross);
+  renderMethods(sold, refs, gross, feeSold+feeRef);
+  renderChart(sold, refs);
+  renderRefunds(refs, lost);
+  renderAll(rows);
+
+  document.getElementById('soldSub').textContent = rangeLabel();
+  document.getElementById('allSub').textContent  = rows.length + ' order' + (rows.length===1?'':'s') + ' · ' + rangeLabel();
+  document.getElementById('refSub').textContent  = (refs.length+lost.length) ? (refs.length+' refunded, '+lost.length+' never completed') : 'nothing to chase';
+}
+
+function renderGroup(el, sold, refs, keyFn, head, grossAll){
+  const map = new Map();
+  sold.forEach(o=>{
+    const k = keyFn(o), r = map.get(k) || {n:0,gross:0,fee:0,ref:0};
+    r.n++; r.gross += Number(o.amount_minor||0); r.fee += feeOf(o); map.set(k,r);
+  });
+  refs.forEach(o=>{
+    const k = keyFn(o), r = map.get(k) || {n:0,gross:0,fee:0,ref:0};
+    r.ref += Number(o.amount_minor||0); r.fee += feeOf(o); map.set(k,r);
+  });
+  const list = [...map.entries()].sort((a,b)=>b[1].gross-a[1].gross);
+  if(!list.length){ document.getElementById(el).innerHTML = emptyState('Nothing sold in this period','Pick a wider period, or All time, to see what has been sold before.'); return; }
+  const tot = list.reduce((t,x)=>({n:t.n+x[1].n, gross:t.gross+x[1].gross, fee:t.fee+x[1].fee, ref:t.ref+x[1].ref}), {n:0,gross:0,fee:0,ref:0});
+  document.getElementById(el).innerHTML =
+   '<table class="t"><thead><tr><th>'+head+'</th><th class="n">Orders</th><th class="n">Sold</th><th class="n">Fees</th><th class="n">Refunded</th><th class="n">Net</th><th style="width:110px">Share</th></tr></thead><tbody>'+
+    list.map(([k,r])=>'<tr><td class="p">'+esc(k)+'</td><td class="n">'+r.n+'</td><td class="n">'+D(r.gross)+'</td><td class="n">'+D(r.fee)+'</td><td class="n">'+(r.ref?D(r.ref):'—')+'</td><td class="n">'+D(r.gross-r.fee)+'</td>'+
+      '<td><div class="bar"><i style="width:'+pct(r.gross,grossAll||1)+'%"></i></div></td></tr>').join('')+
+   '</tbody><tfoot><tr><td>Total</td><td class="n">'+tot.n+'</td><td class="n">'+D(tot.gross)+'</td><td class="n">'+D(tot.fee)+'</td><td class="n">'+(tot.ref?D(tot.ref):'—')+'</td><td class="n">'+D(tot.gross-tot.fee)+'</td><td></td></tr></tfoot></table>';
+}
+
+function renderMethods(sold, refs, grossAll, feeAll){
+  const map = new Map();
+  const add = (o, refunded) => {
+    const k = o.method || 'unknown', r = map.get(k) || {n:0,gross:0,fee:0,ref:0};
+    if(refunded){ r.ref += Number(o.amount_minor||0); } else { r.n++; r.gross += Number(o.amount_minor||0); }
+    r.fee += feeOf(o); map.set(k,r);
+  };
+  sold.forEach(o=>add(o,false)); refs.forEach(o=>add(o,true));
+  const list = [...map.entries()].sort((a,b)=>b[1].fee-a[1].fee);
+  const box = document.getElementById('byMethod');
+  if(!list.length){ box.innerHTML = emptyState('No payments in this period','Nothing was collected, so nothing cost anything.'); document.getElementById('savings').innerHTML=''; return; }
+  const tot = list.reduce((t,x)=>({n:t.n+x[1].n, gross:t.gross+x[1].gross, fee:t.fee+x[1].fee}), {n:0,gross:0,fee:0});
+  box.innerHTML =
+   '<table class="t"><thead><tr><th>Method</th><th class="n">Rate</th><th class="n">Orders</th><th class="n">Collected</th><th class="n">Cost</th><th class="n">Net</th><th class="n">Avg order</th></tr></thead><tbody>'+
+    list.map(([k,r])=>'<tr><td class="p">'+esc(METHOD_LABEL[k]||k)+'</td><td class="n">'+rateFor(k)+'%</td><td class="n">'+r.n+'</td><td class="n">'+D(r.gross)+'</td><td class="n" style="color:var(--amber-600);font-weight:700">'+D(r.fee)+'</td><td class="n">'+D(r.gross-r.fee)+'</td><td class="n">'+(r.n?D(r.gross/r.n):'—')+'</td></tr>').join('')+
+   '</tbody><tfoot><tr><td>Total</td><td class="n"></td><td class="n">'+tot.n+'</td><td class="n">'+D(tot.gross)+'</td><td class="n">'+D(tot.fee)+'</td><td class="n">'+D(tot.gross-tot.fee)+'</td><td class="n"></td></tr></tfoot></table>';
+
+  /* Wat het kost dat mensen met de duurste methode betalen. Geen advies om
+     kaart te weren — buiten Gambia is dat vaak de enige optie. */
+  const card = map.get('card');
+  const cheap = Math.min(RATES.local, RATES.bank);
+  if(card && card.gross && RATES.card > cheap){
+    const diff = Math.round(card.gross * (RATES.card - cheap) / 100);
+    document.getElementById('savings').innerHTML = 'Card is the expensive way in: at '+RATES.card+'% against '+cheap+'%, the '+D(card.gross)+' paid by card cost <b>'+D(diff)+'</b> more than the same money over a wallet or a transfer. Worth knowing, not worth refusing — a diaspora buyer often has no other option.';
+  } else {
+    document.getElementById('savings').innerHTML = 'Nothing came in by card in this period, so there is no expensive tail to look at.';
+  }
+}
+
+function renderChart(sold, refs){
+  const byMonth = new Map();
+  const key = d => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+  sold.forEach(o=>{ const k=key(dayOf(o)); const r=byMonth.get(k)||{net:0,fee:0}; r.net += Number(o.amount_minor||0)-feeOf(o); r.fee += feeOf(o); byMonth.set(k,r); });
+  refs.forEach(o=>{ const k=key(dayOf(o)); const r=byMonth.get(k)||{net:0,fee:0}; r.fee += feeOf(o); r.net -= feeOf(o); byMonth.set(k,r); });
+  const months = [...byMonth.keys()].sort().slice(-18);
+  const box = document.getElementById('chart');
+  if(!months.length){ box.innerHTML = emptyState('No months to chart','Once a payment goes through, its month appears here.'); return; }
+  const W = 1000, H = 260, PL = 8, PR = 8, PB = 34, PT = 24;
+  const max = Math.max(...months.map(m=>{ const r=byMonth.get(m); return Math.max(0,r.net)+r.fee; }), 1);
+  const bw = (W-PL-PR)/months.length, bar = Math.min(58, bw*0.62);
+  const y = v => PT + (H-PT-PB) * (1 - v/max);
+  const grid = [0,.25,.5,.75,1].map(f=>'<line class="gl" x1="'+PL+'" x2="'+(W-PR)+'" y1="'+y(max*f)+'" y2="'+y(max*f)+'"/>').join('');
+  const bars = months.map((m,i)=>{
+    const r = byMonth.get(m), n = Math.max(0,r.net), x = PL + bw*i + (bw-bar)/2;
+    const yn = y(n), yf = y(n+r.fee), hn = Math.max(0, y(0)-yn), hf = Math.max(0, yn-yf);
+    const d = new Date(m+'-01T00:00:00');
+    return '<g><title>'+d.toLocaleDateString('en-GB',{month:'long',year:'numeric'})+' — net '+D(r.net)+', fee '+D(r.fee)+'</title>'+
+      (hf>0.4?'<rect class="fee" x="'+x+'" y="'+yf+'" width="'+bar+'" height="'+hf+'" rx="3"/>':'')+
+      '<rect class="net" x="'+x+'" y="'+yn+'" width="'+bar+'" height="'+hn+'" rx="3"/>'+
+      '<text class="val" x="'+(x+bar/2)+'" y="'+(yf-7)+'" text-anchor="middle">'+D(r.net)+'</text>'+
+      '<text class="mlab" x="'+(x+bar/2)+'" y="'+(H-13)+'" text-anchor="middle">'+d.toLocaleDateString('en-GB',{month:'short'})+'</text>'+
+      (d.getMonth()===0||i===0?'<text class="mlab" x="'+(x+bar/2)+'" y="'+(H-2)+'" text-anchor="middle">'+d.getFullYear()+'</text>':'')+
+      '</g>';
+  }).join('');
+  box.innerHTML = '<svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Net revenue per month">'+grid+bars+'</svg>';
+}
+
+const STATUS_PILL = { succeeded:'ok', refunded:'bad', failed:'bad', cancelled:'bad', expired:'', pending:'warn', processing:'warn' };
+function whenTxt(o){ return dayOf(o).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'}); }
+
+function renderRefunds(refs, lost){
+  const rows = refs.concat(lost).sort((a,b)=>dayOf(b)-dayOf(a));
+  const box = document.getElementById('refunds');
+  if(!rows.length){ box.innerHTML = emptyState('Nothing went back','No refunds, no cancellations and no failed payments in this period.'); return; }
+  box.innerHTML = '<table class="t"><thead><tr><th>When</th><th>Reference</th><th>Product</th><th>Method</th><th class="n">Amount</th><th class="n">Fee lost</th><th>Status</th><th>Note</th></tr></thead><tbody>'+
+    rows.map(o=>'<tr><td>'+whenTxt(o)+'</td><td><span class="ref">'+esc(o.reference)+'</span></td><td class="p">'+esc(planLabel(o))+'</td><td>'+esc(METHOD_LABEL[o.method]||o.method||'—')+'</td>'+
+      '<td class="n">'+D(o.amount_minor)+'</td><td class="n">'+(isRefund(o)?D(feeOf(o)):'—')+'</td>'+
+      '<td><span class="pill '+(STATUS_PILL[o.status]||'')+'">'+esc(o.status)+'</span></td><td>'+esc(o.admin_note||'')+'</td></tr>').join('')+
+    '</tbody></table>';
+}
+
+function renderAll(rows){
+  const box = document.getElementById('allOrders');
+  if(!rows.length){ box.innerHTML = emptyState('No orders in this period','Widen the period to see earlier sales.'); return; }
+  const list = rows.slice().sort((a,b)=>dayOf(b)-dayOf(a));
+  box.innerHTML = '<table class="t"><thead><tr><th>When</th><th>Reference</th><th>Product</th><th>Method</th><th class="n">Amount</th><th class="n">Fee</th><th class="n">Net</th><th>Status</th><th>Customer</th></tr></thead><tbody>'+
+    list.map(o=>{
+      const counted = isSold(o) || isRefund(o);
+      return '<tr><td>'+whenTxt(o)+'</td><td><span class="ref">'+esc(o.reference)+'</span></td><td class="p">'+esc(planLabel(o))+'</td><td>'+esc(METHOD_LABEL[o.method]||o.method||'—')+'</td>'+
+      '<td class="n">'+D(o.amount_minor)+'</td><td class="n">'+(counted?D(feeOf(o)):'—')+'</td><td class="n">'+(isSold(o)?D(Number(o.amount_minor||0)-feeOf(o)):'—')+'</td>'+
+      '<td><span class="pill '+(STATUS_PILL[o.status]||'')+'">'+esc(o.status)+'</span></td><td>'+esc(o.customer_email||'')+'</td></tr>';
+    }).join('')+'</tbody></table>';
+}
+
+/* ---- csv ---- */
+function csv(){
+  const rows = all.filter(inRange).slice().sort((a,b)=>dayOf(a)-dayOf(b));
+  const head = ['date','reference','product','plan_id','method','status','fulfilment','gross_gmd','fee_rate_pct','fee_gmd','net_gmd','customer_email','listing_id','note'];
+  const q = v => '"' + String(v==null?'':v).replace(/"/g,'""') + '"';
+  const body = rows.map(o=>{
+    const counted = isSold(o) || isRefund(o);
+    return [dayOf(o).toISOString().slice(0,10), o.reference, planLabel(o), o.plan_id, o.method, o.status, o.fulfilment_status||'new',
+      D2(o.amount_minor), rateFor(o.method), counted?D2(feeOf(o)):'0.00', isSold(o)?D2(Number(o.amount_minor||0)-feeOf(o)):'0.00',
+      o.customer_email, o.listing_id, o.admin_note].map(q).join(',');
+  });
+  const blob = new Blob(['\ufeff'+[head.map(q).join(',')].concat(body).join('\r\n')], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'mykunda-sales-' + (period==='custom' ? 'custom' : period) + '-' + new Date().toISOString().slice(0,10) + '.csv';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
+}
+
+/* ---- events ---- */
+document.getElementById('periodSeg').addEventListener('click', e=>{
+  const b = e.target.closest('button[data-p]'); if(!b) return;
+  period = b.dataset.p; render();
+});
+['dFrom','dTo'].forEach(id=>document.getElementById(id).addEventListener('change', ()=>{ period='custom'; render(); }));
+document.getElementById('csvBtn').addEventListener('click', csv);
+['rLocal','rCard','rBank'].forEach(id=>document.getElementById(id).addEventListener('input', e=>{
+  const k = id==='rLocal'?'local':(id==='rCard'?'card':'bank');
+  const v = parseFloat(e.target.value);
+  RATES[k] = isFinite(v) && v>=0 ? v : 0;
+  try{ localStorage.setItem(RATE_KEY, JSON.stringify(RATES)); }catch(err){}
+  const s = document.getElementById('rateSaved');
+  s.classList.add('on'); clearTimeout(window.__rt); window.__rt = setTimeout(()=>s.classList.remove('on'), 1400);
+  render();
+}));
+
+/* Voorbeeldrijen voor de preview en voor iedereen zonder sessie. Alleen
+   in gebruik als er geen backend is; de vorm is gelijk aan payments. */
+const DEMO_SALES = (function(){
+  const iso = (m,d) => new Date(2026, m-1, d, 11, 20).toISOString();
+  const r = (ref,plan,amount,method,status,m,d,extra) => Object.assign({
+    reference:ref, plan_id:plan, amount_minor:amount*100, method:method, status:status, currency:'GMD',
+    created_at:iso(m,d), paid_at:status==='succeeded'||status==='refunded'?iso(m,d):null,
+    customer_email:'buyer@example.com', listing_id:null, metadata:{}, fulfilment_status:'done', admin_note:''
+  }, extra||{});
+  return [
+    r('MK-A1B2C3D','verified_m',9000,'card','succeeded',5,14),
+    r('MK-D4E5F6G','boost_30',2500,'wave','succeeded',5,22),
+    r('MK-H7J8K9L','doc_check',3500,'afrimoney','succeeded',6,3),
+    r('MK-M1N2P3Q','verified_s',4500,'bank_transfer','succeeded',6,11),
+    r('MK-R4S5T6U','boost_30',2500,'qmoney','succeeded',6,19),
+    r('MK-Z1A2B3C','verified_l',16000,'bank_transfer','succeeded',7,2),
+    r('MK-D5E6F7G','doc_check',3500,'card','refunded',7,9,{admin_note:'Seller withdrew before we started — full refund.'}),
+    r('MK-H8J9K1L','boost_30',2500,'wave','succeeded',7,15),
+    r('MK-M2N3P4Q','verified_m',9000,'card','succeeded',7,24),
+    r('MK-R5S6T7U','doc_check',3500,'aps','succeeded',8,4),
+    r('MK-Z2A3B4C','verified_s',4500,'wave','succeeded',8,13),
+    r('MK-H9J1K2L','doc_check',3500,'card','succeeded',8,22)
+  ];
+})();
+
+load();
+</script>
+</body>
+</html>

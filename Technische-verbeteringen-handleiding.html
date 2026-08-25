@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyKunda — Technische verbeteringen, augustus 2026</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hanken Grotesk',-apple-system,BlinkMacSystemFont,sans-serif;background:#FAF8F3;color:#18201D;line-height:1.6;-webkit-font-smoothing:antialiased}
+.page{max-width:760px;margin:0 auto;padding:40px 24px 90px}
+.hero{background:linear-gradient(135deg,#0E2E25,#1C5848);border-radius:18px;padding:44px 38px;margin-bottom:34px;color:#fff}
+.hero .badge{display:inline-block;background:rgba(221,138,69,.2);color:#DD8A45;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:5px 12px;border-radius:999px;margin-bottom:14px}
+.hero h1{font-size:31px;font-weight:800;line-height:1.15;margin-bottom:10px}
+.hero p{color:rgba(255,255,255,.78);font-size:16px;line-height:1.55}
+h2.sec{font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:#5C6B64;margin:34px 0 14px}
+.step{background:#fff;border-radius:16px;border:1.5px solid #E5E1D6;padding:26px 30px;margin-bottom:16px;position:relative}
+.step.done{border-color:#BEDACE;background:#f8fcf9}
+.step.todo{border-color:#EFD3B4;background:#fffdf9}
+.step h3{font-size:19px;font-weight:800;margin-bottom:7px;padding-right:110px}
+.step .desc{color:#5C6B64;font-size:15px}
+.step .tag{position:absolute;top:22px;right:22px;font-size:11.5px;font-weight:700;padding:4px 11px;border-radius:999px;letter-spacing:.03em}
+.step.done .tag{background:#DCEAE3;color:#15463A}
+.step.todo .tag{background:#FBF1E6;color:#8B5E2F}
+ul.list{list-style:none;margin-top:14px;display:grid;gap:0}
+ul.list li{position:relative;padding:11px 0 11px 26px;border-bottom:1px solid #EFEBE1;font-size:14.5px;color:#384640}
+ul.list li:last-child{border-bottom:none}
+ul.list li::before{content:"";position:absolute;left:4px;top:19px;width:7px;height:7px;border-radius:2px;background:#2A7561}
+.code-block{background:#1a1f1d;border-radius:10px;padding:15px 17px;margin:14px 0;overflow-x:auto}
+.code-block code{color:#BEDACE;font-family:'SF Mono',Menlo,Consolas,monospace;font-size:13px;line-height:1.75;white-space:pre}
+.code-block .c{color:#77857e}
+.info-box{border-radius:10px;padding:15px 17px;margin:14px 0;font-size:14.5px;line-height:1.55}
+.info-box.tip{background:#EAF2ED;color:#15463A;border-left:4px solid #2A7561}
+.info-box.warn{background:#FBF1E6;color:#8B5E2F;border-left:4px solid #DD8A45}
+.files{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.files span{background:#EFEBE1;color:#384640;font-family:'SF Mono',Menlo,Consolas,monospace;font-size:12.5px;padding:4px 10px;border-radius:6px}
+a{color:#15463A;font-weight:600;text-decoration:underline;text-decoration-color:rgba(21,70,58,.3);text-underline-offset:2px}
+a:hover{text-decoration-color:#15463A}
+.foot{margin-top:40px;font-size:13.5px;color:#8A958E;border-top:1px solid #E5E1D6;padding-top:18px}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="hero">
+<div class="badge">17 augustus 2026</div>
+<h1>Technische verbeteringen doorgevoerd</h1>
+<p>Alle punten uit de instructie zijn verwerkt en staan in de bestanden — ook het belangrijkste punt, header en footer statisch in de HTML. Je hoeft niets te bouwen: <code>deploy/</code> is uploadklaar. Alleen HSTS is een serverinstelling en moet jij zelf omzetten.</p>
+</div>
+
+<h2 class="sec">Klaar in het project</h2>
+
+<div class="step done"><span class="tag">Klaar</span>
+<h3>A · Header, footer en landmarks statisch in de HTML</h3>
+<p class="desc">In <b>74 pagina's</b> staat de uitvoer van <code>headerHTML(active, onHero)</code> en <code>footerHTML()</code> nu letterlijk in de HTML, tussen de markers <code>&lt;!--mk-hdr--&gt;</code> en <code>&lt;!--mk-ftr--&gt;</code>. De twee <code>innerHTML</code>-regels zijn uit de inline scripts verdwenen; <code>initHeroHeader()</code> staat er nog. Elke pagina heeft daarnaast een <code>&lt;a class="skip-link"&gt;</code> direct na <code>&lt;body&gt;</code> en een <code>&lt;main id="main"&gt;</code> om de inhoud.</p>
+<ul class="list">
+<li>De statische versie is de <b>uitgelogde</b> variant in <b>dalasi</b> — de enige twee dingen die per bezoeker verschillen. <code>app.js</code> heeft er <code>hydrateStaticHeader()</code> bij: is iemand ingelogd of koos hij een andere munt, dan wordt de header eenmalig opnieuw getekend. Voor iedereen anders (en voor zoekmachines) gebeurt er niets.</li>
+<li>De koersregels in het valutamenu werken al bij via <code>onRatesUpdated()</code> en <code>renderRateNote()</code>, dus die bevriezen niet.</li>
+<li>Alle plaatslinks en gidsen zijn gewone <code>&lt;a href&gt;</code>-links binnen <code>&lt;nav class="nav"&gt;</code> — geen <code>href="#"</code> als enige weg naar de lijst.</li>
+<li>Logo en menu-icoon verschijnen niet dubbel: de placeholder-div is vervangen, de runtime vult hem niet meer.</li>
+<li><code>admin.html</code>, <code>dashboard.html</code>, <code>messages.html</code>, <code>list.html</code>, <code>auth.html</code>, <code>checkout*.html</code>, <code>sources.html</code>, <code>rates.html</code> en <code>title-verification.html</code> zijn ongemoeid gebleven.</li>
+<li>Dezelfde stap zit óók in <code>build.mjs</code>, idempotent: draai je later alsnog <code>node build.mjs</code>, dan wordt het blok tussen de markers opnieuw geschreven met de argumenten die op de div bewaard staan (<code>data-active</code>, <code>data-hero</code>). Verandert de header in <code>app.js</code>, dan is dat de manier om de pagina's bij te werken — of vraag het mij.</li>
+</ul>
+<div class="info-box tip">Getest en pixel-voor-pixel vergeleken met de oude pagina: identiek, inclusief de transparante header boven de hero.</div>
+</div>
+
+<div class="step done"><span class="tag">Klaar</span>
+<h3>B · Namen op alle formuliervelden</h3>
+<p class="desc">Elk veld heeft nu een toegankelijke naam. De layout is niet aangeraakt.</p>
+<ul class="list">
+<li><b>sell.html</b> — 36 velden van de waardebepaling (woning én land) kregen een <code>aria-label</code>; naam-, e-mail- en telefoonvelden ook <code>autocomplete</code>. De vier velden van het consultformulier zijn aan hun zichtbare label gekoppeld via <code>for</code>/<code>id</code>.</li>
+<li><b>contact.html</b> — de vijf zichtbare labels stonden er al maar waren niet gekoppeld; ze hebben nu <code>for=</code> plus <code>autocomplete</code> op naam, e-mail en telefoon.</li>
+<li><b>search.html</b> — zoekveld, <code>pMin</code>, <code>pMax</code> en de sorteerkeuze.</li>
+<li><b>buy.html / rent.html</b> — zoekveld en de twee filterselects per pagina.</li>
+<li><b>41 plaatspagina's + guides.html + agent.html + property.html</b> — het e-mailveld van de attentiemelding en de contactvelden zonder label.</li>
+</ul>
+</div>
+
+<div class="step done"><span class="tag">Klaar</span>
+<h3>C · Afmetingen op alle afbeeldingen</h3>
+<p class="desc">149 <code>&lt;img&gt;</code>-elementen hebben nu de intrinsieke <code>width</code> en <code>height</code> van het bestand zelf — gemeten uit de bestanden, niet geschat.</p>
+<div class="info-box tip">In <code>styles.css</code> staat nu <code>img{display:block;max-width:100%;height:auto}</code>. Die <code>height:auto</code> is nodig: zonder die regel zouden de nieuwe hoogte-attributen foto's in een responsieve kolom platdrukken. Regels die zelf een hoogte zetten (<code>.card-media img</code>, <code>.pcard img</code> en dergelijke) blijven gewoon gelden, dus het beeld verandert niet.</div>
+<p class="desc">Wat nog beweegt: kaartfoto's die JavaScript aanmaakt (<code>p.img</code> in <code>app.js</code>, listings uit de database) hebben geen bekende maat. Die zitten wél in een container met <code>aspect-ratio</code>, dus ze duwen de pagina niet omlaag.</p>
+</div>
+
+<div class="step done"><span class="tag">Klaar</span>
+<h3>D · image-slot.js alleen waar het gebruikt wordt</h3>
+<p class="desc">De regel is uit zeven pagina's verwijderd. Op <b>kerr-serign.html</b> stond hij zelfs blokkerend in de <code>&lt;head&gt;</code> zonder <code>defer</code> — dat scheelt daar het meest. <b>kololi.html</b> en <b>property.html</b> houden het script; die gebruiken <code>&lt;image-slot&gt;</code> echt.</p>
+<div class="files"><span>index.html</span><span>buy.html</span><span>rent.html</span><span>sell.html</span><span>search.html</span><span>agent.html</span><span>kerr-serign.html</span></div>
+</div>
+
+<div class="step done"><span class="tag">Klaar</span>
+<h3>E · Kleine correcties</h3>
+<ul class="list">
+<li>Spaties uit de links: <code>buy.html</code> → <code>q=Cape%20Point</code>, <code>kerr-serign.html</code> → <code>q=Kerr%20Serign</code>. Sitewide gecontroleerd, verder geen enkele.</li>
+<li><code>sw.js</code>: <code>market.html</code> uit de privélijst en <code>V</code> naar <code>'mk-v42'</code>, zodat de service worker de wijziging ook oppakt.</li>
+</ul>
+</div>
+
+<h2 class="sec">Wat jij nog doet</h2>
+
+<div class="step todo"><span class="tag">Actie</span>
+<h3>1 · Uploaden</h3>
+<p class="desc">Upload de <b>hele inhoud van <code>deploy/</code></b> naar de webroot, met overschrijven aan. Alle 87 pagina's zijn gewijzigd (header, footer, landmarks, nieuwe versiestempel <code>?v=1791580000000</code>), plus:</p>
+<div class="files"><span>app.js</span><span>app.min.js</span><span>styles.css</span><span>styles.min.css</span><span>sw.js</span></div>
+<div class="info-box tip">De stempel in <code>sw.js</code> is gelijkgetrokken met die in de pagina's, en <code>V</code> staat op <code>mk-v42</code> — terugkerende bezoekers krijgen dus meteen de nieuwe versie in plaats van eerst nog de oude uit de cache.</div>
+</div>
+
+<div class="step todo"><span class="tag">Controle</span>
+<h3>2 · Na de upload even nakijken</h3>
+<div class="code-block"><code><span class="c"># navigatie en plaatslinks zonder JavaScript</span>
+curl -s https://mykunda.com/kololi.html | grep -c '&lt;nav'
+curl -s https://mykunda.com/kololi.html | grep -c 'href="brufut.html"'
+curl -s https://mykunda.com/index.html  | grep -c 'id="main"'</code></div>
+<p class="desc">In de browser: home, buy, rent en verify hebben nog een transparante header boven de hero die bij scrollen dichtklapt; het valutamenu en het mobiele menu openen; Tab op een verse pagina laat eerst “Skip to content” zien; en na inloggen staat je naam weer in de header.</p>
+</div>
+
+<div class="step todo"><span class="tag">Jouw keuze</span>
+<h3>3 · HSTS (punt E3)</h3>
+<p class="desc">Niet aangeraakt: dit is een header op de origin of een schakelaar in Cloudflare, geen projectbestand. Zet hem alleen om als élk subdomein van mykunda.com over HTTPS gaat:</p>
+<div class="code-block"><code>Strict-Transport-Security: max-age=31536000; includeSubDomains</code></div>
+<p class="desc">Twijfel je over een subdomein (mail, een testomgeving), sla het dan over — de winst is klein en een fout hier sluit een subdomein een jaar lang buiten.</p>
+</div>
+
+<h2 class="sec">Niet gedaan, en waarom</h2>
+<div class="step">
+<ul class="list">
+<li><b>De service worker-strategie, de CSP en het laadmodel</b> — ongemoeid, zoals afgesproken. De enige regel in <code>sw.js</code> die veranderde is <code>isPrivate</code>, plus <code>V</code>.</li>
+<li><b><code>?v=</code>-stempels</b> — één stempel voor alles, precies zoals <code>build.mjs</code> het doet, en gelijk aan <code>STAMP</code> in <code>sw.js</code>.</li>
+<li><b><code>&lt;image-slot&gt;</code> vervangen door een gewone <code>&lt;img&gt;</code></b> op kololi en property — optioneel volgens de instructie, en het raakt hoe je zelf foto's in het ontwerp zet. Zeg het als je het wilt.</li>
+<li><b>Ingelogde pagina's</b> — niet aangeraakt.</li>
+</ul>
+</div>
+
+<div class="foot">Wijzigingen gemaakt in dit project (de enige bron van waarheid). Op de server is niets rechtstreeks aangepast.</div>
+
+</div>
+</body>
+</html>

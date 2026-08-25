@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyKunda — Phase 2 Build Plan</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Mulish:wght@400;500;600;700;800;900&display=swap">
+<style>
+:root{
+  --green-900:#0E2E25;--green-800:#123A2E;--green-700:#15463A;--green-600:#1C5848;--green-500:#2A7561;
+  --green-200:#BEDACE;--green-100:#DCEAE3;--green-50:#EAF2ED;
+  --amber-600:#B45F22;--amber-500:#C8702D;--amber-400:#DD8A45;--amber-100:#F6E6D4;--amber-50:#FBF1E6;
+  --paper:#FAF8F3;--paper-2:#F3F0E8;--white:#FFFFFF;--ink:#18201D;--ink-2:#384640;
+  --muted:#5C6B64;--muted-2:#8A958E;--line:#E5E1D6;--line-2:#EFEBE1;
+  --serif:'Mulish',sans-serif;--sans:'Hanken Grotesk',sans-serif;
+  --r-sm:8px;--r-md:12px;--r-lg:18px;
+  --sh-sm:0 1px 2px rgba(24,32,29,.06),0 1px 3px rgba(24,32,29,.05);
+  --sh-md:0 4px 14px rgba(24,32,29,.07),0 2px 6px rgba(24,32,29,.05);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--paper-2);color:var(--ink);line-height:1.62;-webkit-font-smoothing:antialiased}
+.doc{max-width:920px;margin:0 auto;background:var(--paper);box-shadow:var(--sh-md)}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:800;line-height:1.14;letter-spacing:-.015em;color:var(--ink)}
+p{margin:11px 0;color:var(--ink-2)}
+a{color:var(--green-700)}
+strong{color:var(--ink);font-weight:700}
+code{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.85em;background:var(--green-50);color:var(--green-700);padding:2px 6px;border-radius:5px;font-weight:600}
+
+.cover{background:linear-gradient(150deg,var(--green-900),var(--green-700));color:#fff;padding:64px 64px 50px;position:relative;overflow:hidden}
+.cover::after{content:"2";position:absolute;right:-20px;bottom:-40px;font-family:var(--serif);font-size:280px;font-weight:900;color:rgba(255,255,255,.04);line-height:1;pointer-events:none}
+.cover .logo{display:flex;align-items:center;gap:11px;font-family:var(--serif);font-weight:800;font-size:23px;letter-spacing:-.02em;margin-bottom:42px}
+.cover .logo svg{width:36px;height:36px}
+.cover .kicker{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--amber-400);margin-bottom:15px}
+.cover h1{color:#fff;font-size:42px;font-weight:900;max-width:680px}
+.cover .lede{font-size:17.5px;color:rgba(255,255,255,.86);margin-top:17px;max-width:620px;line-height:1.55}
+.cover .meta{display:flex;gap:34px;margin-top:36px;padding-top:24px;border-top:1px solid rgba(255,255,255,.18);flex-wrap:wrap}
+.cover .meta div span{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.6);font-weight:700;margin-bottom:4px}
+.cover .meta div b{font-family:var(--serif);font-size:16px;font-weight:700;color:#fff}
+
+.body{padding:52px 64px 64px}
+section{margin-bottom:48px}
+.num{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;background:var(--green-700);color:#fff;font-family:var(--serif);font-weight:800;font-size:16px;margin-right:13px;flex:none}
+.h-row{display:flex;align-items:center;margin-bottom:8px}
+.h-row h2{font-size:26px}
+.lead-line{color:var(--muted);font-size:16px;margin:0 0 22px 47px}
+section > p,section > .grid,section > .tablewrap,section > .note,section > .goal,section > .sprint{margin-left:47px}
+
+.goal{background:var(--green-50);border:1px solid var(--green-100);border-radius:var(--r-lg);padding:22px 26px;margin:0 0 6px 47px}
+.goal h4{font-size:16px;margin-bottom:6px;color:var(--green-700)}
+.goal p{margin:0;font-size:15px}
+
+.note{border-left:4px solid var(--amber-500);background:var(--amber-50);padding:15px 20px;border-radius:0 var(--r-md) var(--r-md) 0;margin:18px 0}
+.note b{color:var(--amber-600)}
+
+.prereq{border-left:4px solid var(--green-500);background:var(--green-50);padding:15px 20px;border-radius:0 var(--r-md) var(--r-md) 0;margin:18px 0}
+.prereq b{color:var(--green-700)}
+
+/* sprint blocks */
+.sprint{margin-bottom:28px;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
+.sprint-head{display:flex;align-items:center;gap:16px;padding:20px 24px;background:var(--white);border-bottom:1px solid var(--line-2)}
+.sprint-num{width:40px;height:40px;border-radius:10px;background:var(--green-700);color:#fff;font-family:var(--serif);font-weight:800;font-size:17px;display:flex;align-items:center;justify-content:center;flex:none}
+.sprint-head h3{font-size:20px;flex:1}
+.sprint-head .dur{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.sprint-body{padding:22px 24px;display:grid;gap:6px}
+.task{display:flex;gap:11px;align-items:flex-start}
+.task .box{width:18px;height:18px;border-radius:5px;border:2px solid var(--green-500);flex:none;margin-top:2px}
+.task .tx{font-size:14.5px;color:var(--ink-2)}
+.task .tx b{color:var(--ink)}
+.task.done .box{background:var(--green-500);border-color:var(--green-500)}
+.deliver{margin-top:10px;font-size:13.5px;color:var(--green-700);font-weight:700;display:flex;align-items:center;gap:8px}
+.deliver::before{content:"▸";color:var(--amber-500)}
+
+/* phase 1 recap */
+.recap{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+.recap-item{background:var(--white);border:1px solid var(--line);border-radius:var(--r-md);padding:14px 18px;display:flex;align-items:center;gap:12px}
+.recap-item .check{width:28px;height:28px;border-radius:7px;background:var(--green-500);color:#fff;display:flex;align-items:center;justify-content:center;flex:none}
+.recap-item .check svg{width:16px;height:16px}
+.recap-item span{font-size:14px;font-weight:600;color:var(--ink)}
+
+/* grid cards */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}
+.mini{background:var(--white);border:1px solid var(--line);border-radius:var(--r-md);padding:18px}
+.mini h4{font-size:15px;margin-bottom:5px}
+.mini p{font-size:13.5px;margin:0;color:var(--muted)}
+.mini .ic{width:36px;height:36px;border-radius:9px;background:var(--green-50);color:var(--green-700);display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:18px}
+
+/* priority label */
+.prio{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;letter-spacing:.03em;margin-left:auto;flex:none}
+.prio.high{background:#FEE2E2;color:#B91C1C}
+.prio.med{background:var(--amber-100);color:var(--amber-600)}
+.prio.low{background:var(--green-100);color:var(--green-700)}
+
+/* timeline */
+.timeline{display:flex;gap:0;margin:20px 0 4px;flex-wrap:wrap}
+.tl{flex:1;min-width:96px;position:relative;background:var(--white);border:1px solid var(--line);padding:13px 12px 13px 20px}
+.tl:first-child{border-radius:var(--r-md) 0 0 var(--r-md)}
+.tl:last-child{border-radius:0 var(--r-md) var(--r-md) 0}
+.tl .tn{font-size:11px;font-weight:700;color:var(--amber-600);text-transform:uppercase;letter-spacing:.04em}
+.tl .tt{font-family:var(--serif);font-weight:700;font-size:13.5px;margin-top:3px;color:var(--ink)}
+.tl::after{content:"";position:absolute;right:-9px;top:50%;transform:translateY(-50%) rotate(45deg);width:16px;height:16px;background:var(--white);border-right:1px solid var(--line);border-top:1px solid var(--line);z-index:2}
+.tl:last-child::after{display:none}
+
+.tablewrap{margin:18px 0;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{background:var(--green-700);color:#fff;text-align:left;padding:11px 15px;font-family:var(--serif);font-weight:700;font-size:13px}
+td{padding:10px 15px;border-top:1px solid var(--line-2);color:var(--ink-2);vertical-align:top}
+tr:nth-child(even) td{background:var(--paper)}
+
+ul.chk{list-style:none;margin:6px 0 0 0}
+ul.chk li{position:relative;padding-left:30px;margin:11px 0;font-size:14.5px;color:var(--ink-2)}
+ul.chk li::before{content:"";position:absolute;left:0;top:1px;width:19px;height:19px;border-radius:5px;border:2px solid var(--amber-500)}
+ul.chk li b{color:var(--ink)}
+
+.foot{background:var(--green-900);color:#9FB6AC;padding:28px 64px;font-size:13px;display:flex;gap:14px;align-items:center}
+.foot b{color:#fff;font-family:var(--serif)}
+.foot .sp{margin-left:auto}
+
+@media print{body{background:#fff}.doc{box-shadow:none;max-width:none}section,.sprint{break-inside:avoid}.cover{break-after:page}}
+@media(max-width:720px){
+  .cover{padding:42px 26px}.cover h1{font-size:30px}.body{padding:36px 26px}
+  section > p,section > .grid,section > .tablewrap,section > .note,section > .goal,section > .sprint,.lead-line,.timeline{margin-left:0}
+  .sprint-head{flex-wrap:wrap}.recap{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.foot{padding:24px 26px;flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <div class="cover">
+    <div class="logo">
+      <svg viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="11" fill="#fff" opacity=".12"/><path d="M11 20.5 20 12l9 8.5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 19v9h14v-9" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.5 28v-5h5v5" stroke="#DD8A45" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      MyKunda
+    </div>
+    <div class="kicker">Build Plan · Phase 2 — Growth</div>
+    <h1>From live to thriving: the next six sprints</h1>
+    <p class="lede">Phase 1 gave MyKunda a spine — real accounts, real listings, and lead capture. Phase 2 makes it a platform people come back to: real-time messaging, payment for listings, WhatsApp integration, and the search & discovery engine that turns visitors into leads.</p>
+    <div class="meta">
+      <div><span>Phase</span><b>2 of 3 — Growth</b></div>
+      <div><span>Duration</span><b>~6 sprints</b></div>
+      <div><span>Depends on</span><b>Phase 1 live</b></div>
+      <div><span>Outcome</span><b>Self-service platform</b></div>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <!-- PHASE 1 RECAP -->
+    <section>
+      <div class="h-row"><span class="num">✓</span><h2>Phase 1 — what's done</h2></div>
+      <p class="lead-line">The foundation is in place. Every item below is live or ready to deploy.</p>
+      <div class="recap">
+        <div class="recap-item"><div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg></div><span>Full frontend (15+ pages)</span></div>
+        <div class="recap-item"><div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg></div><span>Supabase schema + RLS</span></div>
+        <div class="recap-item"><div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg></div><span>Auth (email + phone OTP)</span></div>
+        <div class="recap-item"><div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg></div><span>Lead capture → Supabase</span></div>
+        <div class="recap-item"><div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg></div><span>Edge Functions (notify-lead)</span></div>
+        <div class="recap-item"><div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg></div><span>Email templates (Resend)</span></div>
+        <div class="recap-item"><div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg></div><span>Listing wizard (list.html)</span></div>
+        <div class="recap-item"><div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg></div><span>Admin board (admin.html)</span></div>
+      </div>
+    </section>
+
+    <!-- OVERVIEW -->
+    <section>
+      <div class="h-row"><span class="num">★</span><h2>Phase 2 goal</h2></div>
+      <div class="goal">
+        <h4>Definition of done</h4>
+        <p>A seller can list, pay, and manage their property end-to-end. Buyers can search, filter, message agents, and get WhatsApp updates. The admin can manage leads, verify titles, and see revenue. <strong>MyKunda runs as a self-service business, not a prototype.</strong></p>
+      </div>
+
+      <div class="timeline" style="margin-left:47px">
+        <div class="tl"><div class="tn">Sprint 1</div><div class="tt">Search engine</div></div>
+        <div class="tl"><div class="tn">Sprint 2</div><div class="tt">Listing wizard live</div></div>
+        <div class="tl"><div class="tn">Sprint 3</div><div class="tt">Payments</div></div>
+        <div class="tl"><div class="tn">Sprint 4</div><div class="tt">Messaging</div></div>
+        <div class="tl"><div class="tn">Sprint 5</div><div class="tt">WhatsApp</div></div>
+        <div class="tl"><div class="tn">Sprint 6</div><div class="tt">Title workflow</div></div>
+      </div>
+    </section>
+
+    <!-- SPRINT 1 -->
+    <section>
+      <div class="h-row"><span class="num">1</span><h2>The sprints</h2></div>
+      <p class="lead-line">Each sprint delivers a working, testable feature set.</p>
+
+      <div class="sprint">
+        <div class="sprint-head">
+          <div class="sprint-num">1</div>
+          <h3>Search & discovery engine</h3>
+          <span class="prio high">High priority</span>
+        </div>
+        <div class="sprint-body">
+          <p style="margin-top:0;font-size:14.5px">Replace the static demo data on search.html, home.html and area pages with real database queries. Make filters, map pins and search results work against live listings.</p>
+          <div class="task"><span class="box"></span><span class="tx"><b>Connect search.html to Supabase</b> — filters (type, price range, beds, area) build a real query. Results render from DB instead of demo array.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Map integration</b> — real pins from lat/lng in the database. Clicking a pin opens the listing card. Map bounds filter results.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Area pages read from DB</b> — Kololi, Bijilo, Brufut, Cape Point, Sanyang show real listings for that area instead of demo cards.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>home.html featured section</b> — pulls the newest verified listings from the DB. "Staff picks" curated via an admin flag.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>property.html from DB</b> — load a single listing by UUID from the URL. Photos from Storage. Show real agent info.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Full-text search</b> — add Meilisearch (or Supabase full-text) for fast type-ahead on title, area, description.</span></div>
+          <div class="deliver">Milestone: a visitor can search, filter, view on the map — all from live data.</div>
+        </div>
+      </div>
+
+      <!-- SPRINT 2 -->
+      <div class="sprint">
+        <div class="sprint-head">
+          <div class="sprint-num">2</div>
+          <h3>Listing wizard → database</h3>
+          <span class="prio high">High priority</span>
+        </div>
+        <div class="sprint-body">
+          <p style="margin-top:0;font-size:14.5px">The list.html wizard currently runs in demo mode. Make every step write to the database, upload real photos, and submit for review.</p>
+          <div class="task"><span class="box"></span><span class="tx"><b>Wizard ↔ Supabase</b> — each step saves to <code>listings</code> as a draft. Auto-save on every field change.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Photo upload</b> — drag-and-drop images upload to <code>listing-photos</code> bucket. Reorder, delete, set hero image.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Document upload</b> — title deeds, ownership letters → <code>listing-docs</code> (private bucket). Only owner + admin can view.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Map pin placement</b> — the pin step writes lat/lng + Google Plus Code to the listing. Reverse geocode for area name.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Submit for review</b> — status changes to <code>pending_review</code>. Triggers <code>notify-lead</code> email to admin team.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Seller dashboard</b> — dashboard.html shows the seller's real listings, their status, views and enquiries from the DB.</span></div>
+          <div class="deliver">Milestone: a seller creates a real listing with photos; admin sees it in the review queue.</div>
+        </div>
+      </div>
+
+      <!-- SPRINT 3 -->
+      <div class="sprint">
+        <div class="sprint-head">
+          <div class="sprint-num">3</div>
+          <h3>Payments & listing plans</h3>
+          <span class="prio med">Medium priority</span>
+        </div>
+        <div class="sprint-body">
+          <p style="margin-top:0;font-size:14.5px">Monetize the platform: sellers choose a plan (Basic free / Verified / Premium) and pay before their listing goes live. checkout.html becomes functional.</p>
+          <div class="task"><span class="box"></span><span class="tx"><b>Payment provider integration</b> — Wave, QMoney, or Stripe (cards). Start with Wave for local mobile money.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>checkout.html → real checkout</b> — plan selection, price display, payment flow. On success: update listing plan + status.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Payment confirmation emails</b> — receipt to seller, notification to admin. Styled like existing email templates.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Webhook handling</b> — payment provider confirms → Edge Function updates listing status.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Admin revenue view</b> — admin.html shows payments received, plan breakdown, revenue per month.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Listing expiry & renewal</b> — listings expire after 90 days. Reminder email 7 days before. Easy renewal via dashboard.</span></div>
+          <div class="deliver">Milestone: a seller pays for a plan; the payment is recorded; the listing goes live.</div>
+          <div class="prereq" style="margin-top:14px"><b>Prerequisite:</b> Choose a payment provider and set up a merchant account. Wave Money is recommended for local payments; Stripe for international cards.</div>
+        </div>
+      </div>
+
+      <!-- SPRINT 4 -->
+      <div class="sprint">
+        <div class="sprint-head">
+          <div class="sprint-num">4</div>
+          <h3>Real-time messaging</h3>
+          <span class="prio med">Medium priority</span>
+        </div>
+        <div class="sprint-body">
+          <p style="margin-top:0;font-size:14.5px">messages.html becomes a real chat system. Buyers message agents or sellers; agents respond. Conversations persist and trigger notifications.</p>
+          <div class="task"><span class="box"></span><span class="tx"><b>Messages table + schema</b> — <code>conversations</code> and <code>messages</code> tables with RLS (only participants can read/write).</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Supabase Realtime</b> — new messages appear instantly without refreshing. Typing indicator.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>"Message agent" button</b> on property.html creates a conversation tied to that listing. Pre-fills a structured first message.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Unread count in header</b> — the nav shows a badge with unread message count. Real-time update.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Email fallback</b> — if the recipient hasn't read a message within 30 minutes, send an email notification with a deep link to the conversation.</span></div>
+          <div class="deliver">Milestone: buyer and agent can have a real-time conversation about a property.</div>
+        </div>
+      </div>
+
+      <!-- SPRINT 5 -->
+      <div class="sprint">
+        <div class="sprint-head">
+          <div class="sprint-num">5</div>
+          <h3>WhatsApp integration</h3>
+          <span class="prio med">Medium priority</span>
+        </div>
+        <div class="sprint-body">
+          <p style="margin-top:0;font-size:14.5px">WhatsApp is how The Gambia communicates. Connect it as both a notification channel and a lead source.</p>
+          <div class="task"><span class="box"></span><span class="tx"><b>WhatsApp Business API</b> — set up via Meta Business (or a BSP like 360dialog/Twilio). Verified business number.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Lead notifications via WhatsApp</b> — when a new lead or viewing request comes in, the assigned agent gets a WhatsApp alert (not just email).</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Saved search alerts</b> — users who opt for WhatsApp alerts get new-listing notifications on their phone instead of email.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Listing share via WA</b> — the share button sends a rich message with photo, price and direct link. Already designed in the UI; needs the deep link.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Inbound lead capture</b> — a buyer messages the WhatsApp number → auto-creates a lead in Supabase with the message and phone number.</span></div>
+          <div class="deliver">Milestone: agents receive WhatsApp alerts for leads; buyers get listing alerts on WhatsApp.</div>
+          <div class="prereq" style="margin-top:14px"><b>Prerequisite:</b> WhatsApp Business API approval + a verified phone number. Apply early — approval can take 1–2 weeks.</div>
+        </div>
+      </div>
+
+      <!-- SPRINT 6 -->
+      <div class="sprint">
+        <div class="sprint-head">
+          <div class="sprint-num">6</div>
+          <h3>Title verification workflow</h3>
+          <span class="prio low">Phase 2 stretch</span>
+        </div>
+        <div class="sprint-body">
+          <p style="margin-top:0;font-size:14.5px">Turn "Verified Title" from a manual badge into a structured workflow with status tracking, document review, and an audit trail.</p>
+          <div class="task"><span class="box"></span><span class="tx"><b>Verification schema</b> — <code>title_verifications</code> table: document uploads, status (pending / in_review / approved / rejected), reviewer notes, timestamps.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Seller flow</b> — seller uploads deed + supporting docs from dashboard. Gets status updates via email.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Admin review UI</b> — dedicated view in admin.html: see uploaded docs, approve/reject with notes, mark issues.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Verified badge logic</b> — approved verification → <code>is_verified_title = true</code> → badge appears on listing card and detail page.</span></div>
+          <div class="task"><span class="box"></span><span class="tx"><b>Audit trail</b> — every status change logged with timestamp, reviewer, and reason. Visible to admin and seller.</span></div>
+          <div class="deliver">Milestone: a seller submits documents; admin reviews and approves; the Verified badge appears automatically.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEW SCHEMA -->
+    <section>
+      <div class="h-row"><span class="num">2</span><h2>New tables (Phase 2 additions)</h2></div>
+      <p class="lead-line">Added to the existing schema — no changes to Phase 1 tables.</p>
+      <div class="tablewrap">
+        <table>
+          <tr><th>Table</th><th>Sprint</th><th>Purpose</th></tr>
+          <tr><td><code>conversations</code></td><td>4</td><td>Thread between two users, optionally linked to a listing</td></tr>
+          <tr><td><code>messages</code></td><td>4</td><td>Individual messages within a conversation, with read receipts</td></tr>
+          <tr><td><code>payments</code></td><td>3</td><td>Payment records: amount, provider, reference, status, linked listing</td></tr>
+          <tr><td><code>title_verifications</code></td><td>6</td><td>Verification requests with status, reviewer, documents, notes</td></tr>
+          <tr><td><code>verification_docs</code></td><td>6</td><td>Documents uploaded for a specific verification request</td></tr>
+          <tr><td><code>notification_prefs</code></td><td>5</td><td>Per-user channel preferences: email, WhatsApp, or both</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- NEW EDGE FUNCTIONS -->
+    <section>
+      <div class="h-row"><span class="num">3</span><h2>New Edge Functions</h2></div>
+      <p class="lead-line">Server-side logic that runs in Supabase Edge Functions.</p>
+      <div class="tablewrap">
+        <table>
+          <tr><th>Function</th><th>Sprint</th><th>Trigger → Action</th></tr>
+          <tr><td><code>process-payment</code></td><td>3</td><td>Payment webhook → update listing status + send receipt email</td></tr>
+          <tr><td><code>notify-message</code></td><td>4</td><td>New message → email if recipient offline for 30 min</td></tr>
+          <tr><td><code>wa-notify</code></td><td>5</td><td>New lead/listing → WhatsApp message to agent/user</td></tr>
+          <tr><td><code>wa-inbound</code></td><td>5</td><td>Incoming WhatsApp message → create lead in Supabase</td></tr>
+          <tr><td><code>listing-expiry</code></td><td>3</td><td>Daily cron → check expiring listings → send renewal email</td></tr>
+          <tr><td><code>notify-verification</code></td><td>6</td><td>Verification status change → email seller with update</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- DECISIONS NEEDED -->
+    <section>
+      <div class="h-row"><span class="num">4</span><h2>Decisions needed before starting</h2></div>
+      <p class="lead-line">These choices affect sprint 3 and 5. Best decided early.</p>
+      <div class="grid">
+        <div class="mini">
+          <div class="ic">💳</div>
+          <h4>Payment provider</h4>
+          <p><strong>Wave Money</strong> (dominant in Gambia, mobile money) vs <strong>Stripe</strong> (international cards, diaspora). Recommendation: start with Wave for local sellers, add Stripe later for diaspora buyers.</p>
+        </div>
+        <div class="mini">
+          <div class="ic">💬</div>
+          <h4>WhatsApp approach</h4>
+          <p><strong>Official Business API</strong> (via Meta or a BSP like 360dialog) vs <strong>simple click-to-chat links</strong> (no API needed, but no automation). Recommendation: start with click-to-chat, add API in sprint 5.</p>
+        </div>
+        <div class="mini">
+          <div class="ic">🔍</div>
+          <h4>Search engine</h4>
+          <p><strong>Meilisearch Cloud</strong> (fast, typo-tolerant, hosted) vs <strong>Supabase full-text search</strong> (free, built-in, less powerful). Recommendation: start with Supabase FTS; migrate to Meilisearch if needed.</p>
+        </div>
+        <div class="mini">
+          <div class="ic">💰</div>
+          <h4>Listing pricing</h4>
+          <p>What does each plan cost? Basic (free), Verified (D2,500?), Premium (D5,000?). This needs to be decided before sprint 3 can begin.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT'S NOT IN PHASE 2 -->
+    <section style="margin-bottom:0">
+      <div class="h-row"><span class="num">5</span><h2>Deferred to Phase 3</h2></div>
+      <p class="lead-line">Important, but not before the core platform is running.</p>
+      <div class="grid">
+        <div class="mini">
+          <div class="ic">📊</div>
+          <h4>Analytics dashboard</h4>
+          <p>Market data, price trends, area comparisons. Needs a critical mass of listings first.</p>
+        </div>
+        <div class="mini">
+          <div class="ic">🤖</div>
+          <h4>AI-powered valuation</h4>
+          <p>Automated property valuation based on comparable sales and market data. Needs data history.</p>
+        </div>
+        <div class="mini">
+          <div class="ic">🏗️</div>
+          <h4>Build management</h4>
+          <p>Project tracking for buyers who purchase land and build. Timeline, contractor management, photo updates.</p>
+        </div>
+        <div class="mini">
+          <div class="ic">🌍</div>
+          <h4>Multi-language</h4>
+          <p>Wolof, Mandinka, French interface options. Important for local adoption but not for initial diaspora focus.</p>
+        </div>
+      </div>
+      <div class="goal" style="margin-left:47px;margin-top:16px">
+        <h4>Ready to start?</h4>
+        <p>Decide the four questions above (payment, WhatsApp, search, pricing) and Phase 2 can begin with Sprint 1. Each sprint is self-contained — you can review and test the result before moving to the next.</p>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="foot">
+    <b>MyKunda</b>
+    <span>Phase 2 Build Plan · Growth</span>
+    <span class="sp">6 sprints · v1</span>
+  </div>
+
+</div>
+</body>
+</html>

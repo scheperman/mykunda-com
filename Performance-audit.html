@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>MyKunda — Performance-audit augustus 2026</title>
+<script src="doc-page.js"></script>
+<style>
+doc-page:not(:defined){visibility:hidden}
+:root{--g9:#0E2E25;--g7:#1C5848;--g2:#DCEAE3;--am:#B4711C;--am-bg:#FBF3E7;--ink:#16211D;--ink2:#3D4B45;--mut:#6B7B74;--line:#E2E8E4}
+doc-page{font-family:"Hanken Grotesk",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:var(--ink2);font-size:10.5pt;line-height:1.62}
+h1{font-size:26pt;line-height:1.1;letter-spacing:-.02em;color:var(--g9);margin:0 0 6px}
+.sub{font-size:11.5pt;color:var(--mut);margin:0 0 4px;line-height:1.5}
+.stamp{font-size:8.5pt;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:var(--am);margin-bottom:12px}
+h2{font-size:15pt;color:var(--g9);margin:30px 0 10px;letter-spacing:-.01em;padding-bottom:7px;border-bottom:2px solid var(--g2)}
+h3{font-size:11.5pt;color:var(--g7);margin:20px 0 6px}
+p{margin:0 0 9px}
+ul,ol{margin:0 0 10px;padding-left:19px}
+li{margin-bottom:5px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:9pt;background:#F1F5F3;padding:1px 5px;border-radius:3px;color:var(--g9);word-break:break-word}
+pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:8.5pt;line-height:1.5;background:var(--g9);color:#D9E7E1;padding:13px 15px;border-radius:6px;overflow-wrap:break-word;white-space:pre-wrap;margin:0 0 12px;break-inside:avoid}
+pre b{color:#F3C77A;font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:9pt;margin:0 0 14px}
+th{background:var(--g7);color:#fff;text-align:left;padding:8px 10px;font-weight:700;font-size:8pt;text-transform:uppercase;letter-spacing:.04em}
+td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.45}
+tr:nth-child(even) td{background:#F7FAF8}
+td code{background:none;padding:0;font-size:8.5pt}
+.tag{display:inline-block;font-size:7.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 7px;border-radius:20px;white-space:nowrap}
+.tbug{background:#FBDFD8;color:#8E2C16}
+.tscale{background:#FDEBD4;color:#8A5510}
+.tok{background:#DFF3E5;color:#1D6B36}
+.tlater{background:#E8EDF5;color:#3A5378}
+.box{background:var(--am-bg);border:1px solid #F0DCC0;border-radius:7px;padding:14px 17px;margin:0 0 14px;break-inside:avoid;orphans:3;widows:3}
+.box b{color:var(--am)}
+.box.g{background:#F2F8F4;border-color:#D3E6D9}
+.box.g b{color:var(--g7)}
+.check{list-style:none;padding-left:0;counter-reset:c}
+.check li{position:relative;padding-left:30px;margin-bottom:9px;counter-increment:c;break-inside:avoid;orphans:3;widows:3}
+.check li::before{content:counter(c);position:absolute;left:0;top:1px;width:20px;height:20px;border-radius:50%;background:var(--g7);color:#fff;font-size:8.5pt;font-weight:700;display:flex;align-items:center;justify-content:center}
+.lead{font-size:11pt;color:var(--ink2);line-height:1.65;margin-bottom:14px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px}
+.kpi{background:#F7FAF8;border:1px solid var(--line);border-radius:7px;padding:12px 14px}
+.kpi .n{font-size:19pt;font-weight:700;color:var(--g9);line-height:1.1}
+.kpi .l{font-size:8.5pt;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-top:3px}
+hr{border:0;border-top:1px solid var(--line);margin:26px 0}
+.foot{font-size:8.5pt;color:var(--mut)}
+a{color:var(--g7)}
+a:hover{color:var(--g9)}
+</style>
+</head>
+<body>
+<doc-page margin="0.7in">
+
+<div class="stamp">MyKunda · mykunda.com</div>
+<h1>Performance-audit: wat er gebeurt als de traffic komt</h1><p class="sub">15 augustus 2026 — de architectuurvraag beantwoord (blijft static HTML de juiste keuze?) plus een doorloop van de serverconfiguratie, de service worker, de asset-pijplijn en elke Supabase-query die de site afvuurt. Drie echte bugs gevonden en opgelost, vijf schaalpunten waarvan drie doorgevoerd, en twee acties die alleen jij kunt doen.</p>
+
+<div class="grid3" style="margin-top:20px">
+  <div class="kpi"><div class="n">3</div><div class="l">bugs — opgelost</div></div>
+  <div class="kpi"><div class="n">5</div><div class="l">schaalpunten — 3 opgelost</div></div>
+  <div class="kpi"><div class="n">7</div><div class="l">bestanden te uploaden</div></div>
+</div>
+
+<div class="box g">
+<p><b>Doorgevoerd op 15 augustus.</b> Alle drie de bugs zijn opgelost, plus de drie schaalpunten die in dit project op te lossen waren. Wat overblijft zijn twee dingen die niet in code zitten: Cloudflare aanzetten en het SQL-script draaien. De uploadlijst staat onderaan.</p>
+</div>
+
+<h2>Het antwoord op de architectuurvraag</h2>
+<p class="lead">Static HTML + JS blijft voor deze site de juiste keuze. Er is geen taal die het beter zou doen, en overstappen zou de site langzamer maken, niet sneller.</p>
+<p>De reden is dat jullie de dynamiek al goed hebben afgesplitst: de pagina's zijn statisch, Supabase doet de data en auth, edge functions doen de logica, en <code>sw.js</code> vangt de trage 4G op. Een statisch bestand wordt van schijf geserveerd — duizend gelijktijdige bezoekers kosten de server vrijwel niets. Bij WordPress of Laravel kost elke pageview CPU en een databaseverbinding, en dáár zit de kantelpunt bij traffic.</p>
+<p>Wat wél schaalt-of-niet, is Supabase. En daar zitten de echte problemen — niet in de HTML.</p>
+
+<div class="box">
+<p><b>Wanneer je wél zou moeten overstappen.</b> Alleen bij honderden of duizenden listings die elk een eigen geïndexeerde pagina met verse data nodig hebben. Dan is de volgende stap een site-generator (Astro of Eleventy): nog steeds statische output, maar pagina's gegenereerd uit Supabase bij het bouwen. Geen PHP, geen Node-server, geen andere hostingrekening. Dat is een verbouwing van weken en op dit moment niet nodig.</p>
+</div>
+
+<h2>Wat al goed staat</h2>
+<p>Dit is nagelopen en klopte:</p>
+<ul>
+<li><b>Afbeeldingen.</b> Alle 105 bestanden zijn WebP, met een <code>-mob</code>-variant per hero en een <code>&lt;picture&gt;</code> met <code>media="(max-width:640px)"</code> die hem ook echt kiest. Hero's dragen <code>fetchpriority="high"</code>, kaarten <code>loading="lazy"</code>. Dit is de post waar normaal 90% van de bandbreedte weglekt; hier niet.</li>
+<li><b>Fonts.</b> Twee variabele woff2-bestanden, zelf gehost, met <code>preload</code>. Geen Google Fonts op de publieke pagina's — dus geen extra DNS-lookup en TLS-handshake naar een derde partij.</li>
+<li><b>Serverconfiguratie.</b> Brotli en GZIP aan, een jaar <code>immutable</code> op afbeeldingen en fonts, <code>no-cache</code> op de service worker, HSTS, HTTPS geforceerd, <code>www</code> gestript, echte 404-status.</li>
+<li><b>Service worker.</b> Stale-while-revalidate op HTML, cache-first op assets, een 6-seconden-guard op een vastgelopen socket, en privépagina's expliciet buiten de cache. Voor een gedeelde telefoon op 4G is dit precies goed gedacht.</li>
+<li><b>Vendor-bestanden lokaal.</b> Leaflet, React en supabase-js staan in <code>vendor/</code> in plaats van op een CDN van een derde partij. Eén origin, geen externe afhankelijkheid.</li>
+<li><b>Preconnect</b> naar Supabase en MapTiler staat in de <code>&lt;head&gt;</code>, dus de handshake loopt al terwijl de HTML nog parseert.</li>
+</ul>
+
+<h2>Nu al fout <span class="tag tok" style="font-size:8.5pt">alle drie opgelost</span></h2>
+<p>Drie dingen zijn geen schaalrisico maar een bug die vandaag actief is.</p>
+
+<h3>1 · De precache van de service worker is dood <span class="tag tok">opgelost</span></h3>
+<p>De service worker precacht de shell met een versiestempel dat moet matchen met de <code>&lt;head&gt;</code> van de pagina's. Die stempels lopen uit elkaar:</p>
+<pre>sw.js       styles.min.css?v=<b>1787875200000</b>
+index.html  styles.min.css?v=<b>1787961600000</b></pre>
+<p>Het commentaar in <code>sw.js</code> waarschuwt hier zelf voor: "a mismatch silently makes this precache useless." Dat is precies wat er nu gebeurt. De browser ziet de precache-URL als een ander bestand dan de URL die de pagina opvraagt, dus elke bezoeker downloadt CSS, JS en de fonts opnieuw — ongeveer 130 kB die al klaarstond.</p>
+<p><b>Opgelost.</b> De stempel in <code>sw.js</code> staat nu in één constante (<code>STAMP</code>) en is gelijkgetrokken met de pagina's. Het nieuwe <code>build.mjs</code> schrijft die constante en elke <code>?v=</code> in elke pagina vanaf nu vanuit één bron, dus ze kunnen niet meer uit elkaar lopen. De cacheversie staat op <code>mk-v17</code>, zodat elke bezoeker de oude kapotte cache één keer weggooit.</p>
+
+<h3>2 · <code>app.min.js</code> was niet geminificeerd <span class="tag tok">opgelost</span></h3>
+<table>
+<tr><th>Bestand</th><th>Bron</th><th>"min" vóór</th><th>"min" nu</th></tr>
+<tr><td><code>app.js</code></td><td>87 kB / 1292 regels</td><td>87 kB / 1289 regels</td><td><b>75 kB</b></td></tr>
+<tr><td><code>styles.css</code></td><td>40 kB / 590 regels</td><td>37 kB / 4 regels</td><td>37 kB — was al goed</td></tr>
+</table>
+<p>Bij <code>app.min.js</code> waren alleen wat commentaarregels weg — variabelenamen en witruimte stonden er nog volledig in.</p>
+<p><b>Opgelost — 12 kB eraf.</b> <code>build.mjs</code> minificeert nu echt: commentaar, indentatie en witruimte rond leestekens eruit. Variabelenamen laat het met opzet staan; die inkorten vraagt een volledige parser en levert ná Brotli nauwelijks meer op, terwijl het in een bestand van 1300 regels wél een stille breuk kan opleveren.</p>
+<div class="box">
+<p><b>Eén valkuil die dit bijna stil misging — het is de moeite waard om te weten.</b> De eerste versie van de minifier keek per regel. <code>app.js</code> bouwt zijn kaarten met meerregelige template literals vol HTML, en op de tweede regel van zo'n literal denkt een regel-voor-regel-minifier dat hij naar code kijkt. Hij haalde toen spaties weg die de bezoeker daadwerkelijk leést: <code>${ICON.pin} ${p.street}</code> werd <code>${ICON.pin}${p.street}</code>, waardoor het locatie-icoon tegen het adres plakte op elke property-card van de site.</p>
+<p>De uitvoer was daarbij nog steeds geldige JavaScript, dus een parse-controle vangt dit per definitie niet. De minifier is nu stateful over regelgrenzen: template literals én gewone strings gaan volledig verbatim mee, ongeacht hoeveel regels ze beslaan. En er ligt een assert onder: alle 1408 literals in de uitvoer moeten byte-voor-byte gelijk zijn aan die in de bron, in dezelfde volgorde, anders schrijft de build niets weg. Die assert is getest door de oude fout er kunstmatig weer in te zetten — hij wordt afgekeurd.</p>
+</div>
+<p>De CSS bleek al goed geminificeerd en is bewust ongewijzigd gelaten.</p>
+
+<h3>3 · Iedere ingelogde gebruiker abonneerde zich op álle berichten van het platform <span class="tag tok">opgelost</span></h3>
+<pre>sb.channel('all-msgs-'+userId)
+  .on('postgres_changes', { event:'INSERT', schema:'public', table:'messages' },
+      payload =&gt; { if(payload.new.sender_id !== userId) onNewMessage(...) })</pre>
+<p>Er zit geen <code>filter</code> op het abonnement. Het filteren gebeurt pas in de browser, ná ontvangst. Twee gevolgen:</p>
+<ul>
+<li><b>Privacy.</b> Of dit een lek is, hangt volledig af van of RLS op <code>messages</code> aanstaat vóór Realtime. Staat dat niet strak, dan krijgt elke ingelogde bezoeker de inhoud van elk bericht van iedereen binnen. Dit moet gecontroleerd worden vóór er echte gebruikers op zitten.</li>
+<li><b>Schaal.</b> Met 200 ingelogde gebruikers gaat elk bericht 200 keer over de lijn in plaats van 2 keer. De ongelezen-badge is de duurste functie van de site geworden.</li>
+</ul>
+<p><b>Opgelost.</b> <code>subscribeToAllMessages</code> opent nu één gefilterd kanaal per conversatie waar de gebruiker daadwerkelijk in zit (<code>filter:'conversation_id=eq.…'</code>), zodat de server filtert en er niets anders meer bij de browser aankomt. De functie geeft een array kanalen terug en <code>unsubscribeChannel()</code> accepteert nu ook een array, dus bestaande aanroepen blijven werken.</p>
+<p><b>Nog wel jouw actie:</b> blok 4 van het SQL-script controleert of RLS op <code>messages</code> en <code>conversations</code> echt aanstaat. De frontend hoort niet de enige verdediging te zijn. Doe dit vóór er echte gebruikers op zitten.</p>
+
+<h2>Schaalt niet mee</h2>
+
+<h3>4 · Elke gebiedspagina haalde de hele listings-tabel op <span class="tag tok">opgelost</span></h3>
+<p>Dit is het grootste schaalrisico van de site. <code>primeListings()</code> doet:</p>
+<pre>sb.from('listings').select('<b>*, listing_media(*)</b>')
+  .in('status',['active','under_offer'])
+  .order('created_at',{ascending:false})   <b>← geen limit</b></pre>
+<p>En dat wordt aangeroepen op 35+ gebiedspagina's — die er allemaal maar <b>drie</b> kaarten uit gebruiken (<code>.slice(0,3)</code>). Vandaag is dat onschuldig. Bij 400 listings met gemiddeld 8 foto's is het per bezoeker per pagina zo'n 3.500 rijen en enkele honderden kB JSON, over 4G.</p>
+<p><b>Opgelost, in één bestand in plaats van 35.</b> De verleiding was om alle gebiedspagina's aan te passen; het is beter opgelost in <code>supabase.js</code> zelf, want daar kan het niet meer per pagina uit de bocht lopen. Drie grenzen:</p>
+<ul class="check">
+<li><b>Eén keer per pagina.</b> <code>primeListings()</code> keert direct terug als de cache al gevuld is, in plaats van opnieuw te fetchen.</li>
+<li><b>Eén keer per sessie.</b> Het resultaat wordt vijf minuten in <code>sessionStorage</code> hergebruikt — vijf gebiedspagina's achter elkaar openen kost nu één request in plaats van vijf.</li>
+<li><b>Een harde bovengrens.</b> <code>.limit(400)</code>, ongeacht hoe groot de tabel wordt. De ongeremde variant kon in principe de hele tabel meenemen.</li>
+</ul>
+<p>En de detailpagina, die de zwaarste was: <code>property.html</code> haalde eerst de héle tabel op om daar één listing uit te vissen. Die doet nu eerst <code>fetchListing(id)</code> — één rij, opgezocht op primary key — en valt alleen terug op de cache voor demo-data en lokaal aangemaakte listings.</p>
+<p><b>Wat hierna nog kan:</b> een <code>listing_cards</code>-view zodat de kaartqueries niet meer <code>select('*')</code> plus alle media doen. Dat is de volgende stap, geen noodgeval meer nu de bovengrenzen erin zitten:</p>
+<pre>create view listing_cards as
+select l.id, l.kind, l.category, l.status, l.price, l.title,
+       l.street, l.area, l.beds, l.baths, l.sqm, l.plot_sqm,
+       l.lat, l.lng, l.is_verified_title, l.plan, l.created_at,
+       (select storage_path from listing_media m
+         where m.listing_id = l.id and not m.is_document
+         order by m.sort limit 1) as cover
+from listings l;</pre>
+<div class="box"><p><b>Effect.</b> Een kaartrij van ±300 bytes in plaats van een volledige listing met alle media. Dat is nog eens 80–90% minder JSON per pageview — maar de bovengrenzen die er nu in zitten, houden de zaak hoe dan ook overeind.</p></div>
+
+<h3>5 · Vrij-tekst zoeken kan geen index gebruiken <span class="tag tscale">SQL nodig</span></h3>
+<pre>q.or('title.ilike.%'+q+'%,area.ilike.%'+q+'%,street.ilike.%'+q+'%,description.ilike.%'+q+'%')</pre>
+<p>Een <code>ilike</code> met een <code>%</code> aan het begin kan door geen enkele gewone index worden bediend; Postgres leest de hele tabel, vier kolommen breed. Bij een paar honderd rijen merk je dat niet, bij tienduizend wel — en de zoekpagina is de pagina waar de meeste bezoekers als eerste landen.</p>
+<pre>create extension if not exists pg_trgm;
+create index listings_search_trgm on listings
+  using gin ((coalesce(title,'')||' '||coalesce(area,'')||' '||
+              coalesce(street,'')||' '||coalesce(description,'')) gin_trgm_ops);</pre>
+<p>Plus gewone indexen op wat er in élke query staat: <code>(status, created_at desc)</code>, <code>(status, price)</code>, <code>(area)</code>, <code>listing_media(listing_id)</code>, <code>favorites(user_id)</code>, <code>messages(conversation_id, created_at)</code>. Alles staat klaar in <code>backend/performance-indexes.sql</code>, blok 1 en 2 — kopiëer het naar de SQL Editor van Supabase en voer het uit.</p>
+
+<h3>6 · Eén UPDATE per bekeken listing <span class="tag tscale">SQL nodig</span></h3>
+<p><code>fetchListing()</code> vuurt <code>bump_listing_views</code> af bij elke detailpagina. Fire-and-forget is goed gedacht, maar het blijft een schrijfactie op dezelfde rij. Wordt een listing populair, dan staan alle bezoekers achter elkaar in de rij voor dezelfde row lock — en een populaire listing is precies waar je dit niet wil.</p>
+<p><b>Fix, staat klaar in blok 3 van het SQL-script:</b> een append-only <code>listing_views</code>-tabel (geen lock-conflict mogelijk), een herschreven <code>bump_listing_views</code> met dezelfde naam en dezelfde aanroep — dus de frontend hoeft niet te wijzigen — en een <code>rollup_listing_views()</code> die één keer per nacht optelt naar de teller, in dezelfde cron als de marktindex.</p>
+
+<h3>7 · Geen CDN <span class="tag tscale">jouw actie</span></h3>
+<p>De site staat op één server, aangesproken via FTP. Voor een bezoeker in Serekunda is elke request een rondje naar Europa: 200–400 ms per bestand, en de eerste pageview vraagt HTML, CSS, JS, twee fonts en de hero op.</p>
+<p><b>Fix:</b> Cloudflare ervóór zetten. Gratis, geen wijziging in jullie werkwijze — nameservers omzetten, klaar. Wat het oplevert:</p>
+<ul>
+<li>HTML, CSS, JS en afbeeldingen worden wereldwijd gecacht, ook op het knooppunt dat het dichtst bij Gambia zit.</li>
+<li>HTTP/3 en QUIC, wat op een wisselvallige mobiele verbinding merkbaar sneller herstelt dan TCP.</li>
+<li>De server blijft overeind bij een piek of een botaanval, omdat hij het grootste deel van de verzoeken nooit ziet.</li>
+</ul>
+<div class="box"><p><b>Let op één ding.</b> Na het aanzetten moet je na elke FTP-upload de cache purgen, anders zie je je eigen wijziging niet. Zet in Cloudflare de <i>Cache Rules</i> zo dat <code>*.html</code> kort leeft (of "respect existing headers" — jullie <code>.htaccess</code> stuurt al <code>max-age=0</code>) en assets lang. Dan hoef je alleen bij een assetwijziging te purgen.</p></div>
+
+<h3>8 · Eén globale cache-buster voor alle assets <span class="tag tok">opgelost</span></h3>
+<p>Alle bestanden droegen dezelfde stempel, <code>?v=1791580000000</code>, handmatig op twee plekken bijgehouden — de oorzaak van bug 1. Eén pagina had zelfs nog een stempel van drie weken oud (<code>sources.html</code>).</p>
+<p><b>Opgelost.</b> <code>build.mjs</code> zet de stempel nu in één keer in elke pagina én in <code>sw.js</code>, en mirrort daarna naar <code>deploy/</code>. Interne documenten slaat het over. Vanaf nu is de volledige uploadvoorbereiding één commando:</p>
+<pre>node build.mjs</pre>
+<p><code>supabase.js</code> is bovendien uit de lange cache gehaald (<code>no-cache</code> in <code>.htaccess</code> en <code>_headers</code>). Daar zit auth- en berichtenlogica in; een veiligheidsfix moet bij de volgende paginaweergave aankomen, niet een maand later. Het bestand laadt ná <code>window.onload</code>, dus het revalideren kost niets op het kritieke pad.</p>
+
+<h3>9 · Twintig <code>upload-*</code>-mappen met kopieën van dezelfde pagina's <span class="tag tok">opgelost</span></h3>
+<p>Naast <code>deploy/</code> stonden er negentien historische uploadmappen, elk met een eigen versie van dezelfde bestanden — vier verschillende <code>kartong.html</code>'s, drie <code>supabase.js</code>'s. Geen performanceprobleem, maar precies het scenario waar de werkafspraak in <code>CLAUDE.md</code> tegen beschermt: één verkeerde map uploaden zet de site weken terug.</p>
+<p><b>Opgeruimd.</b> Alle negentien staan nu onder <code>archief/</code>, niets verwijderd. In de root staat nog één map die telt: <code>deploy/</code>.</p>
+
+<h2>Wat er nog te doen is</h2>
+<table>
+<tr><th>#</th><th>Actie</th><th>Wie</th><th>Werk</th><th>Winst</th></tr>
+<tr><td>1</td><td>Cloudflare voor <code>mykunda.com</code> zetten</td><td>jij, bij de domeinregistratie</td><td>1 uur</td><td>Groot — elke bezoeker, elke pagina</td></tr>
+<tr><td>2</td><td><code>backend/performance-indexes.sql</code> uitvoeren in Supabase → SQL Editor</td><td>jij</td><td>15 min</td><td>Groot — zoekpagina, en de teller die niet meer botst</td></tr>
+<tr><td>3</td><td>Blok 4 van dat script nalopen: staat RLS op <code>messages</code> aan?</td><td>jij</td><td>10 min</td><td>Privacy — vóór de eerste echte gebruikers</td></tr>
+<tr><td>4</td><td>De zeven bestanden hieronder uploaden</td><td>jij</td><td>5 min</td><td>Alles wat hierboven "opgelost" staat, gaat live</td></tr>
+<tr><td>5</td><td>Later: <code>listing_cards</code>-view voor de kaartqueries</td><td>samen</td><td>halve dag</td><td>Middel — geen noodgeval meer</td></tr>
+</table>
+
+<h2>Te uploaden naar de webroot</h2>
+<p>Uit <code>deploy/</code>, met overschrijven aan. Alleen deze zeven zijn gewijzigd:</p>
+<table>
+<tr><th>Bestand</th><th>Waarom</th></tr>
+<tr><td><code>app.min.js</code></td><td>Echt geminificeerd — 12 kB kleiner, gerenderde tekst byte-identiek</td></tr>
+<tr><td><code>supabase.js</code></td><td>Berichten-abonnement per conversatie; grenzen op <code>primeListings()</code></td></tr>
+<tr><td><code>sw.js</code></td><td>Precache-stempel gelijkgetrokken; cacheversie <code>mk-v17</code></td></tr>
+<tr><td><code>property.html</code></td><td>Haalt één listing op in plaats van de hele tabel</td></tr>
+<tr><td><code>sources.html</code></td><td>Achtergebleven stempel van drie weken oud gecorrigeerd</td></tr>
+<tr><td><code>.htaccess</code></td><td><code>supabase.js</code> uit de lange cache</td></tr>
+<tr><td><code>_headers</code></td><td>Idem, voor als de site ooit op Netlify/Vercel staat</td></tr>
+</table>
+<div class="box"><p><b>Na het uploaden één keer controleren.</b> Open de site, hard-refresh (<code>Ctrl+Shift+R</code>), en kijk in de console of er geen fouten staan. De service worker draait daarna op <code>mk-v17</code>; de oude cache wordt automatisch weggegooid. Zet je Cloudflare aan, purge dan de cache na deze upload.</p></div>
+<p>Niet uploaden: <code>build.mjs</code>, <code>backend/performance-indexes.sql</code> en dit document zijn interne bestanden.</p>
+
+<div class="box g">
+<p><b>Kort samengevat.</b> De front-end is niet je probleem — die is beter gebouwd dan de meeste sites die ik zie. Wat er stuk was is nu gemaakt en wat ongeremd was heeft grenzen. Wat overblijft zijn twee dingen die alleen jij kunt doen: Cloudflare ervoor zetten, en het SQL-script draaien. Samen zijn die twee het verschil tussen "de site trekt het" en "de site trekt het niet" wanneer de traffic komt.</p>
+</div>
+
+<hr>
+<p class="foot">Intern document — niet uploaden naar de webroot. Onderzocht: <code>.htaccess</code>, <code>_headers</code>, <code>sw.js</code>, <code>supabase.js</code>, <code>app.js</code>/<code>app.min.js</code>, <code>styles.css</code>/<code>styles.min.css</code>, de <code>&lt;head&gt;</code> en scriptlading van de publieke pagina's, alle 105 afbeeldingen en de mappenstructuur van het project. Gewijzigd in dit project: <code>app.min.js</code>, <code>supabase.js</code>, <code>sw.js</code>, <code>property.html</code>, <code>sources.html</code>, <code>.htaccess</code>, <code>_headers</code>, en nieuw: <code>build.mjs</code>, <code>backend/performance-indexes.sql</code>, <code>archief/</code>.</p>
+
+</doc-page>
+</body>
+</html>
