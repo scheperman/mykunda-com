@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:1seproe--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:17dyl2y--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -32,7 +32,7 @@
 <link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="images/kotu.webp" as="image" fetchpriority="high">
-<link rel="stylesheet" href="styles.min.css?v=160056045768410">
+<link rel="stylesheet" href="styles.min.css?v=54036962077406">
 <style>#rtable{max-width:1000px}#rtable .rrow{grid-template-columns:1.5fr 1fr 1fr 1fr 1fr;gap:12px}#rtable .rhead span{line-height:1.3}#rtable .rl{display:none}@media(max-width:760px){#rtable .rrow{grid-template-columns:1fr;gap:4px}#rtable .rl{display:inline;color:var(--muted);font-weight:600;margin-right:8px}}</style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://mykunda.com/"},{"@type":"ListItem","position":2,"name":"Rent","item":"https://mykunda.com/rent.html"}]}
@@ -139,9 +139,9 @@
 <section class="sec wrap" data-screen-label="Rent / Featured">
 <div class="sec-head">
 <div>
-<div class="eyebrow">Available now</div>
+<div class="eyebrow" id="rentEyebrow">Available now</div>
 <h2>Homes to rent</h2>
-<p>Furnished and unfurnished places across the coast — photographed properly, with the monthly rent on the listing.</p>
+<p id="rentLead">Furnished and unfurnished places across the coast — photographed properly, with the monthly rent on the listing.</p>
 </div>
 <a class="link-arrow" href="search.html?type=rent">See all rentals <span id="a1"></span></a>
 </div>
@@ -295,11 +295,11 @@
 window.__sbReady=new Promise(function(res){window.addEventListener('load',function(){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js';
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=160056045768410'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=54036962077406'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
   document.body.appendChild(s1);
 });});
 </script>
-<script src="app.min.js?v=160056045768410"></script>
+<script src="app.min.js?v=54036962077406"></script>
 <script>
 initHeroHeader();
 
@@ -323,9 +323,30 @@ if(rentals.length){
   document.getElementById('stRent').textContent =
     rentals.length + (rentals.length === 1 ? ' place to rent' : ' places to rent');
 }
+/* Lege staat. De vorige versie was één grijze regel in de eerste kolom van een
+   grid-3, pal onder een kop die gefotografeerde woningen met maandprijzen
+   beloofde. Dit blok loopt over de volle breedte en geeft twee echte wegen:
+   zelf plaatsen, en wat er vandaag al op de pagina staat. */
+var ARROW_SM = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
 document.getElementById('rentGrid').innerHTML = rentals.length
   ? rentals.slice(0,3).map(cardHTML).join('')
-  : '<p style="color:var(--muted)">Nothing to rent listed yet — <a href="sell.html">list your place free</a>.</p>';
+  : '<div class="elist">'
+    + '<div class="elist-a">'
+    + '<h3>Be the first to list</h3>'
+    + '<p>Listing a place to rent is free. Tenants reach you through search, the area pages and WhatsApp, with no agency office in between.</p>'
+    + '<a class="btn btn-primary" href="list.html">List your place</a>'
+    + '</div>'
+    + '<div class="elist-b"><h4>Already useful today</h4><div class="elist-links">'
+    + '<a href="#rtable">What rent costs, area by area' + ARROW_SM + '</a>'
+    + '<a href="areas-in-the-gambia.html">All 41 areas, from Banjul to Basse' + ARROW_SM + '</a>'
+    + '<a href="guide-renting-out-property-in-the-gambia.html">Renting out a place: what to expect' + ARROW_SM + '</a>'
+    + '</div></div></div>';
+if(!rentals.length){
+  /* "Available now" boven "Nothing is listed here yet" spreekt zichzelf tegen. */
+  document.getElementById('rentEyebrow').textContent = 'Coming soon';
+  document.getElementById('rentLead').textContent =
+    'Nothing is listed here yet — MyKunda is new, and the first places to rent are on their way.';
+}
 
 // indicative rents (EUR/month, converted to selected currency)
 var RENTS = [

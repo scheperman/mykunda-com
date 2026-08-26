@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:008sp4x--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:0k0fxtv--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -34,7 +34,7 @@
 <link rel="preload" href="images/home-hero-mobile.webp" as="image" media="(max-width:640px)" fetchpriority="high">
 <link rel="preload" href="images/home-hero-tablet.webp" as="image" media="(min-width:641px) and (max-width:1024px)" fetchpriority="high">
 <link rel="preload" href="images/home-hero.webp" as="image" media="(min-width:1025px)" fetchpriority="high">
-<link rel="stylesheet" href="styles.min.css?v=160056045768410">
+<link rel="stylesheet" href="styles.min.css?v=54036962077406">
 <style>.guide-teaser{display:flex;align-items:center;gap:18px;margin-top:32px;background:var(--green-50);border:1.5px solid var(--green-200);border-radius:var(--r-lg);padding:22px 26px;transition:.15s}.guide-teaser:hover{border-color:var(--green-500);box-shadow:var(--sh-sm)}.guide-teaser .ic{width:44px;height:44px;border-radius:12px;background:var(--white);color:var(--green-700);display:flex;align-items:center;justify-content:center;flex:none}.guide-teaser b{font-family:var(--serif);font-size:17px;font-weight:600;color:var(--ink);display:block}.guide-teaser p{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.5}.guide-teaser .go{margin-left:auto;font-weight:700;font-size:14.5px;color:var(--green-700);white-space:nowrap;display:flex;align-items:center;gap:6px;flex:none}@media(max-width:640px){.guide-teaser{flex-direction:column;align-items:flex-start;text-align:left}.guide-teaser .go{margin-left:0}}
 .ovpitch{display:grid;grid-template-columns:1.15fr .85fr;gap:34px;align-items:center;background:linear-gradient(135deg,#0E2E25,#15463A 62%,#1C5848);border-radius:var(--r-xl);padding:44px 46px;color:#fff}
 .ovpitch .eyebrow{color:var(--amber-400);margin-bottom:12px}
@@ -151,9 +151,9 @@
 <section class="sec wrap" data-screen-label="Buy / Featured homes">
 <div class="sec-head">
 <div>
-<div class="eyebrow">For sale now</div>
+<div class="eyebrow" id="buyHomesEyebrow">For sale now</div>
 <h2>Homes &amp; compounds</h2>
-<p>Ready-to-move villas, apartments and family compounds along the coast — checked, photographed and priced in the open.</p>
+<p id="buyHomesLead">Ready-to-move villas, apartments and family compounds along the coast — checked, photographed and priced in the open.</p>
 </div>
 <a class="link-arrow" href="search.html?type=sale">See all for sale <span id="a1"></span></a>
 </div>
@@ -306,11 +306,11 @@
 window.__sbReady=new Promise(function(res){window.addEventListener('load',function(){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js';
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=160056045768410'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=54036962077406'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
   document.body.appendChild(s1);
 });});
 </script>
-<script src="app.min.js?v=160056045768410"></script>
+<script src="app.min.js?v=54036962077406"></script>
 <script>
 initHeroHeader();
 
@@ -329,8 +329,27 @@ document.querySelectorAll('.apr').forEach(function(el){
 });
 
 // listings — real data only; empty lists get an honest empty state
-var EMPTY_HOMES = '<div style="padding:34px 0;color:var(--muted)"><p style="font-size:17px;font-weight:600;color:var(--ink-2)">No homes listed yet</p><p style="margin-top:6px">MyKunda is new. Be the first to list your property — it\'s free.</p><a class="btn btn-primary" href="list.html" style="margin-top:14px">List your property</a></div>';
-var EMPTY_LAND = '<div style="padding:34px 0;color:var(--muted)"><p style="font-size:17px;font-weight:600;color:var(--ink-2)">No plots listed yet</p><p style="margin-top:6px">Land and plots you list appear here. Listing is free.</p><a class="btn btn-primary" href="list.html?cat=land" style="margin-top:14px">List your plot</a></div>';
+/* Lege staat, zolang er nog niets te koop staat. De vorige versie zette een
+   losse regel "No homes listed yet" in de eerste kolom van het grid-3 — links
+   tegen de rand, met een half scherm leegte ernaast, en pal onder een kop die
+   ready-to-move villa's beloofde. Dit blok loopt over de volle breedte en biedt
+   twee echte wegen in plaats van een doodlopend eind: zelf plaatsen (wat de
+   leegte oplost) en wat er vandaag al staat. Het plottenraster eronder blijft
+   leeg — die sectie heeft genoeg aan haar eigen tekst en de gids. */
+var ARROW_SM = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+var EMPTY_HOMES =
+  '<div class="elist">'
+  + '<div class="elist-a">'
+  + '<h3>Be the first to list</h3>'
+  + '<p>Listing on MyKunda is free, and a title check is available on anything you put up. Once your listing is approved it shows up in search and on the area page for that town.</p>'
+  + '<a class="btn btn-primary" href="list.html">List your property</a>'
+  + '</div>'
+  + '<div class="elist-b"><h4>Already useful today</h4><div class="elist-links">'
+  + '<a href="gambia-property-prices.html">What property costs, area by area' + ARROW_SM + '</a>'
+  + '<a href="areas-in-the-gambia.html">All 41 areas, from Banjul to Basse' + ARROW_SM + '</a>'
+  + '<a href="verify.html">Have a title checked before you pay' + ARROW_SM + '</a>'
+  + '</div></div></div>';
+var EMPTY_HOMES_LEAD = 'Nothing is listed here yet — MyKunda is new, and the first homes and compounds are on their way.';
 function renderBuyListings(){
   var sale = allListings().filter(function(p){ return p.type==='sale'; });
   var homes = sale.filter(function(p){ return p.cat!=='land'; }).slice(0,3);
@@ -343,7 +362,14 @@ function renderBuyListings(){
       sale.length + (sale.length === 1 ? ' home or plot for sale' : ' homes & plots for sale');
   }
   document.getElementById('buyHomes').innerHTML = homes.length ? homes.map(cardHTML).join('') : EMPTY_HOMES;
-  document.getElementById('buyLand').innerHTML = plots.length ? plots.map(cardHTML).join('') : EMPTY_LAND;
+  if(!homes.length){
+    /* "For sale now" boven "Nothing is listed here yet" spreekt zichzelf tegen. */
+    document.getElementById('buyHomesEyebrow').textContent = 'Coming soon';
+    document.getElementById('buyHomesLead').textContent = EMPTY_HOMES_LEAD;
+  }
+  /* Geen tweede lege blok: de plottensectie draagt haar eigen verhaal en de gids
+     eronder. Een tweede "nog niets hier" pal na het eerste maakt de pagina dood. */
+  document.getElementById('buyLand').innerHTML = plots.length ? plots.map(cardHTML).join('') : '';
 }
 renderBuyListings();
 (async function(){
