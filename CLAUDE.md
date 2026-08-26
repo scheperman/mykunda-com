@@ -173,10 +173,11 @@ Sinds 26-08-2026 loopt hij van begin tot eind door zonder toetsaanslag:
   dan alles opnieuw bij de server halen. Wordt die regel niet herkend — een andere
   taalversie van WinSCP — dan gaat het script gewoon door. Dat is de veilige kant
   van die keuze.
-- **De bevestiging staat op ja** en gaat na vijf seconden vanzelf door. Die vijf
-  seconden zijn er om `n` te kunnen drukken als de lijst je niet bevalt. Kijk
-  ernaar: sinds de stempel uit de inhoud komt, staat er alleen nog in wat je
-  werkelijk hebt gewijzigd, dus een onverwacht lange lijst betekent iets.
+- **Er wordt niets gevraagd.** Is er iets te synchroniseren, dan gaat het weg.
+  De lijst uit stap 2 is je controle achteraf: sinds de stempel uit de inhoud komt
+  staat daar alleen nog in wat je zelf hebt gewijzigd, dus een onverwacht lange
+  lijst betekent iets. Wil je toch een moment om af te breken, dan staan de twee
+  regels ervoor als commentaar in `upload.bat` klaar.
 - **Geen Enter aan het eind.** Het venster sluit zichzelf na acht seconden. Bij een
   fout blijft de oude `pause` staan, anders lees je de foutmelding nooit.
 

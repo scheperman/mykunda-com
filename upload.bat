@@ -130,15 +130,12 @@ rem  gaat het script gewoon door zoals vroeger. Dat is de veilige kant.
 findstr /i /c:"Niets te synchroniseren" /c:"Nothing to synchronize" "%VOORBEELD%" >nul
 if not errorlevel 1 goto :nietstedoen
 
-rem  De bevestiging staat standaard op ja en gaat vanzelf door. De vijf seconden
-rem  zijn er voor het geval de lijst hierboven je niet bevalt: dan druk je n.
-echo.
-choice /c jn /n /t 5 /d j /m "  Naar de server sturen? Ja, tenzij je binnen 5 seconden n indrukt: "
-if errorlevel 2 (
-  echo.
-  echo   Afgebroken. Er is niets geupload.
-  goto :einde
-)
+rem  Er wordt niets meer gevraagd: is er iets te synchroniseren, dan gaat het weg.
+rem  Wil je toch weer een moment om af te breken, zet dan deze twee regels terug:
+rem      choice /c jn /n /t 5 /d j /m "  Naar de server sturen? Ja, tenzij je binnen 5 seconden n indrukt: "
+rem      if errorlevel 2 goto :einde
+rem  De lijst hierboven blijft hoe dan ook je controle achteraf: sinds de stempel
+rem  uit de inhoud komt, staat daar alleen nog in wat je zelf hebt gewijzigd.
 
 rem --- 3. Echt versturen ----------------------------------------
 echo.
