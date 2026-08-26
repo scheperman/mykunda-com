@@ -30,7 +30,9 @@ verwerken, pas daarna opnieuw uploaden.
 
 1. de wijziging in de **root** van deze map maken;
 2. `node build.mjs` draaien;
-3. de hele inhoud van `deploy/` via FTP uploaden, met overschrijven aan;
+3. de **losse bestanden uit de root van `deploy/`** via FTP uploaden, met
+   overschrijven aan — de mediamappen alleen als daar iets veranderd is, zie
+   "Wat er per upload mee moet" hieronder;
 4. Cloudflare leegmaken (zie hieronder);
 5. `git add -A` en committen, met in het bericht wat er live is gezet.
 
@@ -94,9 +96,32 @@ oude menu.
 Verhoog hem bij elke inhoudelijke wijziging. `STAMP` nooit met de hand aanraken.
 
 Alleen `sw.js` uploaden kan niet: de build zet bij elke run een nieuwe `?v=` in álle
-pagina's én in `sw.js`. Na een build gaan dus altijd alle losse bestanden uit de root
-van `deploy/` mee. De vijf mediamappen alleen als er afbeeldingen of fonts bij zijn
-gekomen.
+pagina's én in `sw.js`.
+
+## Wat er per upload mee moet
+
+`deploy/` is 27,8 MB, maar een gewone upload is 4,7 MB. Het verschil zijn de
+mediamappen, en die veranderen bijna nooit.
+
+| wat | omvang | wanneer uploaden |
+| --- | --- | --- |
+| losse bestanden in de root van `deploy/` (90 HTML + 18 stuks CSS, JS, `.htaccess`, sitemaps) | 108 bestanden, 4,7 MB | **elke keer** |
+| `images/` (incl. `images/og/`) | 165 bestanden, 22,4 MB | alleen bij nieuwe of vervangen foto's |
+| `vendor/` | 10 bestanden, 0,5 MB | alleen bij een nieuwe Leaflet of andere bibliotheek |
+| `logo/` en `fonts/` | 5 bestanden, 0,2 MB | alleen als logo of lettertype verandert |
+
+De root moet élke keer mee omdat de build in iedere pagina en in `sw.js` een verse
+`?v=`-stempel zet. Een pagina overslaan geeft een stempel die niet matcht met de
+service worker; die pagina's zijn dan dood gewicht in de precache.
+
+**Let op `.htaccess`.** Dat is een verborgen bestand en veel FTP-programma's tonen
+het niet standaard. Het draagt de CSP en de cacheregels, dus zonder dat bestand
+komen die wijzigingen nooit live. Zet in je FTP-programma "verborgen bestanden
+tonen" aan en controleer na een CSP-wijziging of de kop echt veranderd is.
+
+Werkt je FTP-programma met "alleen nieuwere bestanden overzetten" (FileZilla en
+WinSCP kunnen dat), zet dat dan aan en sleep gewoon alles: dan doet het programma
+deze afweging zelf en kun je niets vergeten.
 
 ## Na de upload: Cloudflare leegmaken
 
