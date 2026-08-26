@@ -127,8 +127,8 @@ tonen" aan en controleer na een CSP-wijziging of de kop echt veranderd is.
 
 `upload.bat` in de root doet stap 2 en 3 van de leverroute achter elkaar: hij
 draait `build.mjs`, laat daarna met WinSCP eerst **zien** wat er naar de server
-zou gaan, en verstuurt pas na een bevestiging. Daarna herinnert hij aan de
-Cloudflare-purge, want die blijft handwerk.
+zou gaan, verstuurt pas na een bevestiging, en leegt tot slot de Cloudflare-cache
+via de API. Vier stappen, één handeling.
 
 De synchronisatie vergelijkt op tijd en grootte en verwijdert niets op de
 server. Omdat `build.mjs` de tijdstempels van `images/`, `vendor/`, `logo/` en
@@ -137,9 +137,28 @@ server. Omdat `build.mjs` de tijdstempels van `images/`, `vendor/`, `logo/` en
 blijft er in de praktijk 4,7 MB uit de root over. Je hoeft dus niet meer zelf te
 kiezen welke mappen mee moeten; sleep desnoods alles.
 
-Twee dingen bovenin het bestand instellen: `SESSIE` (de naam waaronder de
-verbinding in WinSCP is opgeslagen) en `EXTERN` (de servermap). Er staat geen
-wachtwoord in, dus het bestand mag in de repo.
+Drie dingen bovenin het bestand instellen: `SESSIE` (de naam waaronder de
+verbinding in WinSCP is opgeslagen), `EXTERN` (de servermap) en `CF_ZONE` (de
+Zone ID bij Cloudflare). Er staat geen wachtwoord in en geen token — die staan
+allebei buiten de repo — dus het bestand mag gewoon meegecommit worden.
+
+### De sessie heet `mykunda-sftp`, en waarom niet `mykunda`
+
+Op 26-08-2026 stond de upload stil op `Kan site map of werkruimte niet openen`.
+Oorzaak: er was in WinSCP per ongeluk een **map** `MyKunda` bijgekomen met een
+halve verbinding erin. WinSCP kijkt niet naar hoofdletters, dus `open "mykunda"`
+kwam uit bij die map in plaats van bij de verbinding — en een map kun je niet
+openen. De opgeslagen verbinding zelf mankeerde niets.
+
+Daarom heet de verbinding nu `mykunda-sftp`. Die naam kan niet botsen met een
+mapje dat naar het project is vernoemd. **Noem een opgeslagen verbinding dus
+nooit hetzelfde als een sitemap in WinSCP**, en hernoem hem niet terug.
+
+Herken je deze fout ooit opnieuw: het ligt niet aan de servermap en niet aan het
+wachtwoord, maar aan een naam die twee keer voorkomt. Kijken kan in de
+Aanmeldingsdialoog van WinSCP, of in het register onder
+`HKCU\Software\Martin Prikryl\WinSCP 2\Sessions` — daar staat elke map als
+`Mapnaam/Sitenaam`.
 
 ### De servermap: níét `/httpdocs`
 
@@ -168,9 +187,49 @@ hem links liggen en hij komt nooit op de server. Gecontroleerd.
 ## Na de upload: Cloudflare leegmaken
 
 Cloudflare cachet HTML, en `mykunda.com/` is daar een andere cachesleutel dan
-`mykunda.com/index.html` — de homepage blijft daardoor het langst oud. Na elke upload:
-Cloudflare → Caching → Configuration → **Purge Everything**, daarna nakijken in een
-privévenster. Zonder purge lijkt een geslaagde upload mislukt.
+`mykunda.com/index.html` — de homepage blijft daardoor het langst oud. Zonder purge
+lijkt een geslaagde upload mislukt.
+
+Sinds 26-08-2026 doet `upload.bat` dit zelf, als stap 4/4, via de Cloudflare-API.
+Handmatig kan nog steeds: Cloudflare → Caching → Configuration → **Purge Everything**.
+Daarna nakijken in een privévenster.
+
+### Het token voor stap 4
+
+De Zone ID (`9bcef0f88fccc1407adafd421a4ec299`) staat gewoon bovenin `upload.bat` —
+dat is een identificatie, geen geheim. Het **token** staat er bewust niet, en ook
+nergens anders in de repo, maar in je gebruikersmap:
+
+```
+%USERPROFILE%\.mykunda-cloudflare.cmd
+```
+
+Eén regel, aanhalingstekens erbij:
+
+```
+set "CF_TOKEN=hier-jouw-token"
+```
+
+Aanmaken op **dash.cloudflare.com → Manage account → Account API tokens →
+Create Token**. Het dashboard is in 2026 herbouwd; "Custom token" heet daar nu
+**Start from scratch — Build a custom permission policy**. Dan:
+
+1. **Token name**: iets herkenbaars, bijvoorbeeld `mykunda-purge`.
+2. In het beleidsvak staat een keuzelijst op **Entire Account**. Zet die op
+   **Specified Domains** en kies `mykunda.com`. Dit moet als eerste — Cache
+   Purge is een domeinrecht, dus zolang de scope op Entire Account staat is het
+   níét te vinden en lijkt het alsof het recht niet bestaat.
+3. Zoek op `purge`. Onder **Cache & Performance → Cache** ("Grants access to
+   purge cache") vink je **Purge** aan. Verder niets.
+4. **Token expiration** op **No expiration**, anders stopt de purge-stap er op
+   een dag mee zonder dat je weet waarom.
+
+Meer rechten heeft het niet nodig, en meer geven maakt de schade groter als het
+bestand ooit uitlekt. Cloudflare toont het token één keer — daarna niet meer.
+
+Ontbreekt het bestand of is het token verlopen, dan gaat er niets stuk: het script
+meldt dat de cache níét is geleegd en verwijst je naar het dashboard. Een mislukte
+purge breekt de upload dus nooit af, want die is op dat moment al klaar.
 
 ## Controleren
 

@@ -10,7 +10,9 @@ rem  zou gaan, en verstuurt pas na jouw bevestiging.
 rem
 rem  Er staat hier geen wachtwoord in. WinSCP bewaart de verbinding
 rem  onder de naam hieronder; dit bestand verwijst er alleen naar.
-rem  Daarom mag het gewoon in de repo staan.
+rem  Hetzelfde geldt voor het Cloudflare-token van stap 4: dat staat
+rem  in je gebruikersmap, niet hier. Daarom mag dit bestand gewoon
+rem  in de repo staan.
 rem
 rem  EENMALIG VOORAF: verbind een keer met de hand in WinSCP zelf en
 rem  sla de verbinding op onder de naam hieronder. Dat is niet alleen
@@ -32,8 +34,12 @@ rem          /httpdocs in - dan zet je MyKunda over GamGrowth heen.
 rem
 rem          Het script controleert dit ook zelf: het kijkt eerst of
 rem          er in deze map een index.html staat en stopt anders.
-set "SESSIE=mykunda"
+set "SESSIE=mykunda-sftp"
 set "EXTERN=/var/www/vhosts/gamgrowth.com/mykunda.com"
+rem CF_ZONE = de Zone ID van mykunda.com bij Cloudflare. Dat is een
+rem          identificatie en geen geheim, dus die mag hier staan.
+rem          Het bijbehorende token staat bewust NIET in dit bestand.
+set "CF_ZONE=9bcef0f88fccc1407adafd421a4ec299"
 rem -------------------------------------------------------------
 
 cd /d "%~dp0"
@@ -68,7 +74,7 @@ echo   WinSCP: !WINSCP!
 
 rem --- 1. Bouwen ------------------------------------------------
 echo.
-echo == 1/3  Bouwen ================================================
+echo == 1/4  Bouwen ================================================
 call node build.mjs
 if errorlevel 1 (
   echo.
@@ -88,7 +94,7 @@ rem  Omdat build.mjs de tijdstempels van images, vendor, logo en
 rem  fonts met rust laat, ziet WinSCP die 22 MB als ongewijzigd en
 rem  blijft er in de praktijk 4,7 MB uit de root over.
 echo.
-echo == 2/3  Wat zou er naar de server gaan? =======================
+echo == 2/4  Wat zou er naar de server gaan? =======================
 rem  De stat-regel is het vangnet: staat er geen index.html in de
 rem  opgegeven map, dan is het de verkeerde map en stopt WinSCP hier -
 rem  voordat er ook maar iets verstuurd is.
@@ -122,7 +128,7 @@ if /i not "!GA!"=="j" (
 
 rem --- 3. Echt versturen ----------------------------------------
 echo.
-echo == 3/3  Uploaden ==============================================
+echo == 3/4  Uploaden ==============================================
 > "%SCRIPT%" echo option batch abort
 >>"%SCRIPT%" echo option confirm off
 >>"%SCRIPT%" echo open "%SESSIE%"
@@ -140,14 +146,82 @@ if errorlevel 1 (
 
 del "%SCRIPT%" >nul 2>&1
 echo.
-echo ===============================================================
 echo   Geupload.
+
+rem --- 4. Cloudflare-cache legen --------------------------------
+rem  Zonder dit blijft de oude versie zichtbaar: Cloudflare serveert
+rem  dan nog uit zijn eigen cache en haalt jouw nieuwe bestanden
+rem  niet op.
+rem
+rem  Het API-token staat bewust niet in dit bestand en niet in de
+rem  repo, maar in een bestand in je gebruikersmap:
+rem
+rem      %USERPROFILE%\.mykunda-cloudflare.cmd
+rem
+rem  Met daarin exact een regel, aanhalingstekens erbij:
+rem
+rem      set "CF_TOKEN=hier-jouw-token"
+rem
+rem  Zie CLAUDE.md voor het aanmaken van dat token. Ontbreekt het
+rem  bestand, dan gaat er niets stuk: het script zegt dan gewoon dat
+rem  je het met de hand moet doen.
 echo.
-echo   Nu nog met de hand, en zonder dit is de upload niet zichtbaar:
+echo == 4/4  Cloudflare-cache legen ================================
+set "CF_TOKEN="
+set "CFCONF=%USERPROFILE%\.mykunda-cloudflare.cmd"
+if exist "%CFCONF%" call "%CFCONF%"
+
+if not defined CF_TOKEN (
+  echo   Geen token gevonden in !CFCONF!
+  goto :handmatig
+)
+if not defined CF_ZONE (
+  echo   CF_ZONE is niet ingevuld bovenin dit bestand.
+  goto :handmatig
+)
+
+where curl.exe >nul 2>&1
+if errorlevel 1 (
+  echo   curl niet gevonden op deze computer.
+  goto :handmatig
+)
+
+set "CFOUT=%TEMP%\cf-purge-mykunda.json"
+curl -s -o "%CFOUT%" -X POST "https://api.cloudflare.com/client/v4/zones/%CF_ZONE%/purge_cache" -H "Authorization: Bearer %CF_TOKEN%" -H "Content-Type: application/json" -d "{\"purge_everything\":true}"
+if errorlevel 1 (
+  echo   curl kwam er niet uit. Netwerkprobleem?
+  goto :purgefout
+)
+
+findstr /r /c:"success.:true" "%CFOUT%" >nul
+if errorlevel 1 goto :purgefout
+
+del "%CFOUT%" >nul 2>&1
+echo   Cache geleegd. Binnen enkele seconden is de nieuwe versie live.
+echo   Nakijken kan in een privevenster.
+goto :klaar
+
+:purgefout
+echo.
+echo   Het legen van de cache is NIET gelukt. Antwoord van Cloudflare:
+if exist "%CFOUT%" type "%CFOUT%"
+echo.
+echo   Meestal is het token verlopen, of heeft het niet het recht
+echo   Zone - Cache Purge - Purge op deze zone.
+goto :handmatig
+
+:handmatig
+echo.
+echo   De cache is niet automatisch geleegd. Doe het met de hand,
+echo   anders is de upload niet zichtbaar:
 echo     Cloudflare - Caching - Configuration - Purge Everything
 echo     https://dash.cloudflare.com
+goto :klaar
+
+:klaar
 echo.
-echo   Daarna nakijken in een privevenster.
+echo ===============================================================
+echo   Klaar.
 echo ===============================================================
 goto :einde
 
