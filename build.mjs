@@ -33,6 +33,7 @@ const SITE_ASSETS = [
   'supabase.js', 'sw.js', 'manifest.json', 'admin-guard.js',
   'admin-nav.js', 'image-slot.js', 'gambia-places.js',
   'market-index.js', 'market-sources.js',
+  'valuation.js', 'valuation-areas.js',
   'title-verification-app.js', 'title-verification-components.js',
   'robots.txt', 'sitemap.xml', 'sitemap-pages.xml', '.htaccess'
 ];
@@ -260,6 +261,7 @@ const VERSIONED = [
   'app.min.js', 'styles.min.css', 'areas.css', 'supabase.js',
   'admin-guard.js', 'admin-nav.js', 'image-slot.js', 'gambia-places.js',
   'market-index.js', 'market-sources.js',
+  'valuation.js', 'valuation-areas.js',
   'title-verification-app.js', 'title-verification-components.js',
   'guide-bodies-2.js'
 ];
@@ -298,7 +300,7 @@ const MARK_START = '<!--mk-mark-->', MARK_END = '<!--/mk-mark-->';
  * verloren de afgeschermde pagina's hun `noindex` en de publieke pagina's hun
  * `index, follow, max-image-preview:large` — precies de regressie van 17-08-2026.
  * robots.txt blokkeert de app-pagina's bewust niet; deze metatag doet dat werk. */
-const NOINDEX_PAGES = new Set(['admin.html', 'dashboard.html', 'messages.html', 'list.html',
+const NOINDEX_PAGES = new Set(['valuation-selftest.html', 'admin.html', 'dashboard.html', 'messages.html', 'list.html',
   'auth.html', 'checkout.html', 'checkout v2.html', 'checkout v3.html', 'sources.html',
   'rates.html', 'title-verification.html', 'market.html']);
 const AI = 'noai, noimageai';

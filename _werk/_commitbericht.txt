@@ -1,0 +1,31 @@
+Waardebepaling: nieuw rekenmodel, adaptieve flow op sell.html, prijsindicatie in list.html
+
+Grond en opstal worden voortaan apart gewaardeerd en opgeteld, in plaats van
+een vraagprijs per m2 met tien vermenigvuldigers erop. De grondtarieven zijn
+herijkt op lokale kavellistings in dalasi; de oude tabel stond op het niveau
+van de expatportalen en zat daardoor in de kustzone tot 200% te hoog en in de
+Kombo-groeigebieden tot 50% te laag. Kenmerken tellen nu op als procentpunten
+met een harde grens, gemeten vanaf een vast referentiekavel.
+
+Bouwkosten zijn van onderaf opgebouwd uit Gambiaanse materiaalprijzen
+(AccessGambia, januari 2026) met gepubliceerde hoeveelheden uit echte
+bestekken: EUR 200 / 300 / 500 per m2 voor eenvoudig, normaal en hoog. Omdat
+die cijfers afgeleid zijn en niet waargenomen, kan een waardering met opstal
+nooit hoger scoren dan 'fair'. 'Strong' is gereserveerd voor gebieden met acht
+of meer waarnemingen; vandaag haalt geen enkel gebied dat.
+
+Nieuw:
+  valuation.js           het model, zonder DOM
+  valuation-areas.js     de tarieventabel, losgemaakt uit sell.html (183 gebieden)
+  valuation-selftest.html 18 geankerde gevallen, noindex - 9% afwijking, 12/12 in band
+
+sell.html: de twee losse rekentools vervangen door een adaptieve flow die live
+meerekent; het bedrag komt voor de e-mail. Kaart en kavel-intekenen ongewijzigd.
+list.html: prijsindicatie bij de prijsstap uit dezelfde module.
+build.mjs: nieuwe bestanden in SITE_ASSETS en VERSIONED, zelftest op noindex.
+sw.js: mk-v71.
+
+Werkbestanden van de ombouw staan in _werk/, inclusief de oude sell.html.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01SUv4J9Hy5rQzZt9SDCTsQG

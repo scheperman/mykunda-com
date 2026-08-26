@@ -1,0 +1,544 @@
+/* ============================================================
+   MyKunda — waarderingsmodel
+   ------------------------------------------------------------
+   Eén bron voor elke waardebepaling op de site. sell.html en
+   list.html rekenen allebei hierdoor; nergens anders staat een
+   tarief of een opslag.
+
+   Rekenwijze: grond en opstal worden apart gewaardeerd en
+   opgeteld. Dat is de methode voor markten zonder betrouwbaar
+   transactieregister, en Gambia is er daar één van — er bestaat
+   geen publieke bron met gerealiseerde verkoopprijzen. Alles
+   hieronder komt dus uit vraagprijzen, en het model zegt dat ook.
+
+   Interne eenheid is EUR (net als CURRENCIES in app.js);
+   omrekenen naar de weergavevaluta doet convert() daar.
+
+   HERIJKEN: elk blok hieronder draagt een `herijkt`-datum. De
+   betrouwbaarheidsscore zakt naarmate die datum ouder wordt, en
+   boven de twaalf maanden zegt de tool het uit zichzelf.
+   ============================================================ */
+(function (root) {
+'use strict';
+
+/* ============================================================
+   1 · GRONDTARIEVEN — EUR per m²
+   ------------------------------------------------------------
+   BASIS is de tabel zoals die tot augustus 2026 in sell.html
+   stond. Die was geijkt op GamRealty en Holprop: portalen die in
+   euro's adverteren voor buitenlandse kopers. Naast kavellistings
+   in dalasi (gambiarealestate.gm, songhaiproperties.gm,
+   accessgambia.com, gezien 26-08-2026) bleek die tabel in de
+   kustzone structureel te hoog en in de Kombo-groeigebieden te
+   laag. Zie het ijkrapport.
+
+   De tabel wordt daarom niet vervangen maar gecorrigeerd, zodat
+   per gebied zichtbaar blijft waar het getal vandaan komt:
+
+     WAARGENOMEN  minstens twee lokale kavellistings → mediaan
+     HALF         één waarneming → halverwege geschoven
+     ZONE         geen waarneming → zonefactor op het oude tarief
+
+   Alleen WAARGENOMEN telt als bewijs. De andere twee verbreden
+   de bandbreedte; zie confidence().
+   ============================================================ */
+var LAND_HERIJKT = '2026-08-26';
+
+/* Waargenomen: mediaan van lokale kavellistings in dalasi,
+   omgerekend tegen 85,74 GMD/EUR (market_macro, aug 2026). */
+var LAND_OBSERVED = {
+  'kololi':         { eur: 52.3, n: 2 },
+  'bijilo':         { eur: 61.0, n: 3 },
+  'brusubi':        { eur: 54.0, n: 2 },
+  'kerr serign':    { eur: 52.5, n: 2 },
+  'sukuta':         { eur: 34.7, n: 2 },
+  'jabang':         { eur: 31.9, n: 2 },
+  'lamin':          { eur: 15.2, n: 2 },
+  'yundum':         { eur: 18.6, n: 2 },
+  'old yundum':     { eur: 18.6, n: 2 },
+  'busumbala':      { eur: 17.0, n: 2 },
+  'gunjur':         { eur: 13.1, n: 2 },
+  'kartong':        { eur:  9.0, n: 2 },
+  'kartung':        { eur:  9.0, n: 2 },
+  'sanyang':        { eur: 14.9, n: 2 }
+};
+
+/* Half geschoven: één waarneming is een aanwijzing, geen mediaan. */
+var LAND_HALF = {
+  'brufut heights': { eur: 50.4 },
+  'brufut':         { eur: 33.6 },
+  'brikama':        { eur: 14.3 },
+  'tujereng':       { eur: 22.9 },
+  'farafenni':      { eur:  2.5 }
+};
+
+/* Zonefactor voor gebieden zonder eigen waarneming. Mediaan van
+   lokaal/portaal per zone, over de gebieden die wél bewijs hebben. */
+var LAND_ZONE = {
+  coast:     0.45,  /* toeristische kuststrook: 7 gebieden, mediaan 0,43 */
+  kombo:     1.05,  /* Kombo binnenland: 9 gebieden, mediaan 1,10       */
+  greater:   0.70,  /* Greater Banjul: geen bewijs, tussen beide in     */
+  upcountry: 0.55   /* provincie: één waarneming (Farafenni), half      */
+};
+
+var ZONE_OF = {
+  coast: ['kololi','senegambia','bijilo','cape point','fajara','bakau','kotu',
+          'brufut heights','brufut','tanji','batokunku','sanyang','tujereng',
+          'gunjur','kartong','kartung','ghana town','jambanjelly','folonko'],
+  kombo: ['brusubi','kerr serign','sukuta','lamin','jabang','yundum','old yundum',
+          'busumbala','brikama','sinchu alagie','sinchu baliya','nema kunku',
+          'banjulunding','wellingara','farato','abuko','kembujeh','madiana',
+          'kuloro','giboro koto','sotokoi','faraba sutu','bessi nding','jambur',
+          'marakissa','kafuta','sifoe','mandinaba','bonto','kitty','nyambai',
+          'faraba banta','pirang','bulok','kalagi','somita','sibanor','darsilami'],
+  greater: ['banjul','serrekunda','serekunda','kanifing','bakoteh','bundung',
+            'talinding','tallinding kunjang','latri kunda','faji kunda','pipeline',
+            'tabokoto','new jeshwang','old jeshwang','dippa kunda','ebou town',
+            'ebo town','manjai kunda','churchills town','kabafita']
+};
+
+function zoneFor(key) {
+  for (var z in ZONE_OF) { if (ZONE_OF[z].indexOf(key) > -1) return z; }
+  return 'upcountry';
+}
+
+/* ============================================================
+   2 · BOUWKOSTEN — EUR per bebouwde m², nieuwbouw
+   ------------------------------------------------------------
+   Geen enkele bron geeft een Gambiaans tarief per m² dat je kunt
+   overnemen; Shreeji Development schrijft in juli 2026 letterlijk
+   dat dat tarief niet bestaat. Daarom van onderaf opgebouwd uit
+   de Gambiaanse materiaalprijzen (AccessGambia, 7 januari 2026)
+   met gepubliceerde hoeveelheden uit echte bestekken.
+
+   De ruwbouw per m² vloer rekent uit:
+     2,05 m² muur per m² vloer  · 10 blokken per m² muur
+     0,20 zak cement metselspecie en 0,22 zak pleister per m² muur
+     0,13 m³ funderingsbeton en 0,14 m³ vloerplaat per m² vloer
+     9,5 kg wapening per m² vloer
+   Bij D550 per zak cement, D845 per m³ zand en D55 per kg staal
+   geeft dat D3.400 – D5.200 aan ruwbouwmateriaal per m².
+   Met arbeid (+50% op materiaal), de gepubliceerde verdeling
+   ruwbouw 38% van de harde bouwsom, en 20% aannemersopslag komt
+   daar EUR 163 – EUR 321 per m² uit.
+
+   Drie onafhankelijke lijnen komen daarmee op hetzelfde uit:
+     · deze opbouw van onderaf          EUR 163 – 321
+     · mykunda.com/guide-building-...   EUR 300 standaard, 500+ hoog
+     · enormousbuildings.com            USD 300 – 700 = EUR 254 – 594
+   De afwerkingsgraad — tegels of cementvloer, aluminium of stalen
+   ramen, airco of niet — zit in de 62% die de opbouw niet zelf
+   berekent. Vandaar één vraag aan de gebruiker in plaats van een
+   aanname.
+
+   Deze drie getallen zijn afgeleid, niet waargenomen. De
+   opstalwaarde scoort daarom nooit hoger dan 'redelijk'; zie
+   confidence(). Komt er een Gambiaanse offerte op tafel, dan is
+   dit blok de enige plek die verandert.
+   ============================================================ */
+var BUILD_HERIJKT = '2026-08-26';
+var BUILD_COST = {
+  basic:    200,  /* betonblok, cementvloer of eenvoudige tegel, stalen ramen,
+                     golfplaat, geen airco — onderkant van de eigen opbouw     */
+  standard: 300,  /* tegelvloer, hor, plafond, boiler — komt overeen met de
+                     eigen gids en met de onderkant van de gepubliceerde band  */
+  high:     500   /* aluminium schuifpuien, airco, ingebouwde keuken, plafonds */
+};
+/* Wat de opstal draagt maar niet in EUR/m² vloer zit. Afgeschreven
+   investeringen: een zwembad kost in Sanyang hetzelfde als in Kololi. */
+var BUILD_EXTRA = {
+  pool:        14000,  /* 8×4 m met pomp en filter                      */
+  solar:        4500,  /* paneel, omvormer, accu — huishoudformaat      */
+  generator:    1800,  /* 5–7 kVA met kast                              */
+  borehole:     3200,  /* boring, pomp en tank                          */
+  wallPerM:        55, /* ommuring per strekkende meter, 2 m hoog       */
+  furnishedPct:  0.05, /* volledig gemeubileerd, op de opstalwaarde     */
+  semiPct:       0.02
+};
+
+/* Afschrijving: betonblokbouw met golfplaat gaat lang mee en de
+   grond draagt het grootste deel van de waarde. 1,5% per jaar met
+   een bodem van 60% restwaarde — een huis van veertig jaar oud op
+   een goede kavel is in Gambia geen afgeschreven huis. */
+function depreciation(yearBuilt, condition) {
+  var now = new Date().getUTCFullYear();
+  var age = yearBuilt ? Math.max(0, now - (+yearBuilt)) : 12;   /* onbekend → 12 jaar */
+  var d = Math.min(0.40, age * 0.015);
+  if (condition === 'new') d = 0;
+  if (condition === 'renovation') d = Math.min(0.55, d + 0.22);
+  return d;
+}
+
+/* ============================================================
+   3 · KENMERKEN — procentpunten, niet vermenigvuldigers
+   ------------------------------------------------------------
+   Tien vermenigvuldigers achter elkaar kunnen vóór demping tot
+   +200% oplopen; daarna corrigeerden een demping van 0,75 en een
+   plafond dat weer terug. Drie mechanismen die elkaars werk
+   overdoen en die je aan geen klant uitlegt.
+
+   Optellen is stabieler en leest als een checklist: "jouw kavel
+   scoort +18%". De harde grens onderaan doet wat de demping deed,
+   op één plek en zichtbaar.
+
+   REFERENTIEKAVEL — het nulpunt van deze tabel, en tegelijk de
+   kavel waar elk tarief in LAND_OBSERVED bij hoort:
+       alkalo-titel · lateriet weg · stroom aanwezig · water in de
+       straat · deels omheind · ontbost · regelmatige vorm · geen
+       hoek · geen overstromingsrisico · landinwaarts · geen uitzicht
+   Dat is de gewone Gambiaanse bouwkavel. Elke waarneming is naar
+   die specificatie teruggerekend vóór hij tarief werd; anders tel
+   je de stroomaansluiting twee keer — één keer in de vraagprijs
+   waar het tarief uit komt, en nog eens als plusje erbovenop. De
+   eerste zelftest liep daar op vast: Brusubi kwam 67% te hoog uit.
+   Wijzig je hieronder een getal, herijk dan ook de tarieven.
+   ============================================================ */
+var LAND_PTS = {
+  title:  { freehold: 10, leasehold: 8, sublease: 5, alkalalo: 0, unclear: -25 },
+  road:   { tarmac: 12, laterite: 0, none: -20 },
+  elec:   { present: 0, nearby: -6, none: -14 },
+  water:  { nawec: 4, borehole: 2, nearby: 0, none: -10 },
+  fence:  { full: 8, partial: 0, none: -6 },
+  cleared:{ cleared: 0, partial: -4, bush: -9 },
+  corner: { yes: 5, no: 0 },
+  shape:  { regular: 0, irregular: -7 },
+  flood:  { no: 0, low: -8, high: -22 },
+  beach:  { beachfront: 45, walking: 12, inland: 0 },
+  view:   { ocean: 10, garden: 3, none: 0 }
+};
+var LAND_CAP = { down: -45, up: 60 };
+
+/* De opstal krijgt zijn eigen, veel kortere lijst: alles wat met
+   de locatie te maken heeft zit al in de grondwaarde, en alles wat
+   geld kost staat in BUILD_EXTRA. Wat overblijft is de plattegrond. */
+var BUILD_PTS = {
+  floors: { '1': 0, '2': 4, '3': 6 },
+  baths:  { '1': -3, '2': 0, '3': 3, '4': 6 },
+  security: { gated: 4, wall: 0, none: -3 }
+};
+var BUILD_CAP = { down: -20, up: 20 };
+
+/* ============================================================
+   4 · HUUR — twee markten, niet één
+   ------------------------------------------------------------
+   Lokale lange huur in dalasi (Songhai Properties, twaalf
+   jaarhuren in de Kombo's) loopt van D250.000 tot D600.000 per
+   jaar, mediaan D350.000 — bruto rendement 2,5 tot 4% op lokale
+   verkoopprijzen. Expat- en gemeubileerde verhuur (GamRealty,
+   Gambia Property Shop) ligt daar een factor drie boven.
+
+   Numbeo geeft 1,6–1,8% voor Gambia op twaalf inzendingen van
+   twee mensen; Global Property Guide impliceert 5,9% op een
+   pagina die zelf zegt dat Gambia geen prijsstatistiek publiceert.
+   Allebei te dun. De huur-tegen-prijsvergelijking hierboven niet.
+   ============================================================ */
+var RENT_HERIJKT = '2026-08-26';
+
+/* ---- het portaalniveau ----
+   Dezelfde kavel wordt in dalasi anders geprijsd dan in euro's.
+   Dat is geen ruis maar een tweede markt, en een verkoper die op
+   diaspora mikt heeft er wat aan.
+
+   Eerst geprobeerd als één vermenigvuldiger op de modelwaarde.
+   Dat viel af: over negen objecten waarvoor allebei de prijzen
+   bestaan loopt de verhouding van 0,90 tot 2,41 — een mediaan van
+   1,7 zegt daar niets zinnigs mee. Eén getal zou een precisie
+   suggereren die er niet is.
+
+   Dus alleen waar het portaalniveau werkelijk is waargenomen, per
+   gebied, in EUR/m². Geen waarneming betekent: niets tonen. Deze
+   tarieven staan naast het hoofdgetal, nooit erin.
+   Bron: GamRealty grondgids maart 2026 en Holprop, 26-08-2026. */
+var PORTAL_RATE = {
+  'kololi':        [80, 289],  'senegambia':     [130, 314],
+  'bijilo':        [40, 277],  'brufut heights': [40, 120],
+  'brufut':        [25,  70],  'sukuta':         [43,  45],
+  'tanji':         [15,  35],  'sanyang':        [10,  38],
+  'tujereng':      [ 8,  40],  'gunjur':         [ 8,  20],
+  'kartong':       [ 8,  20],  'kartung':        [ 8,  20]
+};
+var RENT_YIELD = {
+  local:  { villa: 0.030, house: 0.032, apartment: 0.042, townhouse: 0.035,
+            compound: 0.028, penthouse: 0.040, lodge: 0.045, commercial: 0.055 },
+  expatMultiple: 2.8       /* gemeubileerd, in euro's, aan buitenlanders */
+};
+
+root.MK_VAL_CONFIG = {
+  LAND_OBSERVED: LAND_OBSERVED, LAND_HALF: LAND_HALF, LAND_ZONE: LAND_ZONE,
+  BUILD_COST: BUILD_COST, BUILD_EXTRA: BUILD_EXTRA, LAND_PTS: LAND_PTS,
+  BUILD_PTS: BUILD_PTS, RENT_YIELD: RENT_YIELD, PORTAL_RATE: PORTAL_RATE,
+  herijkt: { land: LAND_HERIJKT, build: BUILD_HERIJKT, rent: RENT_HERIJKT },
+  zoneFor: zoneFor, depreciation: depreciation,
+  LAND_CAP: LAND_CAP, BUILD_CAP: BUILD_CAP
+};
+
+})(typeof window !== 'undefined' ? window : globalThis);
+
+/* ============================================================
+   5 · DE REKENMACHINE
+   ------------------------------------------------------------
+   Pure functies, geen DOM. sell.html en list.html geven een
+   object in en krijgen een object terug; het tekenen doen zij.
+   Dat maakt de zelftest mogelijk: valuation-selftest.html voert
+   hier geankerde gevallen doorheen en zet de uitkomst naast de
+   waargenomen prijs.
+
+   LAND_BASE — de tarieventabel per gebied zoals die in sell.html
+   stond — wordt van buiten meegegeven (valuation-areas.js), zodat
+   de data los staat van het model en met de hand bij te werken is
+   zonder het rekenwerk aan te raken.
+   ============================================================ */
+(function (root) {
+'use strict';
+var C = root.MK_VAL_CONFIG;
+
+function norm(s) { return String(s == null ? '' : s).toLowerCase().trim(); }
+/* De onderbouwing is wat de klant leest; daar hoort geen sleutel in te staan. */
+function titel(s) { return String(s || '').replace(/(^|[\s-])([a-z])/g, function (m, a, b) { return a + b.toUpperCase(); }); }
+var FINISH_EN = { basic: 'simple', standard: 'standard', high: 'high' };
+
+/* Welk gebied bedoelt iemand? Langste sleutel eerst, zodat
+   "brufut heights" niet als "brufut" wordt gelezen. */
+function matchArea(locStr, base) {
+  var s = norm(locStr), keys = Object.keys(base || {}).sort(function (a, b) { return b.length - a.length; });
+  for (var i = 0; i < keys.length; i++) { if (s.indexOf(keys[i]) > -1) return keys[i]; }
+  return null;
+}
+
+/* Het grondtarief plus de herkomst ervan. De herkomst is geen
+   voetnoot: hij bepaalt verderop de bandbreedte. */
+function landRate(areaKey, base) {
+  var k = norm(areaKey);
+  if (C.LAND_OBSERVED[k]) {
+    return { eur: C.LAND_OBSERVED[k].eur, src: 'observed', n: C.LAND_OBSERVED[k].n,
+             note: C.LAND_OBSERVED[k].n + ' local plot listings in ' + titel(areaKey) };
+  }
+  if (C.LAND_HALF[k]) {
+    return { eur: C.LAND_HALF[k].eur, src: 'half', n: 1,
+             note: 'one observation in ' + titel(areaKey) + ' \u2014 shifted halfway from the older rate' };
+  }
+  var was = base && base[k];
+  if (was == null) return { eur: null, src: 'none', n: 0, note: 'area not recognised' };
+  var z = C.zoneFor(k), f = C.LAND_ZONE[z];
+  return { eur: Math.round(was * f * 10) / 10, src: 'zone', n: 0,
+           note: 'no observations \u2014 regional rate for ' + z + ' (\u00d7' + f + ')' };
+}
+
+/* Grote kavels doen een lager gemiddelde per m²: er zijn minder
+   kopers voor 2.000 m² dan voor de 400–500 m² die de Gambiaanse
+   markt als standaardkavel verhandelt. Het knikpunt ligt daarom
+   op 600 m², de bovenkant van die cluster. */
+function effLand(sqm) {
+  if (sqm <= 600) return sqm;
+  if (sqm <= 2000) return 600 + (sqm - 600) * 0.90;
+  return 600 + 1400 * 0.90 + (sqm - 2000) * 0.78;
+}
+/* Bij gebouwen speelt hetzelfde: de tweede honderd vierkante meter
+   brengt minder op dan de eerste. */
+function effBuilt(sqm) {
+  if (sqm <= 150) return sqm;
+  if (sqm <= 300) return 150 + (sqm - 150) * 0.90;
+  return 150 + 150 * 0.90 + (sqm - 300) * 0.80;
+}
+
+function points(table, key, val) {
+  var t = table[key]; if (!t) return 0;
+  var v = t[norm(val)];
+  return typeof v === 'number' ? v : 0;
+}
+
+function sumPoints(table, cap, input, fields) {
+  var total = 0, hit = [];
+  fields.forEach(function (f) {
+    var p = points(table, f, input[f]);
+    if (p) { total += p; hit.push({ field: f, value: input[f], pts: p }); }
+  });
+  var capped = Math.max(cap.down, Math.min(cap.up, total));
+  return { raw: total, pts: capped, capped: capped !== total, hit: hit };
+}
+
+/* ---- betrouwbaarheid ----
+   Vier ingrediënten, en het model scoort zichzelf nooit hoger dan
+   zijn zwakste. Het cijfer stuurt de bandbreedte; er is geen vaste
+   ±20% meer. */
+function confidence(parts) {
+  var s = 100, why = [];
+  /* Twee waarnemingen zijn geen markt. De eerste versie gaf daar
+     'sterk onderbouwd' bij — een label dat meer belooft dan er
+     ligt, juist bij de gebieden waar we het minst weten. 'Sterk'
+     is nu gereserveerd voor gebieden met acht of meer
+     waarnemingen: precies de drempel waarop laag 3 het van de
+     vaste tabel overneemt. Vandaag haalt geen enkel gebied dat.
+     Dat is de bedoeling: het label heeft ergens om te groeien. */
+  if (parts.landSrc === 'observed') {
+    var n = parts.landN || 0;
+    if (n >= 8) { /* geen aftrek */ }
+    else if (n >= 4) { s -= 12; why.push(n + ' observations in this area'); }
+    else { s -= 26; why.push('only ' + n + ' observations in this area \u2014 too few for a median to carry weight'); }
+  }
+  else if (parts.landSrc === 'half') { s -= 38; why.push('one observation in this area'); }
+  else if (parts.landSrc === 'zone') { s -= 52; why.push('no observations in this area \u2014 rate derived from the wider region'); }
+  else { s -= 60; why.push('area not recognised'); }
+
+  /* Elke prijs waar dit model op staat is een VRAAGprijs. Voor
+     Gambia bestaat geen publieke bron met wat er werkelijk is
+     betaald, dus hoe groot het gat is tussen vragen en krijgen
+     weten we niet — alleen dat het er is, en dat het één kant op
+     wijst. Dat kost iedereen punten, altijd. */
+  s -= 6;
+  why.push('based on asking prices \u2014 no one publishes what property actually sells for in The Gambia');
+
+  var missing = parts.missing || 0;
+  if (missing) { s -= Math.min(20, missing * 4); why.push(missing + (missing === 1 ? ' field' : ' fields') + ' left blank'); }
+
+  var months = parts.ageMonths || 0;
+  if (months > 12) { s -= Math.min(15, (months - 12) * 1.5); why.push('rates last recalibrated ' + Math.round(months) + ' months ago'); }
+
+  /* De opstalwaarde staat op afgeleide bouwkosten, niet op
+     waargenomen offertes. Zolang dat zo is kan een woning niet
+     'sterk onderbouwd' heten — een kavel wel. */
+  if (parts.hasBuilding) { s = Math.min(s, 74); why.push('build cost derived from material prices, not from builders\u2019 quotes'); }
+
+  if (parts.methodGap != null && parts.methodGap > 0.25) {
+    s -= 12; why.push('the two methods disagree by ' + Math.round(parts.methodGap * 100) + '%');
+  }
+  s = Math.max(10, Math.min(100, Math.round(s)));
+  var label = s >= 75 ? 'strong' : s >= 50 ? 'fair' : 'indicative';
+  var band  = s >= 85 ? 0.12 : s >= 70 ? 0.18 : s >= 55 ? 0.25 : s >= 40 ? 0.32 : 0.38;
+  return { score: s, label: label, band: band, reasons: why };
+}
+
+function monthsSince(iso) {
+  var d = new Date(iso + 'T00:00:00Z');
+  return (Date.now() - d.getTime()) / (1000 * 60 * 60 * 24 * 30.44);
+}
+
+/* Wat er in dit gebied op de internationale portalen wordt
+   gevraagd — alleen als dat daar ook echt is waargenomen. */
+function portalLevel(areaKey, plot, built, isLand) {
+  var pr = C.PORTAL_RATE[norm(areaKey)];
+  if (pr == null || !isLand || !plot) return null;
+  var e = effLand(plot);
+  return { area: titel(areaKey), rateLow: pr[0], rateHigh: pr[1],
+           low: Math.round(e * pr[0]), high: Math.round(e * pr[1]),
+           note: 'international portals ask EUR ' + pr[0] + '\u2013' + pr[1] + ' per m\u00b2 for plots in ' + titel(areaKey) };
+}
+
+/* ---- de hoofdfunctie ---- */
+function value(input, opts) {
+  opts = opts || {};
+  var base = opts.LAND_BASE || {};
+  var lines = [];
+  var areaKey = matchArea(input.area, base) || norm(input.area);
+  var isLand = norm(input.type) === 'land';
+  var isApt  = norm(input.type) === 'apartment' || norm(input.type) === 'penthouse';
+
+  /* --- grond --- */
+  var lr = landRate(areaKey, base);
+
+  /* Kennen we het gebied niet, dan is er geen tarief en dus geen
+     waarde. Een nul tonen zou een antwoord suggereren; dit is er
+     geen. De eerste browsertest liet zien wat er anders gebeurt:
+     "Bansang" gaf EUR 0 met het label 'redelijk onderbouwd'. */
+  if (lr.eur == null) {
+    return { ok: false, reason: 'unknown-area', area: input.area,
+             confidence: { score: 0, label: 'indicative', band: 0.38,
+                           reasons: ['this area is not in the rate table'] },
+             lines: [] };
+  }
+  var plot = +input.plotSqm || 0;
+  var landPts = sumPoints(C.LAND_PTS, C.LAND_CAP, input,
+    ['title', 'road', 'elec', 'water', 'fence', 'cleared', 'corner', 'shape', 'flood', 'beach', 'view']);
+  var landRateAdj = lr.eur == null ? null : lr.eur * (1 + landPts.pts / 100);
+  var landValue = 0;
+  if (!isApt && plot > 0 && landRateAdj != null) {
+    landValue = effLand(plot) * landRateAdj;
+    lines.push({ k: 'Land rate, ' + titel(input.area || areaKey), v: landRateAdj, unit: '/m²', note: lr.note });
+    landPts.hit.forEach(function (h) { lines.push({ k: h.field, v: h.pts, unit: 'pt', note: String(h.value) }); });
+    if (landPts.capped) lines.push({ k: 'Capped at +' + C.LAND_CAP.up + '%', v: null, note: 'features added up to ' + landPts.raw + '%' });
+    if (plot > 600) lines.push({ k: 'Large plot, tapered rate', v: null, note: plot + ' m\u00b2 priced as ' + Math.round(effLand(plot)) + ' m\u00b2' });
+    lines.push({ k: 'Land value', v: landValue, strong: true });
+  }
+
+  /* --- opstal --- */
+  var built = +input.builtSqm || 0;
+  var buildValue = 0, rebuild = 0, unitCost = 0;
+  if (!isLand && built > 0) {
+    var finish = norm(input.finish) || 'standard';
+    unitCost = C.BUILD_COST[finish] || C.BUILD_COST.standard;
+    var bp = sumPoints(C.BUILD_PTS, C.BUILD_CAP, input, ['floors', 'baths', 'security']);
+    var gross = effBuilt(built) * unitCost * (1 + bp.pts / 100);
+    var dep = C.depreciation(input.yearBuilt, norm(input.condition));
+    buildValue = gross * (1 - dep);
+
+    var extra = 0;
+    if (norm(input.pool) === 'yes') extra += C.BUILD_EXTRA.pool;
+    if (norm(input.solar) === 'solar' || norm(input.solar) === 'both') extra += C.BUILD_EXTRA.solar;
+    if (norm(input.solar) === 'generator' || norm(input.solar) === 'both') extra += C.BUILD_EXTRA.generator;
+    if (norm(input.water) === 'borehole' || norm(input.water) === 'both') extra += C.BUILD_EXTRA.borehole;
+    if (plot > 0 && norm(input.fence) === 'full') extra += Math.sqrt(plot) * 4 * C.BUILD_EXTRA.wallPerM;
+    var extraDep = extra * (1 - dep * 0.6);          /* voorzieningen slijten trager dan het casco */
+    var furn = norm(input.furnished) === 'furnished' ? C.BUILD_EXTRA.furnishedPct
+             : norm(input.furnished) === 'semi' ? C.BUILD_EXTRA.semiPct : 0;
+    buildValue = (buildValue + extraDep) * (1 + furn);
+    rebuild = effBuilt(built) * unitCost + extra;
+
+    lines.push({ k: 'Build cost, ' + (FINISH_EN[finish] || finish) + ' finish', v: unitCost, unit: '/m\u00b2', note: 'derived from Gambian material prices, Jan 2026' });
+    bp.hit.forEach(function (h) { lines.push({ k: h.field, v: h.pts, unit: 'pt', note: String(h.value) }); });
+    if (dep) lines.push({ k: 'Depreciation', v: -Math.round(dep * 100), unit: '%', note: input.yearBuilt ? 'built ' + input.yearBuilt : 'year unknown \u2014 12 years assumed' });
+    if (extra) lines.push({ k: 'Fixtures', v: extraDep, note: 'valued at depreciated build cost, not as a percentage of the location' });
+    lines.push({ k: 'Building value', v: buildValue, strong: true });
+  }
+
+  /* Appartement: de kavel is niet toe te wijzen aan één unit, dus
+     geen grondwaarde. Wat overblijft is de opstal plus de locatie,
+     en die locatie moet dan wél in het tarief zitten. */
+  if (isApt && lr.eur != null && built > 0) {
+    var locUplift = built * lr.eur * 1.6;    /* aandeel in de grondwaarde van het gebouw */
+    buildValue += locUplift;
+    lines.push({ k: 'Location share', v: locUplift, note: 'a flat has no plot of its own \u2014 the land is carried per built m\u00b2' });
+  }
+
+  var mid = landValue + buildValue;
+
+  /* --- huur en rendement --- */
+  var y = C.RENT_YIELD.local[norm(input.type)] || C.RENT_YIELD.local.house;
+  var rentLocal = mid * y / 12;
+  var rentExpat = rentLocal * C.RENT_YIELD.expatMultiple;
+
+  /* --- betrouwbaarheid en band --- */
+  var wanted = isLand ? ['title', 'road', 'elec', 'water', 'fence', 'cleared', 'flood', 'beach']
+                      : ['condition', 'yearBuilt', 'finish', 'floors', 'baths', 'water', 'security', 'beach'];
+  var missing = wanted.filter(function (f) { return input[f] == null || input[f] === ''; }).length;
+  var conf = confidence({
+    landSrc: (isApt && !plot) ? 'observed' : lr.src, landN: lr.n,
+    missing: missing, hasBuilding: !isLand && built > 0,
+    ageMonths: monthsSince(C.herijkt.land),
+    methodGap: opts.methodGap
+  });
+
+  var step = mid >= 200000 ? 5000 : mid >= 50000 ? 1000 : 500;
+  var rnd = function (v) { return Math.round(v / step) * step; };
+
+  return {
+    ok: true,
+    mid: Math.round(mid),
+    low: rnd(mid * (1 - conf.band)),
+    high: rnd(mid * (1 + conf.band * 1.25)),   /* opwaarts iets ruimer: vraagprijzen kennen geen plafond */
+    land: Math.round(landValue),
+    build: Math.round(buildValue),
+    rebuild: Math.round(rebuild),
+    landRate: landRateAdj, landRateSrc: lr,
+    buildUnit: unitCost,
+    landPts: landPts.pts,
+    rent: { local: Math.round(rentLocal), expat: Math.round(rentExpat), grossYield: y },
+    portal: portalLevel(areaKey, plot, built, isLand),
+    confidence: conf,
+    lines: lines
+  };
+}
+
+root.MK_VAL = { value: value, landRate: landRate, matchArea: matchArea,
+                effLand: effLand, effBuilt: effBuilt, confidence: confidence };
+
+})(typeof window !== 'undefined' ? window : globalThis);

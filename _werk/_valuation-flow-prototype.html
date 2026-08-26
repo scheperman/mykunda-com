@@ -1,0 +1,1117 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>What is it worth? — MyKunda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+:root{
+  --green:#15463A; --green-2:#2A7561; --green-6:#EDF3F0; --red:#CE1126;
+  --ochre:#C8702D; --ink:#16201C; --ink-2:#55625B; --ink-3:#8A958E;
+  --line:#E2E4DF; --line-2:#CDD2CB; --paper:#FFFFFF; --ground:#F7F7F4;
+  --r:14px; --sans:Archivo,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --serif:"Source Serif 4",Georgia,serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.shell{max-width:1140px;margin:0 auto;padding:28px 20px 140px}
+@media(min-width:980px){
+  .shell{display:grid;grid-template-columns:1fr 388px;gap:38px;align-items:start;padding-bottom:60px}
+  .rail{position:sticky;top:24px}
+}
+h1{font-size:clamp(26px,4vw,36px);line-height:1.1;letter-spacing:-.025em;margin:0 0 8px;text-wrap:balance}
+.sub{font-family:var(--serif);font-size:17.5px;color:var(--ink-2);margin:0 0 28px;max-width:56ch}
+
+/* ---- stap ---- */
+.step{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:22px 24px;margin-bottom:14px}
+.step[hidden]{display:none}
+.step > h2{font-size:19px;letter-spacing:-.015em;margin:0 0 4px;font-weight:600}
+.step > .hint{font-family:var(--serif);font-size:15px;color:var(--ink-2);margin:0 0 18px}
+.step.done{padding:14px 24px;background:transparent;border-style:dashed}
+.step.done > h2,.step.done > .hint,.step.done .body{display:none}
+.recap{display:none;align-items:center;gap:10px;font-size:14.5px;color:var(--ink-2);cursor:pointer;width:100%;background:none;border:0;text-align:left;font-family:inherit;padding:0}
+.step.done .recap{display:flex}
+.recap b{color:var(--ink);font-weight:600}
+.recap .edit{margin-left:auto;color:var(--green-2);font-weight:600;font-size:13.5px}
+.recap:hover .edit{text-decoration:underline}
+.tick{width:19px;height:19px;border-radius:50%;background:var(--green-2);color:#fff;display:grid;place-items:center;flex:none}
+.tick svg{width:11px;height:11px}
+
+/* ---- keuzekaarten ---- */
+.cards{display:grid;gap:10px}
+@media(min-width:560px){.cards{grid-template-columns:repeat(3,1fr)}}
+.card{border:1.5px solid var(--line-2);border-radius:12px;padding:16px;cursor:pointer;background:var(--paper);text-align:left;font-family:inherit;transition:border-color .12s,background .12s}
+.card:hover{border-color:var(--green-2)}
+.card.sel{border-color:var(--green);background:var(--green-6);box-shadow:inset 0 0 0 1px var(--green)}
+.card .ic{display:block;color:var(--green-2);margin-bottom:9px}
+.card .t{font-weight:600;font-size:15.5px;display:block}
+.card .s{font-family:var(--serif);font-size:13.5px;color:var(--ink-2);display:block;margin-top:2px;line-height:1.4}
+
+/* ---- velden ---- */
+.grid{display:grid;gap:14px}
+@media(min-width:560px){.grid.two{grid-template-columns:1fr 1fr}.grid.three{grid-template-columns:repeat(3,1fr)}}
+label.f{display:block}
+label.f > span{display:block;font-size:12.5px;font-weight:600;letter-spacing:.02em;color:var(--ink-2);margin-bottom:5px}
+input,select{width:100%;font:inherit;font-size:15.5px;padding:11px 12px;border:1.5px solid var(--line-2);border-radius:10px;background:var(--paper);color:var(--ink);appearance:none}
+select{text-overflow:ellipsis;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%2355625B' stroke-width='2'><path d='M1 1l5 5 5-5'/></svg>");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+input:focus,select:focus{outline:2px solid var(--green-2);outline-offset:1px;border-color:var(--green-2)}
+input.bad{border-color:var(--red)}
+.suffix{position:relative}
+.suffix input{padding-right:44px}
+.suffix em{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-style:normal;font-size:14px;color:var(--ink-3);pointer-events:none}
+.err{color:var(--red);font-size:14px;margin-top:10px;min-height:1px}
+datalist{display:none}
+
+/* ---- knoppen ---- */
+.btn{font-family:inherit;font-size:15.5px;font-weight:600;border-radius:10px;padding:12px 20px;border:1.5px solid transparent;cursor:pointer}
+.btn.pri{background:var(--green);color:#fff}
+.btn.pri:hover{background:#0F362C}
+.btn.sec{background:var(--paper);border-color:var(--line-2);color:var(--ink)}
+.btn.sec:hover{border-color:var(--green-2);color:var(--green-2)}
+.row{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+
+/* ---- resultaatpaneel ---- */
+.rail .panel{background:var(--green);color:#fff;border-radius:var(--r);padding:24px;overflow:hidden}
+.panel .lab{font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#9FD3C0}
+.panel .big{font-size:clamp(30px,5vw,40px);font-weight:700;letter-spacing:-.03em;line-height:1.05;margin:6px 0 2px;font-variant-numeric:tabular-nums}
+.panel .band{font-family:var(--serif);font-size:15px;color:#CFE6DC}
+.panel .idle{font-family:var(--serif);font-size:15.5px;color:#CFE6DC;line-height:1.5}
+.conf{display:inline-flex;align-items:center;gap:7px;margin-top:14px;padding:5px 11px 5px 8px;border-radius:99px;background:rgba(255,255,255,.13);font-size:13px;font-weight:600}
+.conf .dot{width:8px;height:8px;border-radius:50%}
+.conf.strong .dot{background:#5BD6A6}.conf.fair .dot{background:#F0C14B}.conf.indicative .dot{background:#E89A6B}
+.why{margin:10px 0 0;padding:0;list-style:none;font-family:var(--serif);font-size:13.5px;color:#B9DCCD;line-height:1.5}
+.why li{padding-left:14px;position:relative}
+.why li::before{content:"";position:absolute;left:0;top:.7em;width:6px;height:1.5px;background:#6FAE97}
+
+.split{border-top:1px solid rgba(255,255,255,.18);margin-top:18px;padding-top:16px;display:grid;gap:9px}
+.kv{display:flex;justify-content:space-between;gap:14px;font-size:14.5px}
+.kv span{color:#CFE6DC}.kv b{font-weight:600;font-variant-numeric:tabular-nums}
+.kv.small{font-size:13.5px}.kv.small span,.kv.small b{color:#A8CDBC;font-weight:500}
+
+details.brk{margin-top:16px}
+details.brk summary{cursor:pointer;font-size:13.5px;font-weight:600;color:#9FD3C0;list-style:none}
+details.brk summary::-webkit-details-marker{display:none}
+details.brk summary::before{content:"\25B8";display:inline-block;margin-right:7px;transition:transform .15s}
+details.brk[open] summary::before{transform:rotate(90deg)}
+.brk .lines{margin-top:12px;display:grid;gap:6px;font-size:13px}
+.brk .ln{display:flex;justify-content:space-between;gap:12px;color:#C6E2D6}
+.brk .ln.strong{font-weight:700;color:#fff;border-top:1px solid rgba(255,255,255,.18);padding-top:7px;margin-top:3px}
+.brk .ln .n{color:#8FBFAB;font-size:11.5px;font-family:var(--serif);flex:1;text-align:right;padding-right:8px}
+.brk .ln b{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.aside{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;margin-top:12px}
+.aside h3{font-size:14px;margin:0 0 6px;font-weight:600}
+.aside p{font-family:var(--serif);font-size:14.5px;color:var(--ink-2);margin:0;line-height:1.5}
+.aside .num{font-variant-numeric:tabular-nums;color:var(--ink);font-weight:600}
+
+/* ---- mobiele balk ----
+   Vast onderin, maar ingeklapt: alleen het bedrag. Uitgeklapt dekte
+   hij de knop eronder af — dat vond de browsertest, niet ik. */
+.grip{display:none}
+@media(max-width:979px){
+  .rail{position:fixed;left:0;right:0;bottom:0;z-index:40;padding:0}
+  .rail .panel{border-radius:16px 16px 0 0;padding:14px 20px 18px;box-shadow:0 -8px 30px rgba(0,0,0,.22)}
+  .rail .panel .big{font-size:26px;margin:2px 0 0}
+  .rail .lab{font-size:10.5px}
+  .aside{display:none}
+  .grip{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;padding:0;
+        color:#9FD3C0;font:inherit;font-size:13px;font-weight:600;cursor:pointer;margin-top:10px}
+  .grip::after{content:"";width:0;height:0;border:5px solid transparent;border-bottom-color:#9FD3C0;
+        margin-left:auto;transition:transform .15s}
+  .rail.open .grip::after{transform:rotate(180deg)}
+  /* Alles onder het bedrag is ingeklapt tot de bezoeker erom vraagt. */
+  #more{display:none}
+  .rail.open #more{display:block}
+  .rail.open .panel{max-height:76vh;overflow-y:auto}
+  .shell{padding-bottom:152px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+small.fh{display:block;font-family:var(--serif);font-size:13px;color:var(--ink-3);margin-top:5px;line-height:1.4}
+.foot{font-family:var(--serif);font-size:13.5px;color:var(--ink-3);margin-top:16px;line-height:1.5}
+</style>
+<div class="shell">
+<div>
+  <h1>What is it worth?</h1>
+  <p class="sub">An estimate built from what is actually for sale in your area. The figure appears as soon as you give a location and a size — you don’t have to leave anything behind to see it.</p>
+
+  <!-- 1 · wat -->
+  <section class="step" id="s1">
+    <button class="recap" data-goto="1"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span id="r1"></span><span class="edit">change</span></button>
+    <h2>What are you valuing?</h2>
+    <p class="hint">Everything after this adapts to your answer.</p>
+    <div class="body">
+      <div class="cards" id="typeCards">
+        <button class="card" data-type="land">
+          <span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18M4 20V8l8-4 8 4v12"/><path d="M4 12h16"/></svg></span>
+          <span class="t">Land or plot</span><span class="s">Bare land, nothing built on it yet</span>
+        </button>
+        <button class="card" data-type="house">
+          <span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg></span>
+          <span class="t">House with land</span><span class="s">Villa, house or family compound</span>
+        </button>
+        <button class="card" data-type="apartment">
+          <span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 7h2M14 7h2M8 11h2M14 11h2M8 15h2M14 15h2"/></svg></span>
+          <span class="t">Apartment</span><span class="s">A unit in a building, no plot of its own</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · waar -->
+  <section class="step" id="s2" hidden>
+    <button class="recap" data-goto="2"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span id="r2"></span><span class="edit">change</span></button>
+    <h2>Where is it?</h2>
+    <p class="hint">An area name, coordinates or a Plus Code. Location carries most of the value.</p>
+    <div class="body">
+      <div class="grid two">
+        <label class="f"><span>Area</span>
+          <input id="loc" list="areaList" placeholder="e.g. Brusubi, Sanyang, Lamin" autocomplete="off">
+          <datalist id="areaList"></datalist>
+        </label>
+        <label class="f" id="wrapBeach"><span>Distance to the beach</span>
+          <select id="beach">
+            <option value="inland">Inland</option>
+            <option value="walking">Walking distance to the beach</option>
+            <option value="beachfront">Beachfront</option>
+          </select>
+        </label>
+      </div>
+      <div class="err" id="e2"></div>
+      <div class="row"><button class="btn pri" data-next="2">Continue</button></div>
+    </div>
+  </section>
+
+  <!-- 3 · hoe groot -->
+  <section class="step" id="s3" hidden>
+    <button class="recap" data-goto="3"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span id="r3"></span><span class="edit">change</span></button>
+    <h2>How big is it?</h2>
+    <p class="hint" id="h3">A standard Gambian plot is 400 to 500 m² — 20 by 20, or 20 by 25 metres.</p>
+    <div class="body">
+      <div class="grid two">
+        <label class="f" id="wrapPlot"><span>Plot</span><span class="suffix"><input id="plot" type="number" inputmode="numeric" placeholder="400"><em>m²</em></span></label>
+        <label class="f" id="wrapBuilt"><span>Built area</span><span class="suffix"><input id="built" type="number" inputmode="numeric" placeholder="150"><em>m²</em></span></label>
+      </div>
+      <div class="err" id="e3"></div>
+      <div class="row"><button class="btn pri" data-next="3">Continue</button></div>
+    </div>
+  </section>
+
+  <!-- 4 · kenmerken -->
+  <section class="step" id="s4" hidden>
+    <h2 id="h4">The plot</h2>
+    <p class="hint">Everything is already set to what is ordinary in The Gambia. Change only what differs — the figure follows as you go.</p>
+    <div class="body">
+      <div class="grid three" id="landFields">
+        <label class="f"><span>Title</span><select id="title">
+          <option value="alkalalo">Customary / Alkalo</option><option value="sublease">Sublease</option>
+          <option value="leasehold">State lease</option><option value="freehold">Freehold</option>
+          <option value="unclear">Unclear or disputed</option></select></label>
+        <label class="f"><span>Road</span><select id="road">
+          <option value="laterite">Laterite or sand road</option><option value="tarmac">Tarmac road</option>
+          <option value="none">No road access</option></select></label>
+        <label class="f"><span>Electricity</span><select id="elec">
+          <option value="present">Connected</option><option value="nearby">Power in the street</option>
+          <option value="none">No power nearby</option></select></label>
+        <label class="f"><span>Water</span><select id="water">
+          <option value="nearby">Mains in the street</option><option value="nawec">NAWEC connection</option>
+          <option value="borehole">Own borehole</option><option value="none">No water</option></select></label>
+        <label class="f"><span>Fencing</span><select id="fence">
+          <option value="partial">Partly fenced</option><option value="full">Fully walled</option>
+          <option value="none">Not fenced</option></select></label>
+        <label class="f"><span>Ground cover</span><select id="cleared">
+          <option value="cleared">Cleared and level</option><option value="partial">Partly cleared</option>
+          <option value="bush">Bush or trees</option></select></label>
+        <label class="f"><span>Shape</span><select id="shape">
+          <option value="regular">Regular</option><option value="irregular">Irregular</option></select></label>
+        <label class="f"><span>Corner plot</span><select id="corner">
+          <option value="no">No</option><option value="yes">Yes</option></select></label>
+        <label class="f"><span>Flooding</span><select id="flood">
+          <option value="no">Never floods</option><option value="low">Sometimes in the rains</option>
+          <option value="high">Floods regularly</option></select></label>
+      </div>
+
+      <div class="grid three" id="buildFields" style="margin-top:14px">
+        <label class="f"><span>Finish</span><select id="finish">
+          <option value="basic">Simple</option>
+          <option value="standard" selected>Standard</option>
+          <option value="high">High</option></select><small class="fh" id="finishHint"></small></label>
+        <label class="f"><span>Year built</span><input id="year" type="number" inputmode="numeric" placeholder="unknown"></label>
+        <label class="f"><span>Condition</span><select id="condition">
+          <option value="good">Well kept</option><option value="new">New build</option>
+          <option value="renovation">Needs renovation</option></select></label>
+        <label class="f"><span>Storeys</span><select id="floors">
+          <option value="1">Single storey</option><option value="2">Two storeys</option><option value="3">Three or more</option></select></label>
+        <label class="f"><span>Bathrooms</span><select id="baths">
+          <option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4 or more</option></select></label>
+        <label class="f"><span>Security</span><select id="security">
+          <option value="wall">Walled compound</option><option value="gated">Gated with security</option>
+          <option value="none">None</option></select></label>
+        <label class="f"><span>Swimming pool</span><select id="pool">
+          <option value="no">No</option><option value="yes">Yes</option></select></label>
+        <label class="f"><span>Power</span><select id="solar">
+          <option value="no">NAWEC only</option><option value="solar">Solar panels</option>
+          <option value="generator">Generator</option><option value="both">Solar and generator</option></select></label>
+        <label class="f"><span>Furnishing</span><select id="furnished">
+          <option value="unfurnished">Unfurnished</option><option value="semi">Semi-furnished</option>
+          <option value="furnished">Fully furnished</option></select></label>
+      </div>
+
+      <label class="f" style="margin-top:14px;max-width:280px"><span>View</span><select id="view">
+        <option value="none">No special view</option><option value="garden">Garden or greenery</option>
+        <option value="ocean">Ocean view</option></select></label>
+
+      <div class="row"><button class="btn pri" id="toReport">Email me the full report</button>
+        <button class="btn sec" id="restart">Start again</button></div>
+    </div>
+  </section>
+
+  <!-- 5 · rapport -->
+  <section class="step" id="s5" hidden>
+    <h2>The full report</h2>
+    <p class="hint">Your estimate is already on screen. Want it in your inbox as a report, with the workings and a comparison against what is for sale in your area?</p>
+    <div class="body">
+      <div class="grid two">
+        <label class="f"><span>Name</span><input id="nm" placeholder="Your name"></label>
+        <label class="f"><span>Email</span><input id="em" type="email" placeholder="you@example.com"></label>
+        <label class="f"><span>Phone or WhatsApp <em style="font-weight:400;color:var(--ink-3);font-style:normal">— optional</em></span><input id="ph" placeholder="+220 …"></label>
+      </div>
+      <div class="err" id="e5"></div>
+      <div class="row"><button class="btn pri" id="send">Send the report</button>
+        <button class="btn sec" id="skip">No thanks, this is enough</button></div>
+      <p class="foot">A valuer we work with can check the estimate on site — title and boundaries included. You can ask for that through the report.</p>
+    </div>
+  </section>
+</div>
+
+<!-- resultaat -->
+<div class="rail">
+  <div class="panel" id="panel">
+    <div class="lab">Estimated value</div>
+    <div id="idle" class="idle" style="margin-top:6px">Pick what you are valuing, then give a location and a size. The figure appears here straight away.</div>
+    <div id="res" hidden>
+      <div class="big" id="big">—</div>
+      <div class="band" id="bandTxt"></div>
+      <button class="grip" id="grip" aria-expanded="false" aria-controls="more">The workings</button>
+      <div id="more">
+        <div class="conf" id="conf"><span class="dot"></span><span id="confTxt"></span></div>
+        <ul class="why" id="why"></ul>
+        <div class="split" id="split"></div>
+        <details class="brk"><summary>How this is built up</summary><div class="lines" id="lines"></div></details>
+      </div>
+    </div>
+  </div>
+  <div class="aside" id="portalBox" hidden>
+    <h3>On the international portals</h3>
+    <p id="portalTxt"></p>
+  </div>
+  <div class="aside" id="rentBox" hidden>
+    <h3>If you let it out</h3>
+    <p id="rentTxt"></p>
+  </div>
+  <div class="aside" id="limits">
+    <h3>What this is not for</h3>
+    <p>This is a calculation from what is for sale in your area — not a valuation. For a bank, a court, dividing an inheritance or the tax office you need a valuer who has stood on the ground. We can arrange one; ask through the report.</p>
+  </div>
+</div>
+</div>
+<script>
+/* ============================================================
+   MyKunda — waarderingsmodel
+   ------------------------------------------------------------
+   Eén bron voor elke waardebepaling op de site. sell.html en
+   list.html rekenen allebei hierdoor; nergens anders staat een
+   tarief of een opslag.
+
+   Rekenwijze: grond en opstal worden apart gewaardeerd en
+   opgeteld. Dat is de methode voor markten zonder betrouwbaar
+   transactieregister, en Gambia is er daar één van — er bestaat
+   geen publieke bron met gerealiseerde verkoopprijzen. Alles
+   hieronder komt dus uit vraagprijzen, en het model zegt dat ook.
+
+   Interne eenheid is EUR (net als CURRENCIES in app.js);
+   omrekenen naar de weergavevaluta doet convert() daar.
+
+   HERIJKEN: elk blok hieronder draagt een `herijkt`-datum. De
+   betrouwbaarheidsscore zakt naarmate die datum ouder wordt, en
+   boven de twaalf maanden zegt de tool het uit zichzelf.
+   ============================================================ */
+(function (root) {
+'use strict';
+
+/* ============================================================
+   1 · GRONDTARIEVEN — EUR per m²
+   ------------------------------------------------------------
+   BASIS is de tabel zoals die tot augustus 2026 in sell.html
+   stond. Die was geijkt op GamRealty en Holprop: portalen die in
+   euro's adverteren voor buitenlandse kopers. Naast kavellistings
+   in dalasi (gambiarealestate.gm, songhaiproperties.gm,
+   accessgambia.com, gezien 26-08-2026) bleek die tabel in de
+   kustzone structureel te hoog en in de Kombo-groeigebieden te
+   laag. Zie het ijkrapport.
+
+   De tabel wordt daarom niet vervangen maar gecorrigeerd, zodat
+   per gebied zichtbaar blijft waar het getal vandaan komt:
+
+     WAARGENOMEN  minstens twee lokale kavellistings → mediaan
+     HALF         één waarneming → halverwege geschoven
+     ZONE         geen waarneming → zonefactor op het oude tarief
+
+   Alleen WAARGENOMEN telt als bewijs. De andere twee verbreden
+   de bandbreedte; zie confidence().
+   ============================================================ */
+var LAND_HERIJKT = '2026-08-26';
+
+/* Waargenomen: mediaan van lokale kavellistings in dalasi,
+   omgerekend tegen 85,74 GMD/EUR (market_macro, aug 2026). */
+var LAND_OBSERVED = {
+  'kololi':         { eur: 52.3, n: 2 },
+  'bijilo':         { eur: 61.0, n: 3 },
+  'brusubi':        { eur: 54.0, n: 2 },
+  'kerr serign':    { eur: 52.5, n: 2 },
+  'sukuta':         { eur: 34.7, n: 2 },
+  'jabang':         { eur: 31.9, n: 2 },
+  'lamin':          { eur: 15.2, n: 2 },
+  'yundum':         { eur: 18.6, n: 2 },
+  'old yundum':     { eur: 18.6, n: 2 },
+  'busumbala':      { eur: 17.0, n: 2 },
+  'gunjur':         { eur: 13.1, n: 2 },
+  'kartong':        { eur:  9.0, n: 2 },
+  'kartung':        { eur:  9.0, n: 2 },
+  'sanyang':        { eur: 14.9, n: 2 }
+};
+
+/* Half geschoven: één waarneming is een aanwijzing, geen mediaan. */
+var LAND_HALF = {
+  'brufut heights': { eur: 50.4 },
+  'brufut':         { eur: 33.6 },
+  'brikama':        { eur: 14.3 },
+  'tujereng':       { eur: 22.9 },
+  'farafenni':      { eur:  2.5 }
+};
+
+/* Zonefactor voor gebieden zonder eigen waarneming. Mediaan van
+   lokaal/portaal per zone, over de gebieden die wél bewijs hebben. */
+var LAND_ZONE = {
+  coast:     0.45,  /* toeristische kuststrook: 7 gebieden, mediaan 0,43 */
+  kombo:     1.05,  /* Kombo binnenland: 9 gebieden, mediaan 1,10       */
+  greater:   0.70,  /* Greater Banjul: geen bewijs, tussen beide in     */
+  upcountry: 0.55   /* provincie: één waarneming (Farafenni), half      */
+};
+
+var ZONE_OF = {
+  coast: ['kololi','senegambia','bijilo','cape point','fajara','bakau','kotu',
+          'brufut heights','brufut','tanji','batokunku','sanyang','tujereng',
+          'gunjur','kartong','kartung','ghana town','jambanjelly','folonko'],
+  kombo: ['brusubi','kerr serign','sukuta','lamin','jabang','yundum','old yundum',
+          'busumbala','brikama','sinchu alagie','sinchu baliya','nema kunku',
+          'banjulunding','wellingara','farato','abuko','kembujeh','madiana',
+          'kuloro','giboro koto','sotokoi','faraba sutu','bessi nding','jambur',
+          'marakissa','kafuta','sifoe','mandinaba','bonto','kitty','nyambai',
+          'faraba banta','pirang','bulok','kalagi','somita','sibanor','darsilami'],
+  greater: ['banjul','serrekunda','serekunda','kanifing','bakoteh','bundung',
+            'talinding','tallinding kunjang','latri kunda','faji kunda','pipeline',
+            'tabokoto','new jeshwang','old jeshwang','dippa kunda','ebou town',
+            'ebo town','manjai kunda','churchills town','kabafita']
+};
+
+function zoneFor(key) {
+  for (var z in ZONE_OF) { if (ZONE_OF[z].indexOf(key) > -1) return z; }
+  return 'upcountry';
+}
+
+/* ============================================================
+   2 · BOUWKOSTEN — EUR per bebouwde m², nieuwbouw
+   ------------------------------------------------------------
+   Geen enkele bron geeft een Gambiaans tarief per m² dat je kunt
+   overnemen; Shreeji Development schrijft in juli 2026 letterlijk
+   dat dat tarief niet bestaat. Daarom van onderaf opgebouwd uit
+   de Gambiaanse materiaalprijzen (AccessGambia, 7 januari 2026)
+   met gepubliceerde hoeveelheden uit echte bestekken.
+
+   De ruwbouw per m² vloer rekent uit:
+     2,05 m² muur per m² vloer  · 10 blokken per m² muur
+     0,20 zak cement metselspecie en 0,22 zak pleister per m² muur
+     0,13 m³ funderingsbeton en 0,14 m³ vloerplaat per m² vloer
+     9,5 kg wapening per m² vloer
+   Bij D550 per zak cement, D845 per m³ zand en D55 per kg staal
+   geeft dat D3.400 – D5.200 aan ruwbouwmateriaal per m².
+   Met arbeid (+50% op materiaal), de gepubliceerde verdeling
+   ruwbouw 38% van de harde bouwsom, en 20% aannemersopslag komt
+   daar EUR 163 – EUR 321 per m² uit.
+
+   Drie onafhankelijke lijnen komen daarmee op hetzelfde uit:
+     · deze opbouw van onderaf          EUR 163 – 321
+     · mykunda.com/guide-building-...   EUR 300 standaard, 500+ hoog
+     · enormousbuildings.com            USD 300 – 700 = EUR 254 – 594
+   De afwerkingsgraad — tegels of cementvloer, aluminium of stalen
+   ramen, airco of niet — zit in de 62% die de opbouw niet zelf
+   berekent. Vandaar één vraag aan de gebruiker in plaats van een
+   aanname.
+
+   Deze drie getallen zijn afgeleid, niet waargenomen. De
+   opstalwaarde scoort daarom nooit hoger dan 'redelijk'; zie
+   confidence(). Komt er een Gambiaanse offerte op tafel, dan is
+   dit blok de enige plek die verandert.
+   ============================================================ */
+var BUILD_HERIJKT = '2026-08-26';
+var BUILD_COST = {
+  basic:    200,  /* betonblok, cementvloer of eenvoudige tegel, stalen ramen,
+                     golfplaat, geen airco — onderkant van de eigen opbouw     */
+  standard: 300,  /* tegelvloer, hor, plafond, boiler — komt overeen met de
+                     eigen gids en met de onderkant van de gepubliceerde band  */
+  high:     500   /* aluminium schuifpuien, airco, ingebouwde keuken, plafonds */
+};
+/* Wat de opstal draagt maar niet in EUR/m² vloer zit. Afgeschreven
+   investeringen: een zwembad kost in Sanyang hetzelfde als in Kololi. */
+var BUILD_EXTRA = {
+  pool:        14000,  /* 8×4 m met pomp en filter                      */
+  solar:        4500,  /* paneel, omvormer, accu — huishoudformaat      */
+  generator:    1800,  /* 5–7 kVA met kast                              */
+  borehole:     3200,  /* boring, pomp en tank                          */
+  wallPerM:        55, /* ommuring per strekkende meter, 2 m hoog       */
+  furnishedPct:  0.05, /* volledig gemeubileerd, op de opstalwaarde     */
+  semiPct:       0.02
+};
+
+/* Afschrijving: betonblokbouw met golfplaat gaat lang mee en de
+   grond draagt het grootste deel van de waarde. 1,5% per jaar met
+   een bodem van 60% restwaarde — een huis van veertig jaar oud op
+   een goede kavel is in Gambia geen afgeschreven huis. */
+function depreciation(yearBuilt, condition) {
+  var now = new Date().getUTCFullYear();
+  var age = yearBuilt ? Math.max(0, now - (+yearBuilt)) : 12;   /* onbekend → 12 jaar */
+  var d = Math.min(0.40, age * 0.015);
+  if (condition === 'new') d = 0;
+  if (condition === 'renovation') d = Math.min(0.55, d + 0.22);
+  return d;
+}
+
+/* ============================================================
+   3 · KENMERKEN — procentpunten, niet vermenigvuldigers
+   ------------------------------------------------------------
+   Tien vermenigvuldigers achter elkaar kunnen vóór demping tot
+   +200% oplopen; daarna corrigeerden een demping van 0,75 en een
+   plafond dat weer terug. Drie mechanismen die elkaars werk
+   overdoen en die je aan geen klant uitlegt.
+
+   Optellen is stabieler en leest als een checklist: "jouw kavel
+   scoort +18%". De harde grens onderaan doet wat de demping deed,
+   op één plek en zichtbaar.
+
+   REFERENTIEKAVEL — het nulpunt van deze tabel, en tegelijk de
+   kavel waar elk tarief in LAND_OBSERVED bij hoort:
+       alkalo-titel · lateriet weg · stroom aanwezig · water in de
+       straat · deels omheind · ontbost · regelmatige vorm · geen
+       hoek · geen overstromingsrisico · landinwaarts · geen uitzicht
+   Dat is de gewone Gambiaanse bouwkavel. Elke waarneming is naar
+   die specificatie teruggerekend vóór hij tarief werd; anders tel
+   je de stroomaansluiting twee keer — één keer in de vraagprijs
+   waar het tarief uit komt, en nog eens als plusje erbovenop. De
+   eerste zelftest liep daar op vast: Brusubi kwam 67% te hoog uit.
+   Wijzig je hieronder een getal, herijk dan ook de tarieven.
+   ============================================================ */
+var LAND_PTS = {
+  title:  { freehold: 10, leasehold: 8, sublease: 5, alkalalo: 0, unclear: -25 },
+  road:   { tarmac: 12, laterite: 0, none: -20 },
+  elec:   { present: 0, nearby: -6, none: -14 },
+  water:  { nawec: 4, borehole: 2, nearby: 0, none: -10 },
+  fence:  { full: 8, partial: 0, none: -6 },
+  cleared:{ cleared: 0, partial: -4, bush: -9 },
+  corner: { yes: 5, no: 0 },
+  shape:  { regular: 0, irregular: -7 },
+  flood:  { no: 0, low: -8, high: -22 },
+  beach:  { beachfront: 45, walking: 12, inland: 0 },
+  view:   { ocean: 10, garden: 3, none: 0 }
+};
+var LAND_CAP = { down: -45, up: 60 };
+
+/* De opstal krijgt zijn eigen, veel kortere lijst: alles wat met
+   de locatie te maken heeft zit al in de grondwaarde, en alles wat
+   geld kost staat in BUILD_EXTRA. Wat overblijft is de plattegrond. */
+var BUILD_PTS = {
+  floors: { '1': 0, '2': 4, '3': 6 },
+  baths:  { '1': -3, '2': 0, '3': 3, '4': 6 },
+  security: { gated: 4, wall: 0, none: -3 }
+};
+var BUILD_CAP = { down: -20, up: 20 };
+
+/* ============================================================
+   4 · HUUR — twee markten, niet één
+   ------------------------------------------------------------
+   Lokale lange huur in dalasi (Songhai Properties, twaalf
+   jaarhuren in de Kombo's) loopt van D250.000 tot D600.000 per
+   jaar, mediaan D350.000 — bruto rendement 2,5 tot 4% op lokale
+   verkoopprijzen. Expat- en gemeubileerde verhuur (GamRealty,
+   Gambia Property Shop) ligt daar een factor drie boven.
+
+   Numbeo geeft 1,6–1,8% voor Gambia op twaalf inzendingen van
+   twee mensen; Global Property Guide impliceert 5,9% op een
+   pagina die zelf zegt dat Gambia geen prijsstatistiek publiceert.
+   Allebei te dun. De huur-tegen-prijsvergelijking hierboven niet.
+   ============================================================ */
+var RENT_HERIJKT = '2026-08-26';
+
+/* ---- het portaalniveau ----
+   Dezelfde kavel wordt in dalasi anders geprijsd dan in euro's.
+   Dat is geen ruis maar een tweede markt, en een verkoper die op
+   diaspora mikt heeft er wat aan.
+
+   Eerst geprobeerd als één vermenigvuldiger op de modelwaarde.
+   Dat viel af: over negen objecten waarvoor allebei de prijzen
+   bestaan loopt de verhouding van 0,90 tot 2,41 — een mediaan van
+   1,7 zegt daar niets zinnigs mee. Eén getal zou een precisie
+   suggereren die er niet is.
+
+   Dus alleen waar het portaalniveau werkelijk is waargenomen, per
+   gebied, in EUR/m². Geen waarneming betekent: niets tonen. Deze
+   tarieven staan naast het hoofdgetal, nooit erin.
+   Bron: GamRealty grondgids maart 2026 en Holprop, 26-08-2026. */
+var PORTAL_RATE = {
+  'kololi':        [80, 289],  'senegambia':     [130, 314],
+  'bijilo':        [40, 277],  'brufut heights': [40, 120],
+  'brufut':        [25,  70],  'sukuta':         [43,  45],
+  'tanji':         [15,  35],  'sanyang':        [10,  38],
+  'tujereng':      [ 8,  40],  'gunjur':         [ 8,  20],
+  'kartong':       [ 8,  20],  'kartung':        [ 8,  20]
+};
+var RENT_YIELD = {
+  local:  { villa: 0.030, house: 0.032, apartment: 0.042, townhouse: 0.035,
+            compound: 0.028, penthouse: 0.040, lodge: 0.045, commercial: 0.055 },
+  expatMultiple: 2.8       /* gemeubileerd, in euro's, aan buitenlanders */
+};
+
+root.MK_VAL_CONFIG = {
+  LAND_OBSERVED: LAND_OBSERVED, LAND_HALF: LAND_HALF, LAND_ZONE: LAND_ZONE,
+  BUILD_COST: BUILD_COST, BUILD_EXTRA: BUILD_EXTRA, LAND_PTS: LAND_PTS,
+  BUILD_PTS: BUILD_PTS, RENT_YIELD: RENT_YIELD, PORTAL_RATE: PORTAL_RATE,
+  herijkt: { land: LAND_HERIJKT, build: BUILD_HERIJKT, rent: RENT_HERIJKT },
+  zoneFor: zoneFor, depreciation: depreciation,
+  LAND_CAP: LAND_CAP, BUILD_CAP: BUILD_CAP
+};
+
+})(typeof window !== 'undefined' ? window : globalThis);
+
+/* ============================================================
+   5 · DE REKENMACHINE
+   ------------------------------------------------------------
+   Pure functies, geen DOM. sell.html en list.html geven een
+   object in en krijgen een object terug; het tekenen doen zij.
+   Dat maakt de zelftest mogelijk: valuation-selftest.html voert
+   hier geankerde gevallen doorheen en zet de uitkomst naast de
+   waargenomen prijs.
+
+   LAND_BASE — de tarieventabel per gebied zoals die in sell.html
+   stond — wordt van buiten meegegeven (valuation-areas.js), zodat
+   de data los staat van het model en met de hand bij te werken is
+   zonder het rekenwerk aan te raken.
+   ============================================================ */
+(function (root) {
+'use strict';
+var C = root.MK_VAL_CONFIG;
+
+function norm(s) { return String(s == null ? '' : s).toLowerCase().trim(); }
+/* De onderbouwing is wat de klant leest; daar hoort geen sleutel in te staan. */
+function titel(s) { return String(s || '').replace(/(^|[\s-])([a-z])/g, function (m, a, b) { return a + b.toUpperCase(); }); }
+var FINISH_EN = { basic: 'simple', standard: 'standard', high: 'high' };
+
+/* Welk gebied bedoelt iemand? Langste sleutel eerst, zodat
+   "brufut heights" niet als "brufut" wordt gelezen. */
+function matchArea(locStr, base) {
+  var s = norm(locStr), keys = Object.keys(base || {}).sort(function (a, b) { return b.length - a.length; });
+  for (var i = 0; i < keys.length; i++) { if (s.indexOf(keys[i]) > -1) return keys[i]; }
+  return null;
+}
+
+/* Het grondtarief plus de herkomst ervan. De herkomst is geen
+   voetnoot: hij bepaalt verderop de bandbreedte. */
+function landRate(areaKey, base) {
+  var k = norm(areaKey);
+  if (C.LAND_OBSERVED[k]) {
+    return { eur: C.LAND_OBSERVED[k].eur, src: 'observed', n: C.LAND_OBSERVED[k].n,
+             note: C.LAND_OBSERVED[k].n + ' local plot listings in ' + titel(areaKey) };
+  }
+  if (C.LAND_HALF[k]) {
+    return { eur: C.LAND_HALF[k].eur, src: 'half', n: 1,
+             note: 'one observation in ' + titel(areaKey) + ' \u2014 shifted halfway from the older rate' };
+  }
+  var was = base && base[k];
+  if (was == null) return { eur: null, src: 'none', n: 0, note: 'area not recognised' };
+  var z = C.zoneFor(k), f = C.LAND_ZONE[z];
+  return { eur: Math.round(was * f * 10) / 10, src: 'zone', n: 0,
+           note: 'no observations \u2014 regional rate for ' + z + ' (\u00d7' + f + ')' };
+}
+
+/* Grote kavels doen een lager gemiddelde per m²: er zijn minder
+   kopers voor 2.000 m² dan voor de 400–500 m² die de Gambiaanse
+   markt als standaardkavel verhandelt. Het knikpunt ligt daarom
+   op 600 m², de bovenkant van die cluster. */
+function effLand(sqm) {
+  if (sqm <= 600) return sqm;
+  if (sqm <= 2000) return 600 + (sqm - 600) * 0.90;
+  return 600 + 1400 * 0.90 + (sqm - 2000) * 0.78;
+}
+/* Bij gebouwen speelt hetzelfde: de tweede honderd vierkante meter
+   brengt minder op dan de eerste. */
+function effBuilt(sqm) {
+  if (sqm <= 150) return sqm;
+  if (sqm <= 300) return 150 + (sqm - 150) * 0.90;
+  return 150 + 150 * 0.90 + (sqm - 300) * 0.80;
+}
+
+function points(table, key, val) {
+  var t = table[key]; if (!t) return 0;
+  var v = t[norm(val)];
+  return typeof v === 'number' ? v : 0;
+}
+
+function sumPoints(table, cap, input, fields) {
+  var total = 0, hit = [];
+  fields.forEach(function (f) {
+    var p = points(table, f, input[f]);
+    if (p) { total += p; hit.push({ field: f, value: input[f], pts: p }); }
+  });
+  var capped = Math.max(cap.down, Math.min(cap.up, total));
+  return { raw: total, pts: capped, capped: capped !== total, hit: hit };
+}
+
+/* ---- betrouwbaarheid ----
+   Vier ingrediënten, en het model scoort zichzelf nooit hoger dan
+   zijn zwakste. Het cijfer stuurt de bandbreedte; er is geen vaste
+   ±20% meer. */
+function confidence(parts) {
+  var s = 100, why = [];
+  /* Twee waarnemingen zijn geen markt. De eerste versie gaf daar
+     'sterk onderbouwd' bij — een label dat meer belooft dan er
+     ligt, juist bij de gebieden waar we het minst weten. 'Sterk'
+     is nu gereserveerd voor gebieden met acht of meer
+     waarnemingen: precies de drempel waarop laag 3 het van de
+     vaste tabel overneemt. Vandaag haalt geen enkel gebied dat.
+     Dat is de bedoeling: het label heeft ergens om te groeien. */
+  if (parts.landSrc === 'observed') {
+    var n = parts.landN || 0;
+    if (n >= 8) { /* geen aftrek */ }
+    else if (n >= 4) { s -= 12; why.push(n + ' observations in this area'); }
+    else { s -= 26; why.push('only ' + n + ' observations in this area \u2014 too few for a median to carry weight'); }
+  }
+  else if (parts.landSrc === 'half') { s -= 38; why.push('one observation in this area'); }
+  else if (parts.landSrc === 'zone') { s -= 52; why.push('no observations in this area \u2014 rate derived from the wider region'); }
+  else { s -= 60; why.push('area not recognised'); }
+
+  /* Elke prijs waar dit model op staat is een VRAAGprijs. Voor
+     Gambia bestaat geen publieke bron met wat er werkelijk is
+     betaald, dus hoe groot het gat is tussen vragen en krijgen
+     weten we niet — alleen dat het er is, en dat het één kant op
+     wijst. Dat kost iedereen punten, altijd. */
+  s -= 6;
+  why.push('based on asking prices \u2014 no one publishes what property actually sells for in The Gambia');
+
+  var missing = parts.missing || 0;
+  if (missing) { s -= Math.min(20, missing * 4); why.push(missing + (missing === 1 ? ' field' : ' fields') + ' left blank'); }
+
+  var months = parts.ageMonths || 0;
+  if (months > 12) { s -= Math.min(15, (months - 12) * 1.5); why.push('rates last recalibrated ' + Math.round(months) + ' months ago'); }
+
+  /* De opstalwaarde staat op afgeleide bouwkosten, niet op
+     waargenomen offertes. Zolang dat zo is kan een woning niet
+     'sterk onderbouwd' heten — een kavel wel. */
+  if (parts.hasBuilding) { s = Math.min(s, 74); why.push('build cost derived from material prices, not from builders\u2019 quotes'); }
+
+  if (parts.methodGap != null && parts.methodGap > 0.25) {
+    s -= 12; why.push('the two methods disagree by ' + Math.round(parts.methodGap * 100) + '%');
+  }
+  s = Math.max(10, Math.min(100, Math.round(s)));
+  var label = s >= 75 ? 'strong' : s >= 50 ? 'fair' : 'indicative';
+  var band  = s >= 85 ? 0.12 : s >= 70 ? 0.18 : s >= 55 ? 0.25 : s >= 40 ? 0.32 : 0.38;
+  return { score: s, label: label, band: band, reasons: why };
+}
+
+function monthsSince(iso) {
+  var d = new Date(iso + 'T00:00:00Z');
+  return (Date.now() - d.getTime()) / (1000 * 60 * 60 * 24 * 30.44);
+}
+
+/* Wat er in dit gebied op de internationale portalen wordt
+   gevraagd — alleen als dat daar ook echt is waargenomen. */
+function portalLevel(areaKey, plot, built, isLand) {
+  var pr = C.PORTAL_RATE[norm(areaKey)];
+  if (pr == null || !isLand || !plot) return null;
+  var e = effLand(plot);
+  return { area: titel(areaKey), rateLow: pr[0], rateHigh: pr[1],
+           low: Math.round(e * pr[0]), high: Math.round(e * pr[1]),
+           note: 'international portals ask EUR ' + pr[0] + '\u2013' + pr[1] + ' per m\u00b2 for plots in ' + titel(areaKey) };
+}
+
+/* ---- de hoofdfunctie ---- */
+function value(input, opts) {
+  opts = opts || {};
+  var base = opts.LAND_BASE || {};
+  var lines = [];
+  var areaKey = matchArea(input.area, base) || norm(input.area);
+  var isLand = norm(input.type) === 'land';
+  var isApt  = norm(input.type) === 'apartment' || norm(input.type) === 'penthouse';
+
+  /* --- grond --- */
+  var lr = landRate(areaKey, base);
+
+  /* Kennen we het gebied niet, dan is er geen tarief en dus geen
+     waarde. Een nul tonen zou een antwoord suggereren; dit is er
+     geen. De eerste browsertest liet zien wat er anders gebeurt:
+     "Bansang" gaf EUR 0 met het label 'redelijk onderbouwd'. */
+  if (lr.eur == null) {
+    return { ok: false, reason: 'unknown-area', area: input.area,
+             confidence: { score: 0, label: 'indicative', band: 0.38,
+                           reasons: ['this area is not in the rate table'] },
+             lines: [] };
+  }
+  var plot = +input.plotSqm || 0;
+  var landPts = sumPoints(C.LAND_PTS, C.LAND_CAP, input,
+    ['title', 'road', 'elec', 'water', 'fence', 'cleared', 'corner', 'shape', 'flood', 'beach', 'view']);
+  var landRateAdj = lr.eur == null ? null : lr.eur * (1 + landPts.pts / 100);
+  var landValue = 0;
+  if (!isApt && plot > 0 && landRateAdj != null) {
+    landValue = effLand(plot) * landRateAdj;
+    lines.push({ k: 'Land rate, ' + titel(input.area || areaKey), v: landRateAdj, unit: '/m²', note: lr.note });
+    landPts.hit.forEach(function (h) { lines.push({ k: h.field, v: h.pts, unit: 'pt', note: String(h.value) }); });
+    if (landPts.capped) lines.push({ k: 'Capped at +' + C.LAND_CAP.up + '%', v: null, note: 'features added up to ' + landPts.raw + '%' });
+    if (plot > 600) lines.push({ k: 'Large plot, tapered rate', v: null, note: plot + ' m\u00b2 priced as ' + Math.round(effLand(plot)) + ' m\u00b2' });
+    lines.push({ k: 'Land value', v: landValue, strong: true });
+  }
+
+  /* --- opstal --- */
+  var built = +input.builtSqm || 0;
+  var buildValue = 0, rebuild = 0, unitCost = 0;
+  if (!isLand && built > 0) {
+    var finish = norm(input.finish) || 'standard';
+    unitCost = C.BUILD_COST[finish] || C.BUILD_COST.standard;
+    var bp = sumPoints(C.BUILD_PTS, C.BUILD_CAP, input, ['floors', 'baths', 'security']);
+    var gross = effBuilt(built) * unitCost * (1 + bp.pts / 100);
+    var dep = C.depreciation(input.yearBuilt, norm(input.condition));
+    buildValue = gross * (1 - dep);
+
+    var extra = 0;
+    if (norm(input.pool) === 'yes') extra += C.BUILD_EXTRA.pool;
+    if (norm(input.solar) === 'solar' || norm(input.solar) === 'both') extra += C.BUILD_EXTRA.solar;
+    if (norm(input.solar) === 'generator' || norm(input.solar) === 'both') extra += C.BUILD_EXTRA.generator;
+    if (norm(input.water) === 'borehole' || norm(input.water) === 'both') extra += C.BUILD_EXTRA.borehole;
+    if (plot > 0 && norm(input.fence) === 'full') extra += Math.sqrt(plot) * 4 * C.BUILD_EXTRA.wallPerM;
+    var extraDep = extra * (1 - dep * 0.6);          /* voorzieningen slijten trager dan het casco */
+    var furn = norm(input.furnished) === 'furnished' ? C.BUILD_EXTRA.furnishedPct
+             : norm(input.furnished) === 'semi' ? C.BUILD_EXTRA.semiPct : 0;
+    buildValue = (buildValue + extraDep) * (1 + furn);
+    rebuild = effBuilt(built) * unitCost + extra;
+
+    lines.push({ k: 'Build cost, ' + (FINISH_EN[finish] || finish) + ' finish', v: unitCost, unit: '/m\u00b2', note: 'derived from Gambian material prices, Jan 2026' });
+    bp.hit.forEach(function (h) { lines.push({ k: h.field, v: h.pts, unit: 'pt', note: String(h.value) }); });
+    if (dep) lines.push({ k: 'Depreciation', v: -Math.round(dep * 100), unit: '%', note: input.yearBuilt ? 'built ' + input.yearBuilt : 'year unknown \u2014 12 years assumed' });
+    if (extra) lines.push({ k: 'Fixtures', v: extraDep, note: 'valued at depreciated build cost, not as a percentage of the location' });
+    lines.push({ k: 'Building value', v: buildValue, strong: true });
+  }
+
+  /* Appartement: de kavel is niet toe te wijzen aan één unit, dus
+     geen grondwaarde. Wat overblijft is de opstal plus de locatie,
+     en die locatie moet dan wél in het tarief zitten. */
+  if (isApt && lr.eur != null && built > 0) {
+    var locUplift = built * lr.eur * 1.6;    /* aandeel in de grondwaarde van het gebouw */
+    buildValue += locUplift;
+    lines.push({ k: 'Location share', v: locUplift, note: 'a flat has no plot of its own \u2014 the land is carried per built m\u00b2' });
+  }
+
+  var mid = landValue + buildValue;
+
+  /* --- huur en rendement --- */
+  var y = C.RENT_YIELD.local[norm(input.type)] || C.RENT_YIELD.local.house;
+  var rentLocal = mid * y / 12;
+  var rentExpat = rentLocal * C.RENT_YIELD.expatMultiple;
+
+  /* --- betrouwbaarheid en band --- */
+  var wanted = isLand ? ['title', 'road', 'elec', 'water', 'fence', 'cleared', 'flood', 'beach']
+                      : ['condition', 'yearBuilt', 'finish', 'floors', 'baths', 'water', 'security', 'beach'];
+  var missing = wanted.filter(function (f) { return input[f] == null || input[f] === ''; }).length;
+  var conf = confidence({
+    landSrc: (isApt && !plot) ? 'observed' : lr.src, landN: lr.n,
+    missing: missing, hasBuilding: !isLand && built > 0,
+    ageMonths: monthsSince(C.herijkt.land),
+    methodGap: opts.methodGap
+  });
+
+  var step = mid >= 200000 ? 5000 : mid >= 50000 ? 1000 : 500;
+  var rnd = function (v) { return Math.round(v / step) * step; };
+
+  return {
+    ok: true,
+    mid: Math.round(mid),
+    low: rnd(mid * (1 - conf.band)),
+    high: rnd(mid * (1 + conf.band * 1.25)),   /* opwaarts iets ruimer: vraagprijzen kennen geen plafond */
+    land: Math.round(landValue),
+    build: Math.round(buildValue),
+    rebuild: Math.round(rebuild),
+    landRate: landRateAdj, landRateSrc: lr,
+    buildUnit: unitCost,
+    landPts: landPts.pts,
+    rent: { local: Math.round(rentLocal), expat: Math.round(rentExpat), grossYield: y },
+    portal: portalLevel(areaKey, plot, built, isLand),
+    confidence: conf,
+    lines: lines
+  };
+}
+
+root.MK_VAL = { value: value, landRate: landRate, matchArea: matchArea,
+                effLand: effLand, effBuilt: effBuilt, confidence: confidence };
+
+})(typeof window !== 'undefined' ? window : globalThis);
+</script>
+<script>
+/* PROTOTYPE — bij integratie vervangen door valuation-areas.js uit sell.html */
+window.MK_AREAS = {
+  LAND: {kololi:140,senegambia:130,bijilo:80,'brufut heights':80,brufut:48,brusubi:38,'kerr serign':65,
+    sukuta:30,lamin:15,tujereng:13,gunjur:14,kartong:14,sanyang:18,brikama:13,busumbala:13,jabang:17,
+    yundum:15,'old yundum':15,tanji:25,fajara:120,bakau:90,kotu:110,banjul:90,serrekunda:50,
+    batokunku:18,'cape point':100,'nema kunku':23,'sinchu alagie':33.5,wellingara:15.5,abuko:14,
+    basse:4,farafenni:4,soma:3,barra:7,janjanbureh:5},
+  LABELS: {kololi:'Kololi',senegambia:'Senegambia',bijilo:'Bijilo','brufut heights':'Brufut Heights',
+    brufut:'Brufut',brusubi:'Brusubi','kerr serign':'Kerr Serign',sukuta:'Sukuta',lamin:'Lamin',
+    tujereng:'Tujereng',gunjur:'Gunjur',kartong:'Kartong',sanyang:'Sanyang',brikama:'Brikama',
+    busumbala:'Busumbala',jabang:'Jabang',yundum:'Yundum','old yundum':'Old Yundum',tanji:'Tanji',
+    fajara:'Fajara',bakau:'Bakau',kotu:'Kotu',banjul:'Banjul',serrekunda:'Serrekunda',
+    batokunku:'Batokunku','cape point':'Cape Point','nema kunku':'Nema Kunku',
+    'sinchu alagie':'Sinchu Alagie',wellingara:'Wellingara',abuko:'Abuko',basse:'Basse',
+    farafenni:'Farafenni',soma:'Soma',barra:'Barra',janjanbureh:'Janjanbureh'}
+};
+</script>
+<script>
+/* ============================================================
+   MyKunda — waardebepaling, de flow
+   ------------------------------------------------------------
+   Deze laag stelt vragen en tekent de uitkomst. Er wordt hier
+   niet gerekend: elk bedrag komt uit MK_VAL.value() in
+   valuation.js, zodat sell.html en list.html hetzelfde antwoord
+   geven en de zelftest hetzelfde rekent als de bezoeker ziet.
+
+   Twee keuzes die de flow bepalen:
+   · Elk veld staat al op het REFERENTIEKAVEL uit valuation.js.
+     De gebruiker verandert alleen wat afwijkt, en ziet daardoor
+     meteen een bedrag in plaats van een leeg formulier.
+   · Het bedrag komt vóór de e-mail. Wie daarna nog zijn adres
+     achterlaat wil echt iets.
+   ============================================================ */
+(function () {
+'use strict';
+var $ = function (id) { return document.getElementById(id); };
+var AREAS = (window.MK_AREAS || { LAND: {}, LABELS: {} });
+var BASE = AREAS.LAND || {};
+var LABELS = AREAS.LABELS || {};
+
+var S = { type: '', area: '', beach: 'inland', plot: '', built: '',
+  title: 'alkalalo', road: 'laterite', elec: 'present', water: 'nearby',
+  fence: 'partial', cleared: 'cleared', shape: 'regular', corner: 'no', flood: 'no',
+  finish: 'standard', year: '', condition: 'good', floors: '1', baths: '2',
+  security: 'wall', pool: 'no', solar: 'no', furnished: 'unfurnished', view: 'none' };
+
+/* ---- valuta: hergebruikt de keuze die de bezoeker op de site al maakte ---- */
+function ccy() {
+  var C = window.CURRENCIES, g = window.getCurrency;
+  if (!C || !g) return { symbol: '€', rate: 1 };
+  return C[g()] || C.EUR;
+}
+function money(eur, compact) {
+  if (eur == null) return '—';
+  var c = ccy(), v = eur * (c.rate || 1);
+  if (compact && Math.abs(v) >= 1e6) return c.symbol + ' ' + (v / 1e6).toFixed(1).replace('.', ',') + ' mln';
+  var step = v >= 200000 ? 5000 : v >= 50000 ? 1000 : v >= 2000 ? 500 : v >= 100 ? 10 : 1;
+  return c.symbol + ' ' + (Math.round(v / step) * step).toLocaleString('en-US');
+}
+
+/* ---- gebiedenlijst voor de suggesties ---- */
+(function fillAreas() {
+  var dl = $('areaList'); if (!dl) return;
+  var seen = {}, out = [];
+  Object.keys(LABELS).forEach(function (k) { var l = LABELS[k]; if (!seen[l]) { seen[l] = 1; out.push(l); } });
+  out.sort().forEach(function (l) { var o = document.createElement('option'); o.value = l; dl.appendChild(o); });
+})();
+
+/* ---- stappen ---- */
+var STEPS = [1, 2, 3, 4, 5], at = 1;
+function show(n) {
+  at = n;
+  STEPS.forEach(function (i) {
+    var el = $('s' + i); if (!el) return;
+    el.hidden = i > n;
+    el.classList.toggle('done', i < n);
+  });
+  var el = $('s' + n);
+  if (el && n > 1) {
+    /* Wie 'verminder beweging' aan heeft staan, krijgt geen animatie. */
+    var soft = !window.matchMedia || !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    el.scrollIntoView({ behavior: soft ? 'smooth' : 'auto', block: 'nearest' });
+  }
+}
+function recap() {
+  var t = { land: 'Land or plot', house: 'House with land', apartment: 'Apartment' }[S.type] || '';
+  $('r1').innerHTML = '<b>' + t + '</b>';
+  $('r2').innerHTML = '<b>' + (S.area || '—') + '</b>' + (S.beach !== 'inland' ? ' · ' + (S.beach === 'beachfront' ? 'beachfront' : 'near the beach') : '');
+  var sz = [];
+  if (S.plot) sz.push(S.plot + ' m\u00b2 plot');
+  if (S.built) sz.push(S.built + ' m\u00b2 built');
+  $('r3').innerHTML = '<b>' + (sz.join(' · ') || '—') + '</b>';
+}
+
+/* ---- welke velden horen bij welk type ---- */
+/* De afwerkingsgraad is het enige veld waar een gebruiker echt
+   moet weten wat hij kiest — daar hangt de opstalwaarde aan. */
+var FINISH_HINT = {
+  basic: 'Cement or basic tiled floor, steel windows, corrugated roof, no air-conditioning.',
+  standard: 'Tiled floors, mosquito screens, ceilings, a water heater \u2014 what most homes have.',
+  high: 'Aluminium sliding doors, air-conditioning, fitted kitchen, finished ceilings.'
+};
+function applyType() {
+  var land = S.type === 'land', apt = S.type === 'apartment';
+  $('landFields').style.display = apt ? 'none' : '';
+  $('buildFields').style.display = land ? 'none' : '';
+  $('wrapPlot').style.display = apt ? 'none' : '';
+  $('wrapBuilt').style.display = land ? 'none' : '';
+  $('h4').textContent = land ? 'The plot' : apt ? 'The apartment' : 'The plot and the house';
+  $('h3').textContent = land
+    ? 'A standard Gambian plot is 400 to 500 m\u00b2 \u2014 20 by 20, or 20 by 25 metres.'
+    : apt ? 'The floor area of the unit itself.'
+          : 'The plot is the whole compound; built area is only what stands under a roof.';
+  document.querySelectorAll('#typeCards .card').forEach(function (c) {
+    c.classList.toggle('sel', c.dataset.type === S.type);
+  });
+}
+
+/* ---- rekenen en tekenen ---- */
+function calc() {
+  if (!S.type || !S.area || (!S.plot && !S.built)) return null;
+  return window.MK_VAL.value({
+    type: S.type === 'house' ? 'villa' : S.type,
+    area: S.area, plotSqm: S.plot, builtSqm: S.built,
+    title: S.title, road: S.road, elec: S.elec, water: S.water, fence: S.fence,
+    cleared: S.cleared, shape: S.shape, corner: S.corner, flood: S.flood,
+    beach: S.beach, view: S.view, finish: S.finish, yearBuilt: S.year,
+    condition: S.condition, floors: S.floors, baths: S.baths,
+    security: S.security, pool: S.pool, solar: S.solar, furnished: S.furnished
+  }, { LAND_BASE: BASE });
+}
+
+function render() {
+  var r = calc();
+
+  /* Onbekend gebied: geen bedrag, maar zeggen wat eraan schort.
+     Een nul is geen schatting. */
+  if (r && r.ok === false) {
+    $('res').hidden = true; $('portalBox').hidden = true; $('rentBox').hidden = true;
+    $('idle').hidden = false;
+    $('idle').innerHTML = 'We have no rate for <b>' + (S.area || 'this area') + '</b>. '
+      + 'Try the nearest larger town, or ask for the report and someone will look at it.';
+    return;
+  }
+  $('idle').hidden = !!r; $('res').hidden = !r;
+  $('portalBox').hidden = !(r && r.portal);
+  $('rentBox').hidden = !(r && S.type !== 'land');
+  if (!r) return;
+
+  $('big').textContent = money(r.mid);
+  $('bandTxt').textContent = 'Range ' + money(r.low) + ' \u2013 ' + money(r.high);
+
+  var c = $('conf');
+  c.className = 'conf ' + r.confidence.label;
+  $('confTxt').textContent = { strong: 'Strongly evidenced', fair: 'Fairly evidenced', indicative: 'Indicative only' }[r.confidence.label];
+  $('why').innerHTML = r.confidence.reasons.map(function (w) { return '<li>' + w + '</li>'; }).join('');
+
+  var sp = [];
+  if (r.land) sp.push(kv('Land', money(r.land)));
+  if (r.build) sp.push(kv('Building', money(r.build)));
+  if (r.rebuild) sp.push(kv('Cost to rebuild today', money(r.rebuild), true));
+  $('split').innerHTML = sp.join('');
+
+  $('lines').innerHTML = r.lines.map(function (l) {
+    var val = l.unit === 'pt' ? (l.v > 0 ? '+' + l.v : l.v) + '%'
+            : l.unit === '%' ? l.v + '%'
+            : l.unit === '/m²' ? money(l.v) + '/m²'
+            : l.v == null ? '' : money(l.v);
+    return '<div class="ln' + (l.strong ? ' strong' : '') + '"><span>' + l.k + '</span>'
+      + (l.note ? '<span class="n">' + l.note + '</span>' : '')
+      + '<b>' + val + '</b></div>';
+  }).join('');
+
+  if (r.portal) {
+    $('portalTxt').innerHTML = 'Plots in ' + r.portal.area + ' are advertised there at <span class="num">'
+      + money(r.portal.low) + ' \u2013 ' + money(r.portal.high) + '</span> \u2014 '
+      + money(r.portal.rateLow) + ' to ' + money(r.portal.rateHigh) + ' per m\u00b2. '
+      + 'That is a different market with different buyers. The figure above is the local one.';
+  }
+  if (S.type !== 'land') {
+    $('rentTxt').innerHTML = 'A local long let here brings in roughly <span class="num">'
+      + money(r.rent.local) + ' a month</span>, or <span class="num">'
+      + (r.rent.grossYield * 100).toFixed(1) + '% gross yield</span>. '
+      + 'Furnished, to expatriate tenants, closer to <span class="num">' + money(r.rent.expat)
+      + ' a month</span>. Gross: 8% rental income tax still comes off.';
+  }
+}
+function kv(k, v, small) {
+  return '<div class="kv' + (small ? ' small' : '') + '"><span>' + k + '</span><b>' + v + '</b></div>';
+}
+
+/* ---- bediening ---- */
+document.querySelectorAll('#typeCards .card').forEach(function (b) {
+  b.addEventListener('click', function () {
+    S.type = b.dataset.type; applyType(); recap(); show(2); render();
+  });
+});
+['loc:area', 'beach:beach', 'plot:plot', 'built:built', 'title:title', 'road:road', 'elec:elec',
+ 'water:water', 'fence:fence', 'cleared:cleared', 'shape:shape', 'corner:corner', 'flood:flood',
+ 'finish:finish', 'year:year', 'condition:condition', 'floors:floors', 'baths:baths',
+ 'security:security', 'pool:pool', 'solar:solar', 'furnished:furnished', 'view:view'
+].forEach(function (pair) {
+  var p = pair.split(':'), el = $(p[0]); if (!el) return;
+  var ev = el.tagName === 'SELECT' ? 'change' : 'input';
+  el.addEventListener(ev, function () {
+    S[p[1]] = el.value; el.classList.remove('bad');
+    if (p[1] === 'finish') $('finishHint').textContent = FINISH_HINT[el.value] || '';
+    recap(); render();
+  });
+});
+$('s2').querySelector('[data-next]').addEventListener('click', function () {
+  if (!S.area.trim()) { $('loc').classList.add('bad'); $('e2').textContent = 'Give an area \u2014 without a location there is no rate to work from.'; $('loc').focus(); return; }
+  $('e2').textContent = ''; recap(); show(3); render();
+});
+$('s3').querySelector('[data-next]').addEventListener('click', function () {
+  var need = S.type === 'apartment' ? S.built : S.type === 'land' ? S.plot : (S.plot || S.built);
+  if (!need || +need <= 0) { $('e3').textContent = 'Give a size \u2014 that is what everything is multiplied by.'; return; }
+  $('e3').textContent = ''; recap(); show(4); render();
+});
+document.querySelectorAll('.recap').forEach(function (b) {
+  b.addEventListener('click', function () { show(+b.dataset.goto); });
+});
+$('toReport').addEventListener('click', function () { show(5); });
+$('skip').addEventListener('click', function () { show(4); });
+$('restart').addEventListener('click', function () { location.reload(); });
+$('send').addEventListener('click', function () {
+  var em = $('em').value.trim(), nm = $('nm').value.trim();
+  if (!nm) { $('nm').classList.add('bad'); $('e5').textContent = 'Please add your name.'; return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) { $('em').classList.add('bad'); $('e5').textContent = 'Please add a valid email address.'; return; }
+  $('e5').textContent = '';
+  var r = calc();
+  if (typeof window.sendLead === 'function') {
+    window.sendLead('valuation', {
+      name: nm, email: em, phone: $('ph').value.trim(), area: S.area,
+      message: 'Valuation: ' + S.type + ', ' + S.area + ', ' + (S.plot || '?') + ' m\u00b2 plot, '
+             + (S.built || '0') + ' m\u00b2 built, estimate ' + money(r.mid),
+      payload: { input: S, result: { mid: r.mid, low: r.low, high: r.high, land: r.land,
+                 build: r.build, rebuild: r.rebuild, confidence: r.confidence.score } }
+    });
+  }
+  $('s5').querySelector('.body').innerHTML =
+    '<p class="hint" style="margin:0">Thank you, ' + nm.split(' ')[0] + '. The report is on its way to ' + em
+    + '. If you would like the estimate checked on site, just reply to that email.</p>';
+});
+
+$('grip').addEventListener('click', function () {
+  var open = document.querySelector('.rail').classList.toggle('open');
+  $('grip').setAttribute('aria-expanded', open ? 'true' : 'false');
+});
+
+$('finishHint').textContent = FINISH_HINT[S.finish];
+applyType(); render();
+})();
+</script>

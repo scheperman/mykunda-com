@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:1q9ci7x--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:18brgk5--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -31,7 +31,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=54036962077406">
+<link rel="stylesheet" href="styles.min.css?v=156518406794788">
 <style>
 /* hero */
 .shero{position:relative;color:#fff;margin-top:calc(-1 * var(--header-h));isolation:isolate;overflow:hidden}
@@ -445,125 +445,219 @@
 
 <!-- VALUATION -->
 <section id="value" class="wrap" style="padding-top:56px;padding-bottom:0" data-screen-label="Sell / Valuation">
+<style>
+/* Alleen binnen #value, zodat er niets van de site-CSS mee verandert. */
+#value{--v-line:#E2E4DF;--v-line2:#CDD2CB;--v-paper:#fff;--v-ink:#16201C;--v-ink2:#55625B;--v-ink3:#8A958E;--v-green:#15463A;--v-green2:#2A7561;--v-green6:#EDF3F0;--v-red:#CE1126}
+#value *{box-sizing:border-box}
+.mkv{display:grid;gap:34px;align-items:start}
+@media(min-width:980px){.mkv{grid-template-columns:1fr 380px}.mkv-rail{position:sticky;top:24px}}
+.mkv-head h2{margin:0 0 8px}
+.mkv-head p{margin:0 0 26px;color:var(--v-ink2);max-width:56ch}
+.mkv-step{background:var(--v-paper);border:1px solid var(--v-line);border-radius:14px;padding:22px 24px;margin-bottom:14px}
+.mkv-step[hidden]{display:none}
+.mkv-step>h3{font-size:19px;margin:0 0 4px}
+.mkv-step>.mkv-hint{font-size:15px;color:var(--v-ink2);margin:0 0 18px}
+.mkv-step.done{padding:14px 24px;background:transparent;border-style:dashed}
+.mkv-step.done>h3,.mkv-step.done>.mkv-hint,.mkv-step.done .mkv-body{display:none}
+.mkv-recap{display:none;align-items:center;gap:10px;font-size:14.5px;color:var(--v-ink2);cursor:pointer;width:100%;background:none;border:0;text-align:left;font:inherit;padding:0}
+.mkv-step.done .mkv-recap{display:flex}
+.mkv-recap b{color:var(--v-ink);font-weight:600}
+.mkv-recap .ed{margin-left:auto;color:var(--v-green2);font-weight:600;font-size:13.5px}
+.mkv-tick{width:19px;height:19px;border-radius:50%;background:var(--v-green2);color:#fff;display:grid;place-items:center;flex:none}
+.mkv-tick svg{width:11px;height:11px}
+.mkv-cards{display:grid;gap:10px}
+@media(min-width:560px){.mkv-cards{grid-template-columns:repeat(3,1fr)}}
+.mkv-card{border:1.5px solid var(--v-line2);border-radius:12px;padding:16px;cursor:pointer;background:var(--v-paper);text-align:left;font:inherit;transition:border-color .12s,background .12s}
+.mkv-card:hover{border-color:var(--v-green2)}
+.mkv-card.sel{border-color:var(--v-green);background:var(--v-green6);box-shadow:inset 0 0 0 1px var(--v-green)}
+.mkv-card .ic{display:block;color:var(--v-green2);margin-bottom:9px}
+.mkv-card .t{font-weight:600;font-size:15.5px;display:block}
+.mkv-card .s{font-size:13.5px;color:var(--v-ink2);display:block;margin-top:2px;line-height:1.4}
+.mkv-grid{display:grid;gap:14px}
+@media(min-width:560px){.mkv-grid.two{grid-template-columns:1fr 1fr}.mkv-grid.three{grid-template-columns:repeat(3,1fr)}}
+#value label.mkv-f{display:block}
+#value label.mkv-f>span{display:block;font-size:12.5px;font-weight:600;color:var(--v-ink2);margin-bottom:5px}
+#value .mkv-f input,#value .mkv-f select{width:100%;font:inherit;font-size:15.5px;padding:11px 12px;border:1.5px solid var(--v-line2);border-radius:10px;background:var(--v-paper);color:var(--v-ink);text-overflow:ellipsis}
+#value .mkv-f input:focus,#value .mkv-f select:focus{outline:2px solid var(--v-green2);outline-offset:1px;border-color:var(--v-green2)}
+#value .mkv-f input.bad{border-color:var(--v-red)}
+.mkv-err{color:var(--v-red);font-size:14px;margin-top:10px;min-height:1px}
+#value .btn.mkv-sec{background:var(--v-paper);border:1.5px solid var(--v-line2);color:var(--v-ink)}
+#value .btn.mkv-sec:hover{border-color:var(--v-green2);color:var(--v-green2)}
+.mkv-row{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.mkv-fh{display:block;font-size:13px;color:var(--v-ink3);margin-top:5px;line-height:1.4}
+.mkv-panel{background:var(--v-green);color:#fff;border-radius:14px;padding:24px}
+.mkv-panel .lab{font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#9FD3C0}
+.mkv-panel .big{font-size:clamp(30px,5vw,40px);font-weight:700;letter-spacing:-.03em;line-height:1.05;margin:6px 0 2px;font-variant-numeric:tabular-nums}
+.mkv-panel .band{font-size:15px;color:#CFE6DC}
+.mkv-panel .idle{font-size:15.5px;color:#CFE6DC;line-height:1.5}
+.mkv-conf{display:inline-flex;align-items:center;gap:7px;margin-top:14px;padding:5px 11px 5px 8px;border-radius:99px;background:rgba(255,255,255,.13);font-size:13px;font-weight:600}
+.mkv-conf .dot{width:8px;height:8px;border-radius:50%}
+.mkv-conf.strong .dot{background:#5BD6A6}.mkv-conf.fair .dot{background:#F0C14B}.mkv-conf.indicative .dot{background:#E89A6B}
+.mkv-why{margin:10px 0 0;padding:0;list-style:none;font-size:13.5px;color:#B9DCCD;line-height:1.5}
+.mkv-why li{padding-left:14px;position:relative}
+.mkv-why li::before{content:"";position:absolute;left:0;top:.7em;width:6px;height:1.5px;background:#6FAE97}
+.mkv-split{border-top:1px solid rgba(255,255,255,.18);margin-top:18px;padding-top:16px;display:grid;gap:9px}
+.mkv-kv{display:flex;justify-content:space-between;gap:14px;font-size:14.5px}
+.mkv-kv span{color:#CFE6DC}.mkv-kv b{font-weight:600;font-variant-numeric:tabular-nums}
+.mkv-kv.sm{font-size:13.5px}.mkv-kv.sm span,.mkv-kv.sm b{color:#A8CDBC;font-weight:500}
+#value details.mkv-brk{margin-top:16px}
+#value details.mkv-brk summary{cursor:pointer;font-size:13.5px;font-weight:600;color:#9FD3C0;list-style:none}
+#value details.mkv-brk summary::-webkit-details-marker{display:none}
+#value details.mkv-brk summary::before{content:"\25B8";display:inline-block;margin-right:7px;transition:transform .15s}
+#value details.mkv-brk[open] summary::before{transform:rotate(90deg)}
+.mkv-lines{margin-top:12px;display:grid;gap:6px;font-size:13px}
+.mkv-ln{display:flex;justify-content:space-between;gap:12px;color:#C6E2D6}
+.mkv-ln.strong{font-weight:700;color:#fff;border-top:1px solid rgba(255,255,255,.18);padding-top:7px;margin-top:3px}
+.mkv-ln .n{color:#8FBFAB;font-size:11.5px;flex:1;text-align:right;padding-right:8px}
+.mkv-ln b{font-variant-numeric:tabular-nums;white-space:nowrap}
+.mkv-aside{background:var(--v-paper);border:1px solid var(--v-line);border-radius:14px;padding:18px 20px;margin-top:12px}
+.mkv-aside h4{font-size:14px;margin:0 0 6px;font-weight:600}
+.mkv-aside p{font-size:14.5px;color:var(--v-ink2);margin:0;line-height:1.5}
+.mkv-aside .num{color:var(--v-ink);font-weight:600}
+#value .value-map{margin-top:14px;border-radius:14px;overflow:hidden;min-height:260px;position:relative}
+.mkv-grip{display:none}
+@media(max-width:979px){
+  .mkv-rail{position:fixed;left:0;right:0;bottom:0;z-index:40}
+  .mkv-panel{border-radius:16px 16px 0 0;padding:14px 20px 18px;box-shadow:0 -8px 30px rgba(0,0,0,.22)}
+  .mkv-panel .big{font-size:26px;margin:2px 0 0}
+  .mkv-aside{display:none}
+  .mkv-grip{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;padding:0;color:#9FD3C0;font:inherit;font-size:13px;font-weight:600;cursor:pointer;margin-top:10px}
+  .mkv-grip::after{content:"";width:0;height:0;border:5px solid transparent;border-bottom-color:#9FD3C0;margin-left:auto;transition:transform .15s}
+  .mkv-rail.open .mkv-grip::after{transform:rotate(180deg)}
+  #mkvMore{display:none}
+  .mkv-rail.open #mkvMore{display:block}
+  .mkv-rail.open .mkv-panel{max-height:76vh;overflow-y:auto}
+  #value{padding-bottom:152px!important}
+}
+@media(prefers-reduced-motion:reduce){#value *{transition:none!important}}
+</style>
+
 <div class="value-head">
 <div class="eyebrow">Step one</div>
-<p class="value-lead">Two calculators, because a house and a bare plot price very differently — pick the one that matches what you're selling.</p>
-<div class="value-toggle" id="valueToggle">
-<button class="vtab sel" type="button" data-panel="property">🏠 Home, villa or apartment</button>
-<button class="vtab" type="button" data-panel="land">🌍 Land / plot</button>
-</div>
+<h2>What is it worth?</h2>
+<p class="value-lead">An estimate built from what is actually for sale in your area. The figure appears as soon as you give a location and a size — you don't have to leave anything behind to see it.</p>
 </div>
 
-<div class="value" id="panelProperty" data-screen-label="Sell / Valuation / Property">
-<div class="value-text">
-<h2>What's your home worth today?</h2>
-<p>Enter a few details and get an <b>instant, data-driven estimate</b> from recent coastal sales — then a valuer we work with refines it for free. No strings attached.</p>
-<form class="value-form" id="propForm" novalidate>
-<div class="vf-row"><input type="text" id="pfLocation" aria-label="Area, Plus Code or coordinates" placeholder="Area, Plus Code or coordinates (e.g. Kololi)" required></div>
-<div class="vf-row two">
-<select id="pfType" aria-label="Property type"><option value="apartment">Apartment</option><option value="house" selected>House / villa</option></select>
-<input type="number" id="pfSize" aria-label="Built area in m²" min="1" placeholder="Built area in m²" required>
-</div>
-<div class="vf-row two">
-<select id="pfBeds" aria-label="Bedrooms"><option value="" disabled selected>Bedrooms</option><option value="1">1 bedroom</option><option value="2">2 bedrooms</option><option value="3">3 bedrooms</option><option value="4">4 bedrooms</option><option value="5">5+ bedrooms</option></select>
-<select id="pfBaths" aria-label="Bathrooms"><option value="" disabled selected>Bathrooms</option><option value="1">1 bathroom</option><option value="2">2 bathrooms</option><option value="3">3 bathrooms</option><option value="4">4+ bathrooms</option></select>
-</div>
-<div class="vf-row two">
-<select id="pfCondition" aria-label="Condition"><option value="good" selected>Good condition</option><option value="new">New build (0–5 yr)</option><option value="renovation">Needs renovation</option></select>
-<select id="pfFloors" aria-label="Floors"><option value="1" selected>Single storey</option><option value="2">2 storeys</option><option value="3">3+ storeys</option></select>
-</div>
-<div class="vf-row three">
-<select id="pfPool" aria-label="Pool"><option value="no" selected>No pool</option><option value="yes">Pool</option></select>
-<select id="pfSolar" aria-label="Solar or generator"><option value="no" selected>No solar / generator</option><option value="solar">Solar panels</option><option value="generator">Generator</option><option value="both">Solar + generator</option></select>
-<select id="pfSecurity" aria-label="Compound wall and security"><option value="none" selected>No compound wall</option><option value="wall">Walled compound</option><option value="gated">Gated + security</option></select>
-</div>
-<div class="vf-row three">
-<select id="pfFurnished" aria-label="Furnishing"><option value="unfurnished" selected>Unfurnished</option><option value="semi">Semi-furnished</option><option value="furnished">Fully furnished</option></select>
-<select id="pfWater" aria-label="Water supply"><option value="nawec" selected>Nawec water</option><option value="borehole">Own borehole</option><option value="both">Nawec + borehole</option><option value="none">No running water</option></select>
-<input type="number" id="pfPlot" aria-label="Total land or plot size in m²" min="1" placeholder="Total land / plot m² (optional)">
-</div>
-<div class="vf-row two">
-<select id="pfBeach" aria-label="Distance to the beach"><option value="walking">Walking to beach (&lt; 1 km)</option><option value="beachfront">Beachfront / &lt; 200m</option><option value="inland" selected>Inland (&gt; 1 km)</option></select>
-<select id="pfView" aria-label="View"><option value="none" selected>No special view</option><option value="ocean">Ocean view</option><option value="garden">Garden / nature view</option></select>
-</div>
-<div class="vf-row two"><input type="text" id="pfName" aria-label="Your name" autocomplete="name" placeholder="Your name" required><input type="email" id="pfEmail" aria-label="Email address" autocomplete="email" placeholder="Email address" required></div>
-<div class="vf-row two"><input type="tel" id="pfPhone" aria-label="Phone or WhatsApp number" autocomplete="tel" placeholder="Phone / WhatsApp (optional)"><button class="btn btn-amber" type="submit">Get my estimate</button></div>
-<p class="vf-err" id="pfErr"></p>
-<p class="form-legal on-dark">Estimates are indicative only — <a href="legal-terms.html#terms-6">no rights can be derived from them</a>. We use your details to send the estimate and follow up; see our <a href="legal-privacy.html">Privacy Policy</a>.</p>
-</form>
-<div class="value-done" id="propDone" hidden>
-<div class="vd-est"><span class="vd-est-lab">Indicative market estimate</span><span class="vd-est-range" id="pdRange"></span><span class="vd-est-sub" id="pdSub"></span></div>
-<p class="vd-source">Based on current listings and realised sale prices from Gamrealty, Blue Ocean and Realting, cross-checked against MyKunda's own closed deals.</p>
-<div class="vd-breakdown" id="pdBreakdown" style="margin:16px 0 12px;padding:14px 16px;background:rgba(21,70,58,.06);border-radius:8px;font-size:13.5px;line-height:1.7;color:#FFD700;display:none">
-<div style="font-weight:700;color:#1A1814;margin-bottom:6px;font-size:12px;text-transform:uppercase;letter-spacing:.04em">How we calculated this</div>
-<div id="pdBreakdownList"></div>
-</div>
-<p id="pdMsg"></p>
-<p class="vd-disc">⚠ This is an automated indicative estimate based on average market data for the area — not a formal appraisal or valuation. Actual property values depend on many factors including exact location, condition, legal status, and current market conditions. No rights can be derived from this estimate. For an accurate valuation, a MyKunda expert can assess your property in person on request.</p>
-<button class="btn btn-light btn-sm" id="pdAgain" type="button">Value another property</button>
-<a class="btn btn-amber btn-sm" id="pdListBtn" href="list.html" style="margin-top:10px;display:none">List this property on MyKunda →</a>
-</div>
-</div>
-<div class="value-img value-map" id="pdMapBox"><div class="value-map-tag">📍 <span id="pdMapLabel">The Gambia</span></div></div>
+<div class="mkv">
+<div>
+  <section class="mkv-step" id="mkv1">
+    <button class="mkv-recap" type="button" data-goto="1"><span class="mkv-tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span id="mkvR1"></span><span class="ed">change</span></button>
+    <h3>What are you valuing?</h3>
+    <p class="mkv-hint">Everything after this adapts to your answer.</p>
+    <div class="mkv-body">
+      <div class="mkv-cards" id="mkvTypes">
+        <button class="mkv-card" type="button" data-type="land"><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18M4 20V8l8-4 8 4v12"/><path d="M4 12h16"/></svg></span><span class="t">Land or plot</span><span class="s">Bare land, nothing built on it yet</span></button>
+        <button class="mkv-card" type="button" data-type="house"><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg></span><span class="t">House with land</span><span class="s">Villa, house or family compound</span></button>
+        <button class="mkv-card" type="button" data-type="apartment"><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 7h2M14 7h2M8 11h2M14 11h2M8 15h2M14 15h2"/></svg></span><span class="t">Apartment</span><span class="s">A unit in a building, no plot of its own</span></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="mkv-step" id="mkv2" hidden>
+    <button class="mkv-recap" type="button" data-goto="2"><span class="mkv-tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span id="mkvR2"></span><span class="ed">change</span></button>
+    <h3>Where is it?</h3>
+    <p class="mkv-hint">An area name, coordinates or a Plus Code. Location carries most of the value.</p>
+    <div class="mkv-body">
+      <div class="mkv-grid two">
+        <label class="mkv-f"><span>Area</span><input type="text" id="lfLocation" list="mkvAreas" autocomplete="off" placeholder="e.g. Brusubi, Sanyang, Lamin"><datalist id="mkvAreas"></datalist></label>
+        <label class="mkv-f"><span>Distance to the beach</span><select id="lfBeach"><option value="inland" selected>Inland</option><option value="walking">Walking distance to the beach</option><option value="beachfront">Beachfront</option></select><input type="text" id="lfBeachDist" aria-label="Measured distance to the sea" readonly hidden></label>
+      </div>
+      <div class="mkv-err" id="mkvE2"></div>
+      <div class="mkv-row"><button class="btn btn-primary" type="button" data-next="2">Continue</button></div>
+    </div>
+  </section>
+
+  <section class="mkv-step" id="mkv3" hidden>
+    <button class="mkv-recap" type="button" data-goto="3"><span class="mkv-tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span id="mkvR3"></span><span class="ed">change</span></button>
+    <h3>How big is it?</h3>
+    <p class="mkv-hint" id="mkvH3">A standard Gambian plot is 400 to 500 m² — 20 by 20, or 20 by 25 metres.</p>
+    <div class="mkv-body">
+      <div class="mkv-grid two">
+        <label class="mkv-f" id="mkvWrapPlot"><span>Plot</span><input type="number" id="lfSize" inputmode="numeric" min="1" placeholder="400"><small class="mkv-fh" id="lfSizeNote">Draw the plot on the map and the size is measured for you — otherwise type it in m².</small></label>
+        <label class="mkv-f" id="mkvWrapBuilt"><span>Built area</span><input type="number" id="mkvBuilt" inputmode="numeric" min="1" placeholder="150"><small class="mkv-fh">Only what stands under a roof.</small></label>
+      </div>
+      <div class="mkv-err" id="mkvE3"></div>
+      <div class="mkv-row"><button class="btn btn-primary" type="button" data-next="3">Continue</button></div>
+    </div>
+  </section>
+
+  <section class="mkv-step" id="mkv4" hidden>
+    <h3 id="mkvH4">The plot</h3>
+    <p class="mkv-hint">Everything is already set to what is ordinary in The Gambia. Change only what differs — the figure follows as you go.</p>
+    <div class="mkv-body">
+      <div class="mkv-grid three" id="mkvLandFields">
+        <label class="mkv-f"><span>Title</span><select id="mkvTitle"><option value="alkalalo">Customary / Alkalo</option><option value="sublease">Sublease</option><option value="leasehold">State lease</option><option value="freehold">Freehold</option><option value="unclear">Unclear or disputed</option></select></label>
+        <label class="mkv-f"><span>Road</span><select id="mkvRoad"><option value="laterite">Laterite or sand road</option><option value="tarmac">Tarmac road</option><option value="none">No road access</option></select></label>
+        <label class="mkv-f"><span>Electricity</span><select id="mkvElec"><option value="present">Connected</option><option value="nearby">Power in the street</option><option value="none">No power nearby</option></select></label>
+        <label class="mkv-f"><span>Water</span><select id="mkvWater"><option value="nearby">Mains in the street</option><option value="nawec">NAWEC connection</option><option value="borehole">Own borehole</option><option value="none">No water</option></select></label>
+        <label class="mkv-f"><span>Fencing</span><select id="mkvFence"><option value="partial">Partly fenced</option><option value="full">Fully walled</option><option value="none">Not fenced</option></select></label>
+        <label class="mkv-f"><span>Ground cover</span><select id="mkvCleared"><option value="cleared">Cleared and level</option><option value="partial">Partly cleared</option><option value="bush">Bush or trees</option></select></label>
+        <label class="mkv-f"><span>Shape</span><select id="mkvShape"><option value="regular">Regular</option><option value="irregular">Irregular</option></select></label>
+        <label class="mkv-f"><span>Corner plot</span><select id="mkvCorner"><option value="no">No</option><option value="yes">Yes</option></select></label>
+        <label class="mkv-f"><span>Flooding</span><select id="mkvFlood"><option value="no">Never floods</option><option value="low">Sometimes in the rains</option><option value="high">Floods regularly</option></select></label>
+      </div>
+      <div class="mkv-grid three" id="mkvBuildFields" style="margin-top:14px">
+        <label class="mkv-f"><span>Finish</span><select id="mkvFinish"><option value="basic">Simple</option><option value="standard" selected>Standard</option><option value="high">High</option></select><small class="mkv-fh" id="mkvFinishHint"></small></label>
+        <label class="mkv-f"><span>Year built</span><input type="number" id="mkvYear" inputmode="numeric" placeholder="unknown"></label>
+        <label class="mkv-f"><span>Condition</span><select id="mkvCondition"><option value="good">Well kept</option><option value="new">New build</option><option value="renovation">Needs renovation</option></select></label>
+        <label class="mkv-f"><span>Storeys</span><select id="mkvFloors"><option value="1">Single storey</option><option value="2">Two storeys</option><option value="3">Three or more</option></select></label>
+        <label class="mkv-f"><span>Bathrooms</span><select id="mkvBaths"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4 or more</option></select></label>
+        <label class="mkv-f"><span>Security</span><select id="mkvSecurity"><option value="wall">Walled compound</option><option value="gated">Gated with security</option><option value="none">None</option></select></label>
+        <label class="mkv-f"><span>Swimming pool</span><select id="mkvPool"><option value="no">No</option><option value="yes">Yes</option></select></label>
+        <label class="mkv-f"><span>Power</span><select id="mkvSolar"><option value="no">NAWEC only</option><option value="solar">Solar panels</option><option value="generator">Generator</option><option value="both">Solar and generator</option></select></label>
+        <label class="mkv-f"><span>Furnishing</span><select id="mkvFurnished"><option value="unfurnished">Unfurnished</option><option value="semi">Semi-furnished</option><option value="furnished">Fully furnished</option></select></label>
+      </div>
+      <label class="mkv-f" style="margin-top:14px;max-width:280px"><span>View</span><select id="mkvView"><option value="none">No special view</option><option value="garden">Garden or greenery</option><option value="ocean">Ocean view</option></select></label>
+      <div class="mkv-row"><button class="btn btn-primary" type="button" id="mkvToReport">Email me the full report</button><button class="btn mkv-sec" type="button" id="mkvRestart">Start again</button></div>
+    </div>
+  </section>
+
+  <section class="mkv-step" id="mkv5" hidden>
+    <h3>The full report</h3>
+    <p class="mkv-hint">Your estimate is already on screen. Want it in your inbox as a report, with the workings and a comparison against what is for sale in your area?</p>
+    <div class="mkv-body">
+      <div class="mkv-grid two">
+        <label class="mkv-f"><span>Name</span><input type="text" id="mkvName" autocomplete="name" placeholder="Your name"></label>
+        <label class="mkv-f"><span>Email</span><input type="email" id="mkvEmail" autocomplete="email" placeholder="you@example.com"></label>
+        <label class="mkv-f"><span>Phone or WhatsApp — optional</span><input type="tel" id="mkvPhone" autocomplete="tel" placeholder="+220 …"></label>
+      </div>
+      <div class="mkv-err" id="mkvE5"></div>
+      <div class="mkv-row"><button class="btn btn-amber" type="button" id="mkvSend">Send the report</button><button class="btn mkv-sec" type="button" id="mkvSkip">No thanks, this is enough</button></div>
+      <p class="form-legal">Estimates are indicative only — <a href="legal-terms.html#terms-6">no rights can be derived from them</a>. We use your details to send the estimate and follow up; see our <a href="legal-privacy.html">Privacy Policy</a>.</p>
+    </div>
+  </section>
+
+  <div class="value-img value-map" id="ldMapBox"><div class="value-map-tag">📍 <span id="ldMapLabel">The Gambia</span></div>
+  <div class="vmap-read" id="ldRead" hidden></div>
+  <div class="vmap-tools" id="ldTools">
+  <button type="button" class="vmt sel" data-ldmode="pin">Pin only</button>
+  <button type="button" class="vmt" data-ldmode="draw">Draw the plot</button>
+  <button type="button" class="vmt sel" id="ldSnap" title="Snap corners to 15° steps and 5 m lengths">Snap 90°</button>
+  <button type="button" class="vmt" id="ldUndo" disabled>Undo</button>
+  <button type="button" class="vmt" id="ldClear" disabled>Clear</button>
+  </div></div>
 </div>
 
-<div class="value" id="panelLand" data-screen-label="Sell / Valuation / Land" hidden>
-<div class="value-text">
-<h2>What's your land worth today?</h2>
-<p>Bare plots are priced mostly on title, road access and services — not bedrooms. Get an <b>instant, data-driven estimate</b>, then a valuer we work with confirms it for free.</p>
-<form class="value-form" id="landForm" novalidate>
-<div class="vf-row"><input type="text" id="lfLocation" aria-label="Area, Plus Code or coordinates" placeholder="Area, Plus Code or coordinates (13.3071, -16.7984)" required></div>
-<div class="vf-row two">
-<input type="number" id="lfSize" aria-label="Plot size in m²" min="1" placeholder="Plot size in m²" required>
-<select id="lfTitle" aria-label="Type of title"><option value="alkalalo" selected>Customary / Alkalalo</option><option value="leasehold">State lease (99 years)</option><option value="sublease">Sublease / transfer of a lease</option><option value="freehold">Freehold (title deed)</option><option value="unclear">Title unclear</option></select>
+<div class="mkv-rail" id="mkvRail">
+  <div class="mkv-panel">
+    <div class="lab">Estimated value</div>
+    <div id="mkvIdle" class="idle" style="margin-top:6px">Pick what you are valuing, then give a location and a size. The figure appears here straight away.</div>
+    <div id="mkvRes" hidden>
+      <div class="big" id="mkvBig">—</div>
+      <div class="band" id="mkvBand"></div>
+      <button class="mkv-grip" type="button" id="mkvGrip" aria-expanded="false" aria-controls="mkvMore">The workings</button>
+      <div id="mkvMore">
+        <div class="mkv-conf" id="mkvConf"><span class="dot"></span><span id="mkvConfTxt"></span></div>
+        <ul class="mkv-why" id="mkvWhy"></ul>
+        <div class="mkv-split" id="mkvSplit"></div>
+        <details class="mkv-brk"><summary>How this is built up</summary><div class="mkv-lines" id="mkvLines"></div></details>
+      </div>
+    </div>
+  </div>
+  <div class="mkv-aside" id="mkvPortalBox" hidden><h4>On the international portals</h4><p id="mkvPortalTxt"></p></div>
+  <div class="mkv-aside" id="mkvRentBox" hidden><h4>If you let it out</h4><p id="mkvRentTxt"></p></div>
+  <div class="mkv-aside"><h4>What this is not for</h4><p>This is a calculation from what is for sale in your area — not a valuation. For a bank, a court, dividing an inheritance or the tax office you need a valuer who has stood on the ground. We can arrange one; ask through the report.</p></div>
 </div>
-<p class="vf-note" id="lfSizeNote">Draw the plot on the map and the size is measured for you — otherwise type it in m².</p>
-<div class="vf-row three">
-<select id="lfRoad" aria-label="Road access"><option value="tarmac">Tarmac road</option><option value="laterite" selected>Dirt road</option><option value="none">No road</option></select>
-<select id="lfFencing" aria-label="Fencing"><option value="full">Fully fenced</option><option value="partial" selected>Partly fenced</option><option value="none">Not fenced</option></select>
-<select id="lfCleared" aria-label="Land clearing"><option value="cleared">Cleared plot</option><option value="partial" selected>Partly cleared</option><option value="bush">Bush / trees</option></select>
-</div>
-<div class="vf-row three">
-<select id="lfElectricity" aria-label="Electricity"><option value="present">Power on site</option><option value="nearby" selected>Power nearby</option><option value="none">No power</option></select>
-<select id="lfWater" aria-label="Water supply"><option value="nawec">Nawec water</option><option value="borehole">Own borehole</option><option value="nearby" selected>Water nearby</option><option value="none">No water</option></select>
-<select id="lfCorner" aria-label="Corner plot"><option value="no" selected>Not a corner plot</option><option value="yes">Corner plot</option></select>
-</div>
-<div class="vf-row two">
-<select id="lfPlotShape" aria-label="Plot shape"><option value="regular" selected>Regular shape</option><option value="irregular">Irregular shape</option></select>
-<select id="lfFlood" aria-label="Flood risk"><option value="no" selected>No flood risk</option><option value="low">Low flood risk</option><option value="high">High flood risk</option></select>
-</div>
-<div class="vf-row two">
-<input type="text" id="lfBeachDist" aria-label="Distance to the sea" readonly hidden placeholder="Distance to the sea">
-<select id="lfBeach" aria-label="Distance to the beach"><option value="walking">Walking to beach (&lt; 1 km)</option><option value="beachfront">Beachfront / &lt; 200m</option><option value="inland" selected>Inland (&gt; 1 km)</option></select>
-<select id="lfView" aria-label="View"><option value="none" selected>No special view</option><option value="ocean">Ocean view</option><option value="garden">Garden / nature view</option></select>
-</div>
-<div class="vf-row two"><input type="text" id="lfName" aria-label="Your name" autocomplete="name" placeholder="Your name" required><input type="email" id="lfEmail" aria-label="Email address" autocomplete="email" placeholder="Email address" required></div>
-<div class="vf-row two"><input type="tel" id="lfPhone" aria-label="Phone or WhatsApp number" autocomplete="tel" placeholder="Phone / WhatsApp (optional)"><button class="btn btn-amber" type="submit">Get my estimate</button></div>
-<p class="vf-err" id="lfErr"></p>
-<p class="form-legal on-dark">Estimates are indicative only — <a href="legal-terms.html#terms-6">no rights can be derived from them</a>. We use your details to send the estimate and follow up; see our <a href="legal-privacy.html">Privacy Policy</a>.</p>
-</form>
-<div class="value-done" id="landDone" hidden>
-<div class="vd-est"><span class="vd-est-lab">Indicative market estimate</span><span class="vd-est-range" id="ldRange"></span><span class="vd-est-sub" id="ldSub"></span></div>
-<p class="vd-source">Based on Gamrealty's land market guide, current plot listings and realised sales across the coast, cross-checked against MyKunda's own closed deals.</p>
-<div class="vd-breakdown" id="ldBreakdown" style="margin:16px 0 12px;padding:14px 16px;background:rgba(21,70,58,.06);border-radius:8px;font-size:13.5px;line-height:1.7;color:#FFD700;display:none">
-<div style="font-weight:700;color:#1A1814;margin-bottom:6px;font-size:12px;text-transform:uppercase;letter-spacing:.04em">How we calculated this</div>
-<div id="ldBreakdownList"></div>
-</div>
-<p id="ldMsg"></p>
-<p class="vd-disc">⚠ This is an automated indicative estimate based on average market data for the area — not a formal appraisal or valuation. Actual land values depend on many factors including exact location, title status, and current market conditions. No rights can be derived from this estimate. For an accurate valuation, a valuer we work with can assess your plot in person on request.</p>
-<button class="btn btn-light btn-sm" id="ldAgain" type="button">Value another plot</button>
-<a class="btn btn-amber btn-sm" id="ldListBtn" href="list.html" style="margin-top:10px;display:none">List this plot on MyKunda →</a>
-</div>
-</div>
-<div class="value-img value-map" id="ldMapBox"><div class="value-map-tag">📍 <span id="ldMapLabel">The Gambia</span></div>
-<div class="vmap-read" id="ldRead" hidden></div>
-<div class="vmap-tools" id="ldTools">
-<button type="button" class="vmt sel" data-ldmode="pin">Pin only</button>
-<button type="button" class="vmt" data-ldmode="draw">Draw the plot</button>
-<button type="button" class="vmt sel" id="ldSnap" title="Snap corners to 15° steps and 5 m lengths">Snap 90°</button>
-<button type="button" class="vmt" id="ldUndo" disabled>Undo</button>
-<button type="button" class="vmt" id="ldClear" disabled>Clear</button>
-</div></div>
 </div>
 </section>
 
@@ -850,11 +944,13 @@
 window.__sbReady=new Promise(function(res){window.addEventListener('load',function(){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js';
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=54036962077406'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=156518406794788'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
   document.body.appendChild(s1);
 });});
 </script>
-<script src="app.min.js?v=54036962077406"></script>
+<script src="valuation-areas.js?v=156518406794788"></script>
+<script src="valuation.js?v=156518406794788"></script>
+<script src="app.min.js?v=156518406794788"></script>
 <script>
 
 // icons
@@ -1087,7 +1183,7 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
     const pd=mk('pdMapBox');
     if(pd){ pdMap=pd.m; pdMarker=pd.mkr; const saved=window._lastValProperty; if(saved&&saved.mapLL){ pdMap.setView([saved.mapLL.lat,saved.mapLL.lng],15); pdMarker.setLatLng([saved.mapLL.lat,saved.mapLL.lng]); document.getElementById('pdMapLabel').textContent=saved.mapPlace||'Location'; } }
     const ld=mk('ldMapBox',true);
-    if(ld){ ldMap=ld.m; ldMarker=ld.mkr; ldWireMap(); const saved=window._lastValLand; if(saved&&saved.mapLL){ ldMap.setView([saved.mapLL.lat,saved.mapLL.lng],15); ldMarker.setLatLng([saved.mapLL.lat,saved.mapLL.lng]); document.getElementById('ldMapLabel').textContent=saved.mapPlace||'Location'; } if(!document.getElementById('panelLand').hidden) ldMap.invalidateSize(); }
+    if(ld){ ldMap=ld.m; ldMarker=ld.mkr; ldWireMap(); const saved=window._lastValLand; if(saved&&saved.mapLL){ ldMap.setView([saved.mapLL.lat,saved.mapLL.lng],15); ldMarker.setLatLng([saved.mapLL.lat,saved.mapLL.lng]); document.getElementById('ldMapLabel').textContent=saved.mapPlace||'Location'; } ldMap.invalidateSize(); }
   }
   /* ---- Plot drawing on the land map — same behaviour as the List page ----
      Tap corners to outline the plot; the area feeds the m² field and the centre
@@ -1205,6 +1301,7 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
     if(LD.pts.length>=3){
       const sqm=Math.round(ldArea(LD.pts));
       LD.sqm=sqm; size.value=sqm; size.readOnly=true; size.classList.remove('bad');
+    size.dispatchEvent(new Event('change',{bubbles:true}));
       note.innerHTML='✓ Measured from your outline: <b>'+sqm.toLocaleString('en-US')+' m²</b> — clear the outline to type a size instead.';
     } else {
       if(LD.sqm && size.readOnly){ size.value=''; }
@@ -1215,6 +1312,8 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
   /* Distance to the sea is measured, never picked: from the drawn plot's centre
      when there is an outline, otherwise from the Plus Code / area location. */
   function ldApplyGeo(){
+    /* De flow rekent mee op 'change'; programmatisch zetten vuurt dat niet zelf. */
+    setTimeout(function(){ var b=document.getElementById('lfBeach'); if(b) b.dispatchEvent(new Event('change',{bubbles:true})); },0);
     const sel=document.getElementById('lfBeach'), fld=document.getElementById('lfBeachDist');
     if(!sel||!fld||!window.mkSeaDistance) return;
     if(!LD.ll){ fld.hidden=true; sel.hidden=false; LD.seaM=null; LD.band=null; return; }
@@ -1345,398 +1444,245 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
     }catch(e){}
   }
 
-  // ---------------- TOOL 1: home, villa or apartment ----------------
-  function initPropertyValuation(){
-    const form=document.getElementById('propForm'); if(!form) return;
-    const loc=document.getElementById('pfLocation'), type=document.getElementById('pfType'), size=document.getElementById('pfSize'),
-          name=document.getElementById('pfName'), email=document.getElementById('pfEmail'), phone=document.getElementById('pfPhone'),
-          beds=document.getElementById('pfBeds'), baths=document.getElementById('pfBaths'), condition=document.getElementById('pfCondition'),
-          floors=document.getElementById('pfFloors'), pool=document.getElementById('pfPool'), solar=document.getElementById('pfSolar'),
-          security=document.getElementById('pfSecurity'), furnished=document.getElementById('pfFurnished'), water=document.getElementById('pfWater'),
-          plotSizeEl=document.getElementById('pfPlot'), beach=document.getElementById('pfBeach'), view=document.getElementById('pfView'),
-          err=document.getElementById('pfErr'), done=document.getElementById('propDone'),
-          vdRange=document.getElementById('pdRange'), vdSub=document.getElementById('pdSub'), vdMsg=document.getElementById('pdMsg'),
-          vdBreakdown=document.getElementById('pdBreakdown'), vdBreakdownList=document.getElementById('pdBreakdownList');
+  /* ---------------- DE FLOW ----------------
+     Eén reeks vragen in plaats van twee formulieren. Er wordt hier
+     niet gerekend: elk bedrag komt uit MK_VAL.value() in
+     valuation.js, zodat sell.html, list.html en de zelftest
+     hetzelfde antwoord geven.
 
-    function toggleType(){
-      const isApt=type.value==='apartment';
-      plotSizeEl.hidden=isApt;
-      if(isApt) pool.value='no';
+     Wat hierboven staat blijft van kracht: het intekenen van de
+     kavel schrijft in lfSize, lfBeach en lfBeachDist, en die
+     velden staan in deze flow onder dezelfde namen. Daardoor
+     werkt de kaart zonder dat er één regel tekencode is veranderd.
+     ---------------------------------------- */
+  function initValuationFlow(){
+    var AREAS = window.MK_RATES || {LAND:{},LABELS:{}};
+    var BASE = AREAS.LAND || {}, LABELS = AREAS.LABELS || {};
+    var $ = function(id){ return document.getElementById(id); };
+    if(!$('mkv1') || !window.MK_VAL) return;
+
+    var S = {type:'', area:'', beach:'inland', plot:'', built:'',
+      title:'alkalalo', road:'laterite', elec:'present', water:'nearby',
+      fence:'partial', cleared:'cleared', shape:'regular', corner:'no', flood:'no',
+      finish:'standard', year:'', condition:'good', floors:'1', baths:'2',
+      security:'wall', pool:'no', solar:'no', furnished:'unfurnished', view:'none'};
+
+    /* De gebiedenlijst komt uit dezelfde tabel als de tarieven. */
+    (function(){
+      var dl=$('mkvAreas'); if(!dl) return;
+      var seen={}, out=[];
+      Object.keys(LABELS).forEach(function(k){ var l=LABELS[k]; if(!seen[l]){seen[l]=1;out.push(l);} });
+      out.sort().forEach(function(l){ var o=document.createElement('option'); o.value=l; dl.appendChild(o); });
+    })();
+
+    function money(eur){
+      if(eur==null) return '—';
+      var c=CURRENCIES[getCurrency()], v=eur*(c.rate||1);
+      var step = v>=200000?5000 : v>=50000?1000 : v>=2000?500 : v>=100?10 : 1;
+      return c.symbol + (Math.round(v/step)*step).toLocaleString('en-US');
     }
-    type.addEventListener('change', toggleType); toggleType();
-    [loc,size,name,email].forEach(i=>i.addEventListener('input',()=>{ i.classList.remove('bad'); err.textContent=''; }));
 
-    form.addEventListener('submit', function(e){
-      e.preventDefault();
-      err.textContent='';
-      const miss=[];
-      if(!loc.value.trim()){ loc.classList.add('bad'); miss.push({f:loc,label:'the location'}); }
-      if(!size.value || +size.value<=0){ size.classList.add('bad'); miss.push({f:size,label:'the size'}); }
-      if(!name.value.trim()){ name.classList.add('bad'); miss.push({f:name,label:'your name'}); }
-      if(!emailOk(email.value.trim())){ email.classList.add('bad'); miss.push({f:email,label:'a valid email'}); }
-      if(miss.length){ const parts=miss.map(m=>m.label); const list=parts.length>1?parts.slice(0,-1).join(', ')+' and '+parts[parts.length-1]:parts[0]; err.textContent='Please add '+list+' so we can send your valuation.'; miss[0].f.focus(); return; }
-
-      let area=areaName(loc.value);
-      if(!area && PLUS_RE.test(loc.value)) area=areaFromPlusCode(loc.value);
-      if(!area) area=nearestArea(parseLatLng(loc.value));
-      const place = area || (isExactLoc(loc.value) ? 'this area' : loc.value.trim());
-      const _pdLL=updateValMap(pdMap,pdMarker,'pdMapLabel',loc.value,area,place);
-      const sqm=+size.value, baseRate=rateFor(area||loc.value, type.value);
-
-      const condMult=({new:1.15,good:1.0,renovation:0.72}[condition.value]||1);
-      const beachMult=({beachfront:1.40,walking:1.10,inland:1.0}[beach.value]||1);
-      const bedMult=beds.value?({1:0.97,2:1.0,3:1.0,4:1.02,5:1.03}[beds.value]||1):1;
-      const bathMult=baths.value?({1:0.97,2:1.0,3:1.04,4:1.08}[baths.value]||1):1;
-      const floorMult=({1:1.0,2:1.05,3:1.08}[floors.value]||1);
-      const poolMult=pool.value==='yes'?1.15:1.0;
-      const solarMult=({no:1.0,solar:1.06,generator:1.03,both:1.10}[solar.value]||1);
-      const secMult=({none:1.0,wall:1.06,gated:1.12}[security.value]||1);
-      const furnMult=({unfurnished:1.0,semi:1.04,furnished:1.10}[furnished.value]||1);
-      const viewMult=(view.value==='ocean'&&beach.value==='beachfront')?1.08:({none:1.0,ocean:1.20,garden:1.05}[view.value]||1);
-      const plotSqm=parseInt(plotSizeEl.value)||0;
-      const buildWaterMult=({nawec:1.0,borehole:0.97,both:1.05,none:0.82}[water.value]||1);
-
-      const buildMult=bathMult*floorMult*poolMult*solarMult*secMult*furnMult*buildWaterMult;
-      const rawMult=condMult*beachMult*bedMult*viewMult*buildMult;
-      const damp=0.75;
-      const dampedMult=rawMult>=1?1+(rawMult-1)*damp:1-(1-rawMult)*0.9;
-      const RATE_CEIL=Math.min(baseRate*2.0, type.value==='apartment'?2000:1800);
-      const RATE_FLOOR=baseRate*0.5;
-      const uncapped=baseRate*dampedMult;
-      const adjusted=Math.round(Math.min(Math.max(uncapped,RATE_FLOOR),RATE_CEIL));
-      const rateCapped=uncapped>RATE_CEIL+1;
-
-      function plotRate(base){ const m=beachMult*viewMult; const d=m>=1?1+(m-1)*0.70:m; return Math.round(Math.min(base*d, Math.min(base*1.6,400))); }
-      const lRate=(type.value==='house'&&plotSqm>0)?plotRate(rateFor(area||loc.value,'land')):0;
-
-      const effSqm=effectiveArea(sqm), effPlot=effectiveLandArea(plotSqm);
-      let mid;
-      if(type.value==='house' && plotSqm>0){ mid=Math.round(effPlot*lRate + effSqm*adjusted); }
-      else { mid=Math.round(effSqm*adjusted); }
-
-      const knownArea=!!area;
-      let uncertainCount=0;
-      if(!knownArea) uncertainCount++;
-      if(!size.value||+size.value<=0) uncertainCount++;
-      if(condition.value==='') uncertainCount++;
-      if(type.value==='house' && plotSqm<=0) uncertainCount++;
-      const marginDown=Math.min(0.15+uncertainCount*0.05,0.30);
-      const marginUp=Math.min(0.22+uncertainCount*0.06,0.42);
-
-      const stepSize=mid>=200000?5000:mid>=50000?1000:500;
-      const low=Math.round(mid*(1-marginDown)/stepSize)*stepSize;
-      const high=Math.round(mid*(1+marginUp)/stepSize)*stepSize;
-
-      vdRange.textContent=money(mid);
-      let factors=[];
-      if(condition.value==='new') factors.push('new build premium');
-      if(condition.value==='renovation') factors.push('renovation discount');
-      if(pool.value==='yes') factors.push('swimming pool');
-      if(security.value==='gated') factors.push('gated compound');
-      if(security.value==='wall') factors.push('walled compound');
-      if(solar.value!=='no') factors.push(solar.value==='both'?'solar + generator':solar.value);
-      if(furnished.value==='furnished') factors.push('fully furnished');
-      if(floors.value>='2') factors.push(floors.value+'+ storeys');
-      if(water.value==='none') factors.push('no running water');
-      if(water.value==='both') factors.push('Nawec + borehole');
-      if(water.value==='borehole') factors.push('borehole only');
-      if(view.value==='ocean') factors.push('ocean view');
-      if(view.value==='garden') factors.push('garden view');
-      if(beach.value==='beachfront') factors.push('beachfront location');
-      else if(beach.value==='walking') factors.push('near-beach premium');
-      const factorStr=factors.length?' · Adjusted for: '+factors.join(', '):'';
-      vdSub.textContent='Based on ~'+money(adjusted)+'/m² for a '+sqm.toLocaleString()+' m² home in '+place+factorStr;
-      if(type.value==='house' && plotSqm>0) vdSub.textContent+=' + '+plotSqm.toLocaleString()+' m² land at ~'+money(lRate)+'/m²';
-
-      let bLines=[];
-      bLines.push(row('Base rate for '+place, money(baseRate)+'/m²'));
-      if(condMult!==1) bLines.push(row(condition.value==='new'?'New build premium':'Renovation discount', pct(condMult)));
-      if(beachMult!==1) bLines.push(row(beach.value==='beachfront'?'Beachfront location':'Near-beach premium', pct(beachMult)));
-      if(bedMult!==1) bLines.push(row('Bedroom count ('+(beds.value||'?')+')', pct(bedMult)));
-      if(viewMult!==1) bLines.push(row(view.value==='ocean'?'Ocean view':'Garden view', pct(viewMult)));
-      if(bathMult!==1) bLines.push(row('Bathrooms ('+(baths.value||'?')+')', pct(bathMult)));
-      if(floorMult!==1) bLines.push(row(floors.value+'+ storeys', pct(floorMult)));
-      if(poolMult!==1) bLines.push(row('Swimming pool', pct(poolMult)));
-      if(solarMult!==1) bLines.push(row('Solar / generator', pct(solarMult)));
-      if(secMult!==1) bLines.push(row('Security / compound', pct(secMult)));
-      if(furnMult!==1) bLines.push(row('Furnished', pct(furnMult)));
-      if(buildWaterMult!==1) bLines.push(row('Water supply', pct(buildWaterMult)));
-      if(rawMult>1.15) bLines.push(row('Damping on stacked features', '×'+damp.toFixed(2)));
-      if(rateCapped) bLines.push(row('Capped at local market ceiling', money(RATE_CEIL)+'/m²'));
-      if(sqm>150) bLines.push(row('Larger build priced degressively', sqm.toLocaleString()+' m² priced as '+Math.round(effSqm).toLocaleString()+' m²'));
-      bLines.push(rowStrong('Adjusted rate', money(adjusted)+'/m²'));
-      if(type.value==='house' && plotSqm>0){
-        bLines.push(rowStrong('Building: '+Math.round(effSqm).toLocaleString()+' m² × '+money(adjusted), money(effSqm*adjusted)));
-        if(plotSqm>500) bLines.push(row('Bulk pricing on larger plot', plotSqm.toLocaleString()+' m² priced as '+Math.round(effPlot).toLocaleString()+' m²'));
-        bLines.push(rowStrong('Land: '+Math.round(effPlot).toLocaleString()+' m² × '+money(lRate), money(effPlot*lRate)));
-        bLines.push(rowStrong('Total (building + land)', money(mid)));
-      } else {
-        bLines.push(rowStrong(Math.round(effSqm).toLocaleString()+' m² × '+money(adjusted), money(mid)));
-      }
-      bLines.push(rowMuted('-'+Math.round(marginDown*100)+'% / +'+Math.round(marginUp*100)+'% uncertainty', money(low)+' – '+money(high)));
-      vdBreakdownList.innerHTML=bLines.join('');
-      vdBreakdown.style.display='block';
-
-      const fname=name.value.trim().split(' ')[0];
-      vdMsg.innerHTML='Thanks '+fname+' — here is your instant estimate for a property in <b>'+place+'</b>. A valuer we work with can review it in person and confirm the exact figure — available on request.';
-
-      sendLead('valuation', {
-        name:name.value.trim(), email:email.value.trim(), phone:phone.value.trim(), area:place,
-        message:'Valuation: '+type.value+', '+(beds.value||'?')+'bed/'+(baths.value||'?')+'bath, '+condition.value+', '+floors.value+'fl, pool:'+pool.value+', solar:'+solar.value+', sec:'+security.value+', furn:'+furnished.value+(plotSqm?', plot:'+plotSqm+'m²':'')+', view:'+view.value+', beach:'+beach.value+', '+sqm+'m², est. '+vdRange.textContent,
-        payload:{ type:type.value, sqm, area:place, view:view.value, beach:beach.value, estimate_low:low, estimate_high:high, raw_location:loc.value.trim(), beds:beds.value||null, baths:baths.value||null, condition:condition.value, floors:floors.value, pool:pool.value, solar:solar.value, security:security.value, furnished:furnished.value, water:water.value, plot_size:plotSqm||null }
-      }).catch(function(vErr){
-        console.warn('valuation lead error:', vErr);
-        vdMsg.innerHTML='This is an automated estimate from recent sales — but your request did <b>not</b> reach us.';
-        let vw=document.getElementById('pdLeadWarn');
-        if(!vw){ vw=document.createElement('div'); vw.id='pdLeadWarn'; done.appendChild(vw); }
-        vw.innerHTML=contactFallbackHTML('Hello MyKunda! I requested a valuation on the website for a property in '+place+' (estimate '+vdRange.textContent+'), but the form did not go through. My name is '+name.value.trim()+'.', "Send us the details directly and we'll confirm the exact figure:");
+    var at=1;
+    function show(n){
+      at=n;
+      [1,2,3,4,5].forEach(function(i){
+        var el=$('mkv'+i); if(!el) return;
+        el.hidden = i>n; el.classList.toggle('done', i<n);
       });
+      var el=$('mkv'+n);
+      if(el && n>1){
+        var soft = !window.matchMedia || !matchMedia('(prefers-reduced-motion: reduce)').matches;
+        el.scrollIntoView({behavior: soft?'smooth':'auto', block:'nearest'});
+      }
+      if(n>=2 && ldMap){ setTimeout(function(){ ldMap.invalidateSize(); },80); }
+    }
+    function recap(){
+      var t={land:'Land or plot',house:'House with land',apartment:'Apartment'}[S.type]||'';
+      $('mkvR1').innerHTML='<b>'+t+'</b>';
+      $('mkvR2').innerHTML='<b>'+(S.area||'—')+'</b>'+(S.beach!=='inland'?' · '+(S.beach==='beachfront'?'beachfront':'near the beach'):'');
+      var sz=[]; if(S.plot) sz.push(S.plot+' m² plot'); if(S.built) sz.push(S.built+' m² built');
+      $('mkvR3').innerHTML='<b>'+(sz.join(' · ')||'—')+'</b>';
+    }
 
-      form.hidden=true; done.hidden=false;
+    var FINISH_HINT={
+      basic:'Cement or basic tiled floor, steel windows, corrugated roof, no air-conditioning.',
+      standard:'Tiled floors, mosquito screens, ceilings, a water heater — what most homes have.',
+      high:'Aluminium sliding doors, air-conditioning, fitted kitchen, finished ceilings.'};
 
-      const listParams=new URLSearchParams();
-      listParams.set('cat', type.value==='house'?'villa':type.value);
-      if(place) listParams.set('area', place);
-      if(sqm) listParams.set('sqm', sqm);
-      if(beds.value) listParams.set('beds', beds.value);
-      if(baths.value) listParams.set('baths', baths.value);
-      if(condition.value) listParams.set('condition', condition.value);
-      if(floors.value) listParams.set('floors', floors.value);
-      if(view.value) listParams.set('view', view.value);
-      if(beach.value) listParams.set('beach', beach.value);
-      if(security.value) listParams.set('security', security.value);
-      if(furnished.value) listParams.set('furnished', furnished.value);
-      if(water.value) listParams.set('water', water.value);
-      if(pool.value==='yes') listParams.set('feat','Private pool');
-      if(solar.value && solar.value!=='no') listParams.set('power', solar.value);
-      if(plotSqm) listParams.set('plot', plotSqm);
-      listParams.set('price', Math.round(mid));
-      const btn=document.getElementById('pdListBtn');
-      btn.href='list.html?'+listParams.toString();
-      btn.style.display='inline-flex';
+    function applyType(){
+      var land=S.type==='land', apt=S.type==='apartment';
+      $('mkvLandFields').style.display = apt?'none':'';
+      $('mkvBuildFields').style.display = land?'none':'';
+      $('mkvWrapPlot').style.display = apt?'none':'';
+      $('mkvWrapBuilt').style.display = land?'none':'';
+      $('mkvH4').textContent = land?'The plot':apt?'The apartment':'The plot and the house';
+      $('mkvH3').textContent = land
+        ? 'A standard Gambian plot is 400 to 500 m² — 20 by 20, or 20 by 25 metres.'
+        : apt ? 'The floor area of the unit itself.'
+              : 'The plot is the whole compound; built area is only what stands under a roof.';
+      $('ldMapBox').style.display = apt?'none':'';
+      document.querySelectorAll('#mkvTypes .mkv-card').forEach(function(c){
+        c.classList.toggle('sel', c.dataset.type===S.type);
+      });
+    }
 
-      window._lastValProperty={vdRangeText:vdRange.textContent,vdSubText:vdSub.textContent,breakdownHTML:vdBreakdownList.innerHTML,msgHTML:vdMsg.innerHTML,listHref:btn.href,mapLL:_pdLL,mapPlace:place};
-      saveValState('property', window._lastValProperty);
+    function calc(){
+      if(!S.type || !S.area || (!S.plot && !S.built)) return null;
+      return window.MK_VAL.value({
+        type: S.type==='house'?'villa':S.type,
+        area:S.area, plotSqm:S.plot, builtSqm:S.built,
+        title:S.title, road:S.road, elec:S.elec, water:S.water, fence:S.fence,
+        cleared:S.cleared, shape:S.shape, corner:S.corner, flood:S.flood,
+        beach:S.beach, view:S.view, finish:S.finish, yearBuilt:S.year,
+        condition:S.condition, floors:S.floors, baths:S.baths,
+        security:S.security, pool:S.pool, solar:S.solar, furnished:S.furnished
+      }, {LAND_BASE: BASE});
+    }
+    function kv(k,v,sm){ return '<div class="mkv-kv'+(sm?' sm':'')+'"><span>'+k+'</span><b>'+v+'</b></div>'; }
+
+    var last=null;
+    function render(){
+      var r=calc();
+      /* Onbekend gebied: geen bedrag maar uitleg. Een nul is geen schatting. */
+      if(r && r.ok===false){
+        $('mkvRes').hidden=true; $('mkvPortalBox').hidden=true; $('mkvRentBox').hidden=true;
+        $('mkvIdle').hidden=false;
+        $('mkvIdle').innerHTML='We have no rate for <b>'+(S.area||'this area')+'</b>. Try the nearest larger town, or ask for the report and someone will look at it.';
+        last=null; return;
+      }
+      $('mkvIdle').hidden=!!r; $('mkvRes').hidden=!r;
+      $('mkvPortalBox').hidden=!(r&&r.portal);
+      $('mkvRentBox').hidden=!(r&&S.type!=='land');
+      if(!r){ last=null; return; }
+      last=r;
+      $('mkvBig').textContent=money(r.mid);
+      $('mkvBand').textContent='Range '+money(r.low)+' – '+money(r.high);
+      $('mkvConf').className='mkv-conf '+r.confidence.label;
+      $('mkvConfTxt').textContent={strong:'Strongly evidenced',fair:'Fairly evidenced',indicative:'Indicative only'}[r.confidence.label];
+      $('mkvWhy').innerHTML=r.confidence.reasons.map(function(w){return '<li>'+w+'</li>';}).join('');
+      var sp=[];
+      if(r.land) sp.push(kv('Land',money(r.land)));
+      if(r.build) sp.push(kv('Building',money(r.build)));
+      if(r.rebuild) sp.push(kv('Cost to rebuild today',money(r.rebuild),true));
+      $('mkvSplit').innerHTML=sp.join('');
+      $('mkvLines').innerHTML=r.lines.map(function(l){
+        var val = l.unit==='pt' ? (l.v>0?'+'+l.v:l.v)+'%'
+                : l.unit==='%' ? l.v+'%'
+                : l.unit==='/m²' ? money(l.v)+'/m²'
+                : l.v==null ? '' : money(l.v);
+        return '<div class="mkv-ln'+(l.strong?' strong':'')+'"><span>'+l.k+'</span>'
+          +(l.note?'<span class="n">'+l.note+'</span>':'')+'<b>'+val+'</b></div>';
+      }).join('');
+      if(r.portal){
+        $('mkvPortalTxt').innerHTML='Plots in '+r.portal.area+' are advertised there at <span class="num">'
+          +money(r.portal.low)+' – '+money(r.portal.high)+'</span> — '+money(r.portal.rateLow)+' to '
+          +money(r.portal.rateHigh)+' per m². That is a different market with different buyers. The figure above is the local one.';
+      }
+      if(S.type!=='land'){
+        $('mkvRentTxt').innerHTML='A local long let here brings in roughly <span class="num">'
+          +money(r.rent.local)+' a month</span>, or <span class="num">'+(r.rent.grossYield*100).toFixed(1)
+          +'% gross yield</span>. Furnished, to expatriate tenants, closer to <span class="num">'
+          +money(r.rent.expat)+' a month</span>. Gross: 8% rental income tax still comes off.';
+      }
+    }
+
+    /* ---- bediening ---- */
+    document.querySelectorAll('#mkvTypes .mkv-card').forEach(function(b){
+      b.addEventListener('click',function(){ S.type=b.dataset.type; applyType(); recap(); show(2); render(); });
+    });
+    [['lfLocation','area'],['lfBeach','beach'],['lfSize','plot'],['mkvBuilt','built'],
+     ['mkvTitle','title'],['mkvRoad','road'],['mkvElec','elec'],['mkvWater','water'],
+     ['mkvFence','fence'],['mkvCleared','cleared'],['mkvShape','shape'],['mkvCorner','corner'],
+     ['mkvFlood','flood'],['mkvFinish','finish'],['mkvYear','year'],['mkvCondition','condition'],
+     ['mkvFloors','floors'],['mkvBaths','baths'],['mkvSecurity','security'],['mkvPool','pool'],
+     ['mkvSolar','solar'],['mkvFurnished','furnished'],['mkvView','view']
+    ].forEach(function(p){
+      var el=$(p[0]); if(!el) return;
+      /* Ook 'change': het intekenen van de kavel schrijft lfSize en
+         lfBeach programmatisch en vuurt daar zelf een event bij. */
+      ['input','change'].forEach(function(ev){
+        el.addEventListener(ev,function(){
+          S[p[1]]=el.value; el.classList.remove('bad');
+          if(p[1]==='finish') $('mkvFinishHint').textContent=FINISH_HINT[el.value]||'';
+          recap(); render();
+        });
+      });
     });
 
-    document.getElementById('pdAgain').addEventListener('click', function(){
-      clearValState('property');
-      form.reset(); [loc,size,name,email].forEach(i=>i.classList.remove('bad'));
-      err.textContent=''; done.hidden=true; form.hidden=false;
-      toggleType(); loc.focus();
-    });
-  }
-
-  // ---------------- TOOL 2: land / plot ----------------
-  function initLandValuation(){
-    const form=document.getElementById('landForm'); if(!form) return;
-    const loc=document.getElementById('lfLocation'), size=document.getElementById('lfSize'),
-          name=document.getElementById('lfName'), email=document.getElementById('lfEmail'), phone=document.getElementById('lfPhone'),
-          road=document.getElementById('lfRoad'), title=document.getElementById('lfTitle'), fencing=document.getElementById('lfFencing'),
-          elec=document.getElementById('lfElectricity'), water=document.getElementById('lfWater'), cleared=document.getElementById('lfCleared'),
-          corner=document.getElementById('lfCorner'), plotShape=document.getElementById('lfPlotShape'), flood=document.getElementById('lfFlood'),
-          beach=document.getElementById('lfBeach'), view=document.getElementById('lfView'),
-          err=document.getElementById('lfErr'), done=document.getElementById('landDone'),
-          vdRange=document.getElementById('ldRange'), vdSub=document.getElementById('ldSub'), vdMsg=document.getElementById('ldMsg'),
-          vdBreakdown=document.getElementById('ldBreakdown'), vdBreakdownList=document.getElementById('ldBreakdownList');
-
-    [loc,size,name,email].forEach(i=>i.addEventListener('input',()=>{ i.classList.remove('bad'); err.textContent=''; }));
-
-    /* Typing a Plus Code or an area name moves the map and re-measures the sea
-       distance straight away — no button, no guessing. */
-    let locTimer=null;
-    loc.addEventListener('input',function(){
+    /* De kaart volgt de plaatsnaam, net als in de oude tool. */
+    var locTimer=null;
+    $('lfLocation').addEventListener('input',function(){
       clearTimeout(locTimer);
+      var v=this.value;
       locTimer=setTimeout(function(){
         if(LD.pts.length>=3) return;
-        let a=areaName(loc.value);
-        if(!a && PLUS_RE.test(loc.value)) a=areaFromPlusCode(loc.value);
-        if(!a) a=nearestArea(parseLatLng(loc.value));
-        const ll=updateValMap(ldMap,ldMarker,'ldMapLabel',loc.value,a,a||loc.value.trim());
-        if(ll){
-          LD.ll=ll; ldApplyGeo();
-          /* An exact location — coordinates or a Plus Code — goes in close enough
-             to trace the plot. A bare area name only places you nearby. */
-          if(ldMap) ldMap.setView([ll.lat,ll.lng], isExactLoc(loc.value) ? 18 : 15);
-        }
+        var a=areaName(v);
+        if(!a && PLUS_RE.test(v)) a=areaFromPlusCode(v);
+        if(!a) a=nearestArea(parseLatLng(v));
+        var ll=updateValMap(ldMap,ldMarker,'ldMapLabel',v,a,a||v.trim());
+        if(ll){ LD.ll=ll; ldApplyGeo(); if(ldMap) ldMap.setView([ll.lat,ll.lng], isExactLoc(v)?18:15); }
       },450);
     });
 
-    form.addEventListener('submit', function(e){
-      e.preventDefault();
-      err.textContent='';
-      const miss=[];
-      if(!loc.value.trim()){ loc.classList.add('bad'); miss.push({f:loc,label:'the location'}); }
-      if(!size.value || +size.value<=0){ size.classList.add('bad'); miss.push({f:size,label:'the plot size'}); }
-      if(!name.value.trim()){ name.classList.add('bad'); miss.push({f:name,label:'your name'}); }
-      if(!emailOk(email.value.trim())){ email.classList.add('bad'); miss.push({f:email,label:'a valid email'}); }
-      if(miss.length){ const parts=miss.map(m=>m.label); const list=parts.length>1?parts.slice(0,-1).join(', ')+' and '+parts[parts.length-1]:parts[0]; err.textContent='Please add '+list+' so we can send your valuation.'; miss[0].f.focus(); return; }
+    $('mkv2').querySelector('[data-next]').addEventListener('click',function(){
+      if(!S.area.trim()){ $('lfLocation').classList.add('bad'); $('mkvE2').textContent='Give an area — without a location there is no rate to work from.'; $('lfLocation').focus(); return; }
+      $('mkvE2').textContent=''; recap(); show(3); render();
+    });
+    $('mkv3').querySelector('[data-next]').addEventListener('click',function(){
+      var need = S.type==='apartment' ? S.built : S.type==='land' ? S.plot : (S.plot||S.built);
+      if(!need || +need<=0){ $('mkvE3').textContent='Give a size — that is what everything is multiplied by.'; return; }
+      $('mkvE3').textContent=''; recap(); show(4); render();
+    });
+    document.querySelectorAll('#value .mkv-recap').forEach(function(b){
+      b.addEventListener('click',function(){ show(+b.dataset.goto); });
+    });
+    $('mkvToReport').addEventListener('click',function(){ show(5); });
+    $('mkvSkip').addEventListener('click',function(){ show(4); });
+    $('mkvRestart').addEventListener('click',function(){ location.reload(); });
+    $('mkvGrip').addEventListener('click',function(){
+      var open=$('mkvRail').classList.toggle('open');
+      this.setAttribute('aria-expanded', open?'true':'false');
+    });
 
-      let area=areaName(loc.value);
-      if(!area && PLUS_RE.test(loc.value)) area=areaFromPlusCode(loc.value);
-      if(!area) area=nearestArea(parseLatLng(loc.value));
-      const place = area || (isExactLoc(loc.value) ? 'this area' : loc.value.trim());
-      const _ldLL = LD.pts.length>=3 ? LD.ll : updateValMap(ldMap,ldMarker,'ldMapLabel',loc.value,area,place);
-      if(LD.pts.length>=3){ const lab=document.getElementById('ldMapLabel'); if(lab) lab.textContent=place; }
-      else if(_ldLL){ LD.ll=_ldLL; ldApplyGeo(); }
-      const sqm=+size.value, baseRate=rateFor(area||loc.value,'land');
-
-      const elecMult=({present:1.15,nearby:1.0,none:0.82}[elec.value]||1);
-      const fenceMult=({full:1.12,partial:1.0,none:0.90}[fencing.value]||1);
-      const clearMult=({cleared:1.08,partial:1.0,bush:0.88}[cleared.value]||1);
-      const roadMult=({tarmac:1.30,laterite:1.0,none:0.65}[road.value]||1);
-      const waterMult=({nawec:1.15,borehole:1.12,nearby:1.0,none:0.85}[water.value]||1);
-      const titleMult=({freehold:1.25,leasehold:1.22,sublease:1.15,alkalalo:1.0,unclear:0.60}[title.value]||1);
-      const cornerMult=corner.value==='yes'?1.10:1.0;
-      const shapeMult=plotShape.value==='irregular'?0.90:1.0;
-      const floodMult=({no:1.0,low:0.90,high:0.70}[flood.value]||1);
-      const beachMult=({beachfront:1.60,walking:1.15,inland:1.0}[beach.value]||1);
-      const viewMult=(view.value==='ocean'&&beach.value==='beachfront')?1.08:({none:1.0,ocean:1.20,garden:1.05}[view.value]||1);
-
-      const landMult=elecMult*fenceMult*clearMult*roadMult*waterMult*titleMult*cornerMult*shapeMult*floodMult;
-      const rawMult=beachMult*viewMult*landMult;
-      const damp=0.70;
-      const dampedMult=rawMult>=1?1+(rawMult-1)*damp:1-(1-rawMult)*0.9;
-      const RATE_CEIL=Math.min(baseRate*1.6,400);
-      const RATE_FLOOR=Math.max(baseRate*0.30,3);
-      const uncapped=baseRate*dampedMult;
-      const adjusted=Math.round(Math.min(Math.max(uncapped,RATE_FLOOR),RATE_CEIL));
-      const rateCapped=uncapped>RATE_CEIL+1;
-
-      const effSqm=effectiveLandArea(sqm);
-      const mid=Math.round(effSqm*adjusted);
-
-      const knownArea=!!area;
-      let uncertainCount=0;
-      if(!knownArea) uncertainCount++;
-      if(!size.value||+size.value<=0) uncertainCount++;
-      if(title.value==='unclear') uncertainCount++;
-      const marginDown=Math.min(0.15+uncertainCount*0.05,0.30);
-      const marginUp=Math.min(0.22+uncertainCount*0.06,0.42);
-
-      const stepSize=mid>=200000?5000:mid>=50000?1000:500;
-      const low=Math.round(mid*(1-marginDown)/stepSize)*stepSize;
-      const high=Math.round(mid*(1+marginUp)/stepSize)*stepSize;
-
-      vdRange.textContent=money(mid);
-      let factors=[];
-      if(elec.value==='present') factors.push('power on site');
-      if(elec.value==='none') factors.push('no power');
-      if(fencing.value==='full') factors.push('fully fenced');
-      if(fencing.value==='none') factors.push('not fenced');
-      if(cleared.value==='cleared') factors.push('cleared plot');
-      if(cleared.value==='bush') factors.push('uncleared bush');
-      if(road.value==='tarmac') factors.push('tarmac road');
-      if(road.value==='none') factors.push('no road access');
-      if(water.value==='nawec') factors.push('Nawec water');
-      if(water.value==='borehole') factors.push('own borehole');
-      if(water.value==='none') factors.push('no water');
-      if(title.value==='freehold') factors.push('freehold title');
-      if(title.value==='leasehold') factors.push('state lease');
-      if(title.value==='sublease') factors.push('sublease');
-      if(title.value==='unclear') factors.push('unclear title');
-      if(corner.value==='yes') factors.push('corner plot');
-      if(plotShape.value==='irregular') factors.push('irregular shape');
-      if(flood.value!=='no') factors.push(flood.value+' flood risk');
-      if(view.value==='ocean') factors.push('ocean view');
-      if(view.value==='garden') factors.push('garden view');
-      if(beach.value==='beachfront') factors.push('beachfront location');
-      else if(beach.value==='walking') factors.push('near-beach premium');
-      const factorStr=factors.length?' · Adjusted for: '+factors.join(', '):'';
-      vdSub.textContent='Based on ~'+money(adjusted)+'/m² for a '+sqm.toLocaleString()+' m² plot in '+place+factorStr;
-
-      let bLines=[];
-      bLines.push(row('Base land rate for '+place, money(baseRate)+'/m²'));
-      if(titleMult!==1) bLines.push(row('Title type', pct(titleMult)));
-      if(roadMult!==1) bLines.push(row('Road access', pct(roadMult)));
-      if(elecMult!==1) bLines.push(row('Electricity', pct(elecMult)));
-      if(waterMult!==1) bLines.push(row('Water supply', pct(waterMult)));
-      if(fenceMult!==1) bLines.push(row('Fencing', pct(fenceMult)));
-      if(clearMult!==1) bLines.push(row('Land clearing', pct(clearMult)));
-      if(cornerMult!==1) bLines.push(row('Corner plot', pct(cornerMult)));
-      if(shapeMult!==1) bLines.push(row('Plot shape', pct(shapeMult)));
-      if(floodMult!==1) bLines.push(row('Flood risk', pct(floodMult)));
-      if(LD.seaM!=null) bLines.push(rowMuted('Measured distance to the sea', window.mkFmtSeaDist(LD.seaM)));
-      if(LD.sqm) bLines.push(rowMuted('Plot size measured from your outline', LD.sqm.toLocaleString('en-US')+' m²'));
-      if(beachMult!==1) bLines.push(row(beach.value==='beachfront'?'Beachfront location':'Near-beach premium', pct(beachMult)));
-      if(viewMult!==1) bLines.push(row(view.value==='ocean'?'Ocean view':'Garden view', pct(viewMult)));
-      if(rawMult>1.15) bLines.push(row('Damping on stacked features', '×'+damp.toFixed(2)));
-      if(rateCapped) bLines.push(row('Capped at local market ceiling', money(RATE_CEIL)+'/m²'));
-      if(sqm>500) bLines.push(row('Bulk pricing on larger plot', sqm.toLocaleString()+' m² priced as '+Math.round(effSqm).toLocaleString()+' m²'));
-      bLines.push(rowStrong('Adjusted rate', money(adjusted)+'/m²'));
-      bLines.push(rowStrong(Math.round(effSqm).toLocaleString()+' m² × '+money(adjusted), money(mid)));
-      bLines.push(rowMuted('-'+Math.round(marginDown*100)+'% / +'+Math.round(marginUp*100)+'% uncertainty', money(low)+' – '+money(high)));
-      vdBreakdownList.innerHTML=bLines.join('');
-      vdBreakdown.style.display='block';
-
-      const fname=name.value.trim().split(' ')[0];
-      vdMsg.innerHTML='Thanks '+fname+' — here is your instant estimate for a plot in <b>'+place+'</b>. A valuer we work with can review it in person — including title and boundaries — available on request.';
-
-      sendLead('valuation', {
-        name:name.value.trim(), email:email.value.trim(), phone:phone.value.trim(), area:place,
-        message:'Valuation: land, road:'+road.value+', title:'+title.value+', fence:'+fencing.value+', elec:'+elec.value+', water:'+water.value+', cleared:'+cleared.value+', corner:'+corner.value+', shape:'+plotShape.value+', flood:'+flood.value+', view:'+view.value+', beach:'+beach.value+', '+sqm+'m², est. '+vdRange.textContent,
-        payload:{ type:'land', sqm, area:place, view:view.value, beach:beach.value, beach_m:LD.seaM, boundary: LD.pts.length>=3 ? {type:'polygon',points:LD.pts.map(p=>({lat:+p[0].toFixed(6),lng:+p[1].toFixed(6)})),area_m2:LD.sqm,centroid:LD.ll} : null, estimate_low:low, estimate_high:high, raw_location:loc.value.trim(), electricity:elec.value, fencing:fencing.value, cleared:cleared.value, road:road.value, water:water.value, title_type:title.value, corner:corner.value, plot_shape:plotShape.value, flood_risk:flood.value }
-      }).catch(function(vErr){
-        console.warn('valuation lead error:', vErr);
-        vdMsg.innerHTML='This is an automated estimate from recent land sales — but your request did <b>not</b> reach us.';
-        let vw=document.getElementById('ldLeadWarn');
-        if(!vw){ vw=document.createElement('div'); vw.id='ldLeadWarn'; done.appendChild(vw); }
-        vw.innerHTML=contactFallbackHTML('Hello MyKunda! I requested a land valuation on the website for a plot in '+place+' (estimate '+vdRange.textContent+'), but the form did not go through. My name is '+name.value.trim()+'.', "Send us the details directly and we'll confirm the exact figure:");
+    $('mkvSend').addEventListener('click',function(){
+      var nm=$('mkvName').value.trim(), em=$('mkvEmail').value.trim();
+      if(!nm){ $('mkvName').classList.add('bad'); $('mkvE5').textContent='Please add your name.'; return; }
+      if(!emailOk(em)){ $('mkvEmail').classList.add('bad'); $('mkvE5').textContent='Please add a valid email address.'; return; }
+      $('mkvE5').textContent='';
+      var r=last||calc(); if(!r||r.ok===false) return;
+      var btn=this; btn.disabled=true; btn.textContent='Sending…';
+      sendLead('valuation',{
+        name:nm, email:em, phone:$('mkvPhone').value.trim(), area:S.area,
+        message:'Valuation: '+S.type+', '+S.area+', '+(S.plot||'?')+' m² plot, '+(S.built||'0')+' m² built, estimate '+money(r.mid),
+        payload:{input:S, boundary: LD.pts.length>=3 ? {type:'polygon',points:LD.pts.map(function(p){return {lat:+p[0].toFixed(6),lng:+p[1].toFixed(6)};}),area_m2:LD.sqm,centroid:LD.ll} : null,
+          beach_m: LD.seaM, result:{mid:r.mid,low:r.low,high:r.high,land:r.land,build:r.build,rebuild:r.rebuild,confidence:r.confidence.score}}
+      }).then(function(){
+        $('mkv5').querySelector('.mkv-body').innerHTML='<p class="mkv-hint" style="margin:0">Thank you, '+nm.split(' ')[0]+'. The report is on its way to '+em+'. If you would like the estimate checked on site, just reply to that email.</p>';
+      }).catch(function(e){
+        console.warn('valuation lead error:', e);
+        btn.disabled=false; btn.textContent='Send the report';
+        $('mkvE5').innerHTML=contactFallbackHTML('Hello MyKunda! I used the valuation tool for a property in '+S.area+' (estimate '+money(r.mid)+') but the form did not go through. My name is '+nm+'.', "Your estimate is on screen, but the report request did not reach us. Send it directly:");
       });
-
-      form.hidden=true; done.hidden=false;
-
-      const listParams=new URLSearchParams();
-      listParams.set('cat','land');
-      if(place) listParams.set('area',place);
-      if(sqm) listParams.set('sqm',sqm);
-      if(road.value) listParams.set('road',road.value);
-      if(title.value) listParams.set('titleType',title.value);
-      if(elec.value) listParams.set('elec',elec.value);
-      if(water.value) listParams.set('landWater',water.value);
-      if(fencing.value) listParams.set('fence',fencing.value);
-      if(flood.value) listParams.set('flood',flood.value);
-      if(plotShape.value) listParams.set('shape',plotShape.value);
-      if(beach.value) listParams.set('landBeach',beach.value);
-      listParams.set('price', Math.round(mid));
-      const btn=document.getElementById('ldListBtn');
-      btn.href='list.html?'+listParams.toString();
-      btn.style.display='inline-flex';
-
-      window._lastValLand={vdRangeText:vdRange.textContent,vdSubText:vdSub.textContent,breakdownHTML:vdBreakdownList.innerHTML,msgHTML:vdMsg.innerHTML,listHref:btn.href,mapLL:_ldLL,mapPlace:place};
-      saveValState('land', window._lastValLand);
     });
 
-    document.getElementById('ldAgain').addEventListener('click', function(){
-      clearValState('land');
-      form.reset(); [loc,size,name,email].forEach(i=>i.classList.remove('bad'));
-      ldResetDrawing();
-      err.textContent=''; done.hidden=true; form.hidden=false;
-      loc.focus();
-    });
+    $('mkvFinishHint').textContent=FINISH_HINT[S.finish];
+    applyType(); render();
+
+    /* De listing-knop van de oude tool: het bedrag gaat mee naar list.html. */
+    window.__mkvListHref=function(){
+      var r=last; if(!r||r.ok===false) return null;
+      var p=new URLSearchParams();
+      p.set('cat', S.type==='house'?'villa':S.type);
+      if(S.area) p.set('area',S.area);
+      if(S.plot) p.set(S.type==='land'?'sqm':'plot', S.plot);
+      if(S.built) p.set('sqm', S.built);
+      p.set('price', Math.round(r.mid*(CURRENCIES.GMD.rate/CURRENCIES.EUR.rate)));
+      return 'list.html?'+p.toString();
+    };
   }
 
-  initPropertyValuation();
-  initLandValuation();
-  restoreValState('property');
-  restoreValState('land');
-  window.addEventListener('beforeunload', function(){
-    if(window._lastValProperty) saveValState('property', window._lastValProperty);
-    if(window._lastValLand) saveValState('land', window._lastValLand);
-  });
-
-  // ---- toggle between the two tools (persists across a currency-switch reload) ----
-  let savedTab=null; try{ savedTab=sessionStorage.getItem('mykunda_val_tab'); }catch(e){}
-  function showPanel(p){
-    document.getElementById('panelProperty').hidden = p!=='property';
-    document.getElementById('panelLand').hidden = p!=='land';
-    if(p==='land' && ldMap){ ldMap.invalidateSize(); ldMap.setView(ldMarker.getLatLng(), ldMap.getZoom()); }
-    if(p==='property' && pdMap){ pdMap.invalidateSize(); pdMap.setView(pdMarker.getLatLng(), pdMap.getZoom()); }
-    document.querySelectorAll('#valueToggle .vtab').forEach(function(b){ b.classList.toggle('sel', b.dataset.panel===p); });
-    try{ sessionStorage.setItem('mykunda_val_tab', p); }catch(e){}
-  }
-  document.querySelectorAll('#valueToggle .vtab').forEach(function(b){ b.addEventListener('click', function(){ showPanel(b.dataset.panel); }); });
-  showPanel(savedTab==='land'?'land':'property');
+  initValMaps();
+  initValuationFlow();
 })();
 
 // consultation

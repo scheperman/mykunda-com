@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0bovezl--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1147ab5--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://api.maptiler.com" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=54036962077406">
+<link rel="stylesheet" href="styles.min.css?v=156518406794788">
 <style>
 body{background:var(--paper-2);min-height:100vh}
 
@@ -532,6 +532,7 @@ body{background:var(--paper-2);min-height:100vh}
           <span class="suf" id="priceSuf"></span>
         </div>
         <div class="hint" id="priceHint"></div>
+        <div class="hint" id="priceGuide" style="display:none;margin-top:8px;padding:10px 12px;background:var(--green-50, #EDF3F0);border-radius:8px;line-height:1.5"></div>
       </div>
       <label class="chk-opt sel" id="negToggle" style="max-width:400px;display:flex">
         <span class="box" id="negCk"></span> <span id="negTxt">Open to offers / negotiable</span>
@@ -662,16 +663,18 @@ body{background:var(--paper-2);min-height:100vh}
   </aside>
 </div>
 
-<script src="app.min.js?v=54036962077406"></script>
-<script src="gambia-places.js?v=54036962077406" defer></script>
-<script src="image-slot.js?v=54036962077406" defer></script>
+<script src="valuation-areas.js?v=156518406794788"></script>
+<script src="valuation.js?v=156518406794788"></script>
+<script src="app.min.js?v=156518406794788"></script>
+<script src="gambia-places.js?v=156518406794788" defer></script>
+<script src="image-slot.js?v=156518406794788" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel, Leaflet (~145 KB) only when the
    seller reaches the location step. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=54036962077406'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=156518406794788'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -2422,6 +2425,32 @@ async function addBoundarySnapshotPhoto(){
 document.getElementById('plusIn').addEventListener('input',function(){ S.plus=this.value; });
 
 // price labels
+/* Wat vraagt de markt hier ongeveer? Zelfde module als de
+   waardebepaling op sell.html, zodat de twee niet uiteen kunnen lopen.
+   Het is een indicatie naast het veld, niet een ingevulde prijs: de
+   verkoper bepaalt zijn vraagprijs zelf. */
+function mkPriceGuide(){
+  const box = document.getElementById('priceGuide');
+  if(!box) return;
+  if(isRent() || !window.MK_VAL || !window.MK_RATES){ box.style.display='none'; return; }
+  const r = window.MK_VAL.value({
+    type: S.cat==='villa'||S.cat==='compound'||S.cat==='townhouse'||S.cat==='lodge' ? 'villa' : S.cat,
+    area: (S.area||'').split(' \u00b7 ')[0], plotSqm: S.cat==='land' ? S.landSqm : S.plot,
+    builtSqm: S.cat==='land' ? '' : S.sqm, title: S.titleType, road: S.road, elec: S.elec,
+    water: S.cat==='land' ? S.landWater : S.water, fence: S.fence, flood: S.flood,
+    beach: S.cat==='land' ? S.landBeach : S.beach, view: S.view, condition: S.condition,
+    yearBuilt: S.yearBuilt, floors: S.floors, baths: S.baths, security: S.security,
+    furnished: S.furnished, finish: 'standard'
+  }, { LAND_BASE: (window.MK_RATES||{}).LAND || {} });
+  if(!r || r.ok===false){ box.style.display='none'; return; }
+  const gmd = v => 'D' + Math.round(v * CURRENCIES.GMD.rate / CURRENCIES.EUR.rate).toLocaleString('en-US');
+  box.style.display='block';
+  box.innerHTML = 'Comparable properties in this area work out around <b>' + gmd(r.mid)
+    + '</b> (' + gmd(r.low) + ' \u2013 ' + gmd(r.high) + '). '
+    + '<span style="opacity:.75">' + { strong:'Strongly evidenced', fair:'Fairly evidenced', indicative:'Indicative only' }[r.confidence.label]
+    + ' \u2014 an estimate from asking prices, not a valuation. Your price is yours to set.</span>';
+}
+
 function updatePriceLabels(){
   const rent=isRent(), p=per();
   document.getElementById('priceH1').textContent = rent?'The rent, and the terms':'Set your price';
@@ -2429,6 +2458,7 @@ function updatePriceLabels(){
   document.getElementById('periodRow').querySelectorAll('.pill-opt').forEach(b=>b.classList.toggle('sel',b.dataset.period===S.period));
   document.getElementById('priceLab').textContent = rent?('Rent '+p.suffix):'Asking price';
   document.getElementById('priceSuf').textContent = priceSuffix();
+  mkPriceGuide();
   document.getElementById('priceHint').textContent = rent
     ? ('Buyers see this as \u201cD \u2026 '+p.suffix+'\u201d. '+(S.period==='month'?'Most long lets are quoted per month.':'Short stays are usually quoted '+p.suffix+'.'))
     : 'The full price for the property \u2014 one payment, not a monthly amount.';
@@ -2472,6 +2502,9 @@ function updateSummary(){
   const cover=document.querySelector('#list-photo-0');
   const prev=document.getElementById('sumPrev');
   if(cover && cover.getAttribute('data-filled')!==null && cover.hasAttribute('data-filled')){/* slot fills itself */}
+  /* De prijsindicatie leeft mee met wat er is ingevuld; updateSummary draait
+     bij elke veldwijziging, dus hier is hij altijd actueel. */
+  try{ mkPriceGuide(); }catch(e){}
 }
 // Mirror the cover slot into "Your listing". Tracks the current source so a
 // photo swapped in later replaces the preview instead of sticking on the first.

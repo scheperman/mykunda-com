@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:09j4py9--><!--/mk-mark-->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Valuation self-test — MyKunda</title>
+<style>
+:root{--ink:#16201C;--ink2:#55625B;--ink3:#8A958E;--line:#E2E4DF;--green:#15463A;--green2:#2A7561;--red:#B2131F;--ochre:#C8702D;--paper:#fff;--ground:#F7F7F4}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font:16px/1.55 -apple-system,"Segoe UI",Roboto,sans-serif;padding:32px 20px 80px}
+.w{max-width:1080px;margin:0 auto}
+h1{font-size:30px;letter-spacing:-.02em;margin:0 0 6px}
+p.lead{color:var(--ink2);margin:0 0 24px;max-width:62ch}
+h2{font-size:19px;margin:36px 0 4px}
+h2+p{color:var(--ink2);margin:0 0 14px;max-width:62ch;font-size:15px}
+.sum{display:flex;gap:26px;flex-wrap:wrap;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px 22px;margin-bottom:8px}
+.sum div span{display:block;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
+.sum div b{font-size:24px;font-variant-numeric:tabular-nums}
+table{border-collapse:collapse;width:100%;background:var(--paper);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:13.5px}
+th{text-align:left;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);padding:11px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:8px 12px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums;white-space:nowrap}
+tr:last-child td{border-bottom:none}
+td.k{white-space:normal;font-variant-numeric:normal}
+.r{text-align:right}
+.ok{color:var(--green2);font-weight:600}.no{color:var(--red);font-weight:600}.mid{color:var(--ochre);font-weight:600}
+.note{font-size:14px;color:var(--ink3);margin-top:10px;max-width:70ch;line-height:1.5}
+code{background:#EDF3F0;padding:1px 5px;border-radius:3px;font-size:.9em}
+</style>
+</head>
+<body>
+<div class="w">
+<h1>Valuation self-test</h1>
+<p class="lead">Every case below is a real listing with a real asking price, put through <code>valuation.js</code>. Run this after any change to a rate, a feature score or the build-cost block. It is the control step before anything is uploaded.</p>
+<div id="out">Loading…</div>
+</div>
+
+<script src="valuation-areas.js"></script>
+<script src="valuation.js"></script>
+<script>
+/* De gevallen. 'obs' is de waargenomen vraagprijs in EUR.
+   local = kavellisting in dalasi (daar moet het model kloppen)
+   portal = expatportaal in euro's (daar hoort het model ONDER te liggen) */
+var EURGMD = 85.74;
+var L = {title:'alkalalo',road:'laterite',elec:'present',water:'nearby',fence:'partial',
+         cleared:'cleared',shape:'regular',corner:'no',flood:'no',beach:'inland',view:'none'};
+function c(o){ var r={}; for(var k in L) r[k]=L[k]; for(var k in o) r[k]=o[k]; return r; }
+
+var CASES = [
+ ['local','Kololi, 480 m² (D2.5m)',       2500000/EURGMD, c({type:'land',area:'Kololi',plotSqm:480,road:'tarmac',water:'nawec'})],
+ ['local','Bijilo, 460 m² (D2.5m)',       2500000/EURGMD, c({type:'land',area:'Bijilo',plotSqm:460,water:'nawec'})],
+ ['local','Brusubi Ph1, 375 m² (D1.8m)',  1800000/EURGMD, c({type:'land',area:'Brusubi',plotSqm:375,title:'leasehold',road:'tarmac',water:'nawec'})],
+ ['local','Kerr Serign, 500 m² (D2.0m)',  2000000/EURGMD, c({type:'land',area:'Kerr Serign',plotSqm:500})],
+ ['local','Jabang, 400 m² (D800k)',        800000/EURGMD, c({type:'land',area:'Jabang',plotSqm:400,elec:'nearby',fence:'none',cleared:'partial'})],
+ ['local','Lamin, 500 m² (D500k)',         500000/EURGMD, c({type:'land',area:'Lamin',plotSqm:500,elec:'nearby',fence:'none',cleared:'partial'})],
+ ['local','Old Yundum, 450 m² (D550k)',    550000/EURGMD, c({type:'land',area:'Old Yundum',plotSqm:450,elec:'nearby',fence:'none',cleared:'partial'})],
+ ['local','Gunjur, 400 m² (D250k)',        250000/EURGMD, c({type:'land',area:'Gunjur',plotSqm:400,elec:'none',water:'none',fence:'none',cleared:'bush'})],
+ ['local','Kartong, 400 m² (D175k)',       175000/EURGMD, c({type:'land',area:'Kartong',plotSqm:400,elec:'none',water:'none',fence:'none',cleared:'bush'})],
+ ['local','Sanyang, 468 m² (D440k)',       440000/EURGMD, c({type:'land',area:'Sanyang',plotSqm:468,elec:'nearby',water:'none',fence:'none',cleared:'partial'})],
+ ['local','Brikama, 400 m² (D450k)',       450000/EURGMD, c({type:'land',area:'Brikama',plotSqm:400,elec:'nearby',fence:'none',cleared:'partial'})],
+ ['local','Busumbala, 450 m² (D500k)',     500000/EURGMD, c({type:'land',area:'Busumbala',plotSqm:450,elec:'nearby',fence:'none',cleared:'partial'})],
+ ['portal','Sanyang, 660 m² fenced',       25000, c({type:'land',area:'Sanyang',plotSqm:660,title:'leasehold',elec:'nearby',fence:'full',beach:'walking'})],
+ ['portal','Tanji, 480 m²',                10982, c({type:'land',area:'Tanji',plotSqm:480,elec:'nearby',fence:'none',cleared:'partial'})],
+ ['portal','Fajara villa, 660 m² built',  620000, c({type:'villa',area:'Fajara',builtSqm:660,plotSqm:1200,finish:'high',condition:'new',yearBuilt:2024,floors:'2',baths:'4',pool:'yes',solar:'both',security:'gated',water:'nawec',furnished:'semi',fence:'full',title:'leasehold',road:'tarmac',view:'garden'})],
+ ['portal','Bijilo house, 240 m² built',  250000, c({type:'house',area:'Bijilo',builtSqm:240,plotSqm:600,finish:'standard',condition:'good',yearBuilt:2016,floors:'2',baths:'3',security:'wall',water:'nawec',fence:'full'})],
+ ['portal','Brufut house, 229 m² built',   99000, c({type:'house',area:'Brufut',builtSqm:229,plotSqm:600,finish:'standard',condition:'good',yearBuilt:2014,floors:'1',baths:'2',pool:'yes',security:'wall',water:'nawec',fence:'full'})],
+ ['portal','Jabang house, 220 m² built',  289008, c({type:'house',area:'Jabang',builtSqm:220,plotSqm:800,finish:'high',condition:'good',yearBuilt:2019,floors:'2',baths:'3',pool:'yes',security:'gated',water:'nawec',fence:'full',title:'leasehold'})]
+];
+
+(function(){
+  var BASE = (window.MK_RATES || {}).LAND || {};
+  var eur = function(v){ return '€' + Math.round(v).toLocaleString('en-US'); };
+  var loc = [], por = [], rows = {local:'', portal:''};
+
+  CASES.forEach(function(cs){
+    var kind = cs[0], name = cs[1], obs = cs[2], inp = cs[3];
+    var r = window.MK_VAL.value(inp, { LAND_BASE: BASE });
+    if (!r || r.ok === false) {
+      rows[kind] += '<tr><td class="k">' + name + '</td><td colspan="5" class="no">no rate — ' + (r ? r.confidence.reasons[0] : 'no result') + '</td></tr>';
+      return;
+    }
+    var dev = r.mid / obs - 1, inBand = obs >= r.low && obs <= r.high, ratio = obs / r.mid;
+    if (kind === 'local') { loc.push({dev: dev, inBand: inBand}); }
+    else { por.push(ratio); }
+    var verdict = kind === 'local'
+      ? (inBand ? '<span class="ok">in band</span>' : '<span class="no">outside</span>')
+      : (ratio >= 1.2 ? '<span class="ok">model sits below</span>' : '<span class="mid">close to portal</span>');
+    rows[kind] += '<tr><td class="k">' + name + '</td><td class="r">' + eur(obs) + '</td><td class="r">' + eur(r.mid)
+      + '</td><td class="r">' + (dev > 0 ? '+' : '') + (dev * 100).toFixed(0) + '%</td><td class="r">'
+      + eur(r.low) + ' – ' + eur(r.high) + '</td><td>' + verdict + '</td></tr>';
+  });
+
+  var devs = loc.map(function(x){ return x.dev; }).sort(function(a,b){ return a-b; });
+  var med = devs.length ? devs[Math.floor(devs.length/2)] : 0;
+  var mae = loc.length ? loc.reduce(function(s,x){ return s + Math.abs(x.dev); }, 0) / loc.length : 0;
+  var nIn = loc.filter(function(x){ return x.inBand; }).length;
+  var pSorted = por.slice().sort(function(a,b){ return a-b; });
+  var pMed = pSorted.length ? pSorted[Math.floor(pSorted.length/2)] : 0;
+
+  var head = '<tr><th>Case</th><th class="r">Observed</th><th class="r">Model</th><th class="r">Deviation</th><th class="r">Band</th><th>Verdict</th></tr>';
+  document.getElementById('out').innerHTML =
+    '<div class="sum">'
+    + '<div><span>Mean absolute deviation</span><b>' + (mae*100).toFixed(0) + '%</b></div>'
+    + '<div><span>Median deviation</span><b>' + (med>0?'+':'') + (med*100).toFixed(0) + '%</b></div>'
+    + '<div><span>Within own band</span><b>' + nIn + '/' + loc.length + '</b></div>'
+    + '<div><span>Portal ratio, median</span><b>×' + pMed.toFixed(2) + '</b></div>'
+    + '<div><span>Rates recalibrated</span><b>' + window.MK_VAL_CONFIG.herijkt.land + '</b></div>'
+    + '<div><span>Areas in table</span><b>' + Object.keys(BASE).length + '</b></div>'
+    + '</div>'
+    + '<h2>A · Local plot listings in dalasi</h2><p>This is where the model has to be right. These are the listings the rates were derived from, so a large deviation means something in the calculation has drifted.</p>'
+    + '<table>' + head + rows.local + '</table>'
+    + '<h2>B · Asking prices on international portals</h2><p>Here the model is <em>meant</em> to sit below. The question is not whether it hits the portal price but whether it stays consistently under it — those are two different markets.</p>'
+    + '<table>' + head + rows.portal + '</table>'
+    + '<p class="note">Every observed figure is an asking price. No public source in The Gambia publishes what property actually sells for, so the model is calibrated to what sellers ask, not to what buyers pay. Once <code>market_observations</code> holds real sale prices, add them here first — they are worth more than the whole rate table.</p>';
+})();
+</script>
+</body>
+</html>

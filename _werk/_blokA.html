@@ -1,0 +1,215 @@
+<!-- VALUATION -->
+<section id="value" class="wrap" style="padding-top:56px;padding-bottom:0" data-screen-label="Sell / Valuation">
+<style>
+/* Alleen binnen #value, zodat er niets van de site-CSS mee verandert. */
+#value{--v-line:#E2E4DF;--v-line2:#CDD2CB;--v-paper:#fff;--v-ink:#16201C;--v-ink2:#55625B;--v-ink3:#8A958E;--v-green:#15463A;--v-green2:#2A7561;--v-green6:#EDF3F0;--v-red:#CE1126}
+#value *{box-sizing:border-box}
+.mkv{display:grid;gap:34px;align-items:start}
+@media(min-width:980px){.mkv{grid-template-columns:1fr 380px}.mkv-rail{position:sticky;top:24px}}
+.mkv-head h2{margin:0 0 8px}
+.mkv-head p{margin:0 0 26px;color:var(--v-ink2);max-width:56ch}
+.mkv-step{background:var(--v-paper);border:1px solid var(--v-line);border-radius:14px;padding:22px 24px;margin-bottom:14px}
+.mkv-step[hidden]{display:none}
+.mkv-step>h3{font-size:19px;margin:0 0 4px}
+.mkv-step>.mkv-hint{font-size:15px;color:var(--v-ink2);margin:0 0 18px}
+.mkv-step.done{padding:14px 24px;background:transparent;border-style:dashed}
+.mkv-step.done>h3,.mkv-step.done>.mkv-hint,.mkv-step .mkv-body{display:none}
+.mkv-recap{display:none;align-items:center;gap:10px;font-size:14.5px;color:var(--v-ink2);cursor:pointer;width:100%;background:none;border:0;text-align:left;font:inherit;padding:0}
+.mkv-step.done .mkv-recap{display:flex}
+.mkv-recap b{color:var(--v-ink);font-weight:600}
+.mkv-recap .ed{margin-left:auto;color:var(--v-green2);font-weight:600;font-size:13.5px}
+.mkv-tick{width:19px;height:19px;border-radius:50%;background:var(--v-green2);color:#fff;display:grid;place-items:center;flex:none}
+.mkv-tick svg{width:11px;height:11px}
+.mkv-cards{display:grid;gap:10px}
+@media(min-width:560px){.mkv-cards{grid-template-columns:repeat(3,1fr)}}
+.mkv-card{border:1.5px solid var(--v-line2);border-radius:12px;padding:16px;cursor:pointer;background:var(--v-paper);text-align:left;font:inherit;transition:border-color .12s,background .12s}
+.mkv-card:hover{border-color:var(--v-green2)}
+.mkv-card.sel{border-color:var(--v-green);background:var(--v-green6);box-shadow:inset 0 0 0 1px var(--v-green)}
+.mkv-card .ic{display:block;color:var(--v-green2);margin-bottom:9px}
+.mkv-card .t{font-weight:600;font-size:15.5px;display:block}
+.mkv-card .s{font-size:13.5px;color:var(--v-ink2);display:block;margin-top:2px;line-height:1.4}
+.mkv-grid{display:grid;gap:14px}
+@media(min-width:560px){.mkv-grid.two{grid-template-columns:1fr 1fr}.mkv-grid.three{grid-template-columns:repeat(3,1fr)}}
+#value label.mkv-f{display:block}
+#value label.mkv-f>span{display:block;font-size:12.5px;font-weight:600;color:var(--v-ink2);margin-bottom:5px}
+#value .mkv-f input,#value .mkv-f select{width:100%;font:inherit;font-size:15.5px;padding:11px 12px;border:1.5px solid var(--v-line2);border-radius:10px;background:var(--v-paper);color:var(--v-ink);text-overflow:ellipsis}
+#value .mkv-f input:focus,#value .mkv-f select:focus{outline:2px solid var(--v-green2);outline-offset:1px;border-color:var(--v-green2)}
+#value .mkv-f input.bad{border-color:var(--v-red)}
+.mkv-err{color:var(--v-red);font-size:14px;margin-top:10px;min-height:1px}
+.mkv-row{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.mkv-fh{display:block;font-size:13px;color:var(--v-ink3);margin-top:5px;line-height:1.4}
+.mkv-panel{background:var(--v-green);color:#fff;border-radius:14px;padding:24px}
+.mkv-panel .lab{font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#9FD3C0}
+.mkv-panel .big{font-size:clamp(30px,5vw,40px);font-weight:700;letter-spacing:-.03em;line-height:1.05;margin:6px 0 2px;font-variant-numeric:tabular-nums}
+.mkv-panel .band{font-size:15px;color:#CFE6DC}
+.mkv-panel .idle{font-size:15.5px;color:#CFE6DC;line-height:1.5}
+.mkv-conf{display:inline-flex;align-items:center;gap:7px;margin-top:14px;padding:5px 11px 5px 8px;border-radius:99px;background:rgba(255,255,255,.13);font-size:13px;font-weight:600}
+.mkv-conf .dot{width:8px;height:8px;border-radius:50%}
+.mkv-conf.strong .dot{background:#5BD6A6}.mkv-conf.fair .dot{background:#F0C14B}.mkv-conf.indicative .dot{background:#E89A6B}
+.mkv-why{margin:10px 0 0;padding:0;list-style:none;font-size:13.5px;color:#B9DCCD;line-height:1.5}
+.mkv-why li{padding-left:14px;position:relative}
+.mkv-why li::before{content:"";position:absolute;left:0;top:.7em;width:6px;height:1.5px;background:#6FAE97}
+.mkv-split{border-top:1px solid rgba(255,255,255,.18);margin-top:18px;padding-top:16px;display:grid;gap:9px}
+.mkv-kv{display:flex;justify-content:space-between;gap:14px;font-size:14.5px}
+.mkv-kv span{color:#CFE6DC}.mkv-kv b{font-weight:600;font-variant-numeric:tabular-nums}
+.mkv-kv.sm{font-size:13.5px}.mkv-kv.sm span,.mkv-kv.sm b{color:#A8CDBC;font-weight:500}
+#value details.mkv-brk{margin-top:16px}
+#value details.mkv-brk summary{cursor:pointer;font-size:13.5px;font-weight:600;color:#9FD3C0;list-style:none}
+#value details.mkv-brk summary::-webkit-details-marker{display:none}
+#value details.mkv-brk summary::before{content:"\25B8";display:inline-block;margin-right:7px;transition:transform .15s}
+#value details.mkv-brk[open] summary::before{transform:rotate(90deg)}
+.mkv-lines{margin-top:12px;display:grid;gap:6px;font-size:13px}
+.mkv-ln{display:flex;justify-content:space-between;gap:12px;color:#C6E2D6}
+.mkv-ln.strong{font-weight:700;color:#fff;border-top:1px solid rgba(255,255,255,.18);padding-top:7px;margin-top:3px}
+.mkv-ln .n{color:#8FBFAB;font-size:11.5px;flex:1;text-align:right;padding-right:8px}
+.mkv-ln b{font-variant-numeric:tabular-nums;white-space:nowrap}
+.mkv-aside{background:var(--v-paper);border:1px solid var(--v-line);border-radius:14px;padding:18px 20px;margin-top:12px}
+.mkv-aside h4{font-size:14px;margin:0 0 6px;font-weight:600}
+.mkv-aside p{font-size:14.5px;color:var(--v-ink2);margin:0;line-height:1.5}
+.mkv-aside .num{color:var(--v-ink);font-weight:600}
+#value .value-map{margin-top:14px;border-radius:14px;overflow:hidden;min-height:260px;position:relative}
+.mkv-grip{display:none}
+@media(max-width:979px){
+  .mkv-rail{position:fixed;left:0;right:0;bottom:0;z-index:40}
+  .mkv-panel{border-radius:16px 16px 0 0;padding:14px 20px 18px;box-shadow:0 -8px 30px rgba(0,0,0,.22)}
+  .mkv-panel .big{font-size:26px;margin:2px 0 0}
+  .mkv-aside{display:none}
+  .mkv-grip{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;padding:0;color:#9FD3C0;font:inherit;font-size:13px;font-weight:600;cursor:pointer;margin-top:10px}
+  .mkv-grip::after{content:"";width:0;height:0;border:5px solid transparent;border-bottom-color:#9FD3C0;margin-left:auto;transition:transform .15s}
+  .mkv-rail.open .mkv-grip::after{transform:rotate(180deg)}
+  #mkvMore{display:none}
+  .mkv-rail.open #mkvMore{display:block}
+  .mkv-rail.open .mkv-panel{max-height:76vh;overflow-y:auto}
+  #value{padding-bottom:152px!important}
+}
+@media(prefers-reduced-motion:reduce){#value *{transition:none!important}}
+</style>
+
+<div class="value-head">
+<div class="eyebrow">Step one</div>
+<h2>What is it worth?</h2>
+<p class="value-lead">An estimate built from what is actually for sale in your area. The figure appears as soon as you give a location and a size — you don't have to leave anything behind to see it.</p>
+</div>
+
+<div class="mkv">
+<div>
+  <section class="mkv-step" id="mkv1">
+    <button class="mkv-recap" type="button" data-goto="1"><span class="mkv-tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span id="mkvR1"></span><span class="ed">change</span></button>
+    <h3>What are you valuing?</h3>
+    <p class="mkv-hint">Everything after this adapts to your answer.</p>
+    <div class="mkv-body">
+      <div class="mkv-cards" id="mkvTypes">
+        <button class="mkv-card" type="button" data-type="land"><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18M4 20V8l8-4 8 4v12"/><path d="M4 12h16"/></svg></span><span class="t">Land or plot</span><span class="s">Bare land, nothing built on it yet</span></button>
+        <button class="mkv-card" type="button" data-type="house"><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg></span><span class="t">House with land</span><span class="s">Villa, house or family compound</span></button>
+        <button class="mkv-card" type="button" data-type="apartment"><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 7h2M14 7h2M8 11h2M14 11h2M8 15h2M14 15h2"/></svg></span><span class="t">Apartment</span><span class="s">A unit in a building, no plot of its own</span></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="mkv-step" id="mkv2" hidden>
+    <button class="mkv-recap" type="button" data-goto="2"><span class="mkv-tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span id="mkvR2"></span><span class="ed">change</span></button>
+    <h3>Where is it?</h3>
+    <p class="mkv-hint">An area name, coordinates or a Plus Code. Location carries most of the value.</p>
+    <div class="mkv-body">
+      <div class="mkv-grid two">
+        <label class="mkv-f"><span>Area</span><input type="text" id="lfLocation" list="mkvAreas" autocomplete="off" placeholder="e.g. Brusubi, Sanyang, Lamin"><datalist id="mkvAreas"></datalist></label>
+        <label class="mkv-f"><span>Distance to the beach</span><select id="lfBeach"><option value="inland" selected>Inland</option><option value="walking">Walking distance to the beach</option><option value="beachfront">Beachfront</option></select><input type="text" id="lfBeachDist" aria-label="Measured distance to the sea" readonly hidden></label>
+      </div>
+      <div class="mkv-err" id="mkvE2"></div>
+      <div class="mkv-row"><button class="btn btn-primary" type="button" data-next="2">Continue</button></div>
+    </div>
+  </section>
+
+  <section class="mkv-step" id="mkv3" hidden>
+    <button class="mkv-recap" type="button" data-goto="3"><span class="mkv-tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span id="mkvR3"></span><span class="ed">change</span></button>
+    <h3>How big is it?</h3>
+    <p class="mkv-hint" id="mkvH3">A standard Gambian plot is 400 to 500 m² — 20 by 20, or 20 by 25 metres.</p>
+    <div class="mkv-body">
+      <div class="mkv-grid two">
+        <label class="mkv-f" id="mkvWrapPlot"><span>Plot</span><input type="number" id="lfSize" inputmode="numeric" min="1" placeholder="400"><small class="mkv-fh" id="lfSizeNote">Draw the plot on the map and the size is measured for you — otherwise type it in m².</small></label>
+        <label class="mkv-f" id="mkvWrapBuilt"><span>Built area</span><input type="number" id="mkvBuilt" inputmode="numeric" min="1" placeholder="150"><small class="mkv-fh">Only what stands under a roof.</small></label>
+      </div>
+      <div class="mkv-err" id="mkvE3"></div>
+      <div class="mkv-row"><button class="btn btn-primary" type="button" data-next="3">Continue</button></div>
+    </div>
+  </section>
+
+  <section class="mkv-step" id="mkv4" hidden>
+    <h3 id="mkvH4">The plot</h3>
+    <p class="mkv-hint">Everything is already set to what is ordinary in The Gambia. Change only what differs — the figure follows as you go.</p>
+    <div class="mkv-body">
+      <div class="mkv-grid three" id="mkvLandFields">
+        <label class="mkv-f"><span>Title</span><select id="mkvTitle"><option value="alkalalo">Customary / Alkalo</option><option value="sublease">Sublease</option><option value="leasehold">State lease</option><option value="freehold">Freehold</option><option value="unclear">Unclear or disputed</option></select></label>
+        <label class="mkv-f"><span>Road</span><select id="mkvRoad"><option value="laterite">Laterite or sand road</option><option value="tarmac">Tarmac road</option><option value="none">No road access</option></select></label>
+        <label class="mkv-f"><span>Electricity</span><select id="mkvElec"><option value="present">Connected</option><option value="nearby">Power in the street</option><option value="none">No power nearby</option></select></label>
+        <label class="mkv-f"><span>Water</span><select id="mkvWater"><option value="nearby">Mains in the street</option><option value="nawec">NAWEC connection</option><option value="borehole">Own borehole</option><option value="none">No water</option></select></label>
+        <label class="mkv-f"><span>Fencing</span><select id="mkvFence"><option value="partial">Partly fenced</option><option value="full">Fully walled</option><option value="none">Not fenced</option></select></label>
+        <label class="mkv-f"><span>Ground cover</span><select id="mkvCleared"><option value="cleared">Cleared and level</option><option value="partial">Partly cleared</option><option value="bush">Bush or trees</option></select></label>
+        <label class="mkv-f"><span>Shape</span><select id="mkvShape"><option value="regular">Regular</option><option value="irregular">Irregular</option></select></label>
+        <label class="mkv-f"><span>Corner plot</span><select id="mkvCorner"><option value="no">No</option><option value="yes">Yes</option></select></label>
+        <label class="mkv-f"><span>Flooding</span><select id="mkvFlood"><option value="no">Never floods</option><option value="low">Sometimes in the rains</option><option value="high">Floods regularly</option></select></label>
+      </div>
+      <div class="mkv-grid three" id="mkvBuildFields" style="margin-top:14px">
+        <label class="mkv-f"><span>Finish</span><select id="mkvFinish"><option value="basic">Simple</option><option value="standard" selected>Standard</option><option value="high">High</option></select><small class="mkv-fh" id="mkvFinishHint"></small></label>
+        <label class="mkv-f"><span>Year built</span><input type="number" id="mkvYear" inputmode="numeric" placeholder="unknown"></label>
+        <label class="mkv-f"><span>Condition</span><select id="mkvCondition"><option value="good">Well kept</option><option value="new">New build</option><option value="renovation">Needs renovation</option></select></label>
+        <label class="mkv-f"><span>Storeys</span><select id="mkvFloors"><option value="1">Single storey</option><option value="2">Two storeys</option><option value="3">Three or more</option></select></label>
+        <label class="mkv-f"><span>Bathrooms</span><select id="mkvBaths"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4 or more</option></select></label>
+        <label class="mkv-f"><span>Security</span><select id="mkvSecurity"><option value="wall">Walled compound</option><option value="gated">Gated with security</option><option value="none">None</option></select></label>
+        <label class="mkv-f"><span>Swimming pool</span><select id="mkvPool"><option value="no">No</option><option value="yes">Yes</option></select></label>
+        <label class="mkv-f"><span>Power</span><select id="mkvSolar"><option value="no">NAWEC only</option><option value="solar">Solar panels</option><option value="generator">Generator</option><option value="both">Solar and generator</option></select></label>
+        <label class="mkv-f"><span>Furnishing</span><select id="mkvFurnished"><option value="unfurnished">Unfurnished</option><option value="semi">Semi-furnished</option><option value="furnished">Fully furnished</option></select></label>
+      </div>
+      <label class="mkv-f" style="margin-top:14px;max-width:280px"><span>View</span><select id="mkvView"><option value="none">No special view</option><option value="garden">Garden or greenery</option><option value="ocean">Ocean view</option></select></label>
+      <div class="mkv-row"><button class="btn btn-primary" type="button" id="mkvToReport">Email me the full report</button><button class="btn btn-light" type="button" id="mkvRestart">Start again</button></div>
+    </div>
+  </section>
+
+  <section class="mkv-step" id="mkv5" hidden>
+    <h3>The full report</h3>
+    <p class="mkv-hint">Your estimate is already on screen. Want it in your inbox as a report, with the workings and a comparison against what is for sale in your area?</p>
+    <div class="mkv-body">
+      <div class="mkv-grid two">
+        <label class="mkv-f"><span>Name</span><input type="text" id="mkvName" autocomplete="name" placeholder="Your name"></label>
+        <label class="mkv-f"><span>Email</span><input type="email" id="mkvEmail" autocomplete="email" placeholder="you@example.com"></label>
+        <label class="mkv-f"><span>Phone or WhatsApp — optional</span><input type="tel" id="mkvPhone" autocomplete="tel" placeholder="+220 …"></label>
+      </div>
+      <div class="mkv-err" id="mkvE5"></div>
+      <div class="mkv-row"><button class="btn btn-amber" type="button" id="mkvSend">Send the report</button><button class="btn btn-light" type="button" id="mkvSkip">No thanks, this is enough</button></div>
+      <p class="form-legal">Estimates are indicative only — <a href="legal-terms.html#terms-6">no rights can be derived from them</a>. We use your details to send the estimate and follow up; see our <a href="legal-privacy.html">Privacy Policy</a>.</p>
+    </div>
+  </section>
+
+  <div class="value-img value-map" id="ldMapBox"><div class="value-map-tag">📍 <span id="ldMapLabel">The Gambia</span></div>
+  <div class="vmap-read" id="ldRead" hidden></div>
+  <div class="vmap-tools" id="ldTools">
+  <button type="button" class="vmt sel" data-ldmode="pin">Pin only</button>
+  <button type="button" class="vmt" data-ldmode="draw">Draw the plot</button>
+  <button type="button" class="vmt sel" id="ldSnap" title="Snap corners to 15° steps and 5 m lengths">Snap 90°</button>
+  <button type="button" class="vmt" id="ldUndo" disabled>Undo</button>
+  <button type="button" class="vmt" id="ldClear" disabled>Clear</button>
+  </div></div>
+</div>
+
+<div class="mkv-rail" id="mkvRail">
+  <div class="mkv-panel">
+    <div class="lab">Estimated value</div>
+    <div id="mkvIdle" class="idle" style="margin-top:6px">Pick what you are valuing, then give a location and a size. The figure appears here straight away.</div>
+    <div id="mkvRes" hidden>
+      <div class="big" id="mkvBig">—</div>
+      <div class="band" id="mkvBand"></div>
+      <button class="mkv-grip" type="button" id="mkvGrip" aria-expanded="false" aria-controls="mkvMore">The workings</button>
+      <div id="mkvMore">
+        <div class="mkv-conf" id="mkvConf"><span class="dot"></span><span id="mkvConfTxt"></span></div>
+        <ul class="mkv-why" id="mkvWhy"></ul>
+        <div class="mkv-split" id="mkvSplit"></div>
+        <details class="mkv-brk"><summary>How this is built up</summary><div class="mkv-lines" id="mkvLines"></div></details>
+      </div>
+    </div>
+  </div>
+  <div class="mkv-aside" id="mkvPortalBox" hidden><h4>On the international portals</h4><p id="mkvPortalTxt"></p></div>
+  <div class="mkv-aside" id="mkvRentBox" hidden><h4>If you let it out</h4><p id="mkvRentTxt"></p></div>
+  <div class="mkv-aside"><h4>What this is not for</h4><p>This is a calculation from what is for sale in your area — not a valuation. For a bank, a court, dividing an inheritance or the tax office you need a valuer who has stood on the ground. We can arrange one; ask through the report.</p></div>
+</div>
+</div>
+</section>
