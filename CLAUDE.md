@@ -36,6 +36,10 @@ verwerken, pas daarna opnieuw uploaden.
 4. Cloudflare leegmaken (zie hieronder);
 5. `git add -A` en committen, met in het bericht wat er live is gezet.
 
+Stap 2 en 3 kunnen in een keer met **`upload.bat`**: die bouwt, laat zien wat er
+zou gaan, vraagt om bevestiging en synchroniseert daarna met WinSCP. Stap 4 en 5
+blijven handwerk.
+
 Stap 2 is niet optioneel. De build doet drie dingen die je met de hand niet doet:
 `app.min.js` en `styles.min.css` opnieuw minificeren, één verse `?v=`-stempel in elke
 pagina én in `sw.js` zetten, en het `<!--mk-mark-->`-blok met de robots-metatag
@@ -119,9 +123,32 @@ het niet standaard. Het draagt de CSP en de cacheregels, dus zonder dat bestand
 komen die wijzigingen nooit live. Zet in je FTP-programma "verborgen bestanden
 tonen" aan en controleer na een CSP-wijziging of de kop echt veranderd is.
 
-Werkt je FTP-programma met "alleen nieuwere bestanden overzetten" (FileZilla en
-WinSCP kunnen dat), zet dat dan aan en sleep gewoon alles: dan doet het programma
-deze afweging zelf en kun je niets vergeten.
+### `upload.bat`: bouwen en uploaden in een keer
+
+`upload.bat` in de root doet stap 2 en 3 van de leverroute achter elkaar: hij
+draait `build.mjs`, laat daarna met WinSCP eerst **zien** wat er naar de server
+zou gaan, en verstuurt pas na een bevestiging. Daarna herinnert hij aan de
+Cloudflare-purge, want die blijft handwerk.
+
+De synchronisatie vergelijkt op tijd en grootte en verwijdert niets op de
+server. Omdat `build.mjs` de tijdstempels van `images/`, `vendor/`, `logo/` en
+`fonts/` met rust laat — nagemeten: die bleven op 17:27 staan terwijl
+`index.html` een nieuwe tijd kreeg — ziet WinSCP die 22 MB als ongewijzigd en
+blijft er in de praktijk 4,7 MB uit de root over. Je hoeft dus niet meer zelf te
+kiezen welke mappen mee moeten; sleep desnoods alles.
+
+Twee dingen bovenin het bestand instellen: `SESSIE` (de naam waaronder de
+verbinding in WinSCP is opgeslagen) en `EXTERN` (de servermap, bij Plesk meestal
+`/httpdocs`). Er staat geen wachtwoord in, dus het bestand mag in de repo.
+
+**Verbind de eerste keer met de hand in WinSCP.** Niet alleen voor het
+wachtwoord: bij een eerste SFTP-verbinding vraagt WinSCP of je de vingerafdruk
+van de server vertrouwt, en het script draait met `option batch abort` — dat
+beantwoordt zo'n vraag automatisch met nee en stopt. Eén keer met de hand
+verbinden en opslaan is genoeg.
+
+`upload.bat` staat niet in `SITE_ASSETS` en is geen `.html`, dus de build laat
+hem links liggen en hij komt nooit op de server. Gecontroleerd.
 
 ## Na de upload: Cloudflare leegmaken
 
