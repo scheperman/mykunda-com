@@ -209,6 +209,37 @@ verbinding in WinSCP is opgeslagen), `EXTERN` (de servermap) en `CF_ZONE` (de
 Zone ID bij Cloudflare). Er staat geen wachtwoord in en geen token — die staan
 allebei buiten de repo — dus het bestand mag gewoon meegecommit worden.
 
+### `.bat`-bestanden moeten CRLF houden
+
+De hele repo staat op LF-regeleinden en dat is prima — behalve voor `upload.bat`.
+`cmd.exe` voert een `.bat` met alleen LF nog wel regel voor regel uit, maar gaat
+onderuit zodra er `call :label`, `set /p` of meerregelige `if (...)`-blokken in
+staan. Het breekt niet met een foutmelding: hij slaat stukken over, geeft
+nauwelijks uitvoer en sluit.
+
+Dat gebeurde op 26-08-2026. De oude `upload.bat` overleefde LF omdat er alleen
+losse regels en simpele labels in stonden; zodra stap 5 er met een subroutine en
+een `set /p` bij kwam, deed hij niets meer. Omzetten naar CRLF loste het op,
+zonder één inhoudelijke wijziging.
+
+Let op bij het bewerken: veel editors en tools — waaronder de bestandstools van
+Claude — schrijven standaard LF. Controleer het na elke bewerking van een `.bat`:
+
+```powershell
+$t=[IO.File]::ReadAllText('upload.bat')
+'crlf=' + ([regex]::Matches($t,"`r`n")).Count + ' lf=' + ([regex]::Matches($t,"`n")).Count
+```
+
+Zijn die twee getallen gelijk, dan is het goed. Staat `crlf` op 0, dan zetten:
+
+```powershell
+$t=[IO.File]::ReadAllText('upload.bat') -replace "`r`n","`n" -replace "`n","`r`n"
+[IO.File]::WriteAllText('upload.bat',$t,(New-Object Text.UTF8Encoding $false))
+```
+
+Die `UTF8Encoding $false` is er om een BOM te voorkomen: drie bytes vóór
+`@echo off` en cmd struikelt al over de eerste regel.
+
 ### De sessie heet `mykunda-sftp`, en waarom niet `mykunda`
 
 Op 26-08-2026 stond de upload stil op `Kan site map of werkruimte niet openen`.
