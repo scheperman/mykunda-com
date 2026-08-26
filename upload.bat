@@ -1,12 +1,18 @@
 @echo off
 setlocal enabledelayedexpansion
-title MyKunda - bouwen en uploaden
+title MyKunda - bouwen, uploaden en vastleggen
 
 rem ============================================================
-rem  MyKunda: bouwen en uploaden in een keer.
+rem  MyKunda: de hele leverroute in een keer.
 rem
-rem  Draait build.mjs, laat daarna eerst ZIEN wat er naar de server
-rem  zou gaan, en verstuurt pas na jouw bevestiging.
+rem  Draait build.mjs, laat eerst ZIEN wat er naar de server zou gaan,
+rem  verstuurt, leegt de Cloudflare-cache en legt de bron vast in git
+rem  (add, commit, push). Stap 1 tot en met 5 uit CLAUDE.md.
+rem
+rem  Een commitbericht mag als argument mee - dan loopt hij van begin
+rem  tot eind door zonder toetsaanslag:
+rem
+rem      upload.bat "Areapaginas: kaartcoordinaten gecorrigeerd"
 rem
 rem  Er staat hier geen wachtwoord in. WinSCP bewaart de verbinding
 rem  onder de naam hieronder; dit bestand verwijst er alleen naar.
@@ -75,7 +81,7 @@ echo   WinSCP: !WINSCP!
 
 rem --- 1. Bouwen ------------------------------------------------
 echo.
-echo == 1/4  Bouwen ================================================
+echo == 1/5  Bouwen ================================================
 call node build.mjs
 if errorlevel 1 (
   echo.
@@ -95,7 +101,7 @@ rem  Omdat build.mjs de tijdstempels van images, vendor, logo en
 rem  fonts met rust laat, ziet WinSCP die 22 MB als ongewijzigd en
 rem  blijft er in de praktijk 4,7 MB uit de root over.
 echo.
-echo == 2/4  Wat zou er naar de server gaan? =======================
+echo == 2/5  Wat zou er naar de server gaan? =======================
 rem  De stat-regel is het vangnet: staat er geen index.html in de
 rem  opgegeven map, dan is het de verkeerde map en stopt WinSCP hier -
 rem  voordat er ook maar iets verstuurd is.
@@ -139,7 +145,7 @@ rem  uit de inhoud komt, staat daar alleen nog in wat je zelf hebt gewijzigd.
 
 rem --- 3. Echt versturen ----------------------------------------
 echo.
-echo == 3/4  Uploaden ==============================================
+echo == 3/5  Uploaden ==============================================
 > "%SCRIPT%" echo option batch abort
 >>"%SCRIPT%" echo option confirm off
 >>"%SCRIPT%" echo open "%SESSIE%"
@@ -177,7 +183,7 @@ rem  Zie CLAUDE.md voor het aanmaken van dat token. Ontbreekt het
 rem  bestand, dan gaat er niets stuk: het script zegt dan gewoon dat
 rem  je het met de hand moet doen.
 echo.
-echo == 4/4  Cloudflare-cache legen ================================
+echo == 4/5  Cloudflare-cache legen ================================
 set "CF_TOKEN="
 set "CFCONF=%USERPROFILE%\.mykunda-cloudflare.cmd"
 if exist "%CFCONF%" call "%CFCONF%"
@@ -227,14 +233,14 @@ echo   De cache is niet automatisch geleegd. Doe het met de hand,
 echo   anders is de upload niet zichtbaar:
 echo     Cloudflare - Caching - Configuration - Purge Everything
 echo     https://dash.cloudflare.com
-goto :klaar
+goto :vastleggen
 
 :klaar
 echo.
 echo ===============================================================
-echo   Klaar.
+echo   Geupload en cache geleegd.
 echo ===============================================================
-goto :einde
+goto :vastleggen
 
 :nietstedoen
 del "%SCRIPT%" "%VOORBEELD%" >nul 2>&1
@@ -242,7 +248,86 @@ echo.
 echo ===============================================================
 echo   Niets gewijzigd. Niets geupload, cache ongemoeid gelaten.
 echo ===============================================================
+goto :vastleggen
+
+rem --- 5. Vastleggen in git -------------------------------------
+rem  Staat los van de upload: de server heeft de bestanden, de repo
+rem  houdt bij wat er live staat en waarom. Dit blok draait daarom ook
+rem  als er niets te uploaden viel - een wijziging in CLAUDE.md of in
+rem  een script hoort net zo goed vastgelegd te worden.
+rem
+rem  Het bericht mag als argument mee, en dan draait het hele script
+rem  zonder een enkele toetsaanslag:
+rem
+rem      upload.bat "Areapaginas: kaartcoordinaten gecorrigeerd"
+rem
+rem  Zonder argument vraagt hij erom. Dat is bewust het enige moment
+rem  waarop dit script nog iets van je wil: een commitbericht is het
+rem  enige dat een machine niet kan verzinnen. Enter zonder tekst geeft
+rem  een feitelijke standaardregel - datum en aantal bestanden - zodat
+rem  een onbeheerde run nooit blijft hangen.
+rem
+rem  Er wordt niets geforceerd. Weigert de push, dan stopt het hier met
+rem  een aanwijzing; de commit staat dan gewoon lokaal klaar.
+:vastleggen
+echo.
+echo == 5/5  Vastleggen in git =====================================
+where git.exe >nul 2>&1
+if errorlevel 1 (
+  echo   git niet gevonden. Leg het zelf vast:
+  echo     git add -A   en dan   git commit   en   git push
+  goto :einde
+)
+git rev-parse --is-inside-work-tree >nul 2>&1
+if errorlevel 1 (
+  echo   Dit is geen git-repo. Overgeslagen.
+  goto :einde
+)
+
+git add -A
+if errorlevel 1 (
+  echo   git add is misgegaan. Leg het met de hand vast.
+  goto :einde
+)
+
+rem  --quiet geeft 1 zodra er iets klaarstaat, en 0 als er niets is.
+git diff --cached --quiet
+if not errorlevel 1 (
+  echo   Niets te committen - de bron stond al vast.
+  goto :pushen
+)
+
+echo.
+git -c color.ui=false diff --cached --name-status
+echo.
+set "BERICHT=%~1"
+if not defined BERICHT set /p "BERICHT=  Commitbericht (Enter = standaardtekst): "
+if not defined BERICHT call :standaardbericht
+git commit -m "%BERICHT%"
+if errorlevel 1 (
+  echo   De commit is misgegaan. Er is niets gepusht.
+  goto :einde
+)
+echo   Vastgelegd.
+
+:pushen
+git push
+if errorlevel 1 (
+  echo.
+  echo   De push is niet gelukt. Meestal staat er op GitHub iets nieuwers.
+  echo   De commit staat lokaal klaar; haal eerst op en push dan opnieuw:
+  echo     git pull --rebase
+  echo     git push
+  goto :einde
+)
+echo   Gepusht naar origin.
 goto :einde
+
+rem  Feitelijk, niet verzonnen: de datum en wat er daadwerkelijk klaarstaat.
+:standaardbericht
+for /f %%N in ('git diff --cached --name-only ^| find /c /v ""') do set "AANTAL=%%N"
+set "BERICHT=Live gezet op %DATE% - %AANTAL% bestand(en) gewijzigd"
+goto :eof
 
 :fout
 del "%VOORBEELD%" >nul 2>&1

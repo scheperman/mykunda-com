@@ -34,11 +34,15 @@ verwerken, pas daarna opnieuw uploaden.
    overschrijven aan — de mediamappen alleen als daar iets veranderd is, zie
    "Wat er per upload mee moet" hieronder;
 4. Cloudflare leegmaken (zie hieronder);
-5. `git add -A` en committen, met in het bericht wat er live is gezet.
+5. `git add -A`, committen met in het bericht wat er live is gezet, en pushen.
 
-Stap 2 en 3 kunnen in een keer met **`upload.bat`**: die bouwt, laat zien wat er
-zou gaan, vraagt om bevestiging en synchroniseert daarna met WinSCP. Stap 4 en 5
-blijven handwerk.
+**Stap 2 tot en met 5 doet `upload.bat` in één handeling**: bouwen, tonen wat er
+zou gaan, synchroniseren met WinSCP, de Cloudflare-cache legen via de API, en tot
+slot `git add -A` + commit + push. Stap 1 — de wijziging zelf — blijft mensenwerk,
+en het commitbericht ook: dat mag als argument mee (`upload.bat "wat er live
+gaat"`) en wordt anders gevraagd.
+
+Tot 26-08-2026 stonden stap 4 en 5 hier als handwerk. Dat klopt niet meer.
 
 Stap 2 is niet optioneel. De build doet drie dingen die je met de hand niet doet:
 `app.min.js` en `styles.min.css` opnieuw minificeren, één verse `?v=`-stempel in elke
@@ -157,27 +161,39 @@ het niet standaard. Het draagt de CSP en de cacheregels, dus zonder dat bestand
 komen die wijzigingen nooit live. Zet in je FTP-programma "verborgen bestanden
 tonen" aan en controleer na een CSP-wijziging of de kop echt veranderd is.
 
-### `upload.bat`: bouwen en uploaden in een keer
+### `upload.bat`: bouwen, uploaden en vastleggen in een keer
 
-`upload.bat` in de root doet stap 2 en 3 van de leverroute achter elkaar: hij
-draait `build.mjs`, laat daarna met WinSCP eerst **zien** wat er naar de server
-zou gaan, verstuurt, en leegt tot slot de Cloudflare-cache via de API. Vier
-stappen, één handeling. Er staat een snelkoppeling **MyKunda uploaden** op het
-bureaublad.
+`upload.bat` in de root doet stap 2 tot en met 5 van de leverroute achter elkaar:
+hij draait `build.mjs`, laat daarna met WinSCP eerst **zien** wat er naar de
+server zou gaan, verstuurt, leegt de Cloudflare-cache via de API, en legt tot
+slot de bron vast in git — `add -A`, commit, push. Vijf stappen, één handeling.
+Er staat een snelkoppeling **MyKunda uploaden** op het bureaublad.
 
 Sinds 26-08-2026 loopt hij van begin tot eind door zonder toetsaanslag:
 
-- **Niets gewijzigd, niets gedaan.** Zegt WinSCP in stap 2 "Niets te
-  synchroniseren", dan stopt het script daar. Geen upload, en vooral: géén purge.
-  Een purge zonder aanleiding maakt de site tijdelijk trager, want Cloudflare moet
-  dan alles opnieuw bij de server halen. Wordt die regel niet herkend — een andere
-  taalversie van WinSCP — dan gaat het script gewoon door. Dat is de veilige kant
-  van die keuze.
-- **Er wordt niets gevraagd.** Is er iets te synchroniseren, dan gaat het weg.
-  De lijst uit stap 2 is je controle achteraf: sinds de stempel uit de inhoud komt
-  staat daar alleen nog in wat je zelf hebt gewijzigd, dus een onverwacht lange
-  lijst betekent iets. Wil je toch een moment om af te breken, dan staan de twee
-  regels ervoor als commentaar in `upload.bat` klaar.
+- **Niets gewijzigd, niets geüpload.** Zegt WinSCP in stap 2 "Niets te
+  synchroniseren", dan slaat het script stap 3 en 4 over. Geen upload, en vooral:
+  géén purge. Een purge zonder aanleiding maakt de site tijdelijk trager, want
+  Cloudflare moet dan alles opnieuw bij de server halen. Wordt die regel niet
+  herkend — een andere taalversie van WinSCP — dan gaat het script gewoon door.
+  Dat is de veilige kant van die keuze. Stap 5 draait wél door: een wijziging in
+  `CLAUDE.md` of in een script komt niet in `deploy/` terecht en hoort tóch
+  vastgelegd te worden.
+- **Er wordt niets gevraagd over de upload.** Is er iets te synchroniseren, dan
+  gaat het weg. De lijst uit stap 2 is je controle achteraf: sinds de stempel uit
+  de inhoud komt staat daar alleen nog in wat je zelf hebt gewijzigd, dus een
+  onverwacht lange lijst betekent iets. Wil je toch een moment om af te breken,
+  dan staan de twee regels ervoor als commentaar in `upload.bat` klaar.
+- **Alleen het commitbericht wordt gevraagd** — het enige in deze route dat een
+  machine niet kan verzinnen. Geef je het als argument mee, dan draait ook dat
+  vanzelf: `upload.bat "Areapagina's: kaartcoördinaten gecorrigeerd"`. Enter
+  zonder tekst geeft een feitelijke standaardregel (datum plus het aantal
+  gewijzigde bestanden), zodat een onbeheerde run nooit blijft hangen.
+- **Git wordt nooit geforceerd.** Vóór de commit toont het script
+  `git diff --cached --name-status`, zodat je ziet wat er vastgelegd wordt.
+  Weigert de push — meestal omdat er op GitHub iets nieuwers staat — dan stopt hij
+  met de aanwijzing `git pull --rebase` en dan `git push`. De commit staat op dat
+  moment gewoon lokaal klaar; er gaat niets verloren.
 - **Geen Enter aan het eind.** Het venster sluit zichzelf na acht seconden. Bij een
   fout blijft de oude `pause` staan, anders lees je de foutmelding nooit.
 
@@ -511,7 +527,7 @@ veld voor veld. Korte versie:
 2. **Save & Publish**. De stijl krijgt een eigen ID (een UUID).
 3. Dat ID in `app.js` bij `MK_MAP.satellite` of `MK_MAP.streets` zetten. Verder
    niets: alle kaarten, de perceelfoto en de Static Maps volgen vanzelf.
-4. `node build.mjs`, uploaden, Cloudflare leegmaken.
+4. `upload.bat` draaien — bouwen, uploaden, cache legen en vastleggen.
 
 **Stijl-ID en tegelformaat staan los van elkaar in `MK_MAP`**, en dat is
 opzettelijk. Een eigen stijl heet `01a03b…`; aan die naam valt niet meer af te
@@ -589,6 +605,12 @@ Dat is de enige kopie buiten deze pc.
 omdat een remote die maanden achterloopt je precies zoveel maanden minder
 beschermt dan je denkt. Committen zonder pushen voelt als opslaan en is het
 niet.
+
+Sinds 26-08-2026 doet `upload.bat` dit als stap 5/5 zelf, dus na een upload is
+het al gebeurd. Werk je een sessie lang zonder te uploaden — aan `CLAUDE.md`, aan
+een script, aan een edge function — dan blijft het jouw handeling. Weigert de
+push, dan meldt het script dat en staat de commit lokaal klaar; er wordt niets
+geforceerd.
 
 Commits dragen `17229960+scheperman@users.noreply.github.com`. Dat is bewust:
 GitHub weigert een push die een privé-e-mailadres zou publiceren, en het
