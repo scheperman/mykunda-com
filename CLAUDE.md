@@ -221,8 +221,8 @@ attributie zonder de verplichte links.
 ### Wat Flex verandert
 
 - **@2x kost hetzelfde als 1x.** MapTiler rekent per tegel af, niet per pixel.
-  Daarom halen we scherpe tegels op elk scherm met echte extra pixels op, en niet
-  pas vanaf DPR 1,75. Uitzondering: databesparing aan of een 2G-verbinding.
+  Daarom halen we scherpe tegels op waar het scherm ze ook echt kan tonen — zie
+  de drempels hieronder. Uitzondering: databesparing aan of een 2G-verbinding.
 - **De v4-generatie stijlen.** `hybrid-v4` en `streets-v4`. De oude v2-stijlen
   blijven werken maar krijgen geen ontwerpupdates meer.
 - **Het MapTiler-logo hoeft niet meer op de kaart.** De tekstattributie met
@@ -230,6 +230,42 @@ attributie zonder de verplichte links.
   ook op de perceelfoto. Die zit in `MK_ATTR` en in de Static Maps-URL.
 - **Static Maps** werkt alleen op een betaald plan. Dat is wat de perceelfoto in
   de verkoopflow nu gebruikt.
+
+### Wanneer @2x, en wanneer niet
+
+@2x kost bij MapTiler geen extra verbruik maar wel twee tot vier keer zoveel
+bytes, en die rekening is het hoogst waar de winst het laagst is. Gemeten boven
+Kololi, satelliet in WebP, per tegel:
+
+| URL-zoom | 1x | @2x |
+| --- | --- | --- |
+| 12 | 43 kB | 172 kB |
+| 13 | 96 kB | 362 kB |
+| 15 | 90 kB | 296 kB |
+| 17 | 37 kB | 80 kB |
+| 19 | 19 kB | 44 kB |
+
+Drie drempels regelen dat, alle drie in `MK_MAP`:
+
+- `hidpiMinDpr: 1.5` — onder deze schermdichtheid heeft @2x geen zin. Windows op
+  125% geeft DPR 1,25: een tegel van 1024 px wordt dan teruggeschaald naar 640,
+  dus je betaalt drie tot vier keer zoveel bytes voor een fractie van het
+  verschil. Telefoons zitten op 2 of 3 en krijgen hem wel.
+- `hidpiFromZoom: 14` — onder Leaflet-zoom 14 kijk je naar kustlijnen en
+  plaatsvormen, niet naar daken. Daar is de tegel juist het zwaarst.
+- `mkHidpi: false` als laagoptie — voor kleine kaartvakken. De wijkpagina's
+  gebruiken dit: een vak van ruim 300 px heeft de extra pixels niet nodig, en
+  over eenenveertig pagina's is dat de grootste post.
+
+Gemeten winst: `mkTileLayer` maakt twee URL-sjablonen en kiest per tegel via een
+eigen `getTileUrl`. Let op bij wijzigingen aan de terugval: die verwijdert die
+overschrijving weer, anders zou Leaflet voor Esri en OpenStreetMap nog steeds de
+MapTiler-URL bouwen.
+
+Wat @2x wél doet, gemeten met een laplaciaanmaat op dezelfde uitsnede: op
+zoom 15 zit er 2,6 keer zoveel detail in dan in een opgerekte 1x-tegel; op
+zoom 17 nog maar 1,95 keer, want daar loopt het bronbeeld tegen zijn grens aan.
+Wie helemaal inzoomt en dan oordeelt, ziet het verschil dus het minst.
 
 ### Zoomgrenzen: gemeten, niet gegokt
 

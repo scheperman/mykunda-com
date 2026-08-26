@@ -37,18 +37,29 @@ window.MK_MAP = {
      schaalt Leaflet zelf verder — dat oogt hetzelfde en kost geen tegel. */
   satNativeMax: 19,
   streetsNativeMax: 20,
-  maxZoom: 21
+  maxZoom: 21,
+  /* Wanneer loont @2x? Alleen als het scherm de pixels ook echt heeft. Bij
+     125%-schaling (DPR 1,25 — een heel gewone Windows-instelling) wordt een
+     tegel van 1024 px teruggeschaald naar 640 en zie je maar een fractie van
+     het verschil, voor drie tot vier keer zoveel bytes. Vanaf 1,5 is het de
+     moeite; telefoons zitten op 2 of 3 en krijgen hem dus altijd. */
+  hidpiMinDpr: 1.5,
+  /* En niet op overzichtszoom. Daar zijn satelliettegels juist het zwaarst —
+     gemeten boven Kololi 362 kB tegen 96 kB — terwijl je naar kustlijnen kijkt
+     en niet naar daken. Leaflet-zoom, niet de zoom in de URL. */
+  hidpiFromZoom: 14
 };
 window.MAPTILER_KEY = window.MK_MAP.key;      /* oude naam, blijft werken */
 
 /* Verplicht op elke kaart — ook op de terugvallagen verderop. */
 window.MK_ATTR = '&copy; <a href="https://www.maptiler.com/copyright/" target="_blank" rel="noopener">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>';
 
-/* @2x kost niets extra, maar is ongeveer drie keer zoveel bytes. Meldt de
-   browser een 2G-verbinding of staat databesparing aan, dan blijft het bij 1x;
-   de rest van Gambia krijgt het scherpe beeld. */
+/* @2x kost bij MapTiler niets extra aan verbruik, maar wel twee tot vier keer
+   zoveel bytes. Meldt de browser een 2G-verbinding of staat databesparing aan,
+   dan blijft het bij 1x; net zo bij een scherm dat de extra pixels toch niet
+   kan tonen. */
 window.mkHiDPI = function(){
-  if((window.devicePixelRatio || 1) < 1.25) return false;
+  if((window.devicePixelRatio || 1) < (window.MK_MAP.hidpiMinDpr || 1.5)) return false;
   var c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
   if(c && (c.saveData || /^(slow-)?2g$/.test(c.effectiveType || ''))) return false;
   return true;
@@ -69,7 +80,9 @@ window.mkWebP = (function(){
   };
 })();
 
-window.mapTilerUrl = function(style, ext){
+/* forceHd: true of false dwingt @2x af of juist niet; weglaten laat mkHiDPI
+   beslissen. mkTileLayer maakt daarmee twee sjablonen en kiest per tegel. */
+window.mapTilerUrl = function(style, ext, forceHd){
   var s  = style || window.MK_MAP.satellite;
   /* Zonder opgegeven formaat: de stijl die als satelliet in MK_MAP staat
      krijgt het satellietformaat, de rest dat van de kaartlaag. Aan de naam
@@ -80,7 +93,7 @@ window.mapTilerUrl = function(style, ext){
   /* Oude browsers zonder WebP krijgen het formaat dat er het dichtst bij komt:
      JPEG voor een luchtfoto, PNG voor vlakke kaartkleuren. */
   if(e === 'webp' && !window.mkWebP()) e = sat ? 'jpg' : 'png';
-  var hd = window.mkHiDPI() ? '@2x' : '';
+  var hd = (forceHd === undefined ? window.mkHiDPI() : forceHd) ? '@2x' : '';
   return 'https://api.maptiler.com/maps/' + s + '/{z}/{x}/{y}' + hd + '.' + e +
          '?key=' + window.MK_MAP.key;
 };
@@ -94,12 +107,28 @@ window.mkTileLayer = function(kind, extra){
     maxZoom: window.MK_MAP.maxZoom,
     maxNativeZoom: sat ? window.MK_MAP.satNativeMax : window.MK_MAP.streetsNativeMax,
     attribution: window.MK_ATTR,
-    updateWhenZooming: false        /* pas tegels halen als het zoomen klaar is */
+    updateWhenZooming: false,       /* pas tegels halen als het zoomen klaar is */
+    keepBuffer: 1                   /* één rij tegels buiten beeld, niet twee */
   };
   if(extra) for(var k in extra) o[k] = extra[k];
-  var layer = L.tileLayer(window.mapTilerUrl(
-    sat ? window.MK_MAP.satellite       : window.MK_MAP.streets,
-    sat ? window.MK_MAP.satelliteFormat : window.MK_MAP.streetsFormat), o);
+  var stijl  = sat ? window.MK_MAP.satellite       : window.MK_MAP.streets;
+  var formaat= sat ? window.MK_MAP.satelliteFormat : window.MK_MAP.streetsFormat;
+  var gewoon = window.mapTilerUrl(stijl, formaat, false);
+  var layer  = L.tileLayer(gewoon, o);
+  /* Twee sjablonen, en per tegel kiezen. Op overzichtszoom is een @2x-tegel
+     drie tot vier keer zo zwaar terwijl je er nauwelijks iets van ziet; van
+     dichtbij is het verschil juist duidelijk en de tegel het lichtst. */
+  /* extra.mkHidpi:false zet @2x helemaal uit voor deze laag. Bedoeld voor de
+     kleine kaartjes op de wijkpagina's: een vak van ruim 300 px breed heeft de
+     extra pixels niet nodig, en het scheelt daar het meeste. */
+  if(window.mkHiDPI() && (!extra || extra.mkHidpi !== false)){
+    var scherp = window.mapTilerUrl(stijl, formaat, true);
+    layer.getTileUrl = function(coords){
+      var z = this._getZoomForUrl();
+      var tpl = (coords.z >= (window.MK_MAP.hidpiFromZoom || 0)) ? scherp : gewoon;
+      return tpl.replace('{z}', z).replace('{x}', coords.x).replace('{y}', coords.y);
+    };
+  }
   layer.__mkKind = sat ? 'satellite' : 'streets';
   return layer;
 };
@@ -130,8 +159,9 @@ window.mkScale = function(m){
    pagina. Geeft de twee lagen terug plus set() om van buiten te wisselen. */
 window.mkBaseToggle = function(m, opts){
   opts = opts || {};
-  var sat = window.mkTileLayer('satellite');
-  var str = window.mkTileLayer('streets');
+  var laagOpts = opts.hidpi === false ? { mkHidpi: false } : null;
+  var sat = window.mkTileLayer('satellite', laagOpts);
+  var str = window.mkTileLayer('streets', laagOpts);
   var cur = opts.start === 'streets' ? 'streets' : 'satellite';
   var box = null;
   (cur === 'streets' ? str : sat).addTo(m);
@@ -183,7 +213,9 @@ window.mkAreaMap = function(elId, center, zoom){
     scrollWheelZoom: false, minZoom: 8,
     center: center, zoom: zoom || 15
   });
-  window.mkBaseToggle(m);
+  /* Klein vak, dus geen @2x: op ruim 300 px breed zie je het verschil niet en
+     op de eenenveertig wijkpagina's samen scheelt het het meeste. */
+  window.mkBaseToggle(m, { hidpi: false });
   window.mkScale(m);
   if(typeof guardMapTouch === 'function') guardMapTouch(m, el);
   setTimeout(function(){ try{ m.invalidateSize(); }catch(e){} }, 300);
@@ -225,6 +257,10 @@ window.MAP_FALLBACK_URL = window.MK_FALLBACK.streets;   /* oude naam */
       if(old) map.attributionControl.removeAttribution(old);
       map.attributionControl.addAttribution(layer.options.attribution);
     }
+    /* mkTileLayer kan getTileUrl hebben overschreven om per zoom tussen 1x en
+       @2x te kiezen. Die overschrijving hoort bij MapTiler; voor Esri en
+       OpenStreetMap moet Leaflets eigen versie het weer doen. */
+    if(Object.prototype.hasOwnProperty.call(layer, 'getTileUrl')) delete layer.getTileUrl;
     layer.setUrl(sat ? window.MK_FALLBACK.sat : window.MK_FALLBACK.streets);
     /* Esri's luchtfoto draagt geen namen. Zonder deze laag is de terugval een
        kale foto — precies zoals het er eerder uitzag. */
