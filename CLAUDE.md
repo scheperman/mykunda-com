@@ -99,8 +99,42 @@ oude menu.
 
 Verhoog hem bij elke inhoudelijke wijziging. `STAMP` nooit met de hand aanraken.
 
-Alleen `sw.js` uploaden kan niet: de build zet bij elke run een nieuwe `?v=` in álle
-pagina's én in `sw.js`.
+Alleen `sw.js` uploaden kan niet: verandert de stempel, dan verandert hij in `sw.js`
+én in alle pagina's tegelijk. Die horen dus samen naar de server.
+
+## De versiestempel komt uit de inhoud, niet uit de klok
+
+`STAMP` in `build.mjs` is een sha256 over de inhoud van alles wat met `?v=` wordt
+aangeroepen — `app.min.js`, `styles.min.css`, `supabase.js` en de rest van de lijst
+`VERSIONED`. Verander je niets aan de bron, dan komt er dezelfde stempel uit, blijven
+alle pagina's byte voor byte gelijk en heeft de upload niets te doen.
+
+Tot 26-08-2026 stond hier `String(Date.now())`. Elke bouw kreeg een nieuwe stempel,
+dus gingen alle 95 pagina's opnieuw naar de server — ook als je niets had gewijzigd.
+Dat kostte niet alleen een minuut per upload. Erger was dat de voorbeeldstap in
+`upload.bat` altijd álles opsomde en dus nergens meer voor kón waarschuwen.
+
+Wat dit betekent bij het werken:
+
+| je wijzigt | wat er wordt verstuurd |
+|---|---|
+| één pagina | dat ene bestand |
+| niets | niets |
+| `app.js` of `styles.css` | alle pagina's, want hun `?v=` verandert mee |
+
+Die laatste regel is geen tekortkoming maar het doel van een stempel.
+
+**Voeg je een nieuw bestand toe dat met `?v=` wordt aangeroepen, zet het dan in
+`VERSIONED`.** Doe je dat niet, dan verandert de stempel niet als dat bestand wijzigt
+en houden bezoekers een oude kopie bij nieuwe HTML — de stille fout die bovenin
+`build.mjs` beschreven staat. De build waarschuwt er zelf voor met een regel
+`LET OP: <naam> wordt met ?v= aangeroepen maar telt niet mee in de stempel`.
+
+`app.min.js`, `styles.min.css` en `sw.js` worden alleen geschreven als hun inhoud
+echt anders is. Een `writeFile` met dezelfde inhoud geeft een bestand namelijk toch
+een nieuwe wijzigingsdatum, en WinSCP vergelijkt op tijd — dan was het effect van de
+hele exercitie weg. Nagemeten op 26-08-2026: twee bouwen achter elkaar zonder
+bronwijziging veranderen geen enkel tijdstempel in `deploy/` (288 bestanden).
 
 ## Wat er per upload mee moet
 
