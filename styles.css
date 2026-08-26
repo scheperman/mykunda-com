@@ -146,6 +146,15 @@ h1,h2,h3,h4{font-family:var(--serif);font-weight:600;line-height:1.12;letter-spa
 /* Wrapper div injected by JS — must be sticky so the child header sticks */
 #header{position:sticky;top:0;z-index:60}
 
+/* Leaflet gebruikt intern z-index 400 tot 1000 voor zijn panes, knoppen en
+   popups. Zonder eigen stapelcontext concurreren die nummers rechtstreeks met
+   de koptekst hierboven (60) — en dan wint de kaart, waardoor hij over een
+   geopend menu heen blijft liggen. isolation houdt die nummers binnen het
+   kaartvak; de kaart zelf stapelt daarna gewoon als een blok op de pagina.
+   Het selectorgewicht van body ervoor is er niet voor de sier: leaflet.css
+   wordt op de wijkpagina's ná deze regel ingeladen. */
+body .leaflet-container{position:relative;z-index:0;isolation:isolate}
+
 .site-header{
   position:relative;z-index:70;
   height:var(--header-h);

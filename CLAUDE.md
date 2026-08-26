@@ -353,6 +353,29 @@ in beide MyKunda-stijlen. Op de kaartlaag als vlak met rand, op de
 satellietlaag alleen als omtrek en pas vanaf zoom 18 — daaronder wordt het een
 wit hekwerk over de luchtfoto.
 
+### Kaarten en stapelvolgorde
+
+Leaflet gebruikt intern z-index 400 tot 1000 voor zijn panes, knoppen en popups,
+en de site zet daar eigen knoppen bovenop: `.map-controls`, `.layer-toggle`,
+`.map-banner` op 1000 en `.map-touch-guard` op 1100. De koptekst staat op 60.
+Zonder eigen stapelcontext concurreren die nummers rechtstreeks met elkaar — en
+dan wint de kaart, waardoor hij over een geopend menu heen blijft liggen.
+
+Twee regels vangen dat af, en beide gebruiken `isolation:isolate` omdat dat een
+stapelcontext maakt **zonder aan `position` te komen** (sticky en fixed blijven
+dus werken):
+
+- `body .leaflet-container` in `styles.css` — dekt alles binnen het kaartvak.
+  Het gewicht van `body` ervoor is nodig omdat `leaflet.css` op de wijkpagina's
+  ná `styles.css` wordt ingeladen en `search.html` zelf ook een
+  `.leaflet-container`-regel heeft.
+- `.map-col` in `search.html` — daar staan de knoppen náást het kaartvak, niet
+  erin, dus die vallen buiten de eerste regel.
+
+Zet je ergens een nieuwe knop op een kaart: als hij buiten `.leaflet-container`
+valt, hoort zijn omhulsel ook `isolation:isolate` te krijgen. Test het door de
+kaart net onder de koptekst te scrollen en het Areas-menu te openen.
+
 ### Terugval als MapTiler niets levert
 
 Een afgewezen sleutel faalt niet als een kapotte afbeelding: de API stuurt een
