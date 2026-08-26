@@ -145,20 +145,29 @@ allebei buiten de repo — dus het bestand mag gewoon meegecommit worden.
 ### De sessie heet `mykunda-sftp`, en waarom niet `mykunda`
 
 Op 26-08-2026 stond de upload stil op `Kan site map of werkruimte niet openen`.
-Oorzaak: er was in WinSCP per ongeluk een **map** `MyKunda` bijgekomen met een
-halve verbinding erin. WinSCP kijkt niet naar hoofdletters, dus `open "mykunda"`
-kwam uit bij die map in plaats van bij de verbinding — en een map kun je niet
-openen. De opgeslagen verbinding zelf mankeerde niets.
+De opgeslagen verbinding zelf mankeerde niets. Het probleem was een **werkruimte**
+met de naam `MyKunda`, die er onbedoeld bij was gekomen.
 
-Daarom heet de verbinding nu `mykunda-sftp`. Die naam kan niet botsen met een
-mapje dat naar het project is vernoemd. **Noem een opgeslagen verbinding dus
-nooit hetzelfde als een sitemap in WinSCP**, en hernoem hem niet terug.
+Zo'n werkruimte maakt WinSCP zelf aan: sluit je het venster met een sessie open,
+dan vraagt hij of hij de werkruimte moet bewaren, en bij "ja" staat er voortaan
+een werkruimte in de aanmeldingslijst — met dezelfde naam als je project. WinSCP
+kijkt niet naar hoofdletters, dus `open "mykunda"` kwam daarna uit bij die
+werkruimte in plaats van bij de verbinding. En een werkruimte kun je niet openen
+als sessie.
 
-Herken je deze fout ooit opnieuw: het ligt niet aan de servermap en niet aan het
-wachtwoord, maar aan een naam die twee keer voorkomt. Kijken kan in de
-Aanmeldingsdialoog van WinSCP, of in het register onder
-`HKCU\Software\Martin Prikryl\WinSCP 2\Sessions` — daar staat elke map als
-`Mapnaam/Sitenaam`.
+Daarom heet de verbinding nu `mykunda-sftp`. Die naam botst niet met iets dat
+naar het project vernoemd is. **Hernoem hem niet terug**, en antwoord bij het
+afsluiten van WinSCP "nee" op de vraag om de werkruimte te bewaren.
+
+Herkennen kan aan één regel in de uitvoer. Bij een geslaagde run zegt WinSCP eerst:
+
+> Tijdens scripting mag je niet vertrouwen op opgeslagen sites…
+
+Die zin staat er alleen als hij de opgeslagen verbinding heeft gevonden. Ontbreekt
+hij, en zoekt WinSCP de sessienaam meteen op als servernaam (`Host "..." bestaat
+niet`), dan is de verbinding niet gevonden — dan ligt het aan de naam, niet aan de
+servermap of het wachtwoord. Kijken doe je in de Aanmeldingsdialoog van WinSCP:
+sessies hebben een beeldscherm-icoontje, werkruimtes en mappen een ander.
 
 ### De servermap: níét `/httpdocs`
 
