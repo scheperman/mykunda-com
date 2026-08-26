@@ -138,8 +138,23 @@ blijft er in de praktijk 4,7 MB uit de root over. Je hoeft dus niet meer zelf te
 kiezen welke mappen mee moeten; sleep desnoods alles.
 
 Twee dingen bovenin het bestand instellen: `SESSIE` (de naam waaronder de
-verbinding in WinSCP is opgeslagen) en `EXTERN` (de servermap, bij Plesk meestal
-`/httpdocs`). Er staat geen wachtwoord in, dus het bestand mag in de repo.
+verbinding in WinSCP is opgeslagen) en `EXTERN` (de servermap). Er staat geen
+wachtwoord in, dus het bestand mag in de repo.
+
+### De servermap: níét `/httpdocs`
+
+De SFTP-login komt uit op `/var/www/vhosts/gamgrowth.com/`, want mykunda.com
+draait als tweede domein binnen die vhost. De map `httpdocs` daar is de webroot
+van **gamgrowth.com**; MyKunda staat in de map `mykunda.com` ernaast. Uploaden
+naar `/httpdocs` zet dus de ene site over de andere heen.
+
+Verbindingsgegevens: `ftp.mykunda.com` (45.82.188.213 — de server zelf; het
+kale `mykunda.com` wijst naar Cloudflare en heeft geen SFTP), poort 22, SFTP,
+systeemgebruiker `ycjoswsp` uit Plesk.
+
+`upload.bat` controleert dit ook zelf: vóór het synchroniseren doet hij een
+`stat` op `index.html` in de opgegeven map. Staat die er niet, dan is het de
+verkeerde map en stopt hij voordat er iets verstuurd is.
 
 **Verbind de eerste keer met de hand in WinSCP.** Niet alleen voor het
 wachtwoord: bij een eerste SFTP-verbinding vraagt WinSCP of je de vingerafdruk

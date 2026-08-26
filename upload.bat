@@ -23,11 +23,17 @@ rem ============================================================
 rem --- Instellen: eenmalig aanpassen ---------------------------
 rem SESSIE = de naam waaronder je de verbinding in WinSCP hebt
 rem          opgeslagen (Session > Sites > Save as...).
-rem EXTERN = de map op de server waar de site staat. Bij Plesk is
-rem          dat meestal /httpdocs. Klopt hij niet, dan stopt
-rem          WinSCP met een foutmelding en zie je het meteen.
+rem EXTERN = de map op de server waar mykunda.com staat.
+rem
+rem          LET OP. Je logt in op de vhost van gamgrowth.com, en de
+rem          map httpdocs daar is de webroot van DIE site. MyKunda
+rem          staat in een eigen map ernaast. Vul hier dus nooit
+rem          /httpdocs in - dan zet je MyKunda over GamGrowth heen.
+rem
+rem          Het script controleert dit ook zelf: het kijkt eerst of
+rem          er in deze map een index.html staat en stopt anders.
 set "SESSIE=mykunda"
-set "EXTERN=/httpdocs"
+set "EXTERN=/var/www/vhosts/gamgrowth.com/mykunda.com"
 rem -------------------------------------------------------------
 
 cd /d "%~dp0"
@@ -83,9 +89,13 @@ rem  fonts met rust laat, ziet WinSCP die 22 MB als ongewijzigd en
 rem  blijft er in de praktijk 4,7 MB uit de root over.
 echo.
 echo == 2/3  Wat zou er naar de server gaan? =======================
+rem  De stat-regel is het vangnet: staat er geen index.html in de
+rem  opgegeven map, dan is het de verkeerde map en stopt WinSCP hier -
+rem  voordat er ook maar iets verstuurd is.
 > "%SCRIPT%" echo option batch abort
 >>"%SCRIPT%" echo option confirm off
 >>"%SCRIPT%" echo open "%SESSIE%"
+>>"%SCRIPT%" echo stat "%EXTERN%/index.html"
 >>"%SCRIPT%" echo synchronize remote -criteria=time,size -preview "%LOKAAL%" "%EXTERN%"
 >>"%SCRIPT%" echo close
 >>"%SCRIPT%" echo exit
@@ -93,7 +103,11 @@ echo == 2/3  Wat zou er naar de server gaan? =======================
 if errorlevel 1 (
   echo.
   echo   WinSCP kwam er niet uit. Logboek: %LOG%
-  echo   Controleer de sessienaam ^(%SESSIE%^) en de servermap ^(%EXTERN%^).
+  echo   Twee dingen om na te lopen:
+  echo     - de sessienaam: !SESSIE!
+  echo     - de servermap : !EXTERN!
+  echo   Die map moet de webroot van mykunda.com zijn, dus met index.html
+  echo   erin. Niet de httpdocs van gamgrowth.com.
   goto :fout
 )
 
@@ -112,6 +126,7 @@ echo == 3/3  Uploaden ==============================================
 > "%SCRIPT%" echo option batch abort
 >>"%SCRIPT%" echo option confirm off
 >>"%SCRIPT%" echo open "%SESSIE%"
+>>"%SCRIPT%" echo stat "%EXTERN%/index.html"
 >>"%SCRIPT%" echo synchronize remote -criteria=time,size "%LOKAAL%" "%EXTERN%"
 >>"%SCRIPT%" echo close
 >>"%SCRIPT%" echo exit
