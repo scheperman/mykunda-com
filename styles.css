@@ -524,7 +524,12 @@ body .leaflet-container{position:relative;z-index:0;isolation:isolate}
 @media(max-width:700px){.pillarband{grid-template-columns:1fr;margin-top:-56px;gap:16px}.pcard,.pcard.sell{height:280px;grid-column:auto}.pcard h2{font-size:31px}.pcard-body{padding:24px 22px 22px}}
 
 /* ---------- Landing hero (buy / rent) ---------- */
-.lhero{position:relative;color:#fff;margin-top:calc(-1 * var(--header-h));isolation:isolate;overflow:hidden}
+/* Geen overflow:hidden hier. De foto wordt al geclipt door .lhero-bg, dat zijn
+   eigen overflow:hidden heeft; op .lhero deed die regel niets extra's behalve
+   het filterpaneel van mkFinder afsnijden. Dat paneel is ~560px hoog en er is
+   maar ~220px hero onder de zoekbalk, dus Title & documents, Services, Beach,
+   Features en de knop Show results waren onbereikbaar (26-08-2026). */
+.lhero{position:relative;color:#fff;margin-top:calc(-1 * var(--header-h));isolation:isolate}
 .lhero-bg{position:absolute;inset:0;z-index:0;background:linear-gradient(135deg,#0E2E25,#1C5848);overflow:hidden}
 .lhero-bg img{width:100%;height:100%;object-fit:cover;opacity:.45}
 .lhero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,46,37,.68),rgba(14,46,37,.88))}
@@ -542,11 +547,45 @@ body .leaflet-container{position:relative;z-index:0;isolation:isolate}
 .lsearch .lsd{width:1px;height:32px;background:var(--line);flex:none}
 .lsearch .lsgo{height:56px;padding:0 24px;border-radius:var(--r-md);background:var(--green-700);color:#fff;font-weight:700;font-size:15.5px;display:flex;align-items:center;justify-content:center;gap:9px;flex:none;transition:.15s;font-family:var(--sans)}
 .lsearch .lsgo:hover{background:var(--green-900)}
-.lquick{display:flex;align-items:center;gap:10px;margin-top:18px;flex-wrap:wrap}
-.lquick span{font-size:13.5px;color:rgba(255,255,255,.78);font-weight:600}
-.lquick a{display:inline-flex;align-items:center;white-space:nowrap;height:32px;padding:0 13px;border-radius:var(--r-pill);background:rgba(255,255,255,.15);font-size:13px;font-weight:600;color:#fff;transition:.15s}
-.lquick a:hover{background:rgba(255,255,255,.3)}
-.lstats{display:flex;gap:40px;margin-top:34px;flex-wrap:wrap}
+/* ---------- Hero-infoblok (buy / rent, 26-08-2026) ----------
+   Vervangt de oude .lquick-pillenrij en de .lstats-flexrij. Twee redenen om ze
+   te laten gaan: .lstats was een flex zonder vaste kolombreedtes, dus de drie
+   kolommen verschoven met de lengte van hun tekst en lagen nooit op een lijn;
+   en de .lquick-pillen hadden exact de vorm van de actieve-filterchips die
+   mkFinder er vlak boven tekent, wat las als "dit zijn je filters". Hier ligt
+   alles op een grid en zijn de snelkoppelingen tekstlinks.
+   De 46px erboven is bewust ruim: het filterpaneel klapt hier overheen. */
+.linfo{margin-top:46px}
+.linfo-panel{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:var(--r-lg);padding:24px 26px;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.linfo-facts{display:grid;grid-template-columns:repeat(3,1fr)}
+.linfo-fact{display:flex;gap:12px;align-items:flex-start;padding-inline:16px}
+.linfo-fact:first-child{padding-left:0}
+.linfo-fact+.linfo-fact{border-left:1px solid rgba(255,255,255,.14)}
+.linfo-fact .ic{flex:none;width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:rgba(224,68,88,.16);color:var(--amber-400)}
+/* min-height = precies twee regels (line-height 1.25 x 2). De kolommen mogen
+   nooit meer verspringen doordat één kop toevallig afbreekt en de andere niet —
+   dat was exact wat er mis was met de oude .lstats-flexrij. Nu ligt de
+   ondertitel altijd op dezelfde hoogte, ongeacht de lengte van de tekst. */
+.linfo-fact b{display:block;font-family:var(--serif);font-size:16px;font-weight:700;color:#fff;line-height:1.25;letter-spacing:-.005em;min-height:2.5em}
+.linfo-fact p{font-size:13.5px;line-height:1.5;color:rgba(255,255,255,.66);margin-top:4px;font-weight:500}
+.linfo-pop{display:flex;align-items:baseline;gap:8px 14px;flex-wrap:wrap;margin-top:20px;padding-top:18px;border-top:1px solid rgba(255,255,255,.13)}
+.linfo-pop .lbl{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.linfo-pop a{position:relative;font-size:14.5px;font-weight:600;color:rgba(255,255,255,.92);padding-bottom:2px}
+.linfo-pop a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1.5px;background:rgba(255,255,255,.24);transition:background .15s}
+.linfo-pop a:hover::after{background:var(--amber-400)}
+.linfo-pop .sep{color:rgba(255,255,255,.3);font-size:13px}
+@media(max-width:860px){
+  .linfo{margin-top:34px}
+  .linfo-panel{padding:20px 20px}
+  .linfo-facts{grid-template-columns:1fr}
+  .linfo-fact{padding-inline:0}
+  /* Op één kolom is er geen buurman meer om mee uit te lijnen, dus de
+     twee-regel-reservering hoeft niet en zou alleen lucht toevoegen. */
+  .linfo-fact b{min-height:0}
+  .linfo-fact+.linfo-fact{border-left:none;border-top:1px solid rgba(255,255,255,.13);margin-top:16px;padding-top:16px}
+  .linfo-pop{gap:6px 16px}
+  .linfo-pop .sep{display:none}
+}
 
 /* ---------- mkFinder: buy/rent hero search bar (26-08-2026) ----------
    Shared by buy.html and rent.html via mkFinder() in app.js. All classes are
@@ -622,6 +661,12 @@ body .leaflet-container{position:relative;z-index:0;isolation:isolate}
 .mkf-dateline{margin-top:9px}
 .mkf-dateline input{height:46px;border-radius:var(--r-md);border:1.5px solid var(--line);background:var(--white);padding:0 12px;font-size:14.5px;font-weight:600;color:var(--ink);width:100%;font-family:var(--sans)}
 .mkf-popfoot{display:flex;align-items:center;gap:12px;margin-top:22px;padding-top:16px;border-top:1px solid var(--line-2)}
+/* Het filterpaneel is hoger dan zijn max-height en scrolt dus van binnen. Zonder
+   dit plakt "Show results" onderaan de INHOUD en staat het buiten beeld zodra je
+   het paneel opent — je moest eerst binnen het paneel naar beneden scrollen om
+   je eigen filters te kunnen toepassen. De negatieve bottom compenseert de
+   20px padding-bottom van het paneel. */
+#mkfPopMore .mkf-popfoot{position:sticky;bottom:-20px;background:var(--white);padding-bottom:20px;margin-bottom:-20px}
 .mkf-popfoot .mkf-clear{font-size:14px;font-weight:700;color:var(--muted);text-decoration:underline;text-underline-offset:3px;background:none;border:none;font-family:var(--sans)}
 .mkf-popfoot .mkf-clear:hover{color:var(--ink)}
 .mkf-spacer{flex:1}
@@ -635,8 +680,7 @@ body .leaflet-container{position:relative;z-index:0;isolation:isolate}
 .mkf-chip button:hover{background:var(--amber-600)}
 .mkf-clearall{font-size:13px;font-weight:700;color:rgba(255,255,255,.8);text-decoration:underline;text-underline-offset:3px;padding:0 4px;background:none;border:none;font-family:var(--sans)}
 .mkf-clearall:hover{color:#fff}
-.lstat b{display:block;font-family:var(--serif);font-size:27px;font-weight:600;color:#fff}
-.lstat span{font-size:13.5px;color:rgba(255,255,255,.75);font-weight:600}
+
 
 /* ---------- Shared landing sections ---------- */
 .center-head{text-align:center;max-width:680px;margin:0 auto 44px}
@@ -690,7 +734,7 @@ body .leaflet-container{position:relative;z-index:0;isolation:isolate}
 .landband-img{position:relative;min-height:340px}
 .landband-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 @media(max-width:1080px){.psteps{grid-template-columns:1fr 1fr 1fr}.areatiles{grid-template-columns:1fr 1fr}.lhero h1{font-size:40px}}
-@media(max-width:760px){.psteps,.split2,.areatiles,.landband{grid-template-columns:1fr}.lhero h1{font-size:33px}.lhero .sub{font-size:16px}.center-head h2{font-size:28px}.rtable .rrow{grid-template-columns:1fr;gap:3px}.rtable .rhead{display:none}.lsearch{padding:8px}.lsearch .lsd{display:none}.lsearch .lsgo{width:100%}.lsearch select{width:100%}.landband-text{padding:34px 26px}.landband-img{min-height:220px}.lstats{gap:24px}}
+@media(max-width:760px){.psteps,.split2,.areatiles,.landband{grid-template-columns:1fr}.lhero h1{font-size:33px}.lhero .sub{font-size:16px}.center-head h2{font-size:28px}.rtable .rrow{grid-template-columns:1fr;gap:3px}.rtable .rhead{display:none}.lsearch{padding:8px}.lsearch .lsd{display:none}.lsearch .lsgo{width:100%}.lsearch select{width:100%}.landband-text{padding:34px 26px}.landband-img{min-height:220px}}
 .form-legal{font-size:12px;line-height:1.55;color:var(--muted-2);margin-top:12px}.form-legal a{color:var(--green-700);font-weight:600;text-decoration:underline;text-underline-offset:2px}.form-legal.on-dark{color:rgba(255,255,255,.72)}.form-legal.on-dark a{color:#fff}
 
 /* ---------- Keyboard focus (added 13 Aug 2026) ----------

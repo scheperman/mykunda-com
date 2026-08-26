@@ -1423,6 +1423,37 @@ function mkFinder(mountId, mode){
     if(name==='where') buildWhere($('#mkfQ').value);
     const pop = $(POP[name]), field = $(FIELD[name]);
     pop.hidden = false;
+    if(name==='more'){
+      /* Het filterpaneel is hoger dan de ruimte onder de zoekbalk op een gewoon
+         laptopscherm. Met een vaste max-height in CSS viel de onderkant — en dus
+         de knop Show results — onder de vouw, en moest je eerst de PAGINA
+         scrollen om je filters te kunnen toepassen. Hier krijgt het paneel exact
+         de hoogte die er nog is; wat niet past scrollt binnen het paneel, met de
+         voetbalk er sticky bovenop. */
+      /* De cookiebalk staat fixed onderaan met z-index 200 en ligt dus over het
+         paneel heen. Zonder deze aftrek verdwijnt de voetbalk — en daarmee de
+         knop Show results — er precies achter, en juist bij een eerste bezoek,
+         wat het moment is waarop iemand de filters voor het eerst opent. De balk
+         wordt na accepteren uit de DOM gehaald, dus dan is de aftrek vanzelf 0. */
+      const ccBar = document.getElementById('ccBanner');
+      const ccH = ccBar ? ccBar.getBoundingClientRect().height : 0;
+      const room = () => window.innerHeight - pop.getBoundingClientRect().top - ccH - 18;
+      let avail = room();
+      /* Op een korte laptop (1366x768 bijvoorbeeld) vult de hero het hele scherm
+         en blijft er te weinig over voor een bruikbaar paneel. Dan schuiven we de
+         pagina zover omlaag als nodig — de zoekbalk kruipt naar boven en het
+         paneel krijgt de ruimte, in plaats van dat het achter de cookiebalk
+         verdwijnt of tot een kier wordt samengeknepen. */
+      if(avail < 360){
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight - window.scrollY;
+        const shortfall = Math.min(360 - avail, Math.max(0, maxScroll));
+        /* behavior:'instant' is hier essentieel: de site zet html{scroll-behavior:smooth},
+           en met een geanimeerde scroll meet room() hieronder nog de oude positie —
+           dan valt het paneel terug op zijn minimumhoogte terwijl er wel ruimte is. */
+        if(shortfall > 0){ window.scrollBy({top: shortfall, behavior: 'instant'}); avail = room(); }
+      }
+      pop.style.maxHeight = Math.max(260, avail) + 'px';
+    }
     field.classList.add(name==='more' ? 'mkf-on' : 'mkf-open');
     field.setAttribute('aria-expanded','true');
     if(name==='where') $('#mkfQ').setAttribute('aria-expanded','true');
