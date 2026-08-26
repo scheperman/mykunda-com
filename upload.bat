@@ -46,6 +46,7 @@ cd /d "%~dp0"
 set "LOKAAL=%~dp0deploy"
 set "LOG=%TEMP%\winscp-mykunda.log"
 set "SCRIPT=%TEMP%\winscp-mykunda-script.txt"
+set "VOORBEELD=%TEMP%\winscp-mykunda-voorbeeld.txt"
 
 rem --- WinSCP opzoeken -----------------------------------------
 rem  Twee dingen om te weten. Ten eerste: een pad met (x86) erin mag
@@ -105,8 +106,12 @@ rem  voordat er ook maar iets verstuurd is.
 >>"%SCRIPT%" echo synchronize remote -criteria=time,size -preview "%LOKAAL%" "%EXTERN%"
 >>"%SCRIPT%" echo close
 >>"%SCRIPT%" echo exit
-"%WINSCP%" /log="%LOG%" /loglevel=0 /script="%SCRIPT%"
-if errorlevel 1 (
+rem  De uitvoer gaat eerst naar een bestand en dan pas naar het scherm, zodat
+rem  het script zelf kan zien of er iets te doen viel.
+"%WINSCP%" /log="%LOG%" /loglevel=0 /script="%SCRIPT%" > "%VOORBEELD%" 2>&1
+set "RC=%errorlevel%"
+type "%VOORBEELD%"
+if not "%RC%"=="0" (
   echo.
   echo   WinSCP kwam er niet uit. Logboek: %LOG%
   echo   Twee dingen om na te lopen:
@@ -117,10 +122,19 @@ if errorlevel 1 (
   goto :fout
 )
 
+rem  Viel er niets te synchroniseren, dan is uploaden zinloos en het legen van de
+rem  Cloudflare-cache schadelijk: die maakt de site tijdelijk trager omdat alles
+rem  opnieuw bij de server gehaald moet worden. Dus stoppen we hier.
+rem  Wordt de regel ooit niet herkend - een andere taalversie van WinSCP - dan
+rem  gaat het script gewoon door zoals vroeger. Dat is de veilige kant.
+findstr /i /c:"Niets te synchroniseren" /c:"Nothing to synchronize" "%VOORBEELD%" >nul
+if not errorlevel 1 goto :nietstedoen
+
+rem  De bevestiging staat standaard op ja en gaat vanzelf door. De vijf seconden
+rem  zijn er voor het geval de lijst hierboven je niet bevalt: dan druk je n.
 echo.
-set "GA="
-set /p "GA=Bovenstaande naar de server sturen? (j/n): "
-if /i not "!GA!"=="j" (
+choice /c jn /n /t 5 /d j /m "  Naar de server sturen? Ja, tenzij je binnen 5 seconden n indrukt: "
+if errorlevel 2 (
   echo.
   echo   Afgebroken. Er is niets geupload.
   goto :einde
@@ -225,12 +239,24 @@ echo   Klaar.
 echo ===============================================================
 goto :einde
 
+:nietstedoen
+del "%SCRIPT%" "%VOORBEELD%" >nul 2>&1
+echo.
+echo ===============================================================
+echo   Niets gewijzigd. Niets geupload, cache ongemoeid gelaten.
+echo ===============================================================
+goto :einde
+
 :fout
+del "%VOORBEELD%" >nul 2>&1
 echo.
 pause
 exit /b 1
 
 :einde
+rem  Geen pause: het venster sluit vanzelf. De timeout laat je de uitslag nog
+rem  lezen als je dit vanaf een snelkoppeling start, en is met een toets weg.
+del "%VOORBEELD%" >nul 2>&1
 echo.
-pause
+timeout /t 8 2>nul
 exit /b 0

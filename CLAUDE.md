@@ -161,8 +161,24 @@ tonen" aan en controleer na een CSP-wijziging of de kop echt veranderd is.
 
 `upload.bat` in de root doet stap 2 en 3 van de leverroute achter elkaar: hij
 draait `build.mjs`, laat daarna met WinSCP eerst **zien** wat er naar de server
-zou gaan, verstuurt pas na een bevestiging, en leegt tot slot de Cloudflare-cache
-via de API. Vier stappen, één handeling.
+zou gaan, verstuurt, en leegt tot slot de Cloudflare-cache via de API. Vier
+stappen, één handeling. Er staat een snelkoppeling **MyKunda uploaden** op het
+bureaublad.
+
+Sinds 26-08-2026 loopt hij van begin tot eind door zonder toetsaanslag:
+
+- **Niets gewijzigd, niets gedaan.** Zegt WinSCP in stap 2 "Niets te
+  synchroniseren", dan stopt het script daar. Geen upload, en vooral: géén purge.
+  Een purge zonder aanleiding maakt de site tijdelijk trager, want Cloudflare moet
+  dan alles opnieuw bij de server halen. Wordt die regel niet herkend — een andere
+  taalversie van WinSCP — dan gaat het script gewoon door. Dat is de veilige kant
+  van die keuze.
+- **De bevestiging staat op ja** en gaat na vijf seconden vanzelf door. Die vijf
+  seconden zijn er om `n` te kunnen drukken als de lijst je niet bevalt. Kijk
+  ernaar: sinds de stempel uit de inhoud komt, staat er alleen nog in wat je
+  werkelijk hebt gewijzigd, dus een onverwacht lange lijst betekent iets.
+- **Geen Enter aan het eind.** Het venster sluit zichzelf na acht seconden. Bij een
+  fout blijft de oude `pause` staan, anders lees je de foutmelding nooit.
 
 De synchronisatie vergelijkt op tijd en grootte en verwijdert niets op de
 server. Omdat `build.mjs` de tijdstempels van `images/`, `vendor/`, `logo/` en
