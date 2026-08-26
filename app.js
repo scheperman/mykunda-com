@@ -1133,17 +1133,41 @@ function socialLinks(){return [
   ['WhatsApp',waLink('Hello MyKunda! I have a question about property in The Gambia.'),_WA_ICON,'#25D366'],
 ];}
 
+/* ---------- Areas (shared: header nav + the buy/rent search finder) ---------- */
+const MK_AREAS = [
+  ['Banjul Area',[['Banjul','banjul.html'],['Bakau','bakau.html'],['Cape Point','cape-point.html'],['Fajara','fajara.html'],['Kotu','kotu.html'],['Pipeline','pipeline.html'],['Bakoteh','bakoteh.html'],['Manjai Kunda','manjai-kunda.html'],['Serrekunda','serrekunda.html']]],
+  ['Kombo Coast',[['Kololi','kololi.html'],['Senegambia','senegambia.html'],['Bijilo','bijilo.html'],['Brufut','brufut.html'],['Tanji','tanji.html'],['Batokunku','batokunku.html'],['Tujereng','tujereng.html'],['Sanyang','sanyang.html'],['Gunjur','gunjur.html'],['Kartong','kartong.html']]],
+  ['Kombo Inland',[['Brusubi','brusubi.html'],['Kerr Serign','kerr-serign.html'],['Sukuta','sukuta.html'],['Jabang','jabang.html'],['Nema Kunku','nema-kunku.html'],['Sinchu Alagie','sinchu-alagie.html'],['Lamin','lamin.html'],['Yundum','yundum.html'],['Busumbala','busumbala.html'],['Brikama','brikama.html']]],
+  ['North Bank',[['Barra','barra.html'],['Essau','essau.html'],['Kerewan','kerewan.html'],['Farafenni','farafenni.html']]],
+  ['Central River',[['Janjanbureh','janjanbureh.html'],['Bansang','bansang.html'],['Kuntaur','kuntaur.html']]],
+  ['Upcountry',[['Soma','soma.html'],['Mansa Konko','mansa-konko.html'],['Basse','basse.html'],['Gambissara','gambissara.html'],['Fatoto','fatoto.html']]]
+];
+if(typeof window!=='undefined') window.MK_AREAS = MK_AREAS;
+
+/* ---------- Shared filter vocabularies (buy/rent search finder + search.html) ---------- */
+const MK_CATEGORIES = [
+  ['Homes',[['House or villa','house,villa'],['Apartment','apartment'],['Penthouse','penthouse'],['Townhouse','townhouse'],['Compound','compound'],['Lodge','lodge']]],
+  ['Other',[['Commercial','commercial'],['Land / plot','land']]]
+];
+const MK_DOC_TYPES = [
+  ['freehold','Freehold (with title deed)'],
+  ['leasehold','Leasehold'],
+  ['customary','Customary / family land'],
+  ['sporting','Sporting lease']
+];
+const MK_COND = [['new','New build'],['good','Good'],['renovation','Needs renovation']];
+const MK_BEACH = [['beachfront','Beachfront · 150 m'],['walking','Walking · 1.2 km'],['near','Within 5 km'],['inland','Inland · 5 km+']];
+const MK_FURN = [['furnished','Furnished'],['semi','Part-furnished'],['unfurnished','Unfurnished']];
+const MK_SERV_BUILT = [['nawec_water','Mains (NAWEC) water'],['backup_power','Backup power (solar/generator)']];
+const MK_SERV_LAND = [['plot_power','Electricity on plot'],['plot_water','Water on plot'],['tarmac','Tarmac road access'],['fenced','Fenced or walled'],['lowflood','Low flood risk']];
+const MK_FEAT_SALE = [['pool','Private pool'],['Sea view','Sea view'],['Beachfront','Beachfront'],['Gated','Gated / walled'],['Furnished','Furnished'],['new','Newly listed']];
+const MK_FEAT_RENT = [['pool','Private pool'],['Sea view','Sea view'],['Gated','Gated / secured'],['new','Newly listed']];
+const MK_FEAT_LAND = [['Sea view','Sea view'],['Beachfront','Beachfront'],['new','Newly listed']];
+
 /* ---------- Header / footer injectors ---------- */
 function headerHTML(active, onHero){
   const links = [['Buy','buy.html'],['Rent','rent.html'],['List','sell.html'],['Land','land-for-sale-in-the-gambia.html'],['Verify','verify.html'],['Areas','#'],['Guides','guides.html']];
-  const AREA_REGIONS = [
-    ['Banjul Area',[['Banjul','banjul.html'],['Bakau','bakau.html'],['Cape Point','cape-point.html'],['Fajara','fajara.html'],['Kotu','kotu.html'],['Pipeline','pipeline.html'],['Bakoteh','bakoteh.html'],['Manjai Kunda','manjai-kunda.html'],['Serrekunda','serrekunda.html']]],
-    ['Kombo Coast',[['Kololi','kololi.html'],['Senegambia','senegambia.html'],['Bijilo','bijilo.html'],['Brufut','brufut.html'],['Tanji','tanji.html'],['Batokunku','batokunku.html'],['Tujereng','tujereng.html'],['Sanyang','sanyang.html'],['Gunjur','gunjur.html'],['Kartong','kartong.html']]],
-    ['Kombo Inland',[['Brusubi','brusubi.html'],['Kerr Serign','kerr-serign.html'],['Sukuta','sukuta.html'],['Jabang','jabang.html'],['Nema Kunku','nema-kunku.html'],['Sinchu Alagie','sinchu-alagie.html'],['Lamin','lamin.html'],['Yundum','yundum.html'],['Busumbala','busumbala.html'],['Brikama','brikama.html']]],
-    ['North Bank',[['Barra','barra.html'],['Essau','essau.html'],['Kerewan','kerewan.html'],['Farafenni','farafenni.html']]],
-    ['Central River',[['Janjanbureh','janjanbureh.html'],['Bansang','bansang.html'],['Kuntaur','kuntaur.html']]],
-    ['Upcountry',[['Soma','soma.html'],['Mansa Konko','mansa-konko.html'],['Basse','basse.html'],['Gambissara','gambissara.html'],['Fatoto','fatoto.html']]]
-  ];
+  const AREA_REGIONS = MK_AREAS;
   const AREAS = AREA_REGIONS.flatMap(r=>r[1]);
   const u = getUser();
   const ccy = getCurrency();
@@ -1290,6 +1314,366 @@ function footerHTML(){
     </div>
     </div>
   </footer>`;
+}
+
+/* ---------- mkFinder: the buy/rent hero search bar ----------
+   Renders into the page's #mkFinderMount and wires itself up. One function for
+   both buy.html (mode:'sale') and rent.html (mode:'rent') — until 26-08-2026 the
+   two pages carried separately hand-written copies of this bar that had already
+   drifted (rent.html kept a "Rental term" filter search.html never read; the
+   property-type list sent 'villa' only, so listings.category='house' could never
+   be found). One function means both pages can no longer drift apart.
+
+   What each filter maps to, and why some groups are mode/category-specific:
+   list.html only ever asks a LAND listing for plot size, road, electricity,
+   land_water, fencing and title_type; it only ever asks a BUILT listing (house,
+   villa, apartment, ...) for water, power, security and furnished. Showing a
+   "Tarmac road access" checkbox while browsing apartments would filter on a
+   column no apartment ever has — so the More filters panel changes shape with
+   the category selection instead of listing every column on every page. */
+function mkFinder(mountId, mode){
+  const mount = document.getElementById(mountId);
+  if(!mount) return;
+  const isRent = mode==='rent';
+
+  const S = { q:'', cats:[], pmin:'', pmax:'', beds:0, baths:0, sqm:'', plot:'', plotmax:'',
+    cond:'', year:'', beach:'', titles:[], verified:false, serv:[], feats:[], furn:'', from:'' };
+
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').split('"').join('&quot;'); }
+  function isLand(){ return S.cats.length>0 && S.cats.every(c=>c==='land'); }
+  function tick(){ return '<svg class="mkf-tick" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'; }
+  function steps(){ return isRent ? [100,150,200,300,400,600,800,1200,2000,3500] : [25000,50000,75000,100000,150000,200000,300000,500000,750000,1000000]; }
+  function money(eur){ return fmtAreaPrice(eur); }
+  function look(list, v){ for(const o of list){ if(String(o[0])===String(v)) return o[1]; } return v; }
+  function catLabel(v){ let out=v; MK_CATEGORIES.forEach(g=>g[1].forEach(t=>{ if(t[1]===v) out=t[0]; })); return out; }
+  function servList(){ return isLand() ? MK_SERV_LAND : MK_SERV_BUILT; }
+  function featList(){ return isRent ? MK_FEAT_RENT : (isLand() ? MK_FEAT_LAND : MK_FEAT_SALE); }
+  function fromLabel(v){
+    if(v==='now') return 'Available now';
+    if(v==='month') return 'Available within a month';
+    if(v==='quarter') return 'Available within 3 months';
+    if(/^\d{4}-/.test(v)) return 'Available from '+v;
+    return v;
+  }
+
+  function single(key, list, cur, anyLabel){
+    let h = '<div class="mkf-opts">';
+    if(anyLabel!==false) h += '<button type="button" class="mkf-opt'+(!cur?' on':'')+'" data-k="'+key+'" data-v="">'+tick()+(anyLabel||'Any')+'</button>';
+    list.forEach(o=>{ const v=String(o[0]); h += '<button type="button" class="mkf-opt'+(String(cur)===v?' on':'')+'" data-k="'+key+'" data-v="'+esc(v)+'">'+tick()+esc(o[1])+'</button>'; });
+    return h+'</div>';
+  }
+  function multi(key, list, arr){
+    let h = '<div class="mkf-opts">';
+    list.forEach(o=>{ const v=String(o[0]), on=arr.indexOf(v)>=0; h += '<button type="button" class="mkf-opt'+(on?' on':'')+'" data-mk="'+key+'" data-v="'+esc(v)+'">'+tick()+esc(o[1])+'</button>'; });
+    return h+'</div>';
+  }
+  function numOpts(n){ return Array.from({length:n},(_,i)=>[i+1,(i+1)+'+']); }
+
+  mount.innerHTML = `
+<div class="mkf-bar" id="mkfBar">
+  <div class="mkf-field mkf-where" id="mkfFWhere">
+    <span class="mkf-fl">Where</span>
+    <input type="text" id="mkfQ" autocomplete="off" placeholder="Any area in The Gambia" aria-label="Area or town" aria-expanded="false" role="combobox">
+  </div>
+  <div class="mkf-div"></div>
+  <button type="button" class="mkf-field" id="mkfFType" aria-expanded="false">
+    <span class="mkf-fl">Property type</span>
+    <span class="mkf-fv mkf-empty" id="mkfVType">Any type</span>
+  </button>
+  <div class="mkf-div"></div>
+  <button type="button" class="mkf-field" id="mkfFBudget" aria-expanded="false">
+    <span class="mkf-fl" id="mkfLBudget">${isRent?'Monthly rent':'Budget'}</span>
+    <span class="mkf-fv mkf-empty" id="mkfVBudget">${isRent?'Any rent':'Any price'}</span>
+  </button>
+  <button type="button" class="mkf-more" id="mkfFMore" aria-expanded="false">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+    Filters <span class="mkf-badge" id="mkfBadge">0</span>
+  </button>
+  <button type="button" class="mkf-go" id="mkfGo">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    Search
+  </button>
+  <div class="mkf-pop" id="mkfPopWhere" hidden role="listbox" aria-label="Areas"></div>
+  <div class="mkf-pop" id="mkfPopType" hidden></div>
+  <div class="mkf-pop" id="mkfPopBudget" hidden></div>
+  <div class="mkf-pop" id="mkfPopMore" hidden></div>
+</div>
+<div class="mkf-chips" id="mkfChips"></div>`;
+
+  const $ = sel => mount.querySelector(sel);
+  const FIELD = { where:'#mkfFWhere', type:'#mkfFType', budget:'#mkfFBudget', more:'#mkfFMore' };
+  const POP   = { where:'#mkfPopWhere', type:'#mkfPopType', budget:'#mkfPopBudget', more:'#mkfPopMore' };
+  let openName = null;
+
+  function closePop(){
+    if(!openName) return;
+    $(POP[openName]).hidden = true;
+    $(FIELD[openName]).classList.remove('mkf-open','mkf-on');
+    $(FIELD[openName]).setAttribute('aria-expanded','false');
+    if(openName==='where') $('#mkfQ').setAttribute('aria-expanded','false');
+    openName = null;
+  }
+  function openPop(name){
+    if(openName===name){ closePop(); return; }
+    closePop();
+    openName = name;
+    if(name==='type') buildType();
+    if(name==='budget') buildBudget();
+    if(name==='more') buildMore();
+    if(name==='where') buildWhere($('#mkfQ').value);
+    const pop = $(POP[name]), field = $(FIELD[name]);
+    pop.hidden = false;
+    field.classList.add(name==='more' ? 'mkf-on' : 'mkf-open');
+    field.setAttribute('aria-expanded','true');
+    if(name==='where') $('#mkfQ').setAttribute('aria-expanded','true');
+    if(name!=='more'){
+      const bar = $('#mkfBar').getBoundingClientRect(), fr = field.getBoundingClientRect();
+      pop.style.left = Math.max(8, Math.min(fr.left-bar.left, bar.width-pop.offsetWidth-8)) + 'px';
+    }
+  }
+  document.addEventListener('click', e=>{
+    if(!openName) return;
+    /* composedPath(), not e.target: a multi-select click (category, title,
+       service...) re-renders its own popover mid-bubble (buildType()/buildMore()
+       replace innerHTML), which detaches the clicked button before this
+       document-level listener runs. .contains(e.target) would then see a node
+       that is no longer in the tree and close the popover on every single tap.
+       composedPath() is captured at dispatch time, before that mutation, so it
+       still lists the popover as an ancestor. */
+    const path = e.composedPath ? e.composedPath() : [e.target];
+    if(path.includes($(POP[openName])) || path.includes($(FIELD[openName]))) return;
+    closePop();
+  });
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closePop(); });
+
+  let whereCursor = -1;
+  function buildWhere(term){
+    term = (term||'').trim().toLowerCase();
+    let h = '', n = 0;
+    MK_AREAS.forEach(region=>{
+      const hits = region[1].filter(a=>!term || a[0].toLowerCase().indexOf(term)>=0);
+      if(!hits.length) return;
+      h += '<div class="mkf-agroup">'+esc(region[0])+'</div>';
+      hits.forEach(a=>{ h += '<button type="button" class="mkf-arow" role="option" data-area="'+esc(a[0])+'">'+esc(a[0])+'<small>'+esc(region[0])+'</small></button>'; n++; });
+    });
+    if(!n) h = '<div class="mkf-anone">No area matches “'+esc(term)+'”. Search it anyway — the results map will look it up.</div>';
+    $('#mkfPopWhere').innerHTML = h;
+    whereCursor = -1;
+  }
+  function pickArea(a){ S.q=a; $('#mkfQ').value=a; closePop(); render(); }
+  $('#mkfQ').addEventListener('focus', ()=>openPop('where'));
+  $('#mkfQ').addEventListener('input', function(){
+    S.q = this.value;
+    if(openName!=='where') openPop('where'); else buildWhere(this.value);
+    render();
+  });
+  $('#mkfQ').addEventListener('keydown', function(e){
+    if(openName!=='where'){ if(e.key==='ArrowDown') openPop('where'); return; }
+    const rows = $('#mkfPopWhere').querySelectorAll('.mkf-arow');
+    if(e.key==='ArrowDown' || e.key==='ArrowUp'){
+      e.preventDefault();
+      if(!rows.length) return;
+      whereCursor = e.key==='ArrowDown' ? Math.min(whereCursor+1, rows.length-1) : Math.max(whereCursor-1, 0);
+      rows.forEach((r,i)=>r.classList.toggle('mkf-cursor', i===whereCursor));
+      rows[whereCursor].scrollIntoView({block:'nearest'});
+    } else if(e.key==='Enter'){
+      e.preventDefault();
+      if(whereCursor>=0 && rows[whereCursor]) pickArea(rows[whereCursor].dataset.area); else { closePop(); goSearch(); }
+    }
+  });
+  $('#mkfPopWhere').addEventListener('click', e=>{ const b=e.target.closest('.mkf-arow'); if(b) pickArea(b.dataset.area); });
+  $('#mkfFWhere').addEventListener('click', e=>{ if(e.target.closest('input')) return; $('#mkfQ').focus(); });
+
+  function buildType(){
+    let h = '';
+    MK_CATEGORIES.forEach(g=>{ h += '<h5>'+esc(g[0])+'</h5>'+multi('cats', g[1].map(t=>[t[1],t[0]]), S.cats)+'<div style="height:12px"></div>'; });
+    h += '<div class="mkf-popfoot"><button type="button" class="mkf-clear" data-clear="cats">Clear</button><span class="mkf-spacer"></span><button type="button" class="mkf-apply" data-done="1">Done</button></div>';
+    $('#mkfPopType').innerHTML = h;
+  }
+
+  function buildBudget(){
+    const st = steps(), per = isRent ? ' /mo' : '';
+    function opts(cur, label){ return '<option value="">'+label+'</option>' + st.map(v=>'<option value="'+v+'"'+(String(cur)===String(v)?' selected':'')+'>'+money(v)+per+'</option>').join(''); }
+    const quick = isRent
+      ? [['',400,'Up to '+money(400)+'/mo'],['',800,'Up to '+money(800)+'/mo'],[800,'','Over '+money(800)+'/mo']]
+      : [['',50000,'Up to '+money(50000)],['',150000,'Up to '+money(150000)],[150000,500000,money(150000)+' – '+money(500000)],[500000,'','Over '+money(500000)]];
+    let h = '<h5>'+(isRent?'Monthly rent':'Price')+'</h5>'
+      + '<div class="mkf-range"><select id="mkfSelMin" aria-label="Minimum">'+opts(S.pmin,'No minimum')+'</select><span>–</span>'
+      + '<select id="mkfSelMax" aria-label="Maximum">'+opts(S.pmax,'No maximum')+'</select></div>'
+      + '<div class="mkf-presets">'+quick.map(q=>'<button type="button" class="mkf-opt" data-qmin="'+q[0]+'" data-qmax="'+q[1]+'">'+esc(q[2])+'</button>').join('')+'</div>'
+      + '<div class="mkf-popfoot"><button type="button" class="mkf-clear" data-clear="price">Clear</button><span class="mkf-spacer"></span><button type="button" class="mkf-apply" data-done="1">Done</button></div>';
+    $('#mkfPopBudget').innerHTML = h;
+    $('#mkfSelMin').addEventListener('change', function(){ S.pmin=this.value; render(); });
+    $('#mkfSelMax').addEventListener('change', function(){ S.pmax=this.value; render(); });
+  }
+
+  function g(title, body){ return '<div class="mkf-fgroup"><h5>'+title+'</h5>'+body+'</div>'; }
+  function titleGroup(){
+    return g('Title &amp; documents', multi('titles', MK_DOC_TYPES, S.titles) +
+      '<button type="button" class="mkf-switch'+(S.verified?' on':'')+'" data-sw="verified" style="margin-top:11px"><span class="mkf-sw"></span>'+
+      '<span><b>Title checked by MyKunda</b><small>Only listings whose deed a specialist has read</small></span></button>');
+  }
+  function buildMore(){
+    let h = '<div class="mkf-fgrid">';
+    if(isRent){
+      h += g('Bedrooms', single('beds', numOpts(5), S.beds||''));
+      h += g('Bathrooms', single('baths', numOpts(3), S.baths||''));
+      h += g('Furnishing', single('furn', MK_FURN, S.furn, 'Either'));
+      h += g('Available from',
+        '<div class="mkf-opts">'+[['now','Now'],['month','Within a month'],['quarter','Within 3 months']].map(o=>
+          '<button type="button" class="mkf-opt'+(S.from===o[0]?' on':'')+'" data-k="from" data-v="'+o[0]+'">'+tick()+o[1]+'</button>').join('')+'</div>'+
+        '<div class="mkf-dateline"><input type="date" id="mkfDateFrom" aria-label="Available from date" value="'+(/^\d{4}-/.test(S.from)?S.from:'')+'"></div>');
+      h += g('Distance to the beach', single('beach', MK_BEACH, S.beach));
+      h += g('Services', multi('serv', servList(), S.serv));
+      h += g('Features', multi('feats', featList(), S.feats));
+    } else if(isLand()){
+      h += g('Plot size',
+        '<div class="mkf-range"><select id="mkfPlotMin" aria-label="Minimum plot size"><option value="">No minimum</option>'+
+        [200,400,600,1000,2000,5000].map(v=>'<option value="'+v+'"'+(String(S.plot)===String(v)?' selected':'')+'>'+v.toLocaleString('en-GB')+' m²</option>').join('')+
+        '</select><span>–</span><select id="mkfPlotMax" aria-label="Maximum plot size"><option value="">No maximum</option>'+
+        [400,600,1000,2000,5000,10000].map(v=>'<option value="'+v+'"'+(String(S.plotmax)===String(v)?' selected':'')+'>'+(v>=10000?'1 ha':v.toLocaleString('en-GB')+' m²')+'</option>').join('')+
+        '</select></div><p class="mkf-hint">One standard plot is about 400 m² — 20 × 20 metres.</p>');
+      h += titleGroup();
+      h += g('Services &amp; access', multi('serv', servList(), S.serv));
+      h += g('Distance to the beach', single('beach', MK_BEACH, S.beach));
+      h += g('Features', multi('feats', featList(), S.feats));
+    } else {
+      h += g('Bedrooms', single('beds', numOpts(5), S.beds||''));
+      h += g('Bathrooms', single('baths', numOpts(3), S.baths||''));
+      h += g('Living area', single('sqm', [[60,'60 m²+'],[90,'90 m²+'],[120,'120 m²+'],[180,'180 m²+'],[250,'250 m²+']], S.sqm));
+      h += g('Condition', single('cond', MK_COND, S.cond));
+      h += g('Year built', single('year', [[2024,'2024 or newer'],[2020,'2020 or newer'],[2015,'2015 or newer']], S.year));
+      h += titleGroup();
+      h += g('Services', multi('serv', servList(), S.serv));
+      h += g('Distance to the beach', single('beach', MK_BEACH, S.beach));
+      h += g('Features', multi('feats', featList(), S.feats));
+    }
+    h += '</div><div class="mkf-popfoot"><button type="button" class="mkf-clear" data-clear="all">Clear all filters</button><span class="mkf-spacer"></span><button type="button" class="mkf-apply" data-done="1">Show results</button></div>';
+    $('#mkfPopMore').innerHTML = h;
+    const d = $('#mkfDateFrom'); if(d) d.addEventListener('change', function(){ S.from=this.value; render(); });
+    const pmn = $('#mkfPlotMin'), pmx = $('#mkfPlotMax');
+    if(pmn) pmn.addEventListener('change', function(){ S.plot=this.value; render(); });
+    if(pmx) pmx.addEventListener('change', function(){ S.plotmax=this.value; render(); });
+  }
+
+  mount.addEventListener('click', function(e){
+    const t = e.target.closest('[data-k],[data-mk],[data-sw],[data-clear],[data-done],[data-qmin]');
+    if(!t) return;
+    if(t.dataset.k!==undefined && t.dataset.k!==''){
+      const k=t.dataset.k, v=t.dataset.v;
+      S[k] = (k==='beds'||k==='baths') ? (v?+v:0) : v;
+    } else if(t.dataset.mk){
+      const mk=t.dataset.mk, v=t.dataset.v, arr=S[mk], i=arr.indexOf(v);
+      if(i>=0) arr.splice(i,1); else arr.push(v);
+    } else if(t.dataset.sw){
+      S[t.dataset.sw] = !S[t.dataset.sw];
+    } else if(t.dataset.clear){
+      const c = t.dataset.clear;
+      if(c==='cats') S.cats=[];
+      else if(c==='price'){ S.pmin=''; S.pmax=''; }
+      else { const q=S.q; Object.assign(S,{cats:[],pmin:'',pmax:'',beds:0,baths:0,sqm:'',plot:'',plotmax:'',cond:'',year:'',beach:'',titles:[],verified:false,serv:[],feats:[],furn:'',from:'',q}); }
+    } else if(t.dataset.done!==undefined){
+      closePop(); render(); return;
+    } else if(t.dataset.qmin!==undefined){
+      S.pmin = t.dataset.qmin; S.pmax = t.dataset.qmax;
+    }
+    render();
+    if(openName==='more') buildMore();
+    if(openName==='type') buildType();
+    if(openName==='budget') buildBudget();
+  });
+
+  function chipsFor(){
+    const out = [];
+    const add = (l,k,v) => out.push({l,k,v});
+    if(S.q) add(S.q,'q');
+    S.cats.forEach(c=>add(catLabel(c),'cats',c));
+    if(S.pmin || S.pmax){
+      const per = isRent?'/mo':'';
+      add(S.pmin && S.pmax ? money(+S.pmin)+' – '+money(+S.pmax)+per : S.pmax ? 'Up to '+money(+S.pmax)+per : 'From '+money(+S.pmin)+per, 'price');
+    }
+    if(S.beds) add(S.beds+'+ bedrooms','beds');
+    if(S.baths) add(S.baths+'+ bathrooms','baths');
+    if(S.sqm) add(S.sqm+' m²+ living area','sqm');
+    if(S.plot || S.plotmax) add(S.plot && S.plotmax ? S.plot+' – '+S.plotmax+' m² plot' : S.plotmax ? 'Plot up to '+S.plotmax+' m²' : 'Plot from '+S.plot+' m²', 'plotpair');
+    if(S.cond) add(look(MK_COND,S.cond),'cond');
+    if(S.year) add(look([[2024,'2024 or newer'],[2020,'2020 or newer'],[2015,'2015 or newer']],S.year),'year');
+    if(S.furn) add(look(MK_FURN,S.furn),'furn');
+    if(S.from) add(fromLabel(S.from),'from');
+    if(S.beach) add(look(MK_BEACH,S.beach),'beach');
+    S.titles.forEach(t=>add(look(MK_DOC_TYPES,t),'titles',t));
+    if(S.verified) add('Title checked','verified');
+    S.serv.forEach(s=>add(look(servList(),s),'serv',s));
+    S.feats.forEach(f=>add(look(featList(),f),'feats',f));
+    return out;
+  }
+  function extraCount(){
+    let n = 0;
+    ['beds','baths','sqm','plot','plotmax','cond','year','beach','furn','from'].forEach(k=>{ if(S[k]) n++; });
+    return n + S.titles.length + S.serv.length + S.feats.length + (S.verified?1:0);
+  }
+  function buildParams(){
+    const p = new URLSearchParams();
+    p.set('type', mode);
+    if(S.q) p.set('q', S.q);
+    if(S.cats.length) p.set('cat', S.cats.join(','));
+    if(S.pmin) p.set('pmin', S.pmin);
+    if(S.pmax) p.set('pmax', S.pmax);
+    if(S.beds) p.set('beds', S.beds);
+    if(S.baths) p.set('baths', S.baths);
+    if(S.sqm) p.set('sqm', S.sqm);
+    if(S.plot) p.set('plot', S.plot);
+    if(S.plotmax) p.set('plotmax', S.plotmax);
+    if(S.cond) p.set('cond', S.cond);
+    if(S.year) p.set('year', S.year);
+    if(S.beach) p.set('beach', S.beach);
+    if(S.furn) p.set('furn', S.furn);
+    if(S.from) p.set('from', S.from);
+    if(S.titles.length) p.set('title', S.titles.join(','));
+    if(S.verified) p.set('verified', '1');
+    if(S.serv.length) p.set('serv', S.serv.join(','));
+    if(S.feats.length) p.set('feat', S.feats.join(','));
+    return p;
+  }
+  function goSearch(){ location.href = 'search.html?' + buildParams().toString(); }
+
+  function render(){
+    const vt = $('#mkfVType');
+    if(S.cats.length){ vt.textContent = S.cats.length===1 ? catLabel(S.cats[0]) : S.cats.length+' types'; vt.classList.remove('mkf-empty'); }
+    else { vt.textContent = 'Any type'; vt.classList.add('mkf-empty'); }
+
+    const vb = $('#mkfVBudget'), per = isRent?'/mo':'';
+    if(S.pmin || S.pmax){ vb.textContent = S.pmin && S.pmax ? money(+S.pmin)+' – '+money(+S.pmax)+per : S.pmax ? 'Up to '+money(+S.pmax)+per : 'From '+money(+S.pmin)+per; vb.classList.remove('mkf-empty'); }
+    else { vb.textContent = isRent?'Any rent':'Any price'; vb.classList.add('mkf-empty'); }
+
+    const n = extraCount(), badge = $('#mkfBadge');
+    badge.textContent = n; badge.classList.toggle('mkf-show', n>0);
+
+    const cs = chipsFor();
+    $('#mkfChips').innerHTML = cs.length
+      ? cs.map((c,i)=>'<span class="mkf-chip">'+esc(c.l)+'<button type="button" data-rm="'+i+'" aria-label="Remove '+esc(c.l)+'"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></span>').join('')
+        + '<button type="button" class="mkf-clearall" data-clear="all">Clear all</button>'
+      : '';
+  }
+  $('#mkfChips').addEventListener('click', function(e){
+    const b = e.target.closest('[data-rm],[data-clear]'); if(!b) return;
+    if(b.dataset.clear==='all'){ const q=S.q; Object.assign(S,{cats:[],pmin:'',pmax:'',beds:0,baths:0,sqm:'',plot:'',plotmax:'',cond:'',year:'',beach:'',titles:[],verified:false,serv:[],feats:[],furn:'',from:'',q}); render(); return; }
+    const c = chipsFor()[+b.dataset.rm]; if(!c) return;
+    if(c.k==='q'){ S.q=''; $('#mkfQ').value=''; }
+    else if(c.k==='price'){ S.pmin=''; S.pmax=''; }
+    else if(c.k==='plotpair'){ S.plot=''; S.plotmax=''; }
+    else if(c.k==='verified'){ S.verified=false; }
+    else if(Array.isArray(S[c.k])){ const i=S[c.k].indexOf(c.v); if(i>=0) S[c.k].splice(i,1); }
+    else { S[c.k] = (c.k==='beds'||c.k==='baths') ? 0 : ''; }
+    render();
+  });
+
+  $('#mkfFType').addEventListener('click', ()=>openPop('type'));
+  $('#mkfFBudget').addEventListener('click', ()=>openPop('budget'));
+  $('#mkfFMore').addEventListener('click', ()=>openPop('more'));
+  $('#mkfGo').addEventListener('click', goSearch);
+
+  render();
 }
 
 /* ---------- Statische header/footer bijwerken ---------- */

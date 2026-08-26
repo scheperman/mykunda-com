@@ -365,7 +365,12 @@ function dbListingToCard(r){
     road: r.road||'laterite', title_type: r.title_type||'alkalalo',
     electricity: r.electricity||'none', land_water: r.land_water||'none',
     land_beach: r.land_beach||'inland', plot_shape: r.plot_shape||'regular',
-    flood_risk: r.flood_risk||'no', fencing: r.fencing||'none'
+    flood_risk: r.flood_risk||'no', fencing: r.fencing||'none',
+    /* Added for the buy/rent search filters (26-08-2026): these three columns were
+       already written by list.html but never read back, so nothing could filter on
+       them. doc_type is the one document-type field collected for every listing —
+       land and built alike — via the "Ownership & documents" step. */
+    doc_type: r.doc_type||'', year_built: r.year_built||null, available_from: r.available_from||null
   };
 }
 

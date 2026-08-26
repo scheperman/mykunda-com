@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:0p9be24--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:0kelroi--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -37,7 +37,7 @@
 <link rel="preconnect" href="https://api.maptiler.com" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=221646376883949">
+<link rel="stylesheet" href="styles.min.css?v=72737403601691">
 <style>
 body{height:100vh;overflow:hidden;display:flex;flex-direction:column}
 
@@ -244,18 +244,10 @@ body{height:100vh;overflow:hidden;display:flex;flex-direction:column}
     </div>
     <div class="fdrop">
       <button class="fbtn" id="moreBtn">More filters <span id="mc"></span></button>
-      <div class="panel" id="morePanel" style="min-width:320px">
+      <div class="panel" id="morePanel" style="min-width:320px;max-height:70vh;overflow:auto">
         <h5>Property type</h5>
-        <div class="opt-row" style="margin-bottom:16px" id="ptypeOpts">
-          <button class="opt active" data-t="any">Any</button>
-          <button class="opt" data-t="villa">Villa</button>
-          <button class="opt" data-t="apartment">Apartment</button>
-          <button class="opt" data-t="compound">Compound</button>
-          <button class="opt" data-t="townhouse">Townhouse</button>
-          <button class="opt" data-t="penthouse">Penthouse</button>
-          <button class="opt" data-t="land">Land / plot</button>
-          <button class="opt" data-t="lodge">Lodge</button>
-        </div>
+        <div class="opt-row" style="margin-bottom:16px" id="ptypeOpts"></div>
+        <div id="moreExtra"></div>
         <h5>Features</h5>
         <div class="opt-row" id="featOpts">
           <button class="opt" data-f="Beachfront">Beachfront</button>
@@ -326,7 +318,7 @@ body{height:100vh;overflow:hidden;display:flex;flex-direction:column}
 <button class="mob-map-btn" id="mobMapBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg> Map</button>
 <button class="mob-map-close" id="mobMapClose" aria-label="Close map">&times;</button>
 
-<script src="app.min.js?v=221646376883949"></script>
+<script src="app.min.js?v=72737403601691"></script>
 <script>
 /* 4G: neither Supabase (~205 KB) nor Leaflet (~145 KB) is needed to paint this page.
    Supabase downloads in parallel and the listing code awaits it; Leaflet is only
@@ -335,7 +327,7 @@ body{height:100vh;overflow:hidden;display:flex;flex-direction:column}
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=221646376883949'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=72737403601691'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -366,16 +358,44 @@ function matchBeachBand(p,band){
   const m=listingSeaMetres(p);
   return band==='inland' ? m>BEACH_BAND_MAX.near : m<=(BEACH_BAND_MAX[band]||Infinity);
 }
+const MK_DOC_TYPE_BY_CODE = Object.fromEntries(MK_DOC_TYPES);
+function matchServ(p, code){
+  switch(code){
+    case 'nawec_water': return p.water==='nawec'||p.water==='both';
+    case 'backup_power': return p.power==='solar'||p.power==='generator'||p.power==='both';
+    case 'plot_power': return p.electricity==='present';
+    case 'plot_water': return p.land_water==='borehole'||p.land_water==='nawec';
+    case 'tarmac': return p.road==='tarmac';
+    case 'fenced': return p.fencing==='partial'||p.fencing==='full';
+    case 'lowflood': return p.flood_risk!=='high';
+    default: return true;
+  }
+}
+function matchAvailableFrom(p, val){
+  if(!p.available_from) return val==='now';
+  const today = new Date(); today.setHours(0,0,0,0);
+  const avail = new Date(p.available_from+'T00:00:00');
+  if(val==='now') return avail<=today;
+  if(val==='month'){ const d=new Date(today); d.setDate(d.getDate()+30); return avail<=d; }
+  if(val==='quarter'){ const d=new Date(today); d.setDate(d.getDate()+90); return avail<=d; }
+  if(/^\d{4}-\d{2}-\d{2}$/.test(val)) return avail<=new Date(val+'T00:00:00');
+  return true;
+}
 // ---- state ----
-const PTYPES = ['villa','apartment','compound','townhouse','penthouse','land','lodge'];
-const state = { type: qs('type')||'sale', cat: qs('cat')||'', q: qs('q')||'', pMin:qs('pmin')||'', pMax:qs('pmax')||qs('price')||'', beds:+(qs('beds')||0), ptype:(PTYPES.indexOf(qs('cat'))>=0?qs('cat'):'any'), feats:qs('feat')?qs('feat').split(','):[], sort:'featured', draw:false, cond:qs('cond')||'any', beachP:qs('beach')||'any', furn:qs('furn')||'' };
+const state = { type: qs('type')||'sale', q: qs('q')||'', pMin:qs('pmin')||'', pMax:qs('pmax')||qs('price')||'', beds:+(qs('beds')||0), baths:+(qs('baths')||0),
+  cats: qs('cat')?qs('cat').split(','):[], feats:qs('feat')?qs('feat').split(','):[], sort:'featured', draw:false,
+  cond:qs('cond')||'any', beachP:qs('beach')||'any', furn:qs('furn')||'',
+  sqm:qs('sqm')||'', plot:qs('plot')||'', plotmax:qs('plotmax')||'', year:qs('year')||'',
+  titles: qs('title')?qs('title').split(','):[], verified: qs('verified')==='1', serv: qs('serv')?qs('serv').split(','):[],
+  from: qs('from')||'' };
+function isLand(){ return state.cats.length>0 && state.cats.every(c=>c==='land'); }
 
 // init type seg + search field
 document.querySelectorAll('#typeSeg button').forEach(b=>{
   b.classList.toggle('active', b.dataset.type===state.type);
   b.addEventListener('click',()=>{
     document.querySelectorAll('#typeSeg button').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active'); state.type=b.dataset.type; resetPriceSelects(); applyFilters();
+    b.classList.add('active'); state.type=b.dataset.type; resetPriceSelects(); renderMoreExtra(); applyFilters();
   });
 });
 document.getElementById('fSearch').value = state.q;
@@ -417,20 +437,117 @@ document.querySelectorAll('#bedOpts .opt').forEach(o=>o.addEventListener('click'
   document.querySelectorAll('#bedOpts .opt').forEach(x=>x.classList.remove('active'));
   o.classList.add('active'); state.beds=+o.dataset.b; applyFilters();
 }));
-// ptype / energy single-select
+// energy single-select (property type + services get their own dynamic wiring below)
 function singleSelect(sel, key, attr){
   document.querySelectorAll(sel+' .opt').forEach(o=>o.addEventListener('click',()=>{
     document.querySelectorAll(sel+' .opt').forEach(x=>x.classList.remove('active'));
     o.classList.add('active'); state[key]=o.dataset[attr]; applyFilters();
   }));
 }
-singleSelect('#ptypeOpts','ptype','t');
 singleSelect('#condOpts','cond','c');
 singleSelect('#beachOpts','beachP','bp');
 // reflect incoming URL filters in the panels
 function markOpt(sel, attr, val){ document.querySelectorAll(sel+' .opt').forEach(o=>o.classList.toggle('active', o.dataset[attr]===String(val))); }
-if(state.ptype!=='any') markOpt('#ptypeOpts','t',state.ptype);
 if(state.beds) markOpt('#bedOpts','b',state.beds);
+
+// property type — multi-select, driven by the shared MK_CATEGORIES vocabulary (app.js)
+function renderPtypeOpts(){
+  let h = '<button class="opt'+(state.cats.length===0?' active':'')+'" data-t="">Any</button>';
+  MK_CATEGORIES.forEach(g=>{ g[1].forEach(it=>{
+    const codes = it[1].split(',');
+    const active = codes.every(c=>state.cats.includes(c));
+    h += '<button class="opt'+(active?' active':'')+'" data-t="'+it[1]+'">'+it[0]+'</button>';
+  }); });
+  document.getElementById('ptypeOpts').innerHTML = h;
+  document.querySelectorAll('#ptypeOpts .opt').forEach(o=>o.addEventListener('click',()=>{
+    const val = o.dataset.t;
+    if(val===''){ state.cats = []; }
+    else{
+      const codes = val.split(',');
+      const active = codes.every(c=>state.cats.includes(c));
+      if(active) state.cats = state.cats.filter(c=>!codes.includes(c));
+      else codes.forEach(c=>{ if(!state.cats.includes(c)) state.cats.push(c); });
+    }
+    renderPtypeOpts(); renderMoreExtra(); applyFilters();
+  }));
+}
+
+// dynamic "more filters" extras — shape depends on land vs built, and on buy vs rent
+function numRow(id,dataAttr,cur,steps,unit){
+  return steps.map(n=>{
+    const v = n===0?'':String(n);
+    const active = String(+cur||0)===String(n);
+    return '<button class="opt'+(active?' active':'')+'" data-'+dataAttr+'="'+v+'">'+(n===0?'Any':n+unit)+'</button>';
+  }).join('');
+}
+function plotOptions(sel){
+  return [200,500,1000,2000,5000,10000].map(n=>'<option value="'+n+'" '+(String(sel)===String(n)?'selected':'')+'>'+n+' m²</option>').join('');
+}
+function moreExtraHTML(){
+  const land = isLand();
+  let h = '';
+  if(!land){
+    h += '<h5>Bathrooms (min)</h5><div class="opt-row" id="bathOpts">'+numRow('bathOpts','ba',state.baths,[0,1,2,3,4],'+')+'</div>';
+  }
+  if(land){
+    h += '<h5 style="margin-top:16px">Plot size (m²)</h5><div class="range-row">'
+      + '<select id="plotMin"><option value="">No min</option>'+plotOptions(state.plot)+'</select>'
+      + '<span class="muted">–</span>'
+      + '<select id="plotMax"><option value="">No max</option>'+plotOptions(state.plotmax)+'</select></div>';
+  } else {
+    h += '<h5 style="margin-top:16px">Living area (min m²)</h5><div class="opt-row" id="sqmOpts">'+numRow('sqmOpts','sq',state.sqm,[0,50,100,150,200,300],'+')+'</div>';
+    h += '<h5 style="margin-top:16px">Year built (min)</h5><div class="opt-row" id="yearOpts">'+numRow('yearOpts','yr',state.year,[0,2020,2015,2010,2000],'+')+'</div>';
+  }
+  h += '<h5 style="margin-top:16px">Title &amp; documents</h5><div class="opt-row" id="titleOpts">'
+    + MK_DOC_TYPES.map(t=>'<button class="opt'+(state.titles.includes(t[0])?' active':'')+'" data-ti="'+t[0]+'">'+t[1]+'</button>').join('')
+    + '</div><label style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:14px;cursor:pointer">'
+    + '<input type="checkbox" id="verifiedChk"'+(state.verified?' checked':'')+'> Verified listings only</label>';
+  const servList = land ? MK_SERV_LAND : MK_SERV_BUILT;
+  h += '<h5 style="margin-top:16px">Services</h5><div class="opt-row" id="servOpts">'
+    + servList.map(s=>'<button class="opt'+(state.serv.includes(s[0])?' active':'')+'" data-sv="'+s[0]+'">'+s[1]+'</button>').join('')
+    + '</div>';
+  if(state.type==='rent'){
+    h += '<h5 style="margin-top:16px">Available from</h5><div class="opt-row" id="fromOpts">'
+      + ['','now','month','quarter'].map(v=>{
+          const labels={'':'Any time','now':'Now','month':'Within 1 month','quarter':'Within 3 months'};
+          return '<button class="opt'+(state.from===v?' active':'')+'" data-fr="'+v+'">'+labels[v]+'</button>';
+        }).join('')
+      + '</div>';
+  }
+  return h;
+}
+function renderMoreExtra(){
+  document.getElementById('moreExtra').innerHTML = moreExtraHTML();
+  document.querySelectorAll('#bathOpts .opt').forEach(o=>o.addEventListener('click',()=>{
+    state.baths = +o.dataset.ba||0; renderMoreExtra(); applyFilters();
+  }));
+  const plotMin = document.getElementById('plotMin'), plotMax = document.getElementById('plotMax');
+  if(plotMin) plotMin.addEventListener('change',e=>{ state.plot=e.target.value; applyFilters(); });
+  if(plotMax) plotMax.addEventListener('change',e=>{ state.plotmax=e.target.value; applyFilters(); });
+  document.querySelectorAll('#sqmOpts .opt').forEach(o=>o.addEventListener('click',()=>{
+    state.sqm = o.dataset.sq||''; renderMoreExtra(); applyFilters();
+  }));
+  document.querySelectorAll('#yearOpts .opt').forEach(o=>o.addEventListener('click',()=>{
+    state.year = o.dataset.yr||''; renderMoreExtra(); applyFilters();
+  }));
+  document.querySelectorAll('#titleOpts .opt').forEach(o=>o.addEventListener('click',()=>{
+    o.classList.toggle('active');
+    state.titles = [...document.querySelectorAll('#titleOpts .opt.active')].map(x=>x.dataset.ti);
+    applyFilters();
+  }));
+  const vchk = document.getElementById('verifiedChk');
+  if(vchk) vchk.addEventListener('change',e=>{ state.verified = e.target.checked; applyFilters(); });
+  document.querySelectorAll('#servOpts .opt').forEach(o=>o.addEventListener('click',()=>{
+    o.classList.toggle('active');
+    state.serv = [...document.querySelectorAll('#servOpts .opt.active')].map(x=>x.dataset.sv);
+    applyFilters();
+  }));
+  document.querySelectorAll('#fromOpts .opt').forEach(o=>o.addEventListener('click',()=>{
+    state.from = o.dataset.fr||''; renderMoreExtra(); applyFilters();
+  }));
+}
+renderPtypeOpts();
+renderMoreExtra();
 if(state.cond!=='any') markOpt('#condOpts','c',state.cond);
 if(state.beachP!=='any') markOpt('#beachOpts','bp',state.beachP);
 if(state.furn==='furnished' && state.feats.indexOf('Furnished')<0) state.feats.push('Furnished');
@@ -457,9 +574,18 @@ function filtered(){
     var t = ((p.tag||'') + ' ' + ((p.features||[]).join(' '))).toLowerCase();
     return p.furnished ? p.furnished==='unfurnished' : !/furnished/.test(t);
   });
-  if(state.ptype!=='any') r=r.filter(p=>p.cat===state.ptype);
+  if(state.cats.length) r=r.filter(p=>state.cats.includes(p.cat));
   if(state.cond!=='any') r=r.filter(p=>p.condition===state.cond);
   if(state.beachP!=='any') r=r.filter(p=>matchBeachBand(p,state.beachP));
+  if(state.baths && !isLand()) r=r.filter(p=>(p.baths||0)>=state.baths);
+  if(state.sqm && !isLand()) r=r.filter(p=>(p.sqm||0)>=+state.sqm);
+  if(state.plot && isLand()) r=r.filter(p=>(p.plot||0)>=+state.plot);
+  if(state.plotmax && isLand()) r=r.filter(p=>(p.plot||0)<=+state.plotmax);
+  if(state.year && !isLand()) r=r.filter(p=>(p.year_built||0)>=+state.year);
+  if(state.titles.length) r=r.filter(p=>state.titles.some(t=>MK_DOC_TYPE_BY_CODE[t]===p.doc_type));
+  if(state.verified) r=r.filter(p=>p.verified);
+  if(state.serv.length) r=r.filter(p=>state.serv.every(sv=>matchServ(p,sv)));
+  if(state.from) r=r.filter(p=>matchAvailableFrom(p,state.from));
   state.feats.forEach(f=>{
     if(f==='new') r=r.filter(p=>p.isNew);
     else if(f==='pool') r=r.filter(p=>/pool/i.test(p.tag)||(p.features&&p.features.some(x=>/pool/i.test(x))));
@@ -559,7 +685,7 @@ function pointInPoly(pt, poly){
 function syncFilterBtns(){
   priceBtn.classList.toggle('has', !!(state.pMin||state.pMax));
   bedBtn.classList.toggle('has', state.beds>0);
-  moreBtn.classList.toggle('has', state.ptype!=='any'||state.feats.length>0||state.cond!=='any'||state.beachP!=='any'||!!state.furn);
+  moreBtn.classList.toggle('has', state.cats.length>0||state.feats.length>0||state.cond!=='any'||state.beachP!=='any'||!!state.furn||state.baths>0||!!state.sqm||!!state.plot||!!state.plotmax||!!state.year||state.titles.length>0||state.verified||state.serv.length>0||!!state.from);
 }
 
 const OV_PROMO = '<a href="verify.html" style="display:flex;flex-direction:column;justify-content:center;gap:10px;background:linear-gradient(135deg,#0E2E25,#1C5848);border-radius:var(--r-lg);padding:26px 24px;color:#fff;min-height:220px;text-decoration:none">'
@@ -571,7 +697,7 @@ const OV_PROMO = '<a href="verify.html" style="display:flex;flex-direction:colum
 function applyFilters(){
   let r = filtered();
   if(state.drawPoly && state.drawPoly.length>=3) r = r.filter(p=>typeof p.lat==='number' && pointInPoly([p.lat,p.lng], state.drawPoly));
-  const what = state.ptype==='land' ? 'Land &amp; plots' : (state.type==='rent'?'Property to rent':'Property for sale');
+  const what = isLand() ? 'Land &amp; plots' : (state.type==='rent'?'Property to rent':'Property for sale');
   resTitle.innerHTML = `${what} in ${state.q||'The Gambia'}`;
   resCount.textContent = `${r.length} ${r.length===1?'property':'properties'}`;
   var cards = r.map(listCardHTML);

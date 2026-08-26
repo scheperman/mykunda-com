@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:04z9ekp--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:11kl1bt--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -32,8 +32,7 @@
 <link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="images/kotu.webp" as="image" fetchpriority="high">
-<link rel="stylesheet" href="styles.min.css?v=221646376883949">
-<style>.lsearch{max-width:840px}.lsearch .lsmore{flex:1 1 100%;display:grid;grid-template-columns:repeat(5,1fr);gap:6px;border-top:1px solid var(--line);padding:12px 0 2px;margin-top:4px}.lsearch .lsmore label{display:flex;flex-direction:column;gap:1px;font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted-2);padding-left:10px}.lsearch .lsmore select{height:32px;padding:0 20px 0 0;font-size:13.5px}@media(max-width:760px){.lsearch .lsmore{grid-template-columns:1fr 1fr}}</style>
+<link rel="stylesheet" href="styles.min.css?v=72737403601691">
 <style>#rtable{max-width:1000px}#rtable .rrow{grid-template-columns:1.5fr 1fr 1fr 1fr 1fr;gap:12px}#rtable .rhead span{line-height:1.3}#rtable .rl{display:none}@media(max-width:760px){#rtable .rrow{grid-template-columns:1fr;gap:4px}#rtable .rl{display:inline;color:var(--muted);font-weight:600;margin-right:8px}}</style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://mykunda.com/"},{"@type":"ListItem","position":2,"name":"Rent","item":"https://mykunda.com/rent.html"}]}
@@ -115,21 +114,7 @@
 <div class="eyebrow">Rent in The Gambia</div>
 <h1>A place to live, <em>this season or for years</em></h1>
 <p class="sub">Long-term homes, apartments and compounds, plus short-stay places for the tourist season. Monthly prices stated openly, landlords and agents vetted before they can list.</p>
-<div class="lsearch">
-<label class="lsf"><span id="rsIcon"></span><input type="text" id="rsQ" aria-label="Search by area or town" placeholder="Area or town — e.g. Kotu, Fajara, Bijilo"></label>
-<div class="lsd"></div>
-<select id="rsTerm" aria-label="Rental term"><option value="">Any term</option><option value="long">Long stay (6+ months)</option><option value="short">Short stay</option></select>
-<div class="lsd"></div>
-<select id="rsBeds" aria-label="Bedrooms"><option value="">Beds</option><option value="1">1+</option><option value="2">2+</option><option value="3">3+</option><option value="4">4+</option></select>
-<button class="lsgo" id="rsGo">Search</button>
-<div class="lsmore">
-<label>Property type<select id="rsCat"><option value="">Any type</option><option value="villa">Villa / house</option><option value="apartment">Apartment</option><option value="compound">Compound</option><option value="townhouse">Townhouse</option><option value="lodge">Lodge</option><option value="land">Land / plot</option></select></label>
-<label>Max rent<select id="rsPmax"></select></label>
-<label>Furnishing<select id="rsFurn"><option value="">Either</option><option value="furnished">Furnished</option><option value="unfurnished">Unfurnished</option></select></label>
-<label>Beach<select id="rsBeach"><option value="">Any distance</option><option value="beachfront">Beachfront (150 m)</option><option value="walking">Walking distance (1.2 km)</option><option value="near">Within 5 km</option><option value="inland">Inland (5 km+)</option></select></label>
-<label>Must have<select id="rsFeat"><option value="">Anything</option><option value="pool">Private pool</option><option value="Sea view">Sea view</option><option value="Gated">Gated / walled</option><option value="new">Newly listed</option></select></label>
-</div>
-</div>
+<div id="mkFinderMount"></div>
 <div class="lquick"><span>Popular:</span><a href="search.html?type=rent&amp;q=Kotu">Kotu</a><a href="search.html?type=rent&amp;q=Fajara">Fajara</a><a href="search.html?type=rent&amp;q=Kololi">Kololi</a><a href="search.html?type=rent&amp;cat=apartment">Apartments</a><a href="search.html?type=rent&amp;feat=Furnished">Furnished</a></div>
 <div class="lstats">
 <div class="lstat"><b id="stRent">—</b><span>Places to rent</span></div>
@@ -299,16 +284,16 @@
 window.__sbReady=new Promise(function(res){window.addEventListener('load',function(){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js';
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=221646376883949'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=72737403601691'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
   document.body.appendChild(s1);
 });});
 </script>
-<script src="app.min.js?v=221646376883949"></script>
+<script src="app.min.js?v=72737403601691"></script>
 <script>
 initHeroHeader();
 
 const checkSm = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
-rsIcon.innerHTML = ICON.search;
+mkFinder('mkFinderMount','rent');
 a1.innerHTML = ICON.arrow;
 cb1.innerHTML = cb2.innerHTML = cb3.innerHTML = checkSm;
 
@@ -347,29 +332,6 @@ document.getElementById('rtable').innerHTML =
       + rcell('1-bed unfurnished', r[2]) + rcell('1-bed furnished', r[3])
       + rcell('3-bed unfurnished', r[4]) + rcell('3-bed furnished', r[5]) + '</div>';
   }).join('') ;
-
-// max-rent options, currency-aware
-document.getElementById('rsPmax').innerHTML = '<option value="">No max</option>' +
-  [200,300,400,600,800,1200,2000].map(function(v){ return '<option value="'+v+'">Up to '+fmtAreaPrice(v)+'</option>'; }).join('');
-
-// search
-function rsGoSearch(){
-  var params = new URLSearchParams();
-  params.set('type','rent');
-  var q = document.getElementById('rsQ').value.trim();
-  var term = document.getElementById('rsTerm').value;
-  var beds = document.getElementById('rsBeds').value;
-  if(q) params.set('q', q);
-  if(term) params.set('term', term);
-  if(beds) params.set('beds', beds);
-  [['rsCat','cat'],['rsPmax','pmax'],['rsFurn','furn'],['rsBeach','beach'],['rsFeat','feat']].forEach(function(p){
-    var v = document.getElementById(p[0]).value;
-    if(v) params.set(p[1], v);
-  });
-  location.href = 'search.html?' + params.toString();
-}
-document.getElementById('rsGo').addEventListener('click', rsGoSearch);
-document.getElementById('rsQ').addEventListener('keydown', function(e){ if(e.key==='Enter') rsGoSearch(); });
 
 // FAQ
 const faqs = [

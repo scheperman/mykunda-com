@@ -14,3 +14,6 @@ styles.min.css
 
 # Tijdelijke bestanden van de Supabase CLI
 supabase/.temp/
+
+# Lokale Claude Code-instellingen voor deze repo
+.claude/

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:0j9qqb2--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:0nrucfk--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -34,9 +34,8 @@
 <link rel="preload" href="images/home-hero-mobile.webp" as="image" media="(max-width:640px)" fetchpriority="high">
 <link rel="preload" href="images/home-hero-tablet.webp" as="image" media="(min-width:641px) and (max-width:1024px)" fetchpriority="high">
 <link rel="preload" href="images/home-hero.webp" as="image" media="(min-width:1025px)" fetchpriority="high">
-<link rel="stylesheet" href="styles.min.css?v=221646376883949">
-<style>.lsearch{max-width:840px}.lsearch .lsmore{flex:1 1 100%;display:grid;grid-template-columns:repeat(5,1fr);gap:6px;border-top:1px solid var(--line);padding:12px 0 2px;margin-top:4px}.lsearch .lsmore label{display:flex;flex-direction:column;gap:1px;font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted-2);padding-left:10px}.lsearch .lsmore select{height:32px;padding:0 20px 0 0;font-size:13.5px}@media(max-width:760px){.lsearch .lsmore{grid-template-columns:1fr 1fr}}
-.guide-teaser{display:flex;align-items:center;gap:18px;margin-top:32px;background:var(--green-50);border:1.5px solid var(--green-200);border-radius:var(--r-lg);padding:22px 26px;transition:.15s}.guide-teaser:hover{border-color:var(--green-500);box-shadow:var(--sh-sm)}.guide-teaser .ic{width:44px;height:44px;border-radius:12px;background:var(--white);color:var(--green-700);display:flex;align-items:center;justify-content:center;flex:none}.guide-teaser b{font-family:var(--serif);font-size:17px;font-weight:600;color:var(--ink);display:block}.guide-teaser p{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.5}.guide-teaser .go{margin-left:auto;font-weight:700;font-size:14.5px;color:var(--green-700);white-space:nowrap;display:flex;align-items:center;gap:6px;flex:none}@media(max-width:640px){.guide-teaser{flex-direction:column;align-items:flex-start;text-align:left}.guide-teaser .go{margin-left:0}}
+<link rel="stylesheet" href="styles.min.css?v=72737403601691">
+<style>.guide-teaser{display:flex;align-items:center;gap:18px;margin-top:32px;background:var(--green-50);border:1.5px solid var(--green-200);border-radius:var(--r-lg);padding:22px 26px;transition:.15s}.guide-teaser:hover{border-color:var(--green-500);box-shadow:var(--sh-sm)}.guide-teaser .ic{width:44px;height:44px;border-radius:12px;background:var(--white);color:var(--green-700);display:flex;align-items:center;justify-content:center;flex:none}.guide-teaser b{font-family:var(--serif);font-size:17px;font-weight:600;color:var(--ink);display:block}.guide-teaser p{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.5}.guide-teaser .go{margin-left:auto;font-weight:700;font-size:14.5px;color:var(--green-700);white-space:nowrap;display:flex;align-items:center;gap:6px;flex:none}@media(max-width:640px){.guide-teaser{flex-direction:column;align-items:flex-start;text-align:left}.guide-teaser .go{margin-left:0}}
 .ovpitch{display:grid;grid-template-columns:1.15fr .85fr;gap:34px;align-items:center;background:linear-gradient(135deg,#0E2E25,#15463A 62%,#1C5848);border-radius:var(--r-xl);padding:44px 46px;color:#fff}
 .ovpitch .eyebrow{color:var(--amber-400);margin-bottom:12px}
 .ovpitch h2{color:#fff;font-size:30px;line-height:1.14;letter-spacing:-.01em}
@@ -127,21 +126,7 @@
 <div class="eyebrow">Buy in The Gambia</div>
 <h1>Own a place on the <em>Smiling Coast</em></h1>
 <p class="sub">Villas, apartments, compounds and building plots from Cape Point down to Kartong. A title check is available on any listing, so you can compare on price and location — not on guesswork.</p>
-<div class="lsearch">
-<label class="lsf"><span id="bsIcon"></span><input type="text" id="bsQ" aria-label="Search by area or town" placeholder="Area or town — e.g. Kololi, Brufut, Cape Point"></label>
-<div class="lsd"></div>
-<select id="bsCat" aria-label="Property type"><option value="">Any type</option><option value="villa">Villa / house</option><option value="apartment">Apartment</option><option value="compound">Compound</option><option value="townhouse">Townhouse</option><option value="land">Land / plot</option></select>
-<div class="lsd"></div>
-<select id="bsPrice" aria-label="Maximum price"></select>
-<button class="lsgo" id="bsGo">Search</button>
-<div class="lsmore">
-<label>Bedrooms<select id="bsBeds"><option value="">Any</option><option value="1">1+</option><option value="2">2+</option><option value="3">3+</option><option value="4">4+</option><option value="5">5+</option></select></label>
-<label>Min price<select id="bsPmin"></select></label>
-<label>Condition<select id="bsCond"><option value="">Any</option><option value="new">New build</option><option value="good">Good</option><option value="renovation">Needs renovation</option></select></label>
-<label>Beach<select id="bsBeach"><option value="">Any distance</option><option value="beachfront">Beachfront (150 m)</option><option value="walking">Walking distance (1.2 km)</option><option value="near">Within 5 km</option><option value="inland">Inland (5 km+)</option></select></label>
-<label>Must have<select id="bsFeat"><option value="">Anything</option><option value="pool">Private pool</option><option value="Sea view">Sea view</option><option value="Gated">Gated / walled</option><option value="Furnished">Furnished</option><option value="new">Newly listed</option></select></label>
-</div>
-</div>
+<div id="mkFinderMount"></div>
 <div class="lquick"><span>Popular:</span><a href="search.html?type=sale&amp;q=Kololi">Kololi</a><a href="search.html?type=sale&amp;q=Brufut">Brufut</a><a href="search.html?type=sale&amp;q=Cape%20Point">Cape Point</a><a href="search.html?type=sale&amp;cat=land">Building plots</a><a href="search.html?type=sale&amp;feat=Beachfront">Beachfront</a></div>
 <div class="lstats">
 <div class="lstat"><b id="stSale">—</b><span>Homes &amp; plots for sale</span></div>
@@ -310,28 +295,21 @@
 window.__sbReady=new Promise(function(res){window.addEventListener('load',function(){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js';
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=221646376883949'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=72737403601691'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
   document.body.appendChild(s1);
 });});
 </script>
-<script src="app.min.js?v=221646376883949"></script>
+<script src="app.min.js?v=72737403601691"></script>
 <script>
 initHeroHeader();
 
 const checkSm = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
-bsIcon.innerHTML = ICON.search;
+mkFinder('mkFinderMount','sale');
 a1.innerHTML = a2.innerHTML = ICON.arrow;
 cb1.innerHTML = cb2.innerHTML = cb3.innerHTML = checkSm;
 gtIc.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>';
 gtArrow.innerHTML=ICON.arrow;
 [ovc1,ovc2,ovc3,ovc4,ovc5].forEach(function(el){ el.innerHTML = checkSm; });
-
-// price options, currency-aware
-const PRICE_STEPS = [25000,50000,100000,150000,250000,500000];
-document.getElementById('bsPrice').innerHTML = '<option value="">Any price</option>' +
-  PRICE_STEPS.map(function(v){ return '<option value="'+v+'">Up to '+fmtAreaPrice(v)+'</option>'; }).join('');
-document.getElementById('bsPmin').innerHTML = '<option value="">No min</option>' +
-  PRICE_STEPS.map(function(v){ return '<option value="'+v+'">From '+fmtAreaPrice(v)+'</option>'; }).join('');
 
 // area averages in selected currency
 document.querySelectorAll('.apr').forEach(function(el){
@@ -357,25 +335,6 @@ renderBuyListings();
     try{ await primeListings(); renderBuyListings(); }catch(e){}
   }
 })();
-
-// search
-function bsGoSearch(){
-  var params = new URLSearchParams();
-  params.set('type','sale');
-  var q = document.getElementById('bsQ').value.trim();
-  var cat = document.getElementById('bsCat').value;
-  var price = document.getElementById('bsPrice').value;
-  if(q) params.set('q', q);
-  if(cat) params.set('cat', cat);
-  if(price) params.set('pmax', price);
-  [['bsPmin','pmin'],['bsBeds','beds'],['bsCond','cond'],['bsBeach','beach'],['bsFeat','feat']].forEach(function(p){
-    var v = document.getElementById(p[0]).value;
-    if(v) params.set(p[1], v);
-  });
-  location.href = 'search.html?' + params.toString();
-}
-document.getElementById('bsGo').addEventListener('click', bsGoSearch);
-document.getElementById('bsQ').addEventListener('keydown', function(e){ if(e.key==='Enter') bsGoSearch(); });
 
 // FAQ
 const faqs = [
