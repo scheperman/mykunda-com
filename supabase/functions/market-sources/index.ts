@@ -23,6 +23,34 @@
 //                            console without redeploying
 //
 // Env vars: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
+//
+// ---------------------------------------------------------------------
+// 26-08-2026 — vier leesfouten hersteld en één stilte verbroken.
+//
+//  1. KAVEL versus VLOER. Alles wat op "m2" leek ging in één kolom, en de
+//     index deelde de prijs erdoor. "5-Bedroom Executive Villa" met 625 m2
+//     KAVEL werd zo $631 per gebouwde meter. Nu gaan plot_sqm en built_sqm
+//     apart de tabel in en staat sqm — de noemer voor prijs per m2 —
+//     alleen gevuld als hij de juiste is. Weten we het niet, dan is hij
+//     leeg: de rij telt dan mee voor de mediane prijs, niet voor de
+//     prijs per m2.
+//  2. HUURPERIODE. De Gambiaanse conventie is een jaarhuur, maar sommige
+//     advertenties noemen een maand. Beide gingen als kaal bedrag de
+//     tabel in, waardoor de mediane "huur" op $25.000 uitkwam. price_usd
+//     is bij huur voortaan ALTIJD een jaarbedrag, met rent_period erbij
+//     zodat je het kunt narekenen.
+//  3. CATEGORIE. Het woord "plot" won van het woord "villa", waardoor een
+//     jaarhuur van een villa als grondprijs de index in liep. Een gebouw
+//     wint nu altijd, en tussen gebouwtypen wint het type dat vooraan in
+//     de kop staat.
+//  4. STILLE NUL. Zes van de zeven portalen gaven elke nacht nul rijen
+//     terug met ok:true. Een oogst die niets vindt op een pagina die wél
+//     laadde, is een storing en geen leeg aanbod — dat is nu een fout,
+//     met last_error, zodat het op het bronnenscherm te zien is.
+//  5. GBoS. www.gbos.gov.gm bestaat niet meer (DNS lost niet op). De
+//     actuele bron is gbosdata.org; als die niets prijsgeeft valt hij
+//     terug op de Wereldbank-API voor de jaarreeks.
+// ---------------------------------------------------------------------
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -48,7 +76,7 @@ const robotsCache = new Map<string, string[]>()
 
 async function disallowedPaths(host: string): Promise<string[]> {
   if (robotsCache.has(host)) return robotsCache.get(host)!
-  let rules: string[] = []
+  const rules: string[] = []
   try {
     const r = await fetch(`https://${host}/robots.txt`, {
       headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(8000),
@@ -88,7 +116,8 @@ async function getHtml(url: string): Promise<{ html: string; status: number }> {
 
 /* ---------- normalising ---------- */
 const strip = (s: string) => s.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ')
-  .replace(/&amp;/g, '&').replace(/&#8217;|&rsquo;/g, "'").replace(/\s+/g, ' ').trim()
+  .replace(/&amp;/g, '&').replace(/&#8217;|&rsquo;/g, "'")
+  .replace(/&#215;|&times;/g, 'x').replace(/\s+/g, ' ').trim()
 
 const SYMBOL: Record<string, string> = {
   'D': 'GMD', 'GMD': 'GMD', 'DALASI': 'GMD',
@@ -107,20 +136,82 @@ function parseNumber(raw: string): number | null {
 }
 
 function detectKind(text: string): 'sale' | 'rent' {
-  return /\b(for rent|to let|rental|rent(?:ing)?\b|per month|\/month|p\/m|monthly)\b/i.test(text)
+  return /\b(for rent|to let|rental|renting\b|rent\b|per month|\/month|p\/m|monthly|per annum|per year|yearly)\b/i.test(text)
+    && !/\brent(al)? (income|yield|guarantee|potential)\b/i.test(text)
     ? 'rent' : 'sale'
 }
 
+/* Twee regels, in deze volgorde.
+   1. Een GEBOUW wint altijd van het woord "plot". Een villa op een kavel van
+      660 m2 is een villa. Dat was de fout die een jaarhuur van een woning als
+      grondprijs de index in liet lopen.
+   2. Tussen gebouwtypen wint het type dat het eerst in de tekst staat:
+      advertenties zetten hun kop vooraan, dus "3 Bedroom House + 3 Apartments"
+      is een huis. Een slaapkamertelling telt NIET mee als type - "5-Bedroom
+      Executive Villa" is een villa, geen huis dat met een cijfer begint. */
 function detectCategory(text: string): string {
   const t = text.toLowerCase()
-  if (/\b(plot|land|acre|hectare|bare land|building plot)\b/.test(t)) return 'land'
-  if (/\bvilla\b/.test(t)) return 'villa'
-  if (/\b(apartment|flat|studio|penthouse)\b/.test(t)) return 'apartment'
-  if (/\btown\s?house\b/.test(t)) return 'townhouse'
-  if (/\bcompound\b/.test(t)) return 'compound'
-  if (/\b(commercial|office|shop|warehouse|factory|hotel|restaurant)\b/.test(t)) return 'commercial'
-  if (/\b(house|home|bungalow|duplex)\b/.test(t)) return 'house'
+  const BUILT: [string, RegExp][] = [
+    ['villa', /\bvillas?\b/],
+    ['penthouse', /\bpenthouses?\b/],
+    ['apartment', /\b(apartments?|flats?|studio)\b/],
+    ['townhouse', /\btown\s?houses?\b/],
+    ['commercial', /\b(commercial|offices?|shops?|warehouses?|factory|hotels?|guest\s?houses?|restaurants?|store building)\b/],
+    ['compound', /\bcompounds?\b/],
+    ['house', /\b(houses?|homes?|bungalows?|duplex|storey|lodges?)\b/],
+  ]
+  let best: string | null = null, at = Infinity
+  for (const [name, re] of BUILT) {
+    const m = t.match(re)
+    if (m && m.index !== undefined && m.index < at) { at = m.index; best = name }
+  }
+  if (best) return best
+  if (/\b\d\s*-?\s*bed(room)?s?\b/.test(t) || /\bbed\s?rooms?\s*[:\-]\s*\d/.test(t)) return 'house'
+  if (/\b(plots?|land|acres?|hectares?|farmland)\b/.test(t)) return 'land'
   return 'house'
+}
+
+/* Slaat de genoemde oppervlakte op wat hij is. "660 m2 plot" is kavel,
+   "139 m2 built" is vloer. Weet je het niet, dan weet je het niet. */
+function detectSqmKind(text: string, category: string): 'plot' | 'built' | null {
+  const t = text.toLowerCase()
+  if (/\b(built|floor|living|internal|interior)\s*(area|space|size)?\b/.test(t)) return 'built'
+  if (/\bm2?\s*(of\s*)?(built|living|floor)\b/.test(t)) return 'built'
+  if (/\d+\s*m2?\s*plot\b/.test(t)) return 'plot'
+  if (/\b(plot|land|compound|site)\s*(size|area|of)?\b/.test(t)) return 'plot'
+  if (/\b\d{1,4}\s*(x|×|by)\s*\d{1,4}\b/.test(t)) return 'plot'   /* afmetingen zijn kavelmaten */
+  return category === 'land' ? 'plot' : null
+}
+
+/* Zonder markering beslist de grootte: boven de 400 m2 is het in deze markt
+   vrijwel altijd de kavel, want een woning van 400 m2 vloer is hier een
+   uitzondering en een kavel van 400 m2 de standaard. */
+function resolveSqm(sqm: number | null, hint: 'plot' | 'built' | null, category: string) {
+  if (!sqm) return { plot: null, built: null, kind: null as string | null }
+  const kind = hint ?? (category === 'land' ? 'plot' : (sqm <= 400 ? 'built' : 'plot'))
+  return {
+    plot: kind === 'plot' ? sqm : null,
+    built: kind === 'built' ? sqm : null,
+    kind,
+  }
+}
+
+function detectRentPeriod(text: string): 'month' | 'year' | null {
+  if (/\b(per month|\/ ?month|monthly|a month|p\/m|pcm)\b/i.test(text)) return 'month'
+  if (/\b(per annum|per year|\/ ?year|yearly|annually|a year|p\.a\.)\b/i.test(text)) return 'year'
+  return null
+}
+
+/* Zonder periode in de tekst beslist de hoogte. De twee markten liggen ver
+   genoeg uit elkaar dat dit werkt: onder $2.500 is het een maandhuur, boven
+   $4.000 een jaarhuur. Daartussen laten we het los - een gok die er twaalf
+   keer naast kan zitten hoort niet in een prijsindex. */
+function annualRentUsd(priceUsd: number, period: 'month' | 'year' | null) {
+  if (period === 'month') return { annual: priceUsd * 12, period: 'month' }
+  if (period === 'year') return { annual: priceUsd, period: 'year' }
+  if (priceUsd < 2500) return { annual: priceUsd * 12, period: 'month (assumed)' }
+  if (priceUsd >= 4000) return { annual: priceUsd, period: 'year (assumed)' }
+  return { annual: null as number | null, period: null as string | null }
 }
 
 type Alias = { alias: string; area: string; region: string }
@@ -150,7 +241,9 @@ type Parsed = {
   external_id: string; url: string | null; title: string | null
   kind: string; category: string; area: string | null; region: string | null
   price_usd: number | null; price_raw: string | null; currency: string | null
-  sqm: number | null; beds: number | null; confidence: number
+  sqm: number | null; plot_sqm: number | null; built_sqm: number | null
+  sqm_kind: string | null; rent_period: string | null
+  beds: number | null; confidence: number
 }
 
 function parseBlock(block: string, cfg: any, aliases: Alias[], toUsd: (v: number, c: string) => number, base: string): Parsed | null {
@@ -187,31 +280,74 @@ function parseBlock(block: string, cfg: any, aliases: Alias[], toUsd: (v: number
   if (price && ccy !== 'GMD' && price < 300) price = null
 
   const sqmRaw = f.sqm ? pick(f.sqm) : null
-  const sqm = sqmRaw ? parseNumber(sqmRaw) : null
+  let sqmVal = sqmRaw ? parseNumber(sqmRaw) : null
+  /* De Gambiaanse markt adverteert bijna nooit een oppervlakte maar een
+     maat: "20m x 25m", "Size: 20m. x 20m.". Staat er geen m2, dan is het
+     product van die twee de kavelgrootte - en een maat is per definitie
+     een kavelmaat, nooit een vloeroppervlak. */
+  let dimSqm: number | null = null
+  if (!sqmVal) {
+    const d = text.match(/\b([0-9]{1,4}(?:[.,][0-9])?)\s*(?:m|meters?|mtrs?)?\.?\s*(?:x|×|by)\s*([0-9]{1,4}(?:[.,][0-9])?)\s*(?:m|meters?|mtrs?)?\b/i)
+    if (d) {
+      const a = parseFloat(d[1].replace(',', '.')), b = parseFloat(d[2].replace(',', '.'))
+      if (a >= 4 && a <= 1500 && b >= 4 && b <= 1500) { dimSqm = Math.round(a * b); sqmVal = dimSqm }
+    }
+  }
   const bedsRaw = f.beds ? pick(f.beds) : null
-  const beds = bedsRaw ? parseInt(bedsRaw, 10) : null
+  let beds = bedsRaw ? parseInt(bedsRaw, 10) : null
+  if (!beds) {
+    const bm = text.match(/\b(?:bed\s?rooms?|beds?)\s*[:\-]?\s*([0-9]{1,2})\b/i) || text.match(/\b([0-9]{1,2})\s*-?\s*bed\s?rooms?\b/i)
+    if (bm) beds = parseInt(bm[1], 10)
+  }
 
   const haystack = `${title} ${url || ''} ${text}`
   const hit = matchArea(haystack, aliases)
   const kind = cfg.kind && cfg.kind !== 'auto' ? cfg.kind : detectKind(haystack)
   const category = cfg.category && cfg.category !== 'auto' ? cfg.category : detectCategory(haystack)
 
+  /* Een rij met alleen een maat, geen slaapkamers en geen gebouwwoord is
+     een kavel. Zonder deze regel valt hij op de standaard 'house' terug en
+     komt een stuk grond als woning in de index - precies andersom als de
+     fout hierboven, en net zo fout. */
+  let cat = category
+  if (cat === 'house' && dimSqm && !beds &&
+      !/\b(villas?|apartments?|flats?|penthouses?|houses?|homes?|bungalows?|compounds?|guest\s?houses?|duplex|storey|bed\s?rooms?)\b/i.test(haystack)) {
+    cat = 'land'
+  }
+
+  const okSqm = sqmVal && sqmVal >= 20 && sqmVal <= 100000 ? sqmVal : null
+  const area = resolveSqm(okSqm, dimSqm ? 'plot' : detectSqmKind(haystack, cat), cat)
+
+  let priceUsd = price && ccy ? Math.round(toUsd(price, ccy)) : (price ? Math.round(toUsd(price, 'GMD')) : null)
+  let rentPeriod: string | null = null
+  if (kind === 'rent' && priceUsd) {
+    const r = annualRentUsd(priceUsd, detectRentPeriod(haystack))
+    priceUsd = r.annual === null ? null : Math.round(r.annual)
+    rentPeriod = r.period
+  }
+
+  // De noemer voor prijs per m2: vloer bij bebouwd, kavel bij grond.
+  // Alleen als hij de juiste is - anders leeg, en telt de rij niet mee
+  // voor de prijs per m2 maar nog wel voor de mediane prijs.
+  const denom = cat === 'land' ? area.plot : area.built
+
   let confidence = 0
-  if (price) confidence += 0.40
+  if (priceUsd) confidence += 0.40
   if (ccy) confidence += 0.10
   if (hit) confidence += 0.25
-  if (sqm && sqm >= 20 && sqm <= 100000) confidence += 0.15
+  if (denom) confidence += 0.15
   if (url) confidence += 0.10
 
   const external_id = url ? url.replace(/[?#].*$/, '').slice(-160)
     : (title || text).slice(0, 120)
 
   return {
-    external_id, url, title: title || null, kind, category,
+    external_id, url, title: title || null, kind, category: cat,
     area: hit?.area ?? null, region: hit?.region ?? null,
-    price_usd: price && ccy ? Math.round(toUsd(price, ccy)) : (price ? Math.round(toUsd(price, 'GMD')) : null),
+    price_usd: priceUsd,
     price_raw: priceRaw, currency: ccy,
-    sqm: sqm && sqm >= 20 && sqm <= 100000 ? sqm : null,
+    sqm: denom, plot_sqm: area.plot, built_sqm: area.built,
+    sqm_kind: area.kind, rent_period: rentPeriod,
     beds: beds && beds > 0 && beds < 30 ? beds : null,
     confidence: Math.min(1, +confidence.toFixed(2)),
   }
@@ -241,12 +377,14 @@ async function runHtmlSource(client: ReturnType<typeof sb>, src: any, aliases: A
   const seen: Parsed[] = []
   const rejected: any[] = []
   let status = 0
+  let anyHtml = false
 
   for (const u of urls) {
     if (!robotsAllows(rules, u)) continue
     const got = await getHtml(u)
     status = got.status
     if (!got.html) { await sleep(CRAWL_DELAY_MS); continue }
+    anyHtml = true
 
     let blocks: string[] = []
     if (cfg.item) {
@@ -266,6 +404,15 @@ async function runHtmlSource(client: ReturnType<typeof sb>, src: any, aliases: A
       if (!seen.some((s) => s.external_id === row.external_id)) seen.push(row)
     }
     await sleep(CRAWL_DELAY_MS)
+  }
+
+  /* Een oogst die niets vindt op een pagina die WEL laadde, is een storing.
+     Zes bronnen deden dit maanden lang met ok:true, en niemand kon het zien
+     omdat "0 rijen" er precies zo uitziet als "geen aanbod". */
+  if (!anyHtml) throw new Error('no page returned html (status ' + status + ')')
+  if (!seen.length) {
+    throw new Error('page loaded but nothing parsed - selector needs tuning (' +
+      rejected.length + ' blocks rejected). Test with {run:"' + src.key + '",dry:true}')
   }
 
   if (dry) return { status, seen: seen.length, sample: seen.slice(0, 8), rejected, isNew: 0, updated: 0 }
@@ -331,34 +478,58 @@ async function runCbg(client: ReturnType<typeof sb>, dry: boolean) {
   return { status: got.status, seen: out.length, sample: out, rejected: [], isNew: out.length, updated: 0 }
 }
 
+/* GBoS publiceert niet meer op gbos.gov.gm - dat domein lost sinds
+   augustus 2026 niet eens meer op. Het actuele portaal is gbosdata.org en
+   dat draagt de kopcijfers op de voorpagina. Lukt dat niet, dan is de
+   Wereldbank-API de terugval: alleen jaarcijfers, maar wel machineleesbaar
+   en altijd bereikbaar. Beter een jaarcijfer met een eerlijk etiket dan een
+   maandcijfer dat er niet is. */
 async function runGbos(client: ReturnType<typeof sb>, dry: boolean) {
-  const got = await getHtml('https://www.gbos.gov.gm/cpi.php')
-  const text = strip(got.html)
   const out: any[] = []
-
-  // "The CPI for March 2026 stood at 179.52" - and variants around it.
-  const idx = text.match(/(?:CPI|consumer price index)[^.]{0,120}?([12][0-9]{2}\.[0-9]{1,2})/i)
-  const infl = text.match(/inflation\s*rate[^.]{0,80}?([0-9]{1,2}\.[0-9]{1,2})\s*(?:percent|%)/i)
-  const when = text.match(/\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(20[2-9][0-9])\b/i)
-
   let month = monthStart(new Date())
-  if (when) {
-    const d = new Date(`${when[1]} 1, ${when[2]} UTC`)
-    if (!isNaN(d.getTime())) month = monthStart(d)
+  let source = 'Gambia Bureau of Statistics'
+  let sourceUrl = 'https://www.gbosdata.org/'
+  let status = 0
+
+  try {
+    const got = await getHtml('https://www.gbosdata.org/')
+    status = got.status
+    const text = strip(got.html)
+
+    const idx = text.match(/(?:CPI|consumer price index)[^.]{0,160}?([12][0-9]{2}\.[0-9]{1,2})/i)
+    const infl = text.match(/inflation[^.]{0,120}?([0-9]{1,2}\.[0-9]{1,2})\s*(?:percent|%)/i)
+    const when = text.match(/\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(20[2-9][0-9])\b/i)
+    if (when) {
+      const d = new Date(`${when[1]} 1, ${when[2]} UTC`)
+      if (!isNaN(d.getTime())) month = monthStart(d)
+    }
+    if (idx) out.push({ series: 'cpi_all', value: +idx[1], unit: 'index 2020M1=100' })
+    if (infl) out.push({ series: 'inflation_yoy', value: +infl[1], unit: '%' })
+  } catch (_e) { /* valt hieronder terug op de Wereldbank */ }
+
+  if (!out.length) {
+    const r = await fetch(
+      'https://api.worldbank.org/v2/country/GMB/indicator/FP.CPI.TOTL.ZG?format=json&per_page=3&mrnev=1',
+      { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(TIMEOUT_MS) },
+    )
+    status = r.status
+    const j = await r.json().catch(() => null)
+    const row = Array.isArray(j) && Array.isArray(j[1]) ? j[1].find((x: any) => x && x.value != null) : null
+    if (!row) throw new Error('gbos_unreachable and worldbank_unparseable - enter CPI by hand in the console')
+    out.push({ series: 'inflation_yoy', value: +row.value, unit: '% (jaarcijfer)' })
+    month = monthStart(new Date(Date.UTC(+row.date, 11, 1)))
+    source = 'World Bank (GBoS via WDI) - jaarcijfer, terugval'
+    sourceUrl = 'https://api.worldbank.org/v2/country/GMB/indicator/FP.CPI.TOTL.ZG'
   }
-  if (idx) out.push({ series: 'cpi_all', value: +idx[1], unit: 'index 2020M1=100' })
-  if (infl) out.push({ series: 'inflation_yoy', value: +infl[1], unit: '%' })
-  if (!out.length) throw new Error('gbos_unparseable - enter CPI by hand in the console')
 
   if (!dry) {
     for (const o of out) {
       await client.from('market_macro').upsert({
-        month, ...o, source: 'Gambia Bureau of Statistics', source_url: 'https://www.gbos.gov.gm/cpi.php',
-        fetched_at: new Date().toISOString(),
+        month, ...o, source, source_url: sourceUrl, fetched_at: new Date().toISOString(),
       }, { onConflict: 'month,series' })
     }
   }
-  return { status: got.status, seen: out.length, sample: out, rejected: [], isNew: out.length, updated: 0 }
+  return { status, seen: out.length, sample: out, rejected: [], isNew: out.length, updated: 0 }
 }
 
 /* ---------- cadence ---------- */
@@ -395,7 +566,9 @@ Deno.serve(async (req) => {
   const aliases: Alias[] = (aliasRows || []).sort((a, b) => b.alias.length - a.alias.length)
 
   let q = client.from('market_sources').select('*').eq('active', true).order('sort')
-  if (which !== 'due' && which !== 'all') q = q.eq('key', which)
+  /* Een bron bij naam draaien mag ook als hij uit staat: dat is precies
+     hoe je hem test voordat je hem weer aanzet. */
+  if (which !== 'due' && which !== 'all') q = client.from('market_sources').select('*').eq('key', which).order('sort')
   const { data: sources } = await q
   if (!sources?.length) {
     return new Response(JSON.stringify({ ok: false, error: 'no matching source' }), { status: 404, headers })

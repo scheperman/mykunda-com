@@ -54,6 +54,40 @@ set "LOG=%TEMP%\winscp-mykunda.log"
 set "SCRIPT=%TEMP%\winscp-mykunda-script.txt"
 set "VOORBEELD=%TEMP%\winscp-mykunda-voorbeeld.txt"
 
+rem --- De uitslag per stap -------------------------------------
+rem  Elke stap zet hieronder zijn eigen regel, en aan het eind worden
+rem  ze alle vier getoond met een oordeel eronder.
+rem
+rem  Waarom dit er is: tot 27-08-2026 eindigde dit script bij elke
+rem  afloop hetzelfde - geslaagd, niets te doen, of halverwege
+rem  gestopt. Alles liep uit op dezelfde aftelklok en dezelfde
+rem  exitcode 0. Je kon dus aan het einde niet zien of het gelukt
+rem  was, en een mislukte push zag er precies zo uit als een goede.
+rem  Een venster dat sluit is geen bevestiging.
+set "ST_BOUW=niet gedraaid"
+set "ST_UPLOAD=niet gedraaid"
+set "ST_CACHE=niet gedraaid"
+set "ST_GIT=niet gedraaid"
+set "PROBLEEM="
+
+rem  Zelftest van het slot. Toont het uitslagblok met verzonnen
+rem  waarden en stopt daarna: er wordt niets gebouwd, niets geupload
+rem  en niets vastgelegd. Bewust hier en niet in een los testbestand,
+rem  want een kopie van dit blok zou na de eerste wijziging hiernaast
+rem  gaan lopen en dan slagen terwijl het echte slot stuk is.
+rem      upload.bat --zelftest        zoals een geslaagde run eindigt
+rem      upload.bat --zelftest fout   zoals een mislukte run eindigt
+if /i "%~1"=="--zelftest" (
+  set "ST_BOUW=ok"
+  set "ST_UPLOAD=ok"
+  set "ST_CACHE=ok"
+  set "ST_GIT=ok - vastgelegd en gepusht"
+  if /i "%~2"=="fout" set "ST_CACHE=MOET MET DE HAND - zie hierboven"
+  if /i "%~2"=="fout" set "ST_GIT=MISLUKT - push geweigerd, commit staat lokaal klaar"
+  if /i "%~2"=="fout" set "PROBLEEM=1"
+  goto :einde
+)
+
 rem --- WinSCP opzoeken -----------------------------------------
 rem  Twee dingen om te weten. Ten eerste: een pad met (x86) erin mag
 rem  nooit rechtstreeks binnen de haakjes van een if-blok staan, want
@@ -84,15 +118,18 @@ echo.
 echo == 1/5  Bouwen ================================================
 call node build.mjs
 if errorlevel 1 (
+  set "ST_BOUW=MISLUKT - build.mjs gaf een fout"
   echo.
   echo   De bouw is misgegaan. Er is niets geupload.
   goto :fout
 )
 if not exist "%LOKAAL%\index.html" (
+  set "ST_BOUW=MISLUKT - deploy\index.html ontbreekt"
   echo.
   echo   deploy\index.html ontbreekt. Er is niets geupload.
   goto :fout
 )
+set "ST_BOUW=ok"
 
 rem --- 2. Eerst laten zien wat er zou gaan ----------------------
 rem  -criteria=time,size  : alleen wat nieuwer of anders groot is.
@@ -118,6 +155,7 @@ rem  het script zelf kan zien of er iets te doen viel.
 set "RC=%errorlevel%"
 type "%VOORBEELD%"
 if not "%RC%"=="0" (
+  set "ST_UPLOAD=MISLUKT - WinSCP kon de servermap niet lezen"
   echo.
   echo   WinSCP kwam er niet uit. Logboek: %LOG%
   echo   Twee dingen om na te lopen:
@@ -155,6 +193,7 @@ echo == 3/5  Uploaden ==============================================
 >>"%SCRIPT%" echo exit
 "%WINSCP%" /log="%LOG%" /loglevel=0 /script="%SCRIPT%"
 if errorlevel 1 (
+  set "ST_UPLOAD=MISLUKT - halverwege gestopt, opnieuw draaien"
   echo.
   echo   De upload is halverwege gestopt. Logboek: %LOG%
   echo   Draai dit bestand opnieuw: wat al goed staat wordt overgeslagen.
@@ -162,6 +201,7 @@ if errorlevel 1 (
 )
 
 del "%SCRIPT%" >nul 2>&1
+set "ST_UPLOAD=ok"
 echo.
 echo   Geupload.
 
@@ -214,6 +254,7 @@ findstr /r /c:"success.:true" "%CFOUT%" >nul
 if errorlevel 1 goto :purgefout
 
 del "%CFOUT%" >nul 2>&1
+set "ST_CACHE=ok"
 echo   Cache geleegd. Binnen enkele seconden is de nieuwe versie live.
 echo   Nakijken kan in een privevenster.
 goto :klaar
@@ -228,6 +269,8 @@ echo   Zone - Cache Purge - Purge op deze zone.
 goto :handmatig
 
 :handmatig
+set "ST_CACHE=MOET MET DE HAND - zie hierboven"
+set "PROBLEEM=1"
 echo.
 echo   De cache is niet automatisch geleegd. Doe het met de hand,
 echo   anders is de upload niet zichtbaar:
@@ -244,6 +287,8 @@ goto :vastleggen
 
 :nietstedoen
 del "%SCRIPT%" "%VOORBEELD%" >nul 2>&1
+set "ST_UPLOAD=niets te doen - server stond al gelijk"
+set "ST_CACHE=niet nodig"
 echo.
 echo ===============================================================
 echo   Niets gewijzigd. Niets geupload, cache ongemoeid gelaten.
@@ -274,18 +319,23 @@ echo.
 echo == 5/5  Vastleggen in git =====================================
 where git.exe >nul 2>&1
 if errorlevel 1 (
+  set "ST_GIT=overgeslagen - git niet gevonden"
+  set "PROBLEEM=1"
   echo   git niet gevonden. Leg het zelf vast:
   echo     git add -A   en dan   git commit   en   git push
   goto :einde
 )
 git rev-parse --is-inside-work-tree >nul 2>&1
 if errorlevel 1 (
+  set "ST_GIT=overgeslagen - dit is geen git-repo"
   echo   Dit is geen git-repo. Overgeslagen.
   goto :einde
 )
 
 git add -A
 if errorlevel 1 (
+  set "ST_GIT=MISLUKT - git add ging mis"
+  set "PROBLEEM=1"
   echo   git add is misgegaan. Leg het met de hand vast.
   goto :einde
 )
@@ -297,14 +347,31 @@ if not errorlevel 1 (
   goto :pushen
 )
 
+rem  Alleen de aantallen, niet de hele lijst. Bij een herijking van de
+rem  gebiedsprijzen staan hier 120 bestanden, en dan schuift de vraag
+rem  hieronder van het scherm af - precies zoals op 27-08-2026, toen
+rem  alles wel staged raakte maar niets werd vastgelegd omdat de
+rem  wachtende prompt niet meer te zien was. De volledige lijst blijft
+rem  altijd op te vragen met: git diff --cached --name-status
+for /f %%N in ('git diff --cached --name-only ^| find /c /v ""') do set "AANTAL=%%N"
 echo.
-git -c color.ui=false diff --cached --name-status
+echo   !AANTAL! bestand^(en^) staan klaar om vast te leggen.
 echo.
+
 set "BERICHT=%~1"
-if not defined BERICHT set /p "BERICHT=  Commitbericht (Enter = standaardtekst): "
+if not defined BERICHT (
+  echo   ---------------------------------------------------------------
+  echo    Dit is het enige moment waarop dit script iets van je wil.
+  echo    Typ een commitbericht en druk op Enter, of druk meteen op
+  echo    Enter voor een standaardtekst met de datum en het aantal.
+  echo   ---------------------------------------------------------------
+  set /p "BERICHT=  Commitbericht: "
+)
 if not defined BERICHT call :standaardbericht
-git commit -m "%BERICHT%"
+git commit -m "!BERICHT!"
 if errorlevel 1 (
+  set "ST_GIT=MISLUKT - commit ging mis, niets gepusht"
+  set "PROBLEEM=1"
   echo   De commit is misgegaan. Er is niets gepusht.
   goto :einde
 )
@@ -313,6 +380,8 @@ echo   Vastgelegd.
 :pushen
 git push
 if errorlevel 1 (
+  set "ST_GIT=MISLUKT - push geweigerd, commit staat lokaal klaar"
+  set "PROBLEEM=1"
   echo.
   echo   De push is niet gelukt. Meestal staat er op GitHub iets nieuwers.
   echo   De commit staat lokaal klaar; haal eerst op en push dan opnieuw:
@@ -320,6 +389,7 @@ if errorlevel 1 (
   echo     git push
   goto :einde
 )
+set "ST_GIT=ok - vastgelegd en gepusht"
 echo   Gepusht naar origin.
 goto :einde
 
@@ -329,16 +399,75 @@ for /f %%N in ('git diff --cached --name-only ^| find /c /v ""') do set "AANTAL=
 set "BERICHT=Live gezet op %DATE% - %AANTAL% bestand(en) gewijzigd"
 goto :eof
 
+rem ============================================================
+rem  Het slot. Elke afloop komt hier langs en krijgt dezelfde vier
+rem  regels te zien, zodat je nooit meer hoeft te raden of het goed
+rem  ging. De regel is simpel: ging alles goed, dan sluit het venster
+rem  vanzelf; ging er iets mis, dan blijft het open tot jij een toets
+rem  indrukt. Een venster dat je nooit hebt zien sluiten is geen
+rem  bewijs dat het gelukt is.
+rem ============================================================
+
+:uitslag
+echo.
+echo ===============================================================
+echo   UITSLAG
+echo ---------------------------------------------------------------
+echo    1     bouwen             !ST_BOUW!
+echo    2-3   uploaden           !ST_UPLOAD!
+echo    4     Cloudflare-cache   !ST_CACHE!
+echo    5     git                !ST_GIT!
+call :gitstand
+echo ===============================================================
+goto :eof
+
+rem  Na afloop nog even hardop: staat er echt niets meer lokaal te
+rem  wachten? Dit leest de stand uit git zelf en gelooft dus niet de
+rem  meldingen hierboven op hun woord.
+:gitstand
+set "VOOR="
+set "STAGED="
+for /f "delims=" %%A in ('git rev-list --count @{u}..HEAD 2^>nul') do set "VOOR=%%A"
+for /f %%A in ('git diff --cached --name-only 2^>nul ^| find /c /v ""') do set "STAGED=%%A"
+if defined VOOR if not "!VOOR!"=="0" (
+  echo ---------------------------------------------------------------
+  echo    LET OP  !VOOR! commit^(s^) staan nog lokaal en niet op GitHub.
+  set "PROBLEEM=1"
+)
+if defined STAGED if not "!STAGED!"=="0" (
+  echo ---------------------------------------------------------------
+  echo    LET OP  !STAGED! bestand^(en^) staan klaar maar zijn niet vastgelegd.
+  set "PROBLEEM=1"
+)
+goto :eof
+
 :fout
 del "%VOORBEELD%" >nul 2>&1
+set "PROBLEEM=1"
+call :uitslag
+echo.
+echo   ER IS IETS MISGEGAAN. Zie de regel met MISLUKT hierboven.
+echo   Er is niets geforceerd; opnieuw draaien is veilig.
 echo.
 pause
 exit /b 1
 
 :einde
-rem  Geen pause: het venster sluit vanzelf. De timeout laat je de uitslag nog
-rem  lezen als je dit vanaf een snelkoppeling start, en is met een toets weg.
 del "%VOORBEELD%" >nul 2>&1
+call :uitslag
+if defined PROBLEEM (
+  echo.
+  echo   NIET ALLES IS GELUKT. Loop de regels hierboven na.
+  echo   Er is niets geforceerd; opnieuw draaien is veilig.
+  echo.
+  pause
+  exit /b 1
+)
 echo.
-timeout /t 8 2>nul
+echo   ALLES GELUKT. Site bijgewerkt, cache geleegd, bron vastgelegd.
+echo.
+rem  timeout werkt niet als de invoer omgeleid is - dan valt hij terug
+rem  op ping, dat overal werkt maar niet af te breken is met een toets.
+timeout /t 10
+if errorlevel 1 ping -n 11 127.0.0.1 >nul 2>&1
 exit /b 0

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:1vl3jng--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:18ltn21--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -9,13 +9,13 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#15463A">
 <title>How we measure Gambian property prices — sources and method</title>
-<meta name="description" content="Where the MyKunda price index comes from: which sources are read, what is discarded as duplicate, how often it is rebuilt — and what it is not.">
+<meta name="description" content="Where the MyKunda price figures come from: which sources are read, what is discarded as duplicate, how often it is rebuilt — and what it is not.">
 <link rel="canonical" href="https://mykunda.com/how-we-measure-prices.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MyKunda">
 <meta property="og:locale" content="en_GB">
 <meta property="og:title" content="How MyKunda measures Gambian property prices">
-<meta property="og:description" content="Where the MyKunda price index comes from: which sources are read, what each one is worth, what is thrown away as duplicate or unreadable, how often it is rebuilt — and what the index is not.">
+<meta property="og:description" content="Where the MyKunda price figures come from: which sources are read, what each one is worth, what is thrown away as duplicate or unreadable, how often it is rebuilt — and what the index is not.">
 <meta property="og:url" content="https://mykunda.com/how-we-measure-prices.html">
 <meta property="og:image" content="https://mykunda.com/images/og/gambia-street-aerial.jpg">
 <meta property="og:image:width" content="1200">
@@ -23,14 +23,14 @@
 <meta property="og:image:alt" content="How MyKunda measures Gambian property prices">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="How MyKunda measures Gambian property prices">
-<meta name="twitter:description" content="Where the MyKunda price index comes from: which sources are read, what each one is worth, what is thrown away as duplicate or unreadable, how often it is rebuilt — and what the index is not.">
+<meta name="twitter:description" content="Where the MyKunda price figures come from: which sources are read, what each one is worth, what is thrown away as duplicate or unreadable, how often it is rebuilt — and what the index is not.">
 <meta name="twitter:image" content="https://mykunda.com/images/og/gambia-street-aerial.jpg">
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=156518406794788">
+<link rel="stylesheet" href="styles.min.css?v=97290937763637">
 <style>
 .px-hero{background:linear-gradient(135deg,#0E2E25,#1C5848);color:#fff;padding:calc(var(--header-h) + 8px) 0 0;margin-top:calc(-1 * var(--header-h))}
 .px-hero .wrap{padding-top:48px;padding-bottom:40px}
@@ -144,67 +144,98 @@ table.px .med span{display:block;font-size:11.5px;color:var(--muted-2);text-tran
 <main id="main">
 <section class="px-hero">
   <div class="wrap">
-    <div class="eyebrow">Method · MyKunda price index</div>
+    <div class="eyebrow">Method · MyKunda price table</div>
     <h1>How we measure these prices</h1>
-    <p>A price index for a country with no public register of sale prices has to say exactly what it is made of. This is that statement: the sources, what each one counts for, what gets thrown away, and where the number stops being useful.</p>
+    <p>A price figure for a country with no public register of sale prices has to say exactly what it is made of. This is that statement: the sources, what each one is worth, what gets thrown away, how much evidence sits behind each area, and where the number stops being useful.</p>
   </div>
 </section>
 <div class="px-body">
-  <p class="px-lead">The <a href="gambia-property-prices.html">MyKunda price index</a> is an average <b>asking price per square metre</b> for each of the <b>41 areas</b> we track, published in US dollars and rebuilt every month. It is assembled from listings — ours, other people's, and agents' own lists — plus the occasional real deal we can see the papers for. Nothing in it is modelled or estimated to fill a gap.</p>
-  <p class="px-stamp"><span></span> Last rebuilt <time datetime="2026-08-24">24 August 2026</time>.</p>
+  <p class="px-lead">This page describes how the figures on the <a href="gambia-property-prices.html">price table</a> and the area guides are made. The headline figure is the <b>asking price of land, per square metre, in Gambian dalasi</b>, for each of the 41 areas we cover. Land is measured on its own, separately from buildings, because in The Gambia land and buildings are usually sold separately &mdash; and because land is what most of the market actually trades.</p>
+  <p class="px-stamp"><span></span> Last measured <time datetime="2026-08-25">25 August 2026</time>. Exchange rates: D72.70 per US dollar, D85.74 per euro (Central Bank of The Gambia, 25 August 2026).</p>
 
-  <h2 class="px-h2">Where the observations come from</h2>
-  <p class="px-p">Every observation carries a weight between 0 and 1, and the area averages are <b>weighted medians</b> rather than plain ones — so a handful of unusual asking prices cannot drag an area up or down. The weight says how close the evidence is to a real transaction:</p>
+  <h2 class="px-h2">What the figures are built from</h2>
+  <p class="px-p">Every figure comes from advertised asking prices that we can read a size out of. For the August 2026 measurement that means <b>95 priced plot listings</b> with a stated plot dimension, <b>72 house listings</b> and <b>45 rental listings</b> whose period and property type we can actually read, drawn from:</p>
   <div class="px-table-wrap">
   <table class="px">
-    <thead><tr><th>Kind of evidence</th><th style="text-align:right">Weight</th><th>Why</th></tr></thead>
+    <thead><tr><th>Source</th><th>What it gives</th><th>What to know about it</th></tr></thead>
     <tbody>
-      <tr><td>A closed deal we witnessed</td><td class="num">1.00</td><td class="reg">A price someone actually paid, with papers we saw.</td></tr>
-      <tr><td>A notary figure</td><td class="num">0.95</td><td class="reg">Recorded by a professional, but second-hand to us.</td></tr>
-      <tr><td>Our own asking price</td><td class="num">0.90</td><td class="reg">We know the property, the size and the title. Still an ask.</td></tr>
-      <tr><td>An agency's own list</td><td class="num">0.85</td><td class="reg">Named agent, current stock, sizes usually reliable.</td></tr>
-      <tr><td>A Gambian portal</td><td class="num">0.60 – 0.65</td><td class="reg">Wide coverage, uneven data — sizes and areas often loose.</td></tr>
-      <tr><td>An international aggregator</td><td class="num">0.40</td><td class="reg">Broad stock, but frequently years out of date.</td></tr>
+      <tr><td>Facebook Marketplace &amp; groups</td><td class="reg">The private local market, in dalasi &mdash; 1,102 listings screened, 918 usable</td><td class="reg">By far the densest source, and the only one that reaches ordinary Gambian sellers. Prices are often typed carelessly (D650 for a plot of D650,000), so amounts are rescaled against a plausible range and anything still ambiguous is dropped.</td></tr>
+      <tr><td>Songhai Properties</td><td class="reg">Agent listings in dalasi, mostly Kombo</td><td class="reg">Dense and internally cross-checkable, but the listings carry no date and the site contradicts itself between pages by 40&ndash;65%. Treated as undated.</td></tr>
+      <tr><td>GamRealty</td><td class="reg">The euro- and dollar-priced market for foreign buyers</td><td class="reg">The only portal that states built floor area rather than plot size. Runs two price tiers side by side: raw local plots in dalasi, and fenced, titled, foreigner-ready plots at roughly one and a half to three times as much.</td></tr>
+      <tr><td>AccessGambia, Holprop</td><td class="reg">Additional listings, both currencies</td><td class="reg">Used, but never on their own: Holprop is a currency conversion of dalasi listings rather than an independent market, and AccessGambia has priced the same plot size six times apart on one page.</td></tr>
+      <tr><td>Gambia Real Estate, Schumann, Realigro</td><td class="reg">Nothing usable at present</td><td class="reg">Either prices are hidden, the listings are years old, or the site refuses automated reading. They are listed here so their absence is visible.</td></tr>
     </tbody>
   </table>
   </div>
-  <p class="px-p" style="margin-top:16px">That weight is then multiplied by how confident the reader was about the row itself — a half-legible listing counts for a fraction of a clean one. The effect is deliberate: a real deal can never be outvoted by a pile of scraped guesses.</p>
+  <p class="px-p" style="margin-top:16px">Where a size is given as a dimension &mdash; and in The Gambia it nearly always is, as <b>20 &times; 20</b> or <b>20 &times; 25</b> metres &mdash; the price per square metre is our own arithmetic. Almost nobody in the country advertises a price per square metre.</p>
 
-  <h2 class="px-h2">What gets left out</h2>
+  <h2 class="px-h2">Every figure says how much evidence sits behind it</h2>
+  <p class="px-p">This is the part that matters most. An area with fourteen plot listings and an area with none cannot carry the same kind of number, so we do not pretend they do. Each area falls into one of three classes, and the class is printed next to the figure:</p>
   <div class="px-note">
-    <h3>The same villa on four portals is one villa</h3>
-    <p>Every row is fingerprinted on market, property type, area, size to the nearest 25 m² and price to within about 5%. Where fingerprints match, only the copy from the most trusted source survives; anything matching one of our own listings is dropped outright. Without this step the coast would look busier and cheaper than it is, because the same stock is re-advertised many times over.</p>
+    <h3>Measured &mdash; three or more local plot listings</h3>
+    <p>The figure is the median of what is actually advertised in that area, with a range around it. Twenty of the 41 areas are in this class today, and they are almost all in the Kombos and along the coast, because that is where the advertising is.</p>
   </div>
   <div class="px-note">
-    <h3>Outliers, and anything we could not read</h3>
-    <p>Prices far outside their area's distribution are excluded rather than smoothed — usually they are a currency mix-up, a whole apartment block priced as one unit, or a plot measured in hectares. Listings without a usable size are excluded too: without square metres there is no price per square metre. When a portal redesigns and our reader stops understanding it, the source drops out of that month's index rather than contributing half-read rows.</p>
+    <h3>Few observations &mdash; one or two</h3>
+    <p>The figure is the best we can see, not a market average. One plot is not a market: it is a single seller&rsquo;s opinion of what their own land is worth. We publish it because it is more use than silence, with a wider range and the count shown.</p>
+  </div>
+  <div class="px-note">
+    <h3>Derived &mdash; no listings of our own</h3>
+    <p>The area gets the rate for its region, scaled from the areas nearby that do have evidence. It is marked as derived wherever it appears. It can be wide of a specific street by a factor of two, and upcountry it should be read as an order of magnitude, nothing more.</p>
+  </div>
+  <div class="px-note">
+    <h3>Rent has no derived class at all</h3>
+    <p>Land can be scaled from a neighbouring area because land prices move with location in a way we can see. Rents do not: across the areas where we hold rental listings, the local rent and the local land rate turn out to have almost no relationship, so a rent scaled from next door would be a number with nothing behind it. A rent is therefore published only where rental listings for that area exist &mdash; <b>13</b> of the 41 areas today &mdash; and the other 28 pages say plainly that we have none. Until 27 August 2026 those pages carried a rent anyway, calculated as 2% of the asking price of a house in the same area. That was wrong, and it is gone.</p>
+  </div>
+
+  <h2 class="px-h2">What gets thrown away</h2>
+  <div class="px-note">
+    <h3>Anything without a usable size</h3>
+    <p>Without square metres there is no price per square metre. Listings that give only a total price still count towards the plot and house figures, but never towards the rate per m&sup2;.</p>
+  </div>
+  <div class="px-note">
+    <h3>Prices that are not prices</h3>
+    <p>A striking number of listings carry a phone number in the price field, or a placeholder of D1. Anything whose price matches a phone number in its own text is dropped, and anything that lands outside a plausible range after rescaling is dropped too. Duplicate postings &mdash; the same plot offered by several people, which is common here &mdash; are excluded on the flag the source carries.</p>
+  </div>
+  <div class="px-note">
+    <h3>The two rental markets are never averaged together</h3>
+    <p>A three-bedroom house in Fajara genuinely rents for around D175,000 a year unfurnished on the local market, and for &euro;18,000 to &euro;38,000 a year furnished to a foreign tenant. That is a factor of nine on the same street. A single &ldquo;average rent&rdquo; would be wrong for both, so the figure we publish is the local, unfurnished rent &mdash; the market most readers are in.</p>
+    <p>Two other things are separated out for the same reason. A single room or a room-and-parlour is not a small house, so the rent we publish is for a home of two or three bedrooms and nothing else is counted towards it. And an advertisement whose period we cannot read is left out rather than guessed: Facebook shows only the first hundred characters or so, and a Gambian rent quoted as &ldquo;D45,000&rdquo; can mean a month, six months or a year. Roughly one rental listing in six is dropped on that rule alone.</p>
   </div>
   <div class="px-note">
     <h3>Official statistics are context, never input</h3>
-    <p>Inflation, the policy rate and the dalasi exchange rate are tracked alongside the index but are never priced into it. They are used to read the index — to say whether a rise is real or currency — and to date it. They do not move an area's average.</p>
+    <p>Inflation, the policy rate and the dalasi exchange rate are tracked alongside the figures but never priced into them. They are what you read the figures against: with inflation at 7.0% (Gambia Bureau of Statistics, July 2026), a price rising 5% a year is falling in real terms.</p>
   </div>
 
   <h2 class="px-h2">How often it is updated</h2>
-  <p class="px-p">The index is rebuilt monthly and every published figure carries the month it was measured. Areas with thin evidence in a given month keep the previous reading rather than being refreshed on one or two listings — a number that jumps because three plots came onto the market is worse than no change at all. The year-on-year column compares the same month a year earlier.</p>
+  <p class="px-p">The listing sources are read daily; the published figures are recalculated monthly and every one of them carries the date it was measured. A recalculation is reviewed by a person before it goes live &mdash; an area figure that jumps because three plots came onto the market is worse than no change at all. Where an area has no new evidence in a month, its figure stays where it is and its evidence class is what tells you so.</p>
 
   <h2 class="px-h2">What this is not</h2>
   <div class="px-note">
-    <h3>It is not a valuation</h3>
-    <p>An area average cannot value a property. Title, access, water, power, boundaries and the state of the building all move a real price far more than the area does, and none of them are in this number. Use it to sanity-check an asking price and to compare areas — not to decide what a specific plot or house is worth. For that you need the papers, which is what <a href="verify.html">Ownership Verification</a> is for.</p>
+    <h3>These are not transaction prices, and there is no way to make them so</h3>
+    <p>The Gambia has no public register of sale prices. Deeds are registered at the Registrar General&rsquo;s Department and conveyances are assessed for stamp duty, so the state sees prices &mdash; but nothing is published, and the Centre for Affordable Housing Finance in Africa states plainly that there is no centralised source for house prices or rents in the country. So every figure here is what was <b>asked</b>, consistently measured. What is paid is generally less, by an amount that depends entirely on the seller.</p>
   </div>
   <div class="px-note">
-    <h3>These are not transaction prices</h3>
-    <p>There is no public land registry of sale prices in The Gambia, so no one — us included — can publish verified transaction data for the country. Everything here is what was <b>asked</b>, consistently measured. Sale prices are generally lower, by an amount that depends entirely on the seller.</p>
+    <h3>It is not a valuation</h3>
+    <p>An area rate cannot value a property. Title, access, water, power, boundaries and the state of the building move a real price far more than the area does, and none of them are in this number. Use it to sanity-check an asking price and to compare areas &mdash; not to decide what a specific plot is worth. For a figure on one property, use the <a href="sell.html#value">valuation tool</a>, which prices land and building separately and tells you how confident it is; for the papers, <a href="verify.html">Ownership Verification</a>.</p>
+  </div>
+  <div class="px-note">
+    <h3>Yields here are low, and we would rather say so</h3>
+    <p>Across the areas where we hold both an asking price and a rent we can verify, gross rental yields run from about <b>1.5% to 4.7%</b> &mdash; below the 9.45% a one-year Gambian treasury bill paid in August 2026, and below the only published outside estimate for the country. Buying property here is mostly a bet on land, not an income strategy. Anyone quoting you a double-digit rental yield for The Gambia should be asked where the number comes from.</p>
+    <p>Until 27 August 2026 this page said the yield was &ldquo;roughly 2%&rdquo;. That was not a measurement. The rent published on most area pages was itself calculated as 2% of the asking price on the same page, so the yield we reported back was the assumption we had put in. The rents have since been rebuilt from rental listings only, and the yield is now what falls out of two separately measured numbers &mdash; which is why it is no longer a single figure.</p>
   </div>
   <div class="px-note">
     <h3>It is not an official register</h3>
-    <p>MyKunda is a property platform, not a statistics office. This index is our own measurement, published so it can be checked and argued with. It carries no official standing, and where a figure elsewhere on this site comes from an outside body, that body is named on the page.</p>
+    <p>MyKunda is a property platform, not a statistics office. This is our own measurement, published so it can be checked and argued with. It carries no official standing, and where a figure elsewhere on this site comes from an outside body, that body is named on the page.</p>
   </div>
 
+  <h2 class="px-h2">What we do not know</h2>
+  <p class="px-p">Coverage is honest but uneven, and it is worth being blunt about where it runs out. There is almost no advertising upcountry, so for Basse, Soma, Janjanbureh, Bansang, Kuntaur, Gambissara, Fatoto, Barra, Essau and Kerewan we publish land only, on a derived regional rate, and no house or rent figure at all. Built floor area is published by exactly one portal, so a reliable price per built square metre exists only for parts of the coast. Most listings carry no date, so &ldquo;current&rdquo; means current as at the date of measurement and nothing stronger. And the whole dataset is asking prices from a market where the same plot is sometimes sold twice &mdash; check the papers yourself, every time.</p>
+
   <h2 class="px-h2">Who is responsible for it</h2>
-  <p class="px-p">The index and the written guides are produced and checked by MyKunda, with Edwin Scheperman responsible for what is published. If a figure looks wrong to you, <a href="contact.html">tell us</a> — with the listing or the area, if you can. Corrections are made in the next monthly rebuild, or immediately if something is plainly broken. Who does what is set out on <a href="about.html#team">the team page</a>.</p>
+  <p class="px-p">These figures and the written guides are produced and checked by MyKunda, with Edwin Scheperman responsible for what is published. If a figure looks wrong to you, <a href="contact.html">tell us</a> &mdash; with the listing or the area, if you can. Corrections are made in the next monthly recalculation, or immediately if something is plainly broken. Who does what is set out on <a href="about.html#team">the team page</a>.</p>
   <div class="px-grid">
-    <div class="px-card"><div class="k">The numbers</div><div class="v" style="font-size:20px">Price index</div><div class="t"><a href="gambia-property-prices.html">All 41 areas, price per m² and the year-on-year change →</a></div></div>
+    <div class="px-card"><div class="k">The numbers</div><div class="v" style="font-size:20px">Price table</div><div class="t"><a href="gambia-property-prices.html">Land per m² in all 41 areas, with the evidence behind each →</a></div></div>
     <div class="px-card"><div class="k">Land</div><div class="v" style="font-size:20px">Plot prices</div><div class="t"><a href="land-for-sale-in-the-gambia.html">What a 1000 m² plot costs, by area →</a></div></div>
     <div class="px-card"><div class="k">One property</div><div class="v" style="font-size:20px">Ownership check</div><div class="t"><a href="verify.html">An independent report on who the papers say owns it →</a></div></div>
   </div>
@@ -253,11 +284,11 @@ table.px .med span{display:block;font-size:11.5px;color:var(--muted-2);text-tran
 window.__sbReady=new Promise(function(res){window.addEventListener('load',function(){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js';
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=156518406794788'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=97290937763637'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
   document.body.appendChild(s1);
 });});
 </script>
-<script src="app.min.js?v=156518406794788"></script>
+<script src="app.min.js?v=97290937763637"></script>
 <script>
 </script>
 </body>

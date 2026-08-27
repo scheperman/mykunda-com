@@ -24,61 +24,118 @@
 /* ============================================================
    1 · GRONDTARIEVEN — EUR per m²
    ------------------------------------------------------------
-   BASIS is de tabel zoals die tot augustus 2026 in sell.html
-   stond. Die was geijkt op GamRealty en Holprop: portalen die in
-   euro's adverteren voor buitenlandse kopers. Naast kavellistings
-   in dalasi (gambiarealestate.gm, songhaiproperties.gm,
-   accessgambia.com, gezien 26-08-2026) bleek die tabel in de
-   kustzone structureel te hoog en in de Kombo-groeigebieden te
-   laag. Zie het ijkrapport.
+   HERIJKT 26-08-2026 op een veel bredere basis dan de vorige
+   ronde. Toen stonden hier veertien gebieden met twee of drie
+   waarnemingen; nu zesendertig, met samen ruim honderdnegentig
+   geprijsde kavelaanbiedingen.
 
-   De tabel wordt daarom niet vervangen maar gecorrigeerd, zodat
-   per gebied zichtbaar blijft waar het getal vandaan komt:
+   Waar het bewijs vandaan komt:
+     · Facebook Marketplace en Facebook-groepen, peildatum
+       25-08-2026, 1.102 advertenties binnen 100 km van Sukuta
+       waarvan 918 met een bruikbaar bedrag. Dit is de enige
+       GEDATEERDE bron voor Gambia, en de enige die het gewone
+       particuliere aanbod bereikt in plaats van het makelaars-
+       en expatsegment. 95 daarvan noemen zowel prijs als maat.
+     · Songhai Properties, AccessGambia, Holprop en GamRealty
+       (gezien 26-08-2026), samen nog eens ongeveer 95 kavels.
 
-     WAARGENOMEN  minstens twee lokale kavellistings → mediaan
-     HALF         één waarneming → halverwege geschoven
-     ZONE         geen waarneming → zonefactor op het oude tarief
+   De twee vinden elkaar opvallend goed: Farato D1.701 tegen
+   Songhai's D1.250–1.625, Brikama D906 tegen D800–1.500, Kitty
+   D875 tegen D875, Brusubi D5.833 tegen D4.800–7.000. Voor deze
+   markt is dat zeldzaam. Het tarief hieronder is het naar aantal
+   waarnemingen gewogen gemiddelde van beide medianen.
 
-   Alleen WAARGENOMEN telt als bewijs. De andere twee verbreden
-   de bandbreedte; zie confidence().
+   Opschonen was nodig en niet triviaal: verkopers vullen het
+   prijsveld slordig in (D650 voor een kavel van D650.000), en een
+   flink deel zet er een telefoonnummer in. Bedragen zijn per
+   categorie teruggeschaald tegen een plausibele band, rijen
+   waarvan het bedrag overeenkomt met een cijferreeks in de eigen
+   tekst zijn eruit, dubbele plaatsingen ook, en alles buiten
+   D200–25.000 per m² is als onleesbaar weggegooid.
+
+   Drie klassen, en de klasse bepaalt de bandbreedte:
+     WAARGENOMEN  drie of meer waarnemingen → mediaan
+     HALF         één of twee → aanwijzing, bredere band
+     ZONE         geen → zonefactor op de oude tabel
+
+   LET OP bij het lezen van deze getallen: dit zijn medianen van
+   het GEWONE geadverteerde aanbod, en dat is precies wat de
+   referentiekavel in blok 3 beschrijft. Ze zijn niet naar een
+   betere specificatie teruggerekend. Een advertentie die niets
+   over titel, weg of stroom zegt, krijgt in het model dan ook
+   nul punten — het tarief geldt zoals het hier staat.
    ============================================================ */
 var LAND_HERIJKT = '2026-08-26';
 
-/* Waargenomen: mediaan van lokale kavellistings in dalasi,
-   omgerekend tegen 85,74 GMD/EUR (market_macro, aug 2026). */
+/* Waargenomen: n ≥ 3. `gmd` staat erbij omdat de Gambiaanse markt
+   in dalasi denkt en dat het getal is dat je met een advertentie
+   kunt vergelijken; `eur` is dezelfde waarde gedeeld door 85,74
+   (CBG, 25-08-2026) en is wat het model rekent. */
 var LAND_OBSERVED = {
-  'kololi':         { eur: 52.3, n: 2 },
-  'bijilo':         { eur: 61.0, n: 3 },
-  'brusubi':        { eur: 54.0, n: 2 },
-  'kerr serign':    { eur: 52.5, n: 2 },
-  'sukuta':         { eur: 34.7, n: 2 },
-  'jabang':         { eur: 31.9, n: 2 },
-  'lamin':          { eur: 15.2, n: 2 },
-  'yundum':         { eur: 18.6, n: 2 },
-  'old yundum':     { eur: 18.6, n: 2 },
-  'busumbala':      { eur: 17.0, n: 2 },
-  'gunjur':         { eur: 13.1, n: 2 },
-  'kartong':        { eur:  9.0, n: 2 },
-  'kartung':        { eur:  9.0, n: 2 },
-  'sanyang':        { eur: 14.9, n: 2 }
+  'fajara':     { eur:  155.5, n:  5, gmd: 13333 },
+  'kerr serign':{ eur:   92.2, n:  3, gmd:  7905 },
+  'brusubi':    { eur:   75.3, n:  4, gmd:  6458 },
+  'bijilo':     { eur:   70.0, n: 13, gmd:  6000 },
+  'jabang':     { eur:   33.8, n:  9, gmd:  2894 },
+  'salagi':     { eur:   28.1, n:  4, gmd:  2408 },
+  'sukuta':     { eur:   27.1, n:  8, gmd:  2326 },
+  'brufut':     { eur:   26.6, n:  7, gmd:  2282 },
+  'tujereng':   { eur:   26.6, n: 11, gmd:  2280 },
+  'tanji':      { eur:   25.2, n:  5, gmd:  2163 },
+  'yundum':     { eur:   21.5, n:  5, gmd:  1844 },
+  'lamin':      { eur:   21.4, n:  9, gmd:  1833 },
+  'busumbala':  { eur:   20.2, n:  4, gmd:  1728 },
+  'farato':     { eur:   19.1, n: 13, gmd:  1640 },
+  'jambur':     { eur:   18.8, n:  4, gmd:  1612 },
+  'brikama':    { eur:   12.3, n:  7, gmd:  1053 },
+  'sanyang':    { eur:   11.3, n: 14, gmd:   972 },
+  'mamuda':     { eur:   10.5, n:  5, gmd:   896 },
+  'kitty':      { eur:   10.2, n:  6, gmd:   875 },
+  'gunjur':     { eur:    8.0, n:  7, gmd:   682 },
+  'sifoe':      { eur:    7.3, n:  3, gmd:   625 }
 };
 
-/* Half geschoven: één waarneming is een aanwijzing, geen mediaan. */
+/* Eén of twee waarnemingen: een aanwijzing, geen mediaan. Eén
+   kavel is geen markt — het is de mening van één verkoper over
+   zijn eigen grond. confidence() rekent daar zwaar op af. */
 var LAND_HALF = {
-  'brufut heights': { eur: 50.4 },
-  'brufut':         { eur: 33.6 },
-  'brikama':        { eur: 14.3 },
-  'tujereng':       { eur: 22.9 },
-  'farafenni':      { eur:  2.5 }
+  'cape point':    { eur:  194.4, n:  1, gmd: 16667 },
+  'banjul':        { eur:  145.8, n:  1, gmd: 12500 },
+  'bakoteh':       { eur:  123.0, n:  1, gmd: 10549 },
+  'kotu':          { eur:  116.3, n:  1, gmd:  9971 },
+  'kololi':        { eur:  102.6, n:  4, gmd:  8800 },   /* 27-08-2026: +2 Songhai-kavels met maat */
+  'brufut heights':{ eur:   42.3, n:  2, gmd:  3625 },
+  'ghana town':    { eur:   29.2, n:  1, gmd:  2500 },
+  'madiana':       { eur:   15.5, n:  1, gmd:  1333 },
+  'jambanjelly':   { eur:   14.0, n:  1, gmd:  1202 },
+  'jalanbang':     { eur:   12.7, n:  1, gmd:  1087 },
+  'kartong':       { eur:    8.7, n:  2, gmd:   742 },
+  'bafuloto':      { eur:    8.4, n:  1, gmd:   722 },
+  'faraba':        { eur:    5.7, n:  1, gmd:   488 },
+  'pirang':        { eur:    2.9, n:  1, gmd:   246 },
+  'farafenni':     { eur:    1.1, n:  1, gmd:    93 }
 };
 
-/* Zonefactor voor gebieden zonder eigen waarneming. Mediaan van
-   lokaal/portaal per zone, over de gebieden die wél bewijs hebben. */
+/* Zonefactor voor gebieden zonder eigen waarneming, toegepast op
+   de oude portaaltabel in valuation-areas.js. De factor is de
+   mediaan van waargenomen ÷ oude tabel, en alleen berekend over
+   gebieden met n ≥ 3 — anders bepaalt één advertentie de hele
+   provincie.
+
+   De vorige ronde had coast 0,45 / kombo 1,05 / greater 0,70. Dat
+   verschuift flink, en in beide richtingen: de kust was minder
+   overschat dan gedacht, het Kombo-binnenland en Groot-Banjul
+   juist structureel te laag. */
 var LAND_ZONE = {
-  coast:     0.45,  /* toeristische kuststrook: 7 gebieden, mediaan 0,43 */
-  kombo:     1.05,  /* Kombo binnenland: 9 gebieden, mediaan 1,10       */
-  greater:   0.70,  /* Greater Banjul: geen bewijs, tussen beide in     */
-  upcountry: 0.55   /* provincie: één waarneming (Farafenni), half      */
+  coast:     0.88,  /* 7 gebieden met n≥3: bijilo, fajara, brufut, tanji,
+                       sanyang, tujereng, gunjur                          */
+  kombo:     1.43,  /* 8 gebieden: brusubi, kerr serign, sukuta, lamin,
+                       jabang, yundum, busumbala, brikama                 */
+  greater:   1.40,  /* alleen banjul en bakoteh, elk één waarneming; de
+                       ruwe uitkomst was 2,1 maar dat is te veel gewicht
+                       voor twee losse kavels, dus bewust getemperd       */
+  upcountry: 0.55   /* één waarneming (Farafenni, €1,09/m²) die op 0,27
+                       wees; ook hier bewust halverwege gelaten           */
 };
 
 var ZONE_OF = {
@@ -90,7 +147,8 @@ var ZONE_OF = {
           'banjulunding','wellingara','farato','abuko','kembujeh','madiana',
           'kuloro','giboro koto','sotokoi','faraba sutu','bessi nding','jambur',
           'marakissa','kafuta','sifoe','mandinaba','bonto','kitty','nyambai',
-          'faraba banta','pirang','bulok','kalagi','somita','sibanor','darsilami'],
+          'faraba banta','pirang','bulok','kalagi','somita','sibanor','darsilami',
+          'salagi','mamuda','jalanbang','bafuloto','kunkujang','daranka'],
   greater: ['banjul','serrekunda','serekunda','kanifing','bakoteh','bundung',
             'talinding','tallinding kunjang','latri kunda','faji kunda','pipeline',
             'tabokoto','new jeshwang','old jeshwang','dippa kunda','ebou town',
@@ -221,18 +279,44 @@ var BUILD_CAP = { down: -20, up: 20 };
 /* ============================================================
    4 · HUUR — twee markten, niet één
    ------------------------------------------------------------
-   Lokale lange huur in dalasi (Songhai Properties, twaalf
-   jaarhuren in de Kombo's) loopt van D250.000 tot D600.000 per
-   jaar, mediaan D350.000 — bruto rendement 2,5 tot 4% op lokale
-   verkoopprijzen. Expat- en gemeubileerde verhuur (GamRealty,
-   Gambia Property Shop) ligt daar een factor drie boven.
+   HERIJKT 27-08-2026. Hieronder stond tot die datum 1,95%, en de
+   toelichting erbij zei dat dat een verlaging was van 3,0-5,5%
+   "omdat de gemeten huren dat niet ondersteunden". Die meting
+   deugde niet, en de verlaging dus ook niet.
 
-   Numbeo geeft 1,6–1,8% voor Gambia op twaalf inzendingen van
-   twee mensen; Global Property Guide impliceert 5,9% op een
-   pagina die zelf zegt dat Gambia geen prijsstatistiek publiceert.
-   Allebei te dun. De huur-tegen-prijsvergelijking hierboven niet.
+   Wat er misging: de 98 huuradvertenties waar dat op rustte,
+   hadden geen leesbare periode. De aanname was dat een Gambiaanse
+   huur een JAARhuur is. Dat klopt voor makelaarsadvertenties,
+   maar niet voor het lokale aanbod op Facebook, waar in maanden
+   wordt geadverteerd en in zes- of twaalfmaandsvoorschotten wordt
+   betaald. Maandbedragen en jaarbedragen stonden in één kolom.
+   De verdeling was daardoor tweetoppig — een cluster rond
+   D5.000-13.000 en een rond D150.000-450.000, met een leeg dal
+   ertussen — en de mediaan landde in dat dal. Vandaar D163.000
+   per jaar, en vandaar 1,95%.
+
+   Nu: 45 advertenties waarvan periode én woningtype wél te lezen
+   zijn, per gebied gepaard met de vraagprijs van een woning in
+   datzelfde gebied. Binnen het gebied paren is essentieel — een
+   lokale huur tegen een expat-vraagprijs afzetten is precies hoe
+   je weer op 2% uitkomt.
+
+   Uitkomst over 13 gebieden: mediaan 2,68%, gewogen naar aantal
+   advertenties 2,86%, spreiding 1,5% (Bakau) tot 4,7% (Bakoteh).
+   Het middenniveau hieronder staat daarom op 2,7% voor een
+   gewone woning. Dat ligt tussen de oude 1,95% en de nog oudere
+   3,0-5,5% in, en het is voor het eerst een getal dat uit twee
+   los gemeten grootheden komt.
+
+   Blijft staan: het zijn gepaarde vraagprijzen van VERSCHILLENDE
+   objecten, geen gerealiseerde rendementen. De orde van grootte
+   is hard, de tweede decimaal niet.
+
+   Kopen is in Gambia vooral een weddenschap op grond, niet een
+   inkomensstrategie. Een Gambiaans schatkistpapier op 364 dagen
+   deed 9,45% in augustus 2026 — ruim boven elk van deze cijfers.
    ============================================================ */
-var RENT_HERIJKT = '2026-08-26';
+var RENT_HERIJKT = '2026-08-27';
 
 /* ---- het portaalniveau ----
    Dezelfde kavel wordt in dalasi anders geprijsd dan in euro's.
@@ -258,9 +342,30 @@ var PORTAL_RATE = {
   'kartong':       [ 8,  20],  'kartung':        [ 8,  20]
 };
 var RENT_YIELD = {
-  local:  { villa: 0.030, house: 0.032, apartment: 0.042, townhouse: 0.035,
-            compound: 0.028, penthouse: 0.040, lodge: 0.045, commercial: 0.055 },
-  expatMultiple: 2.8       /* gemeubileerd, in euro's, aan buitenlanders */
+  /* Gemeten: mediaan 2,68% over 13 gebieden waar huur en vraagprijs
+     allebei los zijn waargenomen, met 2,7% als middenniveau voor een
+     gewone woning. De spreiding tussen woningtypen is nog steeds niet
+     waargenomen — daarvoor zijn het te weinig objecten — maar de
+     ordening (appartement boven villa, bedrijfsruimte bovenaan) is in
+     elke markt hetzelfde en blijft dus staan, om het gemeten niveau
+     heen geschaald. De residentiële typen blijven binnen de 1,5-4,7%
+     die we per gebied werkelijk zien; lodge en bedrijfsruimte staan
+     daarboven omdat het een andere activaklasse is. */
+  local:  { villa: 0.022, house: 0.027, apartment: 0.032, townhouse: 0.027,
+            compound: 0.025, penthouse: 0.032, lodge: 0.043, commercial: 0.055 },
+  /* Gemeubileerd, in euro's of dollars, aan buitenlanders. In
+     Fajara staat een lokale driekamerwoning op D175.000 per jaar
+     en een gemeubileerde villa in dezelfde straat op EUR 18.000
+     tot 38.000 — een factor negen. Over de hele waarneming ligt
+     de verhouding tussen 2,5 en 4. Drie is het midden en het
+     enige getal dat we kunnen verdedigen; het staat naast het
+     hoofdgetal, nooit erin.
+     Getoetst op 27-08-2026 met de herijkte lokale huren: Kololi
+     lokaal D350.000 per jaar tegen GamRealty $13.000 (D964.000)
+     en Global Properties $12.000 (D890.000) geeft 2,5 tot 2,8.
+     Ongewijzigd gelaten — de Fajara-factor negen blijkt vooral
+     een ongewoon goedkope lokale advertentie. */
+  expatMultiple: 3.0
 };
 
 root.MK_VAL_CONFIG = {
@@ -314,8 +419,10 @@ function landRate(areaKey, base) {
              note: C.LAND_OBSERVED[k].n + ' local plot listings in ' + titel(areaKey) };
   }
   if (C.LAND_HALF[k]) {
-    return { eur: C.LAND_HALF[k].eur, src: 'half', n: 1,
-             note: 'one observation in ' + titel(areaKey) + ' \u2014 shifted halfway from the older rate' };
+    var hn = C.LAND_HALF[k].n || 1;
+    return { eur: C.LAND_HALF[k].eur, src: 'half', n: hn,
+             note: hn + (hn === 1 ? ' observation' : ' observations') + ' in ' + titel(areaKey) +
+                   ' \u2014 an indication, not a market average' };
   }
   var was = base && base[k];
   if (was == null) return { eur: null, src: 'none', n: 0, note: 'area not recognised' };
@@ -331,7 +438,13 @@ function landRate(areaKey, base) {
 function effLand(sqm) {
   if (sqm <= 600) return sqm;
   if (sqm <= 2000) return 600 + (sqm - 600) * 0.90;
-  return 600 + 1400 * 0.90 + (sqm - 2000) * 0.78;
+  if (sqm <= 5000) return 600 + 1400 * 0.90 + (sqm - 2000) * 0.78;
+  /* Boven de halve hectare is het geen bouwkavel meer maar bulkgrond, en
+     die wordt per m² veel goedkeuper verhandeld. Waargenomen 26-08-2026:
+     Sifoe 2 ha op 0,70 van het lokale kaveltarief, Mamuda 0,64 ha op 0,61,
+     Songhai's Gunjur van 1 km² op een fractie daarvan. De marginale 0,40
+     hierboven is de voorzichtige kant van die waarnemingen. */
+  return 600 + 1400 * 0.90 + 3000 * 0.78 + (sqm - 5000) * 0.40;
 }
 /* Bij gebouwen speelt hetzelfde: de tweede honderd vierkante meter
    brengt minder op dan de eerste. */
@@ -376,7 +489,7 @@ function confidence(parts) {
     else if (n >= 4) { s -= 12; why.push(n + ' observations in this area'); }
     else { s -= 26; why.push('only ' + n + ' observations in this area \u2014 too few for a median to carry weight'); }
   }
-  else if (parts.landSrc === 'half') { s -= 38; why.push('one observation in this area'); }
+  else if (parts.landSrc === 'half') { s -= 38; why.push((parts.landN || 1) + ' observation' + ((parts.landN || 1) === 1 ? '' : 's') + ' in this area \u2014 one plot is not a market'); }
   else if (parts.landSrc === 'zone') { s -= 52; why.push('no observations in this area \u2014 rate derived from the wider region'); }
   else { s -= 60; why.push('area not recognised'); }
 
@@ -404,7 +517,13 @@ function confidence(parts) {
   }
   s = Math.max(10, Math.min(100, Math.round(s)));
   var label = s >= 75 ? 'strong' : s >= 50 ? 'fair' : 'indicative';
-  var band  = s >= 85 ? 0.12 : s >= 70 ? 0.18 : s >= 55 ? 0.25 : s >= 40 ? 0.32 : 0.38;
+  /* De band was 0,12 tot 0,38 en dat was te krap. Gemeten op 45
+     kavelaanbiedingen in gebieden met vier of meer waarnemingen valt maar
+     64% van het aanbod binnen ±18% van de gebiedsmediaan; ±35% vangt 78%
+     en ±45% vangt 89%. Een band die zegt dat hij de markt dekt, moet dat
+     dan ook doen. Onderstaande ladder plus de opwaartse verruiming van
+     1,25 hieronder komt op ongeveer vier op de vijf. */
+  var band  = s >= 85 ? 0.22 : s >= 70 ? 0.30 : s >= 55 ? 0.38 : s >= 40 ? 0.45 : 0.52;
   return { score: s, label: label, band: band, reasons: why };
 }
 

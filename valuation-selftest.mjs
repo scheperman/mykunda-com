@@ -1,4 +1,20 @@
-require('/root/mykunda/valuation.js');
+/* MyKunda — zelftest van het waarderingsmodel
+ *   node valuation-selftest.mjs
+ * Draait vanuit de projectmap; laadt valuation.js ernaast.
+ *
+ * Blok A zijn echte, GEDATEERDE kavelaanbiedingen van 25-08-2026. Ze zitten
+ * niet als losse waarneming in de tarieventabel maar in de mediaan ervan, dus
+ * het model mag er per geval naast zitten. Waar het om gaat: staat de mediane
+ * afwijking rond nul (geen systematische scheefheid), en vangt de band die het
+ * model zelf afgeeft ongeveer vier op de vijf gevallen? Gemeten op 45
+ * aanbiedingen valt 78% van het aanbod binnen ±35% van de gebiedsmediaan; meer
+ * dan dat kan een model op gebiedsniveau niet beloven.
+ */
+import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
+const require = createRequire(import.meta.url);
+require(join(dirname(fileURLToPath(import.meta.url)), 'valuation.js'));
 const V = globalThis.MK_VAL;
 const EURGMD = 85.74;
 const BASE = {'kololi':140,'senegambia':130,'bijilo':80,'brufut heights':80,'brufut':48,'brusubi':38,
@@ -10,22 +26,34 @@ const BASE = {'kololi':140,'senegambia':130,'bijilo':80,'brufut heights':80,'bru
    'obs' is de waargenomen vraagprijs in EUR. Vraagprijzen liggen boven
    verkoopprijzen, dus het model hoort er eerder onder dan boven te zitten. */
 const CASES = [
- // --- kavels, lokale listings in dalasi ---
- {n:'Kololi 480 m² (D2,5 mln)',      obs:2_500_000/EURGMD, i:{type:'land',area:'Kololi',plotSqm:480,title:'alkalalo',road:'tarmac',elec:'present',water:'nawec',fence:'partial',cleared:'cleared',flood:'no',beach:'inland',shape:'regular',corner:'no'}},
- {n:'Bijilo 460 m² (D2,5 mln)',      obs:2_500_000/EURGMD, i:{type:'land',area:'Bijilo',plotSqm:460,title:'alkalalo',road:'laterite',elec:'present',water:'nawec',fence:'partial',cleared:'cleared',flood:'no',beach:'inland',shape:'regular',corner:'no'}},
- {n:'Brusubi Ph1 375 m² (D1,8 mln)', obs:1_800_000/EURGMD, i:{type:'land',area:'Brusubi',plotSqm:375,title:'leasehold',road:'tarmac',elec:'present',water:'nawec',fence:'partial',cleared:'cleared',flood:'no',beach:'inland',shape:'regular',corner:'no'}},
- {n:'Kerr Serign 500 m² (D2,0 mln)', obs:2_000_000/EURGMD, i:{type:'land',area:'Kerr Serign',plotSqm:500,title:'alkalalo',road:'laterite',elec:'present',water:'nearby',fence:'partial',cleared:'cleared',flood:'no',beach:'inland',shape:'regular',corner:'no'}},
- {n:'Jabang 400 m² (D800k)',         obs:800_000/EURGMD,   i:{type:'land',area:'Jabang',plotSqm:400,title:'alkalalo',road:'laterite',elec:'nearby',water:'nearby',fence:'none',cleared:'partial',flood:'no',beach:'inland',shape:'regular',corner:'no'}},
- {n:'Lamin 500 m² (D500k)',          obs:500_000/EURGMD,   i:{type:'land',area:'Lamin',plotSqm:500,title:'alkalalo',road:'laterite',elec:'nearby',water:'nearby',fence:'none',cleared:'partial',flood:'no',beach:'inland',shape:'regular',corner:'no'}},
- {n:'Yundum 450 m² (D550k)',         obs:550_000/EURGMD,   i:{type:'land',area:'Old Yundum',plotSqm:450,title:'alkalalo',road:'laterite',elec:'nearby',water:'nearby',fence:'none',cleared:'partial',flood:'no',beach:'inland',shape:'regular',corner:'no'}},
- {n:'Gunjur 400 m² (D250k)',         obs:250_000/EURGMD,   i:{type:'land',area:'Gunjur',plotSqm:400,title:'alkalalo',road:'laterite',elec:'none',water:'none',fence:'none',cleared:'bush',flood:'no',beach:'inland',shape:'regular',corner:'no'}},
- {n:'Kartong 400 m² (D175k)',        obs:175_000/EURGMD,   i:{type:'land',area:'Kartong',plotSqm:400,title:'alkalalo',road:'laterite',elec:'none',water:'none',fence:'none',cleared:'bush',flood:'no',beach:'inland',shape:'regular',corner:'no'}},
- {n:'Sanyang 468 m² (D440k)',        obs:440_000/EURGMD,   i:{type:'land',area:'Sanyang',plotSqm:468,title:'alkalalo',road:'laterite',elec:'nearby',water:'none',fence:'none',cleared:'partial',flood:'no',beach:'inland',shape:'regular',corner:'no'}},
- {n:'Brikama 400 m² (D450k)',        obs:450_000/EURGMD,   i:{type:'land',area:'Brikama',plotSqm:400,title:'alkalalo',road:'laterite',elec:'nearby',water:'nearby',fence:'none',cleared:'partial',flood:'no',beach:'inland',shape:'regular',corner:'no'}},
- {n:'Busumbala 450 m² (D500k)',      obs:500_000/EURGMD,   i:{type:'land',area:'Busumbala',plotSqm:450,title:'alkalalo',road:'laterite',elec:'nearby',water:'nearby',fence:'none',cleared:'partial',flood:'no',beach:'inland',shape:'regular',corner:'no'}},
- {n:'Sanyang 660 m² omheind (€25k)', obs:25_000,           i:{type:'land',area:'Sanyang',plotSqm:660,title:'leasehold',road:'laterite',elec:'nearby',water:'nearby',fence:'full',cleared:'cleared',flood:'no',beach:'walking',shape:'regular',corner:'no'}},
- {n:'Tujereng 1.100 m² bij strand',  obs:20_809,           i:{type:'land',area:'Tujereng',plotSqm:1100,title:'alkalalo',road:'laterite',elec:'nearby',water:'nearby',fence:'none',cleared:'partial',flood:'no',beach:'walking',shape:'regular',corner:'no'}},
- {n:'Tanji 480 m² (€10.982)',        obs:10_982,           i:{type:'land',area:'Tanji',plotSqm:480,title:'alkalalo',road:'laterite',elec:'nearby',water:'nearby',fence:'none',cleared:'partial',flood:'no',beach:'inland',shape:'regular',corner:'no'}},
+ /* --- A · lokale kavels: echte, GEDATEERDE Facebook-advertenties van
+        25-08-2026. Prijs en maat komen uit de advertentie zelf; de
+        kenmerken alleen waar de tekst ze noemt, want een advertentie
+        die zwijgt over titel of stroom hoort in het model ook te
+        zwijgen. Deze twintig zitten NIET in de tarieventabel als
+        losse waarneming maar in de mediaan ervan, dus het model mag
+        er per geval best naast zitten - de vraag is of de spreiding
+        binnen de band valt die het zelf afgeeft. --- */
+ {n:'Kololi 23x23 m (D3,5 mln)'                   , obs:3_500_000/EURGMD, i:{type:'land',area:'Kololi',plotSqm:529}},
+ {n:'Brusubi 20x30 m (D3,5 mln)'                  , obs:3_500_000/EURGMD, i:{type:'land',area:'Brusubi',plotSqm:600}},
+ {n:'Sukuta Nema 20x25, omheind (D850k)'          , obs:850_000/EURGMD, i:{type:'land',area:'Sukuta',plotSqm:500, fence:'full'}},
+ {n:'Jabang/Tawto, omheind, leasehold (D1,5 mln)' , obs:1_500_000/EURGMD, i:{type:'land',area:'Jabang',plotSqm:400, fence:'full', title:'leasehold'}},
+ {n:'Lamin Keriwan (D800k)'                       , obs:800_000/EURGMD, i:{type:'land',area:'Lamin',plotSqm:400}},
+ {n:'New Yundum 40x25, dubbele kavel (D2 mln)'    , obs:2_000_000/EURGMD, i:{type:'land',area:'Old Yundum',plotSqm:1000}},
+ {n:'Busumbala 24x15 m (D1,3 mln)'                , obs:1_300_000/EURGMD, i:{type:'land',area:'Busumbala',plotSqm:360}},
+ {n:'Brikama Penyem, water en stroom (D375k)'     , obs:375_000/EURGMD, i:{type:'land',area:'Brikama',plotSqm:400, elec:'present', water:'nawec'}},
+ {n:'Sanyang 17x24 m (D450k)'                     , obs:450_000/EURGMD, i:{type:'land',area:'Sanyang',plotSqm:408}},
+ {n:'Sanyang 20x20, zeezicht (D450k)'             , obs:450_000/EURGMD, i:{type:'land',area:'Sanyang',plotSqm:400, view:'ocean', beach:'walking'}},
+ {n:'Tanji 20x25, omheind (D600k)'                , obs:600_000/EURGMD, i:{type:'land',area:'Tanji',plotSqm:500, fence:'full'}},
+ {n:'Tujereng aan de highway 20x40 (D4 mln)'      , obs:4_000_000/EURGMD, i:{type:'land',area:'Tujereng',plotSqm:800, road:'tarmac'}},
+ {n:'Brufut 17x49, freehold (D2,2 mln)'           , obs:2_200_000/EURGMD, i:{type:'land',area:'Brufut',plotSqm:833, title:'freehold'}},
+ {n:'Farato Bojang, omheind (D800k)'              , obs:800_000/EURGMD, i:{type:'land',area:'Farato',plotSqm:450, fence:'full'}},
+ {n:'Jambur 25x25, volledig omheind (D1 mln)'     , obs:1_000_000/EURGMD, i:{type:'land',area:'Jambur',plotSqm:625, fence:'full'}},
+ {n:'Kitty 20x20 (D350k)'                         , obs:350_000/EURGMD, i:{type:'land',area:'Kitty',plotSqm:400}},
+ {n:'Sifoe 20x20 (D250k)'                         , obs:250_000/EURGMD, i:{type:'land',area:'Sifoe',plotSqm:400}},
+ {n:'Salagi Wullinkama 12x53 (D2,5 mln)'          , obs:2_500_000/EURGMD, i:{type:'land',area:'Salagi',plotSqm:636}},
+ {n:'Mamuda 20x20 (D475k)'                        , obs:475_000/EURGMD, i:{type:'land',area:'Mamuda',plotSqm:400}},
+ {n:'Gunjur 200x200, groot perceel (D11 mln)'     , obs:11_000_000/EURGMD, i:{type:'land',area:'Gunjur',plotSqm:40000}},
 
  // --- bebouwd, vraagprijs met bekende bebouwde m² ---
  {n:'Fajara villa 660 m² (€620k)',   obs:620_000, i:{type:'villa',area:'Fajara',builtSqm:660,plotSqm:1200,finish:'high',condition:'new',yearBuilt:2024,floors:'2',baths:'4',beds:'4',pool:'yes',solar:'both',security:'gated',water:'both',furnished:'semi',fence:'full',title:'leasehold',road:'tarmac',elec:'present',cleared:'cleared',flood:'no',beach:'inland',view:'garden',shape:'regular',corner:'no'}},
@@ -36,9 +64,8 @@ const CASES = [
  {n:'Mandinari 4 kmr 500 m² (€90k)', obs:90_000,  i:{type:'house',area:'Mandinari',builtSqm:180,plotSqm:500,finish:'standard',condition:'good',yearBuilt:2015,floors:'1',baths:'2',beds:'4',pool:'no',solar:'no',security:'wall',water:'nawec',furnished:'unfurnished',fence:'full',title:'alkalalo',road:'laterite',elec:'present',cleared:'cleared',flood:'no',beach:'inland',view:'none',shape:'regular',corner:'no'}},
 ];
 
-CASES.forEach((c,ix) => { c.portal = ix >= 12 && ix !== 14 ? (ix<15) : false; });
 /* welke gevallen zijn portaalprijzen in euro's, en welke lokale listings in dalasi */
-const PORTAL_IX = new Set([12,13,14,15,16,17,18,19,20]);
+const PORTAL_IX = new Set([20,21,22,23,24,25,26,27,28]);
 let inBand = 0, rows = [];
 CASES.forEach((c,ix) => {
   const r = V.value(c.i, {LAND_BASE: BASE});
@@ -84,3 +111,51 @@ const rmed = (ratios[Math.floor((ratios.length-1)/2)]+ratios[Math.ceil((ratios.l
 console.log('-'.repeat(118));
 console.log(`Mediane verhouding portaal/model: x${rmed.toFixed(2)}   bereik x${ratios[0].toFixed(2)} - x${ratios[ratios.length-1].toFixed(2)}`);
 console.log(`Binnen de getoonde band 1,4-2,3: ${portal.filter(r=>r.ratio>=1.4&&r.ratio<=2.3).length}/${portal.length}\n`);
+
+/* ---------------------------------------------------------------------------
+   Blok C — HUUR. Toegevoegd 27-08-2026, nadat bleek dat het rendement in
+   valuation.js zichzelf voedde: de huren waarop het geijkt was, waren zelf
+   uit vraagprijzen afgeleid. Deze test kan dat niet meer laten gebeuren.
+
+   De vraag: reproduceert het ENE landelijke rendement de huren die we per
+   gebied werkelijk zien? Bron is area-prices.json — dezelfde bron als de
+   area-pagina's, zodat de twee niet uit elkaar kunnen lopen.
+--------------------------------------------------------------------------- */
+const { readFileSync } = await import('node:fs');
+const DB = JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), 'area-prices.json'), 'utf8'));
+const Y = globalThis.MK_VAL_CONFIG.RENT_YIELD.local.house;
+
+const rent = Object.values(DB.areas).filter(a => a.house && a.rent_year);
+console.log(`\n=== C · HUUR — reproduceert ${(Y*100).toFixed(1)}% de waargenomen huren? ===`);
+console.log('    Model = vraagprijs woning x het rendement voor een gewone woning.');
+console.log('    Waargenomen = de p25-p75 band uit de lokale huuradvertenties.\n');
+console.log(w('GEBIED') + 'model/jaar'.padStart(12) + '  waargenomen band'.padStart(24) + '  in band  gemeten %');
+console.log('-'.repeat(118));
+let rIn = 0;
+rent.sort((a,b)=>b.house-a.house).forEach(a => {
+  const model = a.house * Y;
+  const ok = model >= a.rent_lo && model <= a.rent_hi;
+  if (ok) rIn++;
+  console.log(w(a.label)
+    + ('D' + Math.round(model).toLocaleString('nl-NL')).padStart(12)
+    + ('D' + a.rent_lo.toLocaleString('nl-NL') + '–' + a.rent_hi.toLocaleString('nl-NL')).padStart(24)
+    + (ok ? '     ja  ' : '    NEE  ') + a.yield.toFixed(1) + '%  n=' + a.rent_n);
+});
+const ys = rent.map(a=>a.yield).sort((a,b)=>a-b);
+const yMed = ys[Math.floor(ys.length/2)];
+const worst = Math.max(...rent.map(a => Math.max((a.house*Y)/a.rent_hi, a.rent_lo/(a.house*Y))));
+console.log('-'.repeat(118));
+console.log(`In band: ${rIn}/${rent.length}   gemeten rendement: mediaan ${yMed.toFixed(2)}%, ` +
+            `spreiding ${ys[0].toFixed(1)}–${ys[ys.length-1].toFixed(1)}%   model: ${(Y*100).toFixed(1)}%`);
+
+/* Wanneer is dit goed genoeg? Eén landelijk percentage kan een spreiding van
+   1,5 tot 4,7% niet per gebied raken, en dat hoeft ook niet. Twee dingen
+   moeten wel kloppen: het model mag niet systematisch scheef staan, en geen
+   enkel gebied mag er een factor twee naast zitten. Zakt een van beide door
+   de grens, dan is er iets veranderd in de markt of in de meting. */
+const skew = Math.abs(Y*100 - yMed);
+console.log(`Scheefheid model t.o.v. mediaan: ${skew.toFixed(2)} procentpunt (grens 0,40) — ${skew <= 0.4 ? 'ok' : 'TE SCHEEF'}`);
+console.log(`Slechtste gebied zit ${worst.toFixed(2)}x buiten zijn band (grens 2,00) — ${worst <= 2 ? 'ok' : 'TE VER'}`);
+if (ys[0] < 1 || ys[ys.length-1] > 8)
+  console.log('LET OP: een gemeten rendement buiten 1–8% betekent dat huur en vraagprijs uit twee markten komen.');
+console.log('');

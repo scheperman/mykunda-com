@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" id="mkRobots" content="noindex, follow, noai, noimageai"><!--mk:1nmrqui--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" id="mkRobots" content="noindex, follow, noai, noimageai"><!--mk:0jq8pwr--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -33,7 +33,7 @@
 <link rel="preconnect" href="https://api.maptiler.com" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=156518406794788">
+<link rel="stylesheet" href="styles.min.css?v=97290937763637">
 <style>
 .crumb{padding:18px 0 6px;font-size:14px;color:var(--muted);display:flex;align-items:center;gap:8px}
 .crumb a{font-weight:600}.crumb a:hover{color:var(--green-700)}
@@ -428,15 +428,15 @@
     </div>
   </footer><!--/mk-ftr--></div>
 
-<script src="app.min.js?v=156518406794788"></script>
-<script src="image-slot.js?v=156518406794788" defer></script>
+<script src="app.min.js?v=97290937763637"></script>
+<script src="image-slot.js?v=97290937763637" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel instead of blocking the page, and
    Leaflet (~145 KB) is only fetched when the visitor opens the Map tab. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=156518406794788'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=97290937763637'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -709,67 +709,67 @@ const town = P.area.split('· ')[0].trim();
 const HOOD_DATA = {
   'Kololi': {
     intro: 'Kololi is the heart of The Gambia\'s tourism strip — home to the famous Senegambia junction with its restaurants, bars and nightlife. A 5–10 minute walk brings you to Kololi beach. Popular with expats, holiday-home investors and digital nomads for its walkable amenities and vibrant social scene.',
-    stats: [['Avg. price/m²',1009,' '],['To the beach','5–10 min','on foot'],['To airport (BJL)','25–45 min','via Westfield'],['Intl. schools','3','within 8 km']],
+    stats: [['Land, per m²', 102.64,' '],['To the beach','5–10 min','on foot'],['To airport (BJL)','25–45 min','via Westfield'],['Intl. schools','3','within 8 km']],
     scores: [['Safety',72],['Beach access',88],['Dining & nightlife',95],['Connectivity',90],['Investment demand',92]]
   },
   'Bijilo': {
     intro: 'Bijilo is a quieter, upscale residential area just south of Kololi. Known for the Bijilo Forest Park (monkey park) and a long stretch of undeveloped beach. It attracts expat families and retirees who want peace and nature while staying close to Kololi\'s amenities — a 5-minute drive away.',
-    stats: [['Avg. price/m²',779,' '],['To the beach','10–15 min','on foot'],['To airport (BJL)','20–35 min','coastal road'],['Intl. schools','2','within 6 km']],
+    stats: [['Land, per m²', 69.98,' '],['To the beach','10–15 min','on foot'],['To airport (BJL)','20–35 min','coastal road'],['Intl. schools','2','within 6 km']],
     scores: [['Safety',82],['Beach access',78],['Dining & nightlife',55],['Connectivity',80],['Investment demand',80]]
   },
   'Brufut Heights': {
     intro: 'Brufut Heights is a peaceful, family-friendly hillside area with spacious villas and stunning Atlantic views. Popular with expat families for its secure estates, large gardens and quiet streets. The beach is a 15-minute walk downhill, and Senegambia\'s restaurants are a short drive away.',
-    stats: [['Avg. price/m²',734,' '],['To the beach','15 min','on foot'],['To airport (BJL)','20–35 min','via highway'],['Intl. schools','2','within 10 km']],
+    stats: [['Land, per m²', 42.28,' '],['To the beach','15 min','on foot'],['To airport (BJL)','20–35 min','via highway'],['Intl. schools','2','within 10 km']],
     scores: [['Safety',88],['Beach access',68],['Dining & nightlife',40],['Connectivity',72],['Investment demand',85]]
   },
   'Brufut': {
     intro: 'Brufut is a traditional coastal town with wide golden beaches and a relaxed pace of life. The Brufut Forest Reserve offers great birdwatching. Development is accelerating — estates like Brufut Gardens bring modern infrastructure — making it one of The Gambia\'s fastest-growing property areas.',
-    stats: [['Avg. price/m²',596,' '],['To the beach','5–15 min','depends on location'],['To airport (BJL)','15–30 min','via highway'],['Intl. schools','1','within 10 km']],
+    stats: [['Land, per m²', 26.62,' '],['To the beach','5–15 min','depends on location'],['To airport (BJL)','15–30 min','via highway'],['Intl. schools','1','within 10 km']],
     scores: [['Safety',84],['Beach access',82],['Dining & nightlife',35],['Connectivity',68],['Investment demand',82]]
   },
   'Bakau': {
     intro: 'Bakau is one of The Gambia\'s oldest coastal towns, with a strong local character and proximity to Banjul. Cape Point and the Kachikally Crocodile Pool are landmarks. The area has good beach access and established infrastructure, though it feels more authentically Gambian than the tourist strip.',
-    stats: [['Avg. price/m²',688,' '],['To the beach','5–10 min','on foot'],['To airport (BJL)','40–60 min','through Serrekunda'],['Intl. schools','2','within 5 km']],
+    stats: [['Land, per m²', 78.73,' '],['To the beach','5–10 min','on foot'],['To airport (BJL)','40–60 min','through Serrekunda'],['Intl. schools','2','within 5 km']],
     scores: [['Safety',70],['Beach access',85],['Dining & nightlife',50],['Connectivity',75],['Investment demand',65]]
   },
   'Cape Point': {
     intro: 'Cape Point is an established residential enclave within Bakau, popular with long-term expats and embassy staff. It offers quiet tree-lined streets, proximity to Fajara\'s amenities and direct beach access. Property here tends to hold its value well thanks to limited supply and consistent demand.',
-    stats: [['Avg. price/m²',1100,' '],['To the beach','5 min','on foot'],['To airport (BJL)','45–65 min','through Serrekunda'],['Intl. schools','3','within 5 km']],
+    stats: [['Land, per m²', 194.39,' '],['To the beach','5 min','on foot'],['To airport (BJL)','45–65 min','through Serrekunda'],['Intl. schools','3','within 5 km']],
     scores: [['Safety',80],['Beach access',90],['Dining & nightlife',55],['Connectivity',78],['Investment demand',72]]
   },
   'Fajara': {
     intro: 'Fajara is The Gambia\'s most established expat neighbourhood. Home to international schools, embassies, clinics and quality restaurants. The area combines leafy residential streets with good beach access and reliable infrastructure — a top choice for families who want Western-level comfort.',
-    stats: [['Avg. price/m²',871,' '],['To the beach','8–12 min','on foot'],['To airport (BJL)','35–55 min','via Westfield'],['Intl. schools','4','within 5 km']],
+    stats: [['Land, per m²', 155.51,' '],['To the beach','8–12 min','on foot'],['To airport (BJL)','35–55 min','via Westfield'],['Intl. schools','4','within 5 km']],
     scores: [['Safety',82],['Beach access',75],['Dining & nightlife',65],['Connectivity',85],['Investment demand',75]]
   },
   'Sanyang': {
     intro: 'Sanyang is a fishing village about 35 km south of Banjul, known for Paradise Beach — 8 km of pristine white sand and one of West Africa\'s most beautiful coastlines. It\'s quiet, authentic and increasingly popular with investors seeking affordable beachside land before prices rise.',
-    stats: [['Avg. price/m²',348,' '],['To the beach','5–20 min','depends on plot'],['To airport (BJL)','30–50 min','unpaved sections'],['Intl. schools','0','nearest 20 km']],
+    stats: [['Land, per m²', 11.34,' '],['To the beach','5–20 min','depends on plot'],['To airport (BJL)','30–50 min','unpaved sections'],['Intl. schools','0','nearest 20 km']],
     scores: [['Safety',78],['Beach access',90],['Dining & nightlife',20],['Connectivity',45],['Investment demand',75]]
   },
   'Kotu': {
     intro: 'Kotu sits between Kololi and Fajara and is known for its wide beach, Kotu Stream (a birding hotspot) and cluster of tourist hotels. It\'s quieter than Kololi but close to its nightlife. A solid choice for holiday rental investment with good year-round occupancy rates.',
-    stats: [['Avg. price/m²',825,' '],['To the beach','5 min','on foot'],['To airport (BJL)','30–45 min','via Westfield'],['Intl. schools','2','within 7 km']],
+    stats: [['Land, per m²', 116.29,' '],['To the beach','5 min','on foot'],['To airport (BJL)','30–45 min','via Westfield'],['Intl. schools','2','within 7 km']],
     scores: [['Safety',75],['Beach access',92],['Dining & nightlife',60],['Connectivity',82],['Investment demand',78]]
   },
   'Brusubi': {
     intro: 'Brusubi is a fast-developing inland area about 10 minutes from Kololi. It offers more affordable, spacious plots and modern builds. While there\'s no beach within walking distance, the coastal highway provides quick access. Increasingly popular with young Gambian professionals and diaspora families.',
-    stats: [['Avg. price/m²',504,' '],['To the beach','15 min','by car'],['To airport (BJL)','15–25 min','highway access'],['Intl. schools','1','within 8 km']],
+    stats: [['Land, per m²', 75.32,' '],['To the beach','15 min','by car'],['To airport (BJL)','15–25 min','highway access'],['Intl. schools','1','within 8 km']],
     scores: [['Safety',80],['Beach access',30],['Dining & nightlife',35],['Connectivity',75],['Investment demand',70]]
   },
   'Sukuta': {
     intro: 'Sukuta is a large, bustling town inland from the coast — one of The Gambia\'s most affordable areas for property. It has a lively local market, good transport links and a growing residential sector. Best for buyers seeking value and authentic community life over tourist-area polish.',
-    stats: [['Avg. price/m²',367,' '],['To the beach','20 min','by car'],['To airport (BJL)','20–35 min','via Brikama road'],['Intl. schools','1','within 10 km']],
+    stats: [['Land, per m²', 27.13,' '],['To the beach','20 min','by car'],['To airport (BJL)','20–35 min','via Brikama road'],['Intl. schools','1','within 10 km']],
     scores: [['Safety',68],['Beach access',20],['Dining & nightlife',30],['Connectivity',72],['Investment demand',55]]
   },
   'Kerr Serign': {
     intro: 'Kerr Serign is a quiet residential area near Kololi, offering more affordable property than its beachfront neighbours. It\'s within easy reach of the Senegambia strip and coastal amenities while maintaining a calmer, more local atmosphere. A good entry point for budget-conscious investors.',
-    stats: [['Avg. price/m²',459,' '],['To the beach','15 min','by car/on foot'],['To airport (BJL)','25–40 min','via Westfield'],['Intl. schools','2','within 8 km']],
+    stats: [['Land, per m²', 92.2,' '],['To the beach','15 min','by car/on foot'],['To airport (BJL)','25–40 min','via Westfield'],['Intl. schools','2','within 8 km']],
     scores: [['Safety',72],['Beach access',45],['Dining & nightlife',40],['Connectivity',70],['Investment demand',60]]
   },
   'Tanji': {
     intro: 'Tanji is a colourful fishing village south of Brufut, famous for its busy fish market and the Tanji Bird Reserve. Property prices are among the lowest on the coast. It\'s an emerging area with limited infrastructure but genuine charm — ideal for adventurous investors with a longer time horizon.',
-    stats: [['Avg. price/m²',321,' '],['To the beach','5 min','on foot'],['To airport (BJL)','15–25 min','coastal road'],['Intl. schools','0','nearest 15 km']],
+    stats: [['Land, per m²', 25.23,' '],['To the beach','5 min','on foot'],['To airport (BJL)','15–25 min','coastal road'],['Intl. schools','0','nearest 15 km']],
     scores: [['Safety',72],['Beach access',88],['Dining & nightlife',15],['Connectivity',40],['Investment demand',55]]
   }
 };
@@ -786,13 +786,13 @@ if(!hood){
   // sensible generic fallback for unknown areas
   hood = {
     intro: `${town} is a residential area in The Gambia's coastal region. Contact us for detailed neighbourhood insights and property guidance in this area.`,
-    stats: [['Avg. price/m²',459,' '],['To the beach','varies','ask agent'],['To airport (BJL)','30–50 min','traffic dependent'],['Intl. schools','—','ask agent']],
+    stats: [['Land, per m²', 18.95,' '],['To the beach','varies','ask agent'],['To airport (BJL)','30–50 min','traffic dependent'],['Intl. schools','—','ask agent']],
     scores: [['Safety',70],['Beach access',50],['Dining & nightlife',40],['Connectivity',60],['Investment demand',60]]
   };
 }
 
 hoodIntro.textContent = hood.intro;
-hoodStats.innerHTML = hood.stats.map(h=>`<div class="hstat-card"><div class="lab">${h[0]}</div><div class="num">${h[0]==='Avg. price/m²'?fmtAreaPrice(h[1]):h[1]}</div><div class="meta">${h[2]}</div></div>`).join('');
+hoodStats.innerHTML = hood.stats.map(h=>`<div class="hstat-card"><div class="lab">${h[0]}</div><div class="num">${h[0]==='Land, per m²'?fmtAreaPrice(h[1]):h[1]}</div><div class="meta">${h[2]}</div></div>`).join('');
 scorebars.innerHTML = hood.scores.map(s=>`<div class="scorebar"><span class="l">${s[0]}</span><div class="track"><div class="fill" style="width:${s[1]}%"></div></div><span class="sc">${(s[1]/10).toFixed(1)}</span></div>`).join('');
 
 /* ---- Kaart bij de woning ----

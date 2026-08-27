@@ -637,8 +637,21 @@ omdat een remote die maanden achterloopt je precies zoveel maanden minder
 beschermt dan je denkt. Committen zonder pushen voelt als opslaan en is het
 niet.
 
-Sinds 26-08-2026 doet `upload.bat` dit als stap 5/5 zelf, dus na een upload is
-het al gebeurd. Werk je een sessie lang zonder te uploaden — aan `CLAUDE.md`, aan
+Sinds 27-08-2026 sluit `upload.bat` af met een **uitslagblok**: één regel per
+stap — bouwen, uploaden, cache, git — en daaronder één oordeel. Ging alles goed,
+dan sluit het venster vanzelf na tien seconden en is de exitcode 0. Ging er iets
+mis, dan blijft het venster staan tot je een toets indrukt en is de exitcode 1.
+Het blok leest daarbij de stand van git zelf uit: staat er nog iets staged of
+ligt er een commit die niet gepusht is, dan zegt het dat, ook als de stappen
+zelf "ok" meldden. Een venster dat je nooit hebt zien sluiten is geen bewijs
+dat het gelukt is.
+
+`upload.bat --zelftest` laat zien hoe een geslaagde run eindigt,
+`upload.bat --zelftest fout` hoe een mislukte eindigt. Geen van beide bouwt,
+uploadt of commit iets.
+
+Sinds 26-08-2026 doet `upload.bat` de git-stap als stap 5/5 zelf, dus na een
+upload is het al gebeurd. Werk je een sessie lang zonder te uploaden — aan `CLAUDE.md`, aan
 een script, aan een edge function — dan blijft het jouw handeling. Weigert de
 push, dan meldt het script dat en staat de commit lokaal klaar; er wordt niets
 geforceerd.
@@ -647,3 +660,60 @@ Commits dragen `17229960+scheperman@users.noreply.github.com`. Dat is bewust:
 GitHub weigert een push die een privé-e-mailadres zou publiceren, en het
 persoonlijke gmail-adres hoort niet in de geschiedenis van een bedrijfsrepo.
 Verander `user.email` in deze repo dus niet terug.
+
+## Gebiedsprijzen: één bron, en huur nooit uit een prijs
+
+`area-prices.json` is de enige bron voor elk bedrag op de 41 area-pagina's, op
+`gambia-property-prices.html`, op `land-for-sale-in-the-gambia.html` en in het
+buurtblok van `property.html`. `build-area-prices.mjs` schrijft die pagina's
+eruit en moet **vóór** `build.mjs` draaien. Zet nooit met de hand een bedrag in
+een pagina — de volgende run overschrijft het, of erger, hij overschrijft het
+niet en dan lopen de vijf plekken met hetzelfde getal weer uit elkaar.
+
+### De regel die op 27-08-2026 is bijgekomen
+
+**Een huur wordt nooit uit een vraagprijs afgeleid, en een rendement nooit uit
+een aanname.**
+
+Tot die datum was `rent_year` op 24 van de 29 gebieden met een huurbedrag exact
+2,0% van de vraagprijs van de woning op diezelfde pagina. Vervolgens meldde
+`how-we-measure-prices.html` een bruto huurrendement van "roughly 2%" als
+bevinding. Dat was dezelfde 2% die er was ingestopt. Kololi stond daardoor op
+D124.000 per jaar terwijl Songhai Properties er onmeubileerde driekamerwoningen
+adverteert voor D350.000 tot D450.000.
+
+Wat er nu geldt:
+
+* Huur komt alleen uit **huuradvertenties**, per gebied: mediaan van woningen
+  met twee of meer slaapkamers, onmeubileerd, met p25–p75 als band.
+* **Geen bewijs, geen bedrag.** Grond mag van een buurgebied worden geschaald
+  omdat grondprijs meebeweegt met locatie. Huur niet: over de gebieden waar we
+  huuradvertenties hebben, is het verband tussen lokale huur en lokale
+  grondprijs vrijwel nul (R² = 0,004). Dertien gebieden hebben een huurcijfer,
+  achtentwintig niet, en die zeggen dat ook.
+* **Periode is geen detail.** Facebook toont ongeveer de eerste honderd tekens,
+  en "D45.000" kan een maand, zes maanden of een jaar betekenen. Onleesbaar =
+  weglaten, niet raden. Ongeveer één op de zes huuradvertenties valt daarop af.
+* Een losse kamer of een room-and-parlour telt niet mee: dat is geen kleine
+  woning maar een ander product.
+* `yield` in het bestand is een **uitkomst**, geen invoer. Hetzelfde geldt voor
+  `RENT_YIELD.local` in `valuation.js`: dat stond op 1,95%, geijkt op precies
+  die kapotte huren, en is herijkt naar 2,7% — de mediaan over dertien gebieden
+  waar huur en vraagprijs los van elkaar zijn waargenomen.
+
+### Wat er meedraait als controle
+
+* `node check-rents.mjs` — legt de gebouwde pagina's in `deploy/` naast
+  `area-prices.json` en klaagt bij elk verschil, bij een achtergebleven
+  2%-tekst en bij een rendement buiten 1–8%.
+* `node valuation-selftest.mjs` — blok C toetst of het ene landelijke rendement
+  de per gebied waargenomen huren nog reproduceert. Grenzen: scheefheid ten
+  opzichte van de mediaan maximaal 0,40 procentpunt, en geen gebied verder dan
+  een factor 2 buiten zijn band.
+
+Een rendement buiten 1–8% is bijna altijd hetzelfde probleem: een lokale huur
+die tegen een expat-vraagprijs is afgezet. Zoek dan de bron van het paar, niet
+een correctiefactor.
+
+De eenmalige scripts van deze herijking staan in `_werk/` met de datum in de
+naam. Ze zijn geschiedenis, geen onderdeel van de bouw.
