@@ -14,9 +14,17 @@
 //   EUR -> USD  = eur_gmd / usd_gmd  (kruiskoers, hier berekend)
 //
 // Deploy:   supabase functions deploy fx-rates --no-verify-jwt
-// Schedule: eens per dag, op werkdagen, na publicatie door CBG
+// Schedule: ieder uur op werkdagen tussen 09:00 en 16:00 UTC. CBG
+//           publiceert ergens in de Banjulse ochtend zonder vast tijdstip,
+//           dus we kijken een venster lang mee in plaats van één keer te
+//           gokken. Meer dan één keer schrijven kost niets: staat dezelfde
+//           publicatiedatum met dezelfde bedragen al in de tabel, dan
+//           antwoordt deze functie `unchanged` en raakt de rij niet aan.
+//           De job heet `fx-rates-daily` en draait `0 9-16 * * 1-5`; die
+//           naam dekt de lading niet meer, maar hernoemen betekent hem
+//           opnieuw aanmaken, dus hij blijft zo staan.
 //             select cron.schedule(
-//               'fx-rates-daily', '0 13 * * 1-5',
+//               'fx-rates-daily', '0 9-16 * * 1-5',
 //               $$ select net.http_post(
 //                    url := 'https://<project>.functions.supabase.co/fx-rates',
 //                    headers := '{"Content-Type":"application/json"}'::jsonb,
