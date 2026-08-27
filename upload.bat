@@ -343,6 +343,7 @@ if errorlevel 1 (
 rem  --quiet geeft 1 zodra er iets klaarstaat, en 0 als er niets is.
 git diff --cached --quiet
 if not errorlevel 1 (
+  set "GEENCOMMIT=1"
   echo   Niets te committen - de bron stond al vast.
   goto :pushen
 )
@@ -389,7 +390,11 @@ if errorlevel 1 (
   echo     git push
   goto :einde
 )
-set "ST_GIT=ok - vastgelegd en gepusht"
+if defined GEENCOMMIT (
+  set "ST_GIT=ok - stond al vast, niets nieuws te pushen"
+) else (
+  set "ST_GIT=ok - vastgelegd en gepusht"
+)
 echo   Gepusht naar origin.
 goto :einde
 
@@ -463,11 +468,30 @@ if defined PROBLEEM (
   pause
   exit /b 1
 )
+rem  De slotzin wordt uit de stappen zelf opgebouwd. Hij stond hier eerst
+rem  als een vaste regel - "Site bijgewerkt, cache geleegd, bron
+rem  vastgelegd" - en dat is onwaar zodra er niets te uploaden viel.
+rem  Een samenvatting die niet meebeweegt met wat er gebeurd is, is nog
+rem  steeds een samenvatting die je niet kunt vertrouwen.
 echo.
-echo   ALLES GELUKT. Site bijgewerkt, cache geleegd, bron vastgelegd.
+echo   ALLES GELUKT.
+if "!ST_UPLOAD!"=="ok" (
+  echo     - de site is bijgewerkt en de Cloudflare-cache is geleegd
+) else (
+  echo     - er viel niets te uploaden: de server stond al gelijk met deploy
+)
+if defined GEENCOMMIT (
+  echo     - de bron stond al vast, er was niets nieuws te pushen
+) else (
+  echo     - de bron is vastgelegd en gepusht naar GitHub
+)
 echo.
-rem  timeout werkt niet als de invoer omgeleid is - dan valt hij terug
-rem  op ping, dat overal werkt maar niet af te breken is met een toets.
-timeout /t 10
-if errorlevel 1 ping -n 11 127.0.0.1 >nul 2>&1
+rem  timeout werkt niet als de invoer omgeleid is - dan schrijft hij een
+rem  Engelse foutregel en stopt meteen. Die melding hoort niet onder een
+rem  geslaagde run, dus we vangen hem af en wachten met ping.
+timeout /t 10 2>nul
+if errorlevel 1 (
+  echo   Dit venster sluit over tien seconden.
+  ping -n 11 127.0.0.1 >nul 2>&1
+)
 exit /b 0
