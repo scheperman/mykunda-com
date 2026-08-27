@@ -708,6 +708,26 @@ koersen tegelijk in de bron.
   anderhalve seconde en zetten dan "Refreshed ✓". `fetchLiveRates()` geeft nu
   een promise terug.
 
+### De bron is de CBG-homepage, niet de koerspagina
+
+`cbg.gm/indicative-exchange-rates-latest` heet ernaar en ziet er in een
+browser goed uit, maar bouwt zijn tabel **client-side**. Een server-side
+fetch krijgt 200 met 41.531 bytes waarin de valutacodes in de keuzelijst
+van de omrekenmodule staan en de getallen nergens. De homepage rendert ze
+wél in de HTML (66.556 bytes, alle drie de munten) en staat daarom
+voorop.
+
+Verwissel die volgorde niet terug omdat de detailpagina er logischer
+uitziet. Tot 27-08-2026 stond hij voorop en viel élke run stil terug op
+de homepage; `source_url` in fx_rates verraadde dat, maar niemand keek
+ernaar omdat een mislukte eerste URL in een lege catch verdween.
+
+`fetchCBG()` houdt nu per URL bij wat er gebeurde — status, bytes, welke
+munten geparsed zijn, of de fout — en dat gaat als `trace` mee in het
+antwoord van de POST. Wil je weten waar de koers van vandaag vandaan
+komt, kijk daar: bij een goede run staat er precies één URL in met
+`used: true`.
+
 ### De noodkoers in `app.js`
 
 `CURRENCIES` draagt getallen voor de allereerste weergave met een lege cache
