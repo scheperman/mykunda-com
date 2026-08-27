@@ -94,6 +94,53 @@ async function currentProfile(){
 function isLocalAdmin(){
   try{ return localStorage.getItem('mykunda_admin')==='1'; }catch(e){ return false; }
 }
+
+/* The cached name can be older than the real one: an early sign-in derived it
+   from the email address ("edwinscheperman@gmail.com" -> "Edwinscheperman"),
+   and everything that greets by first name then has no space to split on. The
+   session carries the name the user actually gave, so we heal the cache from
+   it. getSession reads local storage — no network call. */
+async function syncCachedUserName(){
+  if(!sb) return;
+  let cached=null;
+  try{ cached = JSON.parse(localStorage.getItem('mykunda_user')||'null'); }catch(e){}
+  if(!cached) return;
+  let u=null;
+  try{ const { data } = await sb.auth.getSession(); u = data && data.session ? data.session.user : null; }catch(e){ return; }
+  if(!u) return;
+  const meta = u.user_metadata || {};
+  let real = String(meta.full_name || meta.name || '').trim();
+  /* Older accounts kept the name only in profiles. One indexed lookup, and
+     only when the session itself carries nothing. */
+  if(!real){
+    try{
+      const { data: p } = await sb.from('profiles').select('full_name').eq('id', u.id).single();
+      real = String((p && p.full_name) || '').trim();
+    }catch(e){ /* offline or blocked by RLS — leave the cache as it is */ }
+  }
+  if(!real || real === cached.name) return;
+  cached.name = real;
+  if(!cached.email && u.email) cached.email = u.email;
+  try{ localStorage.setItem('mykunda_user', JSON.stringify(cached)); }catch(e){}
+  /* The header was already drawn with the old name — correct it in place. */
+  const first = real.split(/\s+/)[0];
+  document.querySelectorAll('.user-chip').forEach(function(chip){
+    chip.title = real;
+    const nm = chip.querySelector('.user-name'); if(nm) nm.textContent = first;
+    const av = chip.querySelector('.user-av');
+    if(av) av.textContent = (typeof initials==='function') ? initials(real) : first.charAt(0).toUpperCase();
+  });
+  const wn = document.getElementById('welcomeName');
+  if(wn) wn.textContent = 'Welcome back, ' + first;
+  try{ document.dispatchEvent(new CustomEvent('mk:user-updated',{ detail: cached })); }catch(e){}
+}
+/* One tick after DOMContentLoaded: app.js draws the header in its own
+   listener, and we want to correct what it drew, not race it. */
+(function(){
+  var run = function(){ setTimeout(syncCachedUserName, 0); };
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+  else run();
+})();
 /* Full async check + cache update */
 async function checkAdmin(){
   if(!sb) return false;

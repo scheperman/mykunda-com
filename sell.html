@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:03zn1p3--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:1es0jye--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -31,7 +31,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=177881360145938">
+<link rel="stylesheet" href="styles.min.css?v=88464732772710">
 <style>
 /* hero */
 .shero{position:relative;color:#fff;margin-top:calc(-1 * var(--header-h));isolation:isolate;overflow:hidden}
@@ -517,7 +517,10 @@
 #value .value-map{margin-top:14px;border-radius:14px;overflow:hidden;min-height:260px;position:relative}
 .mkv-grip{display:none}
 @media(max-width:979px){
-  .mkv-rail{position:fixed;left:0;right:0;bottom:0;z-index:40}
+  .mkv-rail{position:fixed;left:0;right:0;bottom:0;z-index:40;transition:transform .18s ease}
+  /* The bar belongs to the valuation step. Scrolled past it, it steps aside
+     instead of covering the pricing table, the FAQ and the footer. */
+  .mkv-rail[data-off]{transform:translateY(115%);pointer-events:none}
   .mkv-panel{border-radius:16px 16px 0 0;padding:14px 20px 18px;box-shadow:0 -8px 30px rgba(0,0,0,.22)}
   .mkv-panel .big{font-size:26px;margin:2px 0 0}
   .mkv-aside{display:none}
@@ -944,13 +947,13 @@
 window.__sbReady=new Promise(function(res){window.addEventListener('load',function(){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js';
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=177881360145938'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=88464732772710'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
   document.body.appendChild(s1);
 });});
 </script>
-<script src="valuation-areas.js?v=177881360145938"></script>
-<script src="valuation.js?v=177881360145938"></script>
-<script src="app.min.js?v=177881360145938"></script>
+<script src="valuation-areas.js?v=88464732772710"></script>
+<script src="valuation.js?v=88464732772710"></script>
+<script src="app.min.js?v=88464732772710"></script>
 <script>
 
 // icons
@@ -1639,6 +1642,22 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
       var open=$('mkvRail').classList.toggle('open');
       this.setAttribute('aria-expanded', open?'true':'false');
     });
+
+    /* Below 980px the estimate bar is pinned to the bottom of the screen. It
+       may only be there while the valuation step is on screen; once the reader
+       has scrolled on, it slides away instead of covering the rest of the page. */
+    (function(){
+      var rail=$('mkvRail'), sec=document.getElementById('value');
+      if(!rail || !sec || !('IntersectionObserver' in window)) return;
+      new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(e.isIntersecting){ rail.removeAttribute('data-off'); return; }
+          rail.setAttribute('data-off','');
+          rail.classList.remove('open');
+          var g=$('mkvGrip'); if(g) g.setAttribute('aria-expanded','false');
+        });
+      },{threshold:0}).observe(sec);
+    })();
 
     $('mkvSend').addEventListener('click',function(){
       var nm=$('mkvName').value.trim(), em=$('mkvEmail').value.trim();
