@@ -754,6 +754,12 @@ function listingFields(){
        euro-opslag zette elke verkoopadvertentie in de goedkoopste
        Verified-band. */
     price: askingGMD(),
+    /* De eenheid gaat expliciet mee. De kolom heeft een default van 'GMD'
+       en een check-constraint die niets anders toelaat, dus dit is geen
+       extra veld maar een handtekening: wie hier ooit een eurobedrag zou
+       schrijven, moet daar ook 'EUR' bij zetten en loopt dan tegen de
+       database aan in plaats van tegen een verkeerde Verified-band. */
+    price_currency: 'GMD',
     negotiable: !!S.neg,
     beds: parseInt(S.beds)||0,
     baths: parseInt(S.baths)||0,

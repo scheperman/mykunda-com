@@ -395,19 +395,37 @@ await patch('property.html', src => {
 
    Ze komen nu uit area-prices.json, net als al het andere — zie de regel in
    CLAUDE.md: zet nooit met de hand een bedrag in een pagina. */
+/* Hoeveel waarnemingen er achter een tegelcijfer zitten, in de tegel zelf.
+   Cape Point stond op de voorpagina met D16.667 per m² uit ÉÉN advertentie.
+   De areapagina zegt daar eerlijk "1 observation only" bij; de tegel zei
+   niets, en zo krijgt de mening van één verkoper het gewicht van een
+   marktprijs op de drukst bezochte pagina van de site.
+
+   Bij `observed` (drie of meer waarnemingen, dus een mediaan) blijft het
+   kaal — daar is het getal wat het voorgeeft te zijn. */
+function tegelBewijs(r) {
+  if (r.src === 'observed') return '';
+  if (r.src === 'thin') return ' · ' + r.n + ' listing' + (r.n === 1 ? '' : 's');
+  return ' · no local listings';
+}
+
 for (const page of ['home.html', 'index.html', 'buy.html']) {
   await patch(page, src => {
     let n = 0, missed = [];
     src = src.replace(
       /* Zowel "Avg" (de oude tekst) als "Land" (wat deze stap ervan maakt),
          zodat een tweede run niet "niets herkend" meldt over werk dat de
-         eerste al goed heeft gedaan. */
-      /(<h3>([^<]+)<\/h3><p>[^<]*?)(?:Avg|Land) (<span class="(?:hood-price|apr)" data-gmd=")\d+(">)[^<]*(<\/span>)/g,
-      (m, head, label, pre, mid, post) => {
+         eerste al goed heeft gedaan. Hetzelfde geldt voor het staartje met
+         het aantal waarnemingen: dat wordt meegelezen en opnieuw gezet, niet
+         opgestapeld. Wat er ná /m² aan redactionele tekst staat — "· Beach &
+         nightlife" — blijft ongemoeid. */
+      /(<h3>([^<]+)<\/h3><p>[^<]*?)(?:Avg|Land) (<span class="(?:hood-price|apr)" data-gmd=")\d+(">)[^<]*(<\/span>)(\/m²)( · (?:\d+ listings?|no local listings))?/g,
+      (m, head, label, pre, mid, post, eenheid) => {
         const r = byLabel[label] || A[label.toLowerCase()];
         if (!r) { missed.push(label); return m; }
         n++;
-        return head + 'Land ' + pre + r.gmd_m2 + mid + 'D' + r.gmd_m2.toLocaleString('en-US') + post;
+        return head + 'Land ' + pre + r.gmd_m2 + mid + 'D' + r.gmd_m2.toLocaleString('en-US') +
+               post + eenheid + tegelBewijs(r);
       });
     /* `probs` bestaat alleen binnen de areapagina-lus; hier is `report` de
        plek waar een probleem zichtbaar wordt. */

@@ -350,7 +350,7 @@ Deno.serve(async (req: Request) => {
   if (listingId) {
     const { data: l } = await admin
       .from("listings")
-      .select("id, owner_id, agent_id, kind, price")
+      .select("id, owner_id, agent_id, kind, price, price_currency")
       .eq("id", listingId)
       .maybeSingle();
     if (!l) return json({ error: "listing_not_found" }, 404, headers);
@@ -373,11 +373,33 @@ Deno.serve(async (req: Request) => {
     if (listing.kind !== "sale") {
       return json({ error: "verified_is_for_sale_listings_only" }, 400, headers);
     }
+    // De eenheid eerst, dan pas het getal. verifiedBandVoor() vergelijkt
+    // met D2.000.000 en D10.000.000; die grenzen slaan alleen ergens op als
+    // de vraagprijs in dalasi staat. Tot 27-08-2026 stond er de
+    // euro-tegenwaarde en viel élke verkoopadvertentie in de goedkoopste
+    // band — een bedrag zegt uit zichzelf niet in welke munt het staat, dus
+    // dat moet ernaast staan en hier gecontroleerd worden.
+    //
+    // De kolom heeft een check-constraint die alleen GMD toelaat. Komt hier
+    // ooit iets anders langs, dan is die constraint verbreed zonder dat
+    // deze functie is nagelopen, en dan is stoppen het enige juiste.
+    const munt = String(listing.price_currency ?? "GMD");
+    if (munt !== "GMD") {
+      console.error("create-payment: vraagprijs staat niet in dalasi", {
+        listing_id: listing.id, price_currency: munt,
+      });
+      return json({
+        error: "listing_price_currency_unsupported",
+        price_currency: munt,
+        note: "De Verified-banden zijn dalasigrenzen. Een vraagprijs in een andere munt kan niet in een band worden ingedeeld.",
+      }, 409, headers);
+    }
+
     const vraagprijs = Number(listing.price ?? 0);
     if (!(vraagprijs > 0)) {
       return json({ error: "listing_price_required" }, 400, headers);
     }
-    // Vangrail tegen een verkeerde eenheid. Zie MIN_VRAAGPRIJS_GMD: een
+    // Tweede vangrail, op de hoogte van het bedrag. Zie MIN_VRAAGPRIJS_GMD: een
     // vraagprijs hieronder is geen goedkope kavel maar een bedrag in de
     // verkeerde munt, en dan is elke band die we kiezen de verkeerde.
     if (vraagprijs < MIN_VRAAGPRIJS_GMD) {
@@ -396,6 +418,9 @@ Deno.serve(async (req: Request) => {
       requested_plan_id: planId,
       applied_plan_id: effectievePlanId,
       asking_price_gmd: vraagprijs,
+      // De eenheid mee in de metadata, zodat achteraf uit de betaling zelf
+      // blijkt waartegen de band is gekozen en niemand dat hoeft aan te nemen.
+      asking_price_currency: munt,
     };
   }
 
