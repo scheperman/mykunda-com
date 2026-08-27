@@ -660,11 +660,16 @@ function value(input, opts) {
   });
 
   /* Afrondstap van de band, in dalasi. Was EUR 5.000/1.000/500 boven
-     EUR 200.000/50.000; omgerekend is dat ongeveer D430.000/86.000/43.000
-     boven D17 mln/4,3 mln. Afgerond op stappen die een Gambiaanse lezer
-     herkent. Een band die op D50.000 nauwkeurig heet te zijn suggereert
-     al meer dan het model waarmaakt. */
-  var step = mid >= 15000000 ? 500000 : mid >= 4000000 ? 100000 : 50000;
+     EUR 200.000/50.000 — omgerekend ongeveer D430.000/86.000/43.000 boven
+     D17 mln/4,3 mln. Die onderste stap was ook in euro's al te grof: op een
+     kavel van D250.000 rondde hij af op een vijfde van de waarde, en dan
+     zegt de band meer over de afronding dan over de markt. Vandaar een
+     trede extra onderaan. De stap blijft nu overal onder de 6% van het
+     bedrag zelf; fijner dan dat maakt het model niet waar. */
+  var step = mid >= 15000000 ? 500000
+           : mid >=  4000000 ? 100000
+           : mid >=  1000000 ?  25000
+           :                    10000;
   var rnd = function (v) { return Math.round(v / step) * step; };
 
   return {
