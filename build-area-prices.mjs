@@ -31,13 +31,23 @@ const D   = n => 'D' + Math.round(n).toLocaleString('en-US');
 const Dk  = n => n >= 1e6 ? 'D' + (n / 1e6).toFixed(n >= 1e7 ? 0 : 1) + 'M'
                : 'D' + Math.round(n / 1000) + 'k';
 
-const SRC = { observed: 'local listings', thin: 'few observations',
+const SRC = { observed: 'local listings', band: 'area band', thin: 'few observations',
               derived: 'derived', none: 'no data' };
+
+/* ---------- de publicatieregel van 27-08-2026 ----------
+   Een gebied krijgt alleen een eigen grondtarief bij MIN_OBS of meer
+   bruikbare waarnemingen. Daaronder publiceert de pagina het bandtarief:
+   de gewogen mediaan over de waarnemingen van de omliggende band, met
+   naam en aantal erbij. De eigen waarnemingen staan dan als losse
+   vraagprijzen in de tekst — nooit als tarief. Zo kan één advertentie
+   nooit meer een gebiedscijfer zetten (Bakoteh D10.549 boven Kololi). */
+const MIN_OBS = 5;
 
 /* Hoeveel waarnemingen, in gewone woorden. Het aantal is niet decoratief:
    het is het verschil tussen een gemeten en een afgeleid getal. */
 function note(r) {
   if (r.src === 'observed') return r.n + ' local plot listings';
+  if (r.src === 'band')     return 'band rate — ' + DB.bands[r.band].n + ' listings across the band';
   if (r.src === 'thin')     return r.n + ' observation' + (r.n === 1 ? '' : 's') + ' only';
   return 'no local observations — regional rate';
 }
@@ -67,6 +77,12 @@ const rentSub   = r => `a month · ${D(r.rent_lo)}–${D(r.rent_hi)} a year · $
    uit, en zeggen we het alleen waar beide getallen bestaan. */
 function yieldLine(r) {
   if (!r.house) return '';                       // upcountry: geen woningprijs, dus ook geen rendement
+  /* Sinds 27-08-2026: een rendement alleen waar huur ÉN woningprijs
+     allebei waargenomen zijn. Tegen een afgeleide woningprijs (grond +
+     bouwkosten) is een rendement de deling van een meting door een
+     aanname — dat oogt als kennis en is het niet. */
+  if (r.rent_year && r.house_src !== 'observed')
+    return ' We quote no rental yield here: the house figure above is derived (land plus build cost), and a yield against a derived price would be a measurement divided by an assumption.';
   if (!r.yield) return ' We have no rent listing we can verify here, so we quote no rental yield for this area either — a yield built on a rent we had to guess would only look like knowledge.';
   const lo = (r.rent_lo / r.house * 100).toFixed(1);
   const hi = (r.rent_hi / r.house * 100).toFixed(1);
@@ -111,11 +127,20 @@ function priceBlock(key, r) {
         r.house_src === 'observed' ? 'median local listing' : 'land + build cost, 120 m² house')
     : factRow(null, 'House, asking price', '—', 'no listings we can verify');
 
-  const expl = r.src === 'observed'
-    ? `These are asking prices actually advertised in ${name}, not a national average pushed onto the map.`
-    : r.src === 'thin'
-      ? `We have only ${r.n} usable observation${r.n === 1 ? '' : 's'} in ${name}. The figure is the best we can see, not a market average — treat it as a starting point and check it against what you are shown.`
-      : `We have no plot listings of our own for ${name} yet. The rate above is the ${r.zone === 'upcountry' ? 'provincial' : r.zone === 'greater' ? 'Greater Banjul' : r.zone === 'coast' ? 'coastal' : 'Kombo'} regional rate, and it can be wide of a specific street by a factor of two.`;
+  let expl;
+  if (r.src === 'observed') {
+    expl = `These are asking prices actually advertised in ${name}, not a national average pushed onto the map.`;
+  } else if (r.src === 'band') {
+    const B = DB.bands[r.band];
+    expl = `${name} has ${r.n === 0 ? 'no' : 'only ' + r.n} priced plot listing${r.n === 1 ? '' : 's'} with a known size — below our bar of ${MIN_OBS} for an area-specific rate. The rate above is the band rate for ${B.label}: ${B.basis}. It tells you what the band asks, not what a specific street asks.`;
+    if (r.n > 0 && r.own_med) {
+      expl += ` The ${r.n === 1 ? 'one listing' : r.n + ' listings'} we can price in ${name} itself ask${r.n === 1 ? 's' : ''} ${r.n === 1 ? '' : 'a median of '}${D(r.own_med)} per m² — ${r.n === 1 ? 'one seller’s opinion of one plot' : 'too few to call a market'}, shown here as context, not as a rate.`;
+    }
+  } else if (r.src === 'thin') {
+    expl = `We have only ${r.n} usable observation${r.n === 1 ? '' : 's'} in ${name}. The figure is the best we can see, not a market average — treat it as a starting point and check it against what you are shown.`;
+  } else {
+    expl = `We have no plot listings of our own for ${name} yet. The rate above is the ${r.zone === 'upcountry' ? 'provincial' : r.zone === 'greater' ? 'Greater Banjul' : r.zone === 'coast' ? 'coastal' : 'Kombo'} regional rate, and it can be wide of a specific street by a factor of two.`;
+  }
 
   const upc = r.zone === 'upcountry'
     ? ` Upcountry we publish land only: there is not enough house or rental advertising in ${name} to put a number on either, and a number we cannot defend is worse than none.`
@@ -125,7 +150,7 @@ function priceBlock(key, r) {
         <h2>What property costs in ${name}</h2>
         <p class="lead">Asking prices, measured ${DB.measured_label}. Land and buildings are priced separately here, because in The Gambia they are usually sold separately.</p>
         <div style="margin-top:16px;padding:6px 20px 18px;background:#FAF8F3;border-radius:10px;font-size:14.5px;line-height:1.6">
-          ${factRow('pf0', 'Land, per m²', D(r.gmd_m2), `range ${D(r.lo)}–${D(r.hi)}`)}
+          ${factRow('pf0', 'Land, per m²', D(r.gmd_m2), r.src === 'band' ? `band middle half ${D(r.lo)}–${D(r.hi)}` : `range ${D(r.lo)}–${D(r.hi)}`)}
           ${factRow('pf1', 'Plot of 20 × 20 m (400 m²)', D(r.plot400), r.plot_src === 'observed' ? 'median asking price' : 'at the rate above')}
           ${houseLine}
           ${rentLine}
@@ -160,6 +185,47 @@ function blockRange(src, marker) {
 
 const report = [];
 let changed = 0, skipped = 0;
+
+/* ---------- vangrails vóór er ook maar één pagina wordt aangeraakt ----------
+   Dit is de plek die de Bakoteh-fout structureel onmogelijk maakt: een
+   gebied onder de MIN_OBS-drempel kan geen eigen mediaan publiceren, en
+   de banden moeten in een logische volgorde staan. Faalt één controle,
+   dan schrijft dit script niets — ook niet met --write. */
+{
+  const fouten = [];
+  for (const key of Object.keys(A)) {
+    const r = A[key];
+    if (r.src === 'observed' && r.n < MIN_OBS)
+      fouten.push(`${key}: src=observed met n=${r.n} < ${MIN_OBS}`);
+    if (r.src === 'band') {
+      const B = DB.bands && DB.bands[r.band];
+      if (!B) fouten.push(`${key}: verwijst naar onbekende band '${r.band}'`);
+      else if (r.gmd_m2 !== B.gmd_m2 || r.lo !== B.lo || r.hi !== B.hi)
+        fouten.push(`${key}: tarief/band wijkt af van bands.${r.band} (${r.gmd_m2} vs ${B.gmd_m2})`);
+    }
+    if (r.src === 'thin' && r.zone !== 'upcountry')
+      fouten.push(`${key}: src=thin buiten upcountry — onder de drempel hoort een band, geen eigen mediaan`);
+  }
+  const b = DB.bands || {};
+  if (!(b.strip && b.kombo && b.tanji_tujereng && b.sanyang_gunjur))
+    fouten.push('bands-blok incompleet');
+  else {
+    if (!(b.strip.gmd_m2 > b.kombo.gmd_m2)) fouten.push('bandvolgorde: strip hoort boven kombo');
+    if (!(b.kombo.gmd_m2 >= b.tanji_tujereng.gmd_m2)) fouten.push('bandvolgorde: kombo hoort niet onder tanji_tujereng');
+    if (!(b.tanji_tujereng.gmd_m2 > b.sanyang_gunjur.gmd_m2)) fouten.push('bandvolgorde: tanji_tujereng hoort boven sanyang_gunjur');
+    const laagsteBand = Math.min(...Object.values(b).map(x => x.gmd_m2));
+    for (const key of Object.keys(A)) {
+      const r = A[key];
+      if (r.zone === 'upcountry' && r.gmd_m2 >= laagsteBand)
+        fouten.push(`${key}: upcountry-tarief ${r.gmd_m2} boven de laagste band (${laagsteBand})`);
+    }
+  }
+  if (fouten.length) {
+    console.error('VANGRAIL — er is niets geschreven:');
+    for (const f of fouten) console.error('  - ' + f);
+    process.exit(1);
+  }
+}
 
 for (const key of Object.keys(A)) {
   const r = A[key];
@@ -247,6 +313,13 @@ for (const key of Object.keys(A)) {
   report.push([file, `ok  D${r.gmd_m2}/m²  ${r.src}  n=${r.n}`]);
 }
 
+/* Bewijskolom in de twee tabellen: bij een bandtarief telt het aantal in
+   de band, en staat het eigen aantal (onder de drempel) er apart bij. */
+function evCell(r) {
+  if (r.src === 'band') return `area band (${DB.bands[r.band].n})${r.n ? ' · local n=' + r.n : ''}`;
+  return `${SRC[r.src]}${r.n ? ' · n=' + r.n : ''}`;
+}
+
 /* ---------- de tabel op gambia-property-prices.html ---------- */
 {
   const file = 'gambia-property-prices.html';
@@ -262,7 +335,7 @@ for (const key of Object.keys(A)) {
       const r = A[key]; n++;
       return `<tr><td><a href="${slug}.html">${label}</a></td><td class="reg">${reg}</td>` +
         `<td class="num">${D(r.gmd_m2)}</td>` +
-        `<td class="num">${SRC[r.src]}${r.n ? ' · n=' + r.n : ''}</td>` +
+        `<td class="num">${evCell(r)}</td>` +
         `<td class="med">${Dk(r.plot400)}<span>plot, 400 m²</span></td>` +
         `<td class="med">${r.house ? Dk(r.house) : '—'}<span>house, asking</span></td></tr>`;
     });
@@ -279,12 +352,13 @@ for (const key of Object.keys(A)) {
     'and every figure says how much evidence sits behind it.</p>');
   src = src.replace(/<p class="px-lead">[\s\S]*?<\/p>/, () => {
     const obs = Object.values(A).filter(x => x.src === 'observed').length;
-    const der = Object.values(A).filter(x => x.src === 'derived').length;
+    const rest = Object.keys(A).length - obs;
     return '<p class="px-lead">Land in the ' + Object.keys(A).length + ' areas MyKunda tracks runs from ' +
       '<b>' + D(top.gmd_m2) + ' per m\u00b2 in ' + top.label + '</b> down to <b>' + D(bot.gmd_m2) + ' per m\u00b2 in ' + bot.label + '</b> \u2014 ' +
       'a factor of ' + Math.round(top.gmd_m2 / bot.gmd_m2) + ' across one small country. The standard unit is a ' +
-      '20 \u00d7 20 metre plot of 400 m\u00b2. <b>' + obs + '</b> of these areas have enough local plot listings for the figure to ' +
-      'count as measured; <b>' + der + '</b> have none of their own and carry a regional rate instead, marked as derived. ' +
+      '20 \u00d7 20 metre plot of 400 m\u00b2. An area only gets a rate of its own once we have at least five priced local plot ' +
+      'listings with a known size: <b>' + obs + '</b> of these areas clear that bar, and the other <b>' + rest + '</b> carry the ' +
+      'rate of the surrounding band or region, marked as such \u2014 a single listing never sets an area figure on this site. ' +
       'Upcountry we publish land only \u2014 there is not enough house or rental advertising to put a number on either. ' +
       'For bare plots specifically, see <a href="land-for-sale-in-the-gambia.html">land for sale in The Gambia</a>.</p>';
   });
@@ -333,8 +407,16 @@ await patch('areas-in-the-gambia.html', src => {
       const r = bySlug[slug]; if (!r) return m;
       n++; return head + D(r.gmd_m2) + '<small class="">land / m²</small>' + tail;
     });
-  src = src.replace(/<b>\$1,100 per square metre in Cape Point<\/b> to <b>\$32 in Fatoto<\/b>/,
-    `<b>${D(A['cape point'].gmd_m2)} per square metre of land in Cape Point</b> down to <b>${D(A['fatoto'].gmd_m2)} in Fatoto</b>`);
+  /* Toleraat zowel de oorspronkelijke dollarzin als de door een eerdere run
+     geschreven dalasizin — en gebruik het wérkelijke hoogste en laagste
+     gebied in plaats van een hardgecodeerde naam. Tot 27-08-2026 stond hier
+     Cape Point vast in de tekst, met een tarief uit één advertentie. */
+  {
+    const srt = Object.values(A).slice().sort((x, y) => y.gmd_m2 - x.gmd_m2);
+    const t = srt[0], bo = srt[srt.length - 1];
+    src = src.replace(/<b>(?:\$1,100 per square metre in Cape Point|D[\d,]+ per square metre of land in [^<]+)<\/b> (?:to|down to) <b>(?:\$32|D[\d,]+) in [^<]+<\/b>/,
+      `<b>${D(t.gmd_m2)} per square metre of land in ${t.label}</b> down to <b>${D(bo.gmd_m2)} in ${bo.label}</b>`);
+  }
   src = src.replace(/with the average asking price per square metre and the year-on-year change/g,
     'with the asking price of land per square metre and how much evidence sits behind it');
   return n ? src : null;
@@ -350,7 +432,7 @@ await patch('land-for-sale-in-the-gambia.html', src => {
       return `<tr><td><a href="${slug}.html">${label}</a></td><td class="reg">${reg}</td>` +
         `<td class="med">${Dk(r.plot400)}<span>plot, 400 m²</span></td>` +
         `<td class="num">${D(r.gmd_m2)}</td>` +
-        `<td class="num">${SRC[r.src]}${r.n ? ' · n=' + r.n : ''}</td></tr>`;
+        `<td class="num">${evCell(r)}</td></tr>`;
     });
   src = src.replace(/<thead><tr>[\s\S]*?<\/tr><\/thead>/,
     '<thead><tr><th>Area</th><th>Region</th><th>Typical plot asking price</th>' +
@@ -405,6 +487,7 @@ await patch('property.html', src => {
    kaal — daar is het getal wat het voorgeeft te zijn. */
 function tegelBewijs(r) {
   if (r.src === 'observed') return '';
+  if (r.src === 'band') return ' · band rate';
   if (r.src === 'thin') return ' · ' + r.n + ' listing' + (r.n === 1 ? '' : 's');
   return ' · no local listings';
 }

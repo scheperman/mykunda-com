@@ -20,6 +20,20 @@
 //  Consent is now passed through to the profiles trigger too.
 //  Requires backend/auth-flow-fixes.sql to be applied first.
 //
+//  2026-08-27 update: de rate limit liegt niet meer. Zat een emmer vol, dan
+//  kwam er {ok:true, code_length:0} terug en zette het scherm gewoon door naar
+//  "we hebben een code gestuurd" terwijl er niets verstuurd was — de bezoeker
+//  bleef wachten op een mail die nooit kwam. Nu komt er {ok:false,
+//  rate_limited:true, retry_after} terug, mét een leesbare error-tekst zodat
+//  ook een front-end van vóór deze wijziging iets zinnigs toont. De IP-emmer is
+//  bovendien gesplitst: inloggen op een bestaand account (60/uur) telt niet meer
+//  mee met accounts aanmaken (20/uur). Achter de CGNAT van de Gambiaanse
+//  providers deelt een hele wijk één IP, en die ene emmer sloot echte
+//  gebruikers buiten. De emmer wordt gekozen op de mode die de client meestuurt;
+//  liegen daarover levert niets op, want een onbekend adres krijgt sowieso
+//  no_account terug en dus geen mail. Elke verstuurde auth-mail wordt nu ook
+//  in public.email_events gezet — de code zelf nooit.
+//
 //  Deploy:  supabase functions deploy auth-email --no-verify-jwt
 //  Secrets: reuses RESEND_API_KEY / FROM_EMAIL
 // ============================================================
@@ -45,6 +59,17 @@ const SUBJECT: Record<string, string> = {
   email_code: "Your MyKunda sign-in code",
 };
 
+// Rate limit. Twee emmers per verzoek: één per adres+type (tegen dubbelklikken
+// en tegen iemand die één adres blijft bestoken) en één per IP (tegen iemand
+// die adressen afloopt). De IP-emmers staan los van elkaar, zodat een golf
+// aanmeldpogingen vanaf een gedeeld IP het inloggen niet meesleurt.
+const CODE_WINDOW_SECONDS = 20;   // per adres, tussen twee codes
+const LINK_WINDOW_SECONDS = 60;   // per adres, tussen twee reset-/magic-links
+const IP_WINDOW_SECONDS   = 3600;
+const IP_MAX_SIGNIN = 60;         // inloggen op een bestaand account
+const IP_MAX_SIGNUP = 20;         // account aanmaken
+const IP_MAX_LINK   = 20;         // recovery / magiclink
+
 // Gereserveerde testdomeinen (RFC 2606/6761) hebben geen DNS. Amazon SES houdt
 // zo'n mail 14 uur in de wachtrij en boekt daarna een bounce op de reputatie
 // van mykunda.com. Nooit versturen dus — testen doe je met delivered@resend.dev.
@@ -56,10 +81,10 @@ function isReservedTestAddress(addr: string): boolean {
   return RESERVED_EMAIL_DOMAIN.test(domain);
 }
 
-async function sendEmail(to: string, subject: string, html: string) {
+async function sendEmail(to: string, subject: string, html: string): Promise<{ skipped: boolean; id: string | null }> {
   if (isReservedTestAddress(to)) {
     console.warn(`auth-email: geweigerd, gereserveerd testdomein — ${to}`);
-    return true;
+    return { skipped: true, id: null };
   }
   const r = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -71,7 +96,37 @@ async function sendEmail(to: string, subject: string, html: string) {
     console.error("Resend error", errText);
     throw new Error(`Resend ${r.status}: ${errText}`);
   }
-  return r.ok;
+  const body = await r.json().catch(() => ({} as any));
+  return { skipped: false, id: (body && body.id) ? String(body.id) : null };
+}
+
+/**
+ * Spoor van elke verstuurde auth-mail in public.email_events, net als de
+ * betaal- en leadmails dat al doen. Zonder dit is er achteraf geen enkele
+ * manier om te zien of een code de deur uit is gegaan.
+ *
+ * De code zelf gaat hier NOOIT in — alleen dat er een code verstuurd is.
+ * Loggen mag nooit een verstuurde mail alsnog laten mislukken.
+ */
+async function logAuthEmail(admin: any, o: {
+  event_type: string;
+  recipient: string;
+  subject: string;
+  resend_email_id: string | null;
+  payload?: Record<string, unknown>;
+}) {
+  try {
+    const { error } = await admin.from("email_events").insert({
+      resend_email_id: o.resend_email_id,
+      event_type: o.event_type,
+      recipient: o.recipient,
+      subject: o.subject,
+      payload: o.payload ?? {},
+    });
+    if (error) throw error;
+  } catch (e) {
+    console.error("email_events loggen faalde (de mail is wél verstuurd):", String((e as Error)?.message ?? e));
+  }
 }
 
 // Very light in-memory throttle (per function instance) against accidental
@@ -105,9 +160,10 @@ function callerIp(req: Request): string {
 async function maySend(
   admin: any,
   key: string,
-  ip: string,
+  ipBucket: string,
   windowSeconds = 60,
   maxHits = 1,
+  ipMaxHits = 20,
 ): Promise<boolean> {
   try {
     const perKey = await admin.rpc("claim_auth_email_rate", {
@@ -117,7 +173,7 @@ async function maySend(
     if (perKey.data !== true) return false;
 
     const perIp = await admin.rpc("claim_auth_email_rate", {
-      p_bucket: `ip:${ip}`, p_window_seconds: 3600, p_max_hits: 20,
+      p_bucket: ipBucket, p_window_seconds: IP_WINDOW_SECONDS, p_max_hits: ipMaxHits,
     });
     if (perIp.error) throw perIp.error;
     return perIp.data === true;
@@ -154,13 +210,29 @@ serve(async (req) => {
     // generateLink returns both a link AND its one-time code (email_otp);
     // we mail only the code, so the UI's OTP step is what people actually get.
     if (type === "email_code") {
-      if (!(await maySend(admin, `email_code:${email}`, ip, 20))) {
-        return json({ ok: true, verify_type: "email", code_length: 0 });
-      }
-
       // mode is required from the client going forward; default to "signup"
       // only so older cached frontends don't hard-fail mid-rollout.
       const authMode = mode === "signin" ? "signin" : "signup";
+
+      // Inloggen en aanmelden krijgen een eigen IP-emmer. Wie zich voordoet als
+      // 'signin' om de ruimere emmer te pakken schiet er niets mee op: een
+      // onbekend adres valt hieronder sowieso op no_account en krijgt geen mail.
+      const ipBucket = authMode === "signin" ? `ip:signin:${ip}` : `ip:signup:${ip}`;
+      const ipMax    = authMode === "signin" ? IP_MAX_SIGNIN : IP_MAX_SIGNUP;
+
+      if (!(await maySend(admin, `email_code:${email}`, ipBucket, CODE_WINDOW_SECONDS, 1, ipMax))) {
+        // Eerlijk zijn. Deze route verraadt via no_account/already_exists toch al
+        // of een adres bestaat, dus hier valt niets te verbergen — en een scherm
+        // dat "we hebben een code gestuurd" zegt terwijl dat niet zo is, is het
+        // ergste wat je een bezoeker kunt aandoen. De error-tekst staat erbij
+        // zodat een front-end die rate_limited nog niet kent hem gewoon toont.
+        return json({
+          ok: false,
+          rate_limited: true,
+          retry_after: CODE_WINDOW_SECONDS,
+          error: `You just asked for a code. Check your inbox and spam folder, then try again in ${CODE_WINDOW_SECONDS} seconds.`,
+        });
+      }
 
       const { data: lookup, error: lookupErr } = await admin.rpc("auth_user_lookup", { p_email: email });
       if (lookupErr) throw lookupErr;
@@ -205,11 +277,21 @@ serve(async (req) => {
       if (res.error) throw res.error;
       const code = res.data?.properties?.email_otp;
       if (!code) throw new Error("no email_otp returned from generateLink");
-      await sendEmail(email, SUBJECT.email_code, authCodeEmail({ code }));
+      const sent = await sendEmail(email, SUBJECT.email_code, authCodeEmail({ code }));
+      await logAuthEmail(admin, {
+        event_type: "auth_code",
+        recipient: email,
+        subject: SUBJECT.email_code,
+        resend_email_id: sent.id,
+        payload: { mode: authMode, verify_type: verifyType, skipped: sent.skipped },
+      });
       return json({ ok: true, verify_type: verifyType, code_length: String(code).length });
     }
 
-    if (!(await maySend(admin, `${type}:${email}`, ip))) return okNoop; // pretend success, don't leak throttling
+    // Hier blijft de stille okNoop wél staan: recovery en magiclink mogen niet
+    // verraden of een adres een account heeft, en daar is geen no_account-
+    // antwoord dat dat toch al doet.
+    if (!(await maySend(admin, `${type}:${email}`, `ip:link:${ip}`, LINK_WINDOW_SECONDS, 1, IP_MAX_LINK))) return okNoop;
 
     // Onbekend adres? Hier stoppen. generateLink() geeft bij 'magiclink' geen
     // fout maar maakt het account gewoon aan, en op een open endpoint betekent
@@ -247,12 +329,36 @@ serve(async (req) => {
     const link = `${SITE_URL}/auth.html?token_hash=${encodeURIComponent(hashedToken)}&type=${encodeURIComponent(type)}`
       + (next ? `&next=${encodeURIComponent(next)}` : "");
 
-    await sendEmail(email, SUBJECT[type] ?? "MyKunda", authLinkEmail({ type, link }));
+    const subject = SUBJECT[type] ?? "MyKunda";
+    const linkSent = await sendEmail(email, subject, authLinkEmail({ type, link }));
+    await logAuthEmail(admin, {
+      event_type: `auth_link_${type}`,
+      recipient: email,
+      subject,
+      resend_email_id: linkSent.id,
+      payload: { type, skipped: linkSent.skipped },
+    });
 
     return okNoop;
   } catch (e) {
     console.error("auth-email error:", e);
-    return new Response(JSON.stringify({ ok: false, error: String((e as any)?.message || e) }), {
+    const msg = String((e as any)?.message || e);
+
+    // Een adres op een gereserveerd testdomein laat de CHECK op profiles.email
+    // klappen; de profielinsert rolt de auth-insert mee terug en GoTrue geeft
+    // "Database error saving new user". Dat is geen storing maar een onbruikbaar
+    // adres. Met status 400 komt de tekst niet eens bij de bezoeker aan —
+    // supabase-js vervangt hem dan door "Edge Function returned a non-2xx status
+    // code". Dus: 200 met ok:false, en een zin die iemand kan begrijpen.
+    if (/database error saving new user|violates check constraint|profiles_email_not_reserved_domain/i.test(msg)) {
+      return new Response(JSON.stringify({
+        ok: false,
+        invalid_email: true,
+        error: "We can't use that email address. Please try another one.",
+      }), { status: 200, headers: { ...cors, "Content-Type": "application/json" } });
+    }
+
+    return new Response(JSON.stringify({ ok: false, error: msg }), {
       status: 400,
       headers: { ...cors, "Content-Type": "application/json" },
     });

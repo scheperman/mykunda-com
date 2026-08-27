@@ -5,8 +5,14 @@
 //   2) an internal "New account created" notification to the team
 //  Idempotent: profiles.welcomed_at is stamped after the first send,
 //  and any later call for the same user is a no-op. That makes it
-//  safe to call from BOTH the database trigger (email-code sign-ups)
-//  and the browser (Google sign-ups, after consent is stored).
+//  safe to call from BOTH the database trigger and the browser.
+//
+//  27-08-2026: de trigger on_auth_user_signup_notify vuurt nu ook op INSERT
+//  wanneer email_confirmed_at al gevuld is. Daarmee dekt de database ook de
+//  Google-aanmeldingen; die kwamen al bevestigd binnen, dus de oude AFTER
+//  UPDATE-trigger sloeg ze over en de browser was de enige verzender. De
+//  aanroep vanuit auth.html blijft staan als vangnet (en om consent eerst weg
+//  te schrijven) — welcomed_at zorgt dat er hoe dan ook één mail uitgaat.
 //
 //  Deploy:  supabase functions deploy notify-signup --no-verify-jwt
 //  Secrets: reuses RESEND_API_KEY / FROM_EMAIL
@@ -40,6 +46,26 @@ async function sendEmail(o: { to: string; subject: string; html: string; replyTo
   });
   if (!r.ok) throw new Error(`Resend ${r.status}: ${await r.text()}`);
   return r.json();
+}
+
+/** Spoor in public.email_events, net als de betaal- en leadmails. Loggen mag
+ *  nooit een verstuurde mail alsnog laten mislukken. */
+async function logSignupEmail(db: any, o: {
+  event_type: string; recipient: string; subject: string;
+  resend_email_id: string | null; payload?: Record<string, unknown>;
+}) {
+  try {
+    const { error } = await db.from("email_events").insert({
+      resend_email_id: o.resend_email_id,
+      event_type: o.event_type,
+      recipient: o.recipient,
+      subject: o.subject,
+      payload: o.payload ?? {},
+    });
+    if (error) throw error;
+  } catch (e) {
+    console.error("email_events loggen faalde (de mail is wél verstuurd):", String((e as Error)?.message ?? e));
+  }
 }
 
 serve(async (req) => {
@@ -80,10 +106,22 @@ serve(async (req) => {
 
     const errors: string[] = [];
     try {
-      await sendEmail({ to: info.email, subject: "Welcome to MyKunda — your account is ready", html: welcomeEmail(info), replyTo: TEAM_EMAIL });
+      const subject = "Welcome to MyKunda — your account is ready";
+      const sent = await sendEmail({ to: info.email, subject, html: welcomeEmail(info), replyTo: TEAM_EMAIL });
+      await logSignupEmail(db, {
+        event_type: "signup_welcome", recipient: info.email, subject,
+        resend_email_id: sent?.id ? String(sent.id) : null,
+        payload: { provider: info.provider, consent_contact: info.consentContact, consent_marketing: info.consentMarketing },
+      });
     } catch (e) { errors.push(`welcome: ${(e as Error).message}`); console.error("notify-signup welcome failed:", e); }
     try {
-      await sendEmail({ to: TEAM_EMAIL, subject: `[MyKunda] New account — ${info.name || info.email}`, html: signupBackofficeEmail(info), replyTo: info.email });
+      const teamSubject = `[MyKunda] New account — ${info.name || info.email}`;
+      const teamSent = await sendEmail({ to: TEAM_EMAIL, subject: teamSubject, html: signupBackofficeEmail(info), replyTo: info.email });
+      await logSignupEmail(db, {
+        event_type: "signup_backoffice", recipient: TEAM_EMAIL, subject: teamSubject,
+        resend_email_id: teamSent?.id ? String(teamSent.id) : null,
+        payload: { internal: true, provider: info.provider, user_id: info.id },
+      });
     } catch (e) { errors.push(`team: ${(e as Error).message}`); console.error("notify-signup team failed:", e); }
 
     // If nothing at all went out, release the claim so a retry can send.

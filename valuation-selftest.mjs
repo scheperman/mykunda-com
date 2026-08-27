@@ -151,9 +151,14 @@ rent.sort((a,b)=>b.house-a.house).forEach(a => {
   console.log(w(a.label)
     + ('D' + Math.round(model).toLocaleString('nl-NL')).padStart(12)
     + ('D' + a.rent_lo.toLocaleString('nl-NL') + '–' + a.rent_hi.toLocaleString('nl-NL')).padStart(24)
-    + (ok ? '     ja  ' : '    NEE  ') + a.yield.toFixed(1) + '%  n=' + a.rent_n);
+    + (ok ? '     ja  ' : '    NEE  ') + (a.yield == null ? '  —  ' : a.yield.toFixed(1) + '%') + '  n=' + a.rent_n);
 });
-const ys = rent.map(a=>a.yield).sort((a,b)=>a-b);
+/* Een paar kan een lege yield dragen (27-08-2026: Bakoteh — drie huur-
+   advertenties die niet bij de bandwoningprijs passen; 8,5% zou de 1–8%-
+   vangrail raken en zegt eerder iets over het paar dan over de markt).
+   Zo'n paar telt niet mee in de mediaan; de bandtoets hierboven draait er
+   gewoon voor. Zoek bij de volgende herijking de bron van het paar. */
+const ys = rent.map(a=>a.yield).filter(y=>y!=null).sort((a,b)=>a-b);
 const yMed = ys[Math.floor(ys.length/2)];
 const worst = Math.max(...rent.map(a => Math.max((a.house*Y)/a.rent_hi, a.rent_lo/(a.house*Y))));
 console.log('-'.repeat(118));

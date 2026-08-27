@@ -161,7 +161,10 @@ async function sendAuthEmail(type, email, extra){
   if(error) throw error;
   // no_account / already_exists are expected outcomes, not failures — the
   // sign-in screen turns them into a "switch tab" message.
-  if(data && data.ok===false && !data.no_account && !data.already_exists){
+  // rate_limited en invalid_email horen er sinds 27-08-2026 bij: ook dat zijn
+  // verwachte uitkomsten die het scherm zelf netjes moet tonen, geen storingen.
+  if(data && data.ok===false && !data.no_account && !data.already_exists
+     && !data.rate_limited && !data.invalid_email){
     throw new Error(data.error || 'auth-email failed');
   }
   return data;

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-no-wa>
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1t34q61--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1pfkvtq--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=240286852297707">
+<link rel="stylesheet" href="styles.min.css?v=234084305324833">
 <style>
 body{min-height:100vh;display:flex}
 .auth-wrap{display:grid;grid-template-columns:1fr 1fr;width:100%;min-height:100vh}
@@ -176,37 +176,26 @@ body{min-height:100vh;display:flex}
         <div class="otp-demo" id="otpDemo" style="display:none"></div>
       </div>
 
-      <!-- STEP: set new password (only reached by a recovery link still in flight
-           from the old password flow — passwords are no longer used to sign in) -->
-      <div class="step" id="stepNewPw">
-        <div class="top">
-          <h1>Choose a new password</h1>
-          <p>Pick a strong password (at least 6 characters).</p>
-        </div>
-        <div class="fld">
-          <label>New password</label>
-          <input type="password" id="newPwIn" placeholder="New password (min 6 chars)" autocomplete="new-password">
-        </div>
-        <div class="fld">
-          <label>Confirm password</label>
-          <input type="password" id="newPwConfirm" placeholder="Repeat your new password" autocomplete="new-password">
-        </div>
-        <button class="btn btn-primary btn-block" id="setNewPwBtn" style="height:52px;font-size:16px">Save new password</button>
-        <p id="newPwMsg" style="text-align:center;margin-top:14px;font-size:14px;display:none"></p>
-      </div>
+      <!-- 27-08-2026: de stap "Choose a new password" is hier weggehaald.
+           Inloggen gaat uitsluitend met een e-mailcode of Google; nergens in de
+           site wordt signInWithPassword of sendPasswordReset aangeroepen. Wie
+           hier een wachtwoord instelde kreeg iets wat nergens werkte en dat hij
+           ook niet kon resetten. Een recovery-link logt nu gewoon in en gaat
+           door naar het dashboard. Komt er ooit wél wachtwoordinloggen, bouw
+           dan eerst een "forgot password"-route en zet deze stap terug. -->
 
     </div>
   </div>
 </div>
 
-<script src="app.min.js?v=240286852297707"></script>
+<script src="app.min.js?v=234084305324833"></script>
 <script>
 /* 4G: the Supabase client (~205 KB) is not needed to show the sign-in form.
    It downloads in parallel; everything that talks to the backend awaits it. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=240286852297707'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=234084305324833'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 </script>
@@ -258,13 +247,25 @@ function authErr(msg){
     document.getElementById('continueBtn').after(err);
   }
   err.textContent=msg||''; err.style.display=msg?'block':'none';
+  // Op het codescherm hangt #authErr onder de knop van de vórige stap en staat
+  // dus buiten beeld. Spiegel de melding naar het vakje dat daar wél zichtbaar
+  // is, anders verdwijnt bijvoorbeeld "wacht nog even" spoorloos.
+  const otpStep=document.getElementById('stepOtp');
+  if(otpStep && otpStep.classList.contains('on')){
+    const d=document.getElementById('otpDemo');
+    if(d){ d.textContent=msg||''; d.style.display=msg?'block':'none'; }
+  }
 }
 function friendly(e){
   const m=(e&&e.message)||'';
   if(/rate|too many|seconds/i.test(m)) return 'Too many attempts. Wait a minute and try again.';
   if(/invalid.*email|email.*invalid/i.test(m)) return 'That email address doesn\u2019t look right. Check it and try again.';
   if(/signups not allowed|not found/i.test(m)) return 'No account on that email yet — switch to Create account.';
-  return m || 'Something went wrong. Please try again.';
+  // Alles wat hierboven niet herkend is, is techniek: een databasefout, een
+  // constraint, "Edge Function returned a non-2xx status code". Zulke tekst
+  // hoort niet op het scherm van een bezoeker. De volledige melding staat in
+  // de function-logs, daar hoort hij thuis.
+  return 'Something went wrong. Please try again.';
 }
 
 // ---- send the code ----
@@ -309,6 +310,20 @@ async function sendCode(isResend){
         mode='signin'; applyMode();
         document.getElementById('emailIn').value = email;
         authErr('You already have an account with this email — sign in instead.');
+        return false;
+      }
+      // Er is niets verstuurd. Nooit doorschuiven naar het codescherm: dan
+      // zit iemand te wachten op een mail die niet komt.
+      if(r && r.rate_limited){
+        btn.textContent='Send my code'; btn.style.opacity='';
+        authErr(r.error || ('You just asked for a code. Check your inbox and spam folder, then try again in '
+                + (r.retry_after || 20) + ' seconds.'));
+        return false;
+      }
+      if(r && r.invalid_email){
+        btn.textContent='Send my code'; btn.style.opacity='';
+        flash(document.getElementById('emailIn'));
+        authErr(r.error || 'We can’t use that email address. Please try another one.');
         return false;
       }
       otpVerifyType = (r && r.verify_type) || 'email';
@@ -483,7 +498,11 @@ document.getElementById('otpBack').addEventListener('click',()=>{
 });
 document.getElementById('resendBtn').addEventListener('click',async function(){
   const b=this; b.textContent='Sending\u2026';
-  await sendCode(true);
+  // Alleen "Code sent" zeggen als er echt een code de deur uit is. Ging het niet
+  // door (te snel opnieuw, adres geweigerd), dan staat de reden inmiddels in het
+  // vakje eronder en moet de knop niet het tegendeel beweren.
+  const ok = await sendCode(true);
+  if(!ok){ b.textContent='Resend code'; return; }
   b.textContent='Code sent \u2713';
   setTimeout(()=>b.textContent='Resend code',2200);
 });
@@ -504,7 +523,6 @@ function showAuthStep(id){
     try{
       const { data, error } = await sb.auth.verifyOtp({ token_hash: tokenHash, type: linkType });
       if(error) throw error;
-      if(linkType === 'recovery'){ showAuthStep('stepNewPw'); return; }
       const u = data.user;
       if(u) setUser({ name: u.user_metadata?.full_name || u.user_metadata?.name || (u.email?u.email.split('@')[0]:'MyKunda User'), email: u.email||'' });
       location.href = nextUrl;
@@ -514,10 +532,16 @@ function showAuthStep(id){
     }
     return;
   }
-  sb.auth.onAuthStateChange((event)=>{ if(event === 'PASSWORD_RECOVERY') showAuthStep('stepNewPw'); });
 })();
 
-document.getElementById('setNewPwBtn').addEventListener('click',async ()=>{
+/* De stap "Choose a new password" is op 27-08-2026 uit de pagina gehaald, dus
+   setNewPwBtn bestaat niet meer. Deze handler staat achter een null-check in
+   plaats van dat hij is weggegooid: addEventListener op null gooit een
+   TypeError die de rest van dit script zou meeslepen, en zo blijft de code
+   klaarliggen voor het moment dat er wél wachtwoordinloggen komt. Registreert
+   zich nooit zolang de knop er niet is. */
+const _setNewPwBtn = document.getElementById('setNewPwBtn');
+if(_setNewPwBtn) _setNewPwBtn.addEventListener('click',async ()=>{
   const pw=document.getElementById('newPwIn').value;
   const pw2=document.getElementById('newPwConfirm').value;
   const msg=document.getElementById('newPwMsg');
