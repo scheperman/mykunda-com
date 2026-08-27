@@ -768,6 +768,48 @@ dat "eur" heet met dalasi erin is precies hoe een eenheid zoekraakt.
 het brengt de dollar- en eurokolom uit de bronadvertenties naar dalasi — maar
 het rekent nergens meer mee.
 
+### `price_currency`: de eenheid staat naast het bedrag
+
+`listings.price_currency` is `not null default 'GMD'` met een
+check-constraint die **niets anders toelaat**. `list.html` stuurt hem
+expliciet mee en `create-payment` controleert hem vóórdat hij een
+Verified-band kiest.
+
+Dat lijkt overbodig zolang er maar één munt is, en dat is precies
+waarom hij er staat. Een bedrag zegt uit zichzelf niet in welke munt het
+staat; dat is hoe D12.000.000 als 140.007 in de goedkoopste band belandde.
+Nu moet wie een ander bedrag wil opslaan óók een andere munt opgeven, en
+dan weigert de database. Getest 27-08-2026: `update price_currency='EUR'`
+geeft `violates check constraint "listings_price_currency_check"`.
+
+**Verbreed die constraint nooit los.** Hoort er ooit een tweede munt in,
+dan loop je in dezelfde wijziging elke plek na die `price` met een drempel
+vergelijkt — te beginnen met `verifiedBandVoor()`. De controle in
+`create-payment` is de tweede lijn: komt daar iets anders dan `GMD` langs,
+dan is de constraint verbreed zonder dat die functie is nagekeken, en dan
+stopt hij met `listing_price_currency_unsupported`.
+
+De gekozen band draagt de eenheid mee in `payments.metadata`
+(`asking_price_currency`), zodat achteraf uit de betaling zelf blijkt
+waartegen er is ingedeeld.
+
+### Geen tweede tarieventabel in een pagina
+
+Op 27-08-2026 stonden er in `sell.html` eigen `HOUSE`/`APT`/`LAND`-tabellen
+in EUR per m² voor ruim 180 gebieden, met `rateFor()` eromheen. Dertien
+kilobyte, en **geen enkele aanroep**: `rateFor`, `effectiveArea`,
+`effectiveLandArea`, `row`, `rowStrong`, `rowMuted` en `pct` werden alleen
+gedefinieerd. De schatter die de pagina wél toont rekent via
+`window.MK_VAL`, net als `list.html`.
+
+Ze waren bovendien uit de pas gelopen — Kololi stond er op EUR 140 per m²
+(D11.999) waar `area-prices.json` en `valuation.js` allebei D8.800 zeggen.
+Een vierde bron voor gebiedsprijzen die niemand las, maar die er wel
+uitzag alsof je hem kon vertrouwen. Weggehaald.
+
+Nieuwe gebiedstarieven horen in `area-prices.json` of in het
+`LAND_OBSERVED`/`LAND_HALF`-blok van `valuation.js`. Niet in een pagina.
+
 ### Wat de vangrail in `create-payment` wél en niet vangt
 
 `MIN_VRAAGPRIJS_GMD` staat op D50.000 en weigert een Verified-bestelling
@@ -783,10 +825,9 @@ D50.000, dus de vangrail zwijgt en de bestelling belandt gewoon in
 Hoger zetten kan niet: 400 m² grond upcountry doet D28.400, dus boven de
 D50.000 begin je echte advertenties te weigeren.
 
-Wil je dit écht dichtzetten, dan is de weg een **expliciete eenheid bij het
-bedrag** — een `price_currency` naast `price` — zodat een verkeerde munt
-een fout is in plaats van een getal dat toevallig binnen de band valt. Dat
-is nog niet gedaan.
+Wat dit wél dichtzet is de eenheid naast het bedrag: `price_currency`, zie
+hierboven. Deze grens is de tweede lijn, voor het geval een bedrag ooit in
+dalasi wordt opgeslagen maar dan een orde van grootte ernaast zit.
 
 ### Wat bewust in euro's blijft
 
@@ -796,13 +837,19 @@ een eigen ijking, en die blijven staan:
 * `PORTAL_RATE` in `valuation.js` — het diaspora-aanbod wordt in euro's
   geadverteerd en is in euro's waargenomen. Er in dalasi over rekenen zou een
   tweede markt wegpoetsen die er echt is.
-* De tarieventabellen van de schatter in `sell.html` en de bouwkosten in
-  `valuation.js` zijn in euro's geijkt. Ze staan er met bronvermelding en een
-  herijkdatum; omzetten is een herijking, geen verhuizing. **Openstaand
-  besluit.** Zolang dat niet genomen is, converteert `money()` in `sell.html`
-  eerst naar dalasi (`* CURRENCIES.EUR.gmdPer`) en daarna pas naar de
-  weergavemunt — die functie mag `convert()` níét rechtstreeks op een
-  eurobedrag loslaten, want dan wordt er gedeeld waar vermenigvuldigd hoort.
+* De bouwkosten in `valuation.js` (`BUILD_COST`, `BUILD_EXTRA`) zijn in euro's
+  geijkt. Ze zijn van onderaf opgebouwd uit dalasi-materiaalprijzen, maar de
+  gepubliceerde uitkomst is EUR 200/300/500 — ronde getallen, gekruist met
+  USD-bronnen. Omrekenen geeft D17.148/D25.722/D42.870, een precisie die er
+  niet is. **Doe dit bij de volgende herijking**, niet los: het juiste moment
+  om de eenheid van een geijkt model te veranderen is wanneer je hem opnieuw
+  afleidt, zodat de nieuwe getallen in de nieuwe eenheid rond uitkomen.
+
+`money()` in `sell.html` rekent daarom eerst naar dalasi
+(`* CURRENCIES.EUR.gmdPer`) en daarna pas naar de weergavemunt. Die functie
+mag `convert()` níét rechtstreeks op een eurobedrag loslaten: `convert()`
+neemt dalasi, dus dan wordt er gedeeld waar vermenigvuldigd hoort en staat
+een huis van EUR 900 per m² als D10 op het scherm.
 
 De marktindex (`market_observations.price_usd`, `market_snapshots`) blijft
 in dollars. Dat is een index met veertig maanden geschiedenis waarin de
