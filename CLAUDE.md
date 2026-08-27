@@ -768,6 +768,26 @@ dat "eur" heet met dalasi erin is precies hoe een eenheid zoekraakt.
 het brengt de dollar- en eurokolom uit de bronadvertenties naar dalasi — maar
 het rekent nergens meer mee.
 
+### Wat de vangrail in `create-payment` wél en niet vangt
+
+`MIN_VRAAGPRIJS_GMD` staat op D50.000 en weigert een Verified-bestelling
+met `asking_price_implausible` als de vraagprijs daaronder zit. Getest op
+27-08-2026: D30.000 geeft 409 en er wordt geen betaling aangemaakt.
+
+**Reken je daar niet rijk mee.** Die grens vangt een grove eenheidsfout in
+de onderkant van de markt, en verder niets. Was de villa van D12.000.000
+uit deze test nog in euro's opgeslagen, dan stond er 140.007 — ruim boven
+D50.000, dus de vangrail zwijgt en de bestelling belandt gewoon in
+`verified_s` voor D4.500. Precies de fout die we net hebben weggehaald.
+
+Hoger zetten kan niet: 400 m² grond upcountry doet D28.400, dus boven de
+D50.000 begin je echte advertenties te weigeren.
+
+Wil je dit écht dichtzetten, dan is de weg een **expliciete eenheid bij het
+bedrag** — een `price_currency` naast `price` — zodat een verkeerde munt
+een fout is in plaats van een getal dat toevallig binnen de band valt. Dat
+is nog niet gedaan.
+
 ### Wat bewust in euro's blijft
 
 Twee dingen zijn geen afgeleide van een dalasibedrag maar een eigen markt of
