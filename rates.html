@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:10vse3b--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1qdapik--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=97290937763637">
+<link rel="stylesheet" href="styles.min.css?v=42639051255045">
 <style>
 body{background:var(--paper-2)}
 .admin{max-width:1180px;margin:0 auto;padding:34px 28px 70px}
@@ -105,7 +105,7 @@ body{background:var(--paper-2)}
         <button id="gmdAuto">Use the automatic CBG rate again</button>
       </div>
     </div>
-    <p class="fine">All rates come from the <a href="https://www.cbg.gm/indicative-exchange-rates-latest" target="_blank" rel="noopener">Central Bank of The Gambia daily valuation rates</a> — the official published rate — pulled once a day. CBG quotes the dalasi against all three currencies, so <b>EUR → USD and EUR → GBP are cross rates derived from it</b> (EUR/GMD ÷ USD/GMD), not ECB mid-market rates. Expect them to sit a few percent away from what frankfurter.app or Google shows: CBG's indicative rates carry a bank spread. That is correct behaviour — a price quoted in dollars here matches what a Gambian bank charges, and every currency on the site stays on one source. <a href="https://frankfurter.app" target="_blank" rel="noopener">frankfurter.app</a> (ECB) is only used when the CBG scrape returns the dalasi but not USD/GBP; the tile above says which source is live. A daily move over 3% is rejected and logged in <code>fx_rate_rejects</code> rather than applied, so a bad scrape can never reprice the site. Only override manually if the published rate is clearly wrong.</p>
+    <p class="fine">All rates come from the <a href="https://www.cbg.gm/indicative-exchange-rates-latest" target="_blank" rel="noopener">Central Bank of The Gambia daily valuation rates</a> — the official published rate — pulled once a day. CBG quotes the dalasi against all three currencies, so <b>EUR → USD and EUR → GBP are cross rates derived from it</b> (EUR/GMD ÷ USD/GMD), not ECB mid-market rates. Expect them to sit a few percent away from what frankfurter.app or Google shows: CBG's indicative rates carry a bank spread. That is correct behaviour — a price quoted in dollars here matches what a Gambian bank charges, and every currency on the site stays on one source. <a href="https://frankfurter.dev" target="_blank" rel="noopener">frankfurter.dev</a> (ECB) is only used when the CBG page returns the dalasi but not USD or GBP, and that filling-in happens inside the <code>fx-rates</code> edge function, not in your browser — the tile above says per currency which source is live. A daily move over 3% is rejected per currency and logged in <code>fx_rate_rejects</code> rather than applied, and a currency that goes missing keeps its last good value instead of being written away as null, so a bad scrape can never reprice the site or leave half a rate on screen. <b>An override is site-wide</b>: it is stored in <code>fx_override</code> and every visitor sees it, so only set one if the published rate is clearly wrong.</p>
   </div>
 
   <div class="card" id="fxTrendCard">
@@ -147,10 +147,10 @@ body{background:var(--paper-2)}
 <div id="footer"></div>
 
 <script src="vendor/supabase-js-2.umd.js"></script>
-<script src="supabase.js?v=97290937763637"></script>
-<script src="app.min.js?v=97290937763637"></script>
-<script src="admin-nav.js?v=97290937763637"></script>
-<script src="admin-guard.js?v=97290937763637"></script>
+<script src="supabase.js?v=42639051255045"></script>
+<script src="app.min.js?v=42639051255045"></script>
+<script src="admin-nav.js?v=42639051255045"></script>
+<script src="admin-guard.js?v=42639051255045"></script>
 <script>
 document.getElementById('header').innerHTML = headerHTML('', false);
 document.getElementById('footer').innerHTML = footerHTML();
@@ -173,27 +173,32 @@ if(typeof backendReady==='function' && backendReady()){
   elUSD.textContent = CURRENCIES.USD.rate.toFixed(4);
   elGBP.textContent = CURRENCIES.GBP.rate.toFixed(4);
 
-  /* The tiles used to be hardcoded to "Auto · frankfurter.app", which was wrong
-     whenever CBG answered in full — then these two ARE CBG cross rates and read
-     a few percent off ECB mid-market. Say which source is actually on screen. */
+  /* De function zegt nu per munt waar zijn getal vandaan komt, dus deze
+     tegel hoeft dat niet meer af te leiden uit de vorm van het antwoord.
+     Dat raden ging eerder mis: als CBG het pond niet noteerde, stond er
+     "Auto · frankfurter.app" boven een dollarkoers die wél van CBG kwam. */
+  var SRC_LABEL = {
+    cbg:        'CBG cross rate · via the dalasi',
+    'ecb-cross':'ECB, cross-checked against the CBG dalasi',
+    manual:     'Manual override · set in this page',
+    fallback:   'Fallback rate · not live'
+  };
   function showFxSource(){
-    var txt, warn = false;
-    if(RATE_INFO.cbgCross){ txt = 'CBG cross rate · via the dalasi'; }
-    else if(RATE_INFO.source === 'built-in fallback'){ txt = 'Fallback rate · not live'; warn = true; }
-    else { txt = 'Auto · frankfurter.app (ECB)'; }
-    ['srcUSD','srcGBP'].forEach(function(id){
-      var el = document.getElementById(id);
-      el.textContent = txt;
-      el.style.color = warn ? 'var(--amber-600)' : 'var(--green-700)';
+    [['srcUSD','USD'],['srcGBP','GBP']].forEach(function(pair){
+      var el = document.getElementById(pair[0]);
+      var src = RATE_INFO.sources[pair[1]] || 'fallback';
+      el.textContent = SRC_LABEL[src] || src;
+      el.style.color = (src === 'fallback' || src === 'manual') ? 'var(--amber-600)' : 'var(--green-700)';
     });
   }
 
-  var savedGmd = parseFloat(localStorage.getItem('mykunda_gmd_eur'));
-  elGMD.value = savedGmd > 0 ? savedGmd : CURRENCIES.GMD.rate;
+  elGMD.value = CURRENCIES.EUR.gmdPer;
 
   function showSource(){
-    var manual = parseFloat(localStorage.getItem('mykunda_gmd_eur')) > 0;
-    elSrc.textContent = manual ? 'Manual override — the automatic CBG rate is ignored' : rateNote();
+    var manual = !!RATE_INFO.override;
+    elSrc.textContent = manual
+      ? 'Manual override — site-wide, the automatic CBG rate is ignored'
+      : rateNote();
     elSrc.style.color = manual ? 'var(--amber-600)' : (RATE_INFO.stale ? 'var(--amber-600)' : 'var(--green-700)');
     btnAuto.style.display = manual ? 'inline' : 'none';
   }
@@ -212,11 +217,17 @@ if(typeof backendReady==='function' && backendReady()){
         : 'No action needed — plan prices never move on their own. Review is due when the drift passes ±' +
           Math.round(PRICING.driftTolerance * 100) + '% or 3 months after the last review.');
   }
+  /* Wat een override met de andere twee munten doet, hardop. De
+     verhouding EUR:USD:GBP van CBG blijft staan; alle drie schuiven met
+     dezelfde factor mee. Zo verzet één ingetypt getal niet stilletjes ook
+     de dollarkoers zonder dat iemand dat bedoelde. */
   function showGmdCalc(){
     var val = parseFloat(elGMD.value);
     var calc = document.getElementById('gmdCalc');
     if(!val || val <= 0){ calc.textContent = ''; return; }
-    calc.textContent = '→ 1 USD = ' + (val / CURRENCIES.USD.rate).toFixed(1) + ' GMD · 1 GBP = ' + (val / CURRENCIES.GBP.rate).toFixed(1) + ' GMD';
+    var factor = val / CURRENCIES.EUR.gmdPer;
+    calc.textContent = '→ 1 USD = ' + (CURRENCIES.USD.gmdPer * factor).toFixed(1) +
+                       ' GMD · 1 GBP = ' + (CURRENCIES.GBP.gmdPer * factor).toFixed(1) + ' GMD';
   }
   showGmdCalc(); showSource(); showDrift(); showFxSource();
   elGMD.addEventListener('input', showGmdCalc);
@@ -232,54 +243,81 @@ if(typeof backendReady==='function' && backendReady()){
     }
   } catch(e){}
 
-  btnSave.addEventListener('click', function(){
+  /* Alles op het scherm opnieuw uit CURRENCIES/RATE_INFO tekenen. Eén
+     functie, zodat een verversing nooit half doorkomt. */
+  function repaint(){
+    elUSD.textContent = CURRENCIES.USD.rate.toFixed(4);
+    elGBP.textContent = CURRENCIES.GBP.rate.toFixed(4);
+    elGMD.value = CURRENCIES.EUR.gmdPer;
+    showGmdCalc(); showSource(); showDrift(); showFxSource();
+    if(typeof renderRateNote === 'function') renderRateNote();
+  }
+
+  /* Wachten tot de koers er écht is. Tot 27-08-2026 stond hier een
+     setTimeout van anderhalve tot twee seconden en daarna "Refreshed ✓" —
+     op een trage verbinding las je dan een oud getal onder een groen
+     vinkje. fetchLiveRates() geeft nu een promise terug. */
+  function refresh(){
+    return Promise.resolve(fetchLiveRates(true)).then(repaint);
+  }
+
+  function adminOnly(){
+    if(typeof backendReady === 'function' && backendReady()) return true;
+    alert('Not connected to the backend — the override is stored in the database, so it needs a live connection.');
+    return false;
+  }
+
+  btnSave.addEventListener('click', async function(){
     var val = parseFloat(elGMD.value);
     if(!val || val <= 0){ alert('Please enter a valid rate'); return; }
-    localStorage.setItem('mykunda_gmd_eur', String(val));
-    CURRENCIES.GMD.rate = val;
-    RATE_INFO.source = 'manual override';
-    RATE_INFO.stale = false;
-    showGmdCalc(); showSource(); showDrift();
-    if(typeof renderRateNote === 'function') renderRateNote();
-    btnSave.textContent = 'Saved ✓';
+    if(!adminOnly()) return;
+    var note = prompt('Why is the published rate wrong? This is stored with the override.', '') || null;
+    btnSave.disabled = true; btnSave.textContent = 'Saving…';
+    try {
+      /* Eerst de vorige intrekken: er mag er maar één actief zijn, en de
+         unieke index in de database weigert een tweede. */
+      await sb.from('fx_override').update({ active:false }).eq('active', true);
+      var ins = await sb.from('fx_override').insert({ eur_gmd: val, note: note });
+      if(ins.error) throw ins.error;
+      await refresh();
+      btnSave.textContent = 'Saved ✓';
+    } catch(e){
+      console.error(e);
+      alert('Could not store the override: ' + (e && e.message ? e.message : e));
+      btnSave.textContent = 'Override';
+    }
+    btnSave.disabled = false;
     setTimeout(function(){ btnSave.textContent = 'Override'; }, 1500);
   });
 
-  btnAuto.addEventListener('click', function(){
-    localStorage.setItem('mykunda_gmd_eur', '0');
-    fetchLiveRates(true);
-    setTimeout(function(){
-      elGMD.value = CURRENCIES.GMD.rate;
-      showGmdCalc(); showSource(); showDrift(); showFxSource();
-      if(typeof renderRateNote === 'function') renderRateNote();
-    }, 1500);
+  btnAuto.addEventListener('click', async function(){
+    if(!adminOnly()) return;
+    btnAuto.disabled = true;
+    try {
+      var up = await sb.from('fx_override').update({ active:false }).eq('active', true);
+      if(up.error) throw up.error;
+      await refresh();
+    } catch(e){
+      console.error(e);
+      alert('Could not clear the override: ' + (e && e.message ? e.message : e));
+    }
+    btnAuto.disabled = false;
   });
 
   elStatus.title = 'Click to force refresh';
   elStatus.addEventListener('click', function(){
     elStatus.textContent = 'Refreshing…';
-    fetchLiveRates(true);
-    setTimeout(function(){
-      elUSD.textContent = CURRENCIES.USD.rate.toFixed(4);
-      elGBP.textContent = CURRENCIES.GBP.rate.toFixed(4);
-      elGMD.value = CURRENCIES.GMD.rate;
-      showGmdCalc(); showSource(); showDrift(); showFxSource();
+    refresh().then(function(){
       elStatus.textContent = 'Refreshed ✓';
       elStatus.style.color = 'var(--green-700)';
-    }, 2000);
+    });
   });
 
-  /* Admin page: always show the latest stored CBG rate, never a cached one. */
-  if(typeof fetchLiveRates === 'function' && !(parseFloat(localStorage.getItem('mykunda_gmd_eur')) > 0)){
-    fetchLiveRates(true);
-    setTimeout(function(){
-      elUSD.textContent = CURRENCIES.USD.rate.toFixed(4);
-      elGBP.textContent = CURRENCIES.GBP.rate.toFixed(4);
-      elGMD.value = CURRENCIES.GMD.rate;
-      showGmdCalc(); showSource(); showDrift(); showFxSource();
-      elStatus.textContent = 'Checked just now · click to refresh';
-    }, 1500);
-  }
+  /* Admin page: always show the latest stored rate, never a cached one. */
+  refresh().then(function(){
+    elStatus.textContent = 'Checked just now · click to refresh';
+    elStatus.style.color = 'var(--muted)';
+  });
 })();
 
 /* ---------- Dalasi trend ---------- */

@@ -661,6 +661,72 @@ GitHub weigert een push die een privé-e-mailadres zou publiceren, en het
 persoonlijke gmail-adres hoort niet in de geschiedenis van een bedrijfsrepo.
 Verander `user.email` in deze repo dus niet terug.
 
+## Wisselkoersen: één bron, en die bron is de dalasi
+
+De Central Bank of The Gambia publiceert dagelijks één kolom: **dalasi per
+eenheid**. Dat is de vorm die we bewaren en teruggeven. De dalasi is het
+anker; euro, dollar en pond volgen er door deling uit.
+
+```
+D per 1 EUR = eur_gmd            (van CBG)
+D per 1 USD = usd_gmd            (van CBG)
+D per 1 GBP = gbp_gmd            (van CBG)
+EUR -> USD  = eur_gmd / usd_gmd  (kruiskoers)
+```
+
+**Er is precies één plek die een koers vaststelt: de edge function
+`fx-rates`.** Die haalt op bij CBG, bewaart in `fx_rates`, vult zelf een
+ontbrekende munt aan via de ECB, past zelf een handmatige override toe, en
+geeft bij een GET `gmd_per` terug plus per munt de bron. De browser rekent
+niet mee — `applyRates()` in `app.js` is de enige plek in de front-end waar
+een koers wordt gezet, en die leest alleen.
+
+Zet nooit een koers in een pagina, in een tweede function of in een JSON.
+Zo stond de homepagina maandenlang op D83 per euro terwijl de rest van de
+site op D85,74 rekende, en zo stonden er in augustus 2026 vier verschillende
+koersen tegelijk in de bron.
+
+### Wat er op 27-08-2026 is opgeruimd
+
+* **De frontend belde zelf de ECB.** `app.js` haalde bij een ontbrekende
+  notering `api.frankfurter.app` op. Dat werkte al niet meer: die host stuurt
+  een 302 naar `api.frankfurter.dev` en `connect-src` liet alleen `.app` door,
+  dus de CSP blokkeerde de omleiding. Erger was wat er zou gebeuren als het
+  wél werkte — het overschreef ook de dollarkoers die wél van CBG kwam, en
+  dan staat er een CBG-dalasi naast een ECB-dollar op één scherm. Het
+  aanvullen gebeurt nu in de function, met de CBG-euro als brug.
+* **Een ontbrekende munt werd een deling door nul.** `eur_gmd / gbp_gmd` met
+  een lege `gbp_gmd` geeft `Infinity`, en dat serialiseert als `null`. De
+  function schrijft nu de laatste goede waarde door in plaats van een null.
+* **De override gold maar in één browser.** Hij stond in localStorage onder
+  `mykunda_gmd_eur`, terwijl rates.html hem aankondigde als de koers waarmee
+  élke prijs op de site wordt omgerekend. Hij staat nu in `fx_override`,
+  sitebreed, met een reden erbij. Zolang hij aanstond ververste de site
+  bovendien USD en GBP helemaal niet meer.
+* **De vangrail keek alleen naar de euro.** De 3%-grens geldt nu per munt.
+* **De verversknoppen op rates.html** wachtten met een `setTimeout` van
+  anderhalve seconde en zetten dan "Refreshed ✓". `fetchLiveRates()` geeft nu
+  een promise terug.
+
+### De noodkoers in `app.js`
+
+`CURRENCIES` draagt getallen voor de allereerste weergave met een lege cache
+en een onbereikbare function. Ze staan er met `FX_FALLBACK_AS_AT` erbij, zodat
+te zien is hoe oud ze zijn. Werk ze bij als je toch in dat blok zit; het is
+geen tweede bron maar een startwaarde, en de function overschrijft hem binnen
+een seconde.
+
+### Wat hier nog niet klopt
+
+Bedragen worden **in dalasi waargenomen, in euro's opgeslagen** en op het
+scherm weer met de live koers vermenigvuldigd. Zakt de dalasi 5%, dan stijgt
+elke dalasiprijs op de site 5% zonder dat er iets gemeten is, en de vraagprijs
+die een verkoper als D2.000.000 intypte komt er een week later als D2.040.000
+uit. `create-payment` geeft daarbij `listings.price` — euro's — door aan
+`verifiedBandVoor()`, die op dalasigrenzen toetst; elke verkoopadvertentie
+belandt daardoor in de goedkoopste Verified-band. Het besluit is om de dalasi
+de opslageenheid te maken; dat is nog niet uitgevoerd.
+
 ## Gebiedsprijzen: één bron, en huur nooit uit een prijs
 
 `area-prices.json` is de enige bron voor elk bedrag op de 41 area-pagina's, op

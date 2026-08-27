@@ -473,32 +473,48 @@ const LOGO_MARK = '<img class="logo-mark" src="images/mykunda-icon.png" alt="MyK
 /* ---------- Listings dataset — The Gambia (Kombo / Atlantic coast) ---------- */
 const LISTINGS = []; /* demo listings removed 18-08-2026 — real data comes from the database */
 
-/* ---------- Currency (prices stored in USD, converted on display) ---------- */
 /* ==========================================================================
-   CURRENCY SYSTEM — EUR-anchored
-   
-   EUR→GMD koers per juni 2026, periodiek controleren.
-   Richtwaarde: 83–85 GMD per EUR (bron: xe.com, wise.com).
-   
-   Internally all rates are stored as "per 1 EUR":
-     EUR.rate = 1 (always)
-     USD.rate = from API (e.g. 1.09)
-     GBP.rate = from API (e.g. 0.86)
-     GMD.rate = manual (e.g. 84)
-   
-   Product prices are stored in EUR. convert(eurPrice) = eurPrice * rate.
+   VALUTASYSTEEM — verankerd op de dalasi
+
+   Er is precies één plek die een koers vaststelt: de edge function
+   `fx-rates`, gevoed door de dagelijkse valuation rates van de Central
+   Bank of The Gambia. Die geeft dalasi per eenheid terug (`gmd_per`), en
+   alles wat de site laat zien wordt daaruit gedeeld.
+
+   Zet hier, in een pagina, of in een andere function NOOIT een tweede
+   koers neer. Dat is precies hoe de homepagina op D83 bleef staan terwijl
+   de rest van de site op D85,74 rekende.
+
+   Prijzen worden op dit moment nog in euro's opgeslagen en met
+   `convert()` omgerekend. Dat is een aparte kwestie — zie het
+   koersen-hoofdstuk in CLAUDE.md.
    ========================================================================== */
 /* Bump on every deploy. Read it in the console to confirm which bundle is live:
    window.MYKUNDA_BUILD */
 window.MYKUNDA_BUILD = '2026-08-14-geo1';
 
+/* Eén bron, en dat is de dalasi.
+   -------------------------------------------------------------------
+   `gmdPer` is dalasi per 1 eenheid — precies de vorm die de Central Bank
+   of The Gambia publiceert en die de fx-rates function teruggeeft. Elke
+   andere koers op de site wordt hieruit gedeeld en nergens los ingevoerd.
+
+   `rate` (per 1 euro) blijft er voorlopig naast staan omdat de prijzen op
+   dit moment nog in euro's zijn opgeslagen; hij wordt altijd uit `gmdPer`
+   berekend, nooit apart gezet. Zodra bedragen in dalasi worden bewaard
+   kan `rate` weg.
+
+   De getallen hieronder zijn de noodkoers voor de allereerste
+   paginaweergave met een lege cache en een onbereikbare function. Ze zijn
+   bewust zichtbaar gedateerd: `FX_FALLBACK_AS_AT` staat in de bouw en in
+   de admin, zodat een verouderde noodkoers opvalt in plaats van stil te
+   blijven staan. */
+const FX_FALLBACK_AS_AT = '2026-08-27';   // CBG-publicatiedatum van de getallen hieronder
 const CURRENCIES = {
-  EUR:{symbol:'€', rate:1,     decimals:0, name:'Euro'},
-  USD:{symbol:'$', rate:1.09,  decimals:0, name:'US Dollar'},
-  /* GMD is not in the ECB feed frankfurter uses, so it is set from the Central
-     Bank of The Gambia daily valuation rate (cbg.gm) — see admin. */
-  GMD:{symbol:'D', rate:85.2,  decimals:0, name:'Gambian Dalasi'},
-  GBP:{symbol:'£', rate:0.86,  decimals:0, name:'British Pound'},
+  GMD:{symbol:'D', gmdPer:1,     rate:85.74,  decimals:0, name:'Gambian Dalasi'},
+  EUR:{symbol:'€', gmdPer:85.74, rate:1,      decimals:0, name:'Euro'},
+  USD:{symbol:'$', gmdPer:72.70, rate:1.1794, decimals:0, name:'US Dollar'},
+  GBP:{symbol:'£', gmdPer:96.34, rate:0.8900, decimals:0, name:'British Pound'},
 };
 
 /* ---------- Listing plan pricing (single source of truth) ----------
@@ -567,15 +583,31 @@ function pricingReviewDue(){
 }
 
 /* ==========================================================================
-   LIVE RATES
-   GMD comes from the Central Bank of The Gambia daily valuation rate, pulled
-   by the fx-rates edge function (see edge-functions/fx-rates) and read here.
-   USD/GBP fall back to frankfurter.app (ECB) if the function is unreachable.
+   LIVE RATES — één aanroep, één bron
+   De koers komt van de fx-rates edge function en van nergens anders. Die
+   function haalt zelf de dalasi bij de Central Bank of The Gambia, vult
+   zelf een ontbrekende munt aan via de ECB, en past zelf een handmatige
+   override toe. De browser rekent niet mee: hij leest.
 
-   RATE_INFO records which rate is on screen and where it came from, so the
-   currency picker and admin can state it. Rates only affect DISPLAY — plan
-   prices live in PRICING and never move automatically. */
-const RATE_INFO = { asAt:null, source:'built-in fallback', stale:false, cbgCross:false };
+   Tot 27-08-2026 belde deze code bij een ontbrekende notering zélf
+   api.frankfurter.app. Dat werkte al niet meer — die host stuurt sinds
+   2026 een 302 naar api.frankfurter.dev en de CSP liet alleen .app door —
+   en het mengde bovendien twee ankers: een CBG-dalasi met een ECB-dollar.
+   Beide problemen verdwijnen door het aan de serverkant te doen.
+
+   RATE_INFO zegt welke koers op het scherm staat en waar elk getal
+   vandaan komt, zodat de muntkiezer en de admin dat kunnen benoemen.
+   Koersen raken alleen de WEERGAVE — planprijzen staan in PRICING en
+   bewegen nooit vanzelf. */
+const RATE_INFO = {
+  asAt:null,
+  source:'built-in fallback',
+  stale:false,
+  override:false,
+  /* Per munt: 'cbg', 'ecb-cross', 'manual' of 'fallback'. De function zegt
+     dit zelf; de site verzint het niet meer uit de vorm van het antwoord. */
+  sources:{ GMD:'fallback', EUR:'fallback', USD:'fallback', GBP:'fallback' }
+};
 const RATES_CACHE_KEY = 'mykunda_rates';
 const RATES_MAX_AGE = 2 * 60 * 60 * 1000;
 /* A stored rate older than this is shown with a caveat rather than trusted. */
@@ -593,90 +625,109 @@ function fxEndpoint(){
   return FX_ENDPOINT;
 }
 
+/* Dalasi per eenheid in, alle koersen eruit. Dit is de enige plek in de
+   browser waar een koers wordt gezet. Accepteert ook het oude antwoord
+   (per 1 euro), zodat een bezoeker met een oude cache niet zonder koers
+   komt te zitten tijdens de uitrol. */
 function applyRates(r){
   if(!r) return;
-  if(r.source === 'Central Bank of The Gambia'){
-    RATE_INFO.cbgCross = !!(r.USD > 0 && r.GBP > 0);
+  var per = r.gmd_per;
+  if(!per && r.GMD > 0){
+    /* Oude vorm: GMD/USD/GBP waren per 1 euro. Terugrekenen naar dalasi
+       per eenheid, zodat er verderop maar één rekenwijze bestaat. */
+    per = { GMD:1, EUR:r.GMD };
+    if(r.USD > 0) per.USD = r.GMD / r.USD;
+    if(r.GBP > 0) per.GBP = r.GMD / r.GBP;
   }
-  if(r.GMD > 0) CURRENCIES.GMD.rate = r.GMD;
-  if(r.USD > 0) CURRENCIES.USD.rate = r.USD;
-  if(r.GBP > 0) CURRENCIES.GBP.rate = r.GBP;
+  if(!per || !(per.EUR > 0)) return;
+
+  ['GMD','EUR','USD','GBP'].forEach(function(k){
+    var v = k === 'GMD' ? 1 : per[k];
+    if(!(v > 0) || !CURRENCIES[k]) return;
+    CURRENCIES[k].gmdPer = v;
+    /* `rate` is per 1 euro en wordt hier afgeleid, nooit los gezet. */
+    CURRENCIES[k].rate = k === 'EUR' ? 1 : (k === 'GMD' ? per.EUR : per.EUR / v);
+    if(r.sources && r.sources[k]) RATE_INFO.sources[k] = r.sources[k];
+    else if(!r.sources) RATE_INFO.sources[k] = 'cbg';
+  });
+
   if(r.as_at) RATE_INFO.asAt = r.as_at;
   if(r.source) RATE_INFO.source = r.source;
+  RATE_INFO.override = !!r.override;
   RATE_INFO.stale = !!r.stale || (r.as_at
     ? (Date.now() - new Date(r.as_at).getTime()) > RATE_STALE_DAYS * 86400000
     : false);
 }
 
-/* Show something instantly from cache, then refresh in the background. */
+/* Show something instantly from cache, then refresh in the background.
+   De handmatige override zat hier tot 27-08-2026 als localStorage-sleutel
+   `mykunda_gmd_eur`. Die gold alleen in de browser waar hij was ingetypt,
+   terwijl rates.html beloofde dat het de koers was waarmee élke prijs op
+   de site wordt omgerekend. De override staat nu in de database en komt
+   dus gewoon met het antwoord van de function mee. De oude sleutel wordt
+   hier één keer opgeruimd. */
 (function loadCachedRates(){
   try {
     const cached = JSON.parse(localStorage.getItem(RATES_CACHE_KEY)||'null');
     if(cached) applyRates(cached);
-    /* Honour a manual override set by an admin — it always wins. */
-    const manual = parseFloat(localStorage.getItem('mykunda_gmd_eur'));
-    if(manual > 0){
-      CURRENCIES.GMD.rate = manual;
-      RATE_INFO.source = 'manual override';
-      RATE_INFO.stale = false;
-    }
   } catch(e){}
+  try { localStorage.removeItem('mykunda_gmd_eur'); } catch(e){}
 })();
 
 function cacheRates(){
   try {
     localStorage.setItem(RATES_CACHE_KEY, JSON.stringify({
-      GMD: CURRENCIES.GMD.rate, USD: CURRENCIES.USD.rate, GBP: CURRENCIES.GBP.rate,
-      as_at: RATE_INFO.asAt, source: RATE_INFO.source, stale: RATE_INFO.stale, ts: Date.now()
+      gmd_per: {
+        GMD: 1,
+        EUR: CURRENCIES.EUR.gmdPer,
+        USD: CURRENCIES.USD.gmdPer,
+        GBP: CURRENCIES.GBP.gmdPer
+      },
+      sources: RATE_INFO.sources,
+      as_at: RATE_INFO.asAt, source: RATE_INFO.source,
+      override: RATE_INFO.override, stale: RATE_INFO.stale, ts: Date.now()
     }));
   } catch(e){}
 }
 
+/* Geeft een promise terug die pas rond is als de koers echt binnen (of
+   definitief mislukt) is. rates.html wachtte hier vroeger met een
+   setTimeout van anderhalve seconde op, en zette dan "Refreshed ✓" boven
+   een getal dat nog niet ververst was. */
 function fetchLiveRates(force){
-  /* A manual override means someone deliberately set the rate — leave it. */
-  try { if(parseFloat(localStorage.getItem('mykunda_gmd_eur')) > 0) return; } catch(e){}
   if(!force){
     try {
       const cached = JSON.parse(localStorage.getItem(RATES_CACHE_KEY)||'null');
       const authoritative = cached && cached.source && cached.source !== 'built-in fallback';
       const maxAge = authoritative ? RATES_MAX_AGE : 15 * 60 * 1000;
-      if(cached && cached.ts && (Date.now() - cached.ts < maxAge)) return;
+      if(cached && cached.ts && (Date.now() - cached.ts < maxAge)) return Promise.resolve(false);
     } catch(e){}
   }
   const url = fxEndpoint();
-  const cbg = url
-    ? fetch(url, { signal: AbortSignal.timeout(8000), cache: force ? 'no-store' : 'default' })
-        .then(function(r){ return r.ok ? r.json() : null; })
-        .then(function(d){
-          if(d && d.GMD > 0){ applyRates(d); return d; }
-          return null;
-        })
-        .catch(function(){ return null; })
-    : Promise.resolve(null);
+  if(!url) return Promise.resolve(false);
 
-  cbg.then(function(d){
-    const gotCBG = !!d;
-    /* CBG publishes all three currencies against the dalasi. When it answered
-       in full, its cross rates ARE the rates the site quotes — overwriting them
-       with the ECB feed would mix two sources and misstate USD/GBP amounts. */
-    if(d && d.USD > 0 && d.GBP > 0) return;
-    return fetch('https://api.frankfurter.app/latest?from=EUR&to=USD,GBP')
-      .then(function(r){ return r.json(); })
-      .then(function(data){
-        if(data && data.rates && !RATE_INFO.cbgCross){
-          if(data.rates.USD > 0) CURRENCIES.USD.rate = data.rates.USD;
-          if(data.rates.GBP > 0) CURRENCIES.GBP.rate = data.rates.GBP;
-          if(!gotCBG && data.date){ RATE_INFO.asAt = data.date; RATE_INFO.source = 'ECB (dalasi from last known rate)'; }
-        }
-      })
-      .catch(function(){
-        if(!gotCBG) console.warn('Currency fetch failed, using cached/fallback rates');
-      });
-  }).then(function(){
-    if(RATE_INFO.source !== 'built-in fallback') cacheRates();
-    if(typeof onRatesUpdated === 'function') onRatesUpdated();
-    if(typeof renderRateNote === 'function') renderRateNote();
-  });
+  return fetch(url, { signal: AbortSignal.timeout(8000), cache: force ? 'no-store' : 'default' })
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(d){
+      /* De function vult zelf aan wat CBG niet noteerde en past zelf een
+         override toe. Komt er niets bruikbaars uit, dan houden we wat we
+         hadden — een halve koers is erger dan een oude. */
+      if(!d) return false;
+      const ok = (d.gmd_per && d.gmd_per.EUR > 0) || d.GMD > 0;
+      if(!ok) return false;
+      applyRates(d);
+      return true;
+    })
+    .catch(function(){
+      console.warn('Currency fetch failed, using cached/fallback rates');
+      return false;
+    })
+    .then(function(got){
+      if(RATE_INFO.source !== 'built-in fallback') cacheRates();
+      if(typeof onRatesUpdated === 'function') onRatesUpdated();
+      if(typeof renderRateNote === 'function') renderRateNote();
+      return got;
+    });
 }
 fetchLiveRates();
 
@@ -756,7 +807,7 @@ function onRatesUpdated(){
   document.querySelectorAll('[data-ccy-cross]').forEach(function(el){
     const k = el.getAttribute('data-ccy-cross');
     if(!CURRENCIES[k]) return;
-    el.textContent = '= D' + (CURRENCIES.GMD.rate / CURRENCIES[k].rate).toLocaleString('en-US', {minimumFractionDigits:1,maximumFractionDigits:1});
+    el.textContent = '= D' + CURRENCIES[k].gmdPer.toLocaleString('en-US', {minimumFractionDigits:1,maximumFractionDigits:1});
   });
   /* Area-guide pages (qs0/qs1/qs2/chartBigPrice/breakdown) paint with whatever
      rate was live at parse time and carry no data-eur hook — without this they'd
@@ -1176,7 +1227,7 @@ function headerHTML(active, onHero){
       <div class="ccy-menu" id="ccyMenu">${Object.keys(CURRENCIES).map(k=>{
         var label = '<b>'+CURRENCIES[k].symbol+' '+k+'</b> <span>'+CURRENCIES[k].name+'</span>';
         if(k!=='GMD'){
-          var gmdRate = (CURRENCIES.GMD.rate / CURRENCIES[k].rate);
+          var gmdRate = CURRENCIES[k].gmdPer;   /* dalasi per 1 eenheid, rechtstreeks */
           label += ' <span data-ccy-cross="'+k+'" style="opacity:.55;font-size:11px;white-space:nowrap">= D'+gmdRate.toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1})+'</span>';
         }
         return '<button data-ccy="'+k+'" class="'+(k===ccy?'on':'')+'">'+label+'</button>';
@@ -1766,7 +1817,7 @@ function initCcyPicker(){
   /* Static headers ship hard-coded crosses (= D85); refresh them from the live rate. */
   menu && menu.querySelectorAll('[data-ccy-cross]').forEach(function(el){
     var k=el.getAttribute('data-ccy-cross');
-    if(CURRENCIES[k]) el.textContent='= D'+(CURRENCIES.GMD.rate/CURRENCIES[k].rate).toLocaleString('en-US', {minimumFractionDigits:1,maximumFractionDigits:1});
+    if(CURRENCIES[k]) el.textContent='= D'+CURRENCIES[k].gmdPer.toLocaleString('en-US', {minimumFractionDigits:1,maximumFractionDigits:1});
   });
   renderRateNote();
   btn.dataset.wired='1';
