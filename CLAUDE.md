@@ -979,3 +979,64 @@ keer. Bij het controleren van een verse upload is de eerste lading dus nog de
 oude — herlaad één keer, of kijk in een privévenster. Dat is het ontwerp, geen
 storing. `dashboard`, `list`, `checkout`, `auth` en de andere ingelogde
 pagina's staan in `isPrivate()` en worden nooit bewaard; die zijn meteen vers.
+
+## Het waarderingsmodel rekent in dalasi
+
+Tot 27-08-2026 was de interne eenheid van `valuation.js` de euro, terwijl elke
+waarneming die het model voedt in dalasi is gedaan. `LAND_OBSERVED` droeg per
+gebied het waargenomen dalasibedrag én een `eur`-veld dat daaruit was afgeleid
+door te delen door 85,74; het model rekende met dat afgeleide getal en de
+weergave vermenigvuldigde weer met de koers van de dag. In
+`valuation-selftest.mjs` stond twintig keer `3_500_000/EURGMD`.
+
+Twee omrekeningen die elkaar hadden moeten opheffen, maar dat niet deden: de
+rekenkoers stond vast op 85,74 en de weergavekoers liep mee. Zakte de dalasi
+naar 90, dan steeg "de waargenomen mediaan in Fajara" met 5% zonder dat er in
+Gambia iets was gebeurd. Nu staat de waarneming er zoals hij is waargenomen.
+
+Wat er is omgezet, in één commit — half omzetten ís de fout:
+
+* `LAND_OBSERVED` en `LAND_HALF`: `gmd` is het veld dat het model leest, `eur`
+  is weg. `landRate()` levert `{gmd}` in plaats van `{eur}`.
+* `BUILD_COST` en `BUILD_EXTRA`, tegen 85,74 en daarna afgerond (per m² op
+  D500, vaste posten op D5.000). Grootste afrondafwijking 0,9% op `standard`.
+* De terugvaltabel in `valuation-areas.js`, 183 tarieven, afgerond op drie
+  significante cijfers; grootste afwijking 0,41%.
+* De afrondstap van de band: was EUR 5.000/1.000/500, nu D500.000/100.000/50.000.
+* De verbruikers: `sell.html` (`money()` gaat via `fromGMD()`), `list.html`
+  (de `× CURRENCIES.EUR.gmdPer` in de prijshint is eruit), de prijs in de link
+  van `sell.html` naar `list.html`, en `valuation-selftest.mjs`.
+
+`PORTAL_RATE` blijft bewust euro: dat is een echte euromarkt, staat naast het
+hoofdgetal en nooit erin. `sell.html` heeft daarvoor één `moneyEur()`, en dat
+is de enige plek waar die grens de weergave raakt.
+
+### Het vangnet, en waarom een volgende eenheidswijziging er weer een krijgt
+
+`_werk/unit-harness-27-08-2026.mjs` draait het model over 104 gevallen — elk
+type, elke bewijsklasse, met en zonder opstal, met en zonder de losse posten —
+en schrijft alle bedragen weg. Vóór de wijziging als nulmeting, erna nog eens,
+en `diff` eist dat elk bedrag gelijk is aan het oude maal de koers, binnen de
+afrondmarge, met identiek vertrouwenslabel, band en herkomst. Uitkomst: 720
+bedragen, geen afwijkingen.
+
+Dat is de enige manier om deze klasse fout te vangen. Eén verbruiker die zijn
+omrekening houdt geeft een factor 86 op het scherm van een verkoper, en geen
+enkele bestaande test kijkt daarnaar: `valuation-selftest.mjs` meet
+verhoudingen, en die zijn eenheidsvrij. Verandert er ooit weer een eenheid, dan
+eerst dit vangnet.
+
+### Een koerswijziging is geen herijking
+
+De constanten zijn omgezet tegen 85,74 — de koers waarop de grondtarieven zijn
+geijkt, niet de koers van vandaag. Daarmee blijft de ijkdatum kloppen bij de
+getallen. Toevallig lag de CBG-koers op de dag van omzetten op 85,71, dus voor
+de bezoeker verschoof er vrijwel niets. Was dit een half jaar later gebeurd,
+dan waren de getallen zichtbaar verschoven zonder dat de markt was bewogen —
+en dat had uitgelegd moeten worden.
+
+`BUILD_COST` blijft afgeleid, niet waargenomen. Komt er een Gambiaanse offerte,
+dan is dat blok nog steeds de enige plek die verandert; de omzetting hierboven
+is een eenheid, geen herijking. Listings gaan die herijking overigens niet
+brengen: een listing geeft grond plus opstal in één bedrag, en de opstal
+eruit halen is precies de aanname die je wilde toetsen.
