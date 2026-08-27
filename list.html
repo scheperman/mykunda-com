@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0x9poaa--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1lwmtl7--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://api.maptiler.com" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=88464732772710">
+<link rel="stylesheet" href="styles.min.css?v=162326437185018">
 <style>
 body{background:var(--paper-2);min-height:100vh}
 
@@ -663,18 +663,18 @@ body{background:var(--paper-2);min-height:100vh}
   </aside>
 </div>
 
-<script src="valuation-areas.js?v=88464732772710"></script>
-<script src="valuation.js?v=88464732772710"></script>
-<script src="app.min.js?v=88464732772710"></script>
-<script src="gambia-places.js?v=88464732772710" defer></script>
-<script src="image-slot.js?v=88464732772710" defer></script>
+<script src="valuation-areas.js?v=162326437185018"></script>
+<script src="valuation.js?v=162326437185018"></script>
+<script src="app.min.js?v=162326437185018"></script>
+<script src="gambia-places.js?v=162326437185018" defer></script>
+<script src="image-slot.js?v=162326437185018" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel, Leaflet (~145 KB) only when the
    seller reaches the location step. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=88464732772710'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=162326437185018'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -2456,10 +2456,10 @@ function mkPriceGuide(){
     furnished: S.furnished, finish: 'standard'
   }, { LAND_BASE: (window.MK_RATES||{}).LAND || {} });
   if(!r || r.ok===false){ box.style.display='none'; return; }
-  /* MK_VAL.value() rekent intern in euro's — het waarderingsmodel is daarin
-     geijkt, zie de kop van valuation.js. Hier is de grens: vanaf dit punt
-     is alles dalasi. */
-  const gmd = v => 'D' + Math.round(v * CURRENCIES.EUR.gmdPer).toLocaleString('en-US');
+  /* MK_VAL.value() rekent sinds 27-08-2026 intern in dalasi, net als de
+     rest van de site — zie de kop van valuation.js. Hier wordt dus niets
+     meer omgerekend; er stond hier tot die datum een × CURRENCIES.EUR.gmdPer. */
+  const gmd = v => 'D' + Math.round(v).toLocaleString('en-US');
   box.style.display='block';
   box.innerHTML = 'Comparable properties in this area work out around <b>' + gmd(r.mid)
     + '</b> (' + gmd(r.low) + ' \u2013 ' + gmd(r.high) + '). '

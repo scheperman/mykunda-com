@@ -11,19 +11,8 @@
    geen publieke bron met gerealiseerde verkoopprijzen. Alles
    hieronder komt dus uit vraagprijzen, en het model zegt dat ook.
 
-   Interne eenheid is GMD — de dalasi, net als overal elders op de
-   site. Omrekenen naar de weergavevaluta doet fromGMD() in app.js.
-   Dit was tot 27-08-2026 de euro, terwijl elke waarneming die het
-   model voedt in dalasi is gedaan: de grondtarieven hieronder, de
-   gevallen in valuation-selftest.mjs, alles. Het model deelde die
-   door een vaste 85,74 en de weergave vermenigvuldigde weer met de
-   koers van vandaag. Zakte de dalasi, dan steeg "de waargenomen
-   mediaan in Fajara" zonder dat er in Gambia iets was gebeurd.
-   Nu staat de waarneming er zoals hij is waargenomen.
-
-   De ENIGE uitzondering is PORTAL_RATE in blok 3: dat is een echte
-   euromarkt, staat naast het hoofdgetal en nooit erin, en draagt
-   zijn eenheid in zijn eigen noot.
+   Interne eenheid is EUR (net als CURRENCIES in app.js);
+   omrekenen naar de weergavevaluta doet convert() daar.
 
    HERIJKEN: elk blok hieronder draagt een `herijkt`-datum. De
    betrouwbaarheidsscore zakt naarmate die datum ouder wordt, en
@@ -33,7 +22,7 @@
 'use strict';
 
 /* ============================================================
-   1 · GRONDTARIEVEN — GMD per m²
+   1 · GRONDTARIEVEN — EUR per m²
    ------------------------------------------------------------
    HERIJKT 26-08-2026 op een veel bredere basis dan de vorige
    ronde. Toen stonden hier veertien gebieden met twee of drie
@@ -78,55 +67,53 @@
    ============================================================ */
 var LAND_HERIJKT = '2026-08-26';
 
-/* Waargenomen: n ≥ 3. `gmd` is de mediaan zoals hij in de
-   advertenties staat — de Gambiaanse markt denkt in dalasi, en dit
-   is het getal dat je met een advertentie kunt vergelijken.
-   Tot 27-08-2026 stond hier `eur` naast, dezelfde waarde gedeeld
-   door 85,74 (CBG, 25-08-2026), en dát was wat het model rekende.
-   Die tussenstap is eruit: het model rekent nu met de waarneming. */
+/* Waargenomen: n ≥ 3. `gmd` staat erbij omdat de Gambiaanse markt
+   in dalasi denkt en dat het getal is dat je met een advertentie
+   kunt vergelijken; `eur` is dezelfde waarde gedeeld door 85,74
+   (CBG, 25-08-2026) en is wat het model rekent. */
 var LAND_OBSERVED = {
-  'fajara':     { gmd: 13333, n:  5 },
-  'kerr serign':{ gmd:  7905, n:  3 },
-  'brusubi':    { gmd:  6458, n:  4 },
-  'bijilo':     { gmd:  6000, n: 13 },
-  'jabang':     { gmd:  2894, n:  9 },
-  'salagi':     { gmd:  2408, n:  4 },
-  'sukuta':     { gmd:  2326, n:  8 },
-  'brufut':     { gmd:  2282, n:  7 },
-  'tujereng':   { gmd:  2280, n: 11 },
-  'tanji':      { gmd:  2163, n:  5 },
-  'yundum':     { gmd:  1844, n:  5 },
-  'lamin':      { gmd:  1833, n:  9 },
-  'busumbala':  { gmd:  1728, n:  4 },
-  'farato':     { gmd:  1640, n: 13 },
-  'jambur':     { gmd:  1612, n:  4 },
-  'brikama':    { gmd:  1053, n:  7 },
-  'sanyang':    { gmd:   972, n: 14 },
-  'mamuda':     { gmd:   896, n:  5 },
-  'kitty':      { gmd:   875, n:  6 },
-  'gunjur':     { gmd:   682, n:  7 },
-  'sifoe':      { gmd:   625, n:  3 }
+  'fajara':     { eur:  155.5, n:  5, gmd: 13333 },
+  'kerr serign':{ eur:   92.2, n:  3, gmd:  7905 },
+  'brusubi':    { eur:   75.3, n:  4, gmd:  6458 },
+  'bijilo':     { eur:   70.0, n: 13, gmd:  6000 },
+  'jabang':     { eur:   33.8, n:  9, gmd:  2894 },
+  'salagi':     { eur:   28.1, n:  4, gmd:  2408 },
+  'sukuta':     { eur:   27.1, n:  8, gmd:  2326 },
+  'brufut':     { eur:   26.6, n:  7, gmd:  2282 },
+  'tujereng':   { eur:   26.6, n: 11, gmd:  2280 },
+  'tanji':      { eur:   25.2, n:  5, gmd:  2163 },
+  'yundum':     { eur:   21.5, n:  5, gmd:  1844 },
+  'lamin':      { eur:   21.4, n:  9, gmd:  1833 },
+  'busumbala':  { eur:   20.2, n:  4, gmd:  1728 },
+  'farato':     { eur:   19.1, n: 13, gmd:  1640 },
+  'jambur':     { eur:   18.8, n:  4, gmd:  1612 },
+  'brikama':    { eur:   12.3, n:  7, gmd:  1053 },
+  'sanyang':    { eur:   11.3, n: 14, gmd:   972 },
+  'mamuda':     { eur:   10.5, n:  5, gmd:   896 },
+  'kitty':      { eur:   10.2, n:  6, gmd:   875 },
+  'gunjur':     { eur:    8.0, n:  7, gmd:   682 },
+  'sifoe':      { eur:    7.3, n:  3, gmd:   625 }
 };
 
 /* Eén of twee waarnemingen: een aanwijzing, geen mediaan. Eén
    kavel is geen markt — het is de mening van één verkoper over
    zijn eigen grond. confidence() rekent daar zwaar op af. */
 var LAND_HALF = {
-  'cape point':    { gmd: 16667, n:  1 },
-  'banjul':        { gmd: 12500, n:  1 },
-  'bakoteh':       { gmd: 10549, n:  1 },
-  'kotu':          { gmd:  9971, n:  1 },
-  'kololi':        { gmd:  8800, n:  4 },   /* 27-08-2026: +2 Songhai-kavels met maat */
-  'brufut heights':{ gmd:  3625, n:  2 },
-  'ghana town':    { gmd:  2500, n:  1 },
-  'madiana':       { gmd:  1333, n:  1 },
-  'jambanjelly':   { gmd:  1202, n:  1 },
-  'jalanbang':     { gmd:  1087, n:  1 },
-  'kartong':       { gmd:   742, n:  2 },
-  'bafuloto':      { gmd:   722, n:  1 },
-  'faraba':        { gmd:   488, n:  1 },
-  'pirang':        { gmd:   246, n:  1 },
-  'farafenni':     { gmd:    93, n:  1 }
+  'cape point':    { eur:  194.4, n:  1, gmd: 16667 },
+  'banjul':        { eur:  145.8, n:  1, gmd: 12500 },
+  'bakoteh':       { eur:  123.0, n:  1, gmd: 10549 },
+  'kotu':          { eur:  116.3, n:  1, gmd:  9971 },
+  'kololi':        { eur:  102.6, n:  4, gmd:  8800 },   /* 27-08-2026: +2 Songhai-kavels met maat */
+  'brufut heights':{ eur:   42.3, n:  2, gmd:  3625 },
+  'ghana town':    { eur:   29.2, n:  1, gmd:  2500 },
+  'madiana':       { eur:   15.5, n:  1, gmd:  1333 },
+  'jambanjelly':   { eur:   14.0, n:  1, gmd:  1202 },
+  'jalanbang':     { eur:   12.7, n:  1, gmd:  1087 },
+  'kartong':       { eur:    8.7, n:  2, gmd:   742 },
+  'bafuloto':      { eur:    8.4, n:  1, gmd:   722 },
+  'faraba':        { eur:    5.7, n:  1, gmd:   488 },
+  'pirang':        { eur:    2.9, n:  1, gmd:   246 },
+  'farafenni':     { eur:    1.1, n:  1, gmd:    93 }
 };
 
 /* Zonefactor voor gebieden zonder eigen waarneming, toegepast op
@@ -174,7 +161,7 @@ function zoneFor(key) {
 }
 
 /* ============================================================
-   2 · BOUWKOSTEN — GMD per bebouwde m², nieuwbouw
+   2 · BOUWKOSTEN — EUR per bebouwde m², nieuwbouw
    ------------------------------------------------------------
    Geen enkele bron geeft een Gambiaans tarief per m² dat je kunt
    overnemen; Shreeji Development schrijft in juli 2026 letterlijk
@@ -208,29 +195,21 @@ function zoneFor(key) {
    dit blok de enige plek die verandert.
    ============================================================ */
 var BUILD_HERIJKT = '2026-08-26';
-/* 27-08-2026 omgezet naar dalasi tegen 85,74 (CBG 25-08-2026, dezelfde
-   koers waarop de grondtarieven zijn geijkt), en daarna afgerond: per m²
-   op D500, de vaste posten op D5.000. Grootste afwijking door die
-   afronding is 0,9% op `standard`. Dat is ruim binnen de bandbreedte die
-   het model zelf afgeeft, en deze getallen zijn afgeleid, niet gemeten —
-   ronde bedragen zijn hier eerlijker dan D25.722. */
 var BUILD_COST = {
-  basic:    17000,  /* was EUR 200 — betonblok, cementvloer of eenvoudige tegel,
-                       stalen ramen, golfplaat, geen airco                      */
-  standard: 25500,  /* was EUR 300 — tegelvloer, hor, plafond, boiler; komt
-                       overeen met de eigen gids en met de onderkant van de
-                       gepubliceerde band                                       */
-  high:     43000   /* was EUR 500 — aluminium schuifpuien, airco, ingebouwde
-                       keuken, plafonds                                         */
+  basic:    200,  /* betonblok, cementvloer of eenvoudige tegel, stalen ramen,
+                     golfplaat, geen airco — onderkant van de eigen opbouw     */
+  standard: 300,  /* tegelvloer, hor, plafond, boiler — komt overeen met de
+                     eigen gids en met de onderkant van de gepubliceerde band  */
+  high:     500   /* aluminium schuifpuien, airco, ingebouwde keuken, plafonds */
 };
-/* Wat de opstal draagt maar niet in GMD/m² vloer zit. Afgeschreven
+/* Wat de opstal draagt maar niet in EUR/m² vloer zit. Afgeschreven
    investeringen: een zwembad kost in Sanyang hetzelfde als in Kololi. */
 var BUILD_EXTRA = {
-  pool:      1200000,  /* was EUR 14.000 — 8×4 m met pomp en filter     */
-  solar:      385000,  /* was EUR  4.500 — paneel, omvormer, accu       */
-  generator:  155000,  /* was EUR  1.800 — 5–7 kVA met kast             */
-  borehole:   275000,  /* was EUR  3.200 — boring, pomp en tank         */
-  wallPerM:     4700,  /* was EUR     55 — per strekkende meter, 2 m hoog */
+  pool:        14000,  /* 8×4 m met pomp en filter                      */
+  solar:        4500,  /* paneel, omvormer, accu — huishoudformaat      */
+  generator:    1800,  /* 5–7 kVA met kast                              */
+  borehole:     3200,  /* boring, pomp en tank                          */
+  wallPerM:        55, /* ommuring per strekkende meter, 2 m hoog       */
   furnishedPct:  0.05, /* volledig gemeubileerd, op de opstalwaarde     */
   semiPct:       0.02
 };
@@ -436,21 +415,19 @@ function matchArea(locStr, base) {
 function landRate(areaKey, base) {
   var k = norm(areaKey);
   if (C.LAND_OBSERVED[k]) {
-    return { gmd: C.LAND_OBSERVED[k].gmd, src: 'observed', n: C.LAND_OBSERVED[k].n,
+    return { eur: C.LAND_OBSERVED[k].eur, src: 'observed', n: C.LAND_OBSERVED[k].n,
              note: C.LAND_OBSERVED[k].n + ' local plot listings in ' + titel(areaKey) };
   }
   if (C.LAND_HALF[k]) {
     var hn = C.LAND_HALF[k].n || 1;
-    return { gmd: C.LAND_HALF[k].gmd, src: 'half', n: hn,
+    return { eur: C.LAND_HALF[k].eur, src: 'half', n: hn,
              note: hn + (hn === 1 ? ' observation' : ' observations') + ' in ' + titel(areaKey) +
                    ' \u2014 an indication, not a market average' };
   }
-  /* `base` is de terugvaltabel uit valuation-areas.js, sinds 27-08-2026
-     eveneens in dalasi. */
   var was = base && base[k];
-  if (was == null) return { gmd: null, src: 'none', n: 0, note: 'area not recognised' };
+  if (was == null) return { eur: null, src: 'none', n: 0, note: 'area not recognised' };
   var z = C.zoneFor(k), f = C.LAND_ZONE[z];
-  return { gmd: Math.round(was * f), src: 'zone', n: 0,
+  return { eur: Math.round(was * f * 10) / 10, src: 'zone', n: 0,
            note: 'no observations \u2014 regional rate for ' + z + ' (\u00d7' + f + ')' };
 }
 
@@ -581,8 +558,8 @@ function value(input, opts) {
   /* Kennen we het gebied niet, dan is er geen tarief en dus geen
      waarde. Een nul tonen zou een antwoord suggereren; dit is er
      geen. De eerste browsertest liet zien wat er anders gebeurt:
-     "Bansang" gaf 0 met het label 'redelijk onderbouwd'. */
-  if (lr.gmd == null) {
+     "Bansang" gaf EUR 0 met het label 'redelijk onderbouwd'. */
+  if (lr.eur == null) {
     return { ok: false, reason: 'unknown-area', area: input.area,
              confidence: { score: 0, label: 'indicative', band: 0.38,
                            reasons: ['this area is not in the rate table'] },
@@ -591,7 +568,7 @@ function value(input, opts) {
   var plot = +input.plotSqm || 0;
   var landPts = sumPoints(C.LAND_PTS, C.LAND_CAP, input,
     ['title', 'road', 'elec', 'water', 'fence', 'cleared', 'corner', 'shape', 'flood', 'beach', 'view']);
-  var landRateAdj = lr.gmd == null ? null : lr.gmd * (1 + landPts.pts / 100);
+  var landRateAdj = lr.eur == null ? null : lr.eur * (1 + landPts.pts / 100);
   var landValue = 0;
   if (!isApt && plot > 0 && landRateAdj != null) {
     landValue = effLand(plot) * landRateAdj;
@@ -635,8 +612,8 @@ function value(input, opts) {
   /* Appartement: de kavel is niet toe te wijzen aan één unit, dus
      geen grondwaarde. Wat overblijft is de opstal plus de locatie,
      en die locatie moet dan wél in het tarief zitten. */
-  if (isApt && lr.gmd != null && built > 0) {
-    var locUplift = built * lr.gmd * 1.6;    /* aandeel in de grondwaarde van het gebouw */
+  if (isApt && lr.eur != null && built > 0) {
+    var locUplift = built * lr.eur * 1.6;    /* aandeel in de grondwaarde van het gebouw */
     buildValue += locUplift;
     lines.push({ k: 'Location share', v: locUplift, note: 'a flat has no plot of its own \u2014 the land is carried per built m\u00b2' });
   }
@@ -659,12 +636,7 @@ function value(input, opts) {
     methodGap: opts.methodGap
   });
 
-  /* Afrondstap van de band, in dalasi. Was EUR 5.000/1.000/500 boven
-     EUR 200.000/50.000; omgerekend is dat ongeveer D430.000/86.000/43.000
-     boven D17 mln/4,3 mln. Afgerond op stappen die een Gambiaanse lezer
-     herkent. Een band die op D50.000 nauwkeurig heet te zijn suggereert
-     al meer dan het model waarmaakt. */
-  var step = mid >= 15000000 ? 500000 : mid >= 4000000 ? 100000 : 50000;
+  var step = mid >= 200000 ? 5000 : mid >= 50000 ? 1000 : 500;
   var rnd = function (v) { return Math.round(v / step) * step; };
 
   return {

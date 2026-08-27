@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:1es0jye--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:0vt80x3--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -31,7 +31,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=88464732772710">
+<link rel="stylesheet" href="styles.min.css?v=162326437185018">
 <style>
 /* hero */
 .shero{position:relative;color:#fff;margin-top:calc(-1 * var(--header-h));isolation:isolate;overflow:hidden}
@@ -947,13 +947,13 @@
 window.__sbReady=new Promise(function(res){window.addEventListener('load',function(){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js';
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=88464732772710'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=162326437185018'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
   document.body.appendChild(s1);
 });});
 </script>
-<script src="valuation-areas.js?v=88464732772710"></script>
-<script src="valuation.js?v=88464732772710"></script>
-<script src="app.min.js?v=88464732772710"></script>
+<script src="valuation-areas.js?v=162326437185018"></script>
+<script src="valuation.js?v=162326437185018"></script>
+<script src="app.min.js?v=162326437185018"></script>
 <script>
 
 // icons
@@ -1143,24 +1143,12 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
   }
   const PLUS_RE=/[23456789cfghjmpqrvwx]{4,8}\+[23456789cfghjmpqrvwx]{2,3}/i;
   const emailOk=v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-  /* LET OP — deze schatter is in EURO's geijkt (zie de tarieventabellen
-     hierboven), terwijl de rest van de site sinds 27-08-2026 in dalasi
-     rekent. `convert()` neemt dalasi, dus die mag hier NIET rechtstreeks
-     op een eurobedrag: dat zou elk tarief door de koers delen in plaats
-     van vermenigvuldigen — een huis van EUR 900 per m² kwam dan als D10
-     op het scherm. Daarom eerst naar dalasi, dan pas naar de weergavemunt.
-
-     Dat deze tabellen in euro's staan is een openstaand punt: ze zijn
-     tegen ~85 GMD/EUR geijkt op dalasi-advertenties, dus de euro is ook
-     hier de afgeleide. Omzetten is een herijking van een geijkt model en
-     hoort een besluit te zijn, geen bijvangst van deze wijziging. */
-  function money(eurVal){
-    const c=CURRENCIES[getCurrency()];
-    const v=fromGMD(eurVal * CURRENCIES.EUR.gmdPer);
-    const step = v>=200000?5000 : v>=50000?1000 : v>=2000?500 : v>=100?10 : 1;
-    const r=Math.round(v/step)*step;
-    return c.symbol + r.toLocaleString('en-US');
-  }
+  /* De money() die hier stond is op 27-08-2026 verwijderd, met dezelfde
+     reden als de tarieventabellen hierboven: hij werd nergens aangeroepen.
+     initValuationFlow() heeft zijn eigen money(), en die schaduwde deze.
+     Het openstaande punt in zijn commentaar — dat het model in euro's was
+     geijkt terwijl elke waarneming in dalasi is gedaan — is diezelfde dag
+     opgelost; zie de kop van valuation.js. */
 
   let pdMap=null,pdMarker=null,ldMap=null,ldMarker=null;
   const VAL_MAP_DEFAULT=[13.45,-16.70];
@@ -1474,12 +1462,22 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
       out.sort().forEach(function(l){ var o=document.createElement('option'); o.value=l; dl.appendChild(o); });
     })();
 
-    function money(eur){
-      if(eur==null) return '—';
-      var c=CURRENCIES[getCurrency()], v=eur*(c.rate||1);
+    /* MK_VAL levert sinds 27-08-2026 dalasi. Hiervoor stond hier
+       `eur*(c.rate||1)`: c.rate is het aantal eenheden per euro, en die
+       wordt door applyRates() wél met de dagkoers bijgewerkt. Het punt was
+       dus niet dat dit getal muf werd, maar dat de euro het anker was —
+       een in dalasi waargenomen tarief ging door de koers heen en weer
+       terug, en dat verschil liep mee met de koers in plaats van met de
+       Gambiaanse markt. */
+    function money(gmd){
+      if(gmd==null) return '—';
+      var c=CURRENCIES[getCurrency()], v=fromGMD(gmd);
       var step = v>=200000?5000 : v>=50000?1000 : v>=2000?500 : v>=100?10 : 1;
       return c.symbol + (Math.round(v/step)*step).toLocaleString('en-US');
     }
+    /* PORTAL_RATE is en blijft een euromarkt (zie blok 3 van valuation.js).
+       Dit is de enige plek waar dat de weergave raakt, en hier staat de grens. */
+    function moneyEur(eur){ return eur==null ? '—' : money(eur * CURRENCIES.EUR.gmdPer); }
 
     var at=1;
     function show(n){
@@ -1574,8 +1572,8 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
       }).join('');
       if(r.portal){
         $('mkvPortalTxt').innerHTML='Plots in '+r.portal.area+' are advertised there at <span class="num">'
-          +money(r.portal.low)+' – '+money(r.portal.high)+'</span> — '+money(r.portal.rateLow)+' to '
-          +money(r.portal.rateHigh)+' per m². That is a different market with different buyers. The figure above is the local one.';
+          +moneyEur(r.portal.low)+' – '+moneyEur(r.portal.high)+'</span> — '+moneyEur(r.portal.rateLow)+' to '
+          +moneyEur(r.portal.rateHigh)+' per m². That is a different market with different buyers. The figure above is the local one.';
       }
       if(S.type!=='land'){
         $('mkvRentTxt').innerHTML='A local long let here brings in roughly <span class="num">'
@@ -1691,7 +1689,8 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
       if(S.area) p.set('area',S.area);
       if(S.plot) p.set(S.type==='land'?'sqm':'plot', S.plot);
       if(S.built) p.set('sqm', S.built);
-      p.set('price', Math.round(r.mid*(CURRENCIES.EUR.gmdPer)));
+      /* list.html verwacht dalasi, en dat is wat r.mid sinds 27-08-2026 is. */
+      p.set('price', Math.round(r.mid));
       return 'list.html?'+p.toString();
     };
   }
