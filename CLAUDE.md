@@ -844,6 +844,9 @@ een eigen ijking, en die blijven staan:
   niet is. **Doe dit bij de volgende herijking**, niet los: het juiste moment
   om de eenheid van een geijkt model te veranderen is wanneer je hem opnieuw
   afleidt, zodat de nieuwe getallen in de nieuwe eenheid rond uitkomen.
+  Sinds 27-08-2026 noemt `guide-building-a-house-in-the-gambia.html` dezelfde
+  drie tarieven (D17.000/25.500/43.000 per m², incl. de FAQ-structured-data);
+  wijzigt BUILD_COST, dan hoort die gids in dezelfde beurt mee.
 
 `money()` in `sell.html` rekent daarom eerst naar dalasi
 (`* CURRENCIES.EUR.gmdPer`) en daarna pas naar de weergavemunt. Die functie
@@ -878,6 +881,19 @@ buurtblok van `property.html`. `build-area-prices.mjs` schrijft die pagina's
 eruit en moet **vóór** `build.mjs` draaien. Zet nooit met de hand een bedrag in
 een pagina — de volgende run overschrijft het, of erger, hij overschrijft het
 niet en dan lopen de vijf plekken met hetzelfde getal weer uit elkaar.
+
+### De eerlijkheidsalinea is van de generator
+
+Sinds 27-08-2026 sluit elk waardeblok af met de vaste alinea "These figures are
+as honest as we can make them — and still young…": betrouwbare Gambiaanse
+marktdata bestaat nog nauwelijks — voor niemand — en het bouwen ervan is een
+deel van waarom MyKunda bestaat. Die tekst is eigendom van
+`build-area-prices.mjs`, net als de rest van het blok; niet in een pagina
+herformuleren. De handgeschreven, uitgebreidere versies staan op
+`how-we-measure-prices.html` (sectie "Where the data stands today"), in de FAQ
+("How accurate are the prices on MyKunda?", ook in de structured data) en op
+`about.html`. Wijzigt de boodschap, dan horen die vier plekken samen bij te
+blijven.
 
 ### De regel die op 27-08-2026 is bijgekomen
 

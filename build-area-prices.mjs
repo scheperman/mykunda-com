@@ -146,6 +146,13 @@ function priceBlock(key, r) {
     ? ` Upcountry we publish land only: there is not enough house or rental advertising in ${name} to put a number on either, and a number we cannot defend is worse than none.`
     : '';
 
+  /* De vaste eerlijkheidsalinea (27-08-2026, op verzoek van Edwin): elk
+     waardeblok zegt hardop dat betrouwbare Gambiaanse marktdata nog
+     gebouwd wordt — door iedereen, ook door ons — en waarom we tóch
+     publiceren. Dit is de missie van het platform in twee alinea's tekst;
+     de uitgebreide versie staat op how-we-measure-prices.html. */
+  const honest = `<p style="margin-top:14px">These figures are as honest as we can make them — and still young. Reliable Gambian market data barely exists yet, for anyone; building it is one of the reasons MyKunda exists at all. So we publish what we can measure, print the evidence count next to every figure, and leave a blank rather than defend a number we cannot. A market where buyers and sellers can trust what they read has to start somewhere. Every listing and every verified sale sharpens these figures — and if you know a figure on this page to be wrong, <a href="contact.html">tell us</a>.</p>`;
+
   return `<div class="block">
         <h2>What property costs in ${name}</h2>
         <p class="lead">Asking prices, measured ${DB.measured_label}. Land and buildings are priced separately here, because in The Gambia they are usually sold separately.</p>
@@ -158,6 +165,7 @@ function priceBlock(key, r) {
         </div>
         <p style="margin-top:18px">${expl}${upc}</p>
         <p style="margin-top:14px">Every figure on this page is an <em>asking</em> price. No one in The Gambia publishes what property actually sells for — there is no public register of sale prices — so what a seller asks is the only thing that can be measured consistently. Sale prices are generally lower, by an amount that depends entirely on the seller.${yieldLine(r)}</p>
+        ${honest}
         <p class="src">Land: ${DB.sources.land_obs} priced plot listings across The Gambia, from Facebook Marketplace (${DB.measured_label}), Songhai Properties, AccessGambia, Holprop and GamRealty. Houses and rents: ${DB.sources.house_obs} and ${DB.sources.rent_obs} local listings. <a href="how-we-measure-prices.html">How we measure prices</a>.</p>
       </div>`;
 }
@@ -360,6 +368,8 @@ function evCell(r) {
       'listings with a known size: <b>' + obs + '</b> of these areas clear that bar, and the other <b>' + rest + '</b> carry the ' +
       'rate of the surrounding band or region, marked as such \u2014 a single listing never sets an area figure on this site. ' +
       'Upcountry we publish land only \u2014 there is not enough house or rental advertising to put a number on either. ' +
+      'All of it is young data, honestly labelled: reliable Gambian market data barely exists yet, and building it \u2014 ' +
+      'listing by listing, figure by figure \u2014 is part of why MyKunda exists. ' +
       'For bare plots specifically, see <a href="land-for-sale-in-the-gambia.html">land for sale in The Gambia</a>.</p>';
   });
   src = src.replace(/<p class="px-stamp">[\s\S]*?<\/p>/,
@@ -440,6 +450,7 @@ await patch('land-for-sale-in-the-gambia.html', src => {
   src = src.replace(/<p class="px-stamp">[\s\S]*?<\/p>/,
     '<p class="px-stamp"><span></span> Asking prices in Gambian dalasi, measured <time datetime="' + DB.measured + '">' +
     DB.measured_label + '</time>. The standard unit here is a 20 × 20 metre plot of 400 m² — the size most Gambian plots are sold in. ' +
+    'The evidence base is young; the count next to each figure says exactly how much sits behind it. ' +
     '<a href="how-we-measure-prices.html">How we measure these prices</a></p>');
   src = src.replace(/a standard 1000 m² plot, the area price per m² and the year-on-year change/g,
     'a standard 400 m² plot, the price of land per m² and the evidence behind it');
