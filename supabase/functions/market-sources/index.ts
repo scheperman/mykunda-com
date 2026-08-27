@@ -221,10 +221,24 @@ function matchArea(text: string, aliases: Alias[]) {
   return null
 }
 
+/* De koers komt uit fx_rates en van nergens anders.
+   -------------------------------------------------------------------
+   Hier stond `?? 78`, `?? 72` en `?? 91` als terugval. Die getallen zijn
+   nooit gebruikt — de tabel is niet leeg — maar als dat ooit wél gebeurt
+   worden álle waarnemingen van die run stil tegen een verzonnen koers
+   omgerekend en belanden ze zo in de marktindex. Een index die je
+   achteraf niet meer kunt vertrouwen is erger dan een run die niet
+   draaide, dus dit faalt nu hoorbaar. */
 async function fxToUsd(client: ReturnType<typeof sb>) {
   const { data } = await client.from('fx_rates')
     .select('*').order('as_at', { ascending: false }).limit(1).maybeSingle()
-  const eurGmd = data?.eur_gmd ?? 78, usdGmd = data?.usd_gmd ?? 72, gbpGmd = data?.gbp_gmd ?? 91
+  const eurGmd = Number(data?.eur_gmd), usdGmd = Number(data?.usd_gmd), gbpGmd = Number(data?.gbp_gmd)
+  if (!(eurGmd > 0 && usdGmd > 0 && gbpGmd > 0)) {
+    throw new Error(
+      'fx_rates levert geen volledige koers (eur=' + data?.eur_gmd + ' usd=' + data?.usd_gmd +
+      ' gbp=' + data?.gbp_gmd + '). Zonder koers geen omrekening: run afgebroken.',
+    )
+  }
   return (v: number, ccy: string) => {
     if (ccy === 'USD') return v
     if (ccy === 'GMD') return v / usdGmd

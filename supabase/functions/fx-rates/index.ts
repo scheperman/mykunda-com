@@ -39,8 +39,25 @@
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-const CBG_URL = 'https://www.cbg.gm/indicative-exchange-rates-latest'
+/* De HOMEPAGE is de bron, niet de pagina die ernaar vernoemd is.
+   -------------------------------------------------------------------
+   `/indicative-exchange-rates-latest` ziet er in een browser uit als de
+   juiste plek en is dat ook — maar hij bouwt zijn tabel client-side. Een
+   server-side fetch krijgt 200 met 41 kB waarin de valutacodes wél in de
+   keuzelijst van de omrekenmodule staan en de getallen nergens. Gemeten
+   27-08-2026: status 200, 41.531 bytes, nul munten geparsed.
+
+   De homepage rendert de cijfers wel gewoon in de HTML (66 kB, alle drie
+   de munten). Die staat daarom voorop. De detailpagina blijft als tweede
+   poging staan voor het geval CBG hem ooit server-side gaat renderen;
+   `trace` in het antwoord van de POST laat zien welke van de twee de
+   koers heeft geleverd.
+
+   Tot 27-08-2026 stond de detailpagina voorop en viel élke run stil terug
+   op de homepage. Dat werkte, maar het vangnet was permanent het hoofdpad
+   en dat was aan niets te zien. */
 const CBG_HOME = 'https://www.cbg.gm/'
+const CBG_URL = 'https://www.cbg.gm/indicative-exchange-rates-latest'
 
 // ECB, uitsluitend om een munt aan te vullen die CBG niet noteerde.
 // Server-side, dus geen CSP in de browser. Let op: api.frankfurter.app
@@ -101,20 +118,46 @@ function parseAsAt(html: string): string | null {
   return isNaN(d.getTime()) ? null : d.toISOString().slice(0, 10)
 }
 
+/* Twee bronnen, en we houden bij wat er met allebei gebeurde.
+   -------------------------------------------------------------------
+   Tot 27-08-2026 stond in élke rij van fx_rates `source_url = cbg.gm/`,
+   nooit de pagina met de tabel erop. De terugval was dus permanent het
+   echte pad, en niemand kon zien waarom: een mislukking van de eerste
+   URL verdween in een lege catch.
+
+   `trace` gaat mee in het antwoord van de POST, zodat de eerstvolgende
+   cron-run zelf vertelt of het een status, een time-out of een mislukte
+   parse was. Een vangnet dat je niet kunt uitlezen is geen vangnet.
+
+   De User-Agent draagt een Mozilla-voorvoegsel. Dat is geen vermomming —
+   MyKunda staat er gewoon in, met de URL erbij — maar veel CMS- en
+   WAF-configuraties wijzen een kale productnaam af terwijl ze dezelfde
+   aanvraag met dit voorvoegsel wél doorlaten. Het was hier niet de
+   oorzaak (beide URL's gaven al 200), maar het scheelt een verrassing
+   zodra CBG ooit iets voor die kant zet. */
+const UA = 'Mozilla/5.0 (compatible; MyKunda/1.0; +https://mykunda.com)'
+
 async function fetchCBG() {
-  for (const url of [CBG_URL, CBG_HOME]) {
+  const trace: Array<Record<string, unknown>> = []
+  for (const url of [CBG_HOME, CBG_URL]) {
     try {
       const r = await fetch(url, {
-        headers: { 'User-Agent': 'MyKunda/1.0 (+https://mykunda.com)' },
+        headers: { 'User-Agent': UA, 'Accept': 'text/html,application/xhtml+xml' },
         signal: AbortSignal.timeout(15000),
       })
-      if (!r.ok) continue
+      if (!r.ok) { trace.push({ url, status: r.status }); continue }
       const html = await r.text()
       const rates = parseRates(html)
-      if (rates.EUR) return { rates, asAt: parseAsAt(html), url }
-    } catch (_e) { /* volgende URL */ }
+      if (rates.EUR) {
+        trace.push({ url, status: r.status, bytes: html.length, used: true })
+        return { rates, asAt: parseAsAt(html), url, trace }
+      }
+      trace.push({ url, status: r.status, bytes: html.length, parsed: Object.keys(rates) })
+    } catch (e) {
+      trace.push({ url, error: String((e as Error)?.message || e).slice(0, 160) })
+    }
   }
-  return null
+  return { trace }
 }
 
 /* ECB-kruiskoers, alleen om een ontbrekende munt aan te vullen. De dalasi
@@ -224,13 +267,17 @@ Deno.serve(async (req) => {
     const prev = await latestStored(client)
     const got = await fetchCBG()
 
-    if (!got) {
+    // fetchCBG geeft altijd een object terug; `rates` ontbreekt als geen
+    // van beide URL's een bruikbare eurokoers opleverde. `trace` zegt dan
+    // per URL waarom.
+    if (!got.rates) {
       return new Response(JSON.stringify({
-        ok: false, reason: 'cbg_unreachable_or_unparseable', kept: prev?.as_at ?? null,
+        ok: false, reason: 'cbg_unreachable_or_unparseable',
+        kept: prev?.as_at ?? null, trace: got.trace,
       }), { status: 502, headers })
     }
 
-    const { rates, asAt, url } = got
+    const { rates, asAt, url, trace } = got
     const as_at = asAt || new Date().toISOString().slice(0, 10)
 
     // Vangrail per munt, niet alleen op de euro. Een pond dat in één dag
@@ -288,7 +335,7 @@ Deno.serve(async (req) => {
         Number(prev.eur_gmd) === Number(row.eur_gmd) &&
         Number(prev.usd_gmd) === Number(row.usd_gmd) &&
         Number(prev.gbp_gmd) === Number(row.gbp_gmd)) {
-      return new Response(JSON.stringify({ ok: true, unchanged: true, as_at, ...row }), { headers })
+      return new Response(JSON.stringify({ ok: true, unchanged: true, as_at, ...row, trace }), { headers })
     }
 
     const { error } = await client.from('fx_rates').upsert(row, { onConflict: 'as_at' })
@@ -297,7 +344,7 @@ Deno.serve(async (req) => {
     return new Response(JSON.stringify({
       ok: true, ...row,
       carried_forward: { usd: accepted.USD == null, gbp: accepted.GBP == null },
-      rejected,
+      rejected, trace,
     }), { headers })
   } catch (e) {
     return new Response(JSON.stringify({ ok: false, error: String((e as Error)?.message || e) }), { status: 500, headers })
