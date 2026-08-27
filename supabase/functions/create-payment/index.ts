@@ -158,11 +158,25 @@ const BUYER_PLAN_IDS = ["doc_check", "ownership_check"];
 
 // De banden zoals ze op mykunda.com/sell gepubliceerd staan. Precies
 // D10.000.000 valt in de middelste band, net als in de tabel op de site.
+//
+// LET OP: dit toetst DALASI. listings.price staat sinds 27-08-2026 in
+// dalasi; daarvoor stond er de euro-tegenwaarde in, en dan viel elke
+// verkoopadvertentie in de goedkoopste band — een villa van D12.000.000
+// kwam binnen als ~140.000 en betaalde D4.500 in plaats van D16.000.
+// Verandert de eenheid van listings.price ooit weer, dan hoort deze
+// functie in dezelfde wijziging mee.
 function verifiedBandVoor(prijsGmd: number): string {
   if (prijsGmd < 2_000_000) return "verified_s";
   if (prijsGmd <= 10_000_000) return "verified_m";
   return "verified_l";
 }
+
+// Onder deze grens is een verkoopvraagprijs geen vraagprijs. De goedkoopste
+// grond in de eigen metingen doet D71 per m², dus zelfs een kleine kavel
+// upcountry komt ruim hierboven uit; een bedrag eronder is een verkeerde
+// eenheid of een typefout. Liever hoorbaar weigeren dan stil de verkeerde
+// band factureren — dat is precies wat er hiervoor gebeurde.
+const MIN_VRAAGPRIJS_GMD = 50_000;
 
 // ---------------------------------------------------------------- helpers
 function cors(origin: string | null): Record<string, string> {
@@ -362,6 +376,20 @@ Deno.serve(async (req: Request) => {
     const vraagprijs = Number(listing.price ?? 0);
     if (!(vraagprijs > 0)) {
       return json({ error: "listing_price_required" }, 400, headers);
+    }
+    // Vangrail tegen een verkeerde eenheid. Zie MIN_VRAAGPRIJS_GMD: een
+    // vraagprijs hieronder is geen goedkope kavel maar een bedrag in de
+    // verkeerde munt, en dan is elke band die we kiezen de verkeerde.
+    if (vraagprijs < MIN_VRAAGPRIJS_GMD) {
+      console.error("create-payment: vraagprijs onder de dalasi-ondergrens", {
+        listing_id: listing.id, price: vraagprijs, min: MIN_VRAAGPRIJS_GMD,
+      });
+      return json({
+        error: "asking_price_implausible",
+        asking_price: vraagprijs,
+        min_gmd: MIN_VRAAGPRIJS_GMD,
+        note: "listings.price hoort in dalasi te staan. Controleer de advertentie voordat er een Verified-band aan hangt.",
+      }, 409, headers);
     }
     effectievePlanId = verifiedBandVoor(vraagprijs);
     bandInfo = {

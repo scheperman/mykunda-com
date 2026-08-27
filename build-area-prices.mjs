@@ -18,9 +18,15 @@ const DB = JSON.parse(await readFile('area-prices.json', 'utf8'));
 const A = DB.areas;
 const FX = DB.fx;                       // dalasi per USD / per EUR
 
-/* De pagina's rekenen in EUR: fmtAreaPrice() in app.js vermenigvuldigt met
-   de koers van de gekozen munt. Alles wat we in een id zetten is dus EUR. */
-const eur = gmd => gmd / FX.eur;
+/* De pagina's rekenen in DALASI: fmtAreaPrice() in app.js deelt door de
+   koers van de gekozen munt. Alles wat we in een id zetten is dus het
+   waargenomen dalasibedrag, ongewijzigd.
+
+   Tot 27-08-2026 werd hier door FX.eur gedeeld en op de pagina weer met de
+   live koers vermenigvuldigd. Daardoor bewoog elke gebiedsprijs mee met de
+   dalasi terwijl er niets was gemeten: zakte de munt 5%, dan stond Kololi
+   de volgende ochtend 5% hoger. DB.fx blijft in het bestand staan als
+   vastlegging van de koers waarop is gemeten, maar rekent nergens meer mee. */
 const D   = n => 'D' + Math.round(n).toLocaleString('en-US');
 const Dk  = n => n >= 1e6 ? 'D' + (n / 1e6).toFixed(n >= 1e7 ? 0 : 1) + 'M'
                : 'D' + Math.round(n / 1000) + 'k';
@@ -183,25 +189,35 @@ for (const key of Object.keys(A)) {
   else if (/chartWrap/.test(src)) probs.push('chartWrap staat er nog maar het tekenscript is niet herkend');
 
   /* 4 — vergelijkingslijst: grondprijs per m², zelfde buren */
-  src = src.replace(/var comp=\[(.*?)\];/, (m, body) => {
-    const names = [...body.matchAll(/\["([^"]+)",\s*[\d.]+\]/g)].map(x => x[1]);
+  /* De lijst staat op de pagina's als `const comp=[...]` met enkele
+     aanhalingstekens. Deze vervanger zocht op `var comp=` met dubbele, en
+     matchte daardoor sinds hij bestaat geen enkele pagina — zonder klacht,
+     want de melding hieronder zit BINNEN de replace en die draaide nooit.
+     Gevolg: de vergelijkingslijst op alle 41 pagina's stond nog op de oude
+     eurocijfers. Nu tolerant in beide opzichten, en een gemiste match is
+     voortaan een probleem in plaats van stilte. */
+  const compRe = /(var|const|let)\s+comp\s*=\s*\[(.*?)\];/;
+  if (!compRe.test(src)) probs.push('vergelijkingslijst niet gevonden');
+  else src = src.replace(compRe, (m, kw, body) => {
+    const names = [...body.matchAll(/\[\s*['"]([^'"]+)['"]\s*,\s*[\d.]+\s*\]/g)].map(x => x[1]);
     const rows = names.map(n => {
       const k = n.toLowerCase();
       const rec = A[k] || A[Object.keys(A).find(x => A[x].label === n)];
-      return rec ? `["${n}",${+eur(rec.gmd_m2).toFixed(1)}]` : null;
+      return rec ? `['${n}',${rec.gmd_m2}]` : null;
     }).filter(Boolean);
-    if (rows.length < 2) { probs.push('vergelijkingslijst niet omgezet'); return m; }
-    return 'var comp=[' + rows.join(',') + '];';
+    if (rows.length < 2) { probs.push('vergelijkingslijst niet omgezet (' + names.length + ' namen gelezen)'); return m; }
+    if (rows.length !== names.length) probs.push('vergelijkingslijst: ' + (names.length - rows.length) + ' gebied(en) onbekend');
+    return kw + ' comp=[' + rows.join(',') + '];';
   });
   src = src.replace(/(<h3>Compare nearby<\/h3>\s*<p>)[^<]*(<\/p>)/, '$1Land, per m²$2');
 
   /* 5 — updateAreaPrices(): de enige plek die de muntknop bedient */
   const upd = [
     'function updateAreaPrices(){',
-    `  var v=[["qs0",${+eur(r.gmd_m2).toFixed(2)}],["pf0",${+eur(r.gmd_m2).toFixed(2)}],` +
-      `["qs1",${+eur(r.plot400).toFixed(0)}],["pf1",${+eur(r.plot400).toFixed(0)}]` +
-      (r.house ? `,["qs2",${+eur(r.house).toFixed(0)}],["pf2",${+eur(r.house).toFixed(0)}]` : '') +
-      (r.rent_month ? `,["pf3",${+eur(r.rent_month).toFixed(0)}]` : '') + '];',
+    `  var v=[["qs0",${r.gmd_m2}],["pf0",${r.gmd_m2}],` +
+      `["qs1",${r.plot400}],["pf1",${r.plot400}]` +
+      (r.house ? `,["qs2",${r.house}],["pf2",${r.house}]` : '') +
+      (r.rent_month ? `,["pf3",${Math.round(r.rent_month)}]` : '') + '];',
     '  v.forEach(function(p){ var e=document.getElementById(p[0]); if(e) e.textContent=fmtAreaPrice(p[1]); });',
     '}',
     'updateAreaPrices();'
@@ -356,17 +372,71 @@ await patch('land-for-sale-in-the-gambia.html', src => {
 await patch('property.html', src => {
   let n = 0;
   src = src.replace(/stats: \[\['Avg\. price\/m²',\s*([\d.]+),/g, (m, v) => {
-    n++; return `stats: [['Land, per m²', ${+eur(DB.extra._default.gmd_m2).toFixed(2)},`;
+    n++; return `stats: [['Land, per m²', ${DB.extra._default.gmd_m2},`;
   });
   src = src.replace(/'([^']+)': \{\n(\s*)intro:([\s\S]*?)stats: \[\['Land, per m²',\s*([\d.]+),/g,
     (m, label, ind, intro, val) => {
       const r = byLabel[label] || (DB.extra && DB.extra[label]) || (DB.extra && DB.extra._default);
       if (!r) return m;
       n++;
-      return `'${label}': {\n${ind}intro:${intro}stats: [['Land, per m²', ${+eur(r.gmd_m2).toFixed(2)},`;
+      return `'${label}': {\n${ind}intro:${intro}stats: [['Land, per m²', ${r.gmd_m2},`;
     });
   src = src.replace(/h\[0\]==='Avg\. price\/m²'/g, "h[0]==='Land, per m²'");
   return n ? src : null;
+});
+
+/* ---------- wijktegels op de voorpagina en op /buy ----------
+   Dit waren de laatste bedragen op de site die met de hand in een pagina
+   stonden, en ze liepen dan ook uit de pas: de voorpagina zei "Avg
+   D83.747/m²" voor Kololi, /buy zei D95.450 voor hetzelfde gebied, en de
+   areapagina zelf publiceert D8.800 per m² grond. Drie getallen, één
+   plaats. Ze staan bovendien met een koers van D83,00 per euro ingebakken,
+   die nergens anders op de site voorkomt.
+
+   Ze komen nu uit area-prices.json, net als al het andere — zie de regel in
+   CLAUDE.md: zet nooit met de hand een bedrag in een pagina. */
+for (const page of ['home.html', 'index.html', 'buy.html']) {
+  await patch(page, src => {
+    let n = 0, missed = [];
+    src = src.replace(
+      /* Zowel "Avg" (de oude tekst) als "Land" (wat deze stap ervan maakt),
+         zodat een tweede run niet "niets herkend" meldt over werk dat de
+         eerste al goed heeft gedaan. */
+      /(<h3>([^<]+)<\/h3><p>[^<]*?)(?:Avg|Land) (<span class="(?:hood-price|apr)" data-gmd=")\d+(">)[^<]*(<\/span>)/g,
+      (m, head, label, pre, mid, post) => {
+        const r = byLabel[label] || A[label.toLowerCase()];
+        if (!r) { missed.push(label); return m; }
+        n++;
+        return head + 'Land ' + pre + r.gmd_m2 + mid + 'D' + r.gmd_m2.toLocaleString('en-US') + post;
+      });
+    /* `probs` bestaat alleen binnen de areapagina-lus; hier is `report` de
+       plek waar een probleem zichtbaar wordt. */
+    if (missed.length) report.push([page, 'geen cijfer voor ' + missed.join(', ')]);
+    return n ? src : null;
+  });
+}
+
+/* ---------- de meetstempel op how-we-measure-prices ----------
+   Stond met de hand in de zin getypt. Hij klopte, maar hij klopte per
+   ongeluk: niets hield hem gelijk aan DB.fx en DB.measured, en een stempel
+   die zegt wanneer en waartegen is gemeten hoort geen los leven te leiden
+   van de meting zelf.
+
+   Let op wat deze koersen WEL en NIET zijn: het is de koers waarop is
+   gemeten, niet de koers waarmee de site rekent. Bedragen staan sinds
+   27-08-2026 in dalasi en worden niet meer omgerekend, dus deze twee
+   getallen leggen alleen vast hoe de dollar- en eurokolom in de
+   bronadvertenties naar dalasi zijn gebracht. */
+await patch('how-we-measure-prices.html', src => {
+  const d = new Date(DB.measured + 'T00:00:00Z');
+  const nl = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+  const stamp = `<p class="px-stamp"><span></span> Last measured <time datetime="${DB.measured}">${nl}</time>. ` +
+    `Rates used to bring foreign-currency listings into dalasi: D${FX.usd.toFixed(2)} per US dollar, ` +
+    `D${FX.eur.toFixed(2)} per euro (Central Bank of The Gambia, ${nl}). ` +
+    `Every amount on this site is stored and shown in dalasi; other currencies are converted at the live rate on the day you look.</p>`;
+  const re = /<p class="px-stamp">[\s\S]*?<\/p>/;
+  if (!re.test(src)) { report.push(['how-we-measure-prices.html', 'meetstempel niet gevonden']); return null; }
+  return src.replace(re, stamp);
 });
 
 /* metateksten en structured data die de oude belofte herhalen */

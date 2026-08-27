@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:0w4w0ky--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:0uvs8ge--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -40,8 +40,8 @@
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="images/jabang-mob.webp" as="image" media="(max-width:640px)" fetchpriority="high">
 <link rel="preload" href="images/jabang.webp" as="image" media="(min-width:641px)" fetchpriority="high">
-<link rel="stylesheet" href="styles.min.css?v=42639051255045">
-<link rel="stylesheet" href="areas.css?v=42639051255045">
+<link rel="stylesheet" href="styles.min.css?v=177881360145938">
+<link rel="stylesheet" href="areas.css?v=177881360145938">
 
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://mykunda.com/"},{"@type":"ListItem","position":2,"name":"Areas in The Gambia","item":"https://mykunda.com/areas-in-the-gambia.html"},{"@type":"ListItem","position":3,"name":"Jabang","item":"https://mykunda.com/jabang.html"}]}
@@ -280,11 +280,11 @@
 window.__sbReady=new Promise(function(res){window.addEventListener('load',function(){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js';
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=42639051255045'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=177881360145938'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
   document.body.appendChild(s1);
 });});
 </script>
-<script src="app.min.js?v=42639051255045"></script>
+<script src="app.min.js?v=177881360145938"></script>
 <script>
 vIc.innerHTML = ICON.star; hPin.innerHTML = ICON.pin;
 if(typeof plusCodeChip==="function"){
@@ -351,7 +351,7 @@ var areaName = "Jabang";
   }
 })();
 
-var comp=[["Jabang",33.8],["Nema Kunku",32.9],["Sukuta",27.1],["Brusubi",75.3],["Sinchu Alagie",47.9]];
+var comp=[['Jabang',2894],['Nema Kunku',2819],['Sukuta',2326],['Brusubi',6458],['Sinchu Alagie',4106]];
 compareList.innerHTML = comp.map(function(c,i){return '<div class="compare-row"><span class="nm">'+c[0]+(i===0?" (here)":"")+'</span><span class="pr">'+fmtAreaPrice(c[1])+"</span></div>";}).join("");
 
 function initAreaMap(){
@@ -382,7 +382,7 @@ function initAreaMap(){
 
 // Currency conversion for area prices
 function updateAreaPrices(){
-  var v=[["qs0",33.75],["pf0",33.75],["qs1",13506],["pf1",13506],["qs2",104969],["pf2",104969]];
+  var v=[["qs0",2894],["pf0",2894],["qs1",1158000],["pf1",1158000],["qs2",9000000],["pf2",9000000]];
   v.forEach(function(p){ var e=document.getElementById(p[0]); if(e) e.textContent=fmtAreaPrice(p[1]); });
 }
 updateAreaPrices();

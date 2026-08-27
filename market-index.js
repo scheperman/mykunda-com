@@ -258,7 +258,7 @@ function mkiComposite(rows) {
    ============================================================ */
 async function mkiLoad() {
   try {
-    if (typeof CURRENCIES !== 'undefined' && CURRENCIES.GMD && CURRENCIES.USD) MKI.fx = CURRENCIES.GMD.rate / CURRENCIES.USD.rate;
+    if (typeof CURRENCIES !== 'undefined' && CURRENCIES.GMD && CURRENCIES.USD) MKI.fx = CURRENCIES.USD.gmdPer;
   } catch (e) { }
 
   if (MKI.live) {

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:00uk17u--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:17t0rqe--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -34,7 +34,7 @@
 <link rel="preload" href="images/home-hero-mobile.webp" as="image" media="(max-width:480px)" fetchpriority="high">
 <link rel="preload" href="images/home-hero-tablet.webp" as="image" media="(min-width:481px) and (max-width:1024px)" fetchpriority="high">
 <link rel="preload" href="images/home-hero.webp" as="image" media="(min-width:1025px)" fetchpriority="high">
-<link rel="stylesheet" href="styles.min.css?v=42639051255045">
+<link rel="stylesheet" href="styles.min.css?v=177881360145938">
 <style>
 /* ---------- Pillar tiles: flat colour, no imagery ---------- */
 .pcard{--pc:28,88,72;height:auto;min-height:0;background:rgb(var(--pc))}
@@ -410,19 +410,19 @@
   <div class="hoods">
     <a class="hood" href="kololi.html">
       <img src="images/kololi.webp" alt="Kololi neighborhood" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block" width="800" height="446">
-      <div class="hood-info"><h3>Kololi</h3><p>Kombo North · Avg <span class="hood-price" data-eur="1009">D83,747</span>/m² · Beach &amp; nightlife</p></div>
+      <div class="hood-info"><h3>Kololi</h3><p>Kombo North · Land <span class="hood-price" data-gmd="8800">D8,800</span>/m² · Beach &amp; nightlife</p></div>
     </a>
     <a class="hood" href="cape-point.html">
       <img src="images/capepoint.webp" alt="Cape Point neighborhood" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block" width="800" height="449">
-      <div class="hood-info"><h3>Cape Point</h3><p>Bakau · Avg <span class="hood-price" data-eur="1100">D91,300</span>/m²</p></div>
+      <div class="hood-info"><h3>Cape Point</h3><p>Bakau · Land <span class="hood-price" data-gmd="16667">D16,667</span>/m²</p></div>
     </a>
     <a class="hood" href="brufut.html">
       <picture style="display:contents"><source media="(max-width:640px)" srcset="images/brufut-street-mob.webp"><img src="images/brufut-street.webp" alt="Brufut neighborhood" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block" width="800" height="600"></picture>
-      <div class="hood-info"><h3>Brufut</h3><p>Kombo South · Avg <span class="hood-price" data-eur="596">D49,468</span>/m²</p></div>
+      <div class="hood-info"><h3>Brufut</h3><p>Kombo South · Land <span class="hood-price" data-gmd="2282">D2,282</span>/m²</p></div>
     </a>
     <a class="hood" href="bijilo.html">
       <picture style="display:contents"><source media="(max-width:640px)" srcset="images/bijilo-mob.webp"><img src="images/bijilo.webp" alt="Bijilo neighborhood" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block" width="800" height="446"></picture>
-      <div class="hood-info"><h3>Bijilo</h3><p>Kombo North · Avg <span class="hood-price" data-eur="779">D64,657</span>/m²</p></div>
+      <div class="hood-info"><h3>Bijilo</h3><p>Kombo North · Land <span class="hood-price" data-gmd="6000">D6,000</span>/m²</p></div>
     </a>
     <a class="hood" href="sanyang.html">
       <img src="images/sanyang.webp" alt="Sanyang neighborhood" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block" width="800" height="446">
@@ -539,14 +539,14 @@
     </div>
   </footer><!--/mk-ftr--></div>
 
-<script src="image-slot.js?v=42639051255045" defer></script>
-<script src="app.min.js?v=42639051255045"></script>
+<script src="image-slot.js?v=177881360145938" defer></script>
+<script src="app.min.js?v=177881360145938"></script>
 <script>
 // Lazy-load Supabase (not needed for initial render)
 window.addEventListener('load', function(){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js';
   s1.onerror=function(){window.supabase=null};
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=42639051255045'; document.body.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=177881360145938'; document.body.appendChild(s2); };
   document.body.appendChild(s1);
 });
 </script>
@@ -621,8 +621,8 @@ document.getElementById('guidesTeaser').innerHTML = [...GUIDES].sort((a,b)=>b.da
 
 // Convert hood prices to selected currency
 document.querySelectorAll('.hood-price').forEach(function(el){
-  var eur = parseFloat(el.dataset.eur);
-  if(eur) el.textContent = fmtAreaPrice(eur);
+  var gmd = parseFloat(el.dataset.gmd);
+  if(gmd) el.textContent = fmtAreaPrice(gmd);
 });
 
 </script>

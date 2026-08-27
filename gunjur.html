@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:0vqefh6--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:1mllqs6--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -40,8 +40,8 @@
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="images/gunjur-mob.webp" as="image" media="(max-width:640px)" fetchpriority="high">
 <link rel="preload" href="images/gunjur.webp" as="image" media="(min-width:641px)" fetchpriority="high">
-<link rel="stylesheet" href="styles.min.css?v=42639051255045">
-<link rel="stylesheet" href="areas.css?v=42639051255045">
+<link rel="stylesheet" href="styles.min.css?v=177881360145938">
+<link rel="stylesheet" href="areas.css?v=177881360145938">
 
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://mykunda.com/"},{"@type":"ListItem","position":2,"name":"Areas in The Gambia","item":"https://mykunda.com/areas-in-the-gambia.html"},{"@type":"ListItem","position":3,"name":"Gunjur","item":"https://mykunda.com/gunjur.html"}]}
@@ -280,11 +280,11 @@
 window.__sbReady=new Promise(function(res){window.addEventListener('load',function(){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js';
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=42639051255045'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=177881360145938'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
   document.body.appendChild(s1);
 });});
 </script>
-<script src="app.min.js?v=42639051255045"></script>
+<script src="app.min.js?v=177881360145938"></script>
 <script>
 vIc.innerHTML = ICON.star; hPin.innerHTML = ICON.pin;
 if(typeof plusCodeChip==='function'){
@@ -358,7 +358,7 @@ var areaName = 'Gunjur';
 })();
 
 // compare
-var comp=[["Gunjur",8],["Sanyang",11.3],["Tanji",25.2],["Kartong",8.7],["Brufut",26.6]];
+var comp=[['Gunjur',682],['Sanyang',972],['Tanji',2163],['Kartong',742],['Brufut',2282]];
 compareList.innerHTML = comp.map(function(c,i){return '<div class="compare-row"><span class="nm">'+c[0]+(i===0?' (here)':'')+'</span><span class="pr">'+fmtAreaPrice(c[1])+'</span></div>';}).join('');
 
 // satellite map
@@ -390,7 +390,7 @@ function initAreaMap(){
 
 // Currency conversion for area prices
 function updateAreaPrices(){
-  var v=[["qs0",7.95],["pf0",7.95],["qs1",3184],["pf1",3184],["qs2",39072],["pf2",39072]];
+  var v=[["qs0",682],["pf0",682],["qs1",273000],["pf1",273000],["qs2",3350000],["pf2",3350000]];
   v.forEach(function(p){ var e=document.getElementById(p[0]); if(e) e.textContent=fmtAreaPrice(p[1]); });
 }
 updateAreaPrices();

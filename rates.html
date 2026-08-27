@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1qdapik--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1qgzlfs--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=42639051255045">
+<link rel="stylesheet" href="styles.min.css?v=177881360145938">
 <style>
 body{background:var(--paper-2)}
 .admin{max-width:1180px;margin:0 auto;padding:34px 28px 70px}
@@ -147,10 +147,10 @@ body{background:var(--paper-2)}
 <div id="footer"></div>
 
 <script src="vendor/supabase-js-2.umd.js"></script>
-<script src="supabase.js?v=42639051255045"></script>
-<script src="app.min.js?v=42639051255045"></script>
-<script src="admin-nav.js?v=42639051255045"></script>
-<script src="admin-guard.js?v=42639051255045"></script>
+<script src="supabase.js?v=177881360145938"></script>
+<script src="app.min.js?v=177881360145938"></script>
+<script src="admin-nav.js?v=177881360145938"></script>
+<script src="admin-guard.js?v=177881360145938"></script>
 <script>
 document.getElementById('header').innerHTML = headerHTML('', false);
 document.getElementById('footer').innerHTML = footerHTML();
@@ -210,7 +210,7 @@ if(typeof backendReady==='function' && backendReady()){
     box.style.background = due ? 'var(--amber-50)' : 'var(--paper)';
     box.style.border = '1.5px solid ' + (due ? 'var(--amber-200)' : 'var(--line)');
     box.innerHTML = 'Plan prices were last reviewed on <b>' + PRICING.reviewedAt +
-      '</b> at D' + PRICING.referenceRate + ' per euro. The rate is now D' + CURRENCIES.GMD.rate.toFixed(2) +
+      '</b> at D' + PRICING.referenceRate + ' per euro. The rate is now D' + CURRENCIES.EUR.gmdPer.toFixed(2) +
       ' — a drift of <b>' + pctTxt + '</b>. ' +
       (due
         ? '<span style="color:var(--amber-600);font-weight:700">Time to re-round them.</span> Edit <code>PRICING</code> in <code>app.js</code>: set new tidy dalasi amounts, update the euro references, bump <code>reviewedAt</code>.'

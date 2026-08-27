@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0b6ohx9--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0sufywb--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://api.maptiler.com" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=42639051255045">
+<link rel="stylesheet" href="styles.min.css?v=177881360145938">
 <style>
 body{background:var(--paper-2);min-height:100vh}
 
@@ -663,18 +663,18 @@ body{background:var(--paper-2);min-height:100vh}
   </aside>
 </div>
 
-<script src="valuation-areas.js?v=42639051255045"></script>
-<script src="valuation.js?v=42639051255045"></script>
-<script src="app.min.js?v=42639051255045"></script>
-<script src="gambia-places.js?v=42639051255045" defer></script>
-<script src="image-slot.js?v=42639051255045" defer></script>
+<script src="valuation-areas.js?v=177881360145938"></script>
+<script src="valuation.js?v=177881360145938"></script>
+<script src="app.min.js?v=177881360145938"></script>
+<script src="gambia-places.js?v=177881360145938" defer></script>
+<script src="image-slot.js?v=177881360145938" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel, Leaflet (~145 KB) only when the
    seller reaches the location step. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=42639051255045'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=177881360145938'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -747,7 +747,13 @@ function listingFields(){
     description: S.desc||null,
     street: S.street||null,
     area: S.area||null,
-    price: Math.round(askingGMD()/CURRENCIES.GMD.rate),
+    /* Dalasi in, dalasi opgeslagen. Tot 27-08-2026 werd hier door de
+       eurokoers gedeeld: een verkoper typte D2.000.000 en kreeg het bedrag
+       een week later als D2.040.000 terug omdat de koers was verschoven.
+       En create-payment toetst listings.price op dalasigrenzen, dus een
+       euro-opslag zette elke verkoopadvertentie in de goedkoopste
+       Verified-band. */
+    price: askingGMD(),
     negotiable: !!S.neg,
     beds: parseInt(S.beds)||0,
     baths: parseInt(S.baths)||0,
@@ -780,13 +786,14 @@ function listingFields(){
     seller_type: S.who||null,
     company_name: (S.who==='business' && (S.company||'').trim()) ? S.company.trim() : null,
     fee_type: S.who==='business' ? (S.feeType||'none') : 'none',
+    /* Een percentage is geen bedrag en gaat ongemoeid; een vast bedrag is
+       dalasi, net als de vraagprijs. */
     fee_value: (S.who==='business' && (S.feeType==='pct'||S.feeType==='fixed'))
-      ? (S.feeType==='pct'
-          ? (parseInt(String(S.feeVal||'').replace(/[^0-9]/g,''),10)||null)
-          : (Math.round((parseInt(String(S.feeVal||'').replace(/[^0-9]/g,''),10)||0)/CURRENCIES.GMD.rate)||null))
+      ? (parseInt(String(S.feeVal||'').replace(/[^0-9]/g,''),10)||null)
       : null,
-    /* Deposit in EUR, like price: one unit in the database, converted on screen. */
-    deposit: isRent() ? (Math.round((parseInt(String(S.deposit||'').replace(/[^0-9]/g,''),10)||0)/CURRENCIES.GMD.rate)||null) : null,
+    /* Borg in dalasi, net als de prijs: één eenheid in de database, op het
+       scherm omgerekend naar wat de bezoeker kiest. */
+    deposit: isRent() ? (parseInt(String(S.deposit||'').replace(/[^0-9]/g,''),10)||null) : null,
     price_period: isRent() ? (S.period||'month') : null,
     min_term_months: isRent() ? (parseInt(S.minTerm)||null) : null,
     bills_included: (isRent() && S.bills.length) ? S.bills.slice() : null
@@ -840,7 +847,7 @@ async function loadDraft(id){
     S.plan = ({basic:1,boost:1,verified:1}[data.plan]) ? data.plan : 'basic';
     if(typeof data.lat==='number'){ S.lat=data.lat; S.lng=data.lng; S.plus=data.plus_code||''; }
     if(data.boundary && boundaryToPairs(data.boundary).length>=3){ S.boundary=data.boundary; S.boundarySqm=data.boundary.area_m2||0; }
-    S.price = data.price ? String(Math.round(data.price*CURRENCIES.GMD.rate)) : '';   // DB is EUR, wizard is GMD
+    S.price = data.price ? String(Math.round(data.price)) : '';   // database en wizard rekenen allebei in dalasi
     const pick=(k,d)=>(data[k]!==null&&data[k]!==undefined)?String(data[k]):d;
     S.condition=pick('condition',S.condition); S.floors=pick('floors',S.floors); S.view=pick('view',S.view);
     S.security=pick('security',S.security); S.furnished=pick('furnished',S.furnished);
@@ -854,12 +861,12 @@ async function loadDraft(id){
     S.nearby=Array.isArray(data.nearby)?data.nearby:[];
     S.contactName=data.contact_name||''; S.contactPhone=data.contact_phone||''; S.contactEmail=data.contact_email||'';
     S.who=data.seller_type||''; S.feeType=data.fee_type||'none';
-    /* pct is a plain percentage; a fixed fee is stored in EUR like price. */
-    S.feeVal = data.fee_value ? String(S.feeType==='fixed' ? Math.round(data.fee_value*CURRENCIES.GMD.rate) : data.fee_value) : '';
+    /* pct is een kaal percentage; een vast bedrag staat in dalasi, net als de prijs. */
+    S.feeVal = data.fee_value ? String(S.feeType==='fixed' ? Math.round(data.fee_value) : data.fee_value) : '';
     S.company=data.company_name||'';
     if(S.who) S.confirmWho=true;
     if(S.who==='business') S.mandate=true;
-    S.deposit = data.deposit ? String(Math.round(data.deposit*CURRENCIES.GMD.rate)) : '';
+    S.deposit = data.deposit ? String(Math.round(data.deposit)) : '';
     S.period = PERIODS[data.price_period]?data.price_period:'month';
     S.minTerm = data.min_term_months?String(data.min_term_months):'';
     S.bills = Array.isArray(data.bills_included)?data.bills_included.slice():[];
@@ -978,7 +985,7 @@ function bandLabel(){
   return 'D'+B[i-1].max.toLocaleString('en-US')+' – D'+B[i].max.toLocaleString('en-US');
 }
 function planPriceGMD(key){ return planPriceFor(key, askingGMD(), S.deal); }
-function gmdIn(gmd){ return CURRENCIES[getCurrency()].symbol + Math.round(gmd/CURRENCIES.GMD.rate*CURRENCIES[getCurrency()].rate).toLocaleString('en-US'); }
+function gmdIn(gmd){ return CURRENCIES[getCurrency()].symbol + Math.round(fromGMD(gmd)).toLocaleString('en-US'); }
 
 /* ---- Four tracks, one wizard ----
    Selling a plot of land and letting out a flat have almost nothing in common:
@@ -2443,7 +2450,10 @@ function mkPriceGuide(){
     furnished: S.furnished, finish: 'standard'
   }, { LAND_BASE: (window.MK_RATES||{}).LAND || {} });
   if(!r || r.ok===false){ box.style.display='none'; return; }
-  const gmd = v => 'D' + Math.round(v * CURRENCIES.GMD.rate / CURRENCIES.EUR.rate).toLocaleString('en-US');
+  /* MK_VAL.value() rekent intern in euro's — het waarderingsmodel is daarin
+     geijkt, zie de kop van valuation.js. Hier is de grens: vanaf dit punt
+     is alles dalasi. */
+  const gmd = v => 'D' + Math.round(v * CURRENCIES.EUR.gmdPer).toLocaleString('en-US');
   box.style.display='block';
   box.innerHTML = 'Comparable properties in this area work out around <b>' + gmd(r.mid)
     + '</b> (' + gmd(r.low) + ' \u2013 ' + gmd(r.high) + '). '
@@ -2493,7 +2503,7 @@ function updateSummary(){
     setV('sumFee', biz?feeLabel():'');
   }
   const sym=CURRENCIES[getCurrency()].symbol;
-  const planPriceDisplay=function(gmd){return sym+Math.round(gmd/CURRENCIES.GMD.rate*CURRENCIES[getCurrency()].rate).toLocaleString('en-US');};
+  const planPriceDisplay=function(gmd){return sym+Math.round(fromGMD(gmd)).toLocaleString('en-US');};
   const planLabel={basic:'Basic',boost:'Boost',verified:'Verified'}[S.plan]||'Basic';
   const planGmd=planPriceGMD(S.plan);
   setV('sumPlan', planGmd? planLabel+' · '+planPriceDisplay(planGmd) : 'Basic · Free');
@@ -2685,7 +2695,7 @@ async function publish(){
     isNew:true, verified:(S.plan!=='basic'),
     plan:S.plan,
     status:(S.plan==='basic'?'Active':'In review'),
-    price:Math.round((parseInt(S.price)||0)/CURRENCIES.GMD.rate),
+    price:parseInt(S.price)||0,   /* dalasi — fmtPrice() rekent zelf om */
     title:S.customTitle || (titleFeat+catLabel()).trim(),
     street:S.street||(S.area?S.area.split(' · ')[0]:'The Gambia'),
     area:S.area||'Kololi · Kombo North',

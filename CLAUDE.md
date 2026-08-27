@@ -716,16 +716,72 @@ te zien is hoe oud ze zijn. Werk ze bij als je toch in dat blok zit; het is
 geen tweede bron maar een startwaarde, en de function overschrijft hem binnen
 een seconde.
 
-### Wat hier nog niet klopt
+## Dalasi is de opslageenheid, niet alleen de weergave
 
-Bedragen worden **in dalasi waargenomen, in euro's opgeslagen** en op het
-scherm weer met de live koers vermenigvuldigd. Zakt de dalasi 5%, dan stijgt
-elke dalasiprijs op de site 5% zonder dat er iets gemeten is, en de vraagprijs
-die een verkoper als D2.000.000 intypte komt er een week later als D2.040.000
-uit. `create-payment` geeft daarbij `listings.price` — euro's — door aan
-`verifiedBandVoor()`, die op dalasigrenzen toetst; elke verkoopadvertentie
-belandt daardoor in de goedkoopste Verified-band. Het besluit is om de dalasi
-de opslageenheid te maken; dat is nog niet uitgevoerd.
+Sinds 27-08-2026 wordt elk bedrag **opgeslagen in dalasi** en pas in de
+browser omgerekend naar de munt die de bezoeker kiest. Daarvóór stond alles
+in euro's en werd het met de live koers naar dalasi vermenigvuldigd. Dat
+ging op twee manieren mis:
+
+* **Prijzen bewogen mee met de munt.** Zakte de dalasi 5%, dan stond elke
+  dalasiprijs op de site de volgende ochtend 5% hoger zonder dat er iets was
+  gemeten — en de vraagprijs die een verkoper als D2.000.000 intypte, kwam er
+  een week later als D2.040.000 uit.
+* **`create-payment` rekende met dalasigrenzen op een eurobedrag.** Een villa
+  van D12.000.000 kwam binnen als ~140.000 en viel daarmee onder de grens van
+  D2.000.000: `verified_s`, D4.500 in plaats van D16.000. Elke
+  verkoopadvertentie zat in de goedkoopste band.
+
+### De regel
+
+**Een bedrag gaat de database in zoals het is afgesproken, en dat is in
+dalasi.** `listings.price`, `deposit` en een vaste `fee_value` worden niet
+meer omgerekend bij het opslaan of terugladen. `fromGMD()` in `app.js` is de
+enige plek die van dalasi naar een andere munt gaat; `convert()` is dezelfde
+functie onder zijn oude naam.
+
+Het haakje in de HTML heet `data-gmd`, niet meer `data-eur`. Een attribuut
+dat "eur" heet met dalasi erin is precies hoe een eenheid zoekraakt.
+
+`build-area-prices.mjs` deelt niet meer door `DB.fx.eur`. Dat blok blijft in
+`area-prices.json` staan als vastlegging van de koers waarop is gemeten —
+het brengt de dollar- en eurokolom uit de bronadvertenties naar dalasi — maar
+het rekent nergens meer mee.
+
+### Wat bewust in euro's blijft
+
+Twee dingen zijn geen afgeleide van een dalasibedrag maar een eigen markt of
+een eigen ijking, en die blijven staan:
+
+* `PORTAL_RATE` in `valuation.js` — het diaspora-aanbod wordt in euro's
+  geadverteerd en is in euro's waargenomen. Er in dalasi over rekenen zou een
+  tweede markt wegpoetsen die er echt is.
+* De tarieventabellen van de schatter in `sell.html` en de bouwkosten in
+  `valuation.js` zijn in euro's geijkt. Ze staan er met bronvermelding en een
+  herijkdatum; omzetten is een herijking, geen verhuizing. **Openstaand
+  besluit.** Zolang dat niet genomen is, converteert `money()` in `sell.html`
+  eerst naar dalasi (`* CURRENCIES.EUR.gmdPer`) en daarna pas naar de
+  weergavemunt — die functie mag `convert()` níét rechtstreeks op een
+  eurobedrag loslaten, want dan wordt er gedeeld waar vermenigvuldigd hoort.
+
+De marktindex (`market_observations.price_usd`, `market_snapshots`) blijft
+in dollars. Dat is een index met veertig maanden geschiedenis waarin de
+eenheid tegen zichzelf wegvalt, en `market-sources` haalt zijn koers al uit
+`fx_rates`. Omzetten zou geschiedenis herschrijven zonder iets op te
+lossen.
+
+### Twee stille fouten die hierbij boven kwamen
+
+**De vergelijkingslijst op de areapagina's werd nooit bijgewerkt.** De
+generator zocht op `var comp=` met dubbele aanhalingstekens; de pagina's
+schrijven `const comp=` met enkele. Hij matchte dus geen enkele pagina, en de
+melding daarover stond binnen de `replace` die nooit draaide. Sindsdien
+tolerant op beide, en een gemiste match is nu een gemeld probleem.
+
+**De wijktegels op de voorpagina stonden met de hand in de pagina.** Kololi
+was er D83.747/m², op `/buy` D95.450, en op de areapagina zelf D8.800 —
+met een koers van D83,00 per euro ingebakken die nergens anders voorkomt. Ze
+komen nu uit `area-prices.json` en heten "Land", net als overal elders.
 
 ## Gebiedsprijzen: één bron, en huur nooit uit een prijs
 

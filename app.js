@@ -576,7 +576,7 @@ function planPriceFor(plan, askingGMD, deal){
   return 0;
 }
 /* How far the live rate has moved from the rate the prices were set against. */
-function pricingDrift(){ return CURRENCIES.GMD.rate / PRICING.referenceRate - 1; }
+function pricingDrift(){ return CURRENCIES.EUR.gmdPer / PRICING.referenceRate - 1; }
 function pricingReviewDue(){
   const months = (Date.now() - new Date(PRICING.reviewedAt).getTime()) / 2592000000;
   return Math.abs(pricingDrift()) > PRICING.driftTolerance || months > 3;
@@ -760,15 +760,30 @@ function getCurrency(){ const c=localStorage.getItem('mykunda_ccy'); return CURR
 function setCurrency(c){ if(CURRENCIES[c]) localStorage.setItem('mykunda_ccy', c); }
 
 /* (duplicate migration removed — handled by migrateCcy above) */
-function convert(eur){ return eur * CURRENCIES[getCurrency()].rate; }
 
-/* Format area market prices (stored in EUR) in current currency */
-function fmtAreaPrice(eur){
-  var val = Math.round(eur * CURRENCIES[getCurrency()].rate);
+/* ---------- Van dalasi naar de gekozen munt ----------
+   Elk bedrag dat de site laat zien is een DALASIbedrag. Een vraagprijs is
+   in dalasi afgesproken, een gebiedsprijs is in dalasi waargenomen, een
+   planprijs is in dalasi gefactureerd. De euro, dollar en pond zijn wat
+   een bezoeker er desgewenst naast wil zien.
+
+   Tot 27-08-2026 was het andersom: bedragen stonden in euro's en werden
+   met de live koers naar dalasi vermenigvuldigd. Daardoor steeg elke
+   dalasiprijs op de site zodra de dalasi zakte, zonder dat er iets was
+   gemeten, en kwam een vraagprijs van D2.000.000 een week later als
+   D2.040.000 terug bij de verkoper die hem had ingetypt. */
+function fromGMD(gmd){ return gmd / CURRENCIES[getCurrency()].gmdPer; }
+/* Historische naam, zelfde functie — hij staat op te veel plekken om te
+   hernoemen zonder iets te breken. Neemt dalasi, geeft de weergavemunt. */
+function convert(gmd){ return fromGMD(gmd); }
+
+/* Format area market prices (stored in GMD) in current currency */
+function fmtAreaPrice(gmd){
+  var val = Math.round(fromGMD(gmd));
   return CURRENCIES[getCurrency()].symbol + val.toLocaleString('en-US');
 }
-function fmtAreaPriceK(eur){
-  var val = Math.round(eur * CURRENCIES[getCurrency()].rate / 1000);
+function fmtAreaPriceK(gmd){
+  var val = Math.round(fromGMD(gmd) / 1000);
   return CURRENCIES[getCurrency()].symbol + val.toLocaleString('en-US') + 'k';
 }
 function ccyLabel(){ return getCurrency(); }
@@ -786,23 +801,26 @@ function pinInner(p, type){
   if(type==='rent') return c.symbol + Math.round(v).toLocaleString();
   return v>=1000000 ? c.symbol+(v/1000000).toFixed(v%1000000?2:1).replace(/\.?0+$/,'')+'M' : c.symbol+Math.round(v/1000).toLocaleString('en-US')+'k';
 }
-/* The euro amount rides along in data-eur so onRatesUpdated() can recompute a
-   price that was already painted with the built-in fallback rate. */
+/* Het dalasibedrag rijdt mee in data-gmd, zodat onRatesUpdated() een prijs
+   kan herberekenen die al met de noodkoers was getekend. Heette data-eur
+   tot 27-08-2026; de inhoud is nu dalasi, dus de naam moest mee — een
+   attribuut dat "eur" heet met dalasi erin is precies hoe een eenheid
+   zoekraakt. */
 function fmtPrice(p, type){
-  return '<span data-eur="'+p+'" data-ptype="'+(type||'')+'">'+priceInner(p,type)+'</span>';
+  return '<span data-gmd="'+p+'" data-ptype="'+(type||'')+'">'+priceInner(p,type)+'</span>';
 }
 function fmtPin(p, type){
-  return '<span data-eur="'+p+'" data-ptype="'+(type||'')+'" data-pin="1">'+pinInner(p,type)+'</span>';
+  return '<span data-gmd="'+p+'" data-ptype="'+(type||'')+'" data-pin="1">'+pinInner(p,type)+'</span>';
 }
 
 /* Called when live rates land after first paint. Without this every cold-cache
    visitor kept the fallback numbers for the whole session. */
 function onRatesUpdated(){
-  document.querySelectorAll('[data-eur]').forEach(function(el){
-    const eur = parseFloat(el.getAttribute('data-eur'));
-    if(!(eur > 0)) return;
+  document.querySelectorAll('[data-gmd]').forEach(function(el){
+    const gmd = parseFloat(el.getAttribute('data-gmd'));
+    if(!(gmd > 0)) return;
     const t = el.getAttribute('data-ptype') || undefined;
-    el.innerHTML = el.hasAttribute('data-pin') ? pinInner(eur, t) : priceInner(eur, t);
+    el.innerHTML = el.hasAttribute('data-pin') ? pinInner(gmd, t) : priceInner(gmd, t);
   });
   document.querySelectorAll('[data-ccy-cross]').forEach(function(el){
     const k = el.getAttribute('data-ccy-cross');
@@ -810,7 +828,7 @@ function onRatesUpdated(){
     el.textContent = '= D' + CURRENCIES[k].gmdPer.toLocaleString('en-US', {minimumFractionDigits:1,maximumFractionDigits:1});
   });
   /* Area-guide pages (qs0/qs1/qs2/chartBigPrice/breakdown) paint with whatever
-     rate was live at parse time and carry no data-eur hook — without this they'd
+     rate was live at parse time and carry no data-gmd hook — without this they'd
      stay stuck on a stale/fallback rate even after the live rate lands. */
   if(typeof updateAreaPrices === 'function') updateAreaPrices();
 }
@@ -1393,8 +1411,18 @@ function mkFinder(mountId, mode){
   function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').split('"').join('&quot;'); }
   function isLand(){ return S.cats.length>0 && S.cats.every(c=>c==='land'); }
   function tick(){ return '<svg class="mkf-tick" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'; }
-  function steps(){ return isRent ? [100,150,200,300,400,600,800,1200,2000,3500] : [25000,50000,75000,100000,150000,200000,300000,500000,750000,1000000]; }
-  function money(eur){ return fmtAreaPrice(eur); }
+  /* Filterdrempels in DALASI, want listings.price staat in dalasi en een
+     filter dat in een andere eenheid rekent dan het veld waarop het filtert
+     is stil kapot. Dit zijn de oude eurodrempels omgerekend tegen D85,74 en
+     op ronde dalasibedragen gelegd — de banden verschuiven daarmee hooguit
+     een paar procent, maar ze lezen nu als bedragen die iemand in Gambia
+     ook echt zou noemen. */
+  function steps(){
+    return isRent
+      ? [8000, 12500, 17500, 25000, 35000, 50000, 70000, 100000, 175000, 300000]
+      : [2000000, 4000000, 6500000, 8500000, 12500000, 17500000, 25000000, 42500000, 65000000, 85000000];
+  }
+  function money(gmd){ return fmtAreaPrice(gmd); }
   function look(list, v){ for(const o of list){ if(String(o[0])===String(v)) return o[1]; } return v; }
   function catLabel(v){ let out=v; MK_CATEGORIES.forEach(g=>g[1].forEach(t=>{ if(t[1]===v) out=t[0]; })); return out; }
   function servList(){ return isLand() ? MK_SERV_LAND : MK_SERV_BUILT; }
@@ -2098,7 +2126,7 @@ function warnPricingDrift(){
   }
   if(typeof isLocalAdmin === 'function' && isLocalAdmin() && pricingReviewDue()){
     console.warn('[MyKunda] Listing plan prices need re-rounding — reviewed ' + PRICING.reviewedAt +
-      ' at D' + PRICING.referenceRate + '/€1, live rate D' + CURRENCIES.GMD.rate +
+      ' at D' + PRICING.referenceRate + '/€1, live rate D' + CURRENCIES.EUR.gmdPer +
       ' (' + Math.round(pricingDrift()*100) + '% drift). See PRICING in app.js.');
   }
 }

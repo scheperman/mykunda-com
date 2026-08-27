@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:1h8eok1--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:03zn1p3--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -31,7 +31,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=42639051255045">
+<link rel="stylesheet" href="styles.min.css?v=177881360145938">
 <style>
 /* hero */
 .shero{position:relative;color:#fff;margin-top:calc(-1 * var(--header-h));isolation:isolate;overflow:hidden}
@@ -944,13 +944,13 @@
 window.__sbReady=new Promise(function(res){window.addEventListener('load',function(){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js';
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=42639051255045'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=177881360145938'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
   document.body.appendChild(s1);
 });});
 </script>
-<script src="valuation-areas.js?v=42639051255045"></script>
-<script src="valuation.js?v=42639051255045"></script>
-<script src="app.min.js?v=42639051255045"></script>
+<script src="valuation-areas.js?v=177881360145938"></script>
+<script src="valuation.js?v=177881360145938"></script>
+<script src="app.min.js?v=177881360145938"></script>
 <script>
 
 // icons
@@ -983,10 +983,10 @@ plans.forEach(([id,items])=>{
 // plan prices (currency-aware)
 function ccySym(){ return CURRENCIES[getCurrency()].symbol; }
 function fmtCcy(v){ return ccySym() + Math.round(v).toLocaleString('en-US'); }
-function gmdToCcy(gmd){ return Math.round(gmd / CURRENCIES.GMD.rate * CURRENCIES[getCurrency()].rate); }
+function gmdToCcy(gmd){ return Math.round(fromGMD(gmd)); }
 /* The seller's own asking price, so no band is ever a surprise. */
 var bpDeal = 'sale', bpGMD = 0;
-function ccyToGmd(v){ return v / CURRENCIES[getCurrency()].rate * CURRENCIES.GMD.rate; }
+function ccyToGmd(v){ return v * CURRENCIES[getCurrency()].gmdPer; }
 function bpActiveIndex(){
   if(bpDeal === 'rent') return 0;
   if(!bpGMD) return -1;
@@ -1147,9 +1147,20 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
   }
   const PLUS_RE=/[23456789cfghjmpqrvwx]{4,8}\+[23456789cfghjmpqrvwx]{2,3}/i;
   const emailOk=v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  /* LET OP — deze schatter is in EURO's geijkt (zie de tarieventabellen
+     hierboven), terwijl de rest van de site sinds 27-08-2026 in dalasi
+     rekent. `convert()` neemt dalasi, dus die mag hier NIET rechtstreeks
+     op een eurobedrag: dat zou elk tarief door de koers delen in plaats
+     van vermenigvuldigen — een huis van EUR 900 per m² kwam dan als D10
+     op het scherm. Daarom eerst naar dalasi, dan pas naar de weergavemunt.
+
+     Dat deze tabellen in euro's staan is een openstaand punt: ze zijn
+     tegen ~85 GMD/EUR geijkt op dalasi-advertenties, dus de euro is ook
+     hier de afgeleide. Omzetten is een herijking van een geijkt model en
+     hoort een besluit te zijn, geen bijvangst van deze wijziging. */
   function money(eurVal){
     const c=CURRENCIES[getCurrency()];
-    const v=convert(eurVal);
+    const v=fromGMD(eurVal * CURRENCIES.EUR.gmdPer);
     const step = v>=200000?5000 : v>=50000?1000 : v>=2000?500 : v>=100?10 : 1;
     const r=Math.round(v/step)*step;
     return c.symbol + r.toLocaleString('en-US');
@@ -1676,7 +1687,7 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
       if(S.area) p.set('area',S.area);
       if(S.plot) p.set(S.type==='land'?'sqm':'plot', S.plot);
       if(S.built) p.set('sqm', S.built);
-      p.set('price', Math.round(r.mid*(CURRENCIES.GMD.rate/CURRENCIES.EUR.rate)));
+      p.set('price', Math.round(r.mid*(CURRENCIES.EUR.gmdPer)));
       return 'list.html?'+p.toString();
     };
   }
