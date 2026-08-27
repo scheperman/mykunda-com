@@ -926,3 +926,56 @@ een correctiefactor.
 
 De eenmalige scripts van deze herijking staan in `_werk/` met de datum in de
 naam. Ze zijn geschiedenis, geen onderdeel van de bouw.
+
+
+## De naam in de begroeting komt uit de sessie, niet uit de cache
+
+`localStorage.mykunda_user` is een weergavecache, geen bron van waarheid. Bij
+een vroege aanmelding werd de naam daar afgeleid uit het e-mailadres
+(`edwinscheperman@gmail.com` -> `Edwinscheperman`). Alles wat op voornaam groet
+doet `split(' ')[0]`, en zonder spatie levert dat de hele naam op — de code was
+goed, de data niet.
+
+De regel: de naam die het account draagt wint van de naam in de cache.
+
+* `auth.html` schrijft na OTP-verificatie de naam uit het account
+  (`user_metadata.full_name` of `.name`) en valt alleen terug op de uit het
+  e-mailadres afgeleide naam als het account niets draagt. Het magic-linkpad
+  doet hetzelfde.
+* `supabase.js` heeft `syncCachedUserName()`, die bij elke paginalading de
+  cache geneest. Die leest `sb.auth.getSession()` — dat komt uit local storage,
+  dus het kost geen netwerkcall. Alleen als de sessie zelf geen naam draagt
+  volgt één `profiles.full_name`-lookup.
+* Draait één tick ná `DOMContentLoaded`: `app.js` tekent de header in zijn
+  eigen listener, en wij corrigeren wat er staat in plaats van ermee te racen.
+  Gecorrigeerd worden `.user-chip` (naam, initialen, `title`) en `#welcomeName`.
+
+Wie iets nieuws bouwt dat de naam toont: lees `getUser()`, toon de voornaam, en
+laat het genezen aan `syncCachedUserName()` over. Schrijf niet nog ergens een
+eigen afleiding uit het e-mailadres.
+
+## Een vastgezette balk hoort bij zijn sectie
+
+`.mkv-rail` op `sell.html` — de ESTIMATED VALUE-balk — is onder 980px
+`position:fixed;bottom:0`. Er stond niets tegenover, dus hij bleef over de
+prijstabel, de FAQ, de voettekst en de WhatsApp-knop staan, de hele pagina lang.
+
+De regel: wat `position:fixed` is, hoort weg zodra de sectie waar het bij hoort
+uit beeld is. In `sell.html` doet een `IntersectionObserver` op `#value` dat:
+buiten beeld krijgt de balk `data-off` (`transform:translateY(115%)` plus
+`pointer-events:none`, alleen binnen de mobiele media-query) en klapt hij dicht;
+in beeld gaat het attribuut eraf. Boven de sectie is hij nu ook weg, dus hij
+dekt de hero niet meer af. Desktop (>=980px) blijft `position:sticky` in zijn
+eigen kolom — daar doet het attribuut niets.
+
+De `#value{padding-bottom:152px}` blijft staan: die reserveert ruimte binnen de
+sectie, waar de balk wél hoort.
+
+### Na een upload ziet de eerste pagina er nog oud uit
+
+`sw.js` bedient HTML stale-while-revalidate: de gecachte pagina schildert
+meteen en de verse kopie wordt op de achtergrond opgehaald voor de volgende
+keer. Bij het controleren van een verse upload is de eerste lading dus nog de
+oude — herlaad één keer, of kijk in een privévenster. Dat is het ontwerp, geen
+storing. `dashboard`, `list`, `checkout`, `auth` en de andere ingelogde
+pagina's staan in `isPrivate()` en worden nooit bewaard; die zijn meteen vers.
