@@ -1,8 +1,22 @@
 // ============================================================
 //  MyKunda — branded email system
-//  Deployed copy for notify-signup: shared primitives + the two
-//  account templates. The repo's full _shared/email-template.ts is
-//  the source of truth; keep the two functions below in sync there.
+//  One layout, one voice, for every automated message the site
+//  sends. Edge Functions build a Mail object and hand it to
+//  Resend; nothing composes raw HTML by itself any more.
+//
+//    import { leadAutoReplyEmail, toText } from '../_shared/email-template.ts';
+//    const html = leadAutoReplyEmail(lead);
+//    send({ html, text: toText(html) });
+//
+//  Every template goes through emailWrap(), which supplies:
+//   · preheader (the grey preview line in the inbox)
+//   · a bulletproof CTA button that also renders in Outlook
+//   · light-mode lock, so dark-mode clients don't invert the card
+//   · a footer with real contact details + optional unsubscribe
+//  Visitor input is escaped HERE — callers pass raw values.
+//
+//  Listing templates live in ./email-listing.ts and are
+//  re-exported at the bottom, so importers only need this file.
 // ============================================================
 
 export const BRAND = {
@@ -27,6 +41,14 @@ export const BRAND = {
   font: `-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Helvetica,Arial,sans-serif`,
 };
 
+/** Public download link for the Diaspora Buyer's Checklist lead magnet.
+ *  File lives in the public `lead-magnets` Storage bucket — upload it there
+ *  once via Supabase Studio (Storage → lead-magnets), keep this filename. */
+const DIASPORA_CHECKLIST_URL =
+  'https://jejaerpqltqryqzjvbjp.supabase.co/storage/v1/object/public/lead-magnets/MyKunda-Diaspora-Buyers-Checklist.pdf';
+
+/* ---------- escaping & small text helpers ---------- */
+
 export function esc(v: unknown): string {
   if (v === null || v === undefined) return '';
   return String(v)
@@ -34,20 +56,28 @@ export function esc(v: unknown): string {
     .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
+/** Escaped, or undefined when there is nothing worth showing. */
 export function escOpt(v: unknown): string | undefined {
   if (v === null || v === undefined || String(v).trim() === '') return undefined;
   return esc(v);
 }
 
+/** Escape and keep the line breaks a visitor typed. */
 export function escLines(v: unknown): string {
   return esc(v).replace(/\r?\n/g, '<br>');
 }
 
+/** Only allow http(s) URLs into href — never javascript: from a data field. */
 export function safeUrl(v: unknown): string {
   const s = String(v ?? '').trim();
   return /^https?:\/\//i.test(s) ? esc(s) : '';
 }
 
+/**
+ * Plain-text alternative. Resend sends it alongside the HTML: it keeps the
+ * message readable in text-only clients and measurably improves spam scoring,
+ * which is why every send site passes toText(html).
+ */
 export function toText(html: string): string {
   return html
     .replace(/<div id="preheader"[\s\S]*?<\/div>/i, '')
@@ -58,6 +88,7 @@ export function toText(html: string): string {
     .replace(/<a [^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/gi, (_m, href: string, label: string) => {
       const l = label.replace(/<[^>]+>/g, '').trim();
       if (!l) return href;
+      // mailto:/tel: already read as the address — don't repeat it in brackets
       if (/^(mailto|tel):/i.test(href)) return l;
       return href && href.indexOf(l) === -1 ? `${l} (${href})` : l;
     })
@@ -75,6 +106,9 @@ export function toText(html: string): string {
     .trim();
 }
 
+/* ---------- building blocks ---------- */
+
+/** Label/value table — the house style for any set of details. */
 export function detailTable(rows: [string, unknown][], tone: 'paper' | 'amber' = 'paper'): string {
   const body = rows
     .filter(([, v]) => v !== null && v !== undefined && String(v).trim() !== '')
@@ -84,10 +118,12 @@ export function detailTable(rows: [string, unknown][], tone: 'paper' | 'amber' =
   return `<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="width:100%;border-collapse:collapse;background:${bg};border-radius:10px;margin:8px 0">${body}</table>`;
 }
 
+/** Small caps section label. */
 export function sectionLabel(text: string): string {
   return `<p style="font-size:12px;color:${BRAND.muted};font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin:22px 0 6px">${esc(text)}</p>`;
 }
 
+/** Highlighted callout — amber by default, red for something that went wrong. */
 export function callout(html: string, tone: 'amber' | 'green' | 'red' = 'amber'): string {
   const c = tone === 'red' ? { bg: '#FDECEC', bar: '#C0392B' }
     : tone === 'green' ? { bg: BRAND.green50, bar: BRAND.green }
@@ -104,13 +140,17 @@ function button(label: string, url: string): string {
   </td></tr>`;
 }
 
+/* ---------- the wrapper ---------- */
+
 export function emailWrap(opts: {
   heading: string;
   body: string;
   cta?: string;
   ctaUrl?: string;
   footer?: string;
+  /** Inbox preview line. Always set one — otherwise clients show stray markup. */
   preheader?: string;
+  /** Adds an unsubscribe line. Required for anything marketing-like. */
   unsubscribeUrl?: string;
 }): string {
   const { heading, body, cta, ctaUrl, footer, preheader, unsubscribeUrl } = opts;
@@ -185,9 +225,481 @@ ${pre}
 }
 
 /* ============================================================
-   ACCOUNT CREATED: welcome to the user + heads-up to the team
+   LEAD — team notification (to LEAD_EMAIL)
    ============================================================ */
 
+export const LEAD_LABELS: Record<string, string> = {
+  valuation: 'Property valuation request',
+  viewing: 'Viewing request',
+  agent_message: 'Message for an agent',
+  area_alert: 'Area-alert signup',
+  contact: 'Contact message',
+  listing_enquiry: 'Listing enquiry',
+  consultation: 'Free consultation booking',
+  whatsapp_inbound: 'WhatsApp message',
+  verification: 'New ownership check request',
+};
+
+export function leadNotificationEmail(lead: {
+  source: string; name?: string; email?: string; phone?: string;
+  area?: string; message?: string; payload?: any;
+}): string {
+  const label = LEAD_LABELS[lead.source] ?? 'New enquiry';
+  const who = escOpt(lead.name) || escOpt(lead.email) || 'a visitor';
+
+  const rows: [string, unknown][] = [
+    ['Type', esc(label)],
+    ['Name', escOpt(lead.name)],
+    ['Email', lead.email ? `<a href="mailto:${esc(lead.email)}" style="color:${BRAND.green};font-weight:600">${esc(lead.email)}</a>` : undefined],
+    ['Phone', lead.phone ? `<a href="tel:${esc(String(lead.phone).replace(/[^\d+]/g, ''))}" style="color:${BRAND.green};font-weight:600">${esc(lead.phone)}</a>` : undefined],
+    ['Area', escOpt(lead.area)],
+    ['Message', lead.message ? escLines(lead.message) : undefined],
+  ];
+
+  let extra = '';
+  const p = lead.payload ?? {};
+  if (lead.source === 'valuation' && p) {
+    extra = detailTable([
+      ['Property type', escOpt(p.type)],
+      ['Size', p.sqm ? `${esc(p.sqm)} m²` : undefined],
+      ['Estimated range', p.estimate_low && p.estimate_high
+        ? `$${Number(p.estimate_low).toLocaleString()} – $${Number(p.estimate_high).toLocaleString()}` : undefined],
+      ['Location input', escOpt(p.raw_location)],
+    ], 'amber');
+  }
+  if (lead.source === 'contact' && p.subject) {
+    extra = detailTable([['Subject', escOpt(p.subject)]], 'amber');
+  }
+  if (lead.source === 'contact' && p.lead_magnet) {
+    extra = detailTable([
+      ['Lead magnet', p.lead_magnet === 'diaspora_checklist' ? 'Diaspora Buyer’s Checklist' : escOpt(p.lead_magnet)],
+      ['Channel', escOpt(p.channel)],
+      ['Buying from', escOpt(p.where)],
+    ], 'amber');
+  }
+
+  return emailWrap({
+    heading: `New ${esc(label.toLowerCase())}`,
+    preheader: `${label} from ${who} — reply to this email to answer them directly.`,
+    body: `<p style="margin:0 0 14px">A new enquiry came in through the website. <strong>Reply to this email</strong> and your answer goes straight to ${who}.</p>
+      ${detailTable(rows)}${extra}`,
+    cta: 'Open admin console',
+    ctaUrl: `${BRAND.site}/admin.html`,
+    footer: 'Internal notification from the MyKunda website.',
+  });
+}
+
+/* ============================================================
+   LEAD — auto-reply to the visitor
+   ============================================================ */
+
+export function leadAutoReplyEmail(lead: { source: string; name?: string; payload?: any }): string {
+  const fname = lead.name ? esc(String(lead.name).trim().split(' ')[0]) : '';
+  let intro: string;
+  let extraBlock = '';
+  let ctaLabel = 'Browse properties';
+  let ctaUrl = `${BRAND.site}/search.html`;
+  let preheader = 'We have your message — here is what happens next.';
+  let unsubscribeUrl: string | undefined;
+
+  switch (lead.source) {
+    case 'valuation':
+      intro = 'Thanks for requesting a property valuation. A valuer we work with will review your property and confirm the exact figure with you within <strong>one working day</strong>.';
+      preheader = 'Your valuation request is in — a valuer confirms the figure within one working day.';
+      if (lead.payload?.estimate_low && lead.payload?.estimate_high) {
+        extraBlock = `<div style="background:${BRAND.paper};border-radius:10px;padding:20px 22px;margin:18px 0 6px;border-left:4px solid ${BRAND.amber}">
+            <p style="font-size:12px;color:${BRAND.muted};font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin:0 0 6px">Automated estimate</p>
+            <p style="font-size:22px;font-weight:800;color:${BRAND.ink};margin:0">$${Number(lead.payload.estimate_low).toLocaleString()} – $${Number(lead.payload.estimate_high).toLocaleString()}</p>
+            <p style="font-size:13px;color:${BRAND.muted2};margin:6px 0 0">Based on recent sales data · subject to in-person review</p>
+          </div>`;
+      }
+      ctaLabel = 'Explore similar properties';
+      break;
+    case 'contact':
+      if (lead.payload?.lead_magnet === 'diaspora_checklist') {
+        intro = 'Thanks for requesting the Diaspora Buyer’s Checklist. Your copy is ready below — eight pages covering the documents to demand, the questions to ask, and how to stage a payment safely from abroad.';
+        preheader = 'Your Diaspora Buyer’s Checklist is ready to download.';
+        ctaLabel = 'Download the checklist';
+        ctaUrl = DIASPORA_CHECKLIST_URL;
+      } else {
+        intro = 'Thanks for reaching out to MyKunda. Your message is with our team and someone will get back to you within <strong>one working day</strong>.';
+        preheader = 'Your message reached us — expect a reply within one working day.';
+      }
+      break;
+    case 'listing_enquiry':
+      intro = 'Thanks for your enquiry about this property. The listing agent has been notified and will respond within <strong>one working day</strong>.';
+      preheader = 'Your enquiry is with the listing agent.';
+      ctaLabel = 'View more properties';
+      break;
+    case 'area_alert':
+      intro = 'Your area alert is set up. As soon as a property matching your criteria comes online, you will hear from us first — no more than a handful of emails a month.';
+      preheader = 'Your area alert is live — new matches land in your inbox first.';
+      ctaLabel = 'Browse current listings';
+      unsubscribeUrl = `${BRAND.site}/contact.html?unsubscribe=1`;
+      break;
+    case 'viewing':
+      intro = 'Your viewing request has been received. We are checking it with the owner and will come back with times that work — usually the same day.';
+      preheader = 'Viewing request received — we are lining up times with the owner.';
+      ctaLabel = 'View your dashboard';
+      ctaUrl = `${BRAND.site}/dashboard.html`;
+      break;
+    case 'agent_message':
+      intro = 'Your message has been delivered to the agent. They will get back to you as soon as they can, usually within <strong>a few hours</strong>.';
+      preheader = 'Your message is with the agent.';
+      break;
+    case 'consultation':
+      intro = 'Your free consultation is booked. An advisor will email you shortly with a time slot and a calendar invite. The call takes 20 minutes and there is no obligation.';
+      preheader = 'Your free consultation is booked — we will confirm a time shortly.';
+      ctaLabel = 'Browse properties while you wait';
+      break;
+    case 'whatsapp_inbound':
+      intro = 'Thanks for messaging us on WhatsApp. Our team has your message and will reply there.';
+      preheader = 'We have your WhatsApp message.';
+      break;
+    case 'verification':
+      intro = 'Thanks for requesting an ownership check. We confirm by email within <strong>one working day</strong> that we can run the check on this property, and what we will need from you.';
+      preheader = 'Your ownership check request is in — we confirm within one working day.';
+      ctaLabel = 'Read how the check works';
+      ctaUrl = `${BRAND.site}/verify.html`;
+      break;
+    default:
+      intro = 'Thanks for getting in touch with MyKunda. A member of our team will reply within one working day.';
+  }
+
+  const body = `<p style="margin:0 0 16px">${intro}</p>
+    ${extraBlock}
+    <p style="margin:16px 0 0">In the meantime you can browse every property and plot we list across The Gambia at <a href="${BRAND.site}" style="color:${BRAND.green};font-weight:700">mykunda.com</a>.</p>
+    <div style="border-top:1px solid ${BRAND.line};margin-top:24px;padding-top:18px">
+      <p style="font-size:14px;color:${BRAND.muted};margin:0">In a hurry? WhatsApp us at <a href="${BRAND.waLink}" style="color:${BRAND.green};font-weight:600">${BRAND.waNumber}</a> — or simply reply to this email.</p>
+    </div>`;
+
+  return emailWrap({
+    heading: fname ? `Thank you, ${fname}` : 'Thank you',
+    preheader,
+    body,
+    cta: ctaLabel,
+    ctaUrl,
+    footer: 'You received this because you submitted a request on mykunda.com. We never sell or share your details.',
+    unsubscribeUrl,
+  });
+}
+
+/* ============================================================
+   VIEWINGS
+   ============================================================ */
+
+const fmtSlot = (d: string) => {
+  try { return new Date(d).toLocaleString('en-GB', { dateStyle: 'full', timeStyle: 'short' }); }
+  catch { return String(d); }
+};
+
+/** To the seller / team: someone wants to see a property. */
+export function viewingNotificationEmail(v: {
+  buyer_name?: string; title: string; area?: string;
+  requested_slot?: string; buyer_email?: string; buyer_phone?: string;
+}): string {
+  const who = escOpt(v.buyer_name) || 'A buyer';
+  return emailWrap({
+    heading: 'New viewing request',
+    preheader: `${who} wants to view ${v.title} — confirm or propose another time.`,
+    body: `<p style="margin:0 0 14px"><strong>${who}</strong> would like to view <strong>${esc(v.title)}</strong>. Please confirm the time or propose alternatives.</p>
+      ${detailTable([
+        ['Buyer', escOpt(v.buyer_name) || 'Anonymous'],
+        ['Property', `${esc(v.title)}${v.area ? ' · ' + esc(v.area) : ''}`],
+        ['Preferred time', v.requested_slot ? esc(fmtSlot(v.requested_slot)) : 'Flexible'],
+        ['Email', escOpt(v.buyer_email)],
+        ['Phone', escOpt(v.buyer_phone)],
+      ])}`,
+    cta: 'Respond in dashboard',
+    ctaUrl: `${BRAND.site}/dashboard.html`,
+    footer: 'Internal notification from the MyKunda website.',
+  });
+}
+
+/** To the buyer: we have your request. Sent at the same moment as the one above. */
+export function viewingConfirmationEmail(v: {
+  buyer_name?: string; title: string; area?: string; requested_slot?: string;
+}): string {
+  const fname = v.buyer_name ? esc(String(v.buyer_name).trim().split(' ')[0]) : '';
+  return emailWrap({
+    heading: fname ? `Your viewing request, ${fname}` : 'Your viewing request',
+    preheader: `We are confirming a time for ${v.title} with the owner.`,
+    body: `<p style="margin:0 0 14px">Thanks — your request to view <strong>${esc(v.title)}</strong> is with the owner. They confirm the time or propose alternatives, and you get an email the moment they do. That is usually the same day.</p>
+      ${detailTable([
+        ['Property', `${esc(v.title)}${v.area ? ' · ' + esc(v.area) : ''}`],
+        ['Your preferred time', v.requested_slot ? esc(fmtSlot(v.requested_slot)) : 'Flexible'],
+      ])}
+      ${callout(`<p style="font-size:14px;color:${BRAND.ink};margin:0"><strong>Before you travel to a viewing:</strong> never hand over money to see a property, and ask to see the title documents. Our team can check them for you.</p>`)}
+      <p style="margin:16px 0 0;font-size:14px;color:${BRAND.muted}">Need to change the time? Reply to this email or WhatsApp <a href="${BRAND.waLink}" style="color:${BRAND.green};font-weight:600">${BRAND.waNumber}</a>.</p>`,
+    cta: 'View your dashboard',
+    ctaUrl: `${BRAND.site}/dashboard.html`,
+    footer: 'You received this because you requested a viewing on mykunda.com.',
+  });
+}
+
+/** To the buyer: the seller accepted the time. Without this mail the buyer
+ *  never learns the viewing is on — the seller only clicked in the dashboard. */
+export function viewingConfirmedEmail(v: {
+  buyer_name?: string; title: string; area?: string; slot?: string;
+}): string {
+  const fname = v.buyer_name ? esc(String(v.buyer_name).trim().split(' ')[0]) : '';
+  return emailWrap({
+    heading: 'Your viewing is confirmed',
+    preheader: `${v.title} — ${v.slot ? fmtSlot(v.slot) : 'time confirmed'}.`,
+    body: `<p style="margin:0 0 14px">${fname ? esc(fname) + ', good news — the' : 'The'} owner has confirmed your viewing of <strong>${esc(v.title)}</strong>.</p>
+      ${detailTable([
+        ['Property', `${esc(v.title)}${v.area ? ' · ' + esc(v.area) : ''}`],
+        ['When', v.slot ? esc(fmtSlot(v.slot)) : 'To be agreed'],
+      ])}
+      ${callout(`<p style="font-size:14px;color:${BRAND.ink};margin:0"><strong>Before you travel:</strong> never hand over money to see a property, and ask to see the title documents. Our team can check them for you.</p>`)}
+      <p style="margin:16px 0 0;font-size:14px;color:${BRAND.muted}">Can't make it after all? Reply to this email or WhatsApp <a href="${BRAND.waLink}" style="color:${BRAND.green};font-weight:600">${BRAND.waNumber}</a> and we move it.</p>`,
+    cta: 'Message us on WhatsApp',
+    ctaUrl: BRAND.waLink,
+    footer: 'You received this because you requested a viewing on mykunda.com.',
+  });
+}
+
+/** To the buyer: the seller proposed times. */
+export function viewingSlotsEmail(v: { title: string; proposed_slots: string[] }): string {
+  const slots = (v.proposed_slots || []).map((s) =>
+    `<li style="margin:8px 0;color:${BRAND.ink};font-weight:600;font-size:15px">${esc(fmtSlot(s))}</li>`).join('');
+  return emailWrap({
+    heading: 'Viewing times proposed',
+    preheader: `New times to view ${v.title} — pick the one that suits you.`,
+    body: `<p style="margin:0 0 14px">The seller has proposed these times to view <strong>${esc(v.title)}</strong>:</p>
+      <div style="background:${BRAND.paper};border-radius:10px;padding:16px 22px;margin:8px 0">
+        <ul style="padding-left:20px;margin:0">${slots}</ul>
+      </div>
+      <p style="margin:14px 0 0">Reply to this email with the time that suits you, or send it to us on WhatsApp — we confirm it with the owner the same day. None of them work? Say so and we ask for others.</p>`,
+    cta: 'Confirm on WhatsApp',
+    ctaUrl: BRAND.waLink,
+    footer: 'You received this because you requested a viewing on mykunda.com.',
+  });
+}
+
+/* ============================================================
+   PAYMENTS — receipt to the customer, alert to the backoffice
+   ============================================================ */
+
+export interface PaymentInfo {
+  name?: string;
+  email?: string;
+  phone?: string;
+  plan: string;              // human label, e.g. "Verified listing"
+  planNote?: string;         // one line about what it includes
+  reference: string;
+  amount: string;            // already formatted, e.g. "$99" or "D 4,500"
+  method: string;            // "Wave mobile money", "Card ending 4242", "Bank transfer"
+  awaitingTransfer?: boolean; // bank transfer: money not in yet
+  bank?: { name?: string; account?: string; iban?: string; swift?: string };
+  date?: string;             // ISO; defaults to now
+}
+
+const payDate = (iso?: string) => {
+  const d = iso ? new Date(iso) : new Date();
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+};
+
+export function paymentReceiptEmail(p: PaymentInfo): string {
+  const fname = p.name ? esc(String(p.name).trim().split(' ')[0]) : '';
+  const waiting = !!p.awaitingTransfer;
+
+  const rows: [string, unknown][] = [
+    ['Reference', `<strong>${esc(p.reference)}</strong>`],
+    ['Service', esc(p.plan)],
+    ['Payment method', esc(p.method)],
+    ['Date', esc(payDate(p.date))],
+    [waiting ? 'Amount due' : 'Amount paid', `<strong>${esc(p.amount)}</strong>`],
+  ];
+
+  const bankBlock = waiting && p.bank
+    ? `${sectionLabel('Where to send it')}${detailTable([
+        ['Bank', escOpt(p.bank.name)],
+        ['Account', escOpt(p.bank.account)],
+        ['IBAN', escOpt(p.bank.iban)],
+        ['SWIFT', escOpt(p.bank.swift)],
+        ['Reference', `<strong>${esc(p.reference)}</strong>`],
+      ], 'amber')}`
+    : '';
+
+  const intro = waiting
+    ? `Thanks${fname ? ', ' + fname : ''} — we have registered your bank transfer of <strong>${esc(p.amount)}</strong>. Quote reference <strong>${esc(p.reference)}</strong> exactly, otherwise we cannot match the payment to your order. Your ${esc(p.plan)} starts the moment the money lands.`
+    : `Thanks${fname ? ', ' + fname : ''} — your payment came through and your <strong>${esc(p.plan)}</strong> is confirmed. Keep this email: it is your receipt.`;
+
+  return emailWrap({
+    heading: waiting ? 'Transfer registered' : 'Payment confirmed',
+    preheader: waiting
+      ? `Reference ${p.reference} — quote it with your transfer of ${p.amount}.`
+      : `Receipt for ${p.amount} · ${p.plan} · reference ${p.reference}.`,
+    body: `<p style="margin:0 0 16px">${intro}</p>
+      ${detailTable(rows)}
+      ${bankBlock}
+      ${p.planNote ? `<p style="margin:16px 0 0;font-size:14.5px;color:${BRAND.ink2}">${esc(p.planNote)}</p>` : ''}
+      ${callout(`<p style="font-size:14px;color:${BRAND.ink};margin:0"><strong>MyKunda only ever charges listing and service fees.</strong> We never collect a deposit, a down payment or the purchase price of a property. Anyone asking you to send property money through us is not us — tell us straight away.</p>`)}
+      <p style="margin:16px 0 0;font-size:14px;color:${BRAND.muted}">Questions about this payment? Reply to this email with your reference, or WhatsApp <a href="${BRAND.waLink}" style="color:${BRAND.green};font-weight:600">${BRAND.waNumber}</a>.</p>`,
+    cta: 'Go to My MyKunda',
+    ctaUrl: `${BRAND.site}/dashboard.html`,
+    footer: 'You received this because you completed an order on mykunda.com. This email is your receipt.',
+  });
+}
+
+export function paymentBackofficeEmail(p: PaymentInfo): string {
+  const waiting = !!p.awaitingTransfer;
+  return emailWrap({
+    heading: waiting ? 'Bank transfer registered' : 'Payment received',
+    preheader: `${p.amount} · ${p.plan} · ${p.reference}`,
+    body: `${waiting
+      ? callout(`<p style="font-size:14px;color:${BRAND.ink};margin:0"><strong>Action required.</strong> Watch the bank account for <strong>${esc(p.amount)}</strong> with reference <strong>${esc(p.reference)}</strong>, then activate the order.</p>`)
+      : callout(`<p style="font-size:14px;color:${BRAND.ink};margin:0"><strong>Action required.</strong> Activate this order and confirm to the customer.</p>`, 'green')}
+      ${sectionLabel('Order')}
+      ${detailTable([
+        ['Reference', `<strong>${esc(p.reference)}</strong>`],
+        ['Service', esc(p.plan)],
+        ['Amount', `<strong>${esc(p.amount)}</strong>`],
+        ['Method', esc(p.method)],
+        ['Status', waiting ? 'Awaiting bank transfer' : 'Paid'],
+        ['Date', esc(payDate(p.date))],
+      ])}
+      ${sectionLabel('Customer')}
+      ${detailTable([
+        ['Name', escOpt(p.name)],
+        ['Email', p.email ? `<a href="mailto:${esc(p.email)}" style="color:${BRAND.green};font-weight:600">${esc(p.email)}</a>` : undefined],
+        ['Phone', escOpt(p.phone)],
+      ])}`,
+    cta: 'Open admin console',
+    ctaUrl: `${BRAND.site}/admin.html`,
+    footer: 'Internal notification from the MyKunda website.',
+  });
+}
+
+/* ============================================================
+   AUTH — password reset / magic link / signup confirm
+   ============================================================ */
+
+export function authLinkEmail(opts: { type: 'recovery' | 'magiclink' | 'signup'; link: string }): string {
+  const { type, link } = opts;
+  const COPY: Record<string, { heading: string; body: string; cta: string; expiry: string; pre: string }> = {
+    recovery: {
+      heading: 'Reset your password',
+      body: 'We received a request to reset the password on your MyKunda account. Choose a new one with the button below.',
+      cta: 'Reset password',
+      expiry: 'This link expires in one hour. Didn’t request it? You can safely ignore this email — your password stays as it is.',
+      pre: 'Your password reset link — valid for one hour.',
+    },
+    magiclink: {
+      heading: 'Your sign-in link',
+      body: 'Use the button below to sign in to MyKunda. No password needed.',
+      cta: 'Sign in to MyKunda',
+      expiry: 'This link expires in one hour and works only once.',
+      pre: 'Your sign-in link — valid for one hour.',
+    },
+    signup: {
+      heading: 'Confirm your email',
+      body: 'Welcome to MyKunda. Confirm your email address with the button below and your account is ready.',
+      cta: 'Confirm email',
+      expiry: 'This link expires in one hour.',
+      pre: 'One click to confirm your MyKunda account.',
+    },
+  };
+  const c = COPY[type] ?? COPY.magiclink;
+  const safe = safeUrl(link);
+  return emailWrap({
+    heading: c.heading,
+    preheader: c.pre,
+    body: `<p style="margin:0 0 8px">${c.body}</p>
+      <p style="font-size:13px;color:${BRAND.muted2};margin:18px 0 0">${c.expiry}</p>
+      <p style="font-size:12.5px;color:${BRAND.muted2};margin:14px 0 0;word-break:break-all">Button not working? Paste this link into your browser:<br><a href="${safe}" style="color:${BRAND.green}">${safe}</a></p>`,
+    cta: c.cta,
+    ctaUrl: safe,
+    footer: 'You received this because this address was used to sign in at mykunda.com. We never ask for your password by email.',
+  });
+}
+
+/** The 6-digit sign-in code — what auth.html's OTP screen asks for. */
+export function authCodeEmail(opts: { code: string; minutes?: number }): string {
+  const code = esc(opts.code);
+  const mins = opts.minutes ?? 60;
+  return emailWrap({
+    heading: 'Your sign-in code',
+    preheader: `${code} — your MyKunda sign-in code.`,
+    body: `<p style="margin:0 0 18px">Enter this code on the MyKunda sign-in screen to continue. No password needed.</p>
+      <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 6px"><tr><td style="background:${BRAND.green50};border:1px solid ${BRAND.line};border-radius:12px;padding:18px 26px;font-family:'Courier New',Courier,monospace;font-size:34px;font-weight:700;letter-spacing:.22em;color:${BRAND.ink};text-align:center">${code}</td></tr></table>
+      <p style="font-size:13px;color:${BRAND.muted2};margin:18px 0 0">The code expires in ${mins} minutes and works only once. Didn’t ask for it? You can safely ignore this email.</p>`,
+    footer: 'You received this because this address was used to sign in at mykunda.com. We never ask for your password by email.',
+  });
+}
+
+/* ============================================================
+   DELIVERABILITY ALERT — from the resend-webhook function
+   ============================================================ */
+
+export function emailEventAlertEmail(evt: {
+  type: string; recipient?: string | null; subject?: string | null;
+  reason?: string | null; emailId?: string | null;
+}): string {
+  const LABELS: Record<string, string> = {
+    'email.bounced': 'Email bounced',
+    'email.complained': 'Recipient marked this as spam',
+    'email.failed': 'Email failed to send',
+    'email.delivery_delayed': 'Email delivery delayed',
+    'email.suppressed': 'Email suppressed',
+  };
+  const heading = LABELS[evt.type] || `Email event: ${esc(evt.type)}`;
+  const severe = evt.type === 'email.complained';
+
+  return emailWrap({
+    heading,
+    preheader: `${heading}${evt.recipient ? ' — ' + evt.recipient : ''}`,
+    body: `${callout(
+      `<p style="font-size:14px;color:${BRAND.ink};margin:0">${severe
+        ? 'A recipient marked a MyKunda email as spam. Repeated complaints get the whole domain blocked by mailbox providers — worth checking what was sent and why.'
+        : 'Resend reported a delivery problem with one of our emails.'}</p>`, severe ? 'red' : 'amber')}
+      ${detailTable([
+        ['To', escOpt(evt.recipient)],
+        ['Subject', escOpt(evt.subject)],
+        ['Reason', escOpt(evt.reason)],
+      ])}`,
+    cta: evt.emailId ? 'View in Resend' : undefined,
+    ctaUrl: evt.emailId ? `https://resend.com/emails/${esc(evt.emailId)}` : undefined,
+    footer: 'Internal deliverability alert from the MyKunda website.',
+  });
+}
+
+/* ============================================================
+   WHATSAPP — the one channel that is not email. Same voice,
+   plain text, because WhatsApp has no HTML.
+   ============================================================ */
+
+export function whatsappAutoReply(name?: string): string {
+  const fname = name ? String(name).trim().split(' ')[0] : '';
+  return `Hello${fname ? ' ' + fname : ''}, thanks for messaging MyKunda.
+
+We have your message and a member of our team will reply here shortly. Office hours are 9:00–18:00, Monday to Saturday.
+
+In the meantime you can browse every property and plot we list at mykunda.com.
+
+One thing worth knowing: MyKunda never asks you to send money for a property through us. We only charge listing and service fees.
+
+— The MyKunda team`;
+}
+
+/* ============================================================
+   ACCOUNT CREATED — welcome to the user + heads-up to the team
+   ============================================================ */
+
+export interface SignupInfo {
+  id: string;
+  name?: string;
+  email: string;
+  /** 'google' for OAuth sign-ups, 'email' for the 6-digit code path. */
+  provider: string;
+  consentContact: boolean;
+  consentAt?: string;
+  consentMarketing: boolean;
+  createdAt?: string;
+}
+
+/** One row of the "what your account unlocks" list. */
 function featureRow(icon: string, title: string, text: string, url: string): string {
   return `<tr>
     <td style="width:44px;vertical-align:top;padding:12px 0"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="width:36px;height:36px;border-radius:9px;background:${BRAND.green50};color:${BRAND.green};font-size:17px;font-weight:800;text-align:center;line-height:36px">${icon}</td></tr></table></td>
@@ -197,11 +709,7 @@ function featureRow(icon: string, title: string, text: string, url: string): str
     </td></tr>`;
 }
 
-export interface SignupInfo {
-  id: string; name?: string; email: string; provider: string;
-  consentContact: boolean; consentAt?: string; consentMarketing: boolean; createdAt?: string;
-}
-
+/** To the new user, once their account is confirmed. */
 export function welcomeEmail(u: SignupInfo): string {
   const fname = u.name ? esc(String(u.name).trim().split(' ')[0]) : '';
   const S = BRAND.site;
@@ -228,11 +736,13 @@ export function welcomeEmail(u: SignupInfo): string {
   });
 }
 
+/** To the team: a new account, with the consent state spelled out. */
 export function signupBackofficeEmail(u: SignupInfo): string {
   const via = u.provider === 'google' ? 'Google' : 'Email code';
-  const when = u.createdAt ? new Date(u.createdAt).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Africa/Banjul' }) + ' (Banjul)' : undefined;
+  const fmt = (v: string) => new Date(v).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Africa/Banjul' });
+  const when = u.createdAt ? fmt(u.createdAt) + ' (Banjul)' : undefined;
   const consent = u.consentContact
-    ? `Yes${u.consentAt ? ' · ' + esc(new Date(u.consentAt).toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short',timeZone:'Africa/Banjul'})) : ''}`
+    ? `Yes${u.consentAt ? ' · ' + esc(fmt(u.consentAt)) : ''}`
     : `<span style="color:#C0392B;font-weight:700">Not recorded</span>`;
   return emailWrap({
     heading: 'New account created',
@@ -253,3 +763,6 @@ export function signupBackofficeEmail(u: SignupInfo): string {
     footer: 'Internal notification from the MyKunda website.',
   });
 }
+
+/* Listing templates live next door but import from this file. */
+export { listingConfirmationEmail, listingBackofficeEmail } from './email-listing.ts';
