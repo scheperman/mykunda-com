@@ -1698,9 +1698,9 @@
     "visibility": "visible"
    },
    "paint": {
-    "text-color": "hsl(0, 0%, 100%)",
-    "text-halo-color": "hsl(0, 0%, 17%)",
-    "text-halo-width": 1
+    "text-color": "hsl(45, 100%, 60%)",
+    "text-halo-color": "hsl(0, 0%, 0%)",
+    "text-halo-width": 1.4
    }
   },
   {
@@ -1756,9 +1756,9 @@
     "visibility": "visible"
    },
    "paint": {
-    "text-color": "hsl(0, 0%, 100%)",
-    "text-halo-color": "hsl(0, 0%, 17%)",
-    "text-halo-width": 1
+    "text-color": "hsl(45, 100%, 60%)",
+    "text-halo-color": "hsl(0, 0%, 0%)",
+    "text-halo-width": 1.4
    },
    "filter": [
     "all",
@@ -1836,10 +1836,10 @@
     "visibility": "visible"
    },
    "paint": {
-    "text-color": "hsl(0, 0%, 100%)",
+    "text-color": "hsl(45, 100%, 60%)",
     "text-halo-blur": 0.5,
     "text-halo-color": "hsl(0, 0%, 0%)",
-    "text-halo-width": 1
+    "text-halo-width": 1.4
    },
    "filter": [
     "all",
@@ -1924,10 +1924,10 @@
     "visibility": "visible"
    },
    "paint": {
-    "text-color": "hsl(0, 0%, 100%)",
+    "text-color": "hsl(45, 100%, 60%)",
     "text-halo-blur": 0.5,
     "text-halo-color": "hsl(0, 0%, 0%)",
-    "text-halo-width": 1
+    "text-halo-width": 1.4
    },
    "filter": [
     "all",
@@ -2257,10 +2257,10 @@
     "visibility": "visible"
    },
    "paint": {
-    "text-color": "hsl(0, 0%, 100%)",
+    "text-color": "hsl(45, 100%, 60%)",
     "text-halo-blur": 0.5,
     "text-halo-color": "hsl(0, 0%, 0%)",
-    "text-halo-width": 1
+    "text-halo-width": 1.4
    },
    "filter": [
     "==",
@@ -2325,10 +2325,10 @@
     "visibility": "visible"
    },
    "paint": {
-    "text-color": "hsl(0, 0%, 95%)",
+    "text-color": "hsl(45, 100%, 60%)",
     "text-halo-blur": 0.5,
     "text-halo-color": "hsl(0, 0%, 0%)",
-    "text-halo-width": 1
+    "text-halo-width": 1.4
    },
    "filter": [
     "all",
@@ -2415,10 +2415,10 @@
     "visibility": "visible"
    },
    "paint": {
-    "text-color": "hsl(0, 0%, 95%)",
+    "text-color": "hsl(45, 100%, 60%)",
     "text-halo-blur": 0.5,
     "text-halo-color": "hsl(0, 0%, 0%)",
-    "text-halo-width": 1,
+    "text-halo-width": 1.4,
     "text-opacity": [
      "step",
      [
@@ -2565,10 +2565,10 @@
     "visibility": "visible"
    },
    "paint": {
-    "text-color": "hsl(0, 0%, 95%)",
+    "text-color": "hsl(45, 100%, 60%)",
     "text-halo-blur": 0.5,
     "text-halo-color": "hsl(0, 0%, 0%)",
-    "text-halo-width": 1,
+    "text-halo-width": 1.4,
     "text-opacity": [
      "step",
      [
@@ -2802,10 +2802,10 @@
     "icon-halo-blur": 0.5,
     "icon-halo-color": "hsl(0, 0%, 0%)",
     "icon-halo-width": 1,
-    "text-color": "hsl(0, 0%, 100%)",
+    "text-color": "hsl(45, 100%, 60%)",
     "text-halo-blur": 0.5,
     "text-halo-color": "hsl(0, 0%, 0%)",
-    "text-halo-width": 1
+    "text-halo-width": 1.4
    }
   },
   {
@@ -2898,10 +2898,10 @@
     "icon-halo-blur": 0.5,
     "icon-halo-color": "hsl(0, 0%, 0%)",
     "icon-halo-width": 1,
-    "text-color": "hsl(0, 0%, 100%)",
+    "text-color": "hsl(45, 100%, 60%)",
     "text-halo-blur": 0.5,
     "text-halo-color": "hsl(0, 0%, 0%)",
-    "text-halo-width": 1
+    "text-halo-width": 1.4
    },
    "filter": [
     "all",
@@ -2976,10 +2976,10 @@
     "visibility": "visible"
    },
    "paint": {
-    "text-color": "hsl(0, 0%, 100%)",
+    "text-color": "hsl(45, 100%, 60%)",
     "text-halo-blur": 1,
     "text-halo-color": "hsl(0, 0%, 0%)",
-    "text-halo-width": 1
+    "text-halo-width": 1.4
    },
    "filter": [
     "all",
@@ -3109,10 +3109,10 @@
     "visibility": "visible"
    },
    "paint": {
-    "text-color": "hsl(0, 0%, 100%)",
+    "text-color": "hsl(45, 100%, 60%)",
     "text-halo-blur": 1,
     "text-halo-color": "hsl(0, 0%, 0%)",
-    "text-halo-width": 1
+    "text-halo-width": 1.4
    }
   },
   {
@@ -3156,10 +3156,10 @@
     "visibility": "visible"
    },
    "paint": {
-    "text-color": "hsl(0, 0%, 100%)",
+    "text-color": "hsl(45, 100%, 60%)",
     "text-halo-blur": 1,
     "text-halo-color": "hsl(0, 0%, 0%)",
-    "text-halo-width": 1
+    "text-halo-width": 1.4
    },
    "metadata": {}
   },
@@ -4036,9 +4036,9 @@
     "text-padding": 4
    },
    "paint": {
-    "text-color": "hsl(0, 0%, 100%)",
-    "text-halo-color": "hsl(0, 0%, 17%)",
-    "text-halo-width": 1.1
+    "text-color": "hsl(45, 100%, 60%)",
+    "text-halo-color": "hsl(0, 0%, 0%)",
+    "text-halo-width": 1.4
    }
   }
  ],

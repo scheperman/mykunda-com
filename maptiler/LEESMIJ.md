@@ -20,6 +20,15 @@ leeg valt. Dat laatste is precies wat er gebeurt als je in de Map Designer
 helderheid van de bronstijl vast en vervangt alleen kleurtoon en verzadiging;
 daardoor blijft elke zoomtrap en elke wegenhiërarchie van MapTiler overeind.
 
+**Gele labels op de satellietlaag.** Plaatsnamen, straatnamen en gebouwnamen
+staan daar in `hsl(45, 100%, 60%)` met een zwarte rand van 1,4 px, in plaats
+van het wit met grijze rand van MapTiler. Wit verdwijnt boven Gambia in het
+beeld zelf — zand, zinken daken en witte muren zitten in dezelfde toon — en
+geel komt in die luchtfoto's nergens voor. Water blijft blauw: dat leest al
+goed en houdt water herkenbaar als water. De kaartlaag verandert hier niet
+mee; daar staan plaatsnamen donkergroen op crème en zou geel het contrast
+juist wegnemen.
+
 **De Buildings-tileset.** De gebouwen uit Planet zijn eruit, die van de
 Buildings-tileset erin — met `facade_color` waar die bekend is, een eigen rand,
 en vanaf zoom 17 de naam van het pand. Op een woningsite is het gebouw het

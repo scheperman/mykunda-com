@@ -27,7 +27,13 @@ const MK = {
   green500:'#2A7561',
   ink:     '#18201D',
   muted:   '#5C6B64',
-  line:    '#E5E1D6'
+  line:    '#E5E1D6',
+  /* Alleen voor de satellietlaag. Wit en lichtgrijs — waar MapTiler zijn
+     hybride labels mee tekent — verdwijnen in Gambia in het beeld zelf: zand,
+     zinken daken en witte muren zitten precies in dezelfde toon. Geel komt in
+     die luchtfoto's nergens voor, dus een geel label ligt altijd los van de
+     achtergrond. */
+  satLabel:'hsl(45, 100%, 60%)'
 };
 
 /* ---------- kleur: parsen, tinten, terugschrijven ---------- */
@@ -134,7 +140,20 @@ for (const l of s.layers) {
     l.layout['text-field'] = engels(l.layout['text-field']);
     if (JSON.stringify(l.layout['text-field']) !== voor) labelsOm++;
   }
-  if (!l.paint || sat) continue;
+  /* Op de satellietlaag blijven de vlakken en lijnen met rust — daar ligt een
+     luchtfoto onder, geen kleurvlak. Alleen de labels gaan om: plaatsnamen en
+     straatnamen worden geel met een zwarte rand. Water blijft blauw; dat leest
+     al goed en houdt water als water herkenbaar. */
+  if (sat) {
+    if (l.type === 'symbol' && l.paint && (PLAATS.test(l.id) || WEGLBL.test(l.id))) {
+      if (l.paint['text-color']) l.paint['text-color'] = MK.satLabel;
+      l.paint['text-halo-color'] = 'hsl(0, 0%, 0%)';
+      l.paint['text-halo-width'] = 1.4;
+      lagenOm++;
+    }
+    continue;
+  }
+  if (!l.paint) continue;
   if (l.type === 'symbol') {
     const kleur = PLAATS.test(l.id) ? MK.green700 : WATERLBL.test(l.id) ? '#6E8FA0' : WEGLBL.test(l.id) ? MK.muted : null;
     if (kleur && l.paint['text-color']) { l.paint['text-color'] = kleur; lagenOm++; }
@@ -190,7 +209,7 @@ const gebouwNaam = {
     'text-max-width': 8, 'text-padding': 4
   },
   paint: sat
-    ? { 'text-color': 'hsl(0, 0%, 100%)', 'text-halo-color': 'hsl(0, 0%, 17%)', 'text-halo-width': 1.1 }
+    ? { 'text-color': MK.satLabel, 'text-halo-color': 'hsl(0, 0%, 0%)', 'text-halo-width': 1.4 }
     : { 'text-color': MK.green700, 'text-halo-color': 'hsla(0, 0%, 100%, 0.9)', 'text-halo-width': 1.2 }
 };
 
