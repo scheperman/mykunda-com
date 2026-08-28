@@ -482,10 +482,13 @@
 #mkvSubBuild{margin-top:22px}
 
 /* ---------- rechts: de kaart ---------- */
-.mkv-map{position:relative;display:grid;grid-template-rows:1fr auto;background:var(--v-dark);min-height:340px}
-.mkv-mapview{position:relative;overflow:hidden}
-#value .value-map{position:absolute;inset:0;margin:0;min-height:0;border-radius:0}
-.value-map .leaflet-container{position:absolute;inset:0;width:100%;height:100%;background:#0E2E25}
+.mkv-map{position:relative;display:grid;grid-template-rows:1fr auto;background:var(--map-land,#F1EFE7);min-height:340px}
+/* Laadt de kaart niet, dan hoort daar een leesbare mededeling te staan en geen
+   donker vlak: een zwart venster leest als een storing van de hele pagina. */
+.mkv-mapview{position:relative;overflow:hidden;background:var(--map-land,#F1EFE7)}
+.mkv-mapview::before{content:"Loading the map…";position:absolute;inset:0;z-index:0;display:grid;place-items:center;padding:24px;text-align:center;color:var(--v-ink3);font-size:13.5px;font-weight:600}
+#value .value-map{position:absolute;inset:0;margin:0;min-height:0;border-radius:0;background:var(--map-land,#F1EFE7)}
+#value .leaflet-container{background:var(--map-land,#F1EFE7)}
 .mkv-mapbar{display:flex;align-items:center;gap:14px;min-height:40px;padding:8px 14px;background:var(--v-dark);color:#CFE6DC;font-size:12.5px;line-height:1.35;border-top:1px solid rgba(255,255,255,.09)}
 .mkv-mapbar .place{display:inline-flex;align-items:center;gap:7px;font-weight:700;color:#fff;min-width:0}
 .mkv-mapbar .place span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:22ch}
@@ -1241,8 +1244,13 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
   let pdMap=null,pdMarker=null,ldMap=null,ldMarker=null;
   const VAL_MAP_DEFAULT=[13.45,-16.70];
   function initValMaps(){
+    /* Twee aanroepen: één direct en één zodra Leaflet er is. De tweede mag de
+       kaart niet nog eens opbouwen — Leaflet gooit dan "Map container is
+       already initialized" en alles daarachter blijft liggen. */
+    if(ldMap){ valMapFix(); return; }
     function mk(id,live){
       const el=document.getElementById(id); if(!el||!window.L) return null;
+      try{
       const opts = live
         ? {zoomControl:true,scrollWheelZoom:false}
         : {zoomControl:false,dragging:false,scrollWheelZoom:false,doubleClickZoom:false,touchZoom:false,boxZoom:false,keyboard:false};
@@ -1254,22 +1262,50 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
       else { mkTileLayer('satellite').addTo(m); }
       const mkr=L.marker(VAL_MAP_DEFAULT,{draggable:!!live,autoPan:!!live}).addTo(m);
       return {m,mkr};
+      }catch(e){ console.warn('map init:', e); return null; }
     }
     const pd=mk('pdMapBox');
     if(pd){ pdMap=pd.m; pdMarker=pd.mkr; const saved=window._lastValProperty; if(saved&&saved.mapLL){ pdMap.setView([saved.mapLL.lat,saved.mapLL.lng],15); pdMarker.setLatLng([saved.mapLL.lat,saved.mapLL.lng]); document.getElementById('pdMapLabel').textContent=saved.mapPlace||'Location'; } }
     const ld=mk('ldMapBox',true);
-    if(ld){ ldMap=ld.m; ldMarker=ld.mkr; ldWireMap(); const saved=window._lastValLand; if(saved&&saved.mapLL){ ldMap.setView([saved.mapLL.lat,saved.mapLL.lng],15); ldMarker.setLatLng([saved.mapLL.lat,saved.mapLL.lng]); document.getElementById('ldMapLabel').textContent=saved.mapPlace||'Location'; } ldMap.invalidateSize(); }
+    if(ld){
+      ldMap=ld.m; ldMarker=ld.mkr; ldWireMap();
+      const saved=window._lastValLand;
+      if(saved&&saved.mapLL){ ldMap.setView([saved.mapLL.lat,saved.mapLL.lng],15); ldMarker.setLatLng([saved.mapLL.lat,saved.mapLL.lng]); document.getElementById('ldMapLabel').textContent=saved.mapPlace||'Location'; }
       /* De zoomknoppen stonden linksboven, waar nu de tekengereedschappen
          zitten. Rechtsonder is er ruimte en de balk erboven blijft vrij. */
       try{ if(ldMap.zoomControl) ldMap.zoomControl.setPosition('bottomright'); }catch(e){}
-      /* De kaart is nu een kolom die met het venster meegroeit. Leaflet meet
-         zichzelf alleen bij window.resize, dus meten we de kolom zelf. */
-      try{
-        if('ResizeObserver' in window){
-          var mapCol=document.querySelector('.mkv-map'), rt;
-          if(mapCol) new ResizeObserver(function(){ clearTimeout(rt); rt=setTimeout(function(){ ldMap.invalidateSize(); },120); }).observe(mapCol);
-        }
-      }catch(e){}
+      valMapReady();
+    }
+  }
+  /* ---- De kaart moet blijven weten hoe groot hij is ----
+     Leaflet meet zijn venster één keer bij het opzetten en daarna alleen bij
+     window.resize. De kaart is sinds 28-08-2026 een kolom die met het venster
+     meegroeit; klopt de gemeten maat niet, dan vraagt Leaflet tegels op voor een
+     kleiner vlak en blijft de rest leeg — dat is het "zwarte scherm" dat Edwin
+     zag. Daarom hermeten we op elk moment waarop de maat veranderd kan zijn, en
+     altijd vlak vóór een setView. invalidateSize() is goedkoop en idempotent. */
+  var valMapRO=null;
+  function valMapFix(){
+    if(!ldMap) return;
+    try{ ldMap.invalidateSize(); }catch(e){ return; }
+    requestAnimationFrame(function(){ if(ldMap){ try{ ldMap.invalidateSize(); }catch(e){} } });
+  }
+  function valMapReady(){
+    valMapFix();
+    setTimeout(valMapFix,250); setTimeout(valMapFix,1200);
+    window.addEventListener('load', valMapFix);
+    window.addEventListener('orientationchange', valMapFix);
+    try{ if(document.fonts && document.fonts.ready) document.fonts.ready.then(valMapFix).catch(function(){}); }catch(e){}
+    if(!valMapRO && 'ResizeObserver' in window){
+      var col=document.querySelector('.mkv-map');
+      if(col){
+        var t=null;
+        /* De observer in een variabele houden: een losse instantie zonder
+           verwijzing is niet gegarandeerd blijvend. */
+        valMapRO=new ResizeObserver(function(){ clearTimeout(t); t=setTimeout(valMapFix,120); });
+        valMapRO.observe(col);
+      }
+    }
   }
   /* ---- Plot drawing on the land map — same behaviour as the List page ----
      Tap corners to outline the plot; the area feeds the m² field and the centre
@@ -1491,6 +1527,9 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
     const ll=resolveLatLng(locStr) || (area && typeof AREA_COORDS!=='undefined' && AREA_COORDS[area] ? {lat:AREA_COORDS[area][0],lng:AREA_COORDS[area][1]} : null);
     const lab=document.getElementById(labelId); if(lab) lab.textContent=place||area||'Location';
     if(!map||!marker||!ll) return null;
+    /* Eerst hermeten, dan pas verplaatsen: setView op een verkeerd gemeten
+       venster vult maar een deel van het vlak met tegels. */
+    try{ map.invalidateSize(); }catch(e){}
     map.setView([ll.lat,ll.lng], isExactLoc(locStr) ? 18 : 15);
     marker.setLatLng([ll.lat,ll.lng]);
     /* Wie coördinaten of een Plus Code invult, ziet anders "this area" boven de
@@ -1590,7 +1629,7 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
         var soft = !window.matchMedia || !matchMedia('(prefers-reduced-motion: reduce)').matches;
         el.scrollIntoView({behavior: soft?'smooth':'auto', block:'nearest'});
       }
-      if(n>=2 && ldMap){ setTimeout(function(){ ldMap.invalidateSize(); },80); }
+      if(n>=2 && ldMap){ setTimeout(valMapFix,80); }
       setProg(n); setMapHint(n);
     }
     /* De balk bovenaan het formulier laat zien waar je bent en hoeveel er nog
@@ -1740,7 +1779,7 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
         if(!a && PLUS_RE.test(v)) a=areaFromPlusCode(v);
         if(!a) a=nearestArea(parseLatLng(v));
         var ll=updateValMap(ldMap,ldMarker,'ldMapLabel',v,a,a||v.trim());
-        if(ll){ LD.ll=ll; ldApplyGeo(); if(ldMap) ldMap.setView([ll.lat,ll.lng], isExactLoc(v)?18:15); }
+        if(ll){ LD.ll=ll; ldApplyGeo(); if(ldMap){ valMapFix(); ldMap.setView([ll.lat,ll.lng], isExactLoc(v)?18:15); valMapFix(); } }
       },450);
     });
 

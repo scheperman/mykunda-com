@@ -1217,9 +1217,30 @@ Wat je hierbij moet weten voordat je eraan sleutelt:
 * De zoomknoppen zijn na `mkBaseToggle` verplaatst naar `bottomright`
   (`ldMap.zoomControl.setPosition`). Linksboven is van de tekengereedschappen.
   `.vmap-tools` houdt rechts 104px vrij voor de Satellite/Map-schakelaar.
-* Een `ResizeObserver` op `.mkv-map` roept `invalidateSize()` aan. De kaart is
-  nu een kolom die met het venster meegroeit; Leaflet meet zichzelf alleen bij
-  `window.resize` en zou anders halve tegels tonen.
+* **Een kaart die een kolom vult, moet blijven weten hoe groot hij is.** Leaflet
+  meet zijn venster één keer bij het opzetten en daarna alleen bij
+  `window.resize`. Klopt die maat niet, dan vraagt hij tegels op voor een
+  kleiner vlak en blijft de rest leeg — bij de eerste versie van de werkbank gaf
+  dat na het kiezen van een gebied een half gevulde, donker ogende kaart. In het
+  oude ontwerp viel dat niet op: 745 × 260 paste binnen één rij tegels.
+
+  De correctie is `valMapFix()` (twee keer `invalidateSize()`, de tweede in een
+  `requestAnimationFrame`) plus `valMapReady()`, dat hem aanhaakt op `load`,
+  `orientationchange`, `document.fonts.ready`, een `ResizeObserver` op
+  `.mkv-map` — bewaard in `valMapRO`, want een observer zonder verwijzing is
+  niet gegarandeerd blijvend — en twee natikkende timers. Daarnaast wordt er
+  hermeten **vlak vóór elke `setView`**, in `updateValMap()` en in de
+  invoerhandler van `#lfLocation`. `invalidateSize()` is goedkoop en
+  idempotent; te vaak aanroepen kost niets, te weinig kost de kaart.
+* `initValMaps()` wordt twee keer aangeroepen — direct, en nog eens zodra
+  `ensureLeaflet` klaar is. De tweede mag de kaart niet opnieuw opbouwen:
+  Leaflet gooit dan "Map container is already initialized" en alles achter die
+  regel blijft liggen. Vandaar de `if(ldMap){ valMapFix(); return; }` bovenaan,
+  en een `try/catch` om `mk()`.
+* Het kaartvlak is `--map-land`, niet donkergroen, en `.mkv-mapview::before`
+  zegt "Loading the map…". Laadt de kaart niet, dan staat daar een leesbare
+  mededeling in plaats van een zwart venster — dat laatste leest als een
+  storing van de hele pagina.
 * Het aantal kolommen van `.mkv-grid.three` hangt af van de breedte van het
   **paneel**, niet van het venster. Drie kolommen alleen in de gestapelde
   opzet (`max-width:1099px`). Zet er geen `min-width:1240px`-regel terug: op
