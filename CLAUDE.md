@@ -1304,12 +1304,34 @@ wat erbij is gekomen is diepte, en het zichtbaar maken van bewijs.
 - **`GAMBIA_COLS` is de tweede kolomprobe in `list.html`**, naast `EXTRA_COLS`.
   Komt er weer een reeks nieuwe kolommen bij, zet die dan in dezelfde probe of
   maak een derde — nooit een save die faalt op een onbekende kolom.
-- **`wa-verify` is een zachte drempel.** Zolang de function niet is uitgerold of
-  haar Meta-secrets ontbreken, antwoordt hij 503 en blijft het OTP-blok in de
-  wizard verborgen. `otpAvailable()` beschouwt alleen status 400 als "in de
-  lucht"; 404, 503 en netwerkfouten betekenen allemaal: geen knop tonen die
-  niet kan werken. Uitrollen: `supabase functions deploy wa-verify --no-verify-jwt`,
-  plus `WA_OTP_TEMPLATE` (een goedgekeurde authentication-template bij Meta).
+- **Nummerverificatie loopt omgekeerd, en dat is de kern.** Wij sturen géén code
+  naar een ingetypt nummer: de verkoper stuurt ons een code die op zijn scherm
+  staat (`MYKUNDA-XXXXXXXX`), `wa-inbound` herkent hem en vult het nummer in met
+  het afzendernummer dat van Meta komt. Twee gevolgen: er is **geen goedgekeurde
+  Meta-template nodig** (die is alleen verplicht als het bedrijf het gesprek
+  begint), en het nummer is bewezen in plaats van geloofd. Inkomende berichten
+  kosten bovendien niets.
+- **`wa-verify` is een zachte drempel.** Ontbreekt `WA_BUSINESS_NUMBER`, dan
+  antwoordt hij 503 en blijft het blok in de wizard verborgen — geen knop die
+  niet kan werken. De function staat op `verify_jwt:false` zoals de rest, maar
+  de poort die telt is de `getUser()`-check erin: de anon-sleutel is openbaar en
+  zou anders genoeg zijn om hem leeg te trekken.
+- **Codes zijn 8 tekens uit een alfabet zonder O/0/I/1** (32^8, circa 10^12).
+  Ze staan gehasht in `phone_verifications`; die tabel heeft bewust geen
+  policies, alleen `wa-verify` en `wa-inbound` (service role) komen erbij.
+- **`wa-inbound` verwerkt nu ook verificatieberichten** en maakt daar géén lead
+  van. Alles wat niet op `MYKUNDA-XXXXXXXX` lijkt valt ongemoeid door naar het
+  bestaande leadpad.
+- **Webhook-handtekening.** `wa-inbound` accepteerde tot 28-08-2026 elke POST van
+  wie dan ook — iedereen die de URL kent kon een lead injecteren. Nu er
+  verificatie aan hangt weegt dat zwaarder. Zet `WA_APP_SECRET` (Meta → App →
+  Settings → Basic → App Secret) en de `x-hub-signature-256` wordt hard
+  gecontroleerd. Zonder die secret gedraagt de function zich exact als
+  voorheen, dus het zetten van de secret is de enige stap.
+- **De Supabase-CLI werkt niet via `npx` op deze machine** (28-08-2026): er zit
+  een schil tussen die alleen `npm notice run supabase …` afdrukt en met code 0
+  stopt zonder iets te doen — ook bij `projects list`. Uitrollen dus via de
+  Supabase-MCP, via het dashboard, of met een echte CLI-installatie.
 - **Verplicht om te publiceren** is sinds nu: vier foto's, een beschrijving van
   minstens 40 tekens, een documenttype bij verkoop, en bij customary land de
   naam van de Alkalo en het dorp. Het document zelf is níét verplicht — trede 0

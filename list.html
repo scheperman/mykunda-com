@@ -732,12 +732,9 @@ body{background:var(--paper-2);min-height:100vh}
         <div class="fld"><label id="nameLab">Your name</label><input type="text" id="nameIn" placeholder="Full name"></div>
         <div class="fld"><label>WhatsApp number</label><input type="tel" id="phoneIn" placeholder="+220 …">
           <div id="otpWrap" style="display:none;margin-top:9px">
-            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-              <button type="button" id="otpSend" style="padding:9px 15px;border:1.5px solid var(--green-700);border-radius:var(--r-sm);background:var(--white);font-size:13.5px;font-weight:700;color:var(--green-700);cursor:pointer;font-family:var(--sans)">Send me a code on WhatsApp</button>
-              <input type="text" id="otpCode" inputmode="numeric" maxlength="6" placeholder="6-digit code" style="display:none;max-width:130px;letter-spacing:.14em;font-weight:700">
-              <button type="button" id="otpCheck" style="display:none;padding:9px 15px;border:none;border-radius:var(--r-sm);background:var(--green-700);color:#fff;font-size:13.5px;font-weight:700;cursor:pointer;font-family:var(--sans)">Confirm</button>
-            </div>
-            <div class="hint" id="otpHint">A verified number tells buyers the listing is real. It is never shown until you reply to someone.</div>
+            <button type="button" id="otpStart" style="padding:9px 15px;border:1.5px solid var(--green-700);border-radius:var(--r-sm);background:var(--white);font-size:13.5px;font-weight:700;color:var(--green-700);cursor:pointer;font-family:var(--sans)">Confirm this number on WhatsApp</button>
+            <a id="otpLink" target="_blank" rel="noopener" style="display:none;align-items:center;gap:8px;padding:11px 18px;border-radius:var(--r-sm);background:#25D366;color:#fff;font-size:14.5px;font-weight:800;text-decoration:none;font-family:var(--sans)">Open WhatsApp and send the code</a>
+            <div class="hint" id="otpHint">A confirmed number tells buyers the listing is real. We never show it until you reply to someone.</div>
           </div>
         </div>
       </div>
@@ -3035,61 +3032,69 @@ async function ensureAgency(){
   return ins && ins.data ? ins.data.id : null;
 }
 
-/* ---- WhatsApp one-time code ----
-   A number nobody has proved belongs to them is the cheapest thing to fake on a
-   property site. The check is a soft gate on purpose: while the edge function is
-   not deployed and its Meta template not approved, wa-verify answers 503 and
-   this whole block stays hidden rather than stopping every seller. */
-let _otpProbed=false;
+/* ---- WhatsApp number confirmation ----
+   The direction is reversed on purpose: the seller sends us a code that is on
+   their screen, instead of us sending one to a number they typed. Meta then
+   tells us which number it came from, so the number is proven rather than
+   believed — and no approved template is needed, because a template is only
+   required when the business opens the conversation.
+
+   Soft gate: while wa-verify is not deployed or its secrets are missing it
+   answers 503, and this whole block stays hidden rather than stopping every
+   seller with a button that cannot work. */
+let _otpProbed=false, _otpPoll=null;
 async function otpAvailable(){
   if(typeof sb==='undefined' || !sb) return false;
-  /* Only one answer counts as available: the function is deployed AND its Meta
-     secrets are set, in which case an unknown action comes back 400. A 503 is
-     "deployed but not configured", a 404 is "not deployed", and anything else
-     is a network problem. All three mean: do not offer a button that cannot
-     work. Guessing from the error text is what got this wrong the first time. */
   try{
     const r=await sb.functions.invoke('wa-verify',{ body:{ action:'probe' } });
-    const status = r && r.error && r.error.context && r.error.context.status;
-    return status === 400;
+    return !!(r && r.data && r.data.configured);
   }catch(e){ return false; }
+}
+function otpDone(phone){
+  if(_otpPoll){ clearInterval(_otpPoll); _otpPoll=null; }
+  S.phoneVerified=true;
+  const ph=document.getElementById('phoneIn');
+  /* The number Meta reports is the one that is actually proven. If the seller
+     typed a different one, the proven one wins — silently overwriting it would
+     be the sort of small surprise that costs trust. */
+  if(phone && ph && ph.value.replace(/[^0-9]/g,'') !== phone.replace(/[^0-9]/g,'')){
+    ph.value=phone; S.contactPhone=phone;
+  }
+  const w=document.getElementById('otpWrap');
+  if(w) w.innerHTML='<div class="hint" style="color:var(--green-700);font-weight:700">'+
+    (phone||'This number')+' is confirmed. Your listing carries that.</div>';
+  saveLocalDraft();
 }
 async function initOtp(){
   if(_otpProbed) return; _otpProbed=true;
   const wrap=document.getElementById('otpWrap'); if(!wrap) return;
   if(!(await otpAvailable())) return;
   wrap.style.display='block';
-  const send=document.getElementById('otpSend'), code=document.getElementById('otpCode'),
-        check=document.getElementById('otpCheck'), hint=document.getElementById('otpHint');
-  const phone=()=> (document.getElementById('phoneIn').value||'').trim();
-  send.addEventListener('click', async ()=>{
-    if(!phone()){ flash(document.getElementById('phoneIn')); return; }
-    send.disabled=true; send.textContent='Sending…';
+  const start=document.getElementById('otpStart'), link=document.getElementById('otpLink'),
+        hint=document.getElementById('otpHint');
+  start.addEventListener('click', async ()=>{
+    start.disabled=true; start.textContent='One moment…';
     try{
-      const r=await sb.functions.invoke('wa-verify',{ body:{ action:'send', phone:phone() } });
-      if(r && r.error) throw new Error('send failed');
-      code.style.display=''; check.style.display=''; code.focus();
-      hint.textContent='We sent a six-digit code to '+phone()+' on WhatsApp. It is valid for ten minutes.';
-      send.textContent='Send again';
+      const r=await sb.functions.invoke('wa-verify',{ body:{ action:'start' } });
+      if(!r || r.error || !r.data || !r.data.wa_link) throw new Error('start failed');
+      start.style.display='none';
+      link.href=r.data.wa_link; link.style.display='inline-flex';
+      hint.innerHTML='Tap the button, then send the message that is already written for you — '+
+        '<b>'+r.data.code+'</b>. We confirm the number it arrives from. This page notices by itself.';
+      let tries=0;
+      _otpPoll=setInterval(async ()=>{
+        if(++tries>40){ clearInterval(_otpPoll); _otpPoll=null;
+          hint.textContent='We have not seen your message yet. You can publish without confirming — buyers will simply see that the number is unconfirmed.';
+          return; }
+        try{
+          const st=await sb.functions.invoke('wa-verify',{ body:{ action:'status' } });
+          if(st && st.data && st.data.verified) otpDone(st.data.phone);
+        }catch(e){}
+      }, 3000);
     }catch(e){
-      hint.textContent='We could not send the code. You can publish without it — buyers will see that the number is unverified.';
-      send.textContent='Send me a code on WhatsApp';
+      start.disabled=false; start.textContent='Confirm this number on WhatsApp';
+      hint.textContent='We could not start the confirmation. You can publish without it.';
     }
-    send.disabled=false;
-  });
-  check.addEventListener('click', async ()=>{
-    check.disabled=true;
-    try{
-      const r=await sb.functions.invoke('wa-verify',{ body:{ action:'check', phone:phone(), code:code.value } });
-      if(r && r.data && r.data.verified){
-        S.phoneVerified=true;
-        wrap.innerHTML='<div class="hint" style="color:var(--green-700);font-weight:700">'+
-          phone()+' is verified. Your listing carries that.</div>';
-      }else{
-        hint.textContent='That code did not match. Check the message, or send a new one.';
-      }
-    }catch(e){ hint.textContent='We could not check the code just now.'; }
-    check.disabled=false;
   });
 }
 
