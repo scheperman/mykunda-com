@@ -1284,13 +1284,19 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
      kleiner vlak en blijft de rest leeg — dat is het "zwarte scherm" dat Edwin
      zag. Daarom hermeten we op elk moment waarop de maat veranderd kan zijn, en
      altijd vlak vóór een setView. invalidateSize() is goedkoop en idempotent. */
-  var valMapRO=null;
+  var valMapRO=null, valMapBusyUntil=0;
+  /* invalidateSize() midden in een zoom- of panbeweging breekt het ophalen van
+     de tegels voor het nieuwe niveau af: de kaart blijft dan hangen op de
+     uitvergrote tegels van het vorige niveau — scherpteloos, en over water of
+     donkere grond zwart. Daarom nooit hermeten zolang de kaart beweegt. De
+     grens loopt vanzelf af, zodat een gemist eindsignaal niets blokkeert. */
   function valMapFix(){
-    if(!ldMap) return;
-    try{ ldMap.invalidateSize(); }catch(e){ return; }
-    requestAnimationFrame(function(){ if(ldMap){ try{ ldMap.invalidateSize(); }catch(e){} } });
+    if(!ldMap || Date.now() < valMapBusyUntil) return;
+    try{ ldMap.invalidateSize(false); }catch(e){}
   }
   function valMapReady(){
+    ldMap.on('zoomstart movestart', function(){ valMapBusyUntil = Date.now()+1200; });
+    ldMap.on('zoomend moveend', function(){ valMapBusyUntil = 0; setTimeout(valMapFix,120); });
     valMapFix();
     setTimeout(valMapFix,250); setTimeout(valMapFix,1200);
     window.addEventListener('load', valMapFix);
@@ -1528,8 +1534,9 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
     const lab=document.getElementById(labelId); if(lab) lab.textContent=place||area||'Location';
     if(!map||!marker||!ll) return null;
     /* Eerst hermeten, dan pas verplaatsen: setView op een verkeerd gemeten
-       venster vult maar een deel van het vlak met tegels. */
-    try{ map.invalidateSize(); }catch(e){}
+       venster vult maar een deel van het vlak met tegels. Niet erna — zie de
+       toelichting bij valMapFix(). */
+    try{ if(!map._animatingZoom) map.invalidateSize(false); }catch(e){}
     map.setView([ll.lat,ll.lng], isExactLoc(locStr) ? 18 : 15);
     marker.setLatLng([ll.lat,ll.lng]);
     /* Wie coördinaten of een Plus Code invult, ziet anders "this area" boven de
@@ -1779,7 +1786,7 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
         if(!a && PLUS_RE.test(v)) a=areaFromPlusCode(v);
         if(!a) a=nearestArea(parseLatLng(v));
         var ll=updateValMap(ldMap,ldMarker,'ldMapLabel',v,a,a||v.trim());
-        if(ll){ LD.ll=ll; ldApplyGeo(); if(ldMap){ valMapFix(); ldMap.setView([ll.lat,ll.lng], isExactLoc(v)?18:15); valMapFix(); } }
+        if(ll){ LD.ll=ll; ldApplyGeo(); if(ldMap){ valMapFix(); ldMap.setView([ll.lat,ll.lng], isExactLoc(v)?18:15); } }
       },450);
     });
 

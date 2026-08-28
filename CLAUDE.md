@@ -1224,14 +1224,25 @@ Wat je hierbij moet weten voordat je eraan sleutelt:
   dat na het kiezen van een gebied een half gevulde, donker ogende kaart. In het
   oude ontwerp viel dat niet op: 745 × 260 paste binnen één rij tegels.
 
-  De correctie is `valMapFix()` (twee keer `invalidateSize()`, de tweede in een
-  `requestAnimationFrame`) plus `valMapReady()`, dat hem aanhaakt op `load`,
+  De correctie is `valMapFix()` plus `valMapReady()`, dat hem aanhaakt op `load`,
   `orientationchange`, `document.fonts.ready`, een `ResizeObserver` op
   `.mkv-map` — bewaard in `valMapRO`, want een observer zonder verwijzing is
   niet gegarandeerd blijvend — en twee natikkende timers. Daarnaast wordt er
   hermeten **vlak vóór elke `setView`**, in `updateValMap()` en in de
   invoerhandler van `#lfLocation`. `invalidateSize()` is goedkoop en
   idempotent; te vaak aanroepen kost niets, te weinig kost de kaart.
+
+  **Maar nooit terwijl de kaart beweegt.** De eerste versie van deze correctie
+  hermat ook vlak ná `setView`, en dat was erger dan de kwaal: `invalidateSize()`
+  midden in een zoomanimatie breekt het ophalen van de tegels voor het nieuwe
+  niveau af. De kaart bleef staan op de uitvergrote tegels van zoom 8 — het vlak
+  was netjes gevuld, maar met een wazig, veel te ver uitgezoomd beeld, en boven
+  water of donkere grond gewoon zwart. Vandaar `valMapBusyUntil`: `zoomstart` en
+  `movestart` zetten een grens ~1,2 s vooruit, `zoomend`/`moveend` halen hem weg
+  en hermeten dan alsnog. De grens loopt vanzelf af, zodat een gemist
+  eindsignaal de hermeting niet permanent blokkeert. Meetlat bij het testen:
+  tel de tegelverzoeken. Blijft het bij vier tegels op zoom 8 na het kiezen van
+  een gebied, dan is dit weer stuk; goed is negen tegels op zoom 14.
 * `initValMaps()` wordt twee keer aangeroepen — direct, en nog eens zodra
   `ensureLeaflet` klaar is. De tweede mag de kaart niet opnieuw opbouwen:
   Leaflet gooit dan "Map container is already initialized" en alles achter die
