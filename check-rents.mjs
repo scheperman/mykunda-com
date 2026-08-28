@@ -28,4 +28,5 @@ for (const [key, r] of Object.entries(DB.areas)) {
   if (problems.length) bad++;
   console.log(`${flag} ${r.slug.padEnd(16)} ${r.rent_year ? (D(r.rent_month) + '/mnd  ' + D(r.rent_lo) + '-' + D(r.rent_hi) + '/jr').padEnd(34) : 'geen huurcijfer'.padEnd(34)} ${r.rent_src.padEnd(9)}${problems.join(' | ')}`);
 }
-console.log(bad ? `\n${bad} pagina('s) met een probleem.` : '\nAlle 41 pagina’s komen overeen met area-prices.json.');
+const N = Object.keys(DB.areas).length;
+console.log(bad ? `\n${bad} pagina('s) met een probleem.` : `\nAlle ${N} pagina’s komen overeen met area-prices.json.`);

@@ -6,6 +6,7 @@ const GAMBIA_PLACES = [
   ['Banjul','Banjul',13.4554,-16.5757],
 
   // ── Kanifing LGA (Greater Banjul) ──
+  ['Serrekunda','Kanifing',13.4388,-16.6748],
   ['Serekunda','Kanifing',13.4388,-16.6748],
   ['Bakau','Kanifing',13.4775,-16.6779],
   ['Fajara','Kanifing',13.469,-16.6914],
@@ -74,6 +75,10 @@ const GAMBIA_PLACES = [
   ['Mandina Ba','West Coast',13.24,-16.51],
   ['Kembujeh','West Coast',13.37,-16.71],
   ['Kerr Serign','West Coast',13.4325,-16.7203],
+  ['Salagi','West Coast',13.3928,-16.7104],
+  ['Farato','West Coast',13.3152,-16.6632],
+  ['Mamuda','West Coast',13.3032,-16.7328],
+  ['Latriya','West Coast',13.3000,-16.7110],
   ['Madiana','West Coast',13.3533,-16.7631],
   ['Berefet','West Coast',13.32,-16.55],
   ['Bondali','West Coast',13.33,-16.63],
@@ -175,7 +180,7 @@ const GAMBIA_PLACES = [
   ['Bessi Nding','West Coast',13.3000,-16.5833],
   ['Tunjina','West Coast',13.2833,-16.5667],
   ['Folonko','West Coast',13.1167,-16.7333],
-  ['Jambanjelly','West Coast',13.2167,-16.7500],
+  ['Jambanjelly','West Coast',13.2806,-16.7276],
   ['Kabafita','West Coast',13.3167,-16.7167],
   ['Kalagi','West Coast',13.2333,-16.3500],
   ['Kansala','West Coast',13.1833,-16.3167],

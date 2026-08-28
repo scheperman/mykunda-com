@@ -873,6 +873,126 @@ was er D83.747/m², op `/buy` D95.450, en op de areapagina zelf D8.800 —
 met een koers van D83,00 per euro ingebakken die nergens anders voorkomt. Ze
 komen nu uit `area-prices.json` en heten "Land", net als overal elders.
 
+## Het areamenu: 46 gebieden in zeven groepen (28-08-2026)
+
+`MK_AREAS` in `app.js` is de enige bron voor het areamenu, voor de zoekkiezer
+op /buy en /rent, en — via deze regel — voor de regiokolom in de twee
+prijstabellen. Op 28-08-2026 zijn de zes groepen zeven geworden, west naar
+oost: **Greater Banjul · Kombo Coast · Kombo Inland · North Bank · Lower River
+· Central River · Upper River**. "Banjul Area" en "Upcountry" bestaan niet
+meer; "Upcountry" zette Soma en Mansa Konko (Lower River) achter Central
+River, wat geografisch omgekeerd is. Dezelfde zeven namen staan als koppen op
+`areas-in-the-gambia.html` en in de kolom `reg` van beide tabellen. Wijkt daar
+iets af, dan is `MK_AREAS` de baas.
+
+Beide areamenu's (desktop én mobiel) sluiten af met een link naar
+`areas-in-the-gambia.html`; het aantal in die link komt uit `MK_AREAS.length`,
+dus tel nooit met de hand mee.
+
+### De vijf gebieden die erbij kwamen
+
+Salagi, Farato, Latriya, Mamuda en Jambanjelly. Ze zijn gekozen op **bewijs**,
+niet op bekendheid: in het Facebook-bestand van 25-08-2026 en in
+`external_listings` staan ze bij de meest genoemde plaatsen van het hele land
+(Mamuda 23 vermeldingen, Brufut 20, Brusubi 20 — tegen Kololi 6 en Cape Point
+1), terwijl zestien gebieden die wél een pagina hadden in geen van beide
+bronnen voorkomen.
+
+Hun pagina's zijn met opzet **soberder** dan de andere 41: geen
+leefbaarheidsscores, geen reistijden in minuten, geen tellingen van winkels of
+scholen. Dat onderzoek bestaat voor deze vijf niet, en een verzonnen score is
+precies wat de eerlijkheidsalinea belooft niet te doen. In plaats daarvan
+heeft elke pagina een blok "What we have not measured here yet" en een
+bronnenlijst onder het stuk over grond en titel. Neem die blokken niet weg bij
+een volgende bewerking; ze zijn het verschil tussen dun en onbetrouwbaar.
+
+Wat er wél op staat is nagetrokken bij Gambiaanse pers en officiële bronnen.
+Vier van de vijf hebben een gedocumenteerd, onopgelost titelverhaal (Salagi:
+sloop 2020 en 2025; Farato: 950+ ontruimingsaanzeggingen 2024 om de
+dorpsgrens met Bafuloto; Latriya: eigendomsgeschil sinds 2014; Mamuda: de
+grensruzie bij Pacholling). Bij Jambanjelly is er niets gevonden — en dat
+staat er ook zo, als "wij vonden er geen", niet als "die zijn er niet".
+
+### De vijfde band: `kombo_inland`
+
+Farato, Latriya, Mamuda en Jambanjelly pasten in geen bestaande band. In de
+`kombo`-band (D2.330) zou Mamuda D2.330 publiceren terwijl zijn eigen vier
+advertenties op D948 uitkomen — ruim twee keer zo hoog. Er is daarom een band
+bij: **D1.560 per m², p25–p75 D1.190–D2.080, n=13**, de gepoolde mediaan over
+de dertien prijsbare kavels van die vier dorpen. Hij zit netjes tussen
+`tanji_tujereng` (D2.280) en `sanyang_gunjur` (D970), en de vangrail in
+`build-area-prices.mjs` bewaakt die volgorde nu ook.
+
+Salagi zit in de bestaande `kombo`-band: zijn twee prijsbare kavels (mediaan
+D2.915) liggen erboven, en twee waarnemingen zetten geen tarief. De bestaande
+banden zijn **niet** herrekend — dat zou zes andere pagina's laten bewegen
+zonder dat iemand het gevraagd heeft. Neem het mee bij de herijking van
+3 september: dan horen de nieuwe waarnemingen gewoon in de pool.
+
+### Wat de generator er sindsdien bij doet
+
+Twee dingen die eerder met de hand in pagina's stonden en stil achterliepen:
+
+* **De gebiedsaantallen in lopende tekst.** "41 areas" stond op vier pagina's,
+  plus "12 van de 41" en "13 van de 41 — en de andere 28". Die drie getallen
+  komen nu uit `area-prices.json` (aantal gebieden, aantal `observed`, aantal
+  zonder huurcijfer). Typ ze nergens meer.
+* **De drie budgetbanden op `areas-in-the-gambia.html`.** Die stonden in
+  DOLLARS per m² en dateerden van vóór de omzetting naar dalasi: "Under
+  $150/m²" is D10.900 per m², waar sinds 27-08-2026 vrijwel elk gebied van het
+  land onder valt — Brusubi stond in de middelste band terwijl het op $89 per
+  m² staat. Ze worden nu uit de tabel geschreven, in dalasi.
+
+`check-rents.mjs` telt het aantal pagina's voortaan zelf; de "41" in de
+slotregel stond er ook met de hand.
+
+### Openstaand: de Valuation-tool en de areapagina's rekenen nog anders
+
+De tool (`valuation.js`) gebruikt vanaf **n≥3** de eigen mediaan van een
+gebied; de areapagina's publiceren pas vanaf **n≥5** en tonen daaronder een
+bandtarief. Voor dezelfde plaats staan er dus twee getallen op de site:
+
+| gebied | pagina publiceert | tool rekent | verschil |
+|---|---|---|---|
+| Latriya | D1.560 (band) | D2.644 (n=4) | +69% |
+| Mamuda | D1.560 (band) | D896 (n=5) | −43% |
+| Jambanjelly | D1.560 (band) | D1.202 (n=1) | −23% |
+| Farato | D1.560 (band) | D1.640 (n=13) | +5% |
+| Salagi | D2.330 (band) | D2.408 (n=4) | +3% |
+
+Bij Latriya, Mamuda en Jambanjelly noemt de pagina het toolgetal wél, maar als
+*eigen mediaan ter context* — dus ze spreken elkaar niet tegen, ze labelen het
+anders. Twee dingen zijn wel echt inconsistent en horen bij de herijking van
+3 september uitgezocht:
+
+1. **De waarnemingsaantallen lopen uiteen.** Farato heeft n=13 in de tool en
+   n=4 in `area-prices.json`; Mamuda n=5 tegen n=4; Salagi n=4 tegen n=2. Twee
+   tellingen van dezelfde meting van 25-08-2026 horen gelijk te zijn.
+2. **De drempel.** Of de tool ook naar n≥5 en bandlogica gaat, is een
+   inhoudelijke keuze die bij Edwin ligt (stond al open op 27-08-2026).
+
+Kleine dingen die daarbij horen: `latriya` ontbrak in `ZONE_OF` van
+`valuation.js` en viel dus terug op de zone `upcountry` (factor 0,55) voor een
+Kombo-dorp — toegevoegd. `jambanjelly` staat in `ZONE_OF.coast` terwijl het
+bijna zeven kilometer landinwaarts ligt; dat werkt nu alleen doordat het een
+`LAND_HALF`-regel heeft, maar het klopt niet.
+
+### Coördinaten
+
+`gambia-places.js` had Jambanjelly op 13,2167 / −16,7500. Dat is het
+zwaartepunt van het *district* Kombo South, niet het dorp: ruim 7 km mis.
+Gecorrigeerd naar 13,2806 / −16,7276 (GeoNames, als "Jambanjali", en
+OpenStreetMap liggen 0,4 km uit elkaar; dit ligt ertussen). Salagi, Farato,
+Mamuda en Latriya zijn toegevoegd, en `Serekunda` heet daar nu ook
+`Serrekunda`, zoals de rest van de site het schrijft.
+
+Let op bij alle vijf: **Salagi, Mamuda en Latriya staan in geen enkele
+gazetteer** — niet in GeoNames, niet in OpenStreetMap, niet in de nationale
+nederzettingenlaag. Hun coördinaat is een schatting op 1,5 tot 2 km, en dat
+staat ook op de pagina zelf. Farato staat er onder zijn oude naam *Medina
+Suware Kunda*; drie ándere plaatsen in het land heten óók Farato, en
+kaartdiensten geven meestal die in Upper River.
+
 ## Gebiedsprijzen: één bron, en huur nooit uit een prijs
 
 `area-prices.json` is de enige bron voor elk bedrag op de 41 area-pagina's, op

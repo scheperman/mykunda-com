@@ -215,12 +215,13 @@ let changed = 0, skipped = 0;
       fouten.push(`${key}: src=thin buiten upcountry — onder de drempel hoort een band, geen eigen mediaan`);
   }
   const b = DB.bands || {};
-  if (!(b.strip && b.kombo && b.tanji_tujereng && b.sanyang_gunjur))
+  if (!(b.strip && b.kombo && b.tanji_tujereng && b.kombo_inland && b.sanyang_gunjur))
     fouten.push('bands-blok incompleet');
   else {
     if (!(b.strip.gmd_m2 > b.kombo.gmd_m2)) fouten.push('bandvolgorde: strip hoort boven kombo');
     if (!(b.kombo.gmd_m2 >= b.tanji_tujereng.gmd_m2)) fouten.push('bandvolgorde: kombo hoort niet onder tanji_tujereng');
-    if (!(b.tanji_tujereng.gmd_m2 > b.sanyang_gunjur.gmd_m2)) fouten.push('bandvolgorde: tanji_tujereng hoort boven sanyang_gunjur');
+    if (!(b.tanji_tujereng.gmd_m2 > b.kombo_inland.gmd_m2)) fouten.push('bandvolgorde: tanji_tujereng hoort boven kombo_inland');
+    if (!(b.kombo_inland.gmd_m2 > b.sanyang_gunjur.gmd_m2)) fouten.push('bandvolgorde: kombo_inland hoort boven sanyang_gunjur');
     const laagsteBand = Math.min(...Object.values(b).map(x => x.gmd_m2));
     for (const key of Object.keys(A)) {
       const r = A[key];
@@ -432,6 +433,39 @@ await patch('areas-in-the-gambia.html', src => {
   return n ? src : null;
 });
 
+/* ---------- de budgetbanden op areas-in-the-gambia.html ----------
+   Deze drie blokken stonden in DOLLARS per m² met de hand in de pagina, en
+   ze dateerden van vóór de omzetting naar dalasi: "Under $150/m²" is D10.900
+   per m², en daar valt sinds 27-08-2026 vrijwel elk gebied van het land in.
+   Brusubi stond in de middelste band terwijl het op $89 per m² staat. Ze
+   worden nu net als al het andere uit area-prices.json geschreven. */
+await patch('areas-in-the-gambia.html', src => {
+  const BANDEN = [
+    { tot: 1000, kop: 'Under D1,000 / m²',
+      tekst: 'A full compound plot upcountry, on the North Bank or in the southern coastal villages. Land here is cheap because almost nobody is buying it — and the thinner the local evidence, the wider the figure can be of a specific street.' },
+    { tot: 3000, kop: 'D1,000 – D3,000 / m²',
+      tekst: 'The working middle of the market: the Kombo highway belt, the inland villages being subdivided right now, and the fishing coast south of Tanji. This is where most Gambian families and most diaspora builders actually buy.' },
+    { tot: Infinity, kop: 'Above D3,000 / m²',
+      tekst: 'The established coast and Banjul. Finished villas and apartments rather than bare plots, with rental demand from tourists and expatriates — and the only part of the country where we have enough listings to measure most areas directly.' },
+  ];
+  const rijen = Object.values(A).slice().sort((a, b) => b.gmd_m2 - a.gmd_m2);
+  let vorige = 0;
+  const html = BANDEN.map(b => {
+    const in_band = rijen.filter(r => r.gmd_m2 >= vorige && r.gmd_m2 < b.tot);
+    vorige = b.tot;
+    if (!in_band.length) return '';
+    const pills = in_band.map(r => `<a href="${r.slug}.html">${r.label}</a>`).join('');
+    return `<div class="ar-band"><h3>${b.kop}</h3><p>${b.tekst}</p><div class="pills">${pills}</div></div>`;
+  }).join('\n    ');
+  const re = /<div class="ar-bands">[\s\S]*?<\/div>\s*<\/div>\s*<\/div>/;
+  if (!re.test(src)) { report.push(['areas-in-the-gambia.html', 'budgetbanden niet gevonden']); return null; }
+  src = src.replace(re, `<div class="ar-bands">\n    ${html}\n  </div>`);
+  /* de stempel eronder zei "Average asking price per m²" — dat is niet wat er staat */
+  src = src.replace(/<p class="ar-stamp"><span><\/span>[^<]*/,
+    `<p class="ar-stamp"><span></span> Asking price of land per m², measured ${DB.measured_label}. See `);
+  return src;
+});
+
 /* de grondpagina: dezelfde tabel, maar dan voor kavels */
 await patch('land-for-sale-in-the-gambia.html', src => {
   let n = 0;
@@ -458,6 +492,16 @@ await patch('land-for-sale-in-the-gambia.html', src => {
   src = src.replace(/<b>Avg\. price \/ m²<\/b> is the area's index across everything that sells there, built and unbuilt, so it sits far/,
     "<b>Land, per m²</b> is the rate for bare ground only — buildings are priced separately on this site, so it sits far");
   src = src.replace(/MyKunda price index/g, 'MyKunda price table');
+  /* "Of the 41 areas MyKunda tracks, fourteen are markets ..." — twee getallen
+     die met de hand meegeteld moesten worden en dat dus niet werden. n is het
+     aantal rijen dat deze stap zojuist heeft geschreven. */
+  {
+    const W = ['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven',
+               'twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen','twenty',
+               'twenty-one','twenty-two','twenty-three','twenty-four','twenty-five'];
+    src = src.replace(/Of the (<b>)?\d+ areas(<\/b>)? MyKunda tracks, [a-z-]+ are markets/,
+      `Of the <b>${Object.keys(A).length} areas</b> MyKunda tracks, ${W[n] || n} are markets`);
+  }
   return n ? src : null;
 });
 
@@ -574,6 +618,34 @@ for (const f of ['gambia-property-prices.html', 'how-we-measure-prices.html', 'i
   for (const [re, to] of TXT) src = src.replace(re, to);
   if (src !== before) { changed++; if (WRITE) await writeFile(f, src); report.push([f + ' (tekst)', 'ok']); }
   else report.push([f + ' (tekst)', 'ongewijzigd']);
+}
+
+/* ---------- de aantallen in de lopende tekst ----------
+   "41 areas" stond met de hand op vier pagina's. Elke nieuwe areapagina maakte
+   die zin stil onwaar — precies het patroon dat de rest van dit script bestrijdt.
+   De drie getallen komen nu uit de tabel: hoeveel gebieden er zijn, hoeveel er
+   een gemeten grondtarief hebben, en hoeveel er GEEN huurcijfer hebben. */
+{
+  const N      = Object.keys(A).length;
+  const NOBS   = Object.values(A).filter(x => x.src === 'observed').length;
+  const NRENT  = Object.values(A).filter(x => x.rent_year).length;
+  const NGEEN  = N - NRENT;
+  const woord  = n => ['zero','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten',
+                       'Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen',
+                       'Eighteen','Nineteen','Twenty'][n] || String(n);
+  for (const f of ['gambia-property-prices.html', 'how-we-measure-prices.html', 'index.html',
+                   'areas-in-the-gambia.html', 'faq.html', 'about.html',
+                   'buy.html', 'rent.html', 'land-for-sale-in-the-gambia.html',
+                   'search.html', 'sell.html', 'home.html']) {
+    let src;
+    try { src = await readFile(f, 'utf8'); } catch { continue; }
+    const before = src;
+    src = src.replace(/\b\d+ of the \d+ areas today\b/g, NRENT + ' of the ' + N + ' areas today')
+             .replace(/\band the other \d+ pages say plainly\b/g, 'and the other ' + NGEEN + ' pages say plainly')
+             .replace(/\b[A-Z][a-z]+ of the \d+ areas are in this class\b/g, woord(NOBS) + ' of the ' + N + ' areas are in this class')
+             .replace(/\b\d+ areas\b/g, N + ' areas');
+    if (src !== before) { changed++; if (WRITE) await writeFile(f, src); report.push([f + ' (aantallen)', 'ok']); }
+  }
 }
 
 for (const [f, s] of report) console.log(f.padEnd(26), s);
