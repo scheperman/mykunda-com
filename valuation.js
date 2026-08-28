@@ -78,57 +78,108 @@
    ============================================================ */
 var LAND_HERIJKT = '2026-08-26';
 
-/* Waargenomen: n ≥ 3. `gmd` is de mediaan zoals hij in de
+/* ALLEEN plaatsen ZONDER eigen areapagina — gebieden met een pagina
+   staan in LAND_PUBLISHED hierboven en worden daar afgehandeld.
+   Sinds 28-08-2026 geldt hier dezelfde bar als op de pagina's: een
+   eigen mediaan pas vanaf VIJF bruikbare waarnemingen. Jambur (4) en
+   Sifoe (3) zijn daarop naar LAND_HALF gegaan.
+
+   `gmd` is de mediaan zoals hij in de
    advertenties staat — de Gambiaanse markt denkt in dalasi, en dit
    is het getal dat je met een advertentie kunt vergelijken.
    Tot 27-08-2026 stond hier `eur` naast, dezelfde waarde gedeeld
    door 85,74 (CBG, 25-08-2026), en dát was wat het model rekende.
    Die tussenstap is eruit: het model rekent nu met de waarneming. */
 var LAND_OBSERVED = {
-  'fajara':     { gmd: 13333, n:  5 },
-  'kerr serign':{ gmd:  7905, n:  3 },
-  'brusubi':    { gmd:  6458, n:  4 },
-  'bijilo':     { gmd:  6000, n: 13 },
-  'jabang':     { gmd:  2894, n:  9 },
-  'salagi':     { gmd:  2408, n:  4 },
-  'sukuta':     { gmd:  2326, n:  8 },
-  'brufut':     { gmd:  2282, n:  7 },
-  'tujereng':   { gmd:  2280, n: 11 },
-  'tanji':      { gmd:  2163, n:  5 },
-  'yundum':     { gmd:  1844, n:  5 },
-  'lamin':      { gmd:  1833, n:  9 },
-  'busumbala':  { gmd:  1728, n:  4 },
-  'latriya':    { gmd:  2644, n:  4 },
-  'farato':     { gmd:  1640, n: 13 },
-  'jambur':     { gmd:  1612, n:  4 },
-  'brikama':    { gmd:  1053, n:  7 },
-  'sanyang':    { gmd:   972, n: 14 },
-  'mamuda':     { gmd:   896, n:  5 },
-  'kitty':      { gmd:   875, n:  6 },
-  'gunjur':     { gmd:   682, n:  7 },
-  'sifoe':      { gmd:   625, n:  3 }
+  'kitty':{ gmd:   875, n:  6 }
 };
 
-/* Eén of twee waarnemingen: een aanwijzing, geen mediaan. Eén
+/* Minder dan vijf waarnemingen: een aanwijzing, geen mediaan. Eén
    kavel is geen markt — het is de mening van één verkoper over
    zijn eigen grond. confidence() rekent daar zwaar op af. */
 var LAND_HALF = {
-  'cape point':    { gmd: 16667, n:  1 },
-  'banjul':        { gmd: 12500, n:  1 },
-  'bakoteh':       { gmd: 10549, n:  1 },
-  'kotu':          { gmd:  9971, n:  1 },
-  'kololi':        { gmd:  8800, n:  4 },   /* 27-08-2026: +2 Songhai-kavels met maat */
   'brufut heights':{ gmd:  3625, n:  2 },
   'ghana town':    { gmd:  2500, n:  1 },
+  'jambur':        { gmd:  1612, n:  4 },
   'madiana':       { gmd:  1333, n:  1 },
-  'jambanjelly':   { gmd:  1202, n:  1 },
   'jalanbang':     { gmd:  1087, n:  1 },
-  'kartong':       { gmd:   742, n:  2 },
   'bafuloto':      { gmd:   722, n:  1 },
+  'sifoe':         { gmd:   625, n:  3 },
   'faraba':        { gmd:   488, n:  1 },
-  'pirang':        { gmd:   246, n:  1 },
-  'farafenni':     { gmd:    93, n:  1 }
+  'pirang':        { gmd:   246, n:  1 }
 };
+
+/* ============================================================
+   LAND_PUBLISHED — wat de site over een gebied PUBLICEERT
+   ------------------------------------------------------------
+   GEGENEREERD DOOR build-area-prices.mjs. Niet met de hand
+   bewerken: de volgende run overschrijft het.
+
+   Waarom dit blok bestaat. Op 27-08-2026 is besloten dat geen
+   enkel gebied een eigen grondtarief publiceert onder vijf
+   bruikbare waarnemingen — één advertentie is geen markt. Die
+   regel is toen wél in area-prices.json en op de areapagina's
+   doorgevoerd, maar NIET hier. Gevolg: de areapagina zei over
+   Bakoteh D2.330 per m² (bandtarief) terwijl deze tool er
+   D10.549 van maakte, uit één advertentie — precies het getal
+   dat als ongeloofwaardig was aangemerkt. Over elf gebieden liep
+   het meer dan 10% uiteen, tot 353% toe.
+
+   Sinds 28-08-2026 leest de tool voor elk gebied met een
+   areapagina hetzelfde getal als die pagina, met dezelfde
+   bewijsklasse. LAND_OBSERVED en LAND_HALF hieronder gelden
+   alleen nog voor plaatsen ZONDER eigen pagina.
+   ============================================================ */
+/* mk:land-published */
+var LAND_PUBLISHED = {
+  'bakau': { gmd: 6460, src: 'band', n: 0 },
+  'bakoteh': { gmd: 2330, src: 'band', n: 1, own_med: 10549 },
+  'banjul': { gmd: 6460, src: 'band', n: 1, own_med: 12500 },
+  'bansang': { gmd: 141, src: 'regional', n: 0 },
+  'barra': { gmd: 330, src: 'regional', n: 0 },
+  'basse': { gmd: 189, src: 'regional', n: 0 },
+  'batokunku': { gmd: 2280, src: 'band', n: 0 },
+  'bijilo': { gmd: 6000, src: 'observed', n: 13 },
+  'brikama': { gmd: 1053, src: 'observed', n: 7 },
+  'brufut': { gmd: 2282, src: 'observed', n: 7 },
+  'brusubi': { gmd: 6460, src: 'band', n: 4, own_med: 6458 },
+  'busumbala': { gmd: 2330, src: 'band', n: 4, own_med: 1728 },
+  'cape point': { gmd: 6460, src: 'band', n: 1, own_med: 16667 },
+  'essau': { gmd: 236, src: 'regional', n: 0 },
+  'fajara': { gmd: 13333, src: 'observed', n: 5 },
+  'farafenni': { gmd: 93, src: 'thin', n: 1 },
+  'farato': { gmd: 1560, src: 'band', n: 4, own_med: 1827 },
+  'fatoto': { gmd: 71, src: 'regional', n: 0 },
+  'gambissara': { gmd: 71, src: 'regional', n: 0 },
+  'gunjur': { gmd: 682, src: 'observed', n: 7 },
+  'jabang': { gmd: 2894, src: 'observed', n: 9 },
+  'jambanjelly': { gmd: 1560, src: 'band', n: 1, own_med: 1202 },
+  'janjanbureh': { gmd: 236, src: 'regional', n: 0 },
+  'kartong': { gmd: 970, src: 'band', n: 2, own_med: 742 },
+  'kerewan': { gmd: 189, src: 'regional', n: 0 },
+  'kerr serign': { gmd: 6460, src: 'band', n: 3, own_med: 7905 },
+  'kololi': { gmd: 6460, src: 'band', n: 4, own_med: 8800 },
+  'kotu': { gmd: 6460, src: 'band', n: 1, own_med: 9971 },
+  'kuntaur': { gmd: 141, src: 'regional', n: 0 },
+  'lamin': { gmd: 1833, src: 'observed', n: 9 },
+  'latriya': { gmd: 1560, src: 'band', n: 4, own_med: 2644 },
+  'mamuda': { gmd: 1560, src: 'band', n: 4, own_med: 948 },
+  'manjai kunda': { gmd: 2330, src: 'band', n: 0 },
+  'mansa konko': { gmd: 141, src: 'regional', n: 0 },
+  'nema kunku': { gmd: 2330, src: 'band', n: 0 },
+  'pipeline': { gmd: 2330, src: 'band', n: 0 },
+  'salagi': { gmd: 2330, src: 'band', n: 2, own_med: 2915 },
+  'sanyang': { gmd: 972, src: 'observed', n: 14 },
+  'senegambia': { gmd: 6460, src: 'band', n: 0 },
+  'serrekunda': { gmd: 2330, src: 'band', n: 0 },
+  'sinchu alagie': { gmd: 2330, src: 'band', n: 0 },
+  'soma': { gmd: 141, src: 'regional', n: 0 },
+  'sukuta': { gmd: 2326, src: 'observed', n: 8 },
+  'tanji': { gmd: 2163, src: 'observed', n: 5 },
+  'tujereng': { gmd: 2280, src: 'observed', n: 11 },
+  'yundum': { gmd: 1844, src: 'observed', n: 5 }
+};
+/* /mk:land-published */
 
 /* Zonefactor voor gebieden zonder eigen waarneming, toegepast op
    de oude portaaltabel in valuation-areas.js. De factor is de
@@ -391,7 +442,7 @@ var RENT_YIELD = {
 };
 
 root.MK_VAL_CONFIG = {
-  LAND_OBSERVED: LAND_OBSERVED, LAND_HALF: LAND_HALF, LAND_ZONE: LAND_ZONE,
+  LAND_PUBLISHED: LAND_PUBLISHED, LAND_OBSERVED: LAND_OBSERVED, LAND_HALF: LAND_HALF, LAND_ZONE: LAND_ZONE,
   BUILD_COST: BUILD_COST, BUILD_EXTRA: BUILD_EXTRA, LAND_PTS: LAND_PTS,
   BUILD_PTS: BUILD_PTS, RENT_YIELD: RENT_YIELD, PORTAL_RATE: PORTAL_RATE,
   herijkt: { land: LAND_HERIJKT, build: BUILD_HERIJKT, rent: RENT_HERIJKT },
@@ -436,6 +487,35 @@ function matchArea(locStr, base) {
    voetnoot: hij bepaalt verderop de bandbreedte. */
 function landRate(areaKey, base) {
   var k = norm(areaKey);
+  /* Heeft dit gebied een areapagina, dan is het getal van die pagina
+     leidend. Twee plekken die hetzelfde beweren horen niet twee
+     antwoorden te geven. */
+  var pub = C.LAND_PUBLISHED[k];
+  if (pub) {
+    if (pub.src === 'observed') {
+      return { gmd: pub.gmd, src: 'observed', n: pub.n,
+               note: pub.n + ' local plot listings in ' + titel(areaKey) };
+    }
+    if (pub.src === 'band') {
+      var eigen = pub.own_med
+        ? ' \u2014 the ' + (pub.n === 1 ? 'one listing we can price here asks' : pub.n + ' listings we can price here ask a median of')
+          + ' D' + pub.own_med.toLocaleString('en-US') + ' per m\u00b2, too few to set a rate'
+        : ' \u2014 no priced plot listing in ' + titel(areaKey) + ' itself';
+      return { gmd: pub.gmd, src: 'band', n: pub.n,
+               note: 'area band rate for ' + titel(areaKey) + eigen };
+    }
+    if (pub.src === 'thin') {
+      /* Upcountry publiceert de pagina soms een cijfer op één of twee
+         waarnemingen. Dat is dun, maar het is wél lokaal gemeten — en de
+         tool hoort dan hetzelfde te zeggen als de pagina, niet 'geen
+         waarnemingen'. */
+      return { gmd: pub.gmd, src: 'half', n: pub.n,
+               note: pub.n + (pub.n === 1 ? ' observation' : ' observations') + ' in ' + titel(areaKey) +
+                     ' \u2014 an indication, not a market average' };
+    }
+    return { gmd: pub.gmd, src: 'regional', n: 0,
+             note: 'regional rate \u2014 no plot listings we can price in ' + titel(areaKey) };
+  }
   if (C.LAND_OBSERVED[k]) {
     return { gmd: C.LAND_OBSERVED[k].gmd, src: 'observed', n: C.LAND_OBSERVED[k].n,
              note: C.LAND_OBSERVED[k].n + ' local plot listings in ' + titel(areaKey) };
@@ -513,6 +593,16 @@ function confidence(parts) {
     else if (n >= 4) { s -= 12; why.push(n + ' observations in this area'); }
     else { s -= 26; why.push('only ' + n + ' observations in this area \u2014 too few for a median to carry weight'); }
   }
+  else if (parts.landSrc === 'band') {
+    /* Een bandtarief staat op tientallen advertenties uit de omliggende
+       gebieden, maar niet op deze plaats zelf. Dat is meer waard dan één
+       lokale advertentie en minder dan een lokale mediaan. */
+    s -= 30;
+    why.push(parts.landN
+      ? 'only ' + parts.landN + ' priced listing' + (parts.landN === 1 ? '' : 's') + ' in this area \u2014 rate taken from the surrounding band'
+      : 'no priced listing in this area \u2014 rate taken from the surrounding band');
+  }
+  else if (parts.landSrc === 'regional') { s -= 52; why.push('no plot listings we can price in this area \u2014 regional rate'); }
   else if (parts.landSrc === 'half') { s -= 38; why.push((parts.landN || 1) + ' observation' + ((parts.landN || 1) === 1 ? '' : 's') + ' in this area \u2014 one plot is not a market'); }
   else if (parts.landSrc === 'zone') { s -= 52; why.push('no observations in this area \u2014 rate derived from the wider region'); }
   else { s -= 60; why.push('area not recognised'); }

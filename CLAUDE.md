@@ -946,36 +946,66 @@ Twee dingen die eerder met de hand in pagina's stonden en stil achterliepen:
 `check-rents.mjs` telt het aantal pagina's voortaan zelf; de "41" in de
 slotregel stond er ook met de hand.
 
-### Openstaand: de Valuation-tool en de areapagina's rekenen nog anders
+### Eén bron: de Valuation-tool leest nu wat de areapagina publiceert
 
-De tool (`valuation.js`) gebruikt vanaf **n≥3** de eigen mediaan van een
-gebied; de areapagina's publiceren pas vanaf **n≥5** en tonen daaronder een
-bandtarief. Voor dezelfde plaats staan er dus twee getallen op de site:
+Op 27-08-2026 is besloten dat geen enkel gebied een eigen grondtarief
+publiceert onder **vijf** bruikbare waarnemingen — één advertentie is geen
+markt. Die regel is toen doorgevoerd in `area-prices.json` en op de
+areapagina's, maar **niet** in `valuation.js`, dat op n≥3 bleef staan met een
+eigen, met de hand bijgehouden tabel. Op 28-08-2026 gaf de tool daardoor over
+**twintig van de 46 gebieden** een ander getal dan de pagina ernaast:
 
-| gebied | pagina publiceert | tool rekent | verschil |
+| gebied | pagina | tool (oud) | verschil |
 |---|---|---|---|
-| Latriya | D1.560 (band) | D2.644 (n=4) | +69% |
-| Mamuda | D1.560 (band) | D896 (n=5) | −43% |
-| Jambanjelly | D1.560 (band) | D1.202 (n=1) | −23% |
-| Farato | D1.560 (band) | D1.640 (n=13) | +5% |
-| Salagi | D2.330 (band) | D2.408 (n=4) | +3% |
+| Bakoteh | D2.330 | D10.549 (1 advertentie) | **+353%** |
+| Cape Point | D6.460 | D16.667 (1) | +158% |
+| Banjul | D6.460 | D12.500 (1) | +93% |
+| Serrekunda | D2.330 | D6.006 (zonefactor) | +158% |
+| Kotu | D6.460 | D9.971 (1) | +54% |
+| Latriya | D1.560 | — (gebied onbekend) | tool weigerde |
+| Mamuda | D1.560 | D896 (5) | −43% |
 
-Bij Latriya, Mamuda en Jambanjelly noemt de pagina het toolgetal wél, maar als
-*eigen mediaan ter context* — dus ze spreken elkaar niet tegen, ze labelen het
-anders. Twee dingen zijn wel echt inconsistent en horen bij de herijking van
-3 september uitgezocht:
+Bakoteh was precies het getal dat op 27-08-2026 als ongeloofwaardig was
+aangemerkt: de pagina was gerepareerd, de tool niet.
 
-1. **De waarnemingsaantallen lopen uiteen.** Farato heeft n=13 in de tool en
-   n=4 in `area-prices.json`; Mamuda n=5 tegen n=4; Salagi n=4 tegen n=2. Twee
-   tellingen van dezelfde meting van 25-08-2026 horen gelijk te zijn.
-2. **De drempel.** Of de tool ook naar n≥5 en bandlogica gaat, is een
-   inhoudelijke keuze die bij Edwin ligt (stond al open op 27-08-2026).
+**Hoe het nu werkt.** `valuation.js` bevat een blok tussen
+`/* mk:land-published */` en `/* /mk:land-published */` dat door
+`build-area-prices.mjs` uit `area-prices.json` wordt geschreven — tarief,
+bewijsklasse, aantal waarnemingen en de eigen mediaan per gebied. `landRate()`
+kijkt daar als eerste. Bewerk dat blok nooit met de hand.
 
-Kleine dingen die daarbij horen: `latriya` ontbrak in `ZONE_OF` van
-`valuation.js` en viel dus terug op de zone `upcountry` (factor 0,55) voor een
-Kombo-dorp — toegevoegd. `jambanjelly` staat in `ZONE_OF.coast` terwijl het
-bijna zeven kilometer landinwaarts ligt; dat werkt nu alleen doordat het een
-`LAND_HALF`-regel heeft, maar het klopt niet.
+`LAND_OBSERVED` en `LAND_HALF` gelden sindsdien **alleen nog voor plaatsen
+zonder eigen areapagina** (Kitty, Jambur, Sifoe, Brufut Heights, Ghana Town,
+Madiana, Jalanbang, Bafuloto, Faraba, Pirang). Daar geldt dezelfde bar: een
+eigen mediaan pas vanaf vijf waarnemingen. Jambur (4) en Sifoe (3) zijn
+daarop naar `LAND_HALF` gegaan.
+
+`confidence()` heeft er twee klassen bij: `band` (−30, tussen een lokale
+mediaan en één losse advertentie in) en `regional` (−52). Gebieden die eerder
+62 tot 74 punten scoorden op twee tot vier advertenties komen nu op 44 uit —
+dat is geen verslechtering maar het wegnemen van een belofte die er niet was.
+
+**Blok D van `valuation-selftest.mjs`** legt de tool naast `area-prices.json`
+en faalt bij elk verschil in tarief, aantal of bewijsklasse, en zodra een
+gebied met een pagina óók nog in `LAND_OBSERVED` of `LAND_HALF` staat. Draai
+die zelftest na elke herijking, vóór upload.
+
+### Wat hierdoor NIET is opgelost
+
+De tellingen in `valuation.js` weken af van die in `area-prices.json` voor
+dezelfde meting van 25-08-2026: Farato n=13 tegen 4, Mamuda 5 tegen 4, Salagi
+4 tegen 2. Die afwijking is nu verdwenen doordat de tool de telling van
+`area-prices.json` overneemt — maar waar de oude getallen vandaan kwamen is
+níet achterhaald. Ze zijn niet reproduceerbaar uit `external_listings`; de
+pijplijn geeft voor alle vijf precies de aantallen die `area-prices.json`
+noemt. Vermoedelijk zijn ze in de sessie van 27-08-2026 met een ruimere
+definitie uit het Facebook-bestand geteld (bijvoorbeeld op tekstvermelding in
+plaats van op toegewezen gebied). Als er ooit een tweede telling opduikt: de
+pijplijntelling is de reproduceerbare, en die staat in `area-prices.json`.
+
+Ook nog open: `jambanjelly` staat in `ZONE_OF.coast` terwijl het bijna zeven
+kilometer landinwaarts ligt. Dat werkt nu alleen doordat het gebied via
+`LAND_PUBLISHED` wordt afgehandeld, maar de zone-indeling zelf klopt niet.
 
 ### Coördinaten
 

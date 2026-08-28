@@ -572,6 +572,31 @@ for (const page of ['home.html', 'index.html', 'buy.html']) {
   });
 }
 
+/* ---------- LAND_PUBLISHED in valuation.js ----------
+   De Valuation-tool en de areapagina's beweren allebei iets over het
+   grondtarief van een gebied. Tot 28-08-2026 deden ze dat uit twee
+   losse tabellen, en die liepen uiteen: over elf gebieden meer dan
+   10%, met Bakoteh als ergste geval — de pagina zei D2.330 (bandtarief),
+   de tool D10.549 uit één advertentie. De regel van 27-08-2026 ("nooit
+   een gebiedstarief onder vijf waarnemingen") was toen alleen in
+   area-prices.json doorgevoerd en niet in het model.
+
+   Sindsdien schrijft deze stap het blok LAND_PUBLISHED in valuation.js
+   uit dezelfde tabel. Eén meting, twee plekken die hem tonen. */
+await patch('valuation.js', src => {
+  const regels = Object.keys(A).sort().map(k => {
+    const r = A[k];
+    const src = (r.src === 'observed' || r.src === 'band' || r.src === 'thin') ? r.src : 'regional';
+    const b = ["gmd: " + r.gmd_m2, "src: '" + src + "'", "n: " + r.n];
+    if (r.own_med) b.push('own_med: ' + r.own_med);
+    return "  '" + k + "': { " + b.join(', ') + " }";
+  }).join(',\n');
+  const blok = '/* mk:land-published */\nvar LAND_PUBLISHED = {\n' + regels + '\n};\n/* /mk:land-published */';
+  const re = /\/\* mk:land-published \*\/[\s\S]*?\/\* \/mk:land-published \*\//;
+  if (!re.test(src)) { report.push(['valuation.js', 'mk:land-published-blok niet gevonden']); return null; }
+  return src.replace(re, blok);
+});
+
 /* ---------- de meetstempel op how-we-measure-prices ----------
    Stond met de hand in de zin getypt. Hij klopte, maar hij klopte per
    ongeluk: niets hield hem gelijk aan DB.fx en DB.measured, en een stempel

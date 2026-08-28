@@ -176,3 +176,47 @@ console.log(`Slechtste gebied zit ${worst.toFixed(2)}x buiten zijn band (grens 2
 if (ys[0] < 1 || ys[ys.length-1] > 8)
   console.log('LET OP: een gemeten rendement buiten 1–8% betekent dat huur en vraagprijs uit twee markten komen.');
 console.log('');
+
+/* ============================================================
+   D · ÉÉN BRON — zegt de tool hetzelfde als de areapagina?
+   ------------------------------------------------------------
+   Toegevoegd 28-08-2026. Tot die dag hadden valuation.js en
+   area-prices.json elk hun eigen grondtarieven, en die liepen
+   uiteen: over twintig gebieden gaf de tool een ander getal dan
+   de pagina, met Bakoteh als ergste geval (pagina D2.330,
+   tool D10.549 uit één advertentie — precies het getal dat op
+   27-08-2026 als ongeloofwaardig was aangemerkt).
+
+   LAND_PUBLISHED in valuation.js wordt sindsdien geschreven door
+   build-area-prices.mjs. Deze toets faalt zodra iemand valuation.js
+   uploadt zonder die generator te draaien.
+   ============================================================ */
+console.log('\n=== D · EEN BRON — tool naast areapagina ===\n');
+{
+  const P = MK_VAL_CONFIG.LAND_PUBLISHED || {};
+  const fouten = [];
+  for (const [k, r] of Object.entries(DB.areas)) {
+    const p = P[k];
+    if (!p) { fouten.push(`${r.label}: ontbreekt in LAND_PUBLISHED`); continue; }
+    if (p.gmd !== r.gmd_m2) fouten.push(`${r.label}: tarief ${p.gmd} tegen ${r.gmd_m2} op de pagina`);
+    if (p.n !== r.n)        fouten.push(`${r.label}: n=${p.n} tegen n=${r.n} op de pagina`);
+    const verwacht = (r.src === 'observed' || r.src === 'band' || r.src === 'thin') ? r.src : 'regional';
+    if (p.src !== verwacht) fouten.push(`${r.label}: bewijsklasse '${p.src}' tegen '${verwacht}'`);
+  }
+  const extra = Object.keys(P).filter(k => !DB.areas[k]);
+  if (extra.length) fouten.push(`LAND_PUBLISHED kent gebieden zonder pagina: ${extra.join(', ')}`);
+  /* Geen enkel gebied met een pagina mag nog in de losse tabellen staan:
+     twee bronnen voor hetzelfde getal is precies wat hier is opgeheven. */
+  for (const tab of ['LAND_OBSERVED', 'LAND_HALF']) {
+    const bots = Object.keys(MK_VAL_CONFIG[tab] || {}).filter(k => DB.areas[k]);
+    if (bots.length) fouten.push(`${tab} bevat gebieden die ook een pagina hebben: ${bots.join(', ')}`);
+  }
+  if (fouten.length) {
+    console.log(`${fouten.length} verschil(len) tussen de tool en de areapagina's:`);
+    fouten.forEach(f => console.log('  - ' + f));
+    console.log('\nDraai `node build-area-prices.mjs --write` en probeer opnieuw.');
+  } else {
+    console.log(`Alle ${Object.keys(DB.areas).length} gebieden: tarief, aantal en bewijsklasse gelijk aan de areapagina. — ok`);
+  }
+}
+console.log('');
