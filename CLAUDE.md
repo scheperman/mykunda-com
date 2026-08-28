@@ -1170,7 +1170,7 @@ eigen afleiding uit het e-mailadres.
 
 ## Een vastgezette balk hoort bij zijn sectie
 
-`.mkv-rail` op `sell.html` — de ESTIMATED VALUE-balk — is onder 980px
+`.mkv-rail` op `sell.html` — de ESTIMATED VALUE-balk — is onder 1100px
 `position:fixed;bottom:0`. Er stond niets tegenover, dus hij bleef over de
 prijstabel, de FAQ, de voettekst en de WhatsApp-knop staan, de hele pagina lang.
 
@@ -1179,11 +1179,59 @@ uit beeld is. In `sell.html` doet een `IntersectionObserver` op `#value` dat:
 buiten beeld krijgt de balk `data-off` (`transform:translateY(115%)` plus
 `pointer-events:none`, alleen binnen de mobiele media-query) en klapt hij dicht;
 in beeld gaat het attribuut eraf. Boven de sectie is hij nu ook weg, dus hij
-dekt de hero niet meer af. Desktop (>=980px) blijft `position:sticky` in zijn
-eigen kolom — daar doet het attribuut niets.
+dekt de hero niet meer af. Vanaf 1100px is de balk de onderste rij van de
+werkbank (zie hieronder) en staat hij dus altijd stil — daar doet het attribuut
+niets.
 
-De `#value{padding-bottom:152px}` blijft staan: die reserveert ruimte binnen de
+De `#value{padding-bottom:150px}` blijft staan: die reserveert ruimte binnen de
 sectie, waar de balk wél hoort.
+
+## De waarderingstool is een werkbank, geen formulier met een plaatje
+
+Tot 28-08-2026 stond de tool als één kolom vragen met daaronder een kaart van
+260px hoog, en rechts een smalle kolom met het bedrag. De kaart is niet de
+illustratie bij die vragen — het is het gereedschap waarmee de verkoper zijn
+perceel aanwijst en intekent. Op 260px is dat niet te doen, en de rest van de
+pagina liet zien hoe kaal dat blok erbij stond.
+
+Sindsdien is `.mkv` één omkaderd raster met drie vlakken:
+
+* **links** `.mkv-form` — de stappen, met een voortgangsbalk (`#mkvProg`)
+  bovenaan en een vaste voetnoot onderaan. Het paneel scrolt zelf
+  (`overflow-y:auto`), zodat de kaart niet meebeweegt met een lang stap 4;
+* **rechts** `.mkv-map` — de kaart, over de volle hoogte van de werkbank, met
+  daaronder een balk (`.mkv-mapbar`) met de plaatsnaam en één regel uitleg die
+  per stap meeloopt (`setMapHint()`);
+* **onderlangs** `.mkv-rail` — het bedrag, over beide kolommen. `#mkvMore` is
+  een lade die op elke breedte dicht begint en met `The workings` opengaat.
+
+De hoogte van de bovenste rij is `clamp(560px, calc(100vh - 240px), 720px)`.
+Onder 1100px stapelt alles en wordt de balk weer `position:fixed`.
+
+Wat je hierbij moet weten voordat je eraan sleutelt:
+
+* `.vmap-tools` en `#ldRead` staan **naast** `#ldMapBox`, niet erin. Daardoor
+  komt een klik op een knop nooit op de kaart terecht. Het JS bindt op
+  `#ldTools [data-ldmode]`, dus de knoppen mogen daarbinnen gegroepeerd staan;
+  de segmentknop `.vmt-seg` doet dat.
+* De zoomknoppen zijn na `mkBaseToggle` verplaatst naar `bottomright`
+  (`ldMap.zoomControl.setPosition`). Linksboven is van de tekengereedschappen.
+  `.vmap-tools` houdt rechts 104px vrij voor de Satellite/Map-schakelaar.
+* Een `ResizeObserver` op `.mkv-map` roept `invalidateSize()` aan. De kaart is
+  nu een kolom die met het venster meegroeit; Leaflet meet zichzelf alleen bij
+  `window.resize` en zou anders halve tegels tonen.
+* Het aantal kolommen van `.mkv-grid.three` hangt af van de breedte van het
+  **paneel**, niet van het venster. Drie kolommen alleen in de gestapelde
+  opzet (`max-width:1099px`). Zet er geen `min-width:1240px`-regel terug: op
+  een breed scherm is de linkerkolom nog steeds ~440px.
+* `.mkv-rail` heeft onder 1100px `z-index:1200`, boven het gereedschap op de
+  kaart (`z-index:1000`) uit, anders zweeft de gereedschapsbalk over de balk
+  met het bedrag heen.
+
+Bij dezelfde ingreep is de dode CSS van de vorige tool weggehaald: `.value`,
+`.value-text`, `.value-form`, `.value-done`, `.vf-*`, `.vd-*`, `.value-toggle`
+en `.vtab` hoorden bij de twee losse formulieren van vóór de adaptieve flow en
+stonden nergens meer op een element.
 
 ### Na een upload ziet de eerste pagina er nog oud uit
 

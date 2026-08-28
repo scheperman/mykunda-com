@@ -249,78 +249,14 @@
   .center-head h2{font-size:30px}
   .consult{grid-template-columns:1fr}.consult-info{padding:36px 32px}.consult-form{padding:32px 32px}
 }
-/* valuation tool */
-.value{background:var(--green-700);border-radius:var(--r-xl);overflow:hidden;display:grid;grid-template-columns:1.15fr .85fr;color:#fff}
-.value-text{padding:58px 56px}
-.value-text .eyebrow{color:var(--amber-400);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px}
-.value-text h2{color:#fff;font-size:38px;line-height:1.1}
-.value-text p{color:rgba(255,255,255,.84);font-size:16.5px;margin-top:16px;max-width:420px;line-height:1.55}
-.value-form{margin-top:26px;display:flex;flex-direction:column;gap:10px;max-width:480px}
-.vf-row{display:flex;gap:10px}
-.vf-row.two{display:grid;grid-template-columns:1fr 1fr}
-.vf-row.three{display:grid;grid-template-columns:1fr 1fr 1fr}
+/* ---- valuation module: only the bits the site-wide sheet must know ---- */
 [hidden]{display:none!important}
-.value-form input,.value-form select{width:100%;height:54px;border-radius:var(--r-pill);border:none;padding:0 22px;font-size:15px;font-weight:500;outline:none;box-shadow:0 0 0 2px transparent;transition:box-shadow .15s;background:#fff;color:var(--ink);font-family:var(--sans)}
-.value-form select{appearance:none;-webkit-appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235C6B64' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 18px center;padding-right:42px}
-.value-form input:focus,.value-form select:focus{box-shadow:0 0 0 2px var(--amber-400)}
-.value-form input.bad,.value-form select.bad{box-shadow:0 0 0 2px #E8674C}
-.value-form .btn{height:54px;white-space:nowrap}
-.vf-err{min-height:0;margin:0;font-size:13.5px;font-weight:600;color:#FFD9CE}
-.vf-err:empty{display:none}
-.value-done{margin-top:24px;max-width:480px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);border-radius:var(--r-lg);padding:24px 26px}
-.vd-est{display:flex;flex-direction:column;gap:3px;padding-bottom:16px;margin-bottom:16px;border-bottom:1px solid rgba(255,255,255,.2)}
-.vd-est-lab{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--amber-400)}
-.vd-est-range{font-family:var(--serif);font-size:34px;font-weight:800;color:#fff;line-height:1.1;letter-spacing:-.01em}
-.vd-est-sub{font-size:13.5px;color:rgba(255,255,255,.78);font-weight:600}
-.value-done p{color:rgba(255,255,255,.9);font-size:14.5px;line-height:1.55;margin-bottom:14px}
-.vd-disc{font-size:12px!important;color:rgba(255,255,255,.82)!important;line-height:1.5!important}
-.value-img{position:relative}
-.value-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.value-map .leaflet-container{position:absolute;inset:0;width:100%;height:100%;background:#0e2e25}
-.vmap-tools{position:absolute;left:56px;right:14px;top:14px;z-index:1000;display:flex;flex-wrap:wrap;gap:7px}
-.vmt{height:34px;padding:0 13px;border-radius:99px;border:none;background:rgba(255,255,255,.94);color:#15463A;font-family:var(--sans);font-size:12.5px;font-weight:700;white-space:nowrap;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.22)}
-.vmt.sel{background:var(--amber-400);color:#1A1814}
-.vmt:disabled{opacity:.45;cursor:default}
-.vmap-read{position:absolute;left:56px;right:14px;top:58px;z-index:1000;background:rgba(14,46,37,.92);color:#fff;padding:9px 13px;border-radius:10px;font-size:12.5px;font-weight:600;line-height:1.45}
-#ldMapBox .value-map-tag{left:auto;right:14px;top:auto;bottom:32px}
-#ldMapBox.drawing{cursor:crosshair}
-#ldMapBox.drawing .leaflet-grab{cursor:crosshair}
-.bnd-handle{background:#fff;border:2.5px solid #1F7BFF;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,.35)}
-.bnd-len{display:flex;align-items:center;justify-content:center;overflow:visible;pointer-events:none}
-.bnd-len span{background:rgba(24,32,29,.85);color:#fff;font-family:var(--sans);font-size:11.5px;font-weight:800;padding:2px 7px;border-radius:99px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.3)}
-.bnd-len.live span{background:#1F7BFF}
-.vf-note{font-size:12.5px;color:rgba(255,255,255,.86);line-height:1.45;margin:-2px 2px 0}
-.value-form input[readonly]{background:rgba(255,255,255,.86);font-weight:700}
-.value-map-tag{position:absolute;top:14px;left:14px;z-index:1000;background:rgba(14,46,37,.88);color:#fff;padding:7px 14px;border-radius:99px;font-size:13px;font-weight:700;pointer-events:none;box-shadow:0 2px 10px rgba(0,0,0,.3);max-width:calc(100% - 28px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-@media(max-width:960px){
-  .value{grid-template-columns:1fr}.value-img{height:240px;position:relative}
-  #ldMapBox{height:400px}
-  .value-text{padding:44px 36px}
-  .value-form{max-width:100%}
-  .vf-row.three{grid-template-columns:1fr 1fr;gap:8px}
-  .value-form input,.value-form select{height:50px;font-size:14.5px}
-}
-@media(max-width:480px){
-  .value{border-radius:var(--r-lg)}
-  .value-text{padding:32px 20px}
-  .value-text h2{font-size:28px}
-  .value-text p{font-size:14.5px}
-  .value-form input,.value-form select{height:48px;font-size:14px;padding:0 16px;border-radius:var(--r-md)}
-  .value-form select{padding-right:36px;background-position:right 14px center}
-  .vf-row{flex-direction:column;gap:8px}
-  .vf-row.two,.vf-row.three{grid-template-columns:1fr;gap:8px}
-  .value-form .btn{height:48px;font-size:15px;border-radius:var(--r-md)}
-  .vd-est-range{font-size:26px}
-  .value-done{padding:20px 18px}
-}
-.value-head{margin-bottom:22px;max-width:640px}
-.value-head .value-lead{color:var(--muted);font-size:16px;margin-top:8px;line-height:1.55}
-.value-toggle{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
-.vtab{height:46px;padding:0 22px;border-radius:var(--r-pill);border:1.5px solid var(--line);background:var(--white);font-weight:700;font-size:14.5px;color:var(--ink-2);cursor:pointer;transition:.15s}
-.vtab:hover{border-color:var(--green-500)}
-.vtab.sel{background:var(--green-700);color:#fff;border-color:var(--green-700)}
-.vd-source{font-size:12px!important;color:rgba(255,255,255,.68)!important;margin-top:-6px!important;margin-bottom:14px!important;line-height:1.5!important}
-@media(max-width:480px){.vtab{flex:1;padding:0 10px;font-size:13px;text-align:center}}
+.value-head{max-width:680px;margin-bottom:26px}
+.value-head .value-lead{color:var(--muted);font-size:16.5px;margin-top:10px;line-height:1.55}
+.value-facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.value-facts span{display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 13px 0 11px;border-radius:var(--r-pill);background:var(--green-50);color:var(--green-700);font-size:12.5px;font-weight:600}
+.value-facts span::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--green-500);flex:none}
+@media(max-width:480px){.value-head{margin-bottom:20px}.value-facts span{font-size:12px}}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://mykunda.com/"},{"@type":"ListItem","position":2,"name":"Sell","item":"https://mykunda.com/sell.html"}]}
@@ -446,91 +382,195 @@
 <!-- VALUATION -->
 <section id="value" class="wrap" style="padding-top:56px;padding-bottom:0" data-screen-label="Sell / Valuation">
 <style>
-/* Alleen binnen #value, zodat er niets van de site-CSS mee verandert. */
-#value{--v-line:#E2E4DF;--v-line2:#CDD2CB;--v-paper:#fff;--v-ink:#16201C;--v-ink2:#55625B;--v-ink3:#8A958E;--v-green:#15463A;--v-green2:#2A7561;--v-green6:#EDF3F0;--v-red:#CE1126}
+/* Alleen binnen #value, zodat er niets van de site-CSS mee verandert.
+   Opzet: één werkbank met drie vlakken — links de stappen, rechts een grote
+   kaart, en onderlangs de balk met het bedrag. De kaart is het gereedschap
+   waarmee de verkoper zijn perceel aanwijst; die hoort niet klein te zijn. */
+#value{
+  --v-line:#E4E7E1;--v-line2:#D3D9D2;--v-paper:#fff;--v-ink:#16201C;--v-ink2:#55625B;
+  --v-ink3:#8A958E;--v-green:#15463A;--v-green2:#2A7561;--v-green6:#EFF5F1;--v-red:#CE1126;
+  --v-dark:#0B241C;
+}
 #value *{box-sizing:border-box}
-.mkv{display:grid;gap:34px;align-items:start}
-@media(min-width:980px){.mkv{grid-template-columns:1fr 380px}.mkv-rail{position:sticky;top:24px}}
-.mkv-head h2{margin:0 0 8px}
-.mkv-head p{margin:0 0 26px;color:var(--v-ink2);max-width:56ch}
-.mkv-step{background:var(--v-paper);border:1px solid var(--v-line);border-radius:14px;padding:22px 24px;margin-bottom:14px}
+
+/* ---------- het frame ---------- */
+.mkv{
+  display:grid;grid-template-columns:1fr;
+  border:1px solid var(--v-line);border-radius:20px;background:var(--v-paper);
+  box-shadow:0 30px 60px -34px rgba(11,36,28,.42),0 2px 6px rgba(24,32,29,.04);
+  overflow:hidden;isolation:isolate;
+}
+@media(min-width:1100px){
+  .mkv{
+    grid-template-columns:minmax(410px,.86fr) minmax(450px,1.14fr);
+    grid-template-rows:clamp(560px,calc(100vh - 240px),720px) auto;
+  }
+  .mkv-form{grid-column:1;grid-row:1;overflow-y:auto;border-right:1px solid var(--v-line)}
+  .mkv-map{grid-column:2;grid-row:1}
+  .mkv-rail{grid-column:1 / -1;grid-row:2}
+}
+
+/* ---------- links: de stappen ---------- */
+.mkv-form{padding:22px 26px 28px;display:flex;flex-direction:column;scrollbar-width:thin;scrollbar-color:#CBD3CD transparent}
+.mkv-formfoot{margin-top:auto;padding-top:22px;font-size:12.5px;line-height:1.5;color:var(--v-ink3)}
+.mkv-formfoot b{color:var(--v-ink2);font-weight:600}
+.mkv-form::-webkit-scrollbar{width:9px}
+.mkv-form::-webkit-scrollbar-thumb{background:#D3D9D2;border-radius:9px;border:3px solid #fff}
+
+.mkv-prog{display:flex;align-items:center;list-style:none;margin:0 0 6px;padding:0 0 16px;border-bottom:1px solid var(--v-line)}
+.mkv-prog li{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--v-ink3);white-space:nowrap;min-width:0}
+.mkv-prog li+li::before{content:"";flex:1;min-width:10px;height:1.5px;background:var(--v-line);margin:0 9px}
+.mkv-prog li+li{flex:1}
+.mkv-prog .d{width:22px;height:22px;flex:none;border-radius:50%;border:1.5px solid var(--v-line2);background:#fff;color:var(--v-ink3);display:grid;place-items:center;font-size:11.5px;font-weight:700;transition:.16s}
+.mkv-prog li.done{color:var(--v-ink2)}
+.mkv-prog li.done .d{background:var(--v-green2);border-color:var(--v-green2);color:#fff}
+.mkv-prog li.on{color:var(--v-ink)}
+.mkv-prog li.on .d{background:var(--v-green);border-color:var(--v-green);color:#fff;box-shadow:0 0 0 4px var(--v-green6)}
+@media(max-width:560px){.mkv-prog li .t{display:none}.mkv-prog li.on .t{display:inline}}
+/* In de tweekolomsopzet is de linkerkolom smal; dan alleen de stap waar je
+   staat uitschrijven, de rest blijft een cijfer. */
+@media(min-width:1100px) and (max-width:1319px){.mkv-prog li:not(.on) .t{display:none}}
+
+.mkv-step{padding:20px 0;border-bottom:1px solid var(--v-line)}
+.mkv-step:last-of-type{border-bottom:0;padding-bottom:4px}
 .mkv-step[hidden]{display:none}
-.mkv-step>h3{font-size:19px;margin:0 0 4px}
-.mkv-step>.mkv-hint{font-size:15px;color:var(--v-ink2);margin:0 0 18px}
-.mkv-step.done{padding:14px 24px;background:transparent;border-style:dashed}
+.mkv-step>h3{font-size:20px;margin:0 0 5px;letter-spacing:-.015em}
+.mkv-step>.mkv-hint{font-size:14.5px;color:var(--v-ink2);margin:0 0 18px;line-height:1.5}
+.mkv-step.done{padding:13px 0}
 .mkv-step.done>h3,.mkv-step.done>.mkv-hint,.mkv-step.done .mkv-body{display:none}
-.mkv-recap{display:none;align-items:center;gap:10px;font-size:14.5px;color:var(--v-ink2);cursor:pointer;width:100%;background:none;border:0;text-align:left;font:inherit;padding:0}
+
+.mkv-recap{display:none;align-items:center;gap:10px;font-size:14px;color:var(--v-ink2);cursor:pointer;width:100%;background:none;border:0;text-align:left;font:inherit;padding:0}
 .mkv-step.done .mkv-recap{display:flex}
 .mkv-recap b{color:var(--v-ink);font-weight:600}
-.mkv-recap .ed{margin-left:auto;color:var(--v-green2);font-weight:600;font-size:13.5px}
-.mkv-tick{width:19px;height:19px;border-radius:50%;background:var(--v-green2);color:#fff;display:grid;place-items:center;flex:none}
+.mkv-recap .ed{margin-left:auto;color:var(--v-green2);font-weight:600;font-size:13px;border-bottom:1px solid transparent}
+.mkv-recap:hover .ed{border-bottom-color:currentColor}
+.mkv-tick{width:20px;height:20px;border-radius:50%;background:var(--v-green2);color:#fff;display:grid;place-items:center;flex:none}
 .mkv-tick svg{width:11px;height:11px}
+
 .mkv-cards{display:grid;gap:10px}
 @media(min-width:560px){.mkv-cards{grid-template-columns:repeat(3,1fr)}}
-.mkv-card{border:1.5px solid var(--v-line2);border-radius:12px;padding:16px;cursor:pointer;background:var(--v-paper);text-align:left;font:inherit;transition:border-color .12s,background .12s}
-.mkv-card:hover{border-color:var(--v-green2)}
-.mkv-card.sel{border-color:var(--v-green);background:var(--v-green6);box-shadow:inset 0 0 0 1px var(--v-green)}
-.mkv-card .ic{display:block;color:var(--v-green2);margin-bottom:9px}
-.mkv-card .t{font-weight:600;font-size:15.5px;display:block}
-.mkv-card .s{font-size:13.5px;color:var(--v-ink2);display:block;margin-top:2px;line-height:1.4}
+.mkv-card{position:relative;border:1.5px solid var(--v-line2);border-radius:14px;padding:15px 14px;cursor:pointer;background:var(--v-paper);text-align:left;font:inherit;transition:border-color .14s,background .14s,box-shadow .14s,transform .14s}
+.mkv-card:hover{border-color:var(--v-green2);box-shadow:0 10px 22px -14px rgba(11,36,28,.55);transform:translateY(-1px)}
+.mkv-card.sel{border-color:var(--v-green);background:var(--v-green6)}
+.mkv-card .ic{width:38px;height:38px;border-radius:11px;background:var(--v-green6);color:var(--v-green);display:grid;place-items:center;margin-bottom:11px;transition:.14s}
+.mkv-card.sel .ic{background:var(--v-green);color:#fff}
+.mkv-card.sel::after{content:"";position:absolute;top:11px;right:11px;width:18px;height:18px;border-radius:50%;background:var(--v-green) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center/11px no-repeat}
+.mkv-card .t{font-weight:600;font-size:15px;display:block;line-height:1.25}
+.mkv-card .s{font-size:13px;color:var(--v-ink2);display:block;margin-top:2px;line-height:1.4}
+
+.mkv-gets{list-style:none;margin:22px 0 0;padding:18px 0 0;border-top:1px solid var(--v-line);display:grid;gap:9px}
+.mkv-gets li{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--v-ink2);line-height:1.45}
+.mkv-gets li::before{content:"";flex:none;width:17px;height:17px;margin-top:1px;border-radius:50%;background:var(--v-green6) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2315463A' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center/10px no-repeat}
+.mkv-gets b{color:var(--v-ink);font-weight:600}
 .mkv-grid{display:grid;gap:14px}
-@media(min-width:560px){.mkv-grid.two{grid-template-columns:1fr 1fr}.mkv-grid.three{grid-template-columns:repeat(3,1fr)}}
-#value label.mkv-f{display:block}
-#value label.mkv-f>span{display:block;font-size:12.5px;font-weight:600;color:var(--v-ink2);margin-bottom:5px}
-#value .mkv-f input,#value .mkv-f select{width:100%;font:inherit;font-size:15.5px;padding:11px 12px;border:1.5px solid var(--v-line2);border-radius:10px;background:var(--v-paper);color:var(--v-ink);text-overflow:ellipsis}
-#value .mkv-f input:focus,#value .mkv-f select:focus{outline:2px solid var(--v-green2);outline-offset:1px;border-color:var(--v-green2)}
-#value .mkv-f input.bad{border-color:var(--v-red)}
+@media(min-width:560px){.mkv-grid.two{grid-template-columns:1fr 1fr}.mkv-grid.three{grid-template-columns:1fr 1fr}}
+@media(min-width:760px) and (max-width:1099px){.mkv-grid.three{grid-template-columns:repeat(3,1fr)}}
+#value label.mkv-f{display:block;min-width:0}
+#value label.mkv-f>span{display:block;font-size:12px;font-weight:700;letter-spacing:.02em;color:var(--v-ink2);margin-bottom:6px}
+#value .mkv-f input,#value .mkv-f select{width:100%;font:inherit;font-size:15px;height:44px;padding:0 12px;border:1.5px solid var(--v-line2);border-radius:10px;background:var(--v-paper);color:var(--v-ink);text-overflow:ellipsis;transition:border-color .14s,box-shadow .14s}
+#value .mkv-f select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:34px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235C6B64' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+#value .mkv-f input:hover,#value .mkv-f select:hover{border-color:#B9C3BB}
+#value .mkv-f input:focus,#value .mkv-f select:focus{outline:0;border-color:var(--v-green2);box-shadow:0 0 0 3px rgba(42,117,97,.18)}
+#value .mkv-f input.bad{border-color:var(--v-red);box-shadow:0 0 0 3px rgba(206,17,38,.13)}
 .mkv-err{color:var(--v-red);font-size:14px;margin-top:10px;min-height:1px}
+.mkv-fh{display:block;font-size:12.5px;color:var(--v-ink3);margin-top:6px;line-height:1.4}
+.mkv-row{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
 #value .btn.mkv-sec{background:var(--v-paper);border:1.5px solid var(--v-line2);color:var(--v-ink)}
 #value .btn.mkv-sec:hover{border-color:var(--v-green2);color:var(--v-green2)}
-.mkv-row{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
-.mkv-fh{display:block;font-size:13px;color:var(--v-ink3);margin-top:5px;line-height:1.4}
-.mkv-panel{background:var(--v-green);color:#fff;border-radius:14px;padding:24px}
-.mkv-panel .lab{font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#9FD3C0}
-.mkv-panel .big{font-size:clamp(30px,5vw,40px);font-weight:700;letter-spacing:-.03em;line-height:1.05;margin:6px 0 2px;font-variant-numeric:tabular-nums}
-.mkv-panel .band{font-size:15px;color:#CFE6DC}
-.mkv-panel .idle{font-size:15.5px;color:#CFE6DC;line-height:1.5}
-.mkv-conf{display:inline-flex;align-items:center;gap:7px;margin-top:14px;padding:5px 11px 5px 8px;border-radius:99px;background:rgba(255,255,255,.13);font-size:13px;font-weight:600}
-.mkv-conf .dot{width:8px;height:8px;border-radius:50%}
+.mkv-sub{display:flex;align-items:center;gap:12px;margin:0 0 12px;font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--v-ink3)}
+.mkv-sub::after{content:"";flex:1;height:1px;background:var(--v-line)}
+#mkvSubBuild{margin-top:22px}
+
+/* ---------- rechts: de kaart ---------- */
+.mkv-map{position:relative;display:grid;grid-template-rows:1fr auto;background:var(--v-dark);min-height:340px}
+.mkv-mapview{position:relative;overflow:hidden}
+#value .value-map{position:absolute;inset:0;margin:0;min-height:0;border-radius:0}
+.value-map .leaflet-container{position:absolute;inset:0;width:100%;height:100%;background:#0E2E25}
+.mkv-mapbar{display:flex;align-items:center;gap:14px;min-height:40px;padding:8px 14px;background:var(--v-dark);color:#CFE6DC;font-size:12.5px;line-height:1.35;border-top:1px solid rgba(255,255,255,.09)}
+.mkv-mapbar .place{display:inline-flex;align-items:center;gap:7px;font-weight:700;color:#fff;min-width:0}
+.mkv-mapbar .place span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:22ch}
+.mkv-mapbar .place svg{flex:none;color:#7FC3A9}
+.mkv-mapbar .hint{margin-left:auto;text-align:right;color:#9FC4B5;font-weight:500}
+@media(max-width:560px){.mkv-mapbar .hint{display:none}}
+
+.vmap-tools{position:absolute;left:12px;right:104px;top:12px;z-index:1000;display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start}
+.vmt-seg{display:inline-flex;padding:3px;gap:3px;border-radius:99px;background:rgba(255,255,255,.82);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 3px 12px rgba(0,0,0,.24)}
+.vmt{height:32px;padding:0 14px;border-radius:99px;border:0;background:transparent;color:#15463A;font-family:var(--sans);font-size:12.5px;font-weight:700;white-space:nowrap;cursor:pointer;transition:.14s}
+.vmt-seg .vmt.sel{background:var(--v-green);color:#fff;box-shadow:0 1px 4px rgba(11,36,28,.35)}
+.vmt-tool{height:38px;display:inline-flex;align-items:center;padding:0 14px;border-radius:99px;background:rgba(255,255,255,.82);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 3px 12px rgba(0,0,0,.24)}
+.vmt-tool.sel{background:var(--v-green);color:#fff}
+.vmt-tool:hover:not(:disabled){background:#fff}
+.vmt-tool.sel:hover{background:var(--v-green2)}
+.vmt:disabled{opacity:.45;cursor:default}
+.vmap-read{position:absolute;left:12px;top:60px;z-index:1000;max-width:min(340px,72%);background:rgba(11,36,28,.92);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#fff;padding:10px 14px;border-radius:12px;font-size:12.5px;font-weight:600;line-height:1.45;box-shadow:0 6px 20px rgba(0,0,0,.3)}
+#ldMapBox.drawing{cursor:crosshair}
+#ldMapBox.drawing .leaflet-grab{cursor:crosshair}
+.bnd-handle{background:#fff;border:2.5px solid #1F7BFF;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.bnd-len{display:flex;align-items:center;justify-content:center;overflow:visible;pointer-events:none}
+.bnd-len span{background:rgba(24,32,29,.85);color:#fff;font-family:var(--sans);font-size:11.5px;font-weight:800;padding:2px 7px;border-radius:99px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.bnd-len.live span{background:#1F7BFF}
+#value .leaflet-control-zoom a{border-radius:8px}
+#value .leaflet-bottom.leaflet-right .leaflet-control-attribution{font-size:10px;background:rgba(255,255,255,.72)}
+
+/* ---------- onderlangs: het bedrag ---------- */
+.mkv-rail{background:linear-gradient(104deg,#0B241C 0%,#15463A 54%,#1C5848 100%);color:#fff}
+.mkv-panel{padding:20px 26px 22px}
+.mkv-top{display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap}
+.mkv-fig{flex:1 1 260px;min-width:0}
+.mkv-panel .lab{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#8FC7B2}
+.mkv-panel .big{font-size:clamp(30px,3.2vw,42px);font-weight:700;letter-spacing:-.035em;line-height:1.02;margin:7px 0 3px;font-variant-numeric:tabular-nums}
+.mkv-panel .band{font-size:14.5px;color:#BFDCD0}
+.mkv-panel .idle{font-size:14.5px;color:#BFDCD0;line-height:1.5;margin-top:7px;max-width:56ch}
+.mkv-actions{display:flex;align-items:center;gap:10px;margin-left:auto;flex-wrap:wrap}
+.mkv-conf{display:inline-flex;align-items:center;gap:8px;padding:7px 14px 7px 11px;border-radius:99px;background:rgba(255,255,255,.12);font-size:12.5px;font-weight:700}
+.mkv-conf .dot{width:8px;height:8px;border-radius:50%;flex:none}
 .mkv-conf.strong .dot{background:#5BD6A6}.mkv-conf.fair .dot{background:#F0C14B}.mkv-conf.indicative .dot{background:#E89A6B}
-.mkv-why{margin:10px 0 0;padding:0;list-style:none;font-size:13.5px;color:#B9DCCD;line-height:1.5}
-.mkv-why li{padding-left:14px;position:relative}
-.mkv-why li::before{content:"";position:absolute;left:0;top:.7em;width:6px;height:1.5px;background:#6FAE97}
-.mkv-split{border-top:1px solid rgba(255,255,255,.18);margin-top:18px;padding-top:16px;display:grid;gap:9px}
+.mkv-grip{display:inline-flex;align-items:center;gap:10px;height:40px;padding:0 17px;border-radius:99px;background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.24);color:#fff;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;transition:.14s}
+.mkv-grip:hover{background:rgba(255,255,255,.18)}
+.mkv-grip::after{content:"";width:0;height:0;border:5px solid transparent;border-top-color:currentColor;margin-top:5px;transition:transform .16s}
+.mkv-rail.open .mkv-grip::after{transform:rotate(180deg);margin-top:-5px}
+#mkvMore{display:none}
+.mkv-rail.open #mkvMore{display:block;margin-top:20px;padding-top:20px;border-top:1px solid rgba(255,255,255,.16)}
+.mkv-more{display:grid;gap:22px}
+@media(min-width:860px){.mkv-more{grid-template-columns:1.05fr 1fr 1.15fr}}
+.mkv-more h4{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#8FC7B2;margin:0 0 10px}
+.mkv-why{margin:0;padding:0;list-style:none;font-size:13.5px;color:#C3DED2;line-height:1.5;display:grid;gap:5px}
+.mkv-why li{padding-left:15px;position:relative}
+.mkv-why li::before{content:"";position:absolute;left:0;top:.68em;width:7px;height:1.5px;background:#6FAE97}
+.mkv-split{display:grid;gap:9px}
 .mkv-kv{display:flex;justify-content:space-between;gap:14px;font-size:14.5px}
-.mkv-kv span{color:#CFE6DC}.mkv-kv b{font-weight:600;font-variant-numeric:tabular-nums}
-.mkv-kv.sm{font-size:13.5px}.mkv-kv.sm span,.mkv-kv.sm b{color:#A8CDBC;font-weight:500}
-#value details.mkv-brk{margin-top:16px}
-#value details.mkv-brk summary{cursor:pointer;font-size:13.5px;font-weight:600;color:#9FD3C0;list-style:none}
-#value details.mkv-brk summary::-webkit-details-marker{display:none}
-#value details.mkv-brk summary::before{content:"\25B8";display:inline-block;margin-right:7px;transition:transform .15s}
-#value details.mkv-brk[open] summary::before{transform:rotate(90deg)}
-.mkv-lines{margin-top:12px;display:grid;gap:6px;font-size:13px}
-.mkv-ln{display:flex;justify-content:space-between;gap:12px;color:#C6E2D6}
+.mkv-kv span{color:#C3DED2}.mkv-kv b{font-weight:600;font-variant-numeric:tabular-nums}
+.mkv-kv.sm{font-size:13px}.mkv-kv.sm span,.mkv-kv.sm b{color:#9FC4B5;font-weight:500}
+.mkv-lines{display:grid;gap:6px;font-size:12.5px}
+.mkv-ln{display:flex;justify-content:space-between;gap:12px;color:#C3DED2}
 .mkv-ln.strong{font-weight:700;color:#fff;border-top:1px solid rgba(255,255,255,.18);padding-top:7px;margin-top:3px}
-.mkv-ln .n{color:#8FBFAB;font-size:11.5px;flex:1;text-align:right;padding-right:8px}
+.mkv-ln .n{color:#89B7A5;font-size:11px;flex:1;text-align:right;padding-right:8px}
 .mkv-ln b{font-variant-numeric:tabular-nums;white-space:nowrap}
-.mkv-aside{background:var(--v-paper);border:1px solid var(--v-line);border-radius:14px;padding:18px 20px;margin-top:12px}
-.mkv-aside h4{font-size:14px;margin:0 0 6px;font-weight:600}
-.mkv-aside p{font-size:14.5px;color:var(--v-ink2);margin:0;line-height:1.5}
-.mkv-aside .num{color:var(--v-ink);font-weight:600}
-#value .value-map{margin-top:14px;border-radius:14px;overflow:hidden;min-height:260px;position:relative}
-.mkv-grip{display:none}
-@media(max-width:979px){
-  .mkv-rail{position:fixed;left:0;right:0;bottom:0;z-index:40;transition:transform .18s ease}
-  /* The bar belongs to the valuation step. Scrolled past it, it steps aside
-     instead of covering the pricing table, the FAQ and the footer. */
+.mkv-asides{display:grid;gap:10px;margin-top:14px}
+.mkv-aside{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:12px;padding:13px 15px}
+.mkv-aside h4{font-size:12.5px;letter-spacing:0;text-transform:none;color:#fff;margin:0 0 5px;font-weight:600;font-family:var(--sans)}
+.mkv-aside p{font-size:13px;color:#BFDCD0;margin:0;line-height:1.5}
+.mkv-aside .num{color:#fff;font-weight:700}
+
+/* ---------- smal scherm ---------- */
+@media(max-width:1099px){
+  .mkv{border-radius:18px}
+  .mkv-form{padding:20px 18px 24px}
+  .mkv-map{height:clamp(340px,58vh,460px);border-top:1px solid var(--v-line)}
+  /* De balk hoort bij de waarderingsstap. Voorbij die stap stapt hij opzij in
+     plaats van over de prijstabel, de FAQ en de voettekst te blijven staan. */
+  .mkv-rail{position:fixed;left:0;right:0;bottom:0;z-index:1200;border-radius:16px 16px 0 0;box-shadow:0 -10px 34px rgba(0,0,0,.26);transition:transform .18s ease}
   .mkv-rail[data-off]{transform:translateY(115%);pointer-events:none}
-  .mkv-panel{border-radius:16px 16px 0 0;padding:14px 20px 18px;box-shadow:0 -8px 30px rgba(0,0,0,.22)}
-  .mkv-panel .big{font-size:26px;margin:2px 0 0}
-  .mkv-aside{display:none}
-  .mkv-grip{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;padding:0;color:#9FD3C0;font:inherit;font-size:13px;font-weight:600;cursor:pointer;margin-top:10px}
-  .mkv-grip::after{content:"";width:0;height:0;border:5px solid transparent;border-bottom-color:#9FD3C0;margin-left:auto;transition:transform .15s}
-  .mkv-rail.open .mkv-grip::after{transform:rotate(180deg)}
-  #mkvMore{display:none}
-  .mkv-rail.open #mkvMore{display:block}
-  .mkv-rail.open .mkv-panel{max-height:76vh;overflow-y:auto}
-  #value{padding-bottom:152px!important}
+  .mkv-panel{padding:14px 18px 18px}
+  .mkv-panel .big{font-size:27px;margin:3px 0 1px}
+  .mkv-panel .idle{font-size:13.5px;margin-top:4px}
+  .mkv-top{align-items:center;gap:12px}
+  .mkv-actions{width:100%;margin-left:0;order:3;gap:8px}
+  /* De WhatsApp-knop zweeft rechtsonder; de knop eronderuit houden. */
+  .mkv-rail:not(.open) .mkv-actions{padding-right:66px}
+  .mkv-grip{flex:1;justify-content:space-between}
+  .mkv-rail.open .mkv-panel{max-height:74vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  #value{padding-bottom:150px!important}
 }
 @media(prefers-reduced-motion:reduce){#value *{transition:none!important}}
 </style>
@@ -539,10 +579,19 @@
 <div class="eyebrow">Step one</div>
 <h2>What is it worth?</h2>
 <p class="value-lead">An estimate built from what is actually for sale in your area. The figure appears as soon as you give a location and a size — you don't have to leave anything behind to see it.</p>
+<div class="value-facts"><span>Free, and no email needed</span><span>Built on local asking prices, area by area</span><span>Sale value, rent and rebuild cost</span></div>
 </div>
 
 <div class="mkv">
-<div>
+<div class="mkv-form">
+  <ol class="mkv-prog" id="mkvProg">
+    <li data-step="1" class="on"><span class="d">1</span><span class="t">Type</span></li>
+    <li data-step="2"><span class="d">2</span><span class="t">Location</span></li>
+    <li data-step="3"><span class="d">3</span><span class="t">Size</span></li>
+    <li data-step="4"><span class="d">4</span><span class="t">Details</span></li>
+    <li data-step="5"><span class="d">5</span><span class="t">Report</span></li>
+  </ol>
+
   <section class="mkv-step" id="mkv1">
     <button class="mkv-recap" type="button" data-goto="1"><span class="mkv-tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span id="mkvR1"></span><span class="ed">change</span></button>
     <h3>What are you valuing?</h3>
@@ -553,6 +602,11 @@
         <button class="mkv-card" type="button" data-type="house"><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg></span><span class="t">House with land</span><span class="s">Villa, house or family compound</span></button>
         <button class="mkv-card" type="button" data-type="apartment"><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 7h2M14 7h2M8 11h2M14 11h2M8 15h2M14 15h2"/></svg></span><span class="t">Apartment</span><span class="s">A unit in a building, no plot of its own</span></button>
       </div>
+      <ul class="mkv-gets">
+        <li><span><b>A sale value</b>, with the range around it</span></li>
+        <li><span><b>A monthly rent</b> and the gross yield it implies</span></li>
+        <li><span><b>The cost to rebuild it today</b>, at current material prices</span></li>
+      </ul>
     </div>
   </section>
 
@@ -588,6 +642,7 @@
     <h3 id="mkvH4">The plot</h3>
     <p class="mkv-hint">Everything is already set to what is ordinary in The Gambia. Change only what differs — the figure follows as you go.</p>
     <div class="mkv-body">
+      <div class="mkv-sub" id="mkvSubLand">The plot</div>
       <div class="mkv-grid three" id="mkvLandFields">
         <label class="mkv-f"><span>Title</span><select id="mkvTitle"><option value="alkalalo">Customary / Alkalo</option><option value="sublease">Sublease</option><option value="leasehold">State lease</option><option value="freehold">Freehold</option><option value="unclear">Unclear or disputed</option></select></label>
         <label class="mkv-f"><span>Road</span><select id="mkvRoad"><option value="laterite">Laterite or sand road</option><option value="tarmac">Tarmac road</option><option value="none">No road access</option></select></label>
@@ -599,7 +654,8 @@
         <label class="mkv-f"><span>Corner plot</span><select id="mkvCorner"><option value="no">No</option><option value="yes">Yes</option></select></label>
         <label class="mkv-f"><span>Flooding</span><select id="mkvFlood"><option value="no">Never floods</option><option value="low">Sometimes in the rains</option><option value="high">Floods regularly</option></select></label>
       </div>
-      <div class="mkv-grid three" id="mkvBuildFields" style="margin-top:14px">
+      <div class="mkv-sub" id="mkvSubBuild">The building</div>
+      <div class="mkv-grid three" id="mkvBuildFields">
         <label class="mkv-f"><span>Finish</span><select id="mkvFinish"><option value="basic">Simple</option><option value="standard" selected>Standard</option><option value="high">High</option></select><small class="mkv-fh" id="mkvFinishHint"></small></label>
         <label class="mkv-f"><span>Year built</span><input type="number" id="mkvYear" inputmode="numeric" placeholder="unknown"></label>
         <label class="mkv-f"><span>Condition</span><select id="mkvCondition"><option value="good">Well kept</option><option value="new">New build</option><option value="renovation">Needs renovation</option></select></label>
@@ -629,37 +685,69 @@
       <p class="form-legal">Estimates are indicative only — <a href="legal-terms.html#terms-6">no rights can be derived from them</a>. We use your details to send the estimate and follow up; see our <a href="legal-privacy.html">Privacy Policy</a>.</p>
     </div>
   </section>
+  <p class="mkv-formfoot"><b>Nothing leaves this page.</b> The figure is worked out in your own browser. Your details are only sent if you ask for the written report in the last step.</p>
+</div>
 
-  <div class="value-img value-map" id="ldMapBox"><div class="value-map-tag">📍 <span id="ldMapLabel">The Gambia</span></div>
-  <div class="vmap-read" id="ldRead" hidden></div>
-  <div class="vmap-tools" id="ldTools">
-  <button type="button" class="vmt sel" data-ldmode="pin">Pin only</button>
-  <button type="button" class="vmt" data-ldmode="draw">Draw the plot</button>
-  <button type="button" class="vmt sel" id="ldSnap" title="Snap corners to 15° steps and 5 m lengths">Snap 90°</button>
-  <button type="button" class="vmt" id="ldUndo" disabled>Undo</button>
-  <button type="button" class="vmt" id="ldClear" disabled>Clear</button>
-  </div></div>
+<div class="mkv-map">
+  <div class="mkv-mapview">
+    <div class="value-img value-map" id="ldMapBox"></div>
+    <div class="vmap-read" id="ldRead" hidden></div>
+    <div class="vmap-tools" id="ldTools">
+      <div class="vmt-seg">
+        <button type="button" class="vmt sel" data-ldmode="pin">Pin only</button>
+        <button type="button" class="vmt" data-ldmode="draw">Draw the plot</button>
+      </div>
+      <button type="button" class="vmt vmt-tool sel" id="ldSnap" title="Snap corners to 15° steps and 5 m lengths">Snap 90°</button>
+      <button type="button" class="vmt vmt-tool" id="ldUndo" disabled>Undo</button>
+      <button type="button" class="vmt vmt-tool" id="ldClear" disabled>Clear</button>
+    </div>
+  </div>
+  <div class="mkv-mapbar">
+    <span class="place"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg><span id="ldMapLabel">The Gambia</span></span>
+    <span class="hint" id="mkvMapHint">Pick what you are valuing to begin.</span>
+  </div>
 </div>
 
 <div class="mkv-rail" id="mkvRail">
   <div class="mkv-panel">
-    <div class="lab">Estimated value</div>
-    <div id="mkvIdle" class="idle" style="margin-top:6px">Pick what you are valuing, then give a location and a size. The figure appears here straight away.</div>
-    <div id="mkvRes" hidden>
-      <div class="big" id="mkvBig">—</div>
-      <div class="band" id="mkvBand"></div>
-      <button class="mkv-grip" type="button" id="mkvGrip" aria-expanded="false" aria-controls="mkvMore">The workings</button>
-      <div id="mkvMore">
-        <div class="mkv-conf" id="mkvConf"><span class="dot"></span><span id="mkvConfTxt"></span></div>
-        <ul class="mkv-why" id="mkvWhy"></ul>
-        <div class="mkv-split" id="mkvSplit"></div>
-        <details class="mkv-brk"><summary>How this is built up</summary><div class="mkv-lines" id="mkvLines"></div></details>
+    <div class="mkv-top">
+      <div class="mkv-fig">
+        <div class="lab">Estimated value</div>
+        <div id="mkvIdle" class="idle">Pick what you are valuing, then give a location and a size. The figure appears here straight away.</div>
+        <div id="mkvRes" hidden>
+          <div class="big" id="mkvBig">—</div>
+          <div class="band" id="mkvBand"></div>
+        </div>
+      </div>
+      <div class="mkv-actions">
+        <div class="mkv-conf" id="mkvConf" hidden><span class="dot"></span><span id="mkvConfTxt"></span></div>
+        <button class="mkv-grip" type="button" id="mkvGrip" aria-expanded="false" aria-controls="mkvMore">The workings</button>
+      </div>
+    </div>
+    <div id="mkvMore">
+      <div class="mkv-more">
+        <div>
+          <h4>Why this figure</h4>
+          <ul class="mkv-why" id="mkvWhy"></ul>
+          <div class="mkv-asides">
+            <div class="mkv-aside"><h4>What this is not for</h4><p>This is a calculation from what is for sale in your area — not a valuation. For a bank, a court, dividing an inheritance or the tax office you need a valuer who has stood on the ground. We can arrange one; ask through the report.</p></div>
+          </div>
+        </div>
+        <div>
+          <h4>What it is made of</h4>
+          <div class="mkv-split" id="mkvSplit"></div>
+          <div class="mkv-asides">
+            <div class="mkv-aside" id="mkvRentBox" hidden><h4>If you let it out</h4><p id="mkvRentTxt"></p></div>
+            <div class="mkv-aside" id="mkvPortalBox" hidden><h4>On the international portals</h4><p id="mkvPortalTxt"></p></div>
+          </div>
+        </div>
+        <div>
+          <h4>How this is built up</h4>
+          <div class="mkv-lines" id="mkvLines"></div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="mkv-aside" id="mkvPortalBox" hidden><h4>On the international portals</h4><p id="mkvPortalTxt"></p></div>
-  <div class="mkv-aside" id="mkvRentBox" hidden><h4>If you let it out</h4><p id="mkvRentTxt"></p></div>
-  <div class="mkv-aside"><h4>What this is not for</h4><p>This is a calculation from what is for sale in your area — not a valuation. For a bank, a court, dividing an inheritance or the tax office you need a valuer who has stood on the ground. We can arrange one; ask through the report.</p></div>
 </div>
 </div>
 </section>
@@ -1171,6 +1259,17 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
     if(pd){ pdMap=pd.m; pdMarker=pd.mkr; const saved=window._lastValProperty; if(saved&&saved.mapLL){ pdMap.setView([saved.mapLL.lat,saved.mapLL.lng],15); pdMarker.setLatLng([saved.mapLL.lat,saved.mapLL.lng]); document.getElementById('pdMapLabel').textContent=saved.mapPlace||'Location'; } }
     const ld=mk('ldMapBox',true);
     if(ld){ ldMap=ld.m; ldMarker=ld.mkr; ldWireMap(); const saved=window._lastValLand; if(saved&&saved.mapLL){ ldMap.setView([saved.mapLL.lat,saved.mapLL.lng],15); ldMarker.setLatLng([saved.mapLL.lat,saved.mapLL.lng]); document.getElementById('ldMapLabel').textContent=saved.mapPlace||'Location'; } ldMap.invalidateSize(); }
+      /* De zoomknoppen stonden linksboven, waar nu de tekengereedschappen
+         zitten. Rechtsonder is er ruimte en de balk erboven blijft vrij. */
+      try{ if(ldMap.zoomControl) ldMap.zoomControl.setPosition('bottomright'); }catch(e){}
+      /* De kaart is nu een kolom die met het venster meegroeit. Leaflet meet
+         zichzelf alleen bij window.resize, dus meten we de kolom zelf. */
+      try{
+        if('ResizeObserver' in window){
+          var mapCol=document.querySelector('.mkv-map'), rt;
+          if(mapCol) new ResizeObserver(function(){ clearTimeout(rt); rt=setTimeout(function(){ ldMap.invalidateSize(); },120); }).observe(mapCol);
+        }
+      }catch(e){}
   }
   /* ---- Plot drawing on the land map — same behaviour as the List page ----
      Tap corners to outline the plot; the area feeds the m² field and the centre
@@ -1492,6 +1591,27 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
         el.scrollIntoView({behavior: soft?'smooth':'auto', block:'nearest'});
       }
       if(n>=2 && ldMap){ setTimeout(function(){ ldMap.invalidateSize(); },80); }
+      setProg(n); setMapHint(n);
+    }
+    /* De balk bovenaan het formulier laat zien waar je bent en hoeveel er nog
+       komt. Zonder dat is een stap-voor-stap-formulier een gat zonder bodem. */
+    function setProg(n){
+      var ul=document.getElementById('mkvProg'); if(!ul) return;
+      Array.prototype.forEach.call(ul.children,function(li){
+        var i=+li.getAttribute('data-step');
+        li.classList.toggle('done', i<n);
+        li.classList.toggle('on', i===n);
+      });
+    }
+    /* De regel onder de kaart vertelt wat de kaart op dit moment voor je doet. */
+    function setMapHint(n){
+      var el=document.getElementById('mkvMapHint'); if(!el) return;
+      el.textContent =
+        n<=1 ? 'Pick what you are valuing to begin.' :
+        n===2 ? 'Type an area, or drag the pin to the exact spot.' :
+        n===3 ? (S.type==='apartment' ? 'The pin marks the building — no plot to draw.'
+                                      : 'Tap “Draw the plot” and click each corner — the size fills itself.') :
+        'Drag the pin, or redraw the plot, if anything is off.';
     }
     function recap(){
       var t={land:'Land or plot',house:'House with land',apartment:'Apartment'}[S.type]||'';
@@ -1510,6 +1630,8 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
       var land=S.type==='land', apt=S.type==='apartment';
       $('mkvLandFields').style.display = apt?'none':'';
       $('mkvBuildFields').style.display = land?'none':'';
+      $('mkvSubLand').style.display = apt?'none':'';
+      $('mkvSubBuild').style.display = land?'none':'';
       $('mkvWrapPlot').style.display = apt?'none':'';
       $('mkvWrapBuilt').style.display = land?'none':'';
       $('mkvH4').textContent = land?'The plot':apt?'The apartment':'The plot and the house';
@@ -1542,19 +1664,20 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
       var r=calc();
       /* Onbekend gebied: geen bedrag maar uitleg. Een nul is geen schatting. */
       if(r && r.ok===false){
-        $('mkvRes').hidden=true; $('mkvPortalBox').hidden=true; $('mkvRentBox').hidden=true;
+        $('mkvRes').hidden=true; $('mkvPortalBox').hidden=true; $('mkvRentBox').hidden=true; $('mkvConf').hidden=true; $('mkvGrip').hidden=true;
         $('mkvIdle').hidden=false;
         $('mkvIdle').innerHTML='We have no rate for <b>'+(S.area||'this area')+'</b>. Try the nearest larger town, or ask for the report and someone will look at it.';
         last=null; return;
       }
       $('mkvIdle').hidden=!!r; $('mkvRes').hidden=!r;
+      $('mkvConf').hidden=!r; $('mkvGrip').hidden=!r;
       $('mkvPortalBox').hidden=!(r&&r.portal);
       $('mkvRentBox').hidden=!(r&&S.type!=='land');
       if(!r){ last=null; return; }
       last=r;
       $('mkvBig').textContent=money(r.mid);
       $('mkvBand').textContent='Range '+money(r.low)+' – '+money(r.high);
-      $('mkvConf').className='mkv-conf '+r.confidence.label;
+      $('mkvConf').className='mkv-conf '+r.confidence.label; $('mkvConf').hidden=false; $('mkvGrip').hidden=false;
       $('mkvConfTxt').textContent={strong:'Strongly evidenced',fair:'Fairly evidenced',indicative:'Indicative only'}[r.confidence.label];
       $('mkvWhy').innerHTML=r.confidence.reasons.map(function(w){return '<li>'+w+'</li>';}).join('');
       var sp=[];

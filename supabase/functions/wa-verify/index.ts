@@ -61,9 +61,17 @@ serve(async (req) => {
   const key = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   const waNumber = (Deno.env.get("WA_BUSINESS_NUMBER") || "").replace(/[^\d]/g, "");
 
-  /* Not configured is not an error the seller should see: the wizard reads a
+  /* The whole chain has to exist, not just this end of it. Confirmation only
+     completes when Meta calls wa-inbound, and Meta only calls it when the
+     number is registered to the WhatsApp Business Platform — which is what
+     WA_PHONE_NUMBER_ID and WA_ACCESS_TOKEN stand for. Without them a seller
+     would get a button, send a message, and wait for a confirmation that can
+     never arrive. Checked on 28-08-2026 after exactly that happened in a test.
+
+     Not configured is not an error the seller should see: the wizard reads a
      503 as "no verification available" and lets them publish without it. */
-  if (!url || !key || !waNumber) {
+  const cloudApi = Deno.env.get("WA_PHONE_NUMBER_ID") && Deno.env.get("WA_ACCESS_TOKEN");
+  if (!url || !key || !waNumber || !cloudApi) {
     return json({ configured: false, error: "wa-verify not configured" }, 503);
   }
 
