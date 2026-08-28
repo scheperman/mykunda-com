@@ -990,22 +990,70 @@ en faalt bij elk verschil in tarief, aantal of bewijsklasse, en zodra een
 gebied met een pagina óók nog in `LAND_OBSERVED` of `LAND_HALF` staat. Draai
 die zelftest na elke herijking, vóór upload.
 
-### Wat hierdoor NIET is opgelost
+### De vijf punten die voor 3 september op de lijst stonden
+
+Op 28-08-2026 alsnog per punt bekeken in plaats van doorgeschoven. Uitkomst:
+
+**1. De vier bestaande banden herrekenen — vervallen, er is niets toe te voegen.**
+De banden poolen Bijilo/Fajara/Kololi/Kerr Serign/Brusubi/Kotu/Banjul/Cape Point
+(strip), Sukuta/Lamin/Jabang/Yundum (kombo), Tanji+Tujereng, Sanyang+Gunjur. Van
+de vijf nieuwe gebieden valt er precies één in een bestaande band: Salagi, in
+`kombo`. Zijn twee prijsbare kavels zijn D1.900 en D3.931 — één onder en één boven
+de huidige mediaan van D2.330. Eén waarde onder en één boven toevoegen aan 31
+gesorteerde waarden verschuift de mediaan van de 16e van 31 naar de 17e van 33,
+en dat is **hetzelfde element**. De band beweegt dus aantoonbaar niet. De andere
+drie banden krijgen geen enkele nieuwe waarneming. Pas als er nieuwe marktdata
+binnenkomt is hier weer werk.
+
+**2. Het Bakoteh-huurpaar — kan niet zonder de bronadvertenties.**
+De drie huuradvertenties die D28.500 per maand opleveren staan in het
+Facebook-bestand van 25-08-2026 en zijn nooit in `external_listings` beland; de
+pijplijn heeft voor Bakoteh geen enkele huuradvertentie. Zonder die drie regels
+is er niets te beoordelen. De pagina doet nu al het voorzichtige: de huur staat
+er met "3 rental listings only", en het rendement is bewust leeg met de reden
+erbij (8,5% tegen een afgeleide woningprijs zou de 1–8%-vangrail raken). Dit
+punt wacht op het bestand, niet op een beslissing.
+
+**3. Farafenni — opgelost.** Publiceerde D93 per m² uit ÉÉN advertentie, terwijl
+de regel van 27-08-2026 zegt dat één advertentie geen gebiedstarief zet. Dat was
+dezelfde fout als Bakoteh, alleen naar beneden: Farafenni stond daarmee onder
+Kerewan en Essau, die uit dezelfde tabel komen. Publiceert nu **D189**, de
+regionale afleiding die Kerewan ook krijgt (portaaltabel D343 × 0,55), met de
+D93 ernaast als context. Boven de Kombos is er geen buurband om van te lenen; de
+generator zegt dat er nu ook bij.
+
+**4. `zone_scale` opruimen — het item was fout.** Het blok is niet dood.
+`upcountry: 0.55` is de **live** afleiding van alle twaalf tarieven boven de
+Kombos: Barra D600×0,55=330, Essau D429×0,55=236, Kerewan en Basse D343×0,55=189,
+enzovoort. Alleen `coast`, `kombo` en `greater` zijn door de banden vervangen.
+Het commentaar in `area-prices.json` zei "ongebruikt sinds 27-08-2026" en dat
+klopte voor drie van de vier. Rechtgezet; niet weggooien zolang upcountry hierop
+rust.
+
+**5. Jambanjelly stond in `ZONE_OF.coast` — opgelost**, verplaatst naar `kombo`.
+Het dorp ligt 6,8 km van de kustlijn. Het viel niet op omdat het gebied via
+`LAND_PUBLISHED` wordt afgehandeld, maar de zone bepaalt wél de terugval voor
+alles wat er in de buurt ligt en geen eigen pagina heeft.
+
+### Waar de oude toolgetallen vandaan kwamen
 
 De tellingen in `valuation.js` weken af van die in `area-prices.json` voor
-dezelfde meting van 25-08-2026: Farato n=13 tegen 4, Mamuda 5 tegen 4, Salagi
-4 tegen 2. Die afwijking is nu verdwenen doordat de tool de telling van
-`area-prices.json` overneemt — maar waar de oude getallen vandaan kwamen is
-níet achterhaald. Ze zijn niet reproduceerbaar uit `external_listings`; de
-pijplijn geeft voor alle vijf precies de aantallen die `area-prices.json`
-noemt. Vermoedelijk zijn ze in de sessie van 27-08-2026 met een ruimere
-definitie uit het Facebook-bestand geteld (bijvoorbeeld op tekstvermelding in
-plaats van op toegewezen gebied). Als er ooit een tweede telling opduikt: de
-pijplijntelling is de reproduceerbare, en die staat in `area-prices.json`.
+dezelfde meting van 25-08-2026 (Farato n=13 tegen 4, Mamuda 5 tegen 4, Salagi 4
+tegen 2). Die afwijking is weg doordat de tool de telling van
+`area-prices.json` overneemt, maar de herkomst is niet achterhaald: de oude
+getallen zijn niet reproduceerbaar uit `external_listings`, dat voor alle vijf
+precies de aantallen van `area-prices.json` geeft. Vermoedelijk zijn ze met een
+ruimere definitie uit het Facebook-bestand geteld. Duikt er ooit een tweede
+telling op: de pijplijntelling is de reproduceerbare.
 
-Ook nog open: `jambanjelly` staat in `ZONE_OF.coast` terwijl het bijna zeven
-kilometer landinwaarts ligt. Dat werkt nu alleen doordat het gebied via
-`LAND_PUBLISHED` wordt afgehandeld, maar de zone-indeling zelf klopt niet.
+### Wat de ruwe import laat zien en de pijplijn terecht tegenhoudt
+
+In `market_import_raw` staan vier advertenties waarin het **telefoonnummer als
+prijs** is ingelezen (Tujereng D3.071.677, Gunjur D5.142.869 en D7.731.519,
+Serrekunda D2.966.066). Geen van vieren heeft `external_listings` gehaald, dus ze
+vervuilen geen enkel gepubliceerd cijfer. Wel iets om in de gaten te houden bij
+de volgende import: een prijs van zeven cijfers die ook letterlijk in de
+omschrijving staat na "call" of "contact" is bijna altijd een nummer.
 
 ### Coördinaten
 

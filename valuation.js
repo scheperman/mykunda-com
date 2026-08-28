@@ -147,7 +147,7 @@ var LAND_PUBLISHED = {
   'cape point': { gmd: 6460, src: 'band', n: 1, own_med: 16667 },
   'essau': { gmd: 236, src: 'regional', n: 0 },
   'fajara': { gmd: 13333, src: 'observed', n: 5 },
-  'farafenni': { gmd: 93, src: 'thin', n: 1 },
+  'farafenni': { gmd: 189, src: 'regional', n: 1, own_med: 93 },
   'farato': { gmd: 1560, src: 'band', n: 4, own_med: 1827 },
   'fatoto': { gmd: 71, src: 'regional', n: 0 },
   'gambissara': { gmd: 71, src: 'regional', n: 0 },
@@ -206,14 +206,14 @@ var LAND_ZONE = {
 var ZONE_OF = {
   coast: ['kololi','senegambia','bijilo','cape point','fajara','bakau','kotu',
           'brufut heights','brufut','tanji','batokunku','sanyang','tujereng',
-          'gunjur','kartong','kartung','ghana town','jambanjelly','folonko'],
+          'gunjur','kartong','kartung','ghana town','folonko'],
   kombo: ['brusubi','kerr serign','sukuta','lamin','jabang','yundum','old yundum',
           'busumbala','brikama','sinchu alagie','sinchu baliya','nema kunku',
           'banjulunding','wellingara','farato','abuko','kembujeh','madiana',
           'kuloro','giboro koto','sotokoi','faraba sutu','bessi nding','jambur',
           'marakissa','kafuta','sifoe','mandinaba','bonto','kitty','nyambai',
           'faraba banta','pirang','bulok','kalagi','somita','sibanor','darsilami',
-          'salagi','mamuda','latriya','jalanbang','bafuloto','kunkujang','daranka'],
+          'salagi','mamuda','latriya','jambanjelly','jalanbang','bafuloto','kunkujang','daranka'],
   greater: ['banjul','serrekunda','serekunda','kanifing','bakoteh','bundung',
             'talinding','tallinding kunjang','latri kunda','faji kunda','pipeline',
             'tabokoto','new jeshwang','old jeshwang','dippa kunda','ebou town',
@@ -513,8 +513,12 @@ function landRate(areaKey, base) {
                note: pub.n + (pub.n === 1 ? ' observation' : ' observations') + ' in ' + titel(areaKey) +
                      ' \u2014 an indication, not a market average' };
     }
-    return { gmd: pub.gmd, src: 'regional', n: 0,
-             note: 'regional rate \u2014 no plot listings we can price in ' + titel(areaKey) };
+    return { gmd: pub.gmd, src: 'regional', n: pub.n || 0,
+             note: pub.n && pub.own_med
+               ? 'regional rate \u2014 the ' + (pub.n === 1 ? 'one listing' : pub.n + ' listings') + ' we can price in ' +
+                 titel(areaKey) + (pub.n === 1 ? ' asks ' : ' ask a median of ') + 'D' + pub.own_med.toLocaleString('en-US') +
+                 ' per m\u00b2, too few to set a rate'
+               : 'regional rate \u2014 no plot listings we can price in ' + titel(areaKey) };
   }
   if (C.LAND_OBSERVED[k]) {
     return { gmd: C.LAND_OBSERVED[k].gmd, src: 'observed', n: C.LAND_OBSERVED[k].n,

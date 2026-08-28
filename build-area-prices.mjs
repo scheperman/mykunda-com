@@ -49,6 +49,10 @@ function note(r) {
   if (r.src === 'observed') return r.n + ' local plot listings';
   if (r.src === 'band')     return 'band rate — ' + DB.bands[r.band].n + ' listings across the band';
   if (r.src === 'thin')     return r.n + ' observation' + (r.n === 1 ? '' : 's') + ' only';
+  /* Stond hier vast op "no local observations", ook waar er wél één was. Farafenni
+     zei daardoor in de bewijsregel dat er niets is en twee alinea's lager dat er
+     één advertentie is. Het aantal is het hele punt van deze regel. */
+  if (r.n > 0) return r.n + ' listing' + (r.n === 1 ? '' : 's') + ' only — regional rate';
   return 'no local observations — regional rate';
 }
 
@@ -139,7 +143,16 @@ function priceBlock(key, r) {
   } else if (r.src === 'thin') {
     expl = `We have only ${r.n} usable observation${r.n === 1 ? '' : 's'} in ${name}. The figure is the best we can see, not a market average — treat it as a starting point and check it against what you are shown.`;
   } else {
-    expl = `We have no plot listings of our own for ${name} yet. The rate above is the ${r.zone === 'upcountry' ? 'provincial' : r.zone === 'greater' ? 'Greater Banjul' : r.zone === 'coast' ? 'coastal' : 'Kombo'} regional rate, and it can be wide of a specific street by a factor of two.`;
+    const streek = r.zone === 'upcountry' ? 'provincial' : r.zone === 'greater' ? 'Greater Banjul' : r.zone === 'coast' ? 'coastal' : 'Kombo';
+    if (r.n > 0 && r.own_med) {
+      /* Farafenni, 28-08-2026: publiceerde D93 per m² uit ÉÉN advertentie, terwijl de
+         regel van 27-08-2026 zegt dat één advertentie geen gebiedstarief zet. Het
+         cijfer is nu de regionale afleiding en de waarneming staat erbij als context —
+         dezelfde behandeling die Bakoteh en Kololi op de kust krijgen. */
+      expl = `${name} has ${r.n === 1 ? 'a single' : 'only ' + r.n} priced plot listing${r.n === 1 ? '' : 's'} with a known size \u2014 below our bar of ${MIN_OBS} for an area-specific rate, and there is no neighbouring band up here to borrow from. The rate above is the ${streek} regional rate, and it can be wide of a specific street by a factor of two. The ${r.n === 1 ? 'one listing' : r.n + ' listings'} we can price in ${name} itself ask${r.n === 1 ? 's' : ''} ${r.n === 1 ? '' : 'a median of '}${D(r.own_med)} per m\u00b2 \u2014 shown as context, not as a rate.`;
+    } else {
+      expl = `We have no plot listings of our own for ${name} yet. The rate above is the ${streek} regional rate, and it can be wide of a specific street by a factor of two.`;
+    }
   }
 
   const upc = r.zone === 'upcountry'
