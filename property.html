@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" id="mkRobots" content="noindex, follow, noai, noimageai"><!--mk:0h80czf--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" id="mkRobots" content="noindex, follow, noai, noimageai"><!--mk:0tpdmco--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -33,7 +33,7 @@
 <link rel="preconnect" href="https://api.maptiler.com" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=280526171270904">
+<link rel="stylesheet" href="styles.min.css?v=215529771599997">
 <style>
 .crumb{padding:18px 0 6px;font-size:14px;color:var(--muted);display:flex;align-items:center;gap:8px}
 .crumb a{font-weight:600}.crumb a:hover{color:var(--green-700)}
@@ -143,6 +143,48 @@
 .contact-alt .btn{flex:1}
 .wa{background:#25D366;color:#fff}.wa:hover{background:#1FB855}
 
+/* Mobile action bar. Only exists below the width where the contact card stops
+   sitting beside the property; above that the card is always in view anyway. */
+.pbar{position:fixed;left:0;right:0;bottom:0;z-index:60;display:none;align-items:center;gap:12px;
+      padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:var(--white);
+      border-top:1px solid var(--line);box-shadow:0 -6px 20px rgba(24,32,29,.10)}
+.pbar-price{display:flex;flex-direction:column;line-height:1.15;min-width:0}
+.pbar-price span{font-family:var(--serif);font-weight:800;font-size:19px;color:var(--ink);white-space:nowrap}
+.pbar-price small{font-size:11.5px;color:var(--muted-2);font-weight:600}
+.pbar-wa{margin-left:auto;flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;
+         font-family:var(--sans);font-weight:800;font-size:15px;text-decoration:none;padding:12px 20px;border-radius:var(--r-pill)}
+.pbar-wa:active{background:#1FB855}
+.pbar-wa svg{display:block}
+
+/* ---- Evidence, utilities, terms: the blocks that carry the Gambian detail ---- */
+.blk-lede{font-size:15px;color:var(--muted);margin-bottom:18px;max-width:62ch}
+.blk-note{font-size:13px;color:var(--muted-2);margin-top:16px;line-height:1.55;max-width:66ch}
+.ladder{display:flex;flex-direction:column;gap:2px}
+.rung{display:grid;grid-template-columns:26px 1fr;gap:14px;padding:13px 0;border-top:1px solid var(--line-2)}
+.rung:first-child{border-top:0}
+.rung .dot{width:16px;height:16px;border-radius:50%;margin-top:4px;border:2px solid var(--line);background:var(--white)}
+.rung.lv1 .dot{border-color:var(--muted-2)}
+.rung.lv2 .dot{border-color:var(--green-500);background:var(--green-100)}
+.rung.lv3 .dot{border-color:var(--green-700);background:var(--green-700)}
+.rung .t{font-weight:700;font-size:15.5px}
+.rung .s{font-size:13.5px;color:var(--muted);margin-top:2px;line-height:1.5}
+.gaps{margin-top:16px;padding:13px 15px;background:var(--paper-2);border-radius:var(--r-sm);font-size:13.5px;color:var(--ink-2);line-height:1.55}
+.util-badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.ub{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:var(--r-pill);
+    background:var(--green-50);color:var(--green-700);border:1px solid var(--green-200)}
+.ub.off{background:var(--paper-2);color:var(--muted-2);border-color:var(--line);font-weight:600}
+.agency-head{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.agency-head .logo{width:56px;height:56px;border-radius:var(--r-md);background:var(--paper-2);border:1px solid var(--line);
+    display:grid;place-items:center;font-family:var(--serif);font-weight:800;font-size:20px;color:var(--green-700);flex:none}
+.agency-head .n{font-family:var(--serif);font-size:19px;font-weight:700}
+.agency-head .m{font-size:13.5px;color:var(--muted);margin-top:3px}
+.block.honesty{background:var(--paper-2);border-radius:var(--r-lg);padding:24px 26px}
+.block.honesty ul{margin:0;padding-left:20px;font-size:14.5px;color:var(--ink-2);line-height:1.7}
+.block.report{border-top:1px solid var(--line);padding-top:22px}
+.block.report .rep-in{display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.block.report h3{font-family:var(--serif);font-size:17px;font-weight:700;margin-bottom:4px}
+.block.report p{font-size:13.5px;color:var(--muted);max-width:62ch;margin:0}
+
 .invest-card{background:linear-gradient(160deg,var(--green-800),var(--green-700));color:#fff;border-radius:var(--r-lg);padding:24px;box-shadow:var(--sh-md)}
 .invest-card .eyebrow{color:var(--amber-400);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px}
 .invest-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.13);font-size:14.5px}
@@ -191,6 +233,10 @@
   .feat-list{grid-template-columns:1fr}
   .hood-stats{grid-template-columns:1fr 1fr}
   .grid-4{grid-template-columns:1fr 1fr}
+  .pbar:not([hidden]):not([data-off]){display:flex}
+  body.has-pbar{padding-bottom:78px}
+  /* One WhatsApp button on screen, not two. */
+  body.has-pbar #waFab{display:none!important}
 }
 </style>
 <meta property="fb:pages" content="61593360783009">
@@ -272,7 +318,7 @@
   <div class="media">
     <div class="media-tabs">
       <button class="mtab active" data-pane="photos"><span id="t1"></span> Photos</button>
-      <button class="mtab" data-pane="floor"><span id="t2"></span> Floor plan</button>
+      <button class="mtab" data-pane="floor" id="tabFloor" hidden><span id="t2"></span> Floor plan</button>
       <button class="mtab" data-pane="map"><span id="t4"></span> Map</button>
     </div>
 
@@ -309,9 +355,46 @@
 
       <div class="specbar" id="specbar"></div>
 
+      <!-- Blocks below are written by JS and removed when they have nothing to say. -->
+      <div class="block" id="evidenceBlock" hidden>
+        <h2 id="evidenceH2">Ownership &amp; documents</h2>
+        <p class="blk-lede" id="evidenceLede"></p>
+        <div class="ladder" id="evidenceList"></div>
+        <div class="gaps" id="evidenceGaps"></div>
+      </div>
+
+      <div class="block" id="utilBlock" hidden>
+        <h2>Power, water and backup</h2>
+        <div class="util-badges" id="utilBadges"></div>
+        <div class="feat-list" id="utilList"></div>
+      </div>
+
+      <div class="block" id="compoundBlock" hidden>
+        <h2>The compound and getting there</h2>
+        <div class="feat-list" id="compoundList"></div>
+      </div>
+
       <div class="block">
         <h2>About this home</h2>
         <p id="dDesc"></p>
+      </div>
+
+      <div class="block" id="rentBlock" hidden>
+        <h2 id="rentH2">The rent, and the terms</h2>
+        <div class="feat-list" id="rentList"></div>
+        <div id="managedBox"></div>
+      </div>
+
+      <div class="block" id="payBlock" hidden>
+        <h2>Paying for it</h2>
+        <div class="feat-list" id="payList"></div>
+        <p class="blk-note">MyKunda does not hold or forward money for a sale. Anything you pay, you pay to the seller under an agreement between the two of you.</p>
+      </div>
+
+      <div class="block" id="agencyBlock" hidden>
+        <h2 id="agencyH2">The office behind this listing</h2>
+        <div class="agency-head" id="agencyHead"></div>
+        <div id="agencyOther"></div>
       </div>
 
       <div class="block">
@@ -326,6 +409,28 @@
         <div class="scorebars" id="scorebars"></div>
         <a class="link-arrow" href="kololi.html" style="margin-top:20px;display:inline-flex">Explore full neighborhood guide <span id="hoodArr"></span></a>
       </div>
+
+      <div class="block" id="historyBlock" hidden>
+        <h2>This listing over time</h2>
+        <div class="feat-list" id="historyList"></div>
+      </div>
+
+      <div class="block honesty" id="notCheckedBlock" hidden>
+        <h2>What we have not checked</h2>
+        <p class="blk-lede" id="notCheckedLede"></p>
+        <ul id="notCheckedList"></ul>
+        <p class="blk-note">We would rather name the gaps than let a badge imply they are not there. If you want the ownership of this property established independently, that is what an <a href="verify.html">ownership check</a> is for.</p>
+      </div>
+
+      <div class="block report">
+        <div class="rep-in">
+          <div>
+            <h3>Something wrong with this listing?</h3>
+            <p>Wrong price, sold already, photos that belong to another property, or a plot you believe is not the seller's to sell. You do not need an account, and you do not need proof.</p>
+          </div>
+          <a class="btn btn-ghost btn-sm" id="reportBtn" href="contact.html">Report this listing</a>
+        </div>
+      </div>
     </div>
 
     <aside class="aside">
@@ -333,10 +438,11 @@
         <a class="agent-top" href="agent.html" style="text-decoration:none;color:inherit">
           <image-slot id="ph-agent-awa" shape="circle" placeholder="Photo" style="width:58px;height:58px;flex:none"></image-slot>
           <div>
-            <div class="n">MyKunda</div>
-            <div class="ag">Viewings &amp; enquiries desk · Kombo</div>
+            <div class="n" id="agentName">MyKunda</div>
+            <div class="ag" id="agentRole">Viewings &amp; enquiries desk · Kombo</div>
           </div>
         </a>
+        <div id="emergencyLine"></div>
         <form class="vform" onsubmit="event.preventDefault();bookViewing(this)">
           <div>
             <label for="vDate">Request a viewing</label>
@@ -364,7 +470,7 @@
       <div class="agent-card" style="padding:24px 24px;background:linear-gradient(135deg,#0E2E25,#1C5848);border:none">
         <div style="display:flex;align-items:center;gap:7px;font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--amber-400);margin-bottom:9px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.4 7.8 8 9 4.6-1.2 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg> Before you pay anyone</div>
         <div style="font-family:var(--serif);font-size:19px;font-weight:600;margin-bottom:7px;color:#fff;line-height:1.25">Order your own ownership check</div>
-        <p style="font-size:13.5px;color:rgba(255,255,255,.8);line-height:1.55;margin-bottom:16px">An independent check of the title, the registry and the plot itself — reported in writing to you, not to the listing. From <span id="ovcFrom">D7,500</span> — never a percentage of the price.</p>
+        <p style="font-size:13.5px;color:rgba(255,255,255,.8);line-height:1.55;margin-bottom:16px">An independent check of the title, the registry and the plot itself — reported in writing to you, not to the listing. From <span id="ovcFrom">D3,500</span> — never a percentage of the price.</p>
         <a class="btn btn-amber btn-block btn-sm" id="ovcBtn" href="verify.html">Check this property</a>
       </div>
 
@@ -387,6 +493,13 @@
       <a class="link-arrow" href="search.html">See more <span id="simArr"></span></a></div>
     <div class="grid-4" id="similarGrid"></div>
   </div>
+</div>
+
+<!-- Mobile action bar: the price and the one button that starts a conversation.
+     Hidden while the contact card itself is on screen, so it never doubles up. -->
+<div class="pbar" id="pbar" data-off hidden>
+  <div class="pbar-price"><span id="pbarPrice"></span><small id="pbarSub"></small></div>
+  <a class="pbar-wa" id="pbarWa" target="_blank" rel="noopener"><span id="pbarWaIc"></span> WhatsApp</a>
 </div>
 
 </main>
@@ -428,15 +541,15 @@
     </div>
   </footer><!--/mk-ftr--></div>
 
-<script src="app.min.js?v=280526171270904"></script>
-<script src="image-slot.js?v=280526171270904" defer></script>
+<script src="app.min.js?v=215529771599997"></script>
+<script src="image-slot.js?v=215529771599997" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel instead of blocking the page, and
    Leaflet (~145 KB) is only fetched when the visitor opens the Map tab. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=280526171270904'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=215529771599997'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -612,7 +725,21 @@ function renderGallery(photos){
 })();
 
 // title / price
-dBadges.innerHTML = (P.isNew?'<span class="badge badge-new">New</span>':'')+(P.verified?'<span class="badge badge-verified"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1l3.09 4.26L20 6.27l-2.18 4.35L19.36 16 12 18.27 4.64 16l1.54-5.38L4 6.27l4.91-1.01L12 1z"/><path d="M9.5 11.5l2 2 3.5-4" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Verified</span>':'')+(P.cat==='land'?'<span class="badge badge-rent">Land</span>':(P.type==='sale'?'<span class="badge badge-sale">For sale</span>':'<span class="badge badge-rent">For rent</span>'))+`<span class="badge badge-sale" style="background:var(--amber-100);color:var(--amber-600)">${P.tag}</span>`;
+dBadges.innerHTML = (P.isNew?'<span class="badge badge-new">New</span>':'')+(P.verified?'<span class="badge badge-verified"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1l3.09 4.26L20 6.27l-2.18 4.35L19.36 16 12 18.27 4.64 16l1.54-5.38L4 6.27l4.91-1.01L12 1z"/><path d="M9.5 11.5l2 2 3.5-4" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Verified</span>':'')+(P.cat==='land'?'<span class="badge badge-rent">Land</span>':(P.type==='sale'?'<span class="badge badge-sale">For sale</span>':'<span class="badge badge-rent">For rent</span>'))+(P.tag?`<span class="badge badge-sale" style="background:var(--amber-100);color:var(--amber-600)">${P.tag}</span>`:'')
++(function(){
+  /* Who is on the other side of this listing. "Direct from owner" is a claim
+     about the fee, so it only appears when the fee is recorded as none. */
+  if(P.seller_type==='owner' && (P.fee_type==='none'||!P.fee_type))
+    return '<span class="badge" style="background:var(--green-50);color:var(--green-700);border:1px solid var(--green-200)">'+
+           (P.type==='rent'?'No agent fee':'Direct from owner')+'</span>';
+  if(P.seller_type==='business' && P.type==='rent' && (P.included_services||[]).length)
+    return '<span class="badge" style="background:#FBF1E6;color:#C8702D;border:1px solid #C8702D">Professionally managed</span>';
+  if(P.seller_type==='business' && P.agency && P.agency.verified_at)
+    return '<span class="badge" style="background:var(--green-700);color:#fff">Licensed agency</span>';
+  if(P.seller_type==='business')
+    return '<span class="badge" style="background:var(--paper-2);color:var(--muted);border:1px solid var(--line)">Listed by an agency</span>';
+  return '';
+})();
 dTitle.textContent = P.title;
 crumbTitle.textContent = P.title;
 dAddr.innerHTML = ICON.pin+' '+P.street+', '+P.area.replace('· ','');
@@ -683,11 +810,278 @@ function buildFeatures(p){
   return feats.filter(Boolean);
 }
 const FEATS = buildFeatures(P);
-// If no real features, use defaults
-const displayFeats = FEATS.length >= 3 ? FEATS : (P.cat==='land'
-  ? ['Verified title deed','Road access','Walled & pegged','Mains electricity nearby','Borehole-ready','~120 m to the beach','Residential zoning','Build management available','Clear of encumbrances','Survey plan included']
-  : ['Verified title deed','Walled & gated compound','Borehole water supply','Solar backup power','Air-conditioning throughout','Fibre internet ready','Mature tropical garden','Off-street parking','Staff / guard quarters','Fitted kitchen','Backup water tank','Fully furnished option']);
-featList.innerHTML = displayFeats.map(f=>`<div class="fi"><span class="ic">${ICON.check}</span> ${f}</div>`).join('');
+/* This used to fall back to a fixed list when a listing had fewer than three
+   features — including "Verified title deed" and "Clear of encumbrances" on
+   properties nobody had checked. A thin listing now reads as thin, and the
+   "What we have not checked" block below says so in words. */
+if(FEATS.length){
+  featList.innerHTML = FEATS.map(f=>`<div class="fi"><span class="ic">${ICON.check}</span> ${f}</div>`).join('');
+}else{
+  const blk = featList.closest('.block');
+  if(blk) blk.hidden = true;
+}
+
+/* ================================================================
+   The Gambian blocks: what is known, what backs it up, and what nobody
+   has checked. Every block removes itself when it has nothing to say —
+   an empty heading is worse than no heading.
+   ================================================================ */
+(function(){
+  const esc = s => String(s==null?'':s).replace(/[<>&"]/g, c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+  const fi  = (t,s) => `<div class="fi"><span class="ic">${ICON.check}</span> <span>${t}${s?'<br><span style="color:var(--muted-2);font-size:13px">'+s+'</span>':''}</span></div>`;
+  const show = (id, on) => { const el=document.getElementById(id); if(el) el.hidden = !on; };
+  const isRent = P.type==='rent';
+  const isLand = P.cat==='land';
+  const managed = P.seller_type==='business' && isRent;
+
+  /* ---- 1. Power, water and backup ---------------------------------- */
+  (function(){
+    const badges=[], lines=[];
+    const water = P.water||'', lw = P.land_water||'';
+    const mains = (water==='nawec'||water==='both'||lw==='nawec');
+    const bore  = (water==='borehole'||water==='both'||lw==='borehole');
+    const solar = (P.power==='solar'||P.power==='both');
+    const gen   = (P.power==='generator'||P.power==='both');
+    const grid  = isLand ? (P.electricity==='present') : true;
+
+    badges.push('<span class="ub'+(grid?'':' off')+'">'+(grid?'NAWEC connected':'No NAWEC connection')+'</span>');
+    badges.push('<span class="ub'+(bore?'':' off')+'">'+(bore?'Borehole':'No borehole')+'</span>');
+    badges.push('<span class="ub'+(solar?'':' off')+'">'+(solar?'Solar / inverter':'No solar')+'</span>');
+    badges.push('<span class="ub'+(gen?'':' off')+'">'+(gen?'Generator backup':'No generator')+'</span>');
+    if(P.water_tank===true) badges.push('<span class="ub">Water tank</span>');
+    if(P.septic_tank===true) badges.push('<span class="ub">Septic tank</span>');
+
+    if(isLand && P.electricity==='nearby') lines.push(fi('Electricity available nearby','On the plot itself there is no connection yet.'));
+    if(mains) lines.push(fi('NAWEC mains water'));
+    if(bore && P.tank_litres) lines.push(fi('Borehole with storage', P.tank_litres.toLocaleString('en-US')+' litre overhead tank'));
+    else if(P.water_tank===true && P.tank_litres) lines.push(fi('Overhead storage tank', P.tank_litres.toLocaleString('en-US')+' litres'));
+    if(solar && P.solar_kwp) lines.push(fi('Solar array', P.solar_kwp+' kWp'));
+    if(gen && P.generator_kva) lines.push(fi('Generator', P.generator_kva+' kVA'));
+    const METER={ cash_power:['Cash power meter', isRent?'The tenant tops the meter up.':'You top the meter up as you go.'],
+                  postpaid:['Postpaid meter', isRent?'Billed monthly.':'Billed monthly by NAWEC.'],
+                  shared:['Shared meter', 'The compound shares one meter — agree how it is split before you sign.'],
+                  included:['Electricity included in the rent', null] };
+    if(P.meter_type && METER[P.meter_type]) lines.push(fi(METER[P.meter_type][0], METER[P.meter_type][1]));
+    document.getElementById('utilBadges').innerHTML = badges.join('');
+    document.getElementById('utilList').innerHTML = lines.join('');
+    show('utilBlock', true);
+  })();
+
+  /* ---- 2. The compound and getting there ---------------------------- */
+  (function(){
+    const lines=[];
+    const ROAD={tarmac:['Tarmac road access',null],laterite:['Laterite road access','Passable in the dry season; ask about the rains.'],none:['No road access yet',null]};
+    if(P.road && ROAD[P.road]) lines.push(fi(ROAD[P.road][0], ROAD[P.road][1]));
+    if(typeof P.highway_m==='number' && P.highway_m>0)
+      lines.push(fi('About '+P.highway_m.toLocaleString('en-US')+' m to the tarmac road'));
+    const FENCE={partial:'Partially fenced',full:'Fully fenced or walled',none:'Not fenced'};
+    if(P.fencing && FENCE[P.fencing]) lines.push(fi(FENCE[P.fencing]));
+    const SEC={wall:'Walled compound',gated:'Gated compound with a guard'};
+    if(!isLand && P.security && SEC[P.security]) lines.push(fi(SEC[P.security]));
+    if(P.plot_width_m && P.plot_depth_m)
+      lines.push(fi(P.plot_width_m+' × '+P.plot_depth_m+' m plot', Math.round(P.plot_width_m*P.plot_depth_m).toLocaleString('en-US')+' m²'));
+    if(typeof P.beach_m==='number' && P.beach_m>0)
+      lines.push(fi(seaDistText ? seaDistText(P) : (P.beach_m+' m to the sea')));
+    const FLOOD={low:['Some seasonal flood risk','The seller reports water standing here in the rains.'],high:['High flood risk',null],no:['No flood risk reported',null]};
+    if(P.flood_risk && FLOOD[P.flood_risk]) lines.push(fi(FLOOD[P.flood_risk][0], FLOOD[P.flood_risk][1]));
+    const TDA={inside:['Inside the Tourism Development Area','The TDA sets what may be built along this stretch of coast.'],
+               adjacent:['Bordering the Tourism Development Area',null],
+               outside:['Outside the Tourism Development Area',null]};
+    if(P.tda_zone && TDA[P.tda_zone]) lines.push(fi(TDA[P.tda_zone][0], TDA[P.tda_zone][1]));
+    if(!lines.length) return;
+    document.getElementById('compoundList').innerHTML = lines.join('');
+    show('compoundBlock', true);
+  })();
+
+  /* ---- 3. Rent, terms and management -------------------------------- */
+  (function(){
+    if(!isRent) return;
+    const lines=[];
+    const PER={night:'per night',week:'per week',month:'per month',year:'per year'};
+    if(P.price_period && PER[P.price_period]) lines.push(fi('Rent quoted '+PER[P.price_period]));
+    if(P.deposit) lines.push(fi('Deposit '+fmtPrice(P.deposit), 'Refundable, held by the landlord.'));
+    if(P.min_term_months) lines.push(fi('Minimum stay '+P.min_term_months+(P.min_term_months===1?' month':' months')));
+    if(P.available_from) lines.push(fi('Available from '+P.available_from));
+    if(P.bills_included && P.bills_included.length) lines.push(fi('Included in the rent', esc(P.bills_included.join(', '))));
+    if(P.service_charge) lines.push(fi('Service charge '+fmtPrice(P.service_charge)+' '+(P.service_charge_period||'month'), 'On top of the rent.'));
+    if(!lines.length) return;
+    document.getElementById('rentList').innerHTML = lines.join('');
+    if(managed && (P.included_services||[]).length){
+      document.getElementById('managedBox').innerHTML =
+        '<div class="gaps"><b>Professionally managed.</b> '+esc(P.company_name||'The managing agent')+
+        ' looks after this property. Included: '+esc(P.included_services.join(', '))+'.'+
+        (P.management_terms?'<br>'+esc(P.management_terms):'')+
+        (P.tenant_criteria?'<br><b>Tenant criteria:</b> '+esc(P.tenant_criteria):'')+
+        (P.emergency_phone?'<br><b>24/7 emergency line:</b> '+esc(P.emergency_phone):'')+'</div>';
+    }
+    show('rentBlock', true);
+  })();
+
+  /* ---- 4. Paying for it --------------------------------------------- */
+  (function(){
+    if(isRent) return;
+    const T={cash:['Cash',null],
+             bank_transfer:['Bank transfer','International transfers are possible; ask the seller for the account details in writing.'],
+             remittance:['Remittance','Western Union, Ria or Waficash.'],
+             instalments:['Instalments arranged with the seller', P.instalment_months? ('Over about '+P.instalment_months+' months.') : null]};
+    const lines=(P.payment_terms||[]).map(k=>T[k]?fi(T[k][0],T[k][1]):'').filter(Boolean);
+    if(!lines.length) return;
+    document.getElementById('payList').innerHTML = lines.join('');
+    show('payBlock', true);
+  })();
+
+  /* ---- 5. The office behind the listing ------------------------------ */
+  (function(){
+    const a=P.agency;
+    if(!a || !a.name) return;
+    const initials=String(a.name).split(/\s+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase();
+    const bits=[];
+    if(a.licence_no) bits.push('Licence '+esc(a.licence_no)+(a.licence_body?' · '+esc({giepa:'GIEPA',registrar:'Registrar of Companies',council:'Local council',other:'other authority'}[a.licence_body]||a.licence_body):''));
+    else bits.push('No licence number on file');
+    bits.push(a.verified_at ? 'Checked by MyKunda' : 'Not yet checked by MyKunda');
+    const MAND={exclusive:'Sole mandate for this property',non_exclusive:'Non-exclusive mandate — it may also be listed elsewhere',owner:'The office owns this property'};
+    if(P.mandate_type && MAND[P.mandate_type]) bits.push(MAND[P.mandate_type]);
+    document.getElementById('agencyHead').innerHTML =
+      '<div class="logo">'+esc(initials||'··')+'</div><div><div class="n">'+esc(a.name)+'</div><div class="m">'+bits.join(' · ')+'</div></div>';
+    document.getElementById('agencyH2').textContent = isRent ? 'The office managing this property' : 'The office behind this listing';
+    show('agencyBlock', true);
+  })();
+
+  /* ---- 6. This listing over time ------------------------------------- */
+  (function(){
+    const lines=[];
+    if(P.created_at){
+      const d=new Date(P.created_at);
+      if(!isNaN(d)) lines.push(fi('First listed '+d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})));
+    }
+    if(!lines.length) return;
+    document.getElementById('historyList').innerHTML = lines.join('');
+    show('historyBlock', true);
+  })();
+
+  /* ---- 7. The ownership evidence ladder, and the gaps ----------------- */
+  const LADDER={
+    submitted:        [1,'Uploaded, not yet reviewed','The seller has given us this document. Nobody at MyKunda has read it.'],
+    desk_checked:     [2,'Reviewed by a specialist','The document was read and checked against the others in the file.'],
+    registry_checked: [3,'Checked against the registry','Land registry search, Physical Planning and a visit to the plot.']
+  };
+  const KIND={ title_deed:'Title deed', lease:'State lease', sublease:'Sublease',
+    alkalo_letter:'Alkalo transfer letter', seyfo_confirmation:'Seyfo confirmation',
+    lands_registration:'Ministry of Lands registration', site_plan:'Site plan',
+    survey_plan:'Survey plan', mandate:"Owner's authorisation",
+    management_agreement:'Management agreement', agency_licence:'Agency licence',
+    inventory:'Inventory list', id_document:'Identity document', other:'Other document' };
+
+  function ownershipLines(){
+    const out=[];
+    /* A tenant is not buying the land, and dbListingToCard defaults title_type
+       to 'alkalalo' when the column is null — printing that on a rental would
+       be the page inventing a fact. */
+    if(isRent) return out;
+    const TT={freehold:'Freehold title deed',leasehold:'State lease (99-year leasehold)',
+      sublease:'Sublease of an existing state lease',alkalalo:'Customary / Alkalo land',unclear:'Title status unclear'};
+    if(P.title_type && TT[P.title_type]) out.push(['The seller describes this as: '+TT[P.title_type], null]);
+    if(P.lease_years_remaining) out.push(['About '+P.lease_years_remaining+' years left on the lease', 'As stated by the seller.']);
+    if(P.alkalo_name) out.push(['Alkalo '+esc(P.alkalo_name)+(P.alkalo_village?' of '+esc(P.alkalo_village):''), 'Named by the seller as the signatory of the transfer letter.']);
+    if(P.lands_registry_ref) out.push(['Ministry of Lands reference '+esc(P.lands_registry_ref), 'As given by the seller; we have not searched the register.']);
+    return out;
+  }
+
+  async function renderEvidence(){
+    let rows=[];
+    try{
+      if(typeof sb!=='undefined' && sb && P.id && /^[0-9a-f-]{36}$/i.test(String(P.id))){
+        const r=await sb.rpc('listing_evidence_public',{p_listing:P.id});
+        if(r && !r.error && Array.isArray(r.data)) rows=r.data;
+      }
+    }catch(e){ /* the block simply shows what it can */ }
+
+    const stated=ownershipLines();
+    const html=[];
+    stated.forEach(([t,s])=>{ html.push('<div class="rung"><span class="dot"></span><div><div class="t">'+t+'</div>'+(s?'<div class="s">'+s+'</div>':'')+'</div></div>'); });
+    rows.forEach(r=>{
+      const L=LADDER[r.status]||LADDER.submitted;
+      const when = r.checked_at ? new Date(r.checked_at) : null;
+      const s = L[2] + (when&&!isNaN(when) ? ' Checked '+when.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+'.' : '')
+              + (r.issued_on ? ' Dated '+r.issued_on+'.' : '')
+              + (r.reference ? ' Reference '+esc(r.reference)+'.' : '');
+      html.push('<div class="rung lv'+L[0]+'"><span class="dot"></span><div><div class="t">'+
+        esc(KIND[r.kind]||r.kind)+' — '+L[1]+'</div><div class="s">'+s+'</div></div></div>');
+    });
+    if(!html.length){
+      html.push('<div class="rung"><span class="dot"></span><div><div class="t">Nothing on file yet</div><div class="s">'+
+        (isRent ? 'Nobody has shown us that this person is entitled to let this property.'
+                : 'The seller has not given us any document for this property.')+'</div></div></div>');
+    }
+
+    document.getElementById('evidenceH2').textContent = isRent ? 'The right to let this property' : 'Ownership & documents';
+    document.getElementById('evidenceLede').textContent = isRent
+      ? 'What the person letting this property has shown us, and how far it has been checked.'
+      : 'What the seller has shown us, and how far it has been checked. A document on file is not the same thing as a document that has been verified.';
+    document.getElementById('evidenceList').innerHTML = html.join('');
+
+    /* The gaps, named. A missing document is information, not a blank. */
+    const have = new Set(rows.map(r=>r.kind));
+    const missing=[];
+    if(!isRent){
+      if(P.title_type==='alkalalo' && !have.has('seyfo_confirmation')) missing.push('no Seyfo (district chief) confirmation on file');
+      if(P.title_type==='alkalalo' && !have.has('alkalo_letter')) missing.push('no Alkalo transfer letter uploaded');
+      if((P.title_type==='leasehold'||P.title_type==='sublease') && !have.has('lease')) missing.push('the lease itself has not been uploaded');
+      if(!have.has('site_plan') && !have.has('survey_plan')) missing.push('no site or survey plan');
+      if(!P.lands_registry_ref) missing.push('no Ministry of Lands reference given');
+    }
+    const checked = rows.some(r=>r.status==='registry_checked');
+    const deskChecked = rows.some(r=>r.status==='desk_checked'||r.status==='registry_checked');
+    if(isRent){
+      if(!deskChecked) document.getElementById('evidenceGaps').innerHTML =
+        '<b>Nobody at MyKunda has read the paperwork behind this letting.</b>';
+    }else if(missing.length || !checked){
+      document.getElementById('evidenceGaps').innerHTML =
+        (checked ? '' : '<b>Nobody has searched the land registry for this property.</b> ') +
+        (missing.length ? 'On this listing there is also: '+missing.join('; ')+'.' : '');
+    }
+    show('evidenceBlock', true);
+
+    /* ---- 8. What we have not checked -------------------------------- */
+    const gaps=[];
+    if(!checked) gaps.push(isRent
+      ? 'Whether the person letting this property is entitled to. We have not seen a lease or a management agreement checked against the owner.'
+      : 'The ownership of this property. We have not searched the land registry or visited the plot.');
+    if(!P.phone_verified_at) gaps.push((isRent?"The landlord's":"The seller's")+' phone number. It has not been verified by us.');
+    gaps.push('The measurements. Plot sizes, distances and floor areas come from the seller unless stated otherwise.');
+    if(P.seller_type==='business' && (!P.agency || !P.agency.verified_at)) gaps.push("The agency's licence. We have not confirmed it with the issuing body.");
+    if(isRent) gaps.push('The condition of the property today. Photos may be older than the listing.');
+    document.getElementById('notCheckedLede').textContent =
+      'MyKunda is young and most of what you read here comes from the seller. These are the things we have not established ourselves:';
+    document.getElementById('notCheckedList').innerHTML = gaps.map(g=>'<li>'+g+'</li>').join('');
+    show('notCheckedBlock', true);
+  }
+  renderEvidence();
+
+  /* ---- 9b. Who the enquiry actually reaches -------------------------- */
+  (function(){
+    const n=document.getElementById('agentName'), r=document.getElementById('agentRole');
+    if(!n||!r) return;
+    if(P.seller_type==='business' && P.agency && P.agency.name){
+      n.textContent=P.agency.name;
+      r.textContent = isRent ? 'Managing agent · enquiries and viewings' : 'Estate agent · enquiries and viewings';
+    }else if(P.seller_type==='owner'){
+      n.textContent='The owner';
+      r.textContent = isRent ? 'Lets this home directly — no agency fee' : 'Sells this property directly — no agency fee';
+    }
+    if(managed && P.emergency_phone){
+      document.getElementById('emergencyLine').innerHTML =
+        '<div style="margin-top:12px;padding:10px 13px;background:var(--paper-2);border-radius:var(--r-sm);font-size:13px;color:var(--ink-2);line-height:1.5">'+
+        '<b>24/7 emergency line</b><br><a href="tel:'+esc(String(P.emergency_phone).replace(/\s+/g,''))+'">'+esc(P.emergency_phone)+'</a></div>';
+    }
+  })();
+
+  /* ---- 9. Report this listing --------------------------------------- */
+  (function(){
+    const b=document.getElementById('reportBtn'); if(!b) return;
+    b.href='contact.html?subject='+encodeURIComponent('Report listing: '+(P.title||P.id||''))+'&ref='+encodeURIComponent(P.id||'');
+  })();
+})();
 
 // ---- ownership check CTA (buyer product, priced from PRICING.ownership) ----
 (function(){
@@ -817,8 +1211,17 @@ function initPropMap(){
   mk.bindPopup(`<div style="font-family:var(--sans);min-width:170px"><div style="font-weight:700;color:#18201D;margin-bottom:3px">${P.street}</div><div style="color:#5C6B64;font-size:12.5px;margin-bottom:8px">${P.area.replace('· ',', ')}</div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#15463A">Google Plus Code</div><div style="font-weight:800;color:#15463A">${plusCodeShort(P.lat,P.lng,loc)}</div></div>`);
 }
 
-// floorplan
-floorplan.innerHTML = floorplanSVG(P);
+/* Floor plan: only when the seller actually uploaded one. The tab used to draw
+   a generated plan with fixed room sizes on every listing — a measurement a
+   buyer would reasonably believe, on a page where nobody measured anything. */
+(function(){
+  const src = P.floorplan_url || P.floorplan || '';
+  const tab = document.getElementById('tabFloor');
+  const pane = document.querySelector('.media-pane[data-pane="floor"]');
+  if(!src){ if(tab) tab.remove(); if(pane) pane.remove(); return; }
+  floorplan.innerHTML = '<img src="'+String(src).replace(/"/g,'&quot;')+'" alt="Floor plan of '+String(P.title||'this property').replace(/[<>&"]/g,'')+'" style="max-width:100%;height:auto;display:block;margin:0 auto">';
+  if(tab) tab.hidden = false;
+})();
 
 
 
@@ -864,6 +1267,33 @@ shareBtn.addEventListener('click',()=>{
   window.MYKUNDA_WA_MESSAGE = enquiry;
   const fab=document.getElementById('waFab');
   if(fab) fab.href = waLink(enquiry);
+
+  /* Mobile action bar. On a phone the contact card sits at the very bottom of a
+     long page, so without this a buyer has to scroll all the way back up to say
+     anything. It stands down whenever that card is on screen. */
+  const bar=document.getElementById('pbar');
+  const wa=document.getElementById('pbarWa');
+  if(bar && wa){
+    wa.href = waLink(enquiry);
+    document.getElementById('pbarWaIc').innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2Zm5.5 14c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.2-.7-2.7-1.1-4.4-3.8-4.5-4-.1-.2-1.1-1.4-1.1-2.7s.7-1.9.9-2.1c.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.5c-.2.2-.3.4-.1.7.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.2 0 .4 0 .6-.2l.7-.8c.2-.2.4-.2.6-.1l1.9.9c.2.1.4.2.5.3.1.3.1.7-.1 1.2Z"/></svg>';
+    /* fmtPrice carries data-gmd, so the currency picker keeps this in step. */
+    document.getElementById('pbarPrice').innerHTML = fmtPrice(P.price, P.type);
+    const sub=document.getElementById('pbarSub');
+    if(sub) sub.textContent = P.area ? P.area.split('·')[0].trim() : '';
+    bar.hidden=false;
+    document.body.classList.add('has-pbar');
+    const card = wl ? wl.closest('.agent-card') : null;
+    if(card && 'IntersectionObserver' in window){
+      new IntersectionObserver(function(es){
+        es.forEach(function(e){
+          if(e.isIntersecting) bar.setAttribute('data-off','');
+          else bar.removeAttribute('data-off');
+        });
+      }, { threshold:0 }).observe(card);
+    } else {
+      bar.removeAttribute('data-off');
+    }
+  }
 })();
 // slots
 document.querySelectorAll('#slots .slot').forEach(s=>s.addEventListener('click',()=>{document.querySelectorAll('#slots .slot').forEach(x=>x.classList.remove('active'));s.classList.add('active');}));
@@ -965,48 +1395,6 @@ window.bookViewing = async function(form) {
   form.innerHTML = `<div style="text-align:center;padding:14px 6px"><div style="width:54px;height:54px;border-radius:50%;background:var(--green-50);color:var(--green-700);display:flex;align-items:center;justify-content:center;margin:0 auto 14px">${ICON.check}</div><div style="font-family:var(--serif);font-size:19px;font-weight:600;margin-bottom:6px">Viewing requested</div><p style="font-size:14px;color:var(--muted)">A confirmation is on its way to ${email.replace(/[<>&"]/g,'')}. We come back to you with the time — usually the same day.</p></div>`;
 };
 
-// floorplan generator
-function floorplanSVG(p){
-  if(p.cat==='land'){
-    return `<svg viewBox="0 0 560 420" xmlns="http://www.w3.org/2000/svg" font-family="Hanken Grotesk, sans-serif">
-    <defs><style>.bd{fill:none;stroke:#2A3B34;stroke-width:4}.plot{fill:#EAF2ED}.rl{fill:#384640;font-size:14px;font-weight:700}.rd{fill:#8A958E;font-size:12px;font-weight:600}.dim{stroke:#C8702D;stroke-width:1.5}.road{fill:#E9D9B0}</style></defs>
-    <rect x="60" y="40" width="400" height="300" class="plot"/>
-    <rect x="60" y="40" width="400" height="300" class="bd"/>
-    <rect x="60" y="345" width="440" height="40" class="road"/>
-    <text x="280" y="370" text-anchor="middle" class="rd">Access road</text>
-    <line x1="60" y1="30" x2="460" y2="30" class="dim"/>
-    <text x="260" y="22" text-anchor="middle" class="rd" fill="#C8702D">40 m frontage</text>
-    <line x1="475" y1="40" x2="475" y2="340" class="dim"/>
-    <text x="500" y="195" text-anchor="middle" class="rd" fill="#C8702D" transform="rotate(90,500,195)">30 m deep</text>
-    <text x="260" y="180" text-anchor="middle" class="rl">${p.plot.toLocaleString()} m² plot</text>
-    <text x="260" y="205" text-anchor="middle" class="rd">Residential · ready to build</text>
-    <text x="100" y="60" class="rd" fill="#5B86A0">← ~120 m to beach</text>
-  </svg>`;
-  }
-  return `<svg viewBox="0 0 560 420" xmlns="http://www.w3.org/2000/svg" font-family="Hanken Grotesk, sans-serif">
-    <defs><style>.wall{fill:none;stroke:#2A3B34;stroke-width:5;stroke-linejoin:round}.rm{fill:#F7F5F1}.rl{fill:#384640;font-size:14px;font-weight:700}.rd{fill:#8A958E;font-size:11px;font-weight:600}.door{stroke:#C8702D;stroke-width:3;fill:none}</style></defs>
-    <rect x="20" y="20" width="520" height="380" class="rm"/>
-    <rect x="20" y="20" width="520" height="380" class="wall"/>
-    <line x1="300" y1="20" x2="300" y2="230" class="wall"/>
-    <line x1="20" y1="230" x2="540" y2="230" class="wall"/>
-    <line x1="300" y1="230" x2="300" y2="400" class="wall"/>
-    <line x1="430" y1="230" x2="430" y2="400" class="wall"/>
-    <line x1="430" y1="315" x2="540" y2="315" class="wall"/>
-    <path d="M205,230 a30,30 0 0 0 30,-30" class="door"/>
-    <path d="M300,140 a26,26 0 0 1 -26,26" class="door"/>
-    <text x="160" y="118" text-anchor="middle" class="rl">Living &amp; Dining</text>
-    <text x="160" y="138" text-anchor="middle" class="rd">7.2 × 5.0 m</text>
-    <text x="420" y="118" text-anchor="middle" class="rl">Kitchen</text>
-    <text x="420" y="138" text-anchor="middle" class="rd">4.1 × 3.4 m</text>
-    <text x="160" y="320" text-anchor="middle" class="rl">Master Bedroom</text>
-    <text x="160" y="340" text-anchor="middle" class="rd">4.4 × 3.8 m</text>
-    <text x="365" y="320" text-anchor="middle" class="rl">Bedroom 2</text>
-    <text x="365" y="340" text-anchor="middle" class="rd">3.6 × 3.0 m</text>
-    <text x="485" y="278" text-anchor="middle" class="rl" font-size="12">Bath</text>
-    <text x="485" y="365" text-anchor="middle" class="rl" font-size="12">Hall</text>
-    <text x="280" y="46" text-anchor="middle" class="rd" font-size="12" fill="#C8702D">▲ Terrace — ocean side</text>
-  </svg>`;
-}
 } // end renderProperty
 </script>
 </body>

@@ -252,7 +252,9 @@ async function fetchListings(filters){
 }
 async function fetchListing(id){
   if(!sb) return null;
-  const { data, error } = await sb.from('listings').select('*, listing_media(*)').eq('id', id).single();
+  /* The agency comes along on the single-listing read only: the detail page
+     shows the office behind the listing, the search pages never do. */
+  const { data, error } = await sb.from('listings').select('*, listing_media(*), agencies(*)').eq('id', id).single();
   if(error){ console.warn('fetchListing:', error.message); return null; }
   sb.rpc('bump_listing_views', { p_id: id });   // fire-and-forget view count
   return data;
@@ -420,7 +422,29 @@ function dbListingToCard(r){
        already written by list.html but never read back, so nothing could filter on
        them. doc_type is the one document-type field collected for every listing —
        land and built alike — via the "Ownership & documents" step. */
-    doc_type: r.doc_type||'', year_built: r.year_built||null, available_from: r.available_from||null
+    doc_type: r.doc_type||'', year_built: r.year_built||null, available_from: r.available_from||null,
+    /* Added 28-08-2026 with the Gambia fields. These are read straight back by
+       property.html; anything the database does not have yet stays undefined
+       and the block that shows it simply does not appear. */
+    created_at: r.created_at||null,
+    seller_type: r.seller_type||null, company_name: r.company_name||null,
+    fee_type: r.fee_type||null, fee_value: r.fee_value||null,
+    mandate_type: r.mandate_type||null, rental_mode: r.rental_mode||null,
+    deposit: r.deposit||null, price_period: r.price_period||null,
+    min_term_months: r.min_term_months||null, bills_included: r.bills_included||[],
+    meter_type: r.meter_type||null, water_tank: r.water_tank, tank_litres: r.tank_litres||null,
+    septic_tank: r.septic_tank, solar_kwp: r.solar_kwp||null, generator_kva: r.generator_kva||null,
+    plot_width_m: r.plot_width_m||null, plot_depth_m: r.plot_depth_m||null, highway_m: r.highway_m||null,
+    tda_zone: r.tda_zone||null, lease_years_remaining: r.lease_years_remaining||null,
+    alkalo_name: r.alkalo_name||null, alkalo_village: r.alkalo_village||null,
+    lands_registry_ref: r.lands_registry_ref||null,
+    payment_terms: r.payment_terms||[], instalment_months: r.instalment_months||null,
+    service_charge: r.service_charge||null, service_charge_period: r.service_charge_period||null,
+    included_services: r.included_services||[], tenant_criteria: r.tenant_criteria||null,
+    management_terms: r.management_terms||null, emergency_phone: r.emergency_phone||null,
+    evidence_level: (typeof r.evidence_level==='number') ? r.evidence_level : null,
+    phone_verified_at: r.phone_verified_at||null,
+    agency: r.agencies || null
   };
 }
 

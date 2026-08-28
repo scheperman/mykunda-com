@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0v1rw8w--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1sy3767--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://api.maptiler.com" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=280526171270904">
+<link rel="stylesheet" href="styles.min.css?v=215529771599997">
 <style>
 body{background:var(--paper-2);min-height:100vh}
 
@@ -61,6 +61,11 @@ body{background:var(--paper-2);min-height:100vh}
 .step .eyebrow{font-family:var(--sans);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--amber-600);margin-bottom:10px}
 .step h1{font-size:30px;line-height:1.12;margin-bottom:8px}
 .step .desc{color:var(--muted);font-size:16px;margin-bottom:28px;max-width:560px}
+/* A step is a group of sections. Everything after the first one is part of the
+   same screen, so its heading drops a level and it gets a rule above it. */
+.step.sub.on{margin-top:38px;padding-top:30px;border-top:1px solid var(--line)}
+.step.sub h1{font-size:22px}
+.step.sub .desc{font-size:15px;margin-bottom:22px}
 
 #ownerConfirm,#mandateBox,#confirmBox{background:var(--green-50);border-color:var(--green-200)}
 #ownerConfirm p,#mandateBox p,#confirmBox p{color:var(--ink-2)}
@@ -467,12 +472,102 @@ body{background:var(--paper-2);min-height:100vh}
       </div>
     </section>
 
+    <!-- STEP: the Gambian specifics — power, water, the compound, and how it is run -->
+    <section class="step" data-key="gambia">
+      <div class="eyebrow">Gambia</div>
+      <h1 id="gamH1">Power, water and the compound</h1>
+      <p class="desc" id="gamDesc">The questions every buyer in The Gambia asks before they ask about the price. An empty answer reads as “no”, so it is worth filling these in even when the answer is nothing.</p>
+
+      <div id="gamUtil">
+        <div class="frow">
+          <div class="fld"><label>Water storage tank</label>
+            <select id="tankIn"><option value="">Not stated</option><option value="yes">Yes, overhead tank</option><option value="no">No tank</option></select>
+          </div>
+          <div class="fld" id="tankLitresWrap" style="display:none"><label>Tank size <span style="font-weight:500;color:var(--muted-2)">— litres, optional</span></label><input type="number" id="tankLitresIn" min="0" step="100" placeholder="2000"></div>
+        </div>
+        <div class="frow">
+          <div class="fld" id="solarKwpWrap" style="display:none"><label>Solar array <span style="font-weight:500;color:var(--muted-2)">— kWp, optional</span></label><input type="number" id="solarKwpIn" min="0" step="0.1" placeholder="3.5"></div>
+          <div class="fld" id="genKvaWrap" style="display:none"><label>Generator <span style="font-weight:500;color:var(--muted-2)">— kVA, optional</span></label><input type="number" id="genKvaIn" min="0" step="0.5" placeholder="6.5"></div>
+        </div>
+        <div class="frow">
+          <div class="fld"><label>Septic tank</label>
+            <select id="septicIn"><option value="">Not stated</option><option value="yes">Yes</option><option value="no">No</option></select>
+          </div>
+          <div class="fld" id="meterWrap"><label id="meterLab">Electricity meter</label>
+            <select id="meterIn">
+              <option value="">Not stated</option>
+              <option value="cash_power">Cash power — the tenant tops up</option>
+              <option value="postpaid">Postpaid meter — billed monthly</option>
+              <option value="shared">Shared meter with the compound</option>
+              <option value="included">Included in the rent</option>
+            </select>
+            <div class="hint" id="meterHint">After the rent itself, this is the question tenants ask first.</div>
+          </div>
+        </div>
+        <div class="frow">
+          <div class="fld"><label>Plot width <span style="font-weight:500;color:var(--muted-2)">— metres</span></label><input type="number" id="plotWIn" min="0" step="0.5" placeholder="15"></div>
+          <div class="fld"><label>Plot depth <span style="font-weight:500;color:var(--muted-2)">— metres</span></label><input type="number" id="plotDIn" min="0" step="0.5" placeholder="30"><div class="hint" id="plotDimHint">Most plots here are traded as 15 × 30. Fill both and the square metres follow.</div></div>
+        </div>
+        <div class="frow">
+          <div class="fld"><label>Distance to the tarmac road <span style="font-weight:500;color:var(--muted-2)">— metres, optional</span></label><input type="number" id="highwayIn" min="0" step="10" placeholder="400"><div class="hint">How far the last stretch of laterite runs. In the rains it is the difference between reachable and not.</div></div>
+          <div class="fld"><label>Tourism Development Area</label>
+            <select id="tdaIn">
+              <option value="">Not sure</option>
+              <option value="inside">Inside the TDA</option>
+              <option value="adjacent">Just outside, bordering it</option>
+              <option value="outside">Outside the TDA</option>
+            </select>
+            <div class="hint">The TDA decides what may be built along the coast.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ownership papers, sale only -->
+      <div id="gamTitle" style="display:none;margin-top:28px;padding-top:24px;border-top:1px solid var(--line)">
+        <label style="display:block;font-size:15px;font-weight:700;color:var(--ink);margin-bottom:6px">The paperwork behind the land</label>
+        <p style="font-size:13.5px;color:var(--muted);margin-bottom:16px">You do not have to have everything. What you fill in here is shown on your listing as what it is — and what is missing is shown as missing, not hidden.</p>
+        <div class="frow one" id="leaseYearsRow" style="display:none">
+          <div class="fld"><label>Years left on the lease</label><input type="number" id="leaseYearsIn" min="0" max="99" placeholder="87"><div class="hint">A 99-year lease with 12 years left is a different property from one with 91.</div></div>
+        </div>
+        <div class="frow" id="alkaloRow" style="display:none">
+          <div class="fld"><label>Alkalo's name</label><input type="text" id="alkaloNameIn" placeholder="Full name of the Alkalo who signed"></div>
+          <div class="fld"><label>Village</label><input type="text" id="alkaloVillageIn" placeholder="The village the Alkalo heads"><div class="hint">A transfer letter without a name and a village is a statement, not a document a buyer can check.</div></div>
+        </div>
+        <div class="frow one" id="registryRow">
+          <div class="fld"><label>Ministry of Lands reference <span style="font-weight:500;color:var(--muted-2)">— optional</span></label><input type="text" id="registryRefIn" placeholder="e.g. LR/2019/04412"></div>
+        </div>
+      </div>
+
+      <!-- how it is managed, professional lettings only -->
+      <div id="gamManage" style="display:none;margin-top:28px;padding-top:24px;border-top:1px solid var(--line)">
+        <label style="display:block;font-size:15px;font-weight:700;color:var(--ink);margin-bottom:6px">How the property is managed</label>
+        <p style="font-size:13.5px;color:var(--muted);margin-bottom:16px">This is what earns the <b>Professionally managed</b> label on your listing.</p>
+        <label style="display:block;font-size:13.5px;font-weight:700;color:var(--ink-2);margin-bottom:11px">Included in the management</label>
+        <div class="checks" id="inclChecks"></div>
+        <div class="frow" style="margin-top:18px">
+          <div class="fld"><label>Service charge <span style="font-weight:500;color:var(--muted-2)">— on top of the rent</span></label>
+            <div class="input-affix"><span class="pre">D</span><input type="text" id="svcChargeIn" inputmode="numeric" placeholder="2,500"></div>
+          </div>
+          <div class="fld"><label>Charged per</label>
+            <select id="svcPeriodIn"><option value="month">Month</option><option value="quarter">Quarter</option><option value="year">Year</option></select>
+          </div>
+        </div>
+        <div class="frow one">
+          <div class="fld"><label>Tenant criteria <span style="font-weight:500;color:var(--muted-2)">— optional</span></label><textarea id="tenantCritIn" placeholder="Proof of income, two references, no sublet…" style="min-height:80px"></textarea></div>
+        </div>
+        <div class="frow one">
+          <div class="fld"><label>What the management covers</label><textarea id="mgmtTermsIn" placeholder="Repairs under D5,000 handled within 48 hours, quarterly inspection, garden maintained fortnightly…" style="min-height:80px"></textarea></div>
+        </div>
+      </div>
+    </section>
+
     <!-- STEP: photos -->
     <section class="step" data-key="photos">
       <div class="eyebrow">Photos</div>
       <h1 id="photoH1">Show off your property</h1>
       <p class="desc" id="photoDesc">Drag photos onto each slot. The first one is your cover — make it count. More photos = more enquiries.</p>
       <div class="photo-grid" id="photoGrid" style="grid-template-columns:repeat(4,1fr)"></div>
+      <div id="photoReq" class="hint" style="margin-top:12px;max-width:620px">Four photos is the minimum, and one of them should show the property from the outside. That one photo is what tells a buyer the listing is real. <b id="photoReqN"></b></div>
       <div style="margin-top:22px;max-width:620px">
         <label style="display:block;font-size:13.5px;font-weight:700;color:var(--ink-2);margin-bottom:7px">🎥 Video link <span style="font-weight:500;color:var(--muted-2)">— optional</span></label>
         <input type="text" id="videoIn" placeholder="Paste a YouTube or Vimeo link" style="width:100%;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:12px 14px;font-size:15px;font-family:var(--sans)">
@@ -577,6 +672,16 @@ body{background:var(--paper-2);min-height:100vh}
         </div>
         <div class="bnd-info" id="feeCalc" style="display:none"></div>
       </div>
+      <div id="payWrap" style="display:none;margin-top:30px;max-width:600px">
+        <label style="display:block;font-size:13.5px;font-weight:700;color:var(--ink-2);margin-bottom:5px">How can a buyer pay you?</label>
+        <p style="font-size:13.5px;color:var(--muted);margin-bottom:12px">Half the buyers looking at Gambian property are abroad. Saying this up front saves the first three messages.</p>
+        <div class="checks" id="payChecks"></div>
+        <div class="fld" id="instalWrap" style="display:none;max-width:300px;margin-top:16px">
+          <label>Over how many months?</label>
+          <input type="number" id="instalIn" min="2" max="60" placeholder="12">
+          <div class="hint">Payment in instalments arranged directly with you, not through MyKunda.</div>
+        </div>
+      </div>
       <div id="feeOwnerNote" class="band-note" style="display:none;margin-top:30px;max-width:560px">Your listing carries a <b>No agent fee</b> badge. Tenants deal with you directly and pay nothing beyond the rent and the deposit you agree between you.</div>
     </section>
 
@@ -596,13 +701,45 @@ body{background:var(--paper-2);min-height:100vh}
       <div id="bizWrap" style="display:none">
         <div class="frow">
           <div class="fld"><label>Agency or company name</label><input type="text" id="companyIn" placeholder="e.g. Kombo Coast Properties"></div>
-          <div class="fld"><label>Registration number <span style="font-weight:500;color:var(--muted-2)">— optional</span></label><input type="text" id="regIn" placeholder="GIEPA or company registration"></div>
+          <div class="fld"><label>Registration or licence number</label><input type="text" id="regIn" placeholder="GIEPA or company registration"></div>
+        </div>
+        <div class="frow">
+          <div class="fld"><label>Issued by</label>
+            <select id="licBodyIn">
+              <option value="">Select…</option>
+              <option value="giepa">GIEPA</option>
+              <option value="registrar">Registrar of Companies</option>
+              <option value="council">Local council</option>
+              <option value="other">Something else</option>
+            </select>
+          </div>
+          <div class="fld"><label>Your agreement with the owner</label>
+            <select id="mandateTypeIn">
+              <option value="">Select…</option>
+              <option value="exclusive">Exclusive — only we market it</option>
+              <option value="non_exclusive">Non-exclusive — others may too</option>
+              <option value="owner">We own it ourselves</option>
+            </select>
+            <div class="hint">Shown on the listing. A buyer who sees the same house at three agencies wants to know which one holds the mandate.</div>
+          </div>
+        </div>
+        <div class="frow one" id="emergencyRow" style="display:none">
+          <div class="fld"><label>24/7 emergency number</label><input type="tel" id="emergencyIn" placeholder="+220 …"><div class="hint">Published on the listing. It is what separates managed lettings from the rest.</div></div>
         </div>
         <label class="confirm-box" id="mandateBox" style="margin-bottom:22px"><span class="box"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><p id="mandateTxt">I own this property, or I hold the owner's written permission to market it.</p></label>
       </div>
       <div class="frow">
         <div class="fld"><label id="nameLab">Your name</label><input type="text" id="nameIn" placeholder="Full name"></div>
-        <div class="fld"><label>WhatsApp number</label><input type="tel" id="phoneIn" placeholder="+220 …"></div>
+        <div class="fld"><label>WhatsApp number</label><input type="tel" id="phoneIn" placeholder="+220 …">
+          <div id="otpWrap" style="display:none;margin-top:9px">
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <button type="button" id="otpSend" style="padding:9px 15px;border:1.5px solid var(--green-700);border-radius:var(--r-sm);background:var(--white);font-size:13.5px;font-weight:700;color:var(--green-700);cursor:pointer;font-family:var(--sans)">Send me a code on WhatsApp</button>
+              <input type="text" id="otpCode" inputmode="numeric" maxlength="6" placeholder="6-digit code" style="display:none;max-width:130px;letter-spacing:.14em;font-weight:700">
+              <button type="button" id="otpCheck" style="display:none;padding:9px 15px;border:none;border-radius:var(--r-sm);background:var(--green-700);color:#fff;font-size:13.5px;font-weight:700;cursor:pointer;font-family:var(--sans)">Confirm</button>
+            </div>
+            <div class="hint" id="otpHint">A verified number tells buyers the listing is real. It is never shown until you reply to someone.</div>
+          </div>
+        </div>
       </div>
       <div class="frow one">
         <div class="fld"><label>Email address</label><input type="email" id="emailIn" placeholder="you@email.com"></div>
@@ -663,18 +800,18 @@ body{background:var(--paper-2);min-height:100vh}
   </aside>
 </div>
 
-<script src="valuation-areas.js?v=280526171270904"></script>
-<script src="valuation.js?v=280526171270904"></script>
-<script src="app.min.js?v=280526171270904"></script>
-<script src="gambia-places.js?v=280526171270904" defer></script>
-<script src="image-slot.js?v=280526171270904" defer></script>
+<script src="valuation-areas.js?v=215529771599997"></script>
+<script src="valuation.js?v=215529771599997"></script>
+<script src="app.min.js?v=215529771599997"></script>
+<script src="gambia-places.js?v=215529771599997" defer></script>
+<script src="image-slot.js?v=215529771599997" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel, Leaflet (~145 KB) only when the
    seller reaches the location step. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=280526171270904'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=215529771599997'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -735,6 +872,8 @@ function clearLocalDraft(){ try{ localStorage.removeItem(LOCAL_DRAFT); }catch(e)
    database that does not have them yet those keys are dropped, so the save keeps
    working instead of failing on an unknown column. */
 let EXTRA_COLS = true;
+/* Same trick for the Gambia columns added on 28-08-2026. One probe, one flag. */
+let GAMBIA_COLS = true;
 function listingFields(){
   const lat = (typeof S.lat==='number') ? S.lat : null;
   const lng = (typeof S.lng==='number') ? S.lng : null;
@@ -805,6 +944,49 @@ function listingFields(){
     bills_included: (isRent() && S.bills.length) ? S.bills.slice() : null
   };
   if(!EXTRA_COLS) ['seller_type','company_name','fee_type','fee_value','deposit','price_period','min_term_months','bills_included'].forEach(c=>{ delete f[c]; });
+
+  /* ---- The Gambia step. Same guard as above: on a database without these
+     columns yet the keys are dropped instead of the save failing. ---- */
+  if(GAMBIA_COLS){
+    const num=v=>{ const n=parseFloat(String(v).replace(/[^0-9.]/g,'')); return isFinite(n)&&n>0?n:null; };
+    const int=v=>{ const n=parseInt(String(v).replace(/[^0-9]/g,''),10); return isFinite(n)&&n>0?n:null; };
+    const yn =v=> v==='yes' ? true : (v==='no' ? false : null);
+    Object.assign(f, {
+      water_tank: yn(S.tank),
+      tank_litres: S.tank==='yes' ? int(S.tankLitres) : null,
+      septic_tank: yn(S.septic),
+      meter_type: S.meter||null,
+      solar_kwp: (!isLand && (S.power==='solar'||S.power==='both')) ? num(S.solarKwp) : null,
+      generator_kva: (!isLand && (S.power==='generator'||S.power==='both')) ? num(S.genKva) : null,
+      plot_width_m: num(S.plotW),
+      plot_depth_m: num(S.plotD),
+      highway_m: int(S.highwayM),
+      tda_zone: S.tda||null,
+      /* Papers belong to a sale. A tenant is not buying the land. */
+      lease_years_remaining: (!isRent() && (S.titleType==='leasehold'||S.titleType==='sublease')) ? int(S.leaseYears) : null,
+      alkalo_name:    (!isRent() && S.titleType==='alkalalo') ? ((S.alkaloName||'').trim()||null) : null,
+      alkalo_village: (!isRent() && S.titleType==='alkalalo') ? ((S.alkaloVillage||'').trim()||null) : null,
+      lands_registry_ref: !isRent() ? ((S.registryRef||'').trim()||null) : null,
+      /* Payment terms are a sale question; rent has the deposit and the bills. */
+      payment_terms: (!isRent() && S.payTerms.length) ? S.payTerms.slice() : null,
+      instalment_months: (!isRent() && S.payTerms.indexOf('instalments')>-1) ? int(S.instalMonths) : null,
+      /* Service charge in dalasi, like every other amount here. */
+      service_charge: (isRent() && S.who==='business') ? int(S.svcCharge) : null,
+      service_charge_period: (isRent() && S.who==='business' && S.svcCharge) ? (S.svcPeriod||'month') : null,
+      /* The three things that carry the "Professionally managed" label. */
+      included_services: (isRent() && S.who==='business' && S.inclServices.length) ? S.inclServices.slice() : null,
+      tenant_criteria:  (isRent() && S.who==='business') ? ((S.tenantCrit||'').trim()||null) : null,
+      management_terms: (isRent() && S.who==='business') ? ((S.mgmtTerms||'').trim()||null) : null,
+      mandate_type: S.who==='business' ? (S.mandateType||null) : 'owner',
+      /* Nightly and weekly rents are holiday lets; monthly and yearly are not. */
+      rental_mode: isRent() ? ((S.period==='night'||S.period==='week') ? 'holiday' : 'long_term') : null,
+      emergency_phone: (isRent() && S.who==='business') ? ((S.emergencyPhone||'').trim()||null) : null,
+      /* Only ever set by a code that came back correct. Nothing in the browser
+         can talk itself into this: the check runs in the edge function. */
+      phone_verified_at: S.phoneVerified ? new Date().toISOString() : null,
+      phone_verify_channel: S.phoneVerified ? 'whatsapp' : null
+    });
+  }
   return f;
 }
 
@@ -910,6 +1092,18 @@ function applyStateToUI(){
   setSel('securityIn',S.security); setSel('furnishedIn',S.furnished); setSel('waterIn',S.water); setSel('powerIn',S.power);
   setSel('roadIn',S.road); setSel('titleIn',S.titleType); setSel('elecIn',S.elec); setSel('landWaterIn',S.landWater);
   setSel('floodIn',S.flood); setSel('fenceIn',S.fence);
+  setSel('tankIn',S.tank); setSel('tankLitresIn',S.tankLitres); setSel('septicIn',S.septic);
+  setSel('meterIn',S.meter); setSel('solarKwpIn',S.solarKwp); setSel('genKvaIn',S.genKva);
+  setSel('plotWIn',S.plotW); setSel('plotDIn',S.plotD); setSel('highwayIn',S.highwayM); setSel('tdaIn',S.tda);
+  setSel('leaseYearsIn',S.leaseYears); setSel('alkaloNameIn',S.alkaloName);
+  setSel('alkaloVillageIn',S.alkaloVillage); setSel('registryRefIn',S.registryRef);
+  setSel('svcChargeIn',S.svcCharge); setSel('svcPeriodIn',S.svcPeriod);
+  setSel('tenantCritIn',S.tenantCrit); setSel('mgmtTermsIn',S.mgmtTerms);
+  setSel('instalIn',S.instalMonths); setSel('licBodyIn',S.licBody);
+  setSel('mandateTypeIn',S.mandateType); setSel('emergencyIn',S.emergencyPhone);
+  (S.inclServices||[]).forEach(v=>{ const el=inclChecks&&inclChecks.querySelector('[data-incl="'+v+'"]'); if(el) el.classList.add('sel'); });
+  (S.payTerms||[]).forEach(v=>{ const el=payChecks&&payChecks.querySelector('[data-pay="'+v+'"]'); if(el) el.classList.add('sel'); });
+  applyGambiaUI();
   setSel('highlightsIn',S.highlights); setSel('customFeatsIn',S.customFeats); setSel('yearIn',S.yearBuilt);
   setSel('availIn',S.availDate); setSel('videoIn',S.videoLink); setSel('docType',S.docType);
   setSel('nameIn',S.contactName); setSel('phoneIn',S.contactPhone); setSel('emailIn',S.contactEmail);
@@ -979,7 +1173,13 @@ sumPhIc.innerHTML = ICON.camera;
 const checkSm='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
 
 // ---- state ----
-const S = { deal:'sale', dealPicked:false, period:'month', who:'', confirmWho:false, company:'', regNo:'', mandate:false, deposit:'', minTerm:'', bills:[], feeType:'none', feeVal:'', cat:'villa', area:'', street:'', beds:'', baths:'', sqm:'', plot:'', landSqm:'', front:'', feats:[], customFeats:'', landFeats:[], desc:'', highlights:'', nearby:[], photos:0, docType:'', confirm:false, price:'', neg:true, plan:(['basic','verified','promoted','managed'].indexOf(qs('plan'))>-1?qs('plan'):'basic'), condition:'good', floors:'1', beach:'inland', view:'none', security:'none', furnished:'unfurnished', water:'nawec', power:'no', road:'laterite', titleType:'alkalalo', elec:'none', landWater:'none', landBeach:'inland', shape:'regular', flood:'no', fence:'none', customTitle:'', yearBuilt:'', availDate:'', beachDist:'', videoLink:'' };
+const S = { deal:'sale', dealPicked:false, period:'month', who:'', confirmWho:false, company:'', regNo:'', mandate:false, deposit:'', minTerm:'', bills:[], feeType:'none', feeVal:'', cat:'villa', area:'', street:'', beds:'', baths:'', sqm:'', plot:'', landSqm:'', front:'', feats:[], customFeats:'', landFeats:[], desc:'', highlights:'', nearby:[], photos:0, docType:'', confirm:false, price:'', neg:true, plan:(['basic','verified','promoted','managed'].indexOf(qs('plan'))>-1?qs('plan'):'basic'), condition:'good', floors:'1', beach:'inland', view:'none', security:'none', furnished:'unfurnished', water:'nawec', power:'no', road:'laterite', titleType:'alkalalo', elec:'none', landWater:'none', landBeach:'inland', shape:'regular', flood:'no', fence:'none', customTitle:'', yearBuilt:'', availDate:'', beachDist:'', videoLink:'',
+  /* Gambia-stap */
+  tank:'', tankLitres:'', septic:'', meter:'', solarKwp:'', genKva:'',
+  plotW:'', plotD:'', highwayM:'', tda:'', leaseYears:'', alkaloName:'', alkaloVillage:'', registryRef:'',
+  inclServices:[], svcCharge:'', svcPeriod:'month', tenantCrit:'', mgmtTerms:'',
+  /* prijs- en contactstap */
+  payTerms:[], instalMonths:'', licBody:'', mandateType:'', emergencyPhone:'', phoneVerified:false };
 /* Plan prices live in PRICING (app.js) — the one place they are defined. */
 function askingGMD(){ return parseInt(String(S.price||'').replace(/[^0-9]/g,''),10)||0; }
 function bandFor(){ return planBandFor(askingGMD(), S.deal); }
@@ -999,13 +1199,20 @@ function gmdIn(gmd){ return CURRENCIES[getCurrency()].symbol + Math.round(fromGM
    bills. And a private owner is not an agency. So the deal and the party are
    asked once, at the front door, and everything after that is that track's own
    sequence, wording and validation. Land is sale-only — you cannot let a plot. */
+/* Ten screens became five. Each step is still built from the same sections —
+   nothing moved — but a step now shows a group of them at once. One question
+   per step, and every screen a seller leaves is a screen they may not come
+   back to, so there are as few of them as the content allows.
+   Sections after the first in a group carry .sub: their heading drops a level
+   and their eyebrow is hidden, so a step reads as one screen. */
 const TRACK_STEPS={
-  sale:['intro','what','where','details','photos','proof','price','plan','contact','preview'],
-  rent:['intro','what','where','details','photos','price','proof','plan','contact','preview']
+  sale:[['intro','what'],['where'],['details','gambia'],['photos','proof'],['price','plan','contact'],['preview']],
+  rent:[['intro','what'],['where'],['details','gambia'],['photos','proof'],['price','plan','contact'],['preview']]
 };
-const STEP_LAB={what:['Property','Property'],where:['Location','Location'],details:['Details','The home'],
-  photos:['Photos','Photos'],proof:['Title','Right to let'],price:['Price','Rent & terms'],
-  plan:['Plan','Plan'],contact:['Contact','Contact'],preview:['Review','Review']};
+/* Labels hang off the first section of a group. */
+const STEP_LAB={intro:['You & the property','You & the property'],where:['Location','Location'],
+  details:['The property','The home'],photos:['Documents & photos','Documents & photos'],
+  price:['Price & contact','Rent & contact'],preview:['Review','Review']};
 function isRent(){ return S.deal==='rent'; }
 /* A rent of D 25,000 means nothing without its period, and "150,000" for a sale
    must not read as a monthly figure either. One table, used by every label, the
@@ -1015,11 +1222,16 @@ function per(){ return PERIODS[S.period]||PERIODS.month; }
 function priceSuffix(){ return isRent()?per().suffix:'total'; }  // used for the field suffix and the hint
 function keys(){ return TRACK_STEPS[isRent()?'rent':'sale']; }
 function total(){ return keys().length; }          // index total() = success screen
-function curKey(){ return keys()[step]||'done'; }
+function groupAt(n){ return keys()[n]||[]; }
+function groupHas(n,k){ return groupAt(n).indexOf(k)>-1; }
+function curKey(){ return groupAt(step)[0]||'done'; }
+/* The review is a confirmation, not a question, so it carries no number. */
+function numberedSteps(){ return keys().filter(g=>g.indexOf('preview')<0).length; }
 function labFor(k){ const l=STEP_LAB[k]; return l?l[isRent()?1:0]:''; }
 let step=0;
 function renderSteps(){
-  psteps.innerHTML = keys().slice(1).map((k,i)=>`<div class="pstep" data-i="${i+1}"><div class="bar"></div><div class="lab">${labFor(k)}</div></div>`).join('');
+  psteps.innerHTML = keys().filter(g=>g.indexOf('preview')<0)
+    .map((g,i)=>`<div class="pstep" data-i="${i}"><div class="bar"></div><div class="lab">${labFor(g[0])}</div></div>`).join('');
 }
 renderSteps();
 
@@ -1040,6 +1252,15 @@ const FEATS=['Private pool','Garden','Air-con','Parking','Staff quarters','Balco
 featChecks.innerHTML = FEATS.map(f=>`<label class="chk-opt" data-feat="${f}"><span class="box">${checkSm}</span> ${f}</label>`).join('');
 const LANDFEATS=['Cleared / level','Corner plot','Trees / vegetation','Elevated / hilltop','Near school'];
 landChecks.innerHTML = LANDFEATS.map(f=>`<label class="chk-opt" data-landfeat="${f}"><span class="box">${checkSm}</span> ${f}</label>`).join('');
+
+/* What a managed letting actually includes, and how a buyer can pay. Both are
+   plain lists so the listing can print them back word for word. */
+const INCL_SERVICES=['24/7 security guard','Gardener','Cleaning','Pool maintenance','Repairs & maintenance','Rubbish collection','Water bill','Electricity bill','Internet'];
+const inclChecks=document.getElementById('inclChecks');
+if(inclChecks) inclChecks.innerHTML = INCL_SERVICES.map(f=>`<label class="chk-opt" data-incl="${f}"><span class="box">${checkSm}</span> ${f}</label>`).join('');
+const PAY_TERMS=[['cash','Cash'],['bank_transfer','Bank transfer'],['remittance','Remittance (Western Union, Ria, Waficash)'],['instalments','Instalments arranged with me']];
+const payChecks=document.getElementById('payChecks');
+if(payChecks) payChecks.innerHTML = PAY_TERMS.map(([k,l])=>`<label class="chk-opt" data-pay="${k}"><span class="box">${checkSm}</span> ${l}</label>`).join('');
 
 // photos
 photoGrid.innerHTML = Array.from({length:10}).map((_,i)=>`<div class="photo-cell ${i===0?'cover':''}" data-i="${i}">${i===0?'<span class="cover-tag">Cover</span>':''}<image-slot id="list-photo-${i}" placeholder="${i===0?'Cover photo':'Photo '+(i+1)}" radius="0" style="position:absolute;inset:0;width:100%;height:100%;display:block"></image-slot></div>`).join('');
@@ -1092,6 +1313,7 @@ function bindTypeCards(){
     document.getElementById('buildingDetails').style.display=isLand?'none':'block';
     document.getElementById('landDetails').style.display=isLand?'block':'none';
     document.getElementById('detailDesc').textContent=isLand?'Add the key facts about your plot.':'Add the key facts buyers look for first.';
+    applyGambiaUI(); syncPlotFromDims();
     updateSummary();
   }));
 }
@@ -1376,6 +1598,7 @@ function applyDealUI(){
     : 'I confirm I am the owner, or am authorised to sell this property, and that everything I have entered is accurate.';
   document.getElementById('termsWrap').style.display = rent?'block':'none';
   if(rent&&S.plan==='verified') S.plan='basic';
+  applyGambiaUI();
   updatePriceLabels(); renderFee(); renderPlans(); renderNeeds(); renderSteps(); updateSummary();
 }
 
@@ -1502,23 +1725,100 @@ applyDealUI();
   if(typeof sb==='undefined' || !sb) return;
   try{ const r=await sb.from('listings').select('seller_type,company_name,fee_type,fee_value,deposit,price_period,min_term_months,bills_included').limit(1); if(r&&r.error) EXTRA_COLS=false; }
   catch(e){ EXTRA_COLS=false; }
+  try{ const r2=await sb.from('listings').select('water_tank,tank_litres,septic_tank,meter_type,solar_kwp,generator_kva,plot_width_m,plot_depth_m,highway_m,tda_zone,lease_years_remaining,alkalo_name,alkalo_village,lands_registry_ref,payment_terms,instalment_months,service_charge,service_charge_period,mandate_type,rental_mode,emergency_phone,included_services,tenant_criteria,management_terms,agency_id,phone_verified_at,phone_verify_channel').limit(1); if(r2&&r2.error) GAMBIA_COLS=false; }
+  catch(e){ GAMBIA_COLS=false; }
 })();
 // Building dropdowns
 ['conditionIn','floorsIn','viewIn','securityIn','furnishedIn','waterIn','powerIn'].forEach(id=>{
   const el=document.getElementById(id);
   if(!el) return;
   const key={conditionIn:'condition',floorsIn:'floors',viewIn:'view',securityIn:'security',furnishedIn:'furnished',waterIn:'water',powerIn:'power'}[id];
-  el.addEventListener('change',()=>{ S[key]=el.value; updateSummary(); });
+  el.addEventListener('change',()=>{ S[key]=el.value; applyGambiaUI(); updateSummary(); });
 });
 // Land dropdowns
 ['roadIn','titleIn','elecIn','landWaterIn','floodIn','fenceIn'].forEach(id=>{
   const el=document.getElementById(id);
   if(!el) return;
   const key={roadIn:'road',titleIn:'titleType',elecIn:'elec',landWaterIn:'landWater',floodIn:'flood',fenceIn:'fence'}[id];
-  el.addEventListener('change',()=>{ S[key]=el.value; updateSummary(); });
+  el.addEventListener('change',()=>{ S[key]=el.value; applyGambiaUI(); updateSummary(); });
 });
 featChecks.querySelectorAll('.chk-opt').forEach(c=>c.addEventListener('click',()=>{c.classList.toggle('sel');S.feats=[...featChecks.querySelectorAll('.sel')].map(x=>x.dataset.feat);}));
 landChecks.querySelectorAll('.chk-opt').forEach(c=>c.addEventListener('click',()=>{c.classList.toggle('sel');S.landFeats=[...landChecks.querySelectorAll('.sel')].map(x=>x.dataset.landfeat);}));
+
+/* ---- Gambia step: bindings and the fields that follow from an answer ---- */
+if(inclChecks) inclChecks.querySelectorAll('.chk-opt').forEach(c=>c.addEventListener('click',()=>{
+  c.classList.toggle('sel'); S.inclServices=[...inclChecks.querySelectorAll('.sel')].map(x=>x.dataset.incl);
+}));
+if(payChecks) payChecks.querySelectorAll('.chk-opt').forEach(c=>c.addEventListener('click',()=>{
+  c.classList.toggle('sel');
+  S.payTerms=[...payChecks.querySelectorAll('.sel')].map(x=>x.dataset.pay);
+  applyGambiaUI();
+}));
+[['tankIn','tank'],['septicIn','septic'],['meterIn','meter'],['tdaIn','tda'],
+ ['svcPeriodIn','svcPeriod'],['licBodyIn','licBody'],['mandateTypeIn','mandateType']].forEach(([id,key])=>{
+  const el=document.getElementById(id); if(!el) return;
+  el.addEventListener('change',()=>{ S[key]=el.value; applyGambiaUI(); updateSummary(); });
+});
+[['tankLitresIn','tankLitres'],['solarKwpIn','solarKwp'],['genKvaIn','genKva'],
+ ['plotWIn','plotW'],['plotDIn','plotD'],['highwayIn','highwayM'],['leaseYearsIn','leaseYears'],
+ ['alkaloNameIn','alkaloName'],['alkaloVillageIn','alkaloVillage'],['registryRefIn','registryRef'],
+ ['svcChargeIn','svcCharge'],['tenantCritIn','tenantCrit'],['mgmtTermsIn','mgmtTerms'],
+ ['instalIn','instalMonths'],['emergencyIn','emergencyPhone']].forEach(([id,key])=>{
+  const el=document.getElementById(id); if(!el) return;
+  el.addEventListener('input',()=>{ S[key]=el.value; if(id==='plotWIn'||id==='plotDIn') syncPlotFromDims(); updateSummary(); });
+});
+
+/* Width times depth is the plot size. Filling both should not mean typing the
+   product as well — and a typed size that disagrees with the dimensions is
+   exactly the kind of small contradiction a buyer notices. */
+function syncPlotFromDims(){
+  const w=parseFloat(S.plotW), d=parseFloat(S.plotD);
+  if(!(w>0)||!(d>0)) return;
+  const m2=Math.round(w*d);
+  if(S.cat==='land'){ S.landSqm=String(m2); const el=document.getElementById('landSqmIn'); if(el) el.value=m2; }
+  else { S.plot=String(m2); const el=document.getElementById('plotIn'); if(el) el.value=m2; }
+  const h=document.getElementById('plotDimHint');
+  if(h) h.textContent = w+' × '+d+' m — that is '+m2.toLocaleString('en-US')+' m², filled in for you.';
+}
+
+/* One place that decides which Gambia fields exist, mirroring applyDealUI().
+   Nothing else shows or hides these blocks. */
+function applyGambiaUI(){
+  const isLand = S.cat==='land';
+  const rent = isRent();
+  const biz = S.who==='business';
+  const show=(id,on)=>{ const el=document.getElementById(id); if(el) el.style.display = on?'':'none'; };
+
+  /* kWp and kVA only mean something once solar or a generator is claimed. */
+  show('solarKwpWrap', !isLand && (S.power==='solar'||S.power==='both'));
+  show('genKvaWrap',   !isLand && (S.power==='generator'||S.power==='both'));
+  show('tankLitresWrap', S.tank==='yes');
+
+  /* Who pays the electricity is a tenant's question. A buyer inherits the meter. */
+  const meterLab=document.getElementById('meterLab');
+  if(meterLab) meterLab.textContent = rent ? 'Electricity meter — who pays?' : 'Electricity meter';
+  const meterHint=document.getElementById('meterHint');
+  if(meterHint) meterHint.textContent = rent
+    ? 'After the rent itself, this is the question tenants ask first.'
+    : 'Cash power means the next owner tops up as they go.';
+
+  /* The papers only belong to a sale. A tenant is not buying the land. */
+  show('gamTitle', !rent);
+  show('leaseYearsRow', !rent && (S.titleType==='leasehold'||S.titleType==='sublease'));
+  show('alkaloRow',    !rent && S.titleType==='alkalalo');
+
+  /* Management terms are what a property manager is offering. */
+  show('gamManage', rent && biz);
+  show('emergencyRow', rent && biz);
+
+  /* Payment terms are a sale question; rent has the deposit and the bills. */
+  show('payWrap', !rent);
+  show('instalWrap', !rent && S.payTerms.indexOf('instalments')>-1);
+
+  const h1=document.getElementById('gamH1');
+  if(h1) h1.textContent = isLand ? 'The plot, and the paperwork behind it'
+                                 : (rent ? 'Power, water and what the tenant pays' : 'Power, water and the compound');
+}
 
 // ---- Real file uploads (photos + documents) ----
 const uploadSvg='<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 9l5-5 5 5M12 4v12"/></svg>';
@@ -2568,34 +2868,46 @@ setInterval(()=>{
 // ---- navigation ----
 const nextBtn=document.getElementById('nextBtn'),backBtn=document.getElementById('backBtn');
 function showStep(n){
-  const k=keys()[n]||'done';
-  document.querySelectorAll('.step').forEach(s=>s.classList.toggle('on', s.dataset.key===k));
-  /* The front door carries no step number: it is the question that decides
-     which steps there are. */
-  document.getElementById('progressWrap').style.display=(k==='intro'||n>=total())?'none':'block';
+  const g = (n>=total()) ? ['done'] : groupAt(n);
+  const has = k => g.indexOf(k)>-1;
+  document.querySelectorAll('.step').forEach(s=>s.classList.toggle('on', has(s.dataset.key)));
+  /* The review carries no step number: it is a confirmation, not a question. */
+  const numbered = !has('preview') && !has('done');
+  document.getElementById('progressWrap').style.display = numbered ? 'block' : 'none';
   psteps.querySelectorAll('.pstep').forEach((p,i)=>{
-    p.classList.toggle('active', i===n-1);
-    p.classList.toggle('done', i<n-1);
+    p.classList.toggle('active', i===n);
+    p.classList.toggle('done', i<n);
   });
-  const sec=document.querySelector('.step[data-key="'+k+'"]');
-  const eb=sec&&sec.querySelector('.eyebrow');
-  if(eb&&k!=='intro'&&k!=='done') eb.textContent='Step '+n+' of '+(total()-1)+' · '+labFor(k);
+  /* One eyebrow per step, on the first section of the group. The sections
+     below it are part of the same screen and say so by staying quiet. */
+  g.forEach((k,i)=>{
+    const sec=document.querySelector('.step[data-key="'+k+'"]');
+    if(!sec) return;
+    sec.classList.toggle('sub', i>0);
+    const eb=sec.querySelector('.eyebrow');
+    if(!eb) return;
+    if(i>0){ eb.style.display='none'; return; }
+    eb.style.display='';
+    if(numbered) eb.textContent='Step '+(n+1)+' of '+numberedSteps()+' · '+labFor(k);
+  });
   /* The sidebar only appears where it has something to say: what you'll need at
      the front door, and the running summary from the money step onward. In
      between — location, details, photos — the form takes the full width, which
      is what gives the map its size. */
-  const early=(k==='intro'||k==='what');
-  const money=keys().indexOf('price');
-  const late=(n>=money && n<total());
+  const early=has('intro');
+  const money=keys().findIndex(x=>x.indexOf('price')>-1);
+  const late=(money>-1 && n>=money && n<total());
   document.getElementById('needPanel').style.display=early?'block':'none';
   document.getElementById('sumPanel').style.display=late?'block':'none';
   document.getElementById('summary').style.display=(early||late)?'':'none';
   document.getElementById('wizGrid').classList.toggle('no-aside', !(early||late));
   backBtn.style.visibility = n===0?'hidden':'visible';
   nextBtn.textContent = n===total()-1 ? 'Publish listing' : 'Continue';
-  if(k==='details'){ prefillFromLocation(); }
-  if(k==='where'){ window.__leafletReady().then(()=>{ initListMap(); setTimeout(()=>{ if(listMap) listMap.invalidateSize(); }, 80); }).catch(()=>{}); }
-  if(k==='preview'){ renderPreview(); }
+  if(has('details')){ prefillFromLocation(); applyGambiaUI(); }
+  if(has('photos')){ startPhotoWatch(); } else { stopPhotoWatch(); }
+  if(has('contact')){ initOtp(); }
+  if(has('where')){ window.__leafletReady().then(()=>{ initListMap(); setTimeout(()=>{ if(listMap) listMap.invalidateSize(); }, 80); }).catch(()=>{}); }
+  if(has('preview')){ renderPreview(); }
   if(n>=total()){ // success
     document.getElementById('wizNav').style.display='none';
     document.getElementById('progressWrap').style.display='none';
@@ -2605,8 +2917,35 @@ function showStep(n){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function shake(el){ el.style.animation='shake .4s'; setTimeout(()=>el.style.animation='',400); }
+/* A listing with no photo is a phone number with a headline, and it is what
+   makes a property site read like a classifieds page. Four is the floor. */
+const MIN_PHOTOS=4;
+function filledPhotos(){
+  let n=0;
+  for(let i=0;i<10;i++){
+    const c=document.querySelector('#list-photo-'+i);
+    const im=c&&c.shadowRoot&&c.shadowRoot.querySelector('img');
+    if(im&&im.src&&!im.src.startsWith('data:image/svg')) n++;
+  }
+  return n;
+}
+function updatePhotoReq(){
+  const el=document.getElementById('photoReqN'); if(!el) return;
+  const n=filledPhotos();
+  el.textContent=n+' of '+MIN_PHOTOS+' added';
+  el.style.color = n>=MIN_PHOTOS ? 'var(--green-700)' : 'var(--muted-2)';
+}
+let _photoWatch=null;
+function startPhotoWatch(){ if(_photoWatch) return; updatePhotoReq(); _photoWatch=setInterval(updatePhotoReq,700); }
+function stopPhotoWatch(){ if(_photoWatch){ clearInterval(_photoWatch); _photoWatch=null; } }
+/* A step is a group of sections, so validating a step is validating each of
+   them in the order they appear. The first one that objects wins. */
 function validate(n){
-  const k=keys()[n];
+  const g=groupAt(n);
+  for(let i=0;i<g.length;i++){ if(!validateKey(g[i])) return false; }
+  return true;
+}
+function validateKey(k){
   if(k==='intro'){
     if(!S.dealPicked){ shake(dealCards); return false; }
     if(!S.who){ shake(whoCards); return false; }
@@ -2614,7 +2953,37 @@ function validate(n){
     return true;
   }
   if(k==='where' && !S.area){ flash(locInput); return false; }
-  if(k==='proof' && !S.confirm){ shake(confirmBox); return false; }
+  if(k==='details'){
+    /* The description starts filled in from the location, so an empty one means
+       it was cleared on purpose. A listing without words does not sell. */
+    const d=document.getElementById('descIn');
+    if(d && d.value.trim().length<40){ flash(d); return false; }
+  }
+  if(k==='photos' && filledPhotos()<MIN_PHOTOS){
+    updatePhotoReq();
+    const g=document.getElementById('photoGrid'); if(g) shake(g);
+    const r=document.getElementById('photoReq');
+    if(r){ r.style.color='#C2533A'; setTimeout(()=>r.style.color='',2000); }
+    return false;
+  }
+  if(k==='proof'){
+    /* Not the document itself — a seller may genuinely not have it yet, and the
+       listing says so. But the question has to be answered. */
+    if(!isRent()){
+      const dt=document.getElementById('docType');
+      if(dt && !dt.value){ flash(dt); return false; }
+    }
+    if(!S.confirm){ shake(confirmBox); return false; }
+  }
+  if(k==='gambia'){
+    /* Customary land without a name and a village is a claim, not a document.
+       Ask for it here rather than discovering it during a title check. */
+    if(!isRent() && S.titleType==='alkalalo'){
+      const an=document.getElementById('alkaloNameIn'), av=document.getElementById('alkaloVillageIn');
+      if(an && !an.value.trim()){ flash(an); return false; }
+      if(av && !av.value.trim()){ flash(av); return false; }
+    }
+  }
   if(k==='price'){
     if(!S.price){ flash(priceIn); return false; }
     if(S.who==='business' && (S.feeType==='pct'||S.feeType==='fixed') && !S.feeVal){ flash(feeValIn); return false; }
@@ -2624,6 +2993,10 @@ function validate(n){
     if(S.who==='business'){
       const co=document.getElementById('companyIn');
       if(!co.value.trim()){ flash(co); return false; }
+      const rg=document.getElementById('regIn');
+      if(rg && !rg.value.trim()){ flash(rg); return false; }
+      const mt=document.getElementById('mandateTypeIn');
+      if(mt && !mt.value){ flash(mt); return false; }
       if(!S.mandate){ shake(mandateBox); return false; }
     }
     if(!nm.value){flash(nm);return false;}
@@ -2633,6 +3006,151 @@ function validate(n){
   return true;
 }
 function flash(el){el.style.borderColor='#C2533A';el.focus();setTimeout(()=>el.style.borderColor='',1500);}
+
+/* ---- The agency behind a professional listing ----
+   One row per company, matched on a slug of the name, so a second listing from
+   the same office joins the first instead of creating a twin. Nothing here sets
+   verified_at or the licence fields on an existing row: the database trigger
+   refuses that for anyone but an admin, which is the point. */
+function slugify(s){
+  return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60);
+}
+async function ensureAgency(){
+  if(typeof sb==='undefined' || !sb) return null;
+  const name=(S.company||'').trim(); if(!name) return null;
+  const slug=slugify(name); if(!slug) return null;
+  const found=await sb.from('agencies').select('id').eq('slug',slug).maybeSingle();
+  if(found && found.data && found.data.id) return found.data.id;
+  let uid=null;
+  try{ const u=await sb.auth.getUser(); uid=u && u.data && u.data.user ? u.data.user.id : null; }catch(e){}
+  const row={ name:name, slug:slug, created_by:uid,
+    licence_no:(S.regNo||'').trim()||null,
+    licence_body:S.licBody||null,
+    phone:(S.contactPhone||'').trim()||null,
+    whatsapp:(S.contactPhone||'').trim()||null,
+    email:(S.contactEmail||'').trim()||null };
+  const ins=await sb.from('agencies').insert(row).select('id').single();
+  if(ins && ins.error) throw new Error(ins.error.message);
+  return ins && ins.data ? ins.data.id : null;
+}
+
+/* ---- WhatsApp one-time code ----
+   A number nobody has proved belongs to them is the cheapest thing to fake on a
+   property site. The check is a soft gate on purpose: while the edge function is
+   not deployed and its Meta template not approved, wa-verify answers 503 and
+   this whole block stays hidden rather than stopping every seller. */
+let _otpProbed=false;
+async function otpAvailable(){
+  if(typeof sb==='undefined' || !sb) return false;
+  /* Only one answer counts as available: the function is deployed AND its Meta
+     secrets are set, in which case an unknown action comes back 400. A 503 is
+     "deployed but not configured", a 404 is "not deployed", and anything else
+     is a network problem. All three mean: do not offer a button that cannot
+     work. Guessing from the error text is what got this wrong the first time. */
+  try{
+    const r=await sb.functions.invoke('wa-verify',{ body:{ action:'probe' } });
+    const status = r && r.error && r.error.context && r.error.context.status;
+    return status === 400;
+  }catch(e){ return false; }
+}
+async function initOtp(){
+  if(_otpProbed) return; _otpProbed=true;
+  const wrap=document.getElementById('otpWrap'); if(!wrap) return;
+  if(!(await otpAvailable())) return;
+  wrap.style.display='block';
+  const send=document.getElementById('otpSend'), code=document.getElementById('otpCode'),
+        check=document.getElementById('otpCheck'), hint=document.getElementById('otpHint');
+  const phone=()=> (document.getElementById('phoneIn').value||'').trim();
+  send.addEventListener('click', async ()=>{
+    if(!phone()){ flash(document.getElementById('phoneIn')); return; }
+    send.disabled=true; send.textContent='Sending…';
+    try{
+      const r=await sb.functions.invoke('wa-verify',{ body:{ action:'send', phone:phone() } });
+      if(r && r.error) throw new Error('send failed');
+      code.style.display=''; check.style.display=''; code.focus();
+      hint.textContent='We sent a six-digit code to '+phone()+' on WhatsApp. It is valid for ten minutes.';
+      send.textContent='Send again';
+    }catch(e){
+      hint.textContent='We could not send the code. You can publish without it — buyers will see that the number is unverified.';
+      send.textContent='Send me a code on WhatsApp';
+    }
+    send.disabled=false;
+  });
+  check.addEventListener('click', async ()=>{
+    check.disabled=true;
+    try{
+      const r=await sb.functions.invoke('wa-verify',{ body:{ action:'check', phone:phone(), code:code.value } });
+      if(r && r.data && r.data.verified){
+        S.phoneVerified=true;
+        wrap.innerHTML='<div class="hint" style="color:var(--green-700);font-weight:700">'+
+          phone()+' is verified. Your listing carries that.</div>';
+      }else{
+        hint.textContent='That code did not match. Check the message, or send a new one.';
+      }
+    }catch(e){ hint.textContent='We could not check the code just now.'; }
+    check.disabled=false;
+  });
+}
+
+/* ---- Evidence ----
+   A document is not the same thing as a checked document. Every upload becomes
+   a row that says what it is and that nobody has looked at it yet; only an
+   admin can move it up from there, which the database enforces. The SHA-256 of
+   the file goes on the media row: the same deed appearing under two accounts is
+   worth a human look. */
+function deedEvidenceKind(){
+  if(isRent()) return S.who==='business' ? 'management_agreement' : 'title_deed';
+  return { 'Freehold (with title deed)':'title_deed',
+           'Leasehold':'lease',
+           'Sporting lease':'lease',
+           'Customary / family land':'alkalo_letter' }[S.docType] || 'other';
+}
+async function sha256Hex(file){
+  if(!(window.crypto && crypto.subtle && file)) return null;
+  try{
+    const buf=await file.arrayBuffer();
+    const d=await crypto.subtle.digest('SHA-256', buf);
+    return [...new Uint8Array(d)].map(b=>b.toString(16).padStart(2,'0')).join('');
+  }catch(e){ return null; }
+}
+async function recordEvidence(listingId, media, file, kind){
+  if(typeof sb==='undefined' || !sb || !listingId) return;
+  const hash=await sha256Hex(file);
+  if(hash && media && media.id){
+    try{ await sb.from('listing_media').update({ doc_sha256: hash }).eq('id', media.id); }catch(e){}
+  }
+  const row={ listing_id:listingId, kind:kind||'other',
+              media_id:(media&&media.id)||null,
+              reference:(S.registryRef||'').trim()||null };
+  const r=await sb.from('listing_evidence').insert(row);
+  if(r && r.error) throw new Error(r.error.message);
+}
+
+/* ---- The plot fingerprint ----
+   Written on every publish, whether or not anyone is looking at overlaps yet.
+   The detection is only useful once there are enough plots to find one, and
+   waiting to start collecting would cost a year of them. */
+async function savePlotClaim(listingId, lat, lng){
+  if(typeof sb==='undefined' || !sb || !listingId) return;
+  if(typeof lat!=='number' || typeof lng!=='number') return;
+  const pts=(S.boundary && S.boundary.points) ? S.boundary.points : null;
+  let outline=null;
+  if(pts && pts.length>2){
+    const ring=pts.map(p=>p.lng.toFixed(7)+' '+p.lat.toFixed(7));
+    if(ring[0]!==ring[ring.length-1]) ring.push(ring[0]);
+    outline='SRID=4326;POLYGON(('+ring.join(',')+'))';
+  }
+  const row={
+    listing_id: listingId,
+    centroid: 'SRID=4326;POINT('+lng.toFixed(7)+' '+lat.toFixed(7)+')',
+    outline: outline,
+    area_m2: S.boundarySqm || (parseInt(S.cat==='land'?S.landSqm:S.plot)||null),
+    plot_key: (typeof plusCode==='function') ? plusCode(lat,lng,10) : null
+  };
+  const r=await sb.from('listing_plot_claims').upsert(row,{onConflict:'listing_id'});
+  if(r && r.error) throw new Error(r.error.message);
+}
 
 let _publishing=false;
 nextBtn.addEventListener('click',async ()=>{
@@ -2727,6 +3245,14 @@ async function publish(){
     fields.title = listing.title; fields.street = listing.street; fields.area = listing.area;
     fields.lat = lat; fields.lng = lng;
     fields.plus_code = (typeof plusCode==='function'?plusCode(lat,lng,10):(S.plus||null));
+    /* An agency is a thing in its own right: it holds the licence, the logo and
+       the other listings. Attach the listing to one instead of copying the
+       agency's details onto every listing it places. Never fatal — a listing
+       that cannot find its agency is still a listing. */
+    if(GAMBIA_COLS && S.who==='business' && (S.company||'').trim()){
+      try{ const aid=await ensureAgency(); if(aid) fields.agency_id=aid; }
+      catch(e){ console.warn('agency:', e && e.message); }
+    }
     let rec;
     if(draftId){
       rec = await saveDraft(fields, draftId);
@@ -2750,13 +3276,23 @@ async function publish(){
         }catch(e){ console.warn('photo upload',e.message); }
       }
     }
-    // Upload documents if present
+    // Upload documents if present, and record each one as a piece of evidence
     if(deedFile){
-      try{ await uploadFile(listingDbId, deedFile, 'document'); }catch(e){ console.warn('deed upload:',e.message); }
+      try{
+        const m=await uploadFile(listingDbId, deedFile, 'document');
+        await recordEvidence(listingDbId, m, deedFile, deedEvidenceKind());
+      }catch(e){ console.warn('deed upload:',e.message); }
     }
     if(planFile){
-      try{ await uploadFile(listingDbId, planFile, 'document'); }catch(e){ console.warn('plan upload:',e.message); }
+      try{
+        const m=await uploadFile(listingDbId, planFile, 'document');
+        await recordEvidence(listingDbId, m, planFile, 'site_plan');
+      }catch(e){ console.warn('plan upload:',e.message); }
     }
+    /* The plot fingerprint. Never fatal: a listing that could not write its
+       claim is still a listing, and the admin console can fill it in later. */
+    try{ await savePlotClaim(listingDbId, lat, lng); }
+    catch(e){ console.warn('plot claim:', e && e.message); }
     document.getElementById('viewListingBtn').href='property.html?id='+listingDbId;
     // Remove from localStorage to prevent duplicate (now in DB)
     try{ const ul=getUserListings().filter(l=>l.id!==listing.id); localStorage.setItem('mykunda_listings',JSON.stringify(ul)); }catch(ex){}

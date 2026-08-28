@@ -1254,3 +1254,72 @@ dan is dat blok nog steeds de enige plek die verandert; de omzetting hierboven
 is een eenheid, geen herijking. Listings gaan die herijking overigens niet
 brengen: een listing geeft grond plus opstal in één bedrag, en de opstal
 eruit halen is precies de aanname die je wilde toetsen.
+
+
+---
+
+## Listing-flow en bewijsladder — 28-08-2026
+
+De aanmeldwizard en de listing-detailpagina zijn herzien voor vier doelgroepen:
+particuliere verkoop en verhuur, en professionele verkoop en verhuur namens
+derden. De as die dat draagt bestond al (`S.deal` maal `S.who` in `list.html`);
+wat erbij is gekomen is diepte, en het zichtbaar maken van bewijs.
+
+### Regels die hieruit volgen
+
+- **Geen verzonnen kenmerken meer op `property.html`.** Twee blokken vulden
+  zichzelf met vaste tekst als er te weinig echte gegevens waren: de
+  Floor plan-tab (een gegenereerde plattegrond met vaste kamermaten op elke
+  listing) en de terugvallijst in `buildFeatures` (met onder meer "Verified
+  title deed" en "Clear of encumbrances" op panden die niemand had gecontroleerd).
+  Beide zijn weg. De Floor plan-tab verschijnt alleen bij een echt geüploade
+  plattegrond (`P.floorplan_url`); een dunne listing leest voortaan als dun, en
+  het blok "What we have not checked" zegt met zoveel woorden wat ontbreekt.
+  **Zet er nooit een standaardlijst voor terug.**
+- **`listings.evidence_level` is afgeleid, nooit met de hand gezet.** Hij wordt
+  berekend door `refresh_evidence_level()`, aangeroepen door een trigger op
+  `listing_evidence`. 0 = verklaring, 1 = stukken geüpload, 2 = bureaucontrole,
+  3 = kadastercontrole. Alleen trede 3 mag de Verified-badge dragen.
+- **Een verkoper kan zijn eigen bewijs niet promoveren.** `listing_evidence_guard()`
+  zet status, `checked_at`, `checked_by`, `checked_label` en `internal_note`
+  terug voor iedereen die geen admin is. Hetzelfde geldt voor `agencies`:
+  `agencies_guard_verification()` beschermt `verified_at` en de licentievelden.
+- **De publieke bewijsladder loopt via `listing_evidence_public(uuid)`**, niet
+  via een select op de tabel. Die functie geeft bewust geen `media_id`,
+  `doc_sha256` of `internal_note` terug. `listing_evidence` heeft geen publieke
+  select-policy; dat is geen omissie.
+- **`listing_plot_claims` is een opsporingsmiddel, geen etalage.** Alleen admin
+  leest hem; `plot_claim_overlaps()` draait achter `is_admin()`. De claim wordt
+  bij elke publicatie weggeschreven, ook al draait de detectie nog niet:
+  wachten met vullen kost een jaar aan gegevens.
+- **`price_currency` blijft alleen GMD.** De invoervaluta staat in
+  `price_input_amount` / `price_input_currency` / `fx_rate_used` / `fx_as_at`
+  ernaast. De koers komt van `fx-rates`, nooit uit de pagina zelf. De
+  constraint op `price_currency` is niet verbreed en moet dat ook niet worden.
+- **Kolommen zijn hergebruikt waar dat kon.** `road`, `fencing`, `security`,
+  `water`, `land_water`, `power` en `electricity` dekken al wat ze dekken; er
+  is geen tweede kolom voor hetzelfde feit bijgemaakt. Nieuwe kolommen bestaan
+  alleen waar er nog geen veld voor was (metertype, watertank, septic, kWp/kVA,
+  perceelmaten, afstand tot de tarmac, TDA, Alkalo, leasejaren, registratie).
+- **`GAMBIA_COLS` is de tweede kolomprobe in `list.html`**, naast `EXTRA_COLS`.
+  Komt er weer een reeks nieuwe kolommen bij, zet die dan in dezelfde probe of
+  maak een derde — nooit een save die faalt op een onbekende kolom.
+- **`wa-verify` is een zachte drempel.** Zolang de function niet is uitgerold of
+  haar Meta-secrets ontbreken, antwoordt hij 503 en blijft het OTP-blok in de
+  wizard verborgen. `otpAvailable()` beschouwt alleen status 400 als "in de
+  lucht"; 404, 503 en netwerkfouten betekenen allemaal: geen knop tonen die
+  niet kan werken. Uitrollen: `supabase functions deploy wa-verify --no-verify-jwt`,
+  plus `WA_OTP_TEMPLATE` (een goedgekeurde authentication-template bij Meta).
+- **Verplicht om te publiceren** is sinds nu: vier foto's, een beschrijving van
+  minstens 40 tekens, een documenttype bij verkoop, en bij customary land de
+  naam van de Alkalo en het dorp. Het document zelf is níét verplicht — trede 0
+  en 1 van de ladder bestaan juist omdat een verkoper zijn papieren nog niet
+  hoeft te hebben. Dat is een bewuste keuze, geen gat.
+
+### Wizard: vijf stappen uit dezelfde secties
+
+`TRACK_STEPS` bevat sinds 28-08-2026 groepen in plaats van losse sleutels. Een
+stap toont meerdere `.step`-secties tegelijk; secties na de eerste krijgen
+`.sub` (kop een niveau lager, eyebrow verborgen). Er is geen HTML verplaatst.
+`validate(n)` loopt de sleutels van de groep af via `validateKey(k)`.
+De review telt niet mee in "Step N of 5".
