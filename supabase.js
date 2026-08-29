@@ -542,6 +542,23 @@ async function fetchFeaturedListings(limit){
   return (data||[]).map(dbListingToCard);
 }
 
+/* Plots for sale, for the strip on land-for-sale-in-the-gambia.html.
+   Unlike fetchFeaturedListings this returns the RAW rows: the page maps them
+   once with dbListingToCard itself. Mapping here as well is what made the home
+   page feed already-mapped cards back through dbListingToCard a second time. */
+async function fetchLandListings(limit){
+  if(!sb) return null;
+  const { data, error } = await sb.from('listings').select('*, listing_media(*)')
+    .in('status',['active','under_offer'])
+    .eq('category','land')
+    .eq('kind','sale')
+    .order('is_verified_title',{ascending:false})  // verified first
+    .order('created_at',{ascending:false})
+    .limit(limit||6);
+  if(error){ console.warn('fetchLandListings:', error.message); return null; }
+  return data||[];
+}
+
 /* ============================================================
    Sprint 5 — WhatsApp & notification preferences
    ============================================================ */

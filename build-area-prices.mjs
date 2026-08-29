@@ -482,10 +482,15 @@ await patch('areas-in-the-gambia.html', src => {
 /* de grondpagina: dezelfde tabel, maar dan voor kavels */
 await patch('land-for-sale-in-the-gambia.html', src => {
   let n = 0;
+  /* De rijen die deze stap daadwerkelijk publiceert. De FAQ eronder rekent op
+     precies deze verzameling, zodat "van D… tot D…" nooit een gebied kan noemen
+     dat niet in de tabel staat. */
+  const landRows = [];
+  const probsLand = [];
   src = src.replace(/<tr><td><a href="([a-z-]+)\.html">([^<]+)<\/a><\/td><td class="reg">([^<]*)<\/td>[\s\S]*?<\/tr>/g,
     (m, slug, label, reg) => {
       const r = bySlug[slug]; if (!r) return m;
-      n++;
+      n++; landRows.push(r);
       return `<tr><td><a href="${slug}.html">${label}</a></td><td class="reg">${reg}</td>` +
         `<td class="med">${Dk(r.plot400)}<span>plot, 400 m²</span></td>` +
         `<td class="num">${D(r.gmd_m2)}</td>` +
@@ -514,7 +519,61 @@ await patch('land-for-sale-in-the-gambia.html', src => {
                'twenty-one','twenty-two','twenty-three','twenty-four','twenty-five'];
     src = src.replace(/Of the (<b>)?\d+ areas(<\/b>)? MyKunda tracks, [a-z-]+ are markets/,
       `Of the <b>${Object.keys(A).length} areas</b> MyKunda tracks, ${W[n] || n} are markets`);
+
+    /* "you will find all forty-one in the index" — een met de hand geschreven
+       aantal dat sinds de groei naar 46 gebieden niet meer klopte. Voluit
+       geschreven getallen ontsnappen aan de `\d+ areas`-regel verderop, dus
+       vervangt deze stap het door het cijfer uit de tabel zelf. */
+    src = src.replace(/(not listed here — you will find all )(?:[a-z-]+|\d+)( in the index)/,
+      `$1${Object.keys(A).length}$2`);
+
+    /* De maand in de eyebrow stond met de hand in de pagina en verouderde stil
+       mee met elke meting die er niet in werd bijgewerkt. */
+    const MAAND = new Date(DB.measured + 'T00:00:00Z')
+      .toLocaleDateString('en-GB', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+    src = src.replace(/(<div class="eyebrow">Land &amp; plots · )[^<]*(<\/div>)/, `$1${MAAND}$2`);
+
+    /* Het eerste FAQ-antwoord is het enige met bedragen erin. Ze komen uit
+       dezelfde rijen als de tabel: de goedkoopste en duurste kavel, en de
+       goedkoopste en duurste grondprijs per m². */
+    if (landRows.length) {
+      const perPlot = landRows.slice().sort((a, b) => a.plot400 - b.plot400);
+      const perM2   = landRows.slice().sort((a, b) => a.gmd_m2 - b.gmd_m2);
+      const pLo = perPlot[0], pHi = perPlot[perPlot.length - 1];
+      const mLo = perM2[0],   mHi = perM2[perM2.length - 1];
+      const antwoord =
+        `<p>Across the ${W[n] || n} areas where a plot is the typical sale, a standard 400 m² plot ` +
+        `is advertised at between <b>${Dk(pLo.plot400)}</b> in ${pLo.label} and <b>${Dk(pHi.plot400)}</b> ` +
+        `in ${pHi.label}. Bare land itself runs from <b>${D(mLo.gmd_m2)}</b> per m² in ${mLo.label} ` +
+        `to <b>${D(mHi.gmd_m2)}</b> in ${mHi.label}. The table above gives every area, with the ` +
+        `evidence behind each figure.</p>`;
+      if (!/<div class="a" id="faqA1">/.test(src)) probsLand.push('faqA1 niet gevonden');
+      else src = src.replace(/(<div class="a" id="faqA1">)[\s\S]*?(<\/div>)/, `$1${antwoord}$2`);
+    }
+
+    /* De structured data wordt uit de zichtbare vragen en antwoorden opgebouwd,
+       niet apart onderhouden. Zo kan Google nooit iets anders te lezen krijgen
+       dan de bezoeker. */
+    const qa = [...src.matchAll(
+      /<details[^>]*>\s*<summary>([\s\S]*?)<\/summary>\s*<div class="a"[^>]*>([\s\S]*?)<\/div>\s*<\/details>/g)];
+    if (!qa.length) probsLand.push('geen FAQ-blokken gevonden');
+    else if (!/<script type="application\/ld\+json" id="mkFaqLd">/.test(src)) probsLand.push('mkFaqLd niet gevonden');
+    else {
+      const kaal = s => s.replace(/<[^>]+>/g, ' ')
+        .replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ')
+        .replace(/\s+/g, ' ').trim();
+      const ld = {
+        '@context': 'https://schema.org', '@type': 'FAQPage',
+        mainEntity: qa.map(m => ({
+          '@type': 'Question', name: kaal(m[1]),
+          acceptedAnswer: { '@type': 'Answer', text: kaal(m[2]) }
+        }))
+      };
+      src = src.replace(/(<script type="application\/ld\+json" id="mkFaqLd">)[\s\S]*?(<\/script>)/,
+        `$1\n${JSON.stringify(ld)}\n$2`);
+    }
   }
+  if (probsLand.length) { report.push(['land-for-sale-in-the-gambia.html', probsLand.join(' | ')]); return null; }
   return n ? src : null;
 });
 
@@ -570,7 +629,12 @@ for (const page of ['home.html', 'index.html', 'buy.html']) {
          het aantal waarnemingen: dat wordt meegelezen en opnieuw gezet, niet
          opgestapeld. Wat er ná /m² aan redactionele tekst staat — "· Beach &
          nightlife" — blijft ongemoeid. */
-      /(<h3>([^<]+)<\/h3><p>[^<]*?)(?:Avg|Land) (<span class="(?:hood-price|apr)" data-gmd=")\d+(">)[^<]*(<\/span>)(\/m²)( · (?:\d+ listings?|no local listings))?/g,
+      /* Het staartje wordt met een * meegelezen, niet met een ?: "· band rate"
+         ontbrak in de lijst en werd daardoor nooit herkend, zodat elke run er
+         nog één achter plakte — op home, index en buy stonden er zo al vijf
+         achter elkaar. Alles wat er staat wordt nu opgegeten en één keer
+         opnieuw gezet (29-08-2026). */
+      /(<h3>([^<]+)<\/h3><p>[^<]*?)(?:Avg|Land) (<span class="(?:hood-price|apr)" data-gmd=")\d+(">)[^<]*(<\/span>)(\/m²)(?: · (?:\d+ listings?|no local listings|band rate))*/g,
       (m, head, label, pre, mid, post, eenheid) => {
         const r = byLabel[label] || A[label.toLowerCase()];
         if (!r) { missed.push(label); return m; }
@@ -678,10 +742,26 @@ for (const f of ['gambia-property-prices.html', 'how-we-measure-prices.html', 'i
     let src;
     try { src = await readFile(f, 'utf8'); } catch { continue; }
     const before = src;
+
+    /* Header en footer eerst opzijzetten. `\d+ areas` staat daar namelijk ook in,
+       maar dan als het aantal gebieden PER REGIO in het areamenu ("Kombo Coast
+       10 areas"). Die werden hier tot 29-08-2026 allemaal op 46 gezet: elke run
+       schreef dus onzin in de bron van alle twaalf pagina's. Zichtbaar werd het
+       niet, omdat build.mjs de header daarna uit app.js opnieuw inbakt — precies
+       de reden dat het zo lang kon blijven staan. Die blokken zijn eigendom van
+       `headerHTML()`/`footerHTML()` en horen hier sowieso niet aangeraakt te
+       worden. */
+    const bewaard = [];
+    src = src.replace(/<!--mk-hdr-->[\s\S]*?<!--\/mk-hdr-->|<!--mk-ftr-->[\s\S]*?<!--\/mk-ftr-->/g,
+      m => { bewaard.push(m); return ` mkblok${bewaard.length - 1} `; });
+
     src = src.replace(/\b\d+ of the \d+ areas today\b/g, NRENT + ' of the ' + N + ' areas today')
              .replace(/\band the other \d+ pages say plainly\b/g, 'and the other ' + NGEEN + ' pages say plainly')
              .replace(/\b[A-Z][a-z]+ of the \d+ areas are in this class\b/g, woord(NOBS) + ' of the ' + N + ' areas are in this class')
              .replace(/\b\d+ areas\b/g, N + ' areas');
+
+    src = src.replace(/ mkblok(\d+) /g, (m, i) => bewaard[Number(i)]);
+
     if (src !== before) { changed++; if (WRITE) await writeFile(f, src); report.push([f + ' (aantallen)', 'ok']); }
   }
 }
