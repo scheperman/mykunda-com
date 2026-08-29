@@ -1248,11 +1248,23 @@ worden nooit los bijgewerkt. `node _werk/check-plaatsen.mjs` bewaakt de
 gelijkheid van de drie tabellen en hoort in elke controle-run; hij faalde op
 de oude bestanden met 83 verschillen en staat nu op nul.
 
-Nog open na 30-08: vijf districtsnamen (Sandu, Wuli, Kantora, Nianija,
-Sabach Sanjal) hebben geen puntlocatie en staan deels zelfs buiten hun
-district; en 'Basse Nding' heeft exact de coördinaat van GeoNames "Banjul
-NDing" — de naam op de site is dus vermoedelijk verkeerd. Beide wachten op
-een keuze van Edwin (zie het plaatscontrole-rapport).
+Diezelfde dag heeft Edwin de invullijst met de 31 niet-onderbouwde plaatsen
+teruggegeven; die is verwerkt. Vijftien plaatsen kregen een eigenaarspunt of
+een hoofdplaats-anker (de vijf districtsnamen ankeren nu op Diabugu, Baja
+Kunda, Fatoto, Kass Wollof en Ngayen Sanjal), twee namen zijn gecorrigeerd
+(Kaiaf Niji → Konti Kunda Niji, Basse Nding → Banjul Nding — die laatste ook
+in de sleutels van valuation-areas.js en AREA_LABELS in sell.html), Bani en
+Bantanto zijn op zijn keuze verwijderd, en twaalf plaatsen zijn bewust
+gehandhaafd zonder gazetteer-bron (zo gemarkeerd in gambia-places.js). Let op
+bij Konti Kunda Niji en Konteh Kunda: dat zijn nu twee vermeldingen op ~1 km
+van elkaar in Baddibu — mogelijk hetzelfde dorp, bewust zo gelaten.
+
+Nog open na de verwerking: wil Edwin Bantanto terug, dan moet hij kiezen
+tussen de twee CRR-dorpen (bij Bansang 13.418,-14.652 of bij Jarreng
+13.613,-15.159); en voor het gehandhaafde Bantango Koto (13.55,-14.72) bleek
+er na zijn invulling alsnog een OSM-kandidaat te bestaan: Bantangkoto
+(Village/Fulakunda, Niamina, 13.645,-15.294, alleen als way gemapt) — nog aan
+hem voorgelegd.
 kaartdiensten geven meestal die in Upper River.
 
 ## Gebiedsprijzen: één bron, en huur nooit uit een prijs

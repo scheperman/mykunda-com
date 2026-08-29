@@ -145,9 +145,9 @@
    "regio": "Lower River",
    "lat": 13.36,
    "lng": -15.63,
-   "status": "GEVLAGD",
+   "status": "VERWIJDERD",
    "bron": "",
-   "toelichting": "vier verschillende Bani/Banni’s in de bronnen; site zegt Lower River maar dáár staat er geen — ambigu",
+   "toelichting": "vier verschillende Bani/Banni’s in de bronnen; site zegt Lower River maar dáár staat er geen — ambigu | verwijderd 30-08-2026, keuze eigenaar",
    "oud": null,
    "verschuiving_km": 0
   },
@@ -184,7 +184,7 @@
    "lng": -15.58,
    "status": "GEVLAGD",
    "bron": "",
-   "toelichting": "zie Bani — ambigu",
+   "toelichting": "zie Bani — ambigu | eigenaar gehandhaafd 30-08-2026",
    "oud": null,
    "verschuiving_km": 0
   },
@@ -206,7 +206,7 @@
    "lng": -14.72,
    "status": "GEVLAGD",
    "bron": "",
-   "toelichting": "geen bron gevonden",
+   "toelichting": "geen bron gevonden | eigenaar gehandhaafd 30-08-2026",
    "oud": null,
    "verschuiving_km": 0
   },
@@ -215,9 +215,9 @@
    "regio": "West Coast",
    "lat": 13.28,
    "lng": -16.55,
-   "status": "GEVLAGD",
+   "status": "VERWIJDERD",
    "bron": "",
-   "toelichting": "geen West Coast-Bantanto in de bronnen (wel twee in CRR); tarief past bij Kombo East — onopgelost",
+   "toelichting": "geen West Coast-Bantanto in de bronnen (wel twee in CRR); tarief past bij Kombo East — onopgelost | verwijderd 30-08-2026, keuze eigenaar",
    "oud": null,
    "verschuiving_km": 0
   },
@@ -243,7 +243,7 @@
    "lng": -14.65,
    "status": "GEVLAGD",
    "bron": "",
-   "toelichting": "geen bron gevonden",
+   "toelichting": "geen bron gevonden | eigenaar gehandhaafd 30-08-2026",
    "oud": null,
    "verschuiving_km": 0
   },
@@ -306,7 +306,7 @@
    "lng": -16.45,
    "status": "GEVLAGD",
    "bron": "",
-   "toelichting": "geen bron gevonden",
+   "toelichting": "geen bron gevonden | eigenaar gehandhaafd 30-08-2026",
    "oud": null,
    "verschuiving_km": 0
   },
@@ -337,15 +337,20 @@
    "verschuiving_km": 2.9
   },
   {
-   "plaats": "Basse Nding",
+   "plaats": "Banjul Nding",
    "regio": "West Coast",
    "lat": 13.37333,
    "lng": -16.65722,
-   "status": "GEVLAGD",
-   "bron": "",
-   "toelichting": "coördinaat klopt exact met GeoNames \"Banjul NDing\" (7.110 inw.); de NAAM op de site is vermoedelijk verkeerd en zou Banjul Nding moeten zijn",
-   "oud": null,
-   "verschuiving_km": 0
+   "status": "GECORRIGEERD",
+   "bron": "GeoNames \"Banjul NDing\"; naam gecorrigeerd 30-08-2026 (was Basse Nding)",
+   "toelichting": "GeoNames \"Banjul NDing\"; naam gecorrigeerd 30-08-2026 (was Basse Nding)",
+   "oud": {
+    "lat": 13.37333,
+    "lng": -16.65722,
+    "regio": "West Coast",
+    "naam": "Basse Nding"
+   },
+   "verschuiving_km": 0.0
   },
   {
    "plaats": "Basse Santa Su",
@@ -421,7 +426,7 @@
    "lng": -14.71,
    "status": "GEVLAGD",
    "bron": "",
-   "toelichting": "geen bron gevonden",
+   "toelichting": "geen bron gevonden | eigenaar gehandhaafd 30-08-2026",
    "oud": null,
    "verschuiving_km": 0
   },
@@ -432,7 +437,7 @@
    "lng": -16.5833,
    "status": "GEVLAGD",
    "bron": "",
-   "toelichting": "geen bron gevonden",
+   "toelichting": "geen bron gevonden | eigenaar gehandhaafd 30-08-2026",
    "oud": null,
    "verschuiving_km": 0
   },
@@ -510,7 +515,7 @@
    "lng": -14.7,
    "status": "GEVLAGD",
    "bron": "",
-   "toelichting": "geen bron gevonden",
+   "toelichting": "geen bron gevonden | eigenaar gehandhaafd 30-08-2026",
    "oud": null,
    "verschuiving_km": 0
   },
@@ -633,7 +638,7 @@
    "lng": -16.759,
    "status": "GEVLAGD",
    "bron": "",
-   "toelichting": "estate zonder scherp middelpunt; OSM-punt ligt 1,5 km n.o. van de huidige waarde — huidige waarde gehandhaafd",
+   "toelichting": "estate zonder scherp middelpunt; OSM-punt ligt 1,5 km n.o. van de huidige waarde — huidige waarde gehandhaafd | eigenaar gehandhaafd 30-08-2026",
    "oud": null,
    "verschuiving_km": 0
   },
@@ -703,7 +708,7 @@
    "lng": -14.52,
    "status": "GEVLAGD",
    "bron": "",
-   "toelichting": "geen bron gevonden",
+   "toelichting": "geen bron gevonden | eigenaar gehandhaafd 30-08-2026",
    "oud": null,
    "verschuiving_km": 0
   },
@@ -732,24 +737,32 @@
   {
    "plaats": "Chamoi",
    "regio": "Upper River",
-   "lat": 13.35,
-   "lng": -14.5167,
-   "status": "GEVLAGD",
-   "bron": "",
-   "toelichting": "twee OSM-Chamois (Wuli 13.464,-14.115 en Kantora 13.319,-14.166); huidige punt bij geen van beide — keuze nodig",
-   "oud": null,
-   "verschuiving_km": 0
+   "lat": 13.3189,
+   "lng": -14.1657,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (Kantora), keuze eigenaar 30-08-2026",
+   "toelichting": "OSM (Kantora), keuze eigenaar 30-08-2026",
+   "oud": {
+    "lat": 13.35,
+    "lng": -14.5167,
+    "regio": "Upper River"
+   },
+   "verschuiving_km": 38.17
   },
   {
    "plaats": "Churchills Town",
    "regio": "Kanifing",
-   "lat": 13.455,
-   "lng": -16.655,
-   "status": "GEVLAGD",
-   "bron": "",
-   "toelichting": "Kanifing-wijk; geen gazetteer-bron",
-   "oud": null,
-   "verschuiving_km": 0
+   "lat": 13.4412,
+   "lng": -16.6839,
+   "status": "GECORRIGEERD",
+   "bron": "eigenaar 30-08-2026",
+   "toelichting": "eigenaar 30-08-2026",
+   "oud": {
+    "lat": 13.455,
+    "lng": -16.655,
+    "regio": "Kanifing"
+   },
+   "verschuiving_km": 3.48
   },
   {
    "plaats": "Dankunku",
@@ -966,13 +979,17 @@
   {
    "plaats": "Folonko",
    "regio": "West Coast",
-   "lat": 13.1167,
-   "lng": -16.7333,
-   "status": "GEVLAGD",
-   "bron": "",
-   "toelichting": "geen gazetteer-bron; naam hoort bij de omgeving Kartong (krokodillenpoel) — huidige punt onbevestigd",
-   "oud": null,
-   "verschuiving_km": 0
+   "lat": 13.0908,
+   "lng": -16.7617,
+   "status": "GECORRIGEERD",
+   "bron": "eigenaar 30-08-2026, bij Kartong",
+   "toelichting": "eigenaar 30-08-2026, bij Kartong",
+   "oud": {
+    "lat": 13.1167,
+    "lng": -16.7333,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 4.2
   },
   {
    "plaats": "Gambissara",
@@ -1245,13 +1262,17 @@
   {
    "plaats": "Kabafita",
    "regio": "West Coast",
-   "lat": 13.3167,
-   "lng": -16.7167,
-   "status": "GEVLAGD",
-   "bron": "",
-   "toelichting": "geen gazetteer-bron; Kabafita Forest Park grenst aan Brikama — huidige punt onbevestigd",
-   "oud": null,
-   "verschuiving_km": 0
+   "lat": 13.275,
+   "lng": -16.663,
+   "status": "GECORRIGEERD",
+   "bron": "eigenaar 30-08-2026, bij Kabafita Forest Park",
+   "toelichting": "eigenaar 30-08-2026, bij Kabafita Forest Park",
+   "oud": {
+    "lat": 13.3167,
+    "lng": -16.7167,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 7.42
   },
   {
    "plaats": "Kafuta",
@@ -1284,15 +1305,20 @@
    "verschuiving_km": 1.37
   },
   {
-   "plaats": "Kaiaf Niji",
+   "plaats": "Konti Kunda Niji",
    "regio": "North Bank",
-   "lat": 13.5,
-   "lng": -16.35,
-   "status": "GEVLAGD",
-   "bron": "",
-   "toelichting": "onvindbaar; mogelijk verwarring met Konti Kunda Niji (North Bank)",
-   "oud": null,
-   "verschuiving_km": 0
+   "lat": 13.56667,
+   "lng": -15.78333,
+   "status": "GECORRIGEERD",
+   "bron": "GeoNames; naam gecorrigeerd 30-08-2026 (was Kaiaf Niji)",
+   "toelichting": "GeoNames; naam gecorrigeerd 30-08-2026 (was Kaiaf Niji)",
+   "oud": {
+    "lat": 13.5,
+    "lng": -16.35,
+    "regio": "North Bank",
+    "naam": "Kaiaf Niji"
+   },
+   "verschuiving_km": 61.78
   },
   {
    "plaats": "Kalagi",
@@ -1357,13 +1383,17 @@
   {
    "plaats": "Kantora",
    "regio": "Upper River",
-   "lat": 13.3,
-   "lng": -14.6,
-   "status": "GEVLAGD",
-   "bron": "",
-   "toelichting": "districtsnaam; huidige punt (13.3,-14.6) ligt in Fulladu, ver buiten Kantora — anker Fatoto mogelijk",
-   "oud": null,
-   "verschuiving_km": 0
+   "lat": 13.3992,
+   "lng": -13.891,
+   "status": "GECORRIGEERD",
+   "bron": "anker Fatoto (OSM), keuze eigenaar 30-08-2026",
+   "toelichting": "anker Fatoto (OSM), keuze eigenaar 30-08-2026",
+   "oud": {
+    "lat": 13.3,
+    "lng": -14.6,
+    "regio": "Upper River"
+   },
+   "verschuiving_km": 77.59
   },
   {
    "plaats": "Karantaba",
@@ -1416,13 +1446,17 @@
   {
    "plaats": "Kembujeh",
    "regio": "West Coast",
-   "lat": 13.37,
-   "lng": -16.71,
-   "status": "GEVLAGD",
-   "bron": "",
-   "toelichting": "geen bron; mogelijk hetzelfde als \"Kaimbujae Nding\" (13.284,-16.606, 14,8 km oostelijker) — bevestiging nodig",
-   "oud": null,
-   "verschuiving_km": 0
+   "lat": 13.2844,
+   "lng": -16.6055,
+   "status": "GECORRIGEERD",
+   "bron": "OSM+GeoNames \"Kaimbujae Nding\", bevestigd eigenaar 30-08-2026",
+   "toelichting": "OSM+GeoNames \"Kaimbujae Nding\", bevestigd eigenaar 30-08-2026",
+   "oud": {
+    "lat": 13.37,
+    "lng": -16.71,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 14.75
   },
   {
    "plaats": "Keneba",
@@ -1496,14 +1530,18 @@
   },
   {
    "plaats": "Konteh Kunda",
-   "regio": "Upper River",
-   "lat": 13.38,
-   "lng": -14.05,
-   "status": "GEVLAGD",
-   "bron": "",
-   "toelichting": "site zegt Upper River; alle Konteh Kunda’s in de bronnen liggen in Baddibu (North Bank) — keuze nodig",
-   "oud": null,
-   "verschuiving_km": 0
+   "regio": "North Bank",
+   "lat": 13.5663,
+   "lng": -15.7929,
+   "status": "GECORRIGEERD",
+   "bron": "OSM \"Konteh Kunda Niggi\" (Baddibu), keuze eigenaar 30-08-2026",
+   "toelichting": "OSM \"Konteh Kunda Niggi\" (Baddibu), keuze eigenaar 30-08-2026",
+   "oud": {
+    "lat": 13.38,
+    "lng": -14.05,
+    "regio": "Upper River"
+   },
+   "verschuiving_km": 189.87
   },
   {
    "plaats": "Kotu",
@@ -1619,13 +1657,17 @@
   {
    "plaats": "Latri Kunda",
    "regio": "Kanifing",
-   "lat": 13.437,
+   "lat": 13.4113,
    "lng": -16.674,
-   "status": "GEVLAGD",
-   "bron": "",
-   "toelichting": "twee wijken (Latrikunda Sabiji 13.411,-16.674; Latrikunda German 13.450,-16.685); huidige punt ligt ertussen — keuze nodig",
-   "oud": null,
-   "verschuiving_km": 0
+   "status": "GECORRIGEERD",
+   "bron": "= Latrikunda Sabiji (OSM-way), keuze eigenaar 30-08-2026",
+   "toelichting": "= Latrikunda Sabiji (OSM-way), keuze eigenaar 30-08-2026",
+   "oud": {
+    "lat": 13.437,
+    "lng": -16.674,
+    "regio": "Kanifing"
+   },
+   "verschuiving_km": 2.84
   },
   {
    "plaats": "Latriya",
@@ -1634,7 +1676,7 @@
    "lng": -16.711,
    "status": "GEVLAGD",
    "bron": "",
-   "toelichting": "schatting; geen gazetteer",
+   "toelichting": "schatting; geen gazetteer | eigenaar gehandhaafd 30-08-2026",
    "oud": null,
    "verschuiving_km": 0
   },
@@ -1656,7 +1698,7 @@
    "lng": -16.7328,
    "status": "GEVLAGD",
    "bron": "",
-   "toelichting": "schatting; geen gazetteer",
+   "toelichting": "schatting; geen gazetteer | eigenaar gehandhaafd 30-08-2026",
    "oud": null,
    "verschuiving_km": 0
   },
@@ -1801,13 +1843,17 @@
   {
    "plaats": "Nianija",
    "regio": "Central River",
-   "lat": 13.55,
-   "lng": -14.95,
-   "status": "GEVLAGD",
-   "bron": "",
-   "toelichting": "districtsnaam; huidige punt ligt zuid van de rivier, Nianija is noordoever — anker Kass Wollof (13.783,-14.933) mogelijk",
-   "oud": null,
-   "verschuiving_km": 0
+   "lat": 13.7833,
+   "lng": -14.9333,
+   "status": "GECORRIGEERD",
+   "bron": "anker Kass Wollof (GeoNames), keuze eigenaar 30-08-2026",
+   "toelichting": "anker Kass Wollof (GeoNames), keuze eigenaar 30-08-2026",
+   "oud": {
+    "lat": 13.55,
+    "lng": -14.95,
+    "regio": "Central River"
+   },
+   "verschuiving_km": 25.86
   },
   {
    "plaats": "Njaba Kunda",
@@ -1961,13 +2007,17 @@
   {
    "plaats": "Sabach Sanjal",
    "regio": "North Bank",
-   "lat": 13.54,
-   "lng": -15.68,
-   "status": "GEVLAGD",
-   "bron": "",
-   "toelichting": "districtsnaam; anker Ngayen Sanjal (13.597,-15.444) mogelijk",
-   "oud": null,
-   "verschuiving_km": 0
+   "lat": 13.5968,
+   "lng": -15.444,
+   "status": "GECORRIGEERD",
+   "bron": "anker Ngayen Sanjal (OSM), keuze eigenaar 30-08-2026",
+   "toelichting": "anker Ngayen Sanjal (OSM), keuze eigenaar 30-08-2026",
+   "oud": {
+    "lat": 13.54,
+    "lng": -15.68,
+    "regio": "North Bank"
+   },
+   "verschuiving_km": 26.3
   },
   {
    "plaats": "Sabi",
@@ -1983,13 +2033,17 @@
   {
    "plaats": "Salagi",
    "regio": "West Coast",
-   "lat": 13.3928,
-   "lng": -16.7104,
-   "status": "GEVLAGD",
-   "bron": "",
-   "toelichting": "schatting; staat in geen enkele gazetteer (gedocumenteerd in CLAUDE.md)",
-   "oud": null,
-   "verschuiving_km": 0
+   "lat": 13.393,
+   "lng": -16.71,
+   "status": "GECORRIGEERD",
+   "bron": "eigenaar 30-08-2026",
+   "toelichting": "eigenaar 30-08-2026",
+   "oud": {
+    "lat": 13.3928,
+    "lng": -16.7104,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 0.05
   },
   {
    "plaats": "Sambang",
@@ -2009,24 +2063,32 @@
   {
    "plaats": "Sambuya",
    "regio": "West Coast",
-   "lat": 13.21306,
-   "lng": -16.76556,
-   "status": "GEVLAGD",
-   "bron": "",
-   "toelichting": "geen gazetteer-bron; huidige waarde (bij Gunjur) is plausibel maar onbevestigd — Plus Code van Edwin welkom",
-   "oud": null,
-   "verschuiving_km": 0
+   "lat": 13.2092,
+   "lng": -16.7575,
+   "status": "GECORRIGEERD",
+   "bron": "eigenaar 30-08-2026",
+   "toelichting": "eigenaar 30-08-2026",
+   "oud": {
+    "lat": 13.21306,
+    "lng": -16.76556,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 0.97
   },
   {
    "plaats": "Sandu",
    "regio": "Upper River",
-   "lat": 13.36,
-   "lng": -14.15,
-   "status": "GEVLAGD",
-   "bron": "",
-   "toelichting": "districtsnaam, geen dorp; hoofdplaats Diabugu (13.383,-14.400) als anker mogelijk",
-   "oud": null,
-   "verschuiving_km": 0
+   "lat": 13.3833,
+   "lng": -14.4,
+   "status": "GECORRIGEERD",
+   "bron": "anker hoofdplaats Diabugu (GeoNames), keuze eigenaar 30-08-2026",
+   "toelichting": "anker hoofdplaats Diabugu (GeoNames), keuze eigenaar 30-08-2026",
+   "oud": {
+    "lat": 13.36,
+    "lng": -14.15,
+    "regio": "Upper River"
+   },
+   "verschuiving_km": 27.2
   },
   {
    "plaats": "Sankuia",
@@ -2134,13 +2196,17 @@
   {
    "plaats": "Sinchu Baliya",
    "regio": "West Coast",
-   "lat": 13.36,
-   "lng": -16.66,
-   "status": "GEVLAGD",
-   "bron": "",
-   "toelichting": "geen bron voor dit Kombo-dorp (GeoNames \"Sinchu Balla\" is een ander dorp in CRR)",
-   "oud": null,
-   "verschuiving_km": 0
+   "lat": 13.3966,
+   "lng": -16.6744,
+   "status": "GECORRIGEERD",
+   "bron": "eigenaar 30-08-2026",
+   "toelichting": "eigenaar 30-08-2026",
+   "oud": {
+    "lat": 13.36,
+    "lng": -16.66,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 4.34
   },
   {
    "plaats": "Sintet",
@@ -2301,7 +2367,7 @@
    "lng": -16.5667,
    "status": "GEVLAGD",
    "bron": "",
-   "toelichting": "geen bron gevonden",
+   "toelichting": "geen bron gevonden | eigenaar gehandhaafd 30-08-2026",
    "oud": null,
    "verschuiving_km": 0
   },
@@ -2330,13 +2396,17 @@
   {
    "plaats": "Wuli",
    "regio": "Upper River",
-   "lat": 13.42,
-   "lng": -14.35,
-   "status": "GEVLAGD",
-   "bron": "",
-   "toelichting": "districtsnaam; huidige punt ligt bovendien op de zuidoever (Wuli is noordoever)",
-   "oud": null,
-   "verschuiving_km": 0
+   "lat": 13.4714,
+   "lng": -14.0509,
+   "status": "GECORRIGEERD",
+   "bron": "anker Baja Kunda (OSM), keuze eigenaar 30-08-2026",
+   "toelichting": "anker Baja Kunda (OSM), keuze eigenaar 30-08-2026",
+   "oud": {
+    "lat": 13.42,
+    "lng": -14.35,
+    "regio": "Upper River"
+   },
+   "verschuiving_km": 32.88
   },
   {
    "plaats": "Yundum",
@@ -2349,5 +2419,6 @@
    "oud": null,
    "verschuiving_km": 0
   }
- ]
+ ],
+ "verwerking_eigenaarslijst": "30-08-2026: ingevulde lijst van de eigenaar verwerkt. 15 plaatsen van een eigenaarspunt of hoofdplaats-anker voorzien, 2 namen gecorrigeerd (Kaiaf Niji -> Konti Kunda Niji, Basse Nding -> Banjul Nding), Bani en Bantanto verwijderd (keuze eigenaar), 12 gehandhaafd zonder bron. Open: Bantanto-kandidaat (twee CRR-dorpen), Bantangkoto-kandidaat voor Bantango Koto (13.645,-15.294, OSM-ways)."
 }
