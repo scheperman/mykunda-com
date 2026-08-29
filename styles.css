@@ -178,27 +178,7 @@ body .leaflet-container{position:relative;z-index:0;isolation:isolate}
 .nav-dd-btn:hover{color:var(--green-700)}
 .on-hero .nav-dd-btn{color:#fff}
 .on-hero .nav-dd-btn:hover{opacity:.8}
-.nav-dd-menu{position:absolute;top:calc(100% + 12px);left:50%;transform:translateX(-50%);background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-lg);border:1px solid var(--line);display:grid;grid-template-columns:repeat(6,1fr);gap:0;min-width:940px;padding:8px;max-width:96vw;opacity:0;visibility:hidden;transition:opacity .15s,visibility .15s,transform .15s;transform:translateX(-50%) translateY(6px);z-index:90}
-/* :focus-within, niet :focus + — anders sloot het paneel zodra de focus naar de eerste link ging. */
-.nav-dd:hover .nav-dd-menu,.nav-dd:focus-within .nav-dd-menu{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
-.nav-dd-menu a{display:block;padding:7px 14px;font-size:13.5px;font-weight:600;color:var(--ink) !important;border-radius:var(--r-sm);transition:.1s;white-space:nowrap}
-.nav-dd-region{padding:16px 8px 12px}
-.nav-dd-region-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:0 14px 8px;border-bottom:1px solid var(--line);margin-bottom:4px}
-.nav-dd-footer{grid-column:1/-1;border-top:1px solid var(--line);padding:10px 16px;display:flex;justify-content:center}
-.nav-dd-menu a:hover{background:var(--green-50);color:var(--green-700) !important}
-.nav-dd-all{font-size:13px!important;color:var(--muted)!important}
-.nav-dd-all:hover{color:var(--green-700)!important}
-.nav-dd-guides{grid-template-columns:1fr 1fr!important;min-width:600px!important;max-width:680px;left:50%!important;transform:translateX(-50%)!important;white-space:normal;max-height:calc(100vh - 130px);overflow-y:auto}
-.nav-dd-guides a{white-space:normal!important;line-height:1.35!important}
-
-/* mobile areas sub-menu */
-.md-areas-toggle{display:flex;align-items:center}
-.md-areas-sub{display:none;padding:0 0 8px 20px}
-.md-areas-sub.open{display:flex;flex-direction:column}
-.md-areas-sub a{padding:10px 0;font-size:16px;font-weight:600;color:var(--ink-2);border-bottom:1px solid var(--line-2)}
-.md-areas-sub a:last-child{border-bottom:none}
-.md-areas-toggle svg{transition:transform .2s}
-.md-areas-sub.open ~ .md-areas-toggle svg,.md-areas-toggle[onclick]:has(+ .md-areas-sub.open) svg{transform:rotate(180deg)}
+/* De uitklappanelen van Areas en Guides staan onderaan dit bestand: AREAS- EN GUIDES-MENU. */
 .header-actions{margin-left:auto;display:flex;align-items:center;gap:14px;flex-shrink:0}
 .header-actions .ha-account{display:inline-flex;align-items:center;gap:6px;flex:none}
 .header-actions .icon-btn{display:inline-flex;flex:none;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--line);background:var(--white)}
@@ -789,12 +769,12 @@ aside.keytakeaways li:last-child{margin-bottom:0}
 
 
 /* ============================================================
-   AREAS-MENU — regio kiezen, dan plaatsen (augustus 2026)
-   46 gebieden in 7 regios. Alle links staan in de HTML; alleen
-   CSS verbergt de regio die niet openstaat, zodat crawlers en
-   linkcheckers ze zonder JavaScript blijven zien. Zonder JS valt
-   het paneel terug op de oude lijst: geen rail, alles onder elkaar.
-   Gedrag: initAreaMenu() in app.js.
+   AREAS- EN GUIDES-MENU — groep kiezen, dan links (augustus 2026)
+   46 gebieden in 7 regios; de gidsen per onderwerp. Alle links
+   staan in de HTML; alleen CSS verbergt de groep die niet
+   openstaat, zodat crawlers en linkcheckers ze zonder JavaScript
+   blijven zien. Zonder JS valt het paneel terug op de oude lijst:
+   geen rail, alles onder elkaar. Gedrag: initAreaMenu() in app.js.
    ============================================================ */
 .nav-dd-areas{position:relative}
 .mkam{position:absolute;top:calc(100% + 12px);left:50%;transform:translateX(-50%) translateY(6px);
@@ -840,8 +820,11 @@ aside.keytakeaways li:last-child{margin-bottom:0}
 .mkam:not(.mkam-js) .mkam-pane{display:block;break-inside:avoid;margin-bottom:10px}
 .mkam:not(.mkam-js) .mkam-list{column-count:1}
 .mkam:not(.mkam-js) .mkam-res{display:none}
+/* Gidsenvariant van het paneel: langere titels, dus één kolom. */
+.mkam-guides .mkam-list{column-count:1}
+.mkam-guides:not(.mkam-js) .mkam-panes{column-count:1}
 
-/* --- mobiel: Areas als eigen scherm met drie niveaus --- */
+/* --- mobiel: Areas en Guides elk als eigen scherm met drie niveaus --- */
 .md-drill{display:flex;align-items:center;gap:9px;width:100%;text-align:left;cursor:pointer;
   font-family:var(--serif);font-size:21px;font-weight:600;color:var(--ink);background:none;border:none;padding:13px 4px}
 .md-drill.on{color:var(--green-700)}

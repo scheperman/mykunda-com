@@ -1446,6 +1446,21 @@ const MK_AREAS = [
 ];
 if(typeof window!=='undefined') window.MK_AREAS = MK_AREAS;
 
+/* Gidsen per onderwerp, in dezelfde vorm als MK_AREAS: [groep, [[naam, href], ...]].
+   Afgeleid van GUIDES hierboven, dus een nieuwe gids verschijnt vanzelf in het menu. */
+const MK_GUIDE_GROUPS = (function(){
+  const cats = [];
+  GUIDES.forEach(g => { if(cats.indexOf(g.cat) < 0) cats.push(g.cat); });
+  return cats.map(c => [c, GUIDES.filter(g => g.cat === c).map(g => [g.title, 'guide-' + g.slug + '.html'])]);
+})();
+
+/* Het Areas- en het Guides-menu delen paneel, zoekveld en gedrag (initAreaMenu).
+   data-menu op het paneel of het mobiele scherm kiest de bron; zonder attribuut: areas. */
+const MK_MENUS = {
+  areas:  { groups: MK_AREAS,        title: 'Areas',  single: 'area',  plural: 'areas'  },
+  guides: { groups: MK_GUIDE_GROUPS, title: 'Guides', single: 'guide', plural: 'guides' }
+};
+
 /* ---------- Shared filter vocabularies (buy/rent search finder + search.html) ---------- */
 const MK_CATEGORIES = [
   ['Homes',[['House or villa','house,villa'],['Apartment','apartment'],['Penthouse','penthouse'],['Townhouse','townhouse'],['Compound','compound'],['Lodge','lodge']]],
@@ -1500,14 +1515,12 @@ function headerHTML(active, onHero){
         ${links.map(l=>{
           if(l[0]==='Areas'){
             /* Areas: regio kiezen, dan plaatsen. Zie initAreaMenu(). */
-            return `<div class="nav-dd nav-dd-areas"><button class="nav-dd-btn" aria-haspopup="true" ${active==='Areas'?'style="color:var(--green-700)"':''}>Areas <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="mkam"><div class="mkam-search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg><input type="text" class="mkam-input" autocomplete="off" spellcheck="false" placeholder="Find an area \u2014 Kololi, Brufut, Basse\u2026" aria-label="Find an area"></div><div class="mkam-body"><div class="mkam-rail" role="tablist" aria-label="Regions">${AREA_REGIONS.map((r,i)=>`<button type="button" role="tab" class="mkam-rbtn" data-reg="${i}" aria-selected="${i===0?'true':'false'}">${r[0]}<span class="mkam-n">${r[1].length}</span></button>`).join('')}</div><div class="mkam-panes">${AREA_REGIONS.map((r,i)=>`<div class="mkam-pane${i===0?' on':''}" data-reg="${i}"><div class="mkam-ph">${r[0]}<span>${r[1].length} areas</span></div><div class="mkam-list">${r[1].map(a=>`<a href="${a[1]}">${a[0]}</a>`).join('')}</div></div>`).join('')}<div class="mkam-pane mkam-res"></div></div></div><div class="mkam-foot"><a href="areas-in-the-gambia.html">All ${AREAS.length} areas, compared &rarr;</a></div></div></div>`;
+            return `<div class="nav-dd nav-dd-areas"><button class="nav-dd-btn" aria-haspopup="true" ${active==='Areas'?'style="color:var(--green-700)"':''}>Areas <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="mkam" data-menu="areas"><div class="mkam-search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg><input type="text" class="mkam-input" autocomplete="off" spellcheck="false" placeholder="Find an area \u2014 Kololi, Brufut, Basse\u2026" aria-label="Find an area"></div><div class="mkam-body"><div class="mkam-rail" role="tablist" aria-label="Regions">${AREA_REGIONS.map((r,i)=>`<button type="button" role="tab" class="mkam-rbtn" data-reg="${i}" aria-selected="${i===0?'true':'false'}">${r[0]}<span class="mkam-n">${r[1].length}</span></button>`).join('')}</div><div class="mkam-panes">${AREA_REGIONS.map((r,i)=>`<div class="mkam-pane${i===0?' on':''}" data-reg="${i}"><div class="mkam-ph">${r[0]}<span>${r[1].length} areas</span></div><div class="mkam-list">${r[1].map(a=>`<a href="${a[1]}">${a[0]}</a>`).join('')}</div></div>`).join('')}<div class="mkam-pane mkam-res"></div></div></div><div class="mkam-foot"><a href="areas-in-the-gambia.html">All ${AREAS.length} areas, compared &rarr;</a></div></div></div>`;
           }
           if(l[0]==='Guides'){
-            const guideCats=[...new Set(GUIDES.map(g=>g.cat))];
-            return `<div class="nav-dd">
-              <button class="nav-dd-btn" ${active==='Guides'?'style="color:var(--green-700)"':''}>Guides <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
-              <div class="nav-dd-menu nav-dd-guides">${guideCats.map(c=>`<div class="nav-dd-region"><div class="nav-dd-region-title">${c}</div>${GUIDES.filter(g=>g.cat===c).map(g=>`<a href="guide-${g.slug}.html">${g.title}</a>`).join('')}</div>`).join('')}<div class="nav-dd-footer"><a href="guides.html" class="nav-dd-all">All guides →</a></div></div>
-            </div>`;
+            /* Guides: onderwerp kiezen, dan gidsen. Zelfde paneel en gedrag als Areas
+               (de klasse nav-dd-areas draagt het gedeelde paneelgedrag). Zie initAreaMenu(). */
+            return `<div class="nav-dd nav-dd-areas"><button class="nav-dd-btn" aria-haspopup="true" ${active==='Guides'?'style="color:var(--green-700)"':''}>Guides <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="mkam mkam-guides" data-menu="guides"><div class="mkam-search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg><input type="text" class="mkam-input" autocomplete="off" spellcheck="false" placeholder="Find a guide — buying, land, money…" aria-label="Find a guide"></div><div class="mkam-body"><div class="mkam-rail" role="tablist" aria-label="Topics">${MK_GUIDE_GROUPS.map((r,i)=>`<button type="button" role="tab" class="mkam-rbtn" data-reg="${i}" aria-selected="${i===0?'true':'false'}">${r[0]}<span class="mkam-n">${r[1].length}</span></button>`).join('')}</div><div class="mkam-panes">${MK_GUIDE_GROUPS.map((r,i)=>`<div class="mkam-pane${i===0?' on':''}" data-reg="${i}"><div class="mkam-ph">${r[0]}<span>${r[1].length} guide${r[1].length===1?'':'s'}</span></div><div class="mkam-list">${r[1].map(a=>`<a href="${a[1]}">${a[0]}</a>`).join('')}</div></div>`).join('')}<div class="mkam-pane mkam-res"></div></div></div><div class="mkam-foot"><a href="guides.html">All ${GUIDES.length} guides &rarr;</a></div></div></div>`;
           }
           if(l[0]==='Verify'){
             return `<a href="${l[1]}" style="display:inline-flex;align-items:center;gap:6px${active==='Verify'?';color:var(--green-700)':''}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M12 3 4 6v6c0 5 3.4 7.8 8 9 4.6-1.2 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg>Verify</a>`;
@@ -1552,9 +1565,8 @@ function headerHTML(active, onHero){
             return `<button type="button" class="md-drill ${active==='Areas'?'on':''}" data-drill="areas">Areas <span class="md-n">${AREAS.length}</span></button>`;
           }
           if(l[0]==='Guides'){
-            const guideCats=[...new Set(GUIDES.map(g=>g.cat))];
-            return `<a href="#" class="md-areas-toggle ${active==='Guides'?'on':''}" onclick="event.preventDefault();this.nextElementSibling.classList.toggle('open')">Guides <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;transition:transform .2s"><path d="m6 9 6 6 6-6"/></svg></a>
-            <div class="md-areas-sub">${guideCats.map(c=>`<div style="padding:10px 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">${c}</div>${GUIDES.filter(g=>g.cat===c).map(g=>`<a href="guide-${g.slug}.html">${g.title}</a>`).join('')}`).join('')}<a href="guides.html" style="margin-top:8px;font-weight:700;color:var(--green-700)">All guides →</a></div>`;
+            /* Guides op mobiel: doorschuiven naar het eigen md-sub-scherm, net als Areas. */
+            return `<button type="button" class="md-drill ${active==='Guides'?'on':''}" data-drill="guides">Guides <span class="md-n">${GUIDES.length}</span></button>`;
           }
           if(l[0]==='Verify'){
             return `<a href="${l[1]}" ${active==='Verify'?'class="on"':''} style="display:flex;align-items:center;gap:9px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M12 3 4 6v6c0 5 3.4 7.8 8 9 4.6-1.2 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg>Verify a property</a>`;
@@ -1562,9 +1574,10 @@ function headerHTML(active, onHero){
           return `<a href="${l[1]}" ${active===l[0]?'class="on"':''}>${l[0]}</a>`;
         }).join('')}
       </nav>
-      <!-- Areas op mobiel: drie niveaus. Ook hier staat de opmaak op lange regels;
-           dit blok komt letterlijk in elke pagina. -->
-      <div class="md-sub" id="mdAreaSub"><div class="md-sub-head"><button type="button" class="md-sub-back"><span class="md-sub-backtxt">Menu</span></button><span class="md-sub-title">Areas</span></div><div class="md-sub-search"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg><input type="search" class="md-sub-input" placeholder="Find an area" aria-label="Find an area"></div><div class="md-sub-scroll"><div class="md-sub-regions">${AREA_REGIONS.map((r,i)=>`<button type="button" class="md-reg" data-reg="${i}">${r[0]}<span class="md-n">${r[1].length}</span></button>`).join('')}<a class="md-sub-all" href="areas-in-the-gambia.html">All ${AREAS.length} areas, compared &rarr;</a></div><div class="md-sub-results"></div>${AREA_REGIONS.map((r,i)=>`<div class="md-lvl3" data-reg="${i}">${r[1].map(a=>`<a href="${a[1]}">${a[0]}</a>`).join('')}</div>`).join('')}</div></div>
+      <!-- Areas en Guides op mobiel: elk hun eigen scherm met drie niveaus. Ook hier
+           staat de opmaak op lange regels; deze blokken komen letterlijk in elke pagina. -->
+      <div class="md-sub" id="mdAreaSub" data-menu="areas"><div class="md-sub-head"><button type="button" class="md-sub-back"><span class="md-sub-backtxt">Menu</span></button><span class="md-sub-title">Areas</span></div><div class="md-sub-search"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg><input type="search" class="md-sub-input" placeholder="Find an area" aria-label="Find an area"></div><div class="md-sub-scroll"><div class="md-sub-regions">${AREA_REGIONS.map((r,i)=>`<button type="button" class="md-reg" data-reg="${i}">${r[0]}<span class="md-n">${r[1].length}</span></button>`).join('')}<a class="md-sub-all" href="areas-in-the-gambia.html">All ${AREAS.length} areas, compared &rarr;</a></div><div class="md-sub-results"></div>${AREA_REGIONS.map((r,i)=>`<div class="md-lvl3" data-reg="${i}">${r[1].map(a=>`<a href="${a[1]}">${a[0]}</a>`).join('')}</div>`).join('')}</div></div>
+      <div class="md-sub" id="mdGuideSub" data-menu="guides"><div class="md-sub-head"><button type="button" class="md-sub-back"><span class="md-sub-backtxt">Menu</span></button><span class="md-sub-title">Guides</span></div><div class="md-sub-search"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg><input type="search" class="md-sub-input" placeholder="Find a guide" aria-label="Find a guide"></div><div class="md-sub-scroll"><div class="md-sub-regions">${MK_GUIDE_GROUPS.map((r,i)=>`<button type="button" class="md-reg" data-reg="${i}">${r[0]}<span class="md-n">${r[1].length}</span></button>`).join('')}<a class="md-sub-all" href="guides.html">All ${GUIDES.length} guides &rarr;</a></div><div class="md-sub-results"></div>${MK_GUIDE_GROUPS.map((r,i)=>`<div class="md-lvl3" data-reg="${i}">${r[1].map(a=>`<a href="${a[1]}">${a[0]}</a>`).join('')}</div>`).join('')}</div></div>
       <div class="md-actions">
         ${u
           ? `<a class="md-user" href="dashboard.html"><span class="user-av">${initials(u.name)}</span><div><b>${u.name}</b><span>My MyKunda dashboard</span></div></a>
@@ -2218,13 +2231,15 @@ function initMobileNav(){
   drawer.querySelectorAll('.md-ccy-row button').forEach(b=>b.addEventListener('click',()=>{ setCurrency(b.dataset.ccy); location.reload(); }));
 }
 
-/* ---------- Areas-menu: desktoppaneel + mobiele niveaus ----------
+/* ---------- Areas- en Guides-menu: desktoppaneel + mobiele niveaus ----------
  *
- * De opmaak staat in headerHTML(); alle 46 gebiedslinks staan statisch in de
- * pagina en blijven daar. Deze functie doet drie dingen en verder niets:
- *   1. regio wisselen in het desktoppaneel (muis, klik, pijltjes),
- *   2. filteren op naam, dwars door alle regios heen,
- *   3. de drie niveaus van het mobiele Areas-scherm.
+ * De opmaak staat in headerHTML(); alle gebieds- en gidslinks staan statisch in
+ * de pagina en blijven daar. Beide menus delen dezelfde opbouw; data-menu op het
+ * paneel of het mobiele scherm kiest de bron in MK_MENUS (zonder attribuut: areas).
+ * Deze functie doet drie dingen en verder niets:
+ *   1. groep wisselen in het desktoppaneel (muis, klik, pijltjes),
+ *   2. filteren op naam, dwars door alle groepen heen,
+ *   3. de drie niveaus van het mobiele scherm.
  *
  * Alles loopt via gedelegeerde listeners op document, zodat het blijft werken
  * nadat hydrateStaticHeader() de header opnieuw tekent voor wie is ingelogd.
@@ -2243,9 +2258,11 @@ function initAreaMenu(){
   document.documentElement.dataset.mkamWired = '1';
 
   const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').split('"').join('&quot;');
-  const TOTAL = MK_AREAS.reduce((n,r)=>n+r[1].length,0);
-  const hits = term => { const t=term.trim().toLowerCase(), out=[];
-    MK_AREAS.forEach(r=>r[1].forEach(a=>{ if(a[0].toLowerCase().indexOf(t)>=0) out.push([a,r[0]]); })); return out; };
+  /* Bron van een element: het dichtstbijzijnde data-menu bepaalt areas of guides. */
+  const srcOf = el => { const host = el.closest('[data-menu]'); return MK_MENUS[(host && host.dataset.menu) || 'areas'] || MK_MENUS.areas; };
+  const totalOf = src => src.groups.reduce((n,r)=>n+r[1].length,0);
+  const hits = (term, src) => { const t=term.trim().toLowerCase(), out=[];
+    src.groups.forEach(r=>r[1].forEach(a=>{ if(a[0].toLowerCase().indexOf(t)>=0) out.push([a,r[0]]); })); return out; };
 
   /* ----- desktop ----- */
   function showRegion(panel, i){
@@ -2254,11 +2271,12 @@ function initAreaMenu(){
   }
   function showResults(panel, term){
     const res = panel.querySelector('.mkam-res'); if(!res) return;
-    const list = hits(term);
+    const src = srcOf(panel);
+    const list = hits(term, src);
     res.innerHTML = list.length
       ? '<div class="mkam-ph">'+list.length+' result'+(list.length>1?'s':'')+'<span>for “'+esc(term)+'”</span></div>' +
         '<div class="mkam-list">'+list.map(h=>'<a href="'+h[0][1]+'">'+esc(h[0][0])+'<span class="mkam-reg">'+esc(h[1])+'</span></a>').join('')+'</div>'
-      : '<div class="mkam-ph">No match</div><p class="mkam-none">Nothing matches “'+esc(term)+'”. Try the first letters, or open all '+TOTAL+' areas below.</p>';
+      : '<div class="mkam-ph">No match</div><p class="mkam-none">Nothing matches “'+esc(term)+'”. Try the first letters, or open all '+totalOf(src)+' '+src.plural+' below.</p>';
     panel.querySelectorAll('.mkam-pane').forEach(p=>p.classList.remove('on'));
     panel.querySelectorAll('.mkam-rbtn').forEach(b=>b.setAttribute('aria-selected','false'));
     res.classList.add('on');
@@ -2306,7 +2324,8 @@ function initAreaMenu(){
   });
 
   /* ----- mobiel ----- */
-  function subOf(el){ return el.closest('.md-panel').querySelector('.md-sub'); }
+  function subOf(el, name){ const p = el.closest('.md-panel');
+    return p.querySelector('.md-sub[data-menu="'+name+'"]') || p.querySelector('.md-sub'); }
   function level(sub, n, title, back){
     sub.classList.toggle('lvl3', n===3);
     sub.classList.toggle('on', n>1);
@@ -2321,44 +2340,46 @@ function initAreaMenu(){
     sub.querySelector('.md-sub-scroll').scrollTop = 0;
   }
   function mobileFilter(inp){
-    const sub = inp.closest('.md-sub'), box = sub.querySelector('.md-sub-results'), term = inp.value.trim();
+    const sub = inp.closest('.md-sub'), box = sub.querySelector('.md-sub-results'), term = inp.value.trim(), src = srcOf(sub);
     sub.classList.toggle('searching', !!term);
     box.classList.toggle('on', !!term);
     if(!term) return;
-    const list = hits(term);
+    const list = hits(term, src);
     box.innerHTML = list.length
       ? list.map(h=>'<a href="'+h[0][1]+'">'+esc(h[0][0])+'<span class="mkam-reg">'+esc(h[1])+'</span></a>').join('')
-      : '<p class="md-sub-none">No area matches “'+esc(term)+'”.</p>';
+      : '<p class="md-sub-none">No '+src.single+' matches “'+esc(term)+'”.</p>';
   }
   document.addEventListener('click', e=>{
     const t = e.target.closest ? e.target : null; if(!t) return;
-    const drill = t.closest('[data-drill="areas"]');
-    if(drill){ e.preventDefault(); const sub=subOf(drill);
-      drill.closest('.md-panel').scrollTop = 0; level(sub, 2, 'Areas', 'Menu'); return; }
+    const drill = t.closest('[data-drill]');
+    if(drill){ e.preventDefault(); const sub=subOf(drill, drill.dataset.drill); if(!sub) return;
+      drill.closest('.md-panel').scrollTop = 0; level(sub, 2, srcOf(sub).title, 'Menu'); return; }
     const back = t.closest('.md-sub-back');
-    if(back){ e.preventDefault(); const sub=back.closest('.md-sub');
-      sub.classList.contains('lvl3') ? level(sub, 2, 'Areas', 'Menu') : level(sub, 1, 'Areas', 'Menu'); return; }
+    if(back){ e.preventDefault(); const sub=back.closest('.md-sub'), src=srcOf(sub);
+      sub.classList.contains('lvl3') ? level(sub, 2, src.title, 'Menu') : level(sub, 1, src.title, 'Menu'); return; }
     if(t.closest('.md-close') || t.closest('.md-backdrop')){
-      const sub = t.closest('.mobile-drawer').querySelector('.md-sub');
-      if(sub) level(sub, 1, 'Areas', 'Menu');
+      t.closest('.mobile-drawer').querySelectorAll('.md-sub').forEach(sub=>level(sub, 1, srcOf(sub).title, 'Menu'));
       return;
     }
     const reg = t.closest('.md-reg');
-    if(reg){ e.preventDefault(); const sub=reg.closest('.md-sub'), i=reg.dataset.reg;
+    if(reg){ e.preventDefault(); const sub=reg.closest('.md-sub'), i=reg.dataset.reg, src=srcOf(sub);
       sub.querySelectorAll('.md-lvl3').forEach(l=>l.classList.toggle('on', l.dataset.reg===i));
-      level(sub, 3, MK_AREAS[+i][0], 'Areas');
+      level(sub, 3, src.groups[+i][0], src.title);
       sub.classList.add('lvl3'); }
   });
 }
 
-/* Markeert het gebied van de huidige pagina en opent zijn regio in het paneel. */
+/* Markeert de huidige pagina in beide menus: een areapagina opent haar regio in
+   het Areas-paneel, een gidspagina haar onderwerp in het Guides-paneel. Panelen
+   zonder treffer blijven op hun eerste groep staan. */
 function markCurrentArea(){
   const here = (location.pathname.split('/').pop()||'').toLowerCase();
   if(!here) return;
-  let home = -1;
-  MK_AREAS.forEach((r,i)=>{ if(r[1].some(a=>a[1].toLowerCase()===here)) home = i; });
-  if(home < 0) return;
   document.querySelectorAll('.mkam').forEach(panel=>{
+    const src = MK_MENUS[panel.dataset.menu || 'areas'] || MK_MENUS.areas;
+    let home = -1;
+    src.groups.forEach((r,i)=>{ if(r[1].some(a=>a[1].toLowerCase()===here)) home = i; });
+    if(home < 0) return;
     panel.dataset.home = home;
     panel.querySelectorAll('.mkam-pane').forEach(p=>p.classList.toggle('on', p.dataset.reg===String(home)));
     panel.querySelectorAll('.mkam-rbtn').forEach(b=>b.setAttribute('aria-selected', b.dataset.reg===String(home)?'true':'false'));
