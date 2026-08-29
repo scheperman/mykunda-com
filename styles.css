@@ -4,11 +4,12 @@
    ============================================================ */
 
 /* Self-hosted variable fonts — one file per family covers every weight */
-@font-face{font-family:'Hanken Grotesk';font-style:normal;font-weight:400 800;font-display:swap;src:url('fonts/hanken-grotesk-var-latin.woff2') format('woff2')}
 @font-face{font-family:'Mulish';font-style:normal;font-weight:400 900;font-display:swap;src:url('fonts/mulish-var-latin.woff2') format('woff2')}
+/* De cursieve snede hoort er los bij: zonder deze regel maakt de browser zelf een
+   scheve rechte letter van elke <em>, en dat is geen cursief. */
+@font-face{font-family:'Mulish';font-style:italic;font-weight:400 900;font-display:swap;src:url('fonts/mulish-var-latin-italic.woff2') format('woff2')}
 
 /* Font fallbacks with size-adjust to minimise CLS */
-@font-face{font-family:'Hanken Grotesk Fallback';src:local('Arial');size-adjust:97%;ascent-override:95%;descent-override:22%;line-gap-override:0%}
 @font-face{font-family:'Mulish Fallback';src:local('Arial');size-adjust:100%;ascent-override:93%;descent-override:25%;line-gap-override:0%}
 
 :root{
@@ -56,7 +57,7 @@
 
   /* Type */
   --serif:'Mulish','Mulish Fallback', -apple-system, BlinkMacSystemFont, sans-serif;
-  --sans:'Hanken Grotesk','Hanken Grotesk Fallback', -apple-system, BlinkMacSystemFont, sans-serif;
+  --sans:'Mulish','Mulish Fallback', -apple-system, BlinkMacSystemFont, sans-serif;
 
   /* Radius / shadow */
   --r-sm:8px;

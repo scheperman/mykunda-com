@@ -5,15 +5,13 @@
    deze ene <link> te verwijderen.
    ============================================================ */
 
-/* ---------- 1. Typografie: echte kopletter met italic ---------- */
-@font-face{font-family:'Source Serif 4';font-style:normal;font-weight:400 700;font-display:swap;
-  src:url('fonts/source-serif-4-var-latin.woff2') format('woff2')}
-@font-face{font-family:'Source Serif 4';font-style:italic;font-weight:400 700;font-display:swap;
-  src:url('fonts/source-serif-4-var-latin-italic.woff2') format('woff2')}
-@font-face{font-family:'Source Serif Fallback';src:local('Georgia');size-adjust:96%;ascent-override:92%;descent-override:24%;line-gap-override:0%}
-
+/* ---------- 1. Typografie: één letter, Mulish ----------
+   De hele site staat in Mulish, koppen en tekst. De cursieve snede wordt in
+   styles.css geladen, zodat <em> een echte cursief is en geen scheve rechte.
+   --display blijft als aparte knop bestaan: wil je later toch een eigen
+   kopletter, dan is dit de enige regel die dan verandert. */
 :root{
-  --display:'Source Serif 4','Source Serif Fallback',Georgia,'Times New Roman',serif;
+  --display:'Mulish','Mulish Fallback', -apple-system, BlinkMacSystemFont, sans-serif;
 
   /* Semantische kleuren — rood krijgt één betekenis: actie & verificatie */
   --accent:#CE1126;
@@ -25,17 +23,18 @@
   --sec-y:clamp(52px,5.4vw,84px);
 }
 
-/* Koppen: serif voor het verhaal, grotesk voor de interface */
+/* Koppen: zelfde letter als de tekst, onderscheid via gewicht en schaal */
 h1,h2{font-family:var(--display);font-weight:600;letter-spacing:-.012em;line-height:1.08}
 h3,h4{font-family:var(--sans);font-weight:700;letter-spacing:-.005em;line-height:1.2}
 h1 em,h2 em{font-style:italic;font-weight:500}
 .serif{font-family:var(--display)}
 
-/* Optische correctie: de serif oogt groter, dus iets terug in schaal */
-.hero h1{font-size:clamp(33px,4.5vw,56px);line-height:1.05;letter-spacing:-.018em;text-wrap:balance}
-.lhero h1{font-size:clamp(32px,4.4vw,52px);line-height:1.05}
-.sec-head h2{font-size:clamp(27px,2.6vw,38px)}
-.pcard h2{font-family:var(--display);font-size:clamp(30px,2.9vw,42px);font-weight:600}
+/* Schaal van de koppen. Mulish oogt optisch kleiner dan een schreefletter,
+   dus de bovengrenzen staan weer op de oorspronkelijke waarden van de site. */
+.hero h1{font-size:clamp(34px,4.8vw,60px);line-height:1.04;letter-spacing:-.02em;text-wrap:balance}
+.lhero h1{font-size:clamp(33px,4.4vw,50px);line-height:1.05}
+.sec-head h2{font-size:clamp(27px,2.6vw,36px)}
+.pcard h2{font-family:var(--display);font-size:clamp(30px,2.9vw,40px);font-weight:600}
 .launch h2{font-family:var(--display)}
 
 /* ---------- 2. Eyebrow-discipline ----------

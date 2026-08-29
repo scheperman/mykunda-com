@@ -356,7 +356,6 @@ function markCss(src) {
   const stripped = src.replace(new RegExp(CSS_START + '[\\s\\S]*?' + CSS_END + '\\n?'), '');
   if (!/<\/head>/i.test(stripped)) return stripped;
   const block = CSS_START +
-    '<link rel="preload" href="fonts/source-serif-4-var-latin.woff2" as="font" type="font/woff2" crossorigin>' +
     '<link rel="stylesheet" href="redesign.min.css?v=0">' +
     CSS_END + '\n';
   return stripped.replace(/<\/head>/i, block + '</head>');
