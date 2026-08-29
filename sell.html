@@ -1735,7 +1735,21 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
         ? 'A standard Gambian plot is 400 to 500 m² — 20 by 20, or 20 by 25 metres.'
         : apt ? 'The floor area of the unit itself.'
               : 'The plot is the whole compound; built area is only what stands under a roof.';
-      $('ldMapBox').style.display = apt?'none':'';
+      /* Een appartement heeft geen perceel om in te tekenen, maar wel een
+         ligging: de pin bepaalt het gebied waarmee gerekend wordt en de afstand
+         tot zee. Tot 29-08-2026 werd hier de hele kaart verborgen, waardoor de
+         kaartkolom bij Apartment leeg bleef. Nu blijft de kaart staan en gaan
+         alleen de tekengereedschappen weg; een al getekende omtrek wordt
+         opgeruimd zodat er geen perceelmaat blijft hangen die niet gevraagd is. */
+      $('ldMapBox').style.display = '';
+      var ldT=$('ldTools'); if(ldT) ldT.style.display = apt?'none':'';
+      if(apt){
+        if(LD.pts.length){ LD.pts=[]; ldClearRubber(); ldRedraw(); }
+        ldSetDraw(false);
+        var ldR=$('ldRead'); if(ldR) ldR.hidden=true;
+      }
+      /* De kaartkolom kan van maat veranderen als de velden links wisselen. */
+      if(ldMap) valMapFix();
       document.querySelectorAll('#mkvTypes .mkv-card').forEach(function(c){
         c.classList.toggle('sel', c.dataset.type===S.type);
       });
