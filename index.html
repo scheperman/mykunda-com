@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:1odya91--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:0dloude--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -39,7 +39,7 @@
 <link rel="preload" href="images/home-hero-mobile.webp" as="image" media="(max-width:480px)" fetchpriority="high">
 <link rel="preload" href="images/home-hero-tablet.webp" as="image" media="(min-width:481px) and (max-width:1024px)" fetchpriority="high">
 <link rel="preload" href="images/home-hero.webp" as="image" media="(min-width:1025px)" fetchpriority="high">
-<link rel="stylesheet" href="styles.min.css?v=274404894845396">
+<link rel="stylesheet" href="styles.min.css?v=214283467375158">
 <style>
 /* ---------- Launch notice ---------- */
 .launch{display:grid;grid-template-columns:1.35fr 1fr;gap:44px;align-items:start;background:var(--green-50);border-radius:var(--r-lg);padding:44px 46px}
@@ -298,9 +298,9 @@
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
 <meta name="facebook-domain-verification" content="putmn319zi7zuwdbzknjske15annuu">
-<!--mk-css--><link rel="preload" href="fonts/source-serif-4-var-latin.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="redesign.min.css?v=274404894845396"><!--/mk-css-->
+<!--mk-css--><link rel="preload" href="fonts/source-serif-4-var-latin.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="redesign.min.css?v=214283467375158"><!--/mk-css-->
 </head>
-<body>
+<body class="home">
 <a class="skip-link" href="#main">Skip to content</a>
 <div id="header" data-static data-active="" data-hero="1"><!--mk-hdr-->
   <header class="site-header on-hero" id="siteHeader">
@@ -375,12 +375,6 @@
     <div class="wrap hero-content">
       <h1>Find your place on the <em>Smiling Coast</em></h1>
       <p class="hero-sub">Homes, compounds and land along the Gambian coast — with an independent title check available on any property, listed here or not.</p>
-      <div id="mkFinderMount" class="hero-finder"></div>
-      <div class="hero-trust">
-        <span>46 areas priced per m&sup2;</span>
-        <span>Title checks from D3,500</span>
-        <span><a href="verify.html">Check any property, not just ours</a></span>
-      </div>
     </div>
   </div>
 </section>
@@ -432,7 +426,6 @@
   <div class="grid-3" id="featuredGrid"></div>
 </section>
 
-<!-- Ownership verification band -->
 <section class="sec wrap" style="padding-top:0" data-screen-label="Home / Verification">
   <div class="vband">
     <div>
@@ -452,16 +445,7 @@
 </section>
 
 <!-- Seller CTA band -->
-<section class="wrap" style="padding-top:0;padding-bottom:0" data-screen-label="Home / Sell band">
-  <a class="sellband" href="sell.html">
-    <div class="sellband-ic" id="sellbandIc"></div>
-    <div class="sellband-text">
-      <h3>Got a property or land to sell or rent?</h3>
-      <p>List it yourself on The Gambia’s newest property platform — reach buyers across the country and the diaspora. Anyone can list, from any phone, in about ten minutes.</p>
-    </div>
-    <span class="sellband-cta">List your property <span id="sellbandArr"></span></span>
-  </a>
-</section>
+
 
 <!-- Local agents -->
 <section class="sec wrap" data-screen-label="Home / Local agents">
@@ -605,6 +589,17 @@
   <div class="grid-3" id="guidesTeaser"></div>
 </section>
 
+<section class="wrap" style="padding-top:0;padding-bottom:0" data-screen-label="Home / Sell band">
+  <a class="sellband" href="sell.html">
+    <div class="sellband-ic" id="sellbandIc"></div>
+    <div class="sellband-text">
+      <h3>Got a property or land to sell or rent?</h3>
+      <p>List it yourself on The Gambia’s newest property platform — reach buyers across the country and the diaspora. Anyone can list, from any phone, in about ten minutes.</p>
+    </div>
+    <span class="sellband-cta">List your property <span id="sellbandArr"></span></span>
+  </a>
+</section>
+
 </main>
 <div id="footer" data-static><!--mk-ftr-->
   <footer class="site-footer">
@@ -650,11 +645,11 @@
 window.__sbReady=new Promise(function(res){window.addEventListener('load',function(){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js';
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=274404894845396'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=214283467375158'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
   document.body.appendChild(s1);
 });});
 </script>
-<script src="app.min.js?v=274404894845396"></script>
+<script src="app.min.js?v=214283467375158"></script>
 <script>
 initHeroHeader();
 
@@ -721,7 +716,18 @@ document.querySelectorAll('.hood-price').forEach(function(el){
 });
 
 </script>
-<script>if(typeof mkFinder==="function"){mkFinder("mkFinderMount","sale");}</script>
 
+<script>
+/* "Featured properties" belooft aanbod. Staat er niets in het raster, dan hoort
+   de kop er ook niet te staan; zodra de database vult, komt de sectie vanzelf
+   terug. */
+(function(){
+  var g = document.getElementById('featuredGrid'); if(!g) return;
+  var sec = g.closest('section'); if(!sec) return;
+  function upd(){ sec.hidden = g.children.length === 0; }
+  upd();
+  new MutationObserver(upd).observe(g, { childList:true });
+})();
+</script>
 </body>
 </html>

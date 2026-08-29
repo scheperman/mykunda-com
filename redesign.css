@@ -38,10 +38,17 @@ h1 em,h2 em{font-style:italic;font-weight:500}
 .pcard h2{font-family:var(--display);font-size:clamp(30px,2.9vw,42px);font-weight:600}
 .launch h2{font-family:var(--display)}
 
-/* ---------- 2. Eyebrow-discipline ---------- */
-.sec-head .eyebrow,.launch .eyebrow,.eyebrow{color:var(--eyebrow)}
-.eyebrow--accent,.lhero .eyebrow{color:var(--accent)}
-.on-dark .eyebrow,.lhero .eyebrow,.pcard-eyebrow{color:var(--accent-on-dark)}
+/* ---------- 2. Eyebrow-discipline ----------
+   Een eyebrow is overal hetzelfde ding, dus krijgt hij hier een definitie in
+   plaats van vijf. In de oude opzet had .aband helemaal geen regel en stond
+   "Built with Gambian estate agents" als gewone zin tussen vier hoofdletterlabels.
+   Rood blijft over voor handelen en verifieren; de rest is groen. */
+.eyebrow{font-family:var(--sans);font-size:13px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.1em;color:var(--eyebrow);margin-bottom:10px}
+.sec-head .eyebrow,.launch .eyebrow{color:var(--eyebrow)}
+.eyebrow--accent{color:var(--accent)}
+/* Op donkere vlakken: #E04458 haalde 3,6:1 en zakte dus door de norm. */
+.on-dark .eyebrow,.lhero .eyebrow,.vband .eyebrow,.value-text .eyebrow,.pcard-eyebrow{color:var(--accent-on-dark)}
 
 /* ---------- 3. Knoppen: groen blijft groen ---------- */
 .btn-primary:hover{background:var(--green-900);box-shadow:0 6px 18px rgba(14,46,37,.28)}
@@ -63,41 +70,57 @@ h1 em,h2 em{font-style:italic;font-weight:500}
 .band{background:var(--white);border-top:1px solid var(--line-2);border-bottom:1px solid var(--line-2)}
 .band-tint{background:var(--green-50)}
 
-/* Sectiekoppen op één as — geen wisselend gecentreerd/links */
-.sec-head[style*="center"]{align-items:flex-start!important;text-align:left!important}
+/* Sectiekoppen op één as — geen wisselend gecentreerd/links.
+   De gap:20px van .sec-head is bedoeld voor de RIJ (kop links, link rechts).
+   Zodra de inline stijl er een kolom van maakt, wordt diezelfde 20px verticale
+   ruimte tussen eyebrow, kop en tekst — waardoor die koppen losser stonden dan
+   alle andere. Vandaar gap:0 hier; de marges doen het werk. */
+.sec-head[style*="center"]{align-items:flex-start!important;text-align:left!important;gap:0!important}
 .sec-head[style*="center"] > *{text-align:left!important;max-width:62ch}
 .sec-head p[style*="center"]{text-align:left!important}
 
-/* ---------- 5. Hero: zoeken staat waar men het zoekt ---------- */
-.hero{min-height:min(84vh,720px)}
-.hero-inner{padding-bottom:150px}      /* ruimte voor de overlappende pijlerkaarten */
+/* ---------- 5. Hero: op het paginaraster ----------
+   Zoeken gebeurt op Buy en Rent, niet hier. De drie pijlerkaarten die de hero
+   overlappen zijn de actie op deze pagina. */
+.hero{min-height:min(74vh,660px)}
+.hero-inner{padding-bottom:104px}      /* ruimte voor de overlappende pijlerkaarten */
 .hero-content{width:100%;max-width:var(--wrap);padding-block:32px 0}  /* op het paginaraster i.p.v. gecentreerd:
    .wrap heeft margin:0 auto en is hier een flexitem, dus zonder expliciete
    breedte krimpt hij naar zijn inhoud en zweeft los van de kolommen eronder. */
 .hero-content h1{max-width:780px}
-.hero .mkf-bar{margin-top:28px;max-width:880px}
-.hero .mkf-where{flex:1.9 1 0}
 .hero-sub{max-width:52ch;font-size:clamp(16px,1.35vw,19.5px)}
-.hero-trust{display:flex;flex-wrap:wrap;gap:8px 26px;margin-top:20px;
-  font-size:14px;font-weight:600;color:rgba(255,255,255,.9)}
-.hero-trust span{display:inline-flex;align-items:center;gap:8px}
-.hero-trust span::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent-on-dark);flex:none}
-.hero-trust a{text-decoration:underline;text-underline-offset:3px}
-@media(max-width:1080px){ .hero-inner{padding-bottom:120px} }
+@media(max-width:1080px){ .hero-inner{padding-bottom:88px} }
 @media(max-width:760px){
   .hero{min-height:auto}
-  .hero-inner{padding-bottom:86px}
+  .hero-inner{padding-bottom:62px}
   .hero-content{padding-block:26px 0}
-  /* Op de telefoon één veld: waar. Verfijnen gebeurt op de resultatenpagina,
-     zo blijft de hero een hero in plaats van een formulier. */
-  .hero .mkf-bar{margin-top:22px}
-  .hero .mkf-bar .mkf-field:not(.mkf-where),
-  .hero .mkf-bar .mkf-more,
-  .hero .mkf-bar .mkf-div{display:none}
-  .hero .mkf-bar .mkf-where{border-top:none}
-  .hero .mkf-go{margin-top:4px}
-  .hero-trust{gap:6px 16px;font-size:13px;margin-top:16px}
 }
+
+/* ---------- 5b. Verticaal ritme van de homepage ----------
+   Gemeten op de oude opbouw (1440px): de afstanden tussen de blokken waren
+   78, 78, 78, 156, 156, 156, 156 px. Dat komt doordat .sec boven EN onder ruimte
+   zet: staan er twee .sec-secties naast elkaar, dan tellen twee paddings op;
+   staat er een sectie met inline padding-top:0 tussen, dan telt er maar een.
+   Twee ritmes op een pagina, en dat is precies wat je als rommelig ziet.
+
+   Hier gaat de ruimte daarom van de secties af en tussen de secties in: een
+   afstand, altijd dezelfde. Alleen op de homepage (body.home), zodat de rest
+   van de site ongemoeid blijft. */
+body.home{--rhythm:clamp(56px,6vw,96px)}
+body.home main{padding-bottom:var(--rhythm)}   /* zelfde afstand naar de voettekst */
+body.home main > section{padding-block:0}
+body.home main > section + section{margin-top:var(--rhythm)}
+body.home main > .pillarband{margin-top:-92px}
+@media(max-width:1080px){ body.home main > .pillarband{margin-top:-72px} }
+@media(max-width:700px){ body.home main > .pillarband{margin-top:-44px} }
+
+/* De zes vertrouwenskaarten zijn twee componenten (.tpillar met link, .feat
+   zonder) met net iets andere maten: gaten van 24 en 26 px, padding 32 en 30,
+   koppen van 21 en 20. Net genoeg verschil om als slordigheid te lezen. */
+body.home .trust-pillars{margin-bottom:24px}
+body.home .feat-grid{gap:24px}
+body.home .feat{padding:32px 28px}
+body.home .feat h3{font-size:21px}
 
 /* ---------- 6. Leesbaarheid van de gebiedsmozaïek ---------- */
 .hood::after{background:linear-gradient(180deg,rgba(14,46,37,0) 30%,rgba(14,46,37,.55) 62%,rgba(11,36,29,.92) 100%)}
