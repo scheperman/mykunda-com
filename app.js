@@ -17,6 +17,9 @@
    • het MapTiler-logo hoeft niet meer op de kaart. De tekstattributie met
      links naar MapTiler én OpenStreetMap blijft wel verplicht, op elke kaart. */
 window.MK_MAP = {
+  /* Wie levert de kaart: 'maptiler' of 'mapbox'. Eén regel voor de hele site.
+     Zie het MK_MAPBOX-blok hieronder voor wat er dan verandert. */
+  provider: 'mapbox',
   key: 'gw2XoLm9z2VCXUcbu383',
   /* Eigen stijl gemaakt in MapTiler Cloud? Zet het stijl-ID hier neer en de
      hele site volgt. Flex geeft er twintig; zie CLAUDE.md voor de stappen.
@@ -51,8 +54,51 @@ window.MK_MAP = {
 };
 window.MAPTILER_KEY = window.MK_MAP.key;      /* oude naam, blijft werken */
 
+/* ---------- Mapbox als tweede leverancier ----------
+   De tegels komen dan van de Static Tiles API; Mapbox noemt Leaflet in hun
+   eigen documentatie met zoveel woorden als afnemer daarvan. Wat er anders is
+   dan bij MapTiler, en waarom de code hieronder splitst:
+
+   • Een tegel van 512 px telt als één verzoek, niet als vier. Van de gratis
+     laag (200.000 verzoeken per maand) blijft dus ook 200.000 tegels over,
+     waar de 500.000 van MapTiler Flex op 125.000 tegels uitkomt. Daarboven
+     $0,50 per 1.000. `tileSize: 512` met `zoomOffset: -1` blijft net zo
+     belangrijk: 256 px kost er vier voor hetzelfde beeld.
+   • Een afgewezen token geeft HTTP 401 met een JSON-melding, geen tegel met
+     een watermerk. De sleuteltoets op tiles.json is daarmee overbodig —
+     Leaflet ziet een echte fout en de terugval loopt via `tileerror`.
+   • Het Mapbox-logo is wél verplicht op elke kaart, ook op de kleine kaartjes
+     van de wijkpagina's en op de perceelfoto. Dat is een eis van Mapbox, geen
+     keuze; de tekstattributie hieronder is dat evenmin.
+   • De zoomgrenzen hieronder zijn overgenomen van de MapTiler-meting van
+     25-08-2026 en dus nog niet gemeten op dit bronbeeld. Meet ze opnieuw boven
+     Kololi zodra de token er is, net zoals CLAUDE.md dat voor MapTiler vraagt.
+
+   Zolang `token` leeg is blijft de site op MapTiler draaien, ook als
+   `MK_MAP.provider` al op 'mapbox' staat. Zo kan de schakelaar vooruit zonder
+   dat er ergens een kaart uitvalt. */
+window.MK_MAPBOX = {
+  /* Vastgezet op mykunda.com en *.mykunda.com in het Mapbox-dashboard; zonder
+     die Referer geeft de API 403. Lokaal testen kan dus alleen met een eigen
+     token of door de terugval zijn werk te laten doen. */
+  token: 'pk.eyJ1IjoibXlrdW5kYSIsImEiOiJjbXRlNWF2N3UwdnE4MzBzOHlwenVzOHRtIn0.x19fTfAmoXKA_ZirgC0xow',
+  satellite: 'mapbox/satellite-streets-v12',
+  streets:   'mapbox/streets-v12',
+  satelliteFormat: 'webp',
+  streetsFormat:   'webp',
+  satNativeMax: 19,
+  streetsNativeMax: 20
+};
+window.mkProvider = function(){
+  return (window.MK_MAP.provider === 'mapbox' && window.MK_MAPBOX.token) ? 'mapbox' : 'maptiler';
+};
+
 /* Verplicht op elke kaart — ook op de terugvallagen verderop. */
-window.MK_ATTR = '&copy; <a href="https://www.maptiler.com/copyright/" target="_blank" rel="noopener">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>';
+window.MK_ATTR_MAPTILER = '&copy; <a href="https://www.maptiler.com/copyright/" target="_blank" rel="noopener">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>';
+/* Mapbox schrijft deze drie voor, met deze links. "Improve this map" hoort
+   erbij; de kleur en het formaat mogen mee met het ontwerp, de tekst niet. */
+window.MK_ATTR_MAPBOX = '&copy; <a href="https://www.mapbox.com/about/maps" target="_blank" rel="noopener">Mapbox</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> <a href="https://apps.mapbox.com/feedback/" target="_blank" rel="noopener">Improve this map</a>';
+window.MK_ATTR = window.mkProvider() === 'mapbox' ? window.MK_ATTR_MAPBOX : window.MK_ATTR_MAPTILER;
 
 /* @2x kost bij MapTiler niets extra aan verbruik, maar wel twee tot vier keer
    zoveel bytes. Meldt de browser een 2G-verbinding of staat databesparing aan,
@@ -98,6 +144,35 @@ window.mapTilerUrl = function(style, ext, forceHd){
          '?key=' + window.MK_MAP.key;
 };
 
+/* Eén tegel-URL-sjabloon, wie hem ook levert. kind is 'satellite' of 'streets';
+   forceHd dwingt @2x af of juist niet, weglaten laat mkHiDPI beslissen.
+   Bij Mapbox zit het formaat achter de tegelcoördinaten en de sleutel als
+   access_token in de query; verder is de vorm dezelfde als bij MapTiler. */
+window.mkTileTemplate = function(kind, forceHd){
+  var sat = kind !== 'streets';
+  var hd  = (forceHd === undefined ? window.mkHiDPI() : forceHd) ? '@2x' : '';
+  if(window.mkProvider() === 'mapbox'){
+    var M = window.MK_MAPBOX;
+    var e = (sat ? M.satelliteFormat : M.streetsFormat) || 'webp';
+    /* Oude browsers zonder WebP: JPEG voor een luchtfoto, PNG voor vlakke
+       kaartkleuren. Mapbox schrijft 'jpeg' voluit, niet 'jpg'. */
+    if(e === 'webp' && !window.mkWebP()) e = sat ? 'jpeg' : 'png';
+    return 'https://api.mapbox.com/styles/v1/' + (sat ? M.satellite : M.streets) +
+           '/tiles/512/{z}/{x}/{y}' + hd + '.' + e +
+           '?access_token=' + M.token;
+  }
+  var stijl   = sat ? window.MK_MAP.satellite       : window.MK_MAP.streets;
+  var formaat = sat ? window.MK_MAP.satelliteFormat : window.MK_MAP.streetsFormat;
+  return window.mapTilerUrl(stijl, formaat, forceHd);
+};
+
+/* Waar het bronbeeld ophoudt, per leverancier. */
+window.mkNativeMax = function(kind){
+  var sat = kind !== 'streets';
+  var C = window.mkProvider() === 'mapbox' ? window.MK_MAPBOX : window.MK_MAP;
+  return sat ? C.satNativeMax : C.streetsNativeMax;
+};
+
 /* Eén plek waar een kaartlaag ontstaat: overal dezelfde tegelgrootte, dezelfde
    zoomgrenzen, dezelfde attributie. kind is 'satellite' of 'streets'. */
 window.mkTileLayer = function(kind, extra){
@@ -105,15 +180,13 @@ window.mkTileLayer = function(kind, extra){
   var o = {
     tileSize: 512, zoomOffset: -1, crossOrigin: true,
     maxZoom: window.MK_MAP.maxZoom,
-    maxNativeZoom: sat ? window.MK_MAP.satNativeMax : window.MK_MAP.streetsNativeMax,
+    maxNativeZoom: window.mkNativeMax(kind),
     attribution: window.MK_ATTR,
     updateWhenZooming: false,       /* pas tegels halen als het zoomen klaar is */
     keepBuffer: 1                   /* één rij tegels buiten beeld, niet twee */
   };
   if(extra) for(var k in extra) o[k] = extra[k];
-  var stijl  = sat ? window.MK_MAP.satellite       : window.MK_MAP.streets;
-  var formaat= sat ? window.MK_MAP.satelliteFormat : window.MK_MAP.streetsFormat;
-  var gewoon = window.mapTilerUrl(stijl, formaat, false);
+  var gewoon = window.mkTileTemplate(kind, false);
   var layer  = L.tileLayer(gewoon, o);
   /* Twee sjablonen, en per tegel kiezen. Op overzichtszoom is een @2x-tegel
      drie tot vier keer zo zwaar terwijl je er nauwelijks iets van ziet; van
@@ -122,7 +195,7 @@ window.mkTileLayer = function(kind, extra){
      kleine kaartjes op de wijkpagina's: een vak van ruim 300 px breed heeft de
      extra pixels niet nodig, en het scheelt daar het meeste. */
   if(window.mkHiDPI() && (!extra || extra.mkHidpi !== false)){
-    var scherp = window.mapTilerUrl(stijl, formaat, true);
+    var scherp = window.mkTileTemplate(kind, true);
     layer.getTileUrl = function(coords){
       var z = this._getZoomForUrl();
       var tpl = (coords.z >= (window.MK_MAP.hidpiFromZoom || 0)) ? scherp : gewoon;
@@ -130,7 +203,36 @@ window.mkTileLayer = function(kind, extra){
     };
   }
   layer.__mkKind = sat ? 'satellite' : 'streets';
+  /* Mapbox eist het logo op elke kaart. Het hangt aan de laag en niet aan
+     mkMap, want alleen een laag weet wie de tegels levert; de terugval naar
+     Esri en OpenStreetMap haalt hem daarom ook weer weg. */
+  if(window.mkProvider() === 'mapbox'){
+    layer.on('add', function(){ window.mkBrandLogo(this._map); });
+  }
   return layer;
+};
+
+/* Het Mapbox-woordmerk, linksonder naast de schaalbalk. Zelf gehost, want de
+   CSP laat geen plaatjes van vreemde hosts toe — en het scheelt een verzoek.
+   Eén per kaart; de stijl mag niet veranderen, de plaats wel. */
+window.mkBrandLogo = function(map){
+  if(!map || map.__mkLogo) return;
+  map.__mkLogo = true;
+  if(!document.getElementById('mkLogoCSS')){
+    var st = document.createElement('style'); st.id = 'mkLogoCSS';
+    st.textContent = '.mk-mapbox-logo a{display:block;width:88px;height:23px;'
+      + 'background:url(images/mapbox-logo.svg) no-repeat;background-size:88px 23px}';
+    document.head.appendChild(st);
+  }
+  var ctl = L.control({ position: 'bottomleft' });
+  ctl.onAdd = function(){
+    var d = L.DomUtil.create('div', 'mk-mapbox-logo');
+    d.innerHTML = '<a href="https://www.mapbox.com/" target="_blank" rel="noopener" aria-label="Mapbox"></a>';
+    L.DomEvent.disableClickPropagation(d);
+    return d;
+  };
+  ctl.addTo(map);
+  map.__mkLogoCtl = ctl;
 };
 
 /* Kaart met de instellingen die overal gelijk horen te zijn. */
@@ -271,6 +373,12 @@ window.MAP_FALLBACK_URL = window.MK_FALLBACK.streets;   /* oude naam */
         crossOrigin: true, opacity: .9, pane: 'overlayPane'
       }).addTo(map);
     }
+    /* Het Mapbox-logo hoort bij Mapbox-tegels. Staan die er niet meer, dan
+       moet het weg — anders staat er een merk op een kaart van Esri. */
+    if(map && map.__mkLogoCtl){
+      try{ map.removeControl(map.__mkLogoCtl); }catch(e){}
+      map.__mkLogoCtl = null; map.__mkLogo = false;
+    }
     if(map) setTimeout(function(){ try{ map.invalidateSize(); }catch(e){} }, 60);
   }
   window.mkSwapMapTiles = function(){ down = true; for(var i=0;i<layers.length;i++) swap(layers[i]); };
@@ -278,6 +386,10 @@ window.MAP_FALLBACK_URL = window.MK_FALLBACK.streets;   /* oude naam */
   function probe(){
     if(probed) return;
     probed = true;
+    /* Alleen MapTiler heeft deze toets nodig. Mapbox stuurt bij een afgewezen
+       token HTTP 401 met JSON terug in plaats van een tegel met een watermerk,
+       dus daar meldt Leaflet zelf een tileerror en loopt de terugval vanzelf. */
+    if(window.mkProvider() === 'mapbox') return;
     var url = 'https://api.maptiler.com/maps/' + window.MK_MAP.satellite +
               '/tiles.json?key=' + window.MK_MAP.key;
     try{
@@ -293,7 +405,7 @@ window.MAP_FALLBACK_URL = window.MK_FALLBACK.streets;   /* oude naam */
     var onAdd = L.TileLayer.prototype.onAdd;
     L.TileLayer.prototype.onAdd = function(map){
       var layer = this;
-      if(/api\.maptiler\.com/.test(this._url || '')){
+      if(/api\.(maptiler|mapbox)\.com/.test(this._url || '')){
         layers.push(layer);
         if(down){ setTimeout(function(){ swap(layer); }, 0); }
         else {
@@ -339,8 +451,44 @@ window.mkMercY = function(lat){
 window.mkInvMercY = function(y){
   return (2*Math.atan(Math.exp(y*Math.PI/180)) - Math.PI/2) * 180 / Math.PI;
 };
+/* De perceelomtrek gaat als lijst hoekpunten mee ([lat,lng], zoals Leaflet ze
+   geeft), niet als kant-en-klare tekenopdracht: MapTiler wil een path-string,
+   Mapbox een GeoJSON-overlay. opts.path blijft werken voor wie hem al zo
+   aanlevert, maar dat is dan wel MapTiler-taal. */
+window.MK_PLOT_STROKE = '#1F7BFF';
 window.mkStaticMapUrl = function(bbox, w, h, opts){
   opts = opts || {};
+  var pts = opts.polygon && opts.polygon.length >= 3 ? opts.polygon : null;
+
+  if(window.mkProvider() === 'mapbox'){
+    var M = window.MK_MAPBOX;
+    var mStyle = opts.style || M.satellite;
+    var mHd = opts.hidpi === false ? '' : '@2x';
+    /* Mapbox schrijft het formaat voluit en levert maximaal 1280 px per zijde.
+       De perceelfoto vraagt 1000x658, dus dat past; groter afkappen zou de
+       omrekening naar pixels stilzwijgend scheeftrekken. */
+    var mFmt = (opts.format === 'jpg' || opts.format === 'jpeg' || !opts.format) ? 'jpeg'
+             : (opts.format === 'webp' ? 'webp' : 'png');
+    var over = '';
+    if(pts){
+      var ring = pts.map(function(p){ return [ +(+p[1]).toFixed(6), +(+p[0]).toFixed(6) ]; });
+      ring.push(ring[0]);
+      over = '/geojson(' + encodeURIComponent(JSON.stringify({
+        type: 'Feature',
+        properties: { stroke: window.MK_PLOT_STROKE, 'stroke-width': 5, 'stroke-opacity': 1,
+                      fill: window.MK_PLOT_STROKE, 'fill-opacity': 0.22 },
+        geometry: { type: 'Polygon', coordinates: [ring] }
+      })) + ')';
+    }
+    /* De bbox staat bij Mapbox tussen blokhaken; padding=0 laat de afbeelding
+       exact deze bbox dekken, wat de perceelfoto nodig heeft om de maten er op
+       canvas overheen te kunnen zetten. Attributie en logo blijven aan: dat is
+       bij Mapbox verplicht, ook op een stilstaande afbeelding. */
+    return 'https://api.mapbox.com/styles/v1/' + mStyle + '/static' + over +
+           '/[' + bbox.join(',') + ']/' + w + 'x' + h + mHd + '.' + mFmt +
+           '?padding=0&access_token=' + M.token;
+  }
+
   var style = opts.style || window.MK_MAP.satellite;
   var hd = opts.hidpi === false ? '' : '@2x';
   var u = 'https://api.maptiler.com/maps/' + style + '/static/' +
@@ -348,7 +496,13 @@ window.mkStaticMapUrl = function(bbox, w, h, opts){
           (opts.format || (style === window.MK_MAP.satellite ? window.MK_MAP.satelliteFormat : window.MK_MAP.streetsFormat) || 'jpg') +
           '?key=' + window.MK_MAP.key + '&padding=0&attribution=' +
           (opts.attribution || 'bottomright');
-  if(opts.path) u += '&path=' + encodeURIComponent(opts.path);
+  var path = opts.path;
+  if(!path && pts){
+    var poly = pts.map(function(p){ return (+p[1]).toFixed(6) + ',' + (+p[0]).toFixed(6); });
+    poly.push(poly[0]);
+    path = 'fill:rgba(31,123,255,0.22)|stroke:' + window.MK_PLOT_STROKE + '|width:5|' + poly.join('|');
+  }
+  if(path) u += '&path=' + encodeURIComponent(path);
   if(opts.markers) u += '&markers=' + encodeURIComponent(opts.markers);
   return u;
 };
@@ -366,9 +520,54 @@ window.mkStaticMapUrl = function(bbox, w, h, opts){
    MapTiler rekent per zoekopdracht af, dus wachten we tot het typen even stil
    valt en telt alleen het antwoord op de laatste toetsaanslag. */
 window.MK_GEO_NEAR = '-16.6800,13.4400';       /* Groot-Banjul */
+
+/* Mapbox' Geocoding v6 geeft een ander antwoord dan MapTiler: de coördinaat
+   staat in properties, de naam is in drieën geknipt en het soort plek heet
+   feature_type. De rest van de site leest f.text, f.place_name, f.center,
+   f.place_type en f.context[0].text — dus vertalen we daarnaartoe in plaats
+   van vijf plekken in twee pagina's aan te passen. */
+window.mkMbFeature = function(f){
+  var p = f.properties || {}, c = p.coordinates || {};
+  var lng = c.longitude, lat = c.latitude;
+  if(lng === undefined && f.geometry && f.geometry.coordinates){
+    lng = f.geometry.coordinates[0]; lat = f.geometry.coordinates[1];
+  }
+  var ctx = [], src = p.context || {};
+  ['neighborhood','locality','place','district','region','country'].forEach(function(k){
+    if(src[k] && src[k].name) ctx.push({ id: k, text: src[k].name });
+  });
+  return {
+    center: [lng, lat],
+    text: p.name || '',
+    place_name: p.full_address || [p.name, p.place_formatted].filter(Boolean).join(', ') || p.name || '',
+    place_type: [p.feature_type || 'place'],
+    context: ctx
+  };
+};
+
 window.mkGeocode = function(q, opts){
   opts = opts || {};
-  if(!q || q.length < (opts.min || 3) || !window.MK_MAP || !window.MK_MAP.key) return Promise.resolve([]);
+  if(!q || q.length < (opts.min || 3)) return Promise.resolve([]);
+  if(window.mkProvider() === 'mapbox'){
+    /* permanent=true is nodig zodra een uitkomst wordt bewaard — bij Mapbox is
+       dat een aparte, betaalde eindpuntstand zonder gratis laag. Zoeken om te
+       kijken blijft tijdelijk; zie CLAUDE.md. */
+    var mu = 'https://api.mapbox.com/search/geocode/v6/forward?q=' + encodeURIComponent(q) +
+             '&access_token=' + window.MK_MAPBOX.token +
+             '&country=gm&language=en&limit=' + Math.min(opts.limit || 6, 10) +
+             '&proximity=' + (opts.near || window.MK_GEO_NEAR) +
+             '&autocomplete=' + (opts.autocomplete === false ? 'false' : 'true') +
+             (opts.permanent ? '&permanent=true' : '');
+    if(opts.types) mu += '&types=' + opts.types;
+    return fetch(mu, { mode:'cors', credentials:'omit' })
+      .then(function(r){ return r.ok ? r.json() : { features: [] }; })
+      .then(function(j){
+        return (j.features || []).map(window.mkMbFeature)
+                 .filter(function(f){ return f.center[0] !== undefined; });
+      })
+      .catch(function(){ return []; });
+  }
+  if(!window.MK_MAP || !window.MK_MAP.key) return Promise.resolve([]);
   var u = 'https://api.maptiler.com/geocoding/' + encodeURIComponent(q) +
           '.json?key=' + window.MK_MAP.key +
           '&country=gm&language=en&limit=' + (opts.limit || 6) +
@@ -384,6 +583,20 @@ window.mkGeocode = function(q, opts){
 /* Omgekeerd: van een pin naar de naam van de plek waar hij staat. */
 window.mkReverseGeocode = function(lat, lng, opts){
   opts = opts || {};
+  if(window.mkProvider() === 'mapbox'){
+    var mu = 'https://api.mapbox.com/search/geocode/v6/reverse?longitude=' + Number(lng).toFixed(6) +
+             '&latitude=' + Number(lat).toFixed(6) +
+             '&access_token=' + window.MK_MAPBOX.token + '&language=en&limit=1' +
+             (opts.permanent ? '&permanent=true' : '');
+    if(opts.types) mu += '&types=' + opts.types;
+    return fetch(mu, { mode:'cors', credentials:'omit' })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(j){
+        var f = j && j.features && j.features[0];
+        return f ? window.mkMbFeature(f) : null;
+      })
+      .catch(function(){ return null; });
+  }
   if(!window.MK_MAP || !window.MK_MAP.key) return Promise.resolve(null);
   var u = 'https://api.maptiler.com/geocoding/' + Number(lng).toFixed(6) + ',' + Number(lat).toFixed(6) +
           '.json?key=' + window.MK_MAP.key + '&language=en&limit=1';
@@ -398,7 +611,7 @@ window.mkGeoLabel = function(f){
   var t = (f.place_type || []).join(',');
   if(/poi/.test(t)) return 'place';
   if(/address|road|street/.test(t)) return 'street';
-  if(/municipality|locality|place|neighbourhood/.test(t)) return 'town';
+  if(/municipality|locality|place|neighbou?rhood/.test(t)) return 'town';
   return 'location';
 };
 

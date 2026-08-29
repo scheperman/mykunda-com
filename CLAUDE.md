@@ -428,6 +428,64 @@ bankoverschrijving in `payments` wordt weggeschreven.
 
 De map `edge-functions/` is een verouderde momentopname; zie de LEESMIJ daar.
 
+## Kaarten: sinds 29-08-2026 levert Mapbox, met MapTiler als schakelstand
+
+Edwin besloot op 29-08-2026 over te stappen van MapTiler op Mapbox. De site
+bleef op Leaflet: de tegels komen nu van Mapbox' **Static Tiles API** (die
+Leaflet in Mapbox' eigen documentatie als afnemer noemt), niet van Mapbox GL JS
+— dat zou ruim 1 MB extra JavaScript en een herbouw van elke kaartpagina zijn
+geweest voor hetzelfde beeld.
+
+Hoe het geschakeld is, allemaal bovenin `app.js`:
+
+- `MK_MAP.provider` — `'mapbox'` of `'maptiler'`, één regel voor de hele site.
+  `mkProvider()` valt terug op MapTiler zolang `MK_MAPBOX.token` leeg is.
+- `MK_MAPBOX` — token, stijlen (`mapbox/satellite-streets-v12`,
+  `mapbox/streets-v12`), tegelformaat en zoomgrenzen. Het token is in het
+  Mapbox-dashboard vastgezet op mykunda.com en *.mykunda.com; zonder die
+  Referer geeft de API 403. Lokaal testen laat dus de terugval zien, geen bug.
+- `mkTileTemplate(kind, forceHd)` — één sjabloonfunctie voor beide
+  leveranciers; `mkTileLayer` en de @2x-keuze per tegel lopen erdoorheen.
+- `mkStaticMapUrl` vertaalt de perceelomtrek zelf: geef hem `polygon` (de
+  hoekpunten als `[lat,lng]`, zoals Leaflet ze geeft) en hij bouwt bij MapTiler
+  een path-string en bij Mapbox een GeoJSON-overlay. `list.html` levert sinds
+  29-08-2026 alleen nog de hoekpunten aan.
+- `mkGeocode`/`mkReverseGeocode` praten bij Mapbox met Geocoding **v6**;
+  `mkMbFeature` vertaalt het antwoord naar de vorm die de pagina's al lazen
+  (`center`, `text`, `place_name`, `place_type`, `context`). Let op:
+  uitkomsten die worden **opgeslagen** vereisen bij Mapbox `permanent=true` —
+  een betaald eindpunt zonder gratis laag; het zoeken in de listingflow toont
+  alleen en slaat het adres niet als geocodeuitkomst op.
+- **Het Mapbox-logo is verplicht op elke kaart**, ook op de kleine wijkkaartjes
+  en de perceelfoto (daar brandt Mapbox hem er zelf in). `mkBrandLogo` zet hem
+  linksonder; het bestand staat zelf gehost in `images/mapbox-logo.svg` omdat
+  de CSP geen vreemde afbeeldingshosts toelaat. De tekstattributie is
+  `MK_ATTR_MAPBOX` (© Mapbox, © OpenStreetMap, "Improve this map") — alle drie
+  verplicht. De terugval naar Esri/OSM haalt het logo weer weg.
+- De sleuteltoets op `tiles.json` is een MapTiler-eigenaardigheid: Mapbox
+  stuurt bij een afgewezen token een echte 401, dus daar doet `tileerror` het
+  werk en slaat `mkProbeMapKey` over.
+- CSP: `api.mapbox.com` staat sinds 29-08-2026 naast `api.maptiler.com` in
+  img-src én connect-src van `_headers`, `.htaccess` en `vercel.json` (drie
+  bestanden, dezelfde regel — zie de waarschuwing verderop). De
+  preconnect-hint in alle 49 pagina's wijst nu naar `api.mapbox.com`.
+
+**Wat het kost:** een 512px-tegel telt bij Mapbox als één verzoek (niet vier,
+zoals MapTiler telt), gratis tot 200.000 tegelverzoeken per maand en daarna
+$0,50 per 1.000. Static Images: 50.000 gratis, dan $1,00 per 1.000. Geocoding
+(tijdelijk): 100.000 gratis, dan $0,75 per 1.000. `tileSize: 512` +
+`zoomOffset: -1` blijft de belangrijkste regel. Zet in het Mapbox-dashboard
+een uitgavenlimiet, net als destijds bij MapTiler.
+
+**Nog te meten:** de zoomgrenzen (`satNativeMax: 19`) zijn overgenomen van de
+MapTiler-meting van 25-08-2026 en nog niet op Mapbox' bronbeeld boven Kololi
+gemeten; net zo de eigen-stijlvraag (de gele labels van de MyKunda-stijlen
+bestaan bij Mapbox nog niet — dat vraagt een stijl in Mapbox Studio, waarna
+alleen `MK_MAPBOX.satellite`/`streets` het nieuwe stijl-ID hoeft te krijgen).
+
+Het MapTiler-blok hieronder blijft staan zolang de schakelstand bestaat: alles
+erin geldt nog zodra `provider` terug naar `'maptiler'` gaat.
+
 ## Kaarten en MapTiler
 
 Sinds 25 augustus 2026 draait het MapTiler-account op **Flex**. Alles wat met

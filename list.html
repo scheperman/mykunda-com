@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0oao9j9--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0vef5n1--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -10,10 +10,10 @@
 <meta name="theme-color" content="#15463A">
 <title>List your property — MyKunda</title>
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
-<link rel="preconnect" href="https://api.maptiler.com" crossorigin>
+<link rel="preconnect" href="https://api.mapbox.com" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=44913359080760">
+<link rel="stylesheet" href="styles.min.css?v=149552263275965">
 <style>
 body{background:var(--paper-2);min-height:100vh}
 
@@ -797,18 +797,18 @@ body{background:var(--paper-2);min-height:100vh}
   </aside>
 </div>
 
-<script src="valuation-areas.js?v=44913359080760"></script>
-<script src="valuation.js?v=44913359080760"></script>
-<script src="app.min.js?v=44913359080760"></script>
-<script src="gambia-places.js?v=44913359080760" defer></script>
-<script src="image-slot.js?v=44913359080760" defer></script>
+<script src="valuation-areas.js?v=149552263275965"></script>
+<script src="valuation.js?v=149552263275965"></script>
+<script src="app.min.js?v=149552263275965"></script>
+<script src="gambia-places.js?v=149552263275965" defer></script>
+<script src="image-slot.js?v=149552263275965" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel, Leaflet (~145 KB) only when the
    seller reaches the location step. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=44913359080760'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=149552263275965'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -2659,14 +2659,13 @@ async function renderBoundaryImage(){
   else { const n=dx/want, c=(y1+y2)/2; y1=c-n/2; y2=c+n/2; }
   dx=x2-x1; dy=y2-y1;
 
-  const poly=boundaryPts.map(p=>p[1].toFixed(6)+','+p[0].toFixed(6));
-  poly.push(poly[0]);
-  const path='fill:rgba(31,123,255,0.22)|stroke:#1F7BFF|width:5|'+poly.join('|');
+  /* De hoekpunten gaan als lijst mee; mkStaticMapUrl vertaalt ze naar de taal
+     van de leverancier — een path-string bij MapTiler, GeoJSON bij Mapbox. */
   const url=mkStaticMapUrl(
     [x1.toFixed(6), mkInvMercY(y1).toFixed(6), x2.toFixed(6), mkInvMercY(y2).toFixed(6)],
-    SNAP_W, SNAP_MAP_H, { path:path, format:'jpg' });
-  /* MapTiler weigert een URL boven 8192 bytes; een perceel met tientallen
-     hoekpunten valt dan af in plaats van halverwege te breken. */
+    SNAP_W, SNAP_MAP_H, { polygon:boundaryPts, format:'jpg' });
+  /* Beide leveranciers weigeren een URL boven 8192 bytes; een perceel met
+     tientallen hoekpunten valt dan af in plaats van halverwege te breken. */
   if(url.length>7800) return null;
 
   let img;

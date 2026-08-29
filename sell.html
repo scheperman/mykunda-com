@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:19btb0p--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:0lrlf81--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -31,7 +31,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=44913359080760">
+<link rel="stylesheet" href="styles.min.css?v=149552263275965">
 <style>
 /* hero */
 .shero{position:relative;color:#fff;margin-top:calc(-1 * var(--header-h));isolation:isolate;overflow:hidden}
@@ -1044,13 +1044,13 @@
 window.__sbReady=new Promise(function(res){window.addEventListener('load',function(){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js';
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=44913359080760'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=149552263275965'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
   document.body.appendChild(s1);
 });});
 </script>
-<script src="valuation-areas.js?v=44913359080760"></script>
-<script src="valuation.js?v=44913359080760"></script>
-<script src="app.min.js?v=44913359080760"></script>
+<script src="valuation-areas.js?v=149552263275965"></script>
+<script src="valuation.js?v=149552263275965"></script>
+<script src="app.min.js?v=149552263275965"></script>
 <script>
 
 // icons
@@ -1893,6 +1893,18 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
         name:nm, email:em, phone:$('mkvPhone').value.trim(), area:S.area,
         message:'Valuation: '+S.type+', '+S.area+', '+(S.plot||'?')+' m² plot, '+(S.built||'0')+' m² built, estimate '+money(r.mid),
         payload:{input:S, boundary: LD.pts.length>=3 ? {type:'polygon',points:LD.pts.map(function(p){return {lat:+p[0].toFixed(6),lng:+p[1].toFixed(6)};}),area_m2:LD.sqm,centroid:LD.ll} : null,
+          /* Dezelfde omtrek nog eens, maar dan als standaard-GeoJSON (ring is
+             lng,lat en sluit op het eerste punt). boundary hierboven blijft
+             voor wie hem al leest; dit veld is voor alles wat GeoJSON spreekt —
+             PostGIS, kaartsoftware, een latere koppeling. */
+          boundary_geojson: LD.pts.length>=3 ? (function(){
+            var ring=LD.pts.map(function(p){ return [+p[1].toFixed(6), +p[0].toFixed(6)]; });
+            ring.push(ring[0]);
+            var per=0; for(var i=0;i<LD.pts.length;i++) per+=ldSegM(LD.pts[i],LD.pts[(i+1)%LD.pts.length]);
+            return {type:'Feature',
+              properties:{area_m2:Math.round(LD.sqm), perimeter_m:Math.round(per), corners:LD.pts.length},
+              geometry:{type:'Polygon',coordinates:[ring]}};
+          })() : null,
           beach_m: LD.seaM, result:{mid:r.mid,low:r.low,high:r.high,land:r.land,build:r.build,rebuild:r.rebuild,confidence:r.confidence.score}}
       }).then(function(){
         $('mkv5').querySelector('.mkv-body').innerHTML='<p class="mkv-hint" style="margin:0">Thank you, '+nm.split(' ')[0]+'. The report is on its way to '+em+'. If you would like the estimate checked on site, just reply to that email.</p>';

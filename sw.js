@@ -20,7 +20,7 @@ const MAX_PAGES = 60;
    the browser treat the precached file as a different URL and the whole precache
    becomes dead weight. Do not edit STAMP by hand: run `node build.mjs` and it
    rewrites this line and every page from one source. */
-const STAMP = '44913359080760';
+const STAMP = '149552263275965';
 const PRECACHE = [
   'styles.min.css?v=' + STAMP,
   'app.min.js?v=' + STAMP,
@@ -72,7 +72,7 @@ self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
-  if (url.origin !== location.origin) return;            // maptiler tiles, APIs → straight to network
+  if (url.origin !== location.origin) return;            // map tiles (mapbox/maptiler), APIs → straight to network
   if (url.pathname.startsWith('/api/')) return;
   if (isPrivate(url.pathname)) return;                   // signed-in pages: network only, never stored
 
