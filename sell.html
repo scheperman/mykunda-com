@@ -1418,6 +1418,7 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
       const c=ldCentroid(LD.pts);
       LD.ll={lat:c[0],lng:c[1]};
       if(ldMarker) ldMarker.setLatLng(c);
+      ldAdoptPin();
       read.hidden=false;
       read.innerHTML='<b>'+Math.round(sqm).toLocaleString('en-US')+' m²</b> · perimeter '+Math.round(per)+' m · '+LD.pts.length+' corners';
     } else if(LD.pts.length>0){
@@ -1503,18 +1504,18 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
     document.querySelectorAll('#ldMapBox .value-map-tag').forEach(function(el){ L.DomEvent.disableClickPropagation(el); });
     ldMap.on('click',e=>{
       if(LD.draw){ LD.pts.push(ldSnapPoint(e.latlng)); ldClearRubber(); ldRedraw(); return; }
-      ldMarker.setLatLng(e.latlng); LD.ll={lat:e.latlng.lat,lng:e.latlng.lng}; ldApplyGeo();
+      ldMarker.setLatLng(e.latlng); LD.ll={lat:e.latlng.lat,lng:e.latlng.lng}; ldApplyGeo(); ldAdoptPin();
     });
     ldMap.on('mousemove',e=>{ if(LD.draw) ldUpdateRubber(e.latlng); });
     ldMap.on('mouseout',ldClearRubber);
-    ldMarker.on('dragend',()=>{ const c=ldMarker.getLatLng(); if(!LD.pts.length){ LD.ll={lat:c.lat,lng:c.lng}; ldApplyGeo(); } });
+    ldMarker.on('dragend',()=>{ const c=ldMarker.getLatLng(); if(!LD.pts.length){ LD.ll={lat:c.lat,lng:c.lng}; ldApplyGeo(); ldAdoptPin(); } });
     document.querySelectorAll('#ldTools [data-ldmode]').forEach(b=>b.addEventListener('click',()=>ldSetDraw(b.dataset.ldmode==='draw')));
     document.getElementById('ldSnap').addEventListener('click',function(){ LD.snap=!LD.snap; this.classList.toggle('sel',LD.snap); });
     document.getElementById('ldUndo').addEventListener('click',()=>{ LD.pts.pop(); ldClearRubber(); ldRedraw(); });
     document.getElementById('ldClear').addEventListener('click',()=>{ LD.pts=[]; ldClearRubber(); ldRedraw(); });
   }
   function ldResetDrawing(){
-    LD.pts=[]; LD.ll=null; LD.seaM=null; LD.band=null;
+    LD.pts=[]; LD.ll=null; LD.seaM=null; LD.band=null; LD.pinExact=false;
     if(ldMap){ ldClearLayers(); ldClearRubber(); }
     ldSetDraw(false);
     const read=document.getElementById('ldRead'); if(read) read.hidden=true;
@@ -1782,8 +1783,11 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
       if(!S.type || !S.area || (!S.plot && !S.built)) return null;
       /* Niet de ruwe tekst maar de opgeloste plaats de tarieventabel in — een
          Plus Code of coördinaat is anders letterlijk onvindbaar. Zie
-         resolveArea(). */
-      var loc=resolveArea(S.area);
+         resolveArea(). Is de pin met de hand gezet (LD.pinExact), dan gaat
+         dat punt vóór de naam in het veld: een gesleepte pin geeft zo
+         hetzelfde antwoord als dezelfde plek getypt als coördinaat, met
+         dezelfde afstandsklasse. */
+      var loc=(LD.pinExact && LD.ll) ? nearestByCoords(LD.ll) : resolveArea(S.area);
       return window.MK_VAL.value({
         type: S.type==='house'?'villa':S.type,
         area: loc.area || S.area, areaKm: loc.km, plotSqm:S.plot, builtSqm:S.built,
@@ -1863,7 +1867,10 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
       /* Ook 'change': het intekenen van de kavel schrijft lfSize en
          lfBeach programmatisch en vuurt daar zelf een event bij. */
       ['input','change'].forEach(function(ev){
-        el.addEventListener(ev,function(){
+        el.addEventListener(ev,function(evt){
+          /* Echt typen in het locatieveld heft de pinvoorrang op; de
+             programmatische 'change' uit ldAdoptPin() (isTrusted=false) niet. */
+          if(p[1]==='area' && evt.isTrusted) LD.pinExact=false;
           S[p[1]]=el.value; el.classList.remove('bad');
           if(p[1]==='finish') $('mkvFinishHint').textContent=FINISH_HINT[el.value]||'';
           recap(); render();
@@ -1945,6 +1952,9 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
               properties:{area_m2:Math.round(LD.sqm), perimeter_m:Math.round(per), corners:LD.pts.length},
               geometry:{type:'Polygon',coordinates:[ring]}};
           })() : null,
+          /* De met de hand gezette pin: zonder dit veld kent het rapport alleen
+             de gebiedsnaam, terwijl de verkoper de plek exact heeft aangewezen. */
+          pin: (LD.pinExact && LD.ll) ? {lat:+LD.ll.lat.toFixed(6),lng:+LD.ll.lng.toFixed(6)} : null,
           beach_m: LD.seaM, result:{mid:r.mid,low:r.low,high:r.high,land:r.land,build:r.build,rebuild:r.rebuild,confidence:r.confidence.score}}
       }).then(function(){
         $('mkv5').querySelector('.mkv-body').innerHTML='<p class="mkv-hint" style="margin:0">Thank you, '+nm.split(' ')[0]+'. The report is on its way to '+em+'. If you would like the estimate checked on site, just reply to that email.</p>';

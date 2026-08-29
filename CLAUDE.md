@@ -936,6 +936,39 @@ Facebook-bestand, dan hoort die trap als eerste herijkt te worden.
 `app.js` (tabel `GM_AREAS`): dezelfde plaats staat in die twee tabellen een
 paar honderd meter uit elkaar, en het tarief komt uit `AREA_COORDS`.
 
+### De pin op de kaart schrijft het locatieveld — en gaat vóór de naam
+
+Tot 29-08-2026 werkte een klik op de kaart of een versleepte pin in de
+waarderingstool alleen `LD.ll` en de zeeafstand bij; het locatieveld bleef op
+de eerder getypte naam staan en `calc()` rekende door op het oude gebied. Wie
+"Kerr Serign" koos en de pin naar Bijilo sleepte, zag Bijilo op de kaart en
+Kerr Serign in het veld én in het bedrag. Edwin meldde dit op de dag zelf.
+
+Sindsdien doet `ldAdoptPin()` in `sell.html` drie dingen bij elke met de hand
+gezette pin (kaartklik, pin verslepen, ingetekende kavel — de centroid):
+
+1. het veld en het kaartlabel krijgen de dichtstbijzijnde bekende plaats uit
+   `nearestByCoords()` — het eigen register, niet Mapbox, want het veld voedt
+   de tarieventabel (Mapbox mag alleen het kaartlabel verfijnen); buiten 12 km
+   van elke bekende plaats komt de coördinaat zelf in het veld;
+2. `LD.pinExact` gaat aan, en `calc()` rekent dan met het púnt
+   (`nearestByCoords(LD.ll)`, mét afstandsklasse) in plaats van de veldnaam —
+   een gesleepte pin geeft zo hetzelfde antwoord als dezelfde plek getypt als
+   coördinaat;
+3. de rapportaanvraag krijgt de pin als `payload.pin` mee, zodat de expert de
+   exacte plek heeft en niet alleen de gebiedsnaam.
+
+De lusbewaking zit in de events: veld → kaart loopt via `input`,
+`ldAdoptPin()` vuurt bewust alleen een programmatische `change`
+(`isTrusted=false`). Echt typen (`isTrusted=true`) zet `LD.pinExact` weer uit
+en de naam heeft weer de regie. Wie hier een derde pad bijbouwt: houd dat
+onderscheid in stand, anders vliegt de kaart terug naar het gebiedsanker op
+het moment dat iemand de pin loslaat.
+
+Lokaal controleren kan met `node _werk/serve-lokaal.mjs` (statische server;
+Mapbox-tegels weigeren op localhost, de terugvallaag doet het wel) en
+`node _werk/check-inline-js.mjs sell.html` (syntax van de inline scripts).
+
 ### Geen tweede tarieventabel in een pagina
 
 Op 27-08-2026 stonden er in `sell.html` eigen `HOUSE`/`APT`/`LAND`-tabellen
