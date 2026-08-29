@@ -1257,8 +1257,11 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
     function mk(id,live){
       const el=document.getElementById(id); if(!el||!window.L) return null;
       try{
+      /* Muiswiel aan op de kaart waarop de verkoper werkt — net als op de
+         List-, Search- en Property-kaarten (29-08-2026). Touch merkt hier
+         niets van: daar is geen wiel en pinch-zoom stond al aan. */
       const opts = live
-        ? {zoomControl:true,scrollWheelZoom:false}
+        ? {zoomControl:true,scrollWheelZoom:true}
         : {zoomControl:false,dragging:false,scrollWheelZoom:false,doubleClickZoom:false,touchZoom:false,boxZoom:false,keyboard:false};
       const m=mkMap(el,Object.assign({minZoom:7},opts)).setView(VAL_MAP_DEFAULT,9);
       /* Lagen, zoomgrenzen en terugval komen uit app.js. Alleen de kaart
