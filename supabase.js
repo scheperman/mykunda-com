@@ -542,7 +542,8 @@ async function fetchFeaturedListings(limit){
   return (data||[]).map(dbListingToCard);
 }
 
-/* Plots for sale, for the strip on land-for-sale-in-the-gambia.html.
+/* Plots for sale. Stond hier voor de strip op de grondpagina; die pagina is
+   op 29-08-2026 ingetrokken, dus deze functie heeft nu geen aanroeper meer.
    Unlike fetchFeaturedListings this returns the RAW rows: the page maps them
    once with dbListingToCard itself. Mapping here as well is what made the home
    page feed already-mapped cards back through dbListingToCard a second time. */
