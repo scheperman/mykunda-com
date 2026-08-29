@@ -459,9 +459,14 @@ Hoe het geschakeld is, allemaal bovenin `app.js`:
 - **Het Mapbox-logo is verplicht op elke kaart**, ook op de kleine wijkkaartjes
   en de perceelfoto (daar brandt Mapbox hem er zelf in). `mkBrandLogo` zet hem
   linksonder; het bestand staat zelf gehost in `images/mapbox-logo.svg` omdat
-  de CSP geen vreemde afbeeldingshosts toelaat. De tekstattributie is
-  `MK_ATTR_MAPBOX` (© Mapbox, © OpenStreetMap, "Improve this map") — alle drie
-  verplicht. De terugval naar Esri/OSM haalt het logo weer weg.
+  de CSP geen vreemde afbeeldingshosts toelaat. De tekstattributie loopt sinds
+  29-08-2026 via **`mkAttr(kind)`**, want ze verschilt per laagsoort: de
+  kaartlaag krijgt `MK_ATTR_MAPBOX` (© Mapbox, © OpenStreetMap, "Improve this
+  map") en de satellietlaag `MK_ATTR_MAPBOX_SAT` — dezelfde drie plus
+  **© Maxar**, de beeldleverancier. Mapbox schrijft die vierde voor in zijn
+  eigen Leaflet-handleiding en hij ontbrak tot dan. Zet `attribution` in een
+  laag dus nooit meer op `MK_ATTR` rechtstreeks. De terugval naar Esri/OSM
+  haalt het logo weer weg.
 - De sleuteltoets op `tiles.json` is een MapTiler-eigenaardigheid: Mapbox
   stuurt bij een afgewezen token een echte 401, dus daar doet `tileerror` het
   werk en slaat `mkProbeMapKey` over.
@@ -477,14 +482,58 @@ $0,50 per 1.000. Static Images: 50.000 gratis, dan $1,00 per 1.000. Geocoding
 `zoomOffset: -1` blijft de belangrijkste regel. Zet in het Mapbox-dashboard
 een uitgavenlimiet, net als destijds bij MapTiler.
 
-**Nog te meten:** de zoomgrenzen (`satNativeMax: 19`) zijn overgenomen van de
-MapTiler-meting van 25-08-2026 en nog niet op Mapbox' bronbeeld boven Kololi
-gemeten; net zo de eigen-stijlvraag (de gele labels van de MyKunda-stijlen
+**Gemeten 29-08-2026: `satNativeMax` is 18, niet 19.** De 19 was overgenomen
+van de MapTiler-meting van 25-08-2026 en gold niet voor Mapbox' bronbeeld. Per
+zoomniveau is de tegel vergeleken met de opgeschaalde ouderquadrant en is de
+gemiddelde Laplaciaan (scherpte) berekend, op vier plaatsen:
+
+| bron-zoom | Kololi | Serrekunda | Tujereng | Basse |
+| --- | --- | --- | --- | --- |
+| 16 | 22,9 | 28,3 | 17,4 | 23,7 |
+| 17 | 25,0 | 26,7 | 15,5 | 10,6 |
+| 18 | 4,3 | 4,2 | 2,7 | 3,9 |
+
+Overal dezelfde knik: tot bron-zoom 17 echt beeld, daarboven opschaling. De
+tegelgrootte zegt hetzelfde (84 kB op z17, 37 kB op z18). Bron-zoom 17 is op
+13,4 NB 0,58 m/px, wat past op het 50 cm-beeld dat Mapbox wereldwijd levert;
+hoger dan 50 cm heeft Mapbox alleen in Noord-Amerika, Europa en Australie.
+
+**Let bij dit getal altijd op de omrekening.** De lagen draaien op 512px-tegels
+met `zoomOffset: -1`, dus de kaartzoom ligt een boven de bron-zoom. In de
+browser nagemeten: kaartzoom 19 vraagt bron-zoom 18 op, kaartzoom 17 vraagt 16
+op. `maxNativeZoom: 18` haalt dus bron-zoom 17 op — het laatste echte niveau.
+Op 19 haalde de site een hele ronde tegels op zonder nieuw detail. De
+documentatiewaarde 16 zou juist detail hebben weggegooid: die telt in bron-zoom,
+niet in kaartzoom.
+
+De meting is te herhalen met het script in `_werk/` (tegel ophalen, grijswaarde,
+Laplaciaan) en hoort opnieuw te gebeuren zodra Mapbox nieuw beeld voor Gambia
+publiceert of `MK_MAPBOX.satellite` een ander stijl-ID krijgt.
+
+**Nog te meten:** de eigen-stijlvraag (de gele labels van de MyKunda-stijlen
 bestaan bij Mapbox nog niet — dat vraagt een stijl in Mapbox Studio, waarna
 alleen `MK_MAPBOX.satellite`/`streets` het nieuwe stijl-ID hoeft te krijgen).
 
-Het MapTiler-blok hieronder blijft staan zolang de schakelstand bestaat: alles
-erin geldt nog zodra `provider` terug naar `'maptiler'` gaat.
+**29-08-2026: MapTiler is geen leverancier meer.** Edwin heeft die dag bevestigd
+dat de site alleen nog Mapbox gebruikt. Gemeten op dezelfde dag: vanaf
+mykunda.com geeft elke MapTiler-tegel HTTP 403 en één en dezelfde
+vervangingsafbeelding — nagegaan op drie totaal verschillende tegels (zoom 12,
+16 en 18, verschillende plekken), byte-identiek, voor satelliet en kaartlaag.
+De MapTiler-stand is dus geen werkende terugval meer; `provider` mag niet terug
+naar `'maptiler'`.
+
+Dat is geen risico voor de site, want de terugval die er werkelijk toe doet is
+een andere: `MK_FALLBACK` (Esri-luchtfoto met namenlaag, OpenStreetMap voor de
+kaartlaag) springt in via `tileerror` na drie mislukte tegels, ongeacht wie de
+leverancier is. Die keten is sleutelloos en werkt. `mkProbeMapKey` op
+`tiles.json` is een MapTiler-eigenaardigheid en doet bij Mapbox niets — Mapbox
+stuurt bij een afgewezen token een echte 401 en dan doet `tileerror` het werk.
+
+Het MapTiler-blok hieronder is daarmee dode stof geworden: het beschrijft een
+stand die niet meer gekozen wordt. Het staat er nog omdat opruimen een aparte
+wijziging is (`MK_MAP`, `mapTilerUrl`, de MapTiler-tak in `mkTileTemplate`,
+`mkStaticMapUrl`, `mkGeocode` en `mkReverseGeocode`, plus `api.maptiler.com` in
+de CSP van `_headers`, `.htaccess` en `vercel.json`). Bouw er niets nieuws op.
 
 ## Kaarten en MapTiler
 

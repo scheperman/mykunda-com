@@ -86,7 +86,23 @@ window.MK_MAPBOX = {
   streets:   'mapbox/streets-v12',
   satelliteFormat: 'webp',
   streetsFormat:   'webp',
-  satNativeMax: 19,
+  /* Gemeten 29-08-2026 op mykunda.com, niet geschat. Per zoomniveau is de tegel
+     vergeleken met de opgeschaalde ouderquadrant en is de gemiddelde Laplaciaan
+     (scherpte) berekend, boven Kololi, Serrekunda, Tujereng en Basse. De scherpte
+     loopt door tot bron-zoom 17 en zakt daar met een factor 4 a 6 in:
+       Kololi     22,9 (z16) -> 25,0 (z17) -> 4,3 (z18)
+       Serrekunda 28,3 -> 26,7 -> 4,2
+       Tujereng   17,4 -> 15,5 -> 2,7
+       Basse      23,7 -> 10,6 -> 3,9
+     Bron-zoom 17 is op 13,4 NB 0,58 m/px; dat past op het 50 cm-beeld dat Mapbox
+     wereldwijd levert (hoger dan 50 cm heeft Mapbox alleen in Noord-Amerika,
+     Europa en Australie). Alles daarboven is opschaling.
+     Let op de omrekening: deze lagen draaien op 512px-tegels met zoomOffset -1,
+     dus de kaartzoom ligt er een boven de bron-zoom. Nagemeten in de browser:
+     kaartzoom 19 vraagt bron-zoom 18 op, kaartzoom 17 vraagt 16 op. maxNativeZoom
+     18 vraagt dus bron-zoom 17 - het laatste echte niveau. Stond op 19, en haalde
+     daarmee een hele ronde tegels op zonder nieuw detail (37 kB tegen 84 kB). */
+  satNativeMax: 18,
   streetsNativeMax: 20
 };
 window.mkProvider = function(){
@@ -98,7 +114,17 @@ window.MK_ATTR_MAPTILER = '&copy; <a href="https://www.maptiler.com/copyright/" 
 /* Mapbox schrijft deze drie voor, met deze links. "Improve this map" hoort
    erbij; de kleur en het formaat mogen mee met het ontwerp, de tekst niet. */
 window.MK_ATTR_MAPBOX = '&copy; <a href="https://www.mapbox.com/about/maps" target="_blank" rel="noopener">Mapbox</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> <a href="https://apps.mapbox.com/feedback/" target="_blank" rel="noopener">Improve this map</a>';
+/* Op satellietbeeld hoort de beeldleverancier erbij: Mapbox' eigen Leaflet-
+   handleiding schrijft "&copy; Maxar" voor naast de drie hierboven. De kaartlaag
+   (streets) is OpenStreetMap-gebaseerd en heeft die regel niet nodig. */
+window.MK_ATTR_MAPBOX_SAT = '&copy; <a href="https://www.mapbox.com/about/maps" target="_blank" rel="noopener">Mapbox</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> &copy; <a href="https://www.maxar.com/" target="_blank" rel="noopener">Maxar</a> <a href="https://apps.mapbox.com/feedback/" target="_blank" rel="noopener">Improve this map</a>';
 window.MK_ATTR = window.mkProvider() === 'mapbox' ? window.MK_ATTR_MAPBOX : window.MK_ATTR_MAPTILER;
+/* Eén plek die per laagsoort en per leverancier de juiste regel teruggeeft.
+   MK_ATTR blijft bestaan voor wie hem rechtstreeks gebruikt. */
+window.mkAttr = function(kind){
+  if(window.mkProvider() !== 'mapbox') return window.MK_ATTR_MAPTILER;
+  return (kind !== 'streets') ? window.MK_ATTR_MAPBOX_SAT : window.MK_ATTR_MAPBOX;
+};
 
 /* @2x kost bij MapTiler niets extra aan verbruik, maar wel twee tot vier keer
    zoveel bytes. Meldt de browser een 2G-verbinding of staat databesparing aan,
@@ -181,7 +207,7 @@ window.mkTileLayer = function(kind, extra){
     tileSize: 512, zoomOffset: -1, crossOrigin: true,
     maxZoom: window.MK_MAP.maxZoom,
     maxNativeZoom: window.mkNativeMax(kind),
-    attribution: window.MK_ATTR,
+    attribution: window.mkAttr(kind),
     updateWhenZooming: false,       /* pas tegels halen als het zoomen klaar is */
     keepBuffer: 1                   /* één rij tegels buiten beeld, niet twee */
   };
