@@ -179,7 +179,8 @@ body .leaflet-container{position:relative;z-index:0;isolation:isolate}
 .on-hero .nav-dd-btn{color:#fff}
 .on-hero .nav-dd-btn:hover{opacity:.8}
 .nav-dd-menu{position:absolute;top:calc(100% + 12px);left:50%;transform:translateX(-50%);background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-lg);border:1px solid var(--line);display:grid;grid-template-columns:repeat(6,1fr);gap:0;min-width:940px;padding:8px;max-width:96vw;opacity:0;visibility:hidden;transition:opacity .15s,visibility .15s,transform .15s;transform:translateX(-50%) translateY(6px);z-index:90}
-.nav-dd:hover .nav-dd-menu,.nav-dd-btn:focus + .nav-dd-menu{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+/* :focus-within, niet :focus + — anders sloot het paneel zodra de focus naar de eerste link ging. */
+.nav-dd:hover .nav-dd-menu,.nav-dd:focus-within .nav-dd-menu{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
 .nav-dd-menu a{display:block;padding:7px 14px;font-size:13.5px;font-weight:600;color:var(--ink) !important;border-radius:var(--r-sm);transition:.1s;white-space:nowrap}
 .nav-dd-region{padding:16px 8px 12px}
 .nav-dd-region-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:0 14px 8px;border-bottom:1px solid var(--line);margin-bottom:4px}
@@ -785,3 +786,100 @@ aside.keytakeaways ul{margin:0;padding-left:20px}
 aside.keytakeaways li{font-size:16.5px;line-height:1.6;color:var(--ink-2);margin:0 0 8px}
 aside.keytakeaways li:last-child{margin-bottom:0}
 @media(max-width:640px){.keytakeaways{padding:15px 16px}aside.keytakeaways li{font-size:15.5px}}
+
+
+/* ============================================================
+   AREAS-MENU — regio kiezen, dan plaatsen (augustus 2026)
+   46 gebieden in 7 regios. Alle links staan in de HTML; alleen
+   CSS verbergt de regio die niet openstaat, zodat crawlers en
+   linkcheckers ze zonder JavaScript blijven zien. Zonder JS valt
+   het paneel terug op de oude lijst: geen rail, alles onder elkaar.
+   Gedrag: initAreaMenu() in app.js.
+   ============================================================ */
+.nav-dd-areas{position:relative}
+.mkam{position:absolute;top:calc(100% + 12px);left:50%;transform:translateX(-50%) translateY(6px);
+  width:690px;max-width:96vw;background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);
+  box-shadow:var(--sh-lg);opacity:0;visibility:hidden;overflow:hidden;z-index:90;
+  transition:opacity .15s,visibility .15s,transform .15s}
+.nav-dd-areas:hover .mkam,.nav-dd-areas:focus-within .mkam{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+.nav-dd-areas.mkam-shut .mkam{opacity:0;visibility:hidden}
+.mkam-search{display:flex;align-items:center;gap:9px;padding:11px 14px;border-bottom:1px solid var(--line-2);background:var(--paper-2)}
+.mkam-search svg{flex:none;color:var(--muted-2)}
+.mkam-input{flex:1;min-width:0;font-family:var(--sans);font-size:14px;font-weight:500;color:var(--ink);background:none;border:none;outline:none}
+.mkam-input::placeholder{color:var(--muted-2);font-weight:500}
+.mkam-body{display:grid;grid-template-columns:212px 1fr;min-height:262px}
+.mkam-rail{display:flex;flex-direction:column;gap:1px;padding:8px;background:var(--paper-2);border-right:1px solid var(--line-2)}
+.mkam-rbtn{display:flex;align-items:center;gap:8px;width:100%;text-align:left;cursor:pointer;
+  font-family:var(--sans);font-size:13.5px;font-weight:600;color:var(--ink-2);
+  background:none;border:none;border-radius:var(--r-sm);padding:9px 11px}
+.mkam-rbtn .mkam-n{margin-left:auto;font-size:11.5px;font-weight:700;color:var(--muted-2);font-variant-numeric:tabular-nums}
+.mkam-rbtn::after{content:"";flex:none;margin-left:8px;width:6px;height:6px;opacity:0;
+  border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg)}
+.mkam-rbtn:hover{background:var(--green-50);color:var(--green-700)}
+.mkam-rbtn[aria-selected="true"]{background:var(--white);color:var(--green-700);box-shadow:var(--sh-sm)}
+.mkam-rbtn[aria-selected="true"]::after{opacity:.5}
+.mkam-panes{padding:13px 15px 8px;min-width:0}
+.mkam-pane{display:none}
+.mkam-pane.on{display:block}
+.mkam-ph{font-family:var(--serif);font-size:14px;font-weight:800;color:var(--ink);margin-bottom:8px}
+.mkam-ph span{font-family:var(--sans);font-size:12px;font-weight:600;color:var(--muted-2);margin-left:7px}
+.mkam-list{column-count:2;column-gap:14px}
+.mkam-list a{display:flex;align-items:baseline;gap:8px;break-inside:avoid;padding:6px 9px;border-radius:var(--r-sm);
+  font-size:13.5px;font-weight:600;color:var(--ink) !important;transition:.1s}
+.mkam-list a:hover{background:var(--green-50);color:var(--green-700) !important}
+.mkam-list a[aria-current="page"]{background:var(--green-50);color:var(--green-700) !important}
+.mkam-reg{margin-left:auto;font-size:11.5px;font-weight:600;color:var(--muted-2);white-space:nowrap}
+.mkam-none{font-size:13.5px;color:var(--muted);padding:6px 9px;line-height:1.45}
+.mkam-foot{padding:10px 15px;background:var(--paper-2);border-top:1px solid var(--line-2)}
+.mkam-foot a{font-size:13px;font-weight:700;color:var(--green-700) !important}
+.mkam-foot a:hover{text-decoration:underline}
+/* Terugval zonder JavaScript: geen rail, geen zoekveld, alle regios onder elkaar. */
+.mkam:not(.mkam-js) .mkam-search,.mkam:not(.mkam-js) .mkam-rail{display:none}
+.mkam:not(.mkam-js) .mkam-body{grid-template-columns:1fr}
+.mkam:not(.mkam-js) .mkam-panes{max-height:70vh;overflow-y:auto;column-count:3;column-gap:18px}
+.mkam:not(.mkam-js) .mkam-pane{display:block;break-inside:avoid;margin-bottom:10px}
+.mkam:not(.mkam-js) .mkam-list{column-count:1}
+.mkam:not(.mkam-js) .mkam-res{display:none}
+
+/* --- mobiel: Areas als eigen scherm met drie niveaus --- */
+.md-drill{display:flex;align-items:center;gap:9px;width:100%;text-align:left;cursor:pointer;
+  font-family:var(--serif);font-size:21px;font-weight:600;color:var(--ink);background:none;border:none;padding:13px 4px}
+.md-drill.on{color:var(--green-700)}
+.md-drill .md-n{margin-left:auto;font-family:var(--sans);font-size:13px;font-weight:700;color:var(--muted-2);font-variant-numeric:tabular-nums}
+.md-drill::after{content:"";flex:none;margin-left:9px;width:7px;height:7px;color:var(--muted-2);opacity:.6;
+  border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg)}
+.md-sub{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;background:var(--paper);
+  transform:translateX(100%);transition:transform .26s cubic-bezier(.4,0,.2,1)}
+.md-sub.on{transform:translateX(0)}
+.md-sub-head{display:flex;align-items:center;gap:12px;padding:20px 20px 12px;border-bottom:1px solid var(--line)}
+.md-sub-back{display:flex;align-items:center;gap:5px;cursor:pointer;background:none;border:none;padding:0;
+  font-family:var(--sans);font-size:14px;font-weight:600;color:var(--ink-2)}
+.md-sub-back::before{content:"";flex:none;width:7px;height:7px;margin-right:2px;
+  border-left:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg)}
+.md-sub-title{font-family:var(--serif);font-size:19px;font-weight:700;color:var(--ink)}
+.md-sub-search{display:flex;align-items:center;gap:10px;height:46px;margin:12px 20px 2px;padding:0 14px;
+  background:var(--white);border:1.5px solid var(--line);border-radius:var(--r-pill)}
+.md-sub-search:focus-within{border-color:var(--green-500)}
+.md-sub-search svg{flex:none;color:var(--green-700)}
+.md-sub-input{flex:1;min-width:0;height:100%;border:none;outline:none;background:none;-webkit-appearance:none;
+  font-family:var(--sans);font-size:15px;font-weight:500;color:var(--ink)}
+.md-sub-input::placeholder{color:var(--muted-2);font-weight:500}
+.md-sub-input::-webkit-search-cancel-button{-webkit-appearance:none}
+.md-sub.lvl3 .md-sub-search{display:none}
+.md-sub-scroll{flex:1;overflow-y:auto;padding:6px 20px 26px}
+.md-reg{display:flex;align-items:center;gap:10px;width:100%;text-align:left;cursor:pointer;
+  font-family:var(--sans);font-size:16px;font-weight:600;color:var(--ink);
+  background:none;border:none;border-bottom:1px solid var(--line-2);padding:14px 2px}
+.md-reg .md-n{margin-left:auto;font-size:12.5px;font-weight:700;color:var(--muted-2);font-variant-numeric:tabular-nums}
+.md-reg::after{content:"";flex:none;margin-left:10px;width:7px;height:7px;color:var(--muted-2);opacity:.6;
+  border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg)}
+.md-sub-results,.md-lvl3{display:none}
+.md-sub-results.on,.md-lvl3.on{display:block}
+.md-sub.lvl3 .md-sub-regions,.md-sub.searching .md-sub-regions{display:none}
+.md-sub-results a,.md-lvl3 a{display:flex;align-items:center;padding:14px 2px;border-bottom:1px solid var(--line-2);
+  font-size:16px;font-weight:600;color:var(--ink-2)}
+.md-sub-results a[aria-current="page"],.md-lvl3 a[aria-current="page"]{color:var(--green-700)}
+.md-sub-none{font-size:15px;color:var(--muted);padding:16px 2px}
+.md-sub-all{display:block;margin-top:14px;padding:13px;text-align:center;border:1px solid var(--line);
+  border-radius:var(--r-md);font-size:14px;font-weight:700;color:var(--green-700)}
+@media (prefers-reduced-motion:reduce){.md-sub{transition:none}}

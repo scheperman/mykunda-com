@@ -1508,10 +1508,8 @@ function headerHTML(active, onHero){
       <nav class="nav">
         ${links.map(l=>{
           if(l[0]==='Areas'){
-            return `<div class="nav-dd">
-              <button class="nav-dd-btn" ${active==='Areas'?'style="color:var(--green-700)"':''}>Areas <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
-              <div class="nav-dd-menu">${AREA_REGIONS.map(r=>`<div class="nav-dd-region"><div class="nav-dd-region-title">${r[0]}</div>${r[1].map(a=>`<a href="${a[1]}">${a[0]}</a>`).join('')}</div>`).join('')}<div class="nav-dd-footer"><a href="areas-in-the-gambia.html" class="nav-dd-all">All ${AREAS.length} areas, compared &rarr;</a></div></div>
-            </div>`;
+            /* Areas: regio kiezen, dan plaatsen. Zie initAreaMenu(). */
+            return `<div class="nav-dd nav-dd-areas"><button class="nav-dd-btn" aria-haspopup="true" ${active==='Areas'?'style="color:var(--green-700)"':''}>Areas <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="mkam"><div class="mkam-search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg><input type="text" class="mkam-input" autocomplete="off" spellcheck="false" placeholder="Find an area \u2014 Kololi, Brufut, Basse\u2026" aria-label="Find an area"></div><div class="mkam-body"><div class="mkam-rail" role="tablist" aria-label="Regions">${AREA_REGIONS.map((r,i)=>`<button type="button" role="tab" class="mkam-rbtn" data-reg="${i}" aria-selected="${i===0?'true':'false'}">${r[0]}<span class="mkam-n">${r[1].length}</span></button>`).join('')}</div><div class="mkam-panes">${AREA_REGIONS.map((r,i)=>`<div class="mkam-pane${i===0?' on':''}" data-reg="${i}"><div class="mkam-ph">${r[0]}<span>${r[1].length} areas</span></div><div class="mkam-list">${r[1].map(a=>`<a href="${a[1]}">${a[0]}</a>`).join('')}</div></div>`).join('')}<div class="mkam-pane mkam-res"></div></div></div><div class="mkam-foot"><a href="areas-in-the-gambia.html">All ${AREAS.length} areas, compared &rarr;</a></div></div></div>`;
           }
           if(l[0]==='Guides'){
             const guideCats=[...new Set(GUIDES.map(g=>g.cat))];
@@ -1559,8 +1557,8 @@ function headerHTML(active, onHero){
       <nav class="md-nav">
         ${links.map(l=>{
           if(l[0]==='Areas'){
-            return `<a href="#" class="md-areas-toggle ${active==='Areas'?'on':''}" onclick="event.preventDefault();this.nextElementSibling.classList.toggle('open')">Areas <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;transition:transform .2s"><path d="m6 9 6 6 6-6"/></svg></a>
-            <div class="md-areas-sub">${AREA_REGIONS.map(r=>`<div style="padding:10px 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">${r[0]}</div>${r[1].map(a=>`<a href="${a[1]}">${a[0]}</a>`).join('')}`).join('')}<a href="areas-in-the-gambia.html" style="margin-top:8px;font-weight:700;color:var(--green-700)">All ${AREAS.length} areas, compared &rarr;</a></div>`;
+            /* Areas op mobiel: doorschuiven naar .md-sub, hieronder. */
+            return `<button type="button" class="md-drill ${active==='Areas'?'on':''}" data-drill="areas">Areas <span class="md-n">${AREAS.length}</span></button>`;
           }
           if(l[0]==='Guides'){
             const guideCats=[...new Set(GUIDES.map(g=>g.cat))];
@@ -1573,6 +1571,9 @@ function headerHTML(active, onHero){
           return `<a href="${l[1]}" ${active===l[0]?'class="on"':''}>${l[0]}</a>`;
         }).join('')}
       </nav>
+      <!-- Areas op mobiel: drie niveaus. Ook hier staat de opmaak op lange regels;
+           dit blok komt letterlijk in elke pagina. -->
+      <div class="md-sub" id="mdAreaSub"><div class="md-sub-head"><button type="button" class="md-sub-back"><span class="md-sub-backtxt">Menu</span></button><span class="md-sub-title">Areas</span></div><div class="md-sub-search"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg><input type="search" class="md-sub-input" placeholder="Find an area" aria-label="Find an area"></div><div class="md-sub-scroll"><div class="md-sub-regions">${AREA_REGIONS.map((r,i)=>`<button type="button" class="md-reg" data-reg="${i}">${r[0]}<span class="md-n">${r[1].length}</span></button>`).join('')}<a class="md-sub-all" href="areas-in-the-gambia.html">All ${AREAS.length} areas, compared &rarr;</a></div><div class="md-sub-results"></div>${AREA_REGIONS.map((r,i)=>`<div class="md-lvl3" data-reg="${i}">${r[1].map(a=>`<a href="${a[1]}">${a[0]}</a>`).join('')}</div>`).join('')}</div></div>
       <div class="md-actions">
         ${u
           ? `<a class="md-user" href="dashboard.html"><span class="user-av">${initials(u.name)}</span><div><b>${u.name}</b><span>My MyKunda dashboard</span></div></a>
@@ -2041,6 +2042,7 @@ function hydrateStaticHeader(){
   window.__mkHdrHydrated = true;
   if(!getUser() && getCurrency()==='GMD') return;
   hdr.innerHTML = headerHTML(hdr.getAttribute('data-active')||'', hdr.getAttribute('data-hero')==='1');
+  if(typeof initAreaMenu === 'function') initAreaMenu();   /* het paneel opnieuw in de compacte stand zetten */
 }
 
 /* ---------- On-hero header scroll swap ---------- */
@@ -2225,6 +2227,156 @@ function initMobileNav(){
   drawer.querySelectorAll('.md-ccy-row button').forEach(b=>b.addEventListener('click',()=>{ setCurrency(b.dataset.ccy); location.reload(); }));
 }
 
+/* ---------- Areas-menu: desktoppaneel + mobiele niveaus ----------
+ *
+ * De opmaak staat in headerHTML(); alle 46 gebiedslinks staan statisch in de
+ * pagina en blijven daar. Deze functie doet drie dingen en verder niets:
+ *   1. regio wisselen in het desktoppaneel (muis, klik, pijltjes),
+ *   2. filteren op naam, dwars door alle regios heen,
+ *   3. de drie niveaus van het mobiele Areas-scherm.
+ *
+ * Alles loopt via gedelegeerde listeners op document, zodat het blijft werken
+ * nadat hydrateStaticHeader() de header opnieuw tekent voor wie is ingelogd.
+ *
+ * Twee dingen om in de gaten te houden bij het bewerken van headerHTML():
+ * de opmaak staat daar op lange regels omdat alles binnen die template letterlijk
+ * in elke pagina terechtkomt, en een apostrof in een commentaar binnen een
+ * ${...} van die template zet de minifier in build.mjs in stringmodus, waarna
+ * hij de rest van het bestand niet meer opschoont (gemeten: ruim 8 kB extra).
+ * De klasse mkam-js zet het paneel in de compacte stand; zonder JavaScript
+ * blijft het de oude lijst met alle regios onder elkaar. */
+function initAreaMenu(){
+  document.querySelectorAll('.mkam').forEach(el=>el.classList.add('mkam-js'));
+  markCurrentArea();
+  if(document.documentElement.dataset.mkamWired) return;
+  document.documentElement.dataset.mkamWired = '1';
+
+  const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').split('"').join('&quot;');
+  const TOTAL = MK_AREAS.reduce((n,r)=>n+r[1].length,0);
+  const hits = term => { const t=term.trim().toLowerCase(), out=[];
+    MK_AREAS.forEach(r=>r[1].forEach(a=>{ if(a[0].toLowerCase().indexOf(t)>=0) out.push([a,r[0]]); })); return out; };
+
+  /* ----- desktop ----- */
+  function showRegion(panel, i){
+    panel.querySelectorAll('.mkam-pane').forEach(p=>p.classList.toggle('on', p.dataset.reg===String(i)));
+    panel.querySelectorAll('.mkam-rbtn').forEach(b=>b.setAttribute('aria-selected', b.dataset.reg===String(i)?'true':'false'));
+  }
+  function showResults(panel, term){
+    const res = panel.querySelector('.mkam-res'); if(!res) return;
+    const list = hits(term);
+    res.innerHTML = list.length
+      ? '<div class="mkam-ph">'+list.length+' result'+(list.length>1?'s':'')+'<span>for “'+esc(term)+'”</span></div>' +
+        '<div class="mkam-list">'+list.map(h=>'<a href="'+h[0][1]+'">'+esc(h[0][0])+'<span class="mkam-reg">'+esc(h[1])+'</span></a>').join('')+'</div>'
+      : '<div class="mkam-ph">No match</div><p class="mkam-none">Nothing matches “'+esc(term)+'”. Try the first letters, or open all '+TOTAL+' areas below.</p>';
+    panel.querySelectorAll('.mkam-pane').forEach(p=>p.classList.remove('on'));
+    panel.querySelectorAll('.mkam-rbtn').forEach(b=>b.setAttribute('aria-selected','false'));
+    res.classList.add('on');
+  }
+  function resetPanel(panel){
+    const inp = panel.querySelector('.mkam-input'); if(inp) inp.value='';
+    showRegion(panel, panel.dataset.home || 0);
+  }
+  document.addEventListener('mouseover', e=>{
+    const b = e.target.closest && e.target.closest('.mkam-rbtn'); if(!b) return;
+    const panel = b.closest('.mkam'), inp = panel.querySelector('.mkam-input');
+    if(inp && inp.value.trim()) return;
+    showRegion(panel, b.dataset.reg);
+  });
+  document.addEventListener('click', e=>{
+    const b = e.target.closest && e.target.closest('.mkam-rbtn');
+    if(b){ e.preventDefault(); const panel=b.closest('.mkam'); const inp=panel.querySelector('.mkam-input');
+      if(inp) inp.value=''; showRegion(panel, b.dataset.reg); b.focus(); }
+  });
+  document.addEventListener('input', e=>{
+    const inp = e.target.closest && e.target.closest('.mkam-input');
+    if(inp){ const panel=inp.closest('.mkam');
+      inp.value.trim() ? showResults(panel, inp.value) : resetPanel(panel); return; }
+    const mi = e.target.closest && e.target.closest('.md-sub-input');
+    if(mi) mobileFilter(mi);
+  });
+  document.addEventListener('keydown', e=>{
+    const wrap = e.target.closest && e.target.closest('.nav-dd-areas');
+    if(!wrap) return;
+    const panel = wrap.querySelector('.mkam'), btns = [].slice.call(panel.querySelectorAll('.mkam-rbtn'));
+    if(e.key==='Escape'){
+      wrap.classList.add('mkam-shut');
+      wrap.querySelector('.nav-dd-btn').focus();
+      wrap.addEventListener('mouseleave', ()=>wrap.classList.remove('mkam-shut'), {once:true});
+      return;
+    }
+    if(e.key!=='ArrowDown' && e.key!=='ArrowUp') return;
+    wrap.classList.remove('mkam-shut');
+    const cur = e.target.closest('.mkam-rbtn');
+    if(!cur){ e.preventDefault(); const sel=panel.querySelector('.mkam-rbtn[aria-selected="true"]')||btns[0]; sel.focus(); return; }
+    e.preventDefault();
+    const i = btns.indexOf(cur), n = (i + (e.key==='ArrowDown' ? 1 : btns.length-1)) % btns.length;
+    const inp = panel.querySelector('.mkam-input'); if(inp) inp.value='';
+    btns[n].focus(); showRegion(panel, btns[n].dataset.reg);
+  });
+
+  /* ----- mobiel ----- */
+  function subOf(el){ return el.closest('.md-panel').querySelector('.md-sub'); }
+  function level(sub, n, title, back){
+    sub.classList.toggle('lvl3', n===3);
+    sub.classList.toggle('on', n>1);
+    sub.querySelector('.md-sub-title').textContent = title;
+    sub.querySelector('.md-sub-backtxt').textContent = back;
+    if(n<3) sub.querySelectorAll('.md-lvl3').forEach(l=>l.classList.remove('on'));
+    /* Elke niveauwissel begint met een leeg zoekveld, anders staat het scherm
+       de volgende keer nog op de vorige zoekterm. */
+    const inp = sub.querySelector('.md-sub-input'); if(inp) inp.value='';
+    sub.classList.remove('searching');
+    sub.querySelector('.md-sub-results').classList.remove('on');
+    sub.querySelector('.md-sub-scroll').scrollTop = 0;
+  }
+  function mobileFilter(inp){
+    const sub = inp.closest('.md-sub'), box = sub.querySelector('.md-sub-results'), term = inp.value.trim();
+    sub.classList.toggle('searching', !!term);
+    box.classList.toggle('on', !!term);
+    if(!term) return;
+    const list = hits(term);
+    box.innerHTML = list.length
+      ? list.map(h=>'<a href="'+h[0][1]+'">'+esc(h[0][0])+'<span class="mkam-reg">'+esc(h[1])+'</span></a>').join('')
+      : '<p class="md-sub-none">No area matches “'+esc(term)+'”.</p>';
+  }
+  document.addEventListener('click', e=>{
+    const t = e.target.closest ? e.target : null; if(!t) return;
+    const drill = t.closest('[data-drill="areas"]');
+    if(drill){ e.preventDefault(); const sub=subOf(drill);
+      drill.closest('.md-panel').scrollTop = 0; level(sub, 2, 'Areas', 'Menu'); return; }
+    const back = t.closest('.md-sub-back');
+    if(back){ e.preventDefault(); const sub=back.closest('.md-sub');
+      sub.classList.contains('lvl3') ? level(sub, 2, 'Areas', 'Menu') : level(sub, 1, 'Areas', 'Menu'); return; }
+    if(t.closest('.md-close') || t.closest('.md-backdrop')){
+      const sub = t.closest('.mobile-drawer').querySelector('.md-sub');
+      if(sub) level(sub, 1, 'Areas', 'Menu');
+      return;
+    }
+    const reg = t.closest('.md-reg');
+    if(reg){ e.preventDefault(); const sub=reg.closest('.md-sub'), i=reg.dataset.reg;
+      sub.querySelectorAll('.md-lvl3').forEach(l=>l.classList.toggle('on', l.dataset.reg===i));
+      level(sub, 3, MK_AREAS[+i][0], 'Areas');
+      sub.classList.add('lvl3'); }
+  });
+}
+
+/* Markeert het gebied van de huidige pagina en opent zijn regio in het paneel. */
+function markCurrentArea(){
+  const here = (location.pathname.split('/').pop()||'').toLowerCase();
+  if(!here) return;
+  let home = -1;
+  MK_AREAS.forEach((r,i)=>{ if(r[1].some(a=>a[1].toLowerCase()===here)) home = i; });
+  if(home < 0) return;
+  document.querySelectorAll('.mkam').forEach(panel=>{
+    panel.dataset.home = home;
+    panel.querySelectorAll('.mkam-pane').forEach(p=>p.classList.toggle('on', p.dataset.reg===String(home)));
+    panel.querySelectorAll('.mkam-rbtn').forEach(b=>b.setAttribute('aria-selected', b.dataset.reg===String(home)?'true':'false'));
+  });
+  document.querySelectorAll('.mkam-list a, .md-lvl3 a').forEach(a=>{
+    if((a.getAttribute('href')||'').toLowerCase()===here) a.setAttribute('aria-current','page');
+  });
+}
+
 /* ---------- WhatsApp + Share (Google Plus Code aware) ---------- */
 const WA_NUMBER = '2202282717'; // MyKunda Gambia line: +220 228 2717
 function waLink(message){ return 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(message); }
@@ -2359,7 +2511,7 @@ async function subscribeAreaAlert(form, area){
   }
 }
 
-function initSEO(){ injectSEOBoilerplate(); injectGlobalSEO(); hydrateStaticHeader(); initCcyPicker(); initHdrSearch(); initMobileNav(); injectWhatsApp(); injectFaviconManifest(); injectCookieConsent(); if(localStorage.getItem('mykunda_cc')==='all') loadAnalytics(); detectAdmin(); warnPricingDrift(); }
+function initSEO(){ injectSEOBoilerplate(); injectGlobalSEO(); hydrateStaticHeader(); initCcyPicker(); initHdrSearch(); initMobileNav(); initAreaMenu(); injectWhatsApp(); injectFaviconManifest(); injectCookieConsent(); if(localStorage.getItem('mykunda_cc')==='all') loadAnalytics(); detectAdmin(); warnPricingDrift(); }
 
 /* Auto-detect admin role on page load — shows Admin link in header */
 function warnPricingDrift(){
