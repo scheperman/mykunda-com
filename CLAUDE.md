@@ -793,6 +793,42 @@ De gekozen band draagt de eenheid mee in `payments.metadata`
 (`asking_price_currency`), zodat achteraf uit de betaling zelf blijkt
 waartegen er is ingedeeld.
 
+### Een Plus Code of coördinaat moet de tarieventabel in — met zijn afstand
+
+Op 29-08-2026 gaf de tool op `7C558652+9GG` "We have no rate for
+7C558652+9GG", terwijl er anderhalve kilometer verderop elf geprijsde
+advertenties liggen. De oorzaak was een regressie uit de herbouw van
+26-08-2026: `areaName()` → `areaFromPlusCode()` → `nearestArea()` bleef in
+`sell.html` staan, maar alleen nog vóór de **kaart**. `calc()` kreeg sindsdien
+de ruwe tekst, en `matchArea()` doet niets anders dan die tekst tegen de
+gebiedssleutels leggen. Tot de herbouw ging de waardering via
+`rateFor(area||loc.value)` en was `area` wél opgelost.
+
+Sindsdien lost `resolveArea()` het locatieveld op vóór `MK_VAL.value()`, en
+geeft het naast de plaatsnaam de **afstand** mee (`input.areaKm`). Twee regels
+die bij elkaar horen:
+
+* **Het punt gaat vóór de naam.** Staat er allebei, dan wint de coördinaat —
+  een naam zou het model laten denken dat het hele gebied bedoeld is, en dat
+  maakt de band smaller dan het bewijs toelaat.
+* **Afstand verbreedt de band, hij verschuift het tarief niet.** In
+  `confidence()` kost 0–2 km 8 punten, 2–5 km 25 en daarboven 40, met een
+  bodem onder de band van 0,55 respectievelijk 0,70.
+
+Die drempels zijn gemeten, niet gekozen. Over de dertien gebieden met een
+eigen mediaan is elk gebied weggelaten en voorspeld uit zijn dichtstbijzijnde
+buur (2,8–10,1 km uit elkaar): mediane afwijking factor 1,75, binnen 6 km
+1,57, en maar 46% van de gevallen binnen ±60%. Onder de 2 km is er géén
+meting — de twee dichtstbijzijnde gebieden in de lijst liggen 2,8 km uit
+elkaar — dus die trap staat er op een ander argument: een gebiedsmediaan is
+zelf al een gemiddelde over advertenties die over het hele dorp verspreid
+liggen. Komt er ooit een variogram op de losse advertenties uit het
+Facebook-bestand, dan hoort die trap als eerste herijkt te worden.
+
+`nearestByCoords()` leest bewust `AREA_COORDS` en niet `areaFromCoords()` uit
+`app.js` (tabel `GM_AREAS`): dezelfde plaats staat in die twee tabellen een
+paar honderd meter uit elkaar, en het tarief komt uit `AREA_COORDS`.
+
 ### Geen tweede tarieventabel in een pagina
 
 Op 27-08-2026 stonden er in `sell.html` eigen `HOUSE`/`APT`/`LAND`-tabellen

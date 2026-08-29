@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:0pee2s5--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:19btb0p--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -31,7 +31,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/hanken-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=197469018860626">
+<link rel="stylesheet" href="styles.min.css?v=44913359080760">
 <style>
 /* hero */
 .shero{position:relative;color:#fff;margin-top:calc(-1 * var(--header-h));isolation:isolate;overflow:hidden}
@@ -1044,13 +1044,13 @@
 window.__sbReady=new Promise(function(res){window.addEventListener('load',function(){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js';
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=197469018860626'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=44913359080760'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
   document.body.appendChild(s1);
 });});
 </script>
-<script src="valuation-areas.js?v=197469018860626"></script>
-<script src="valuation.js?v=197469018860626"></script>
-<script src="app.min.js?v=197469018860626"></script>
+<script src="valuation-areas.js?v=44913359080760"></script>
+<script src="valuation.js?v=44913359080760"></script>
+<script src="app.min.js?v=44913359080760"></script>
 <script>
 
 // icons
@@ -1522,6 +1522,47 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
     }
     return bestD<0.0025 ? best : null;   // ~5 km
   }
+  /* Welk gebied hoort bij wat er in het locatieveld staat, en hoe zeker is dat?
+     TOEGEVOEGD 29-08-2026, en het repareert een regressie. Tot 26-08-2026 liep
+     de waardering via `rateFor(area||loc.value)`, waarbij `area` al door
+     areaName / areaFromPlusCode / nearestArea was gehaald. Bij de herbouw naar
+     het nieuwe rekenmodel is die keten blijven staan, maar alleen nog voor de
+     KAART: calc() kreeg sindsdien de ruwe tekst. Wie een Plus Code invulde
+     kreeg daardoor "We have no rate for 7C558652+9GG", terwijl er anderhalve
+     kilometer verderop elf geprijsde advertenties liggen.
+
+     Teruggeeft {area, km}. `km` is null als de naam is ingetypt — dan bedoelt
+     iemand het gebied zelf. Staat er een punt, dan is `km` de afstand tot het
+     middelpunt van het gebied waarvan het tarief komt; valuation.js verbreedt
+     de band daarop. Buiten 12 km van elke bekende plaats is er niets om op te
+     staan en blijft het antwoord "geen tarief" — dat komt binnen Gambia
+     nauwelijks voor, AREA_COORDS dekt ruim 180 plaatsen. */
+  function resolveArea(locStr){
+    /* Het punt gaat vóór de naam. Staat er allebei — "7C558652+9G Tujereng" —
+       en zou de naam winnen, dan denkt het model dat iemand het hele gebied
+       bedoelde en maakt het de band smaller dan het bewijs toelaat. Een punt
+       is specifieker dan een naam en draagt bovendien zijn eigen afstand. */
+    var uit=nearestByCoords(resolveLatLng(locStr));
+    if(uit.area) return uit;
+    var a=areaName(locStr);
+    return a ? {area:a, km:null} : {area:null, km:null};
+  }
+  /* Het dichtstbijzijnde bekende gebied bij een punt, met de afstand erbij.
+     Bewust AREA_COORDS en niet areaFromCoords() uit app.js: die leest GM_AREAS,
+     en dezelfde plaats staat in die twee tabellen een paar honderd meter uit
+     elkaar. Het tarief komt uit AREA_COORDS, dus de afstand hoort daar ook
+     vandaan te komen. */
+  function nearestByCoords(ll){
+    if(!ll || typeof AREA_COORDS==='undefined') return {area:null, km:null};
+    var best=null, bestKm=Infinity;
+    for(const k in AREA_COORDS){
+      const c=AREA_COORDS[k];
+      const dy=(ll.lat-c[0])*110.57, dx=(ll.lng-c[1])*Math.cos(ll.lat*Math.PI/180)*111.32;
+      const km=Math.sqrt(dy*dy+dx*dx);
+      if(km<bestKm){ bestKm=km; best=k; }
+    }
+    return bestKm<=12 ? {area:best, km:bestKm} : {area:null, km:null};
+  }
   function resolveLatLng(locStr){
     const val=(locStr||'').trim();
     const coords=parseLatLng(val);
@@ -1699,9 +1740,13 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
 
     function calc(){
       if(!S.type || !S.area || (!S.plot && !S.built)) return null;
+      /* Niet de ruwe tekst maar de opgeloste plaats de tarieventabel in — een
+         Plus Code of coördinaat is anders letterlijk onvindbaar. Zie
+         resolveArea(). */
+      var loc=resolveArea(S.area);
       return window.MK_VAL.value({
         type: S.type==='house'?'villa':S.type,
-        area:S.area, plotSqm:S.plot, builtSqm:S.built,
+        area: loc.area || S.area, areaKm: loc.km, plotSqm:S.plot, builtSqm:S.built,
         title:S.title, road:S.road, elec:S.elec, water:S.water, fence:S.fence,
         cleared:S.cleared, shape:S.shape, corner:S.corner, flood:S.flood,
         beach:S.beach, view:S.view, finish:S.finish, yearBuilt:S.year,
@@ -1718,7 +1763,12 @@ lb1.innerHTML=lb2.innerHTML=lb3.innerHTML=checkSm;
       if(r && r.ok===false){
         $('mkvRes').hidden=true; $('mkvPortalBox').hidden=true; $('mkvRentBox').hidden=true; $('mkvConf').hidden=true; $('mkvGrip').hidden=true;
         $('mkvIdle').hidden=false;
-        $('mkvIdle').innerHTML='We have no rate for <b>'+(S.area||'this area')+'</b>. Try the nearest larger town, or ask for the report and someone will look at it.';
+        /* Sinds 29-08-2026 komt dit alleen nog voor als de locatie niet te
+           plaatsen is — niet meer omdat er toevallig geen tarief bij die
+           spelling hoort. Vandaar een tekst die zegt wat wél werkt. */
+        $('mkvIdle').innerHTML='We could not place <b>'+(S.area||'that')+'</b> in The Gambia. '
+          +'An area name works, and so do coordinates or a Google Plus Code — anywhere within about 12 km of a town we know gives a figure. '
+          +'Otherwise ask for the report and someone will look at it.';
         last=null; return;
       }
       $('mkvIdle').hidden=!!r; $('mkvRes').hidden=!r;

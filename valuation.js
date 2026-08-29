@@ -611,6 +611,41 @@ function confidence(parts) {
   else if (parts.landSrc === 'zone') { s -= 52; why.push('no observations in this area \u2014 rate derived from the wider region'); }
   else { s -= 60; why.push('area not recognised'); }
 
+  /* ---- afstand tussen het punt en de plaats waar gemeten is ----
+     TOEGEVOEGD 29-08-2026. Wie een Plus Code of coördinaten invult, wijst
+     een punt aan, geen gebied. Het dichtstbijzijnde gemeten gebied is dan
+     het enige bewijs dat er is — maar hoe verder weg, hoe minder dat bewijs
+     over dit punt zegt, en dat moet in de band terugkomen.
+
+     Gemeten, niet gekozen. Over de dertien gebieden waar we een eigen
+     mediaan hebben (twaalf areapagina's met n>=5, plus Kitty) is elk gebied
+     één keer weggelaten en voorspeld uit zijn dichtstbijzijnde buur:
+       · de buren liggen 2,8 tot 10,1 km uit elkaar
+       · mediane afwijking factor 1,75 (dus ongeveer +/-75%)
+       · beperkt tot buren binnen 6 km: factor 1,57 (+/-57%)
+       · slechts 46% van de gevallen valt binnen +/-60%
+     Extrapoleren over een paar kilometer is in deze markt dus duur. Vandaar
+     hieronder een aftrek die met de afstand oploopt en een bodem onder de
+     band die de gemeten afwijking niet mooier maakt dan hij is.
+
+     Onder de 2 km is er GEEN meting: de dichtstbijzijnde twee gebieden in de
+     lijst (Bijilo en Sukuta) liggen 2,8 km uit elkaar. De aftrek daar is
+     daarom klein en berust op een ander argument: een gebiedsmediaan is
+     zelf al een gemiddelde over advertenties die over het hele dorp
+     verspreid liggen, dus een punt op anderhalve kilometer van het
+     middelpunt hoort tot dezelfde verzameling waaruit die mediaan komt.
+     Komt er ooit een variogram op de losse advertenties uit het
+     Facebook-bestand, dan hoort deze trap als eerste herijkt te worden. */
+  if (parts.nearbyKm != null) {
+    var km = parts.nearbyKm;
+    var waar = parts.nearbyArea || 'the nearest area we have measured';
+    var hoe = 'the rate is measured in ' + waar + ', about ' +
+              (km < 2 ? (Math.round(km * 10) / 10) : Math.round(km)) + ' km away';
+    if (km <= 2)      { s -= 8;  why.push(hoe + ' — close enough to fall within that area’s own listings'); }
+    else if (km <= 5) { s -= 25; why.push(hoe + ' — nothing is measured at this spot itself'); }
+    else              { s -= 40; why.push(hoe + ' — far enough that the rate may not hold here at all'); }
+  }
+
   /* Elke prijs waar dit model op staat is een VRAAGprijs. Voor
      Gambia bestaat geen publieke bron met wat er werkelijk is
      betaald, dus hoe groot het gat is tussen vragen en krijgen
@@ -642,6 +677,14 @@ function confidence(parts) {
      dan ook doen. Onderstaande ladder plus de opwaartse verruiming van
      1,25 hieronder komt op ongeveer vier op de vijf. */
   var band  = s >= 85 ? 0.22 : s >= 70 ? 0.30 : s >= 55 ? 0.38 : s >= 40 ? 0.45 : 0.52;
+  /* Bodem onder de band bij een tarief van elders. De ladder hierboven is
+     geijkt op spreiding BINNEN een gebied; die zegt niets over de fout die
+     je maakt door een tarief een paar kilometer te verplaatsen. De meting
+     hierboven zegt +/-57% binnen 6 km en +/-75% daarbuiten, en de band mag
+     dat niet gladstrijken. */
+  if (parts.nearbyKm != null && parts.nearbyKm > 2) {
+    band = Math.max(band, parts.nearbyKm <= 5 ? 0.55 : 0.70);
+  }
   return { score: s, label: label, band: band, reasons: why };
 }
 
@@ -691,6 +734,16 @@ function value(input, opts) {
   if (!isApt && plot > 0 && landRateAdj != null) {
     landValue = effLand(plot) * landRateAdj;
     lines.push({ k: 'Land rate, ' + titel(input.area || areaKey), v: landRateAdj, unit: '/m²', note: lr.note });
+    /* De klant heeft een punt aangewezen, geen gebied. Dan moet er staan
+       waar het tarief vandaan komt en hoe ver dat hiervandaan is — anders
+       leest hij een bedrag alsof het over zijn eigen kavel is gemeten. */
+    if (input.areaKm != null && isFinite(+input.areaKm)) {
+      var _km = +input.areaKm;
+      lines.push({ k: 'Point, not an area', v: null,
+        note: 'you gave an exact location — the nearest area we have a rate for is ' +
+              titel(areaKey) + ', about ' + (_km < 2 ? (Math.round(_km * 10) / 10) : Math.round(_km)) +
+              ' km away' });
+    }
     landPts.hit.forEach(function (h) { lines.push({ k: h.field, v: h.pts, unit: 'pt', note: String(h.value) }); });
     if (landPts.capped) lines.push({ k: 'Capped at +' + C.LAND_CAP.up + '%', v: null, note: 'features added up to ' + landPts.raw + '%' });
     if (plot > 600) lines.push({ k: 'Large plot, tapered rate', v: null, note: plot + ' m\u00b2 priced as ' + Math.round(effLand(plot)) + ' m\u00b2' });
@@ -747,11 +800,18 @@ function value(input, opts) {
   var wanted = isLand ? ['title', 'road', 'elec', 'water', 'fence', 'cleared', 'flood', 'beach']
                       : ['condition', 'yearBuilt', 'finish', 'floors', 'baths', 'water', 'security', 'beach'];
   var missing = wanted.filter(function (f) { return input[f] == null || input[f] === ''; }).length;
+  /* `areaKm` staat er alleen als de plaatsnaam NIET is ingetypt maar is
+     afgeleid uit een Plus Code of coördinaten. Dan is het bekend hoe ver het
+     punt van het middelpunt van dat gebied ligt, en dat hoort de band te
+     verbreden. Wie "Tujereng" typt bedoelt het gebied en krijgt dus niets
+     extra's; wie een punt aanwijst wel. */
+  var nearbyKm = (input.areaKm == null || !isFinite(+input.areaKm)) ? null : +input.areaKm;
   var conf = confidence({
     landSrc: (isApt && !plot) ? 'observed' : lr.src, landN: lr.n,
     missing: missing, hasBuilding: !isLand && built > 0,
     ageMonths: monthsSince(C.herijkt.land),
-    methodGap: opts.methodGap
+    methodGap: opts.methodGap,
+    nearbyKm: nearbyKm, nearbyArea: titel(areaKey)
   });
 
   /* Afrondstap van de band, in dalasi. Was EUR 5.000/1.000/500 boven
