@@ -29,7 +29,7 @@ import { createHash } from 'node:crypto';
 
 /* Files that belong on the server. Everything else in the root is internal. */
 const SITE_ASSETS = [
-  'app.min.js', 'styles.min.css', 'areas.css',
+  'app.min.js', 'styles.min.css', 'redesign.min.css', 'areas.css',
   'supabase.js', 'sw.js', 'manifest.json', 'admin-guard.js',
   'admin-nav.js', 'image-slot.js', 'gambia-places.js',
   'market-index.js', 'market-sources.js',
@@ -53,6 +53,7 @@ const NOT_UPLOADED = new Set([
   'home.html',          /* .htaccess 301 naar /            */
   'neighborhood.html',  /* .htaccess 301 naar /kololi.html */
   'guide.html',         /* .htaccess 301 naar /guides.html */
+  'index.redesign.html',/* vergelijkingskopie van 29-08-2026; mag weg zodra je hem niet meer nodig hebt */
   'checkout v2.html', 'checkout v3.html'
 ]);
 
@@ -240,6 +241,15 @@ const cssSrc = await readFile('styles.css', 'utf8');
 const cssMin = minifyCSS(cssSrc);
 await writeIfChanged('styles.min.css', cssMin);
 
+/* De designlaag is een TWEEDE stylesheet, geen aanvulling op styles.css. Reden:
+   elke pagina heeft een eigen inline <style>-blok dat NA de stylesheet-link staat,
+   dus regels in styles.css verliezen bij gelijk gewicht van de pagina zelf. De
+   designlaag wordt daarom door markCss() vlak voor </head> gezet — achter dat
+   inline blok — en wint dan wel. Zie ook de opmerking bij markCss(). */
+const redesignSrc = await readFile('redesign.css', 'utf8');
+const redesignMin = minifyCSS(redesignSrc);
+await writeIfChanged('redesign.min.css', redesignMin);
+
 console.log(`minified  app.js ${(appSrc.length / 1024) | 0}kb -> ${(appMin.length / 1024) | 0}kb`);
 
 /* ---------------- versiestempel ---------------- */
@@ -258,7 +268,7 @@ console.log(`minified  app.js ${(appSrc.length / 1024) | 0}kb -> ${(appMin.lengt
  * gestempeld met /\?v=\d+/ en sw.js met /const STAMP = '\d+'/; letters erin en de
  * volgende bouw vindt de oude stempel niet meer terug. */
 const VERSIONED = [
-  'app.min.js', 'styles.min.css', 'areas.css', 'supabase.js',
+  'app.min.js', 'styles.min.css', 'redesign.min.css', 'areas.css', 'supabase.js',
   'admin-guard.js', 'admin-nav.js', 'image-slot.js', 'gambia-places.js',
   'market-index.js', 'market-sources.js',
   'valuation.js', 'valuation-areas.js',
@@ -271,6 +281,7 @@ for (const name of VERSIONED) {
   let body;
   if (name === 'app.min.js') body = banner(name) + appMin;
   else if (name === 'styles.min.css') body = cssMin;
+  else if (name === 'redesign.min.css') body = redesignMin;
   else {
     try { body = await readFile(name, 'utf8'); }
     catch { console.log(`LET OP: ${name} staat in VERSIONED maar bestaat niet`); continue; }
@@ -327,6 +338,28 @@ function markPage(src, name) {
       : '<meta name="robots" content="' + robotsFor(name) + '">') +
     '<!--mk:' + fingerprint(name) + '-->' + MARK_END + '\n';
   return stripped.replace(/<head[^>]*>\n?/i, m => m + block);
+}
+
+/* ---------------- designlaag onderaan de head ----------------
+ *
+ * redesign.css (29-08-2026) corrigeert typografie, kleurbetekenis, contrast en
+ * de uitlijning van de hero. Die regels moeten NA het inline <style>-blok van de
+ * pagina staan, anders winnen de paginaregels bij gelijk selectorgewicht — de
+ * stylesheet-link bovenin de head is daarvoor te vroeg. Vandaar een eigen,
+ * herhaalbaar blok vlak voor </head>: bij elke bouw eerst weggehaald, dan
+ * opnieuw gezet, zodat er nooit twee kunnen ontstaan.
+ *
+ * De ?v=0 hieronder is geen fout: de stempelstap verderop vervangt elke ?v=\d+
+ * door de echte stempel. */
+const CSS_START = '<!--mk-css-->', CSS_END = '<!--/mk-css-->';
+function markCss(src) {
+  const stripped = src.replace(new RegExp(CSS_START + '[\\s\\S]*?' + CSS_END + '\\n?'), '');
+  if (!/<\/head>/i.test(stripped)) return stripped;
+  const block = CSS_START +
+    '<link rel="preload" href="fonts/source-serif-4-var-latin.woff2" as="font" type="font/woff2" crossorigin>' +
+    '<link rel="stylesheet" href="redesign.min.css?v=0">' +
+    CSS_END + '\n';
+  return stripped.replace(/<\/head>/i, block + '</head>');
 }
 
 /* ---------------- header, footer en landmarks statisch in de pagina ----------------
@@ -432,7 +465,7 @@ let stamped = 0, prerendered = 0;
 const versionedSeen = new Set();
 for (const f of pages) {
   const src = await readFile(f, 'utf8');
-  const shelled = prerenderShell(src, f);
+  const shelled = markCss(prerenderShell(src, f));
   if (/<div id="header"[^>]*data-static/.test(shelled)) prerendered++;
   for (const m of shelled.matchAll(/([A-Za-z0-9_\-./]+)\?v=\d+/g)) versionedSeen.add(m[1].replace(/^.*\//, ''));
   const out = markPage(shelled.replace(/\?v=\d+/g, '?v=' + STAMP), f);

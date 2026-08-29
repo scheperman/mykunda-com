@@ -8,7 +8,7 @@
    First visit   : network with a 6 s guard, then whatever is in cache. A stalled
                    4G socket no longer leaves the visitor on a blank page.
    Map tiles     : never cached here (external, volume too large). */
-const V = 'mk-v82';
+const V = 'mk-v83';
 const STATIC = V + '-static';
 const PAGES  = V + '-pages';
 const MAX_PAGES = 60;
@@ -20,12 +20,17 @@ const MAX_PAGES = 60;
    the browser treat the precached file as a different URL and the whole precache
    becomes dead weight. Do not edit STAMP by hand: run `node build.mjs` and it
    rewrites this line and every page from one source. */
-const STAMP = '255160799532144';
+const STAMP = '274404894845396';
 const PRECACHE = [
   'styles.min.css?v=' + STAMP,
+  'redesign.min.css?v=' + STAMP,
   'app.min.js?v=' + STAMP,
   'fonts/hanken-grotesk-var-latin.woff2',
   'fonts/mulish-var-latin.woff2',
+  /* De kopletter staat hier omdat elke pagina hem in de eerste schermvulling
+     gebruikt. De cursieve variant bewust niet: die is alleen voor het accent in
+     de hero en font-display:swap vangt de vertraging op. */
+  'fonts/source-serif-4-var-latin.woff2',
   'images/mykunda-icon-sm.png'
 ];
 
