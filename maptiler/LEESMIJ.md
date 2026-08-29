@@ -21,13 +21,23 @@ helderheid van de bronstijl vast en vervangt alleen kleurtoon en verzadiging;
 daardoor blijft elke zoomtrap en elke wegenhiërarchie van MapTiler overeind.
 
 **Gele labels op de satellietlaag.** Plaatsnamen, straatnamen en gebouwnamen
-staan daar in `hsl(45, 100%, 60%)` met een zwarte rand van 1,4 px, in plaats
+staan daar in `hsl(50, 100%, 68%)` met een zwarte rand van 2,2 px, in plaats
 van het wit met grijze rand van MapTiler. Wit verdwijnt boven Gambia in het
 beeld zelf — zand, zinken daken en witte muren zitten in dezelfde toon — en
 geel komt in die luchtfoto's nergens voor. Water blijft blauw: dat leest al
 goed en houdt water herkenbaar als water. De kaartlaag verandert hier niet
 mee; daar staan plaatsnamen donkergroen op crème en zou geel het contrast
 juist wegnemen.
+
+*Waarom juist deze twee waarden.* Tegen zand en zinken daken haalt géén
+tekstkleur noemenswaardig contrast — geel blijft daar onder 1,6:1, wit onder
+1,9:1 — dus daar leest het label van de zwarte rand, niet van zijn kleur. De
+rand ging daarom van 1,4 naar 2,2 px; boven ongeveer 2,5 px knipt de
+SDF-renderer hem af, dus verder ophogen levert niets meer op. Waar de kleur
+wél telt — tegen die rand, tegen vegetatie en tegen water — wint helderheid:
+`hsl(50, 100%, 68%)` haalt 17,1:1 tegen zwart en 6,1:1 tegen vegetatie, tegen
+13,9:1 en 5,0:1 voor het oude `hsl(45, 100%, 60%)`. Nog lichter loopt richting
+wit en verliest het geel zijn eigen kleur.
 
 **De Buildings-tileset.** De gebouwen uit Planet zijn eruit, die van de
 Buildings-tileset erin — met `facade_color` waar die bekend is, een eigen rand,

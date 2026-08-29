@@ -1232,17 +1232,34 @@ Wat je hierbij moet weten voordat je eraan sleutelt:
   invoerhandler van `#lfLocation`. `invalidateSize()` is goedkoop en
   idempotent; te vaak aanroepen kost niets, te weinig kost de kaart.
 
-  **Maar nooit terwijl de kaart beweegt.** De eerste versie van deze correctie
-  hermat ook vlak ná `setView`, en dat was erger dan de kwaal: `invalidateSize()`
-  midden in een zoomanimatie breekt het ophalen van de tegels voor het nieuwe
-  niveau af. De kaart bleef staan op de uitvergrote tegels van zoom 8 — het vlak
-  was netjes gevuld, maar met een wazig, veel te ver uitgezoomd beeld, en boven
-  water of donkere grond gewoon zwart. Vandaar `valMapBusyUntil`: `zoomstart` en
-  `movestart` zetten een grens ~1,2 s vooruit, `zoomend`/`moveend` halen hem weg
-  en hermeten dan alsnog. De grens loopt vanzelf af, zodat een gemist
-  eindsignaal de hermeting niet permanent blokkeert. Meetlat bij het testen:
-  tel de tegelverzoeken. Blijft het bij vier tegels op zoom 8 na het kiezen van
-  een gebied, dan is dit weer stuk; goed is negen tegels op zoom 14.
+  **Maar nooit terwijl de kaart beweegt.** `invalidateSize()` midden in een
+  zoomanimatie kan het ophalen van de tegels voor het nieuwe niveau afbreken;
+  de kaart blijft dan staan op de uitvergrote tegels van het vorige niveau.
+  Vandaar `valMapBusyUntil`: `zoomstart` en `movestart` zetten een grens ~1,2 s
+  vooruit, `zoomend`/`moveend` halen hem weg en hermeten dan alsnog. De grens
+  loopt vanzelf af, zodat een gemist eindsignaal de hermeting niet permanent
+  blokkeert.
+
+  Meetlat bij het testen: tel de tegels en lees de schaalbalk. Goed is, na het
+  kiezen van een gebied, tegels op zoom 14 met de schaalbalk op 500 m en
+  `.leaflet-tile-container` op `scale(1)`. Blijft het bij zoom 8, 30 km en een
+  `scale(64)`, dan volgt de tegellaag de kaart niet.
+
+## Een kaart meet je nooit in een verborgen tabblad
+
+Op 28-08-2026 leek de kaart op de live pagina kapot: na het kiezen van een
+gebied bleef hij op zoom 9 hangen, met de tegels van zoom 8 vierenzestig keer
+uitvergroot. Dat was geen fout in de pagina maar in de meetopstelling. De
+metingen liepen via een geautomatiseerd tabblad, en dat stond op de achtergrond:
+`document.visibilityState` was `hidden`. Chrome draait dan geen
+`requestAnimationFrame`, en Leaflet zet zijn hele geanimeerde zoom in een
+`requestAnimFrame` — `setView()` keert dan meteen terug zonder iets te doen, er
+komt geen enkel `zoomstart`/`zoomend`, en de tegellaag blijft staan waar hij
+stond. Op een zichtbare pagina klopt alles.
+
+Dus: controleer bij elke kaartmeting eerst `document.visibilityState`, en of
+`requestAnimationFrame` daadwerkelijk vuurt. Een kaart die "niet zoomt" zonder
+één enkel zoom-event is bijna altijd dit, en niet de code.
 * `initValMaps()` wordt twee keer aangeroepen — direct, en nog eens zodra
   `ensureLeaflet` klaar is. De tweede mag de kaart niet opnieuw opbouwen:
   Leaflet gooit dan "Map container is already initialized" en alles achter die

@@ -32,8 +32,18 @@ const MK = {
      hybride labels mee tekent — verdwijnen in Gambia in het beeld zelf: zand,
      zinken daken en witte muren zitten precies in dezelfde toon. Geel komt in
      die luchtfoto's nergens voor, dus een geel label ligt altijd los van de
-     achtergrond. */
-  satLabel:'hsl(45, 100%, 60%)'
+     achtergrond.
+     Zo licht mogelijk geel: tegen zand en zinken daken heeft géén tekstkleur
+     noemenswaardig contrast (elk geel blijft daar onder 1,6:1), dus de
+     leesbaarheid komt daar van de zwarte rand. Waar de tekstkleur wél telt —
+     tegen die rand, tegen vegetatie en tegen water — wint hoge helderheid:
+     tegen zwart 17,1:1 in plaats van 13,9:1, tegen vegetatie 6,1:1 in plaats
+     van 5,0:1. Nog lichter wordt het wit en verliest het zijn eigen kleur. */
+  satLabel:'hsl(50, 100%, 68%)',
+  /* De rand doet het werk waar de kleur niets kan: 2,2 px in plaats van 1,4
+     px. Boven ±2,5 px knipt de SDF-renderer de rand af, dus hoger heeft geen
+     zin. */
+  satHalo: 2.2
 };
 
 /* ---------- kleur: parsen, tinten, terugschrijven ---------- */
@@ -148,7 +158,8 @@ for (const l of s.layers) {
     if (l.type === 'symbol' && l.paint && (PLAATS.test(l.id) || WEGLBL.test(l.id))) {
       if (l.paint['text-color']) l.paint['text-color'] = MK.satLabel;
       l.paint['text-halo-color'] = 'hsl(0, 0%, 0%)';
-      l.paint['text-halo-width'] = 1.4;
+      l.paint['text-halo-width'] = MK.satHalo;
+      l.paint['text-halo-blur'] = 0;
       lagenOm++;
     }
     continue;
@@ -209,7 +220,7 @@ const gebouwNaam = {
     'text-max-width': 8, 'text-padding': 4
   },
   paint: sat
-    ? { 'text-color': MK.satLabel, 'text-halo-color': 'hsl(0, 0%, 0%)', 'text-halo-width': 1.4 }
+    ? { 'text-color': MK.satLabel, 'text-halo-color': 'hsl(0, 0%, 0%)', 'text-halo-width': MK.satHalo, 'text-halo-blur': 0 }
     : { 'text-color': MK.green700, 'text-halo-color': 'hsla(0, 0%, 100%, 0.9)', 'text-halo-width': 1.2 }
 };
 

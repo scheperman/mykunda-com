@@ -1698,9 +1698,10 @@
     "visibility": "visible"
    },
    "paint": {
-    "text-color": "hsl(45, 100%, 60%)",
+    "text-color": "hsl(50, 100%, 68%)",
     "text-halo-color": "hsl(0, 0%, 0%)",
-    "text-halo-width": 1.4
+    "text-halo-width": 2.2,
+    "text-halo-blur": 0
    }
   },
   {
@@ -1756,9 +1757,10 @@
     "visibility": "visible"
    },
    "paint": {
-    "text-color": "hsl(45, 100%, 60%)",
+    "text-color": "hsl(50, 100%, 68%)",
     "text-halo-color": "hsl(0, 0%, 0%)",
-    "text-halo-width": 1.4
+    "text-halo-width": 2.2,
+    "text-halo-blur": 0
    },
    "filter": [
     "all",
@@ -1836,10 +1838,10 @@
     "visibility": "visible"
    },
    "paint": {
-    "text-color": "hsl(45, 100%, 60%)",
-    "text-halo-blur": 0.5,
+    "text-color": "hsl(50, 100%, 68%)",
+    "text-halo-blur": 0,
     "text-halo-color": "hsl(0, 0%, 0%)",
-    "text-halo-width": 1.4
+    "text-halo-width": 2.2
    },
    "filter": [
     "all",
@@ -1924,10 +1926,10 @@
     "visibility": "visible"
    },
    "paint": {
-    "text-color": "hsl(45, 100%, 60%)",
-    "text-halo-blur": 0.5,
+    "text-color": "hsl(50, 100%, 68%)",
+    "text-halo-blur": 0,
     "text-halo-color": "hsl(0, 0%, 0%)",
-    "text-halo-width": 1.4
+    "text-halo-width": 2.2
    },
    "filter": [
     "all",
@@ -2257,10 +2259,10 @@
     "visibility": "visible"
    },
    "paint": {
-    "text-color": "hsl(45, 100%, 60%)",
-    "text-halo-blur": 0.5,
+    "text-color": "hsl(50, 100%, 68%)",
+    "text-halo-blur": 0,
     "text-halo-color": "hsl(0, 0%, 0%)",
-    "text-halo-width": 1.4
+    "text-halo-width": 2.2
    },
    "filter": [
     "==",
@@ -2325,10 +2327,10 @@
     "visibility": "visible"
    },
    "paint": {
-    "text-color": "hsl(45, 100%, 60%)",
-    "text-halo-blur": 0.5,
+    "text-color": "hsl(50, 100%, 68%)",
+    "text-halo-blur": 0,
     "text-halo-color": "hsl(0, 0%, 0%)",
-    "text-halo-width": 1.4
+    "text-halo-width": 2.2
    },
    "filter": [
     "all",
@@ -2415,10 +2417,10 @@
     "visibility": "visible"
    },
    "paint": {
-    "text-color": "hsl(45, 100%, 60%)",
-    "text-halo-blur": 0.5,
+    "text-color": "hsl(50, 100%, 68%)",
+    "text-halo-blur": 0,
     "text-halo-color": "hsl(0, 0%, 0%)",
-    "text-halo-width": 1.4,
+    "text-halo-width": 2.2,
     "text-opacity": [
      "step",
      [
@@ -2565,10 +2567,10 @@
     "visibility": "visible"
    },
    "paint": {
-    "text-color": "hsl(45, 100%, 60%)",
-    "text-halo-blur": 0.5,
+    "text-color": "hsl(50, 100%, 68%)",
+    "text-halo-blur": 0,
     "text-halo-color": "hsl(0, 0%, 0%)",
-    "text-halo-width": 1.4,
+    "text-halo-width": 2.2,
     "text-opacity": [
      "step",
      [
@@ -2802,10 +2804,10 @@
     "icon-halo-blur": 0.5,
     "icon-halo-color": "hsl(0, 0%, 0%)",
     "icon-halo-width": 1,
-    "text-color": "hsl(45, 100%, 60%)",
-    "text-halo-blur": 0.5,
+    "text-color": "hsl(50, 100%, 68%)",
+    "text-halo-blur": 0,
     "text-halo-color": "hsl(0, 0%, 0%)",
-    "text-halo-width": 1.4
+    "text-halo-width": 2.2
    }
   },
   {
@@ -2898,10 +2900,10 @@
     "icon-halo-blur": 0.5,
     "icon-halo-color": "hsl(0, 0%, 0%)",
     "icon-halo-width": 1,
-    "text-color": "hsl(45, 100%, 60%)",
-    "text-halo-blur": 0.5,
+    "text-color": "hsl(50, 100%, 68%)",
+    "text-halo-blur": 0,
     "text-halo-color": "hsl(0, 0%, 0%)",
-    "text-halo-width": 1.4
+    "text-halo-width": 2.2
    },
    "filter": [
     "all",
@@ -2976,10 +2978,10 @@
     "visibility": "visible"
    },
    "paint": {
-    "text-color": "hsl(45, 100%, 60%)",
-    "text-halo-blur": 1,
+    "text-color": "hsl(50, 100%, 68%)",
+    "text-halo-blur": 0,
     "text-halo-color": "hsl(0, 0%, 0%)",
-    "text-halo-width": 1.4
+    "text-halo-width": 2.2
    },
    "filter": [
     "all",
@@ -3109,10 +3111,10 @@
     "visibility": "visible"
    },
    "paint": {
-    "text-color": "hsl(45, 100%, 60%)",
-    "text-halo-blur": 1,
+    "text-color": "hsl(50, 100%, 68%)",
+    "text-halo-blur": 0,
     "text-halo-color": "hsl(0, 0%, 0%)",
-    "text-halo-width": 1.4
+    "text-halo-width": 2.2
    }
   },
   {
@@ -3156,10 +3158,10 @@
     "visibility": "visible"
    },
    "paint": {
-    "text-color": "hsl(45, 100%, 60%)",
-    "text-halo-blur": 1,
+    "text-color": "hsl(50, 100%, 68%)",
+    "text-halo-blur": 0,
     "text-halo-color": "hsl(0, 0%, 0%)",
-    "text-halo-width": 1.4
+    "text-halo-width": 2.2
    },
    "metadata": {}
   },
@@ -4036,9 +4038,10 @@
     "text-padding": 4
    },
    "paint": {
-    "text-color": "hsl(45, 100%, 60%)",
+    "text-color": "hsl(50, 100%, 68%)",
     "text-halo-color": "hsl(0, 0%, 0%)",
-    "text-halo-width": 1.4
+    "text-halo-width": 2.2,
+    "text-halo-blur": 0
    }
   }
  ],
