@@ -1483,7 +1483,7 @@ const MK_FEAT_LAND = [['Sea view','Sea view'],['Beachfront','Beachfront'],['new'
 
 /* ---------- Header / footer injectors ---------- */
 function headerHTML(active, onHero){
-  const links = [['Buy','buy.html'],['Rent','rent.html'],['List','sell.html'],['Land','search.html?type=sale&cat=land'],['Verify','verify.html'],['Areas','#'],['Guides','guides.html']];
+  const links = [['Buy','buy.html'],['Rent','rent.html'],['List','sell.html'],['Verify','verify.html'],['Areas','#'],['Guides','guides.html']];
   const AREA_REGIONS = MK_AREAS;
   const AREAS = AREA_REGIONS.flatMap(r=>r[1]);
   const u = getUser();
@@ -1595,7 +1595,7 @@ function headerHTML(active, onHero){
 
 function footerHTML(){
   const cols = [
-    ['Explore',['Properties for sale','Properties for rent','Land & plots','Area guides','New developments','Price index']],
+    ['Explore',['Properties for sale','Properties for rent','Area guides','New developments','Price index']],
     ['For you',['Saved searches','Favorites','Buyer\u2019s guide','Ownership check','Value my property','Diaspora & investor guide']],
     ['Company',['About MyKunda','Partner agents','FAQ','Safe & supported','Contact','Legal & policies']],
   ];
@@ -1621,7 +1621,7 @@ function footerHTML(){
           <a href="${waLink('Hello MyKunda! I have a question about property in The Gambia.')}" target="_blank" rel="noopener">${_WA_ICON}<span>WhatsApp ${MYKUNDA_PHONE_DISPLAY}</span></a>
         </div>
       </div>
-      ${cols.map(c=>`<div class="footer-col"><h3>${c[0]}</h3>${c[1].map(a=>{const map={'Partner agents':'agent.html','Area guides':'areas-in-the-gambia.html','Buyer\u2019s guide':'guide-cost-of-buying-property-in-the-gambia.html','Ownership check':'verify.html','Diaspora & investor guide':'guide-buying-property-in-the-gambia-as-a-foreigner.html','Properties for sale':'search.html?type=sale','Properties for rent':'search.html?type=rent','Land & plots':'search.html?type=sale&cat=land','New developments':'search.html?type=sale&feat=new','Price index':'gambia-property-prices.html','Value my property':'sell.html#value','Saved searches':'dashboard.html','Favorites':'dashboard.html','About MyKunda':'about.html','Contact':'contact.html','FAQ':'faq.html','Safe & supported':'safe.html','Legal & policies':'legal.html'};return `<a href="${map[a]||'#'}">${a}</a>`;}).join('')}</div>`).join('')}
+      ${cols.map(c=>`<div class="footer-col"><h3>${c[0]}</h3>${c[1].map(a=>{const map={'Partner agents':'agent.html','Area guides':'areas-in-the-gambia.html','Buyer\u2019s guide':'guide-cost-of-buying-property-in-the-gambia.html','Ownership check':'verify.html','Diaspora & investor guide':'guide-buying-property-in-the-gambia-as-a-foreigner.html','Properties for sale':'search.html?type=sale','Properties for rent':'search.html?type=rent','New developments':'search.html?type=sale&feat=new','Price index':'gambia-property-prices.html','Value my property':'sell.html#value','Saved searches':'dashboard.html','Favorites':'dashboard.html','About MyKunda':'about.html','Contact':'contact.html','FAQ':'faq.html','Safe & supported':'safe.html','Legal & policies':'legal.html'};return `<a href="${map[a]||'#'}">${a}</a>`;}).join('')}</div>`).join('')}
     </div>
     <div class="wrap footer-bottom">
       <span>© 2026 MyKunda.com</span>
