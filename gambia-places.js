@@ -1,6 +1,13 @@
 // Comprehensive list of places in The Gambia
 // Format: [name, region, lat, lng]
 // Regions: Banjul, Kanifing, West Coast, North Bank, Lower River, Central River, Upper River
+//
+// PLAATSCONTROLE 30-08-2026: alle coordinaten gecontroleerd tegen OpenStreetMap
+// (1.300+ plaatsen, nodes+ways via Overpass) en GeoNames (cities500); 75 regels
+// gecorrigeerd, 31 regels zonder bron gemarkeerd met "niet onderbouwd".
+// Details en bewijs per plaats: plaatscontrole-rapport 30-08-2026 (zie CLAUDE.md).
+// Deze lijst is de ENIGE bron; GM_AREAS en AREA_COORDS in app.js worden
+// hieruit gegenereerd gehouden (zelfde waarden) - niet los aanpassen.
 const GAMBIA_PLACES = [
   // ── Banjul LGA ──
   ['Banjul','Banjul',13.4554,-16.5757],
@@ -14,24 +21,24 @@ const GAMBIA_PLACES = [
   ['Kotu','Kanifing',13.4553,-16.7034],
   ['Kololi','West Coast',13.4404,-16.7156],
   ['Senegambia','West Coast',13.4431,-16.7198],
-  ['Kanifing','Kanifing',13.45,-16.6667],
+  ['Kanifing','Kanifing',13.4538,-16.6748],
   ['Faji Kunda','Kanifing',13.41778,-16.66667],
   ['Talinding','Kanifing',13.42558,-16.67261],
-  ['Bundung','Kanifing',13.445,-16.66],
-  ['Latri Kunda','Kanifing',13.437,-16.674],
+  ['Bundung','Kanifing',13.4251,-16.6774],
+  ['Latri Kunda','Kanifing',13.437,-16.674],  // niet onderbouwd - zie plaatscontrole 30-08-2026
   ['Pipeline','Kanifing',13.463,-16.6841],
   ['Bakoteh','Kanifing',13.4334,-16.6985],
-  ['Tabokoto','Kanifing',13.45,-16.6667],
-  ['New Jeshwang','Kanifing',13.46,-16.664],
-  ['Old Jeshwang','Kanifing',13.463,-16.658],
-  ['Dippa Kunda','Kanifing',13.432,-16.665],
-  ['Ebou Town','Kanifing',13.436,-16.675],
+  ['Tabokoto','Kanifing',13.4066,-16.6658],
+  ['New Jeshwang','Kanifing',13.4429,-16.6706],
+  ['Old Jeshwang','Kanifing',13.4533,-16.6612],
+  ['Dippa Kunda','Kanifing',13.4383,-16.6884],
+  ['Ebou Town','Kanifing',13.4366,-16.668],
   ['Abuko','West Coast',13.4042,-16.6558],
-  ['Churchills Town','Kanifing',13.455,-16.655],
+  ['Churchills Town','Kanifing',13.455,-16.655],  // niet onderbouwd - zie plaatscontrole 30-08-2026
   ['Sinchu Alagie','West Coast',13.37808,-16.68374],
-  ['Ebo Town','Kanifing',13.438,-16.673],
+  ['Ebo Town','Kanifing',13.4366,-16.668],
   ['Manjai Kunda','Kanifing',13.4422,-16.6981],
-  ['Tallinding Kunjang','Kanifing',13.437,-16.683],
+  ['Tallinding Kunjang','Kanifing',13.4259,-16.6722],
 
   // ── Brikama LGA (West Coast) ──
   ['Brikama','West Coast',13.2744,-16.6454],
@@ -45,47 +52,47 @@ const GAMBIA_PLACES = [
   ['Tanji','West Coast',13.3586,-16.7975],
   ['Batokunku','West Coast',13.3268,-16.7991],
   ['Gunjur','West Coast',13.176,-16.7599],
-  ['Sambuya','West Coast',13.21306,-16.76556],
-  ['Brufut Heights','West Coast',13.4000,-16.7590],
+  ['Sambuya','West Coast',13.21306,-16.76556],  // niet onderbouwd - zie plaatscontrole 30-08-2026
+  ['Brufut Heights','West Coast',13.4,-16.759],  // niet onderbouwd - zie plaatscontrole 30-08-2026
   ['Nema Kunku','West Coast',13.40461,-16.68401],
   ['Yundum','West Coast',13.3422,-16.6697],
-  ['Banjulunding','West Coast',13.3667,-16.6833],
+  ['Banjulunding','West Coast',13.3765,-16.6531],
   ['Busumbala','West Coast',13.3334,-16.6667],
   ['Bwiam','West Coast',13.23528,-16.08639],
-  ['Sibanor','West Coast',13.3167,-16.4333],
-  ['Kafuta','West Coast',13.2333,-16.5667],
+  ['Sibanor','West Coast',13.2059,-16.1935],
+  ['Kafuta','West Coast',13.2014,-16.466],
   ['Somita','West Coast',13.20583,-16.30556],
-  ['Marakissa','West Coast',13.32,-16.68],
+  ['Marakissa','West Coast',13.2126,-16.6483],
   ['Pirang','West Coast',13.2725,-16.5353],
   ['Faraba Banta','West Coast',13.2667,-16.5167],
-  ['Nyambai','West Coast',13.31,-16.66],
-  ['Jambur','West Coast',13.38,-16.73],
+  ['Nyambai','West Coast',13.2794,-16.6541],
+  ['Jambur','West Coast',13.3146,-16.7008],
   ['Tujereng','West Coast',13.3179,-16.7889],
   ['Ghana Town','West Coast',13.38444,-16.77111],
   ['Wellingara','West Coast',13.404,-16.674],
   ['Jabang','West Coast',13.3619,-16.7023],
   ['Sifoe','West Coast',13.18361,-16.6975],
   ['Old Yundum','West Coast',13.3625,-16.68611],
-  ['Sinchu Baliya','West Coast',13.36,-16.66],
-  ['Berending (Kombo)','West Coast',13.34,-16.745],
-  ['Kitty','West Coast',13.32,-16.73],
-  ['Mandinaba','West Coast',13.34,-16.67],
-  ['Bonto','West Coast',13.29,-16.65],
-  ['Darsilami','West Coast',13.21,-16.48],
-  ['Mandina Ba','West Coast',13.24,-16.51],
-  ['Kembujeh','West Coast',13.37,-16.71],
+  ['Sinchu Baliya','West Coast',13.36,-16.66],  // niet onderbouwd - zie plaatscontrole 30-08-2026
+  ['Berending (Kombo)','West Coast',13.1402,-16.743],
+  ['Kitty','West Coast',13.2279,-16.668],
+  ['Mandinaba','West Coast',13.2804,-16.5899],
+  ['Bonto','West Coast',13.2884,-16.5556],
+  ['Darsilami','West Coast',13.1769,-16.6567],
+  ['Mandina Ba','West Coast',13.2804,-16.5899],
+  ['Kembujeh','West Coast',13.37,-16.71],  // niet onderbouwd - zie plaatscontrole 30-08-2026
   ['Kerr Serign','West Coast',13.4325,-16.7203],
-  ['Salagi','West Coast',13.3928,-16.7104],
+  ['Salagi','West Coast',13.3928,-16.7104],  // niet onderbouwd - zie plaatscontrole 30-08-2026
   ['Farato','West Coast',13.3152,-16.6632],
-  ['Mamuda','West Coast',13.3032,-16.7328],
-  ['Latriya','West Coast',13.3000,-16.7110],
+  ['Mamuda','West Coast',13.3032,-16.7328],  // niet onderbouwd - zie plaatscontrole 30-08-2026
+  ['Latriya','West Coast',13.3,-16.711],  // niet onderbouwd - zie plaatscontrole 30-08-2026
   ['Madiana','West Coast',13.3533,-16.7631],
-  ['Berefet','West Coast',13.32,-16.55],
-  ['Bondali','West Coast',13.33,-16.63],
-  ['Bakindick','West Coast',13.26,-16.54],
-  ['Bambali','West Coast',13.23,-16.57],
+  ['Berefet','West Coast',13.2439,-16.3799],
+  ['Bondali','West Coast',13.2347,-15.9142],
+  ['Bakindick','North Bank',13.4554,-16.4514],
+  ['Bambali','Lower River',13.4765,-15.3349],
   ['Bulok','West Coast',13.1767,-16.4158],
-  ['Brifu','West Coast',13.21,-16.56],
+  ['Brifu','Upper River',13.5073,-13.9352],
 
   // ── Kerewan LGA (North Bank) ──
   ['Farafenni','North Bank',13.5721,-15.598],
@@ -95,43 +102,43 @@ const GAMBIA_PLACES = [
   ['Selikene','North Bank',13.48333,-15.96667],
   ['Albreda','North Bank',13.3345,-16.386],
   ['Juffureh','North Bank',13.33861,-16.3825],
-  ['Illiassa','North Bank',13.56,-15.72],
-  ['Sabach Sanjal','North Bank',13.54,-15.68],
-  ['Njau','North Bank',13.53,-15.7833],
-  ['Brikama Ba','North Bank',13.55,-15.9833],
-  ['Kuntair','North Bank',13.5167,-15.95],
+  ['Illiassa','North Bank',13.5644,-15.7493],
+  ['Sabach Sanjal','North Bank',13.54,-15.68],  // niet onderbouwd - zie plaatscontrole 30-08-2026
+  ['Njau','Central River',13.7474,-15.2109],
+  ['Brikama Ba','Central River',13.5376,-14.9275],
+  ['Kuntair','North Bank',13.5344,-16.2224],
   ['No Kunda','North Bank',13.56667,-15.83333],
-  ['Medina Serign Mass','North Bank',13.53,-15.71],
-  ['Berending (Niumi)','North Bank',13.4900,-16.5000],
+  ['Medina Serign Mass','North Bank',13.4913,-16.4105],
+  ['Berending (Niumi)','North Bank',13.4909,-16.4613],
 
   // ── Mansakonko LGA (Lower River) ──
   ['Soma','Lower River',13.4446,-15.5355],
-  ['Pakalinding','Lower River',13.4,-15.5],
+  ['Pakalinding','Lower River',13.4634,-15.5517],
   ['Mansa Konko','Lower River',13.4585,-15.534],
   ['Keneba','Lower River',13.32889,-16.015],
   ['Kwinella','Lower River',13.4,-15.8],
   ['Bureng','Lower River',13.41667,-15.28333],
-  ['Jattaba','Lower River',13.39,-15.58],
+  ['Jattaba','Lower River',13.2744,-15.827],
   ['Sankuia','Lower River',13.46667,-15.51667],
   ['Baro Kunda','Lower River',13.48333,-15.26667],
-  ['Genieri','Lower River',13.3833,-15.65],
+  ['Genieri','Lower River',13.4142,-15.6181],
   ['Karantaba','Lower River',13.43333,-15.51667],
-  ['Jali','Lower River',13.38,-15.45],
-  ['Japineh','Lower River',13.37,-15.48],
-  ['Kaiaf','Lower River',13.4,-15.61667],
+  ['Jali','Lower River',13.35,-15.9667],
+  ['Japineh','Lower River',13.423,-15.4212],
+  ['Kaiaf','Lower River',13.4092,-15.6082],
 
   // ── Kuntaur LGA (Central River North) ──
   ['Kuntaur','Central River',13.6709,-14.8898],
   ['Kaur','Central River',13.7,-15.333],
   ['Wassu','Central River',13.69094,-14.87884],
-  ['Brikama Ba (CRR)','Central River',13.53333,-14.93333],
-  ['Njau (CRR)','Central River',13.66,-14.91],
+  ['Brikama Ba (CRR)','Central River',13.5376,-14.9275],
+  ['Njau (CRR)','Central River',13.7474,-15.2109],
 
   // ── Janjanbureh LGA (Central River South) ──
   ['Janjanbureh','Central River',13.5391,-14.7612],
   ['Bansang','Central River',13.4358,-14.6588],
-  ['Kudang','Central River',13.5333,-14.8333],
-  ['Brikamaba','Central River',13.5167,-14.7333],
+  ['Kudang','Central River',13.6621,-15.0602],
+  ['Brikamaba','Central River',13.5376,-14.9275],
 
   // ── Basse LGA (Upper River) ──
   ['Basse Santa Su','Upper River',13.31,-14.215],
@@ -143,72 +150,72 @@ const GAMBIA_PLACES = [
   ['Koina','Upper River',13.48333,-13.86667],
   ['Kulari','Upper River',13.4,-14.08333],
   ['Allunhari','Upper River',13.3167,-14.25],
-  ['Fatoto','Upper River',13.3993,-13.891],
+  ['Fatoto','Upper River',13.3992,-13.891],
   ['Sudowol','Upper River',13.36667,-13.96667],
-  ['Sandu','Upper River',13.36,-14.15],
-  ['Wuli','Upper River',13.42,-14.35],
-  ['Kantora','Upper River',13.3,-14.6],
+  ['Sandu','Upper River',13.36,-14.15],  // niet onderbouwd - zie plaatscontrole 30-08-2026
+  ['Wuli','Upper River',13.42,-14.35],  // niet onderbouwd - zie plaatscontrole 30-08-2026
+  ['Kantora','Upper River',13.3,-14.6],  // niet onderbouwd - zie plaatscontrole 30-08-2026
 
   // ── Additional villages ──
-  ['Badarri','Upper River',13.31,-14.4],
+  ['Badarri','Upper River',13.3414,-14.0956],
   ['Bakadaji','Upper River',13.3,-14.38333],
-  ['Bani','Lower River',13.36,-15.63],
-  ['Banni','Lower River',13.35,-15.58],
-  ['Bantango Koto','Central River',13.55,-14.72],
-  ['Bantanto','West Coast',13.28,-16.55],
-  ['Bantunding','Central River',13.51,-14.8],
-  ['Banyakang','Central River',13.54,-14.65],
-  ['Barajally','Central River',13.5,-14.78],
-  ['Barrow Kunda','Upper River',13.32,-14.38],
-  ['Barry Nabeh','West Coast',13.23,-16.45],
-  ['Basse Nding','West Coast',13.37333,-16.65722],
-  ['Besang Dugu','Central River',13.52,-14.71],
+  ['Bani','Lower River',13.36,-15.63],  // niet onderbouwd - zie plaatscontrole 30-08-2026
+  ['Banni','Lower River',13.35,-15.58],  // niet onderbouwd - zie plaatscontrole 30-08-2026
+  ['Bantango Koto','Central River',13.55,-14.72],  // niet onderbouwd - zie plaatscontrole 30-08-2026
+  ['Bantanto','West Coast',13.28,-16.55],  // niet onderbouwd - zie plaatscontrole 30-08-2026
+  ['Bantunding','Upper River',13.4755,-14.0852],
+  ['Banyakang','Central River',13.54,-14.65],  // niet onderbouwd - zie plaatscontrole 30-08-2026
+  ['Barajally','Central River',13.5852,-14.9461],
+  ['Barrow Kunda','Upper River',13.4882,-14.1173],
+  ['Barry Nabeh','West Coast',13.23,-16.45],  // niet onderbouwd - zie plaatscontrole 30-08-2026
+  ['Basse Nding','West Coast',13.37333,-16.65722],  // niet onderbouwd - zie plaatscontrole 30-08-2026
+  ['Besang Dugu','Central River',13.52,-14.71],  // niet onderbouwd - zie plaatscontrole 30-08-2026
   ['Bohum Kunda','Upper River',13.5556,-13.9506],
-  ['Boro Dampha Kunda','Central River',13.53,-14.7],
-  ['Boro Kanda Kassy','Lower River',13.34,-15.68],
-  ['Busura Alieu','Upper River',13.3,-14.52],
-  ['Jumangsarr','North Bank',13.51,-15.65],
-  ['Jajari','North Bank',13.53,-15.63],
-  ['Bakindick Mandinka','West Coast',13.26,-16.53],
-  ['Boro Modi Bane','Lower River',13.35,-15.53],
+  ['Boro Dampha Kunda','Central River',13.53,-14.7],  // niet onderbouwd - zie plaatscontrole 30-08-2026
+  ['Boro Kanda Kassy','Upper River',13.4227,-14.0286],
+  ['Busura Alieu','Upper River',13.3,-14.52],  // niet onderbouwd - zie plaatscontrole 30-08-2026
+  ['Jumangsarr','North Bank',13.5455,-15.7522],
+  ['Jajari','North Bank',13.5762,-15.746],
+  ['Bakindick Mandinka','North Bank',13.4554,-16.4514],
+  ['Boro Modi Bane','Upper River',13.439,-14.0311],
 
   // ── Additional places (batch 2) ──
   ['Kuloro','West Coast',13.2806,-16.5781],
-  ['Giboro Koto','West Coast',13.2500,-16.5333],
-  ['Sotokoi','West Coast',13.2333,-16.5667],
-  ['Faraba Sutu','West Coast',13.2833,-16.5167],
-  ['Bessi Nding','West Coast',13.3000,-16.5833],
-  ['Tunjina','West Coast',13.2833,-16.5667],
-  ['Folonko','West Coast',13.1167,-16.7333],
+  ['Giboro Koto','West Coast',13.1761,-16.5752],
+  ['Sotokoi','West Coast',13.2262,-16.5033],
+  ['Faraba Sutu','West Coast',13.2044,-16.4824],
+  ['Bessi Nding','West Coast',13.3,-16.5833],  // niet onderbouwd - zie plaatscontrole 30-08-2026
+  ['Tunjina','West Coast',13.2833,-16.5667],  // niet onderbouwd - zie plaatscontrole 30-08-2026
+  ['Folonko','West Coast',13.1167,-16.7333],  // niet onderbouwd - zie plaatscontrole 30-08-2026
   ['Jambanjelly','West Coast',13.2806,-16.7276],
-  ['Kabafita','West Coast',13.3167,-16.7167],
-  ['Kalagi','West Coast',13.2333,-16.3500],
-  ['Kansala','West Coast',13.1833,-16.3167],
-  ['Bintang','West Coast',13.2500,-16.2500],
-  ['Kanilai','West Coast',13.1833,-16.2000],
-  ['Sintet','West Coast',13.2333,-16.1500],
-  ['Njaba Kunda','North Bank',13.5500,-15.7500],
-  ['Medina Serigne Mass','North Bank',13.5167,-16.1500],
-  ['Katchang','North Bank',13.5333,-16.0333],
-  ['Jappineh','Lower River',13.4500,-15.4167],
-  ['Jareng','Lower River',13.4000,-15.5500],
-  ['Kunting','Central River',13.5500,-14.8500],
-  ['Niani Sukuta','Central River',13.5833,-14.7667],
-  ['Sambang','Central River',13.6000,-14.7333],
-  ['Demba Kunda','Upper River',13.3500,-14.0833],
-  ['Sutukoba','Upper River',13.4167,-14.0000],
-  ['Diabugu','Upper River',13.2667,-14.1167],
-  ['Chamoi','Upper River',13.3500,-14.5167],
+  ['Kabafita','West Coast',13.3167,-16.7167],  // niet onderbouwd - zie plaatscontrole 30-08-2026
+  ['Kalagi','West Coast',13.2466,-15.8379],
+  ['Kansala','West Coast',13.2412,-16.1215],
+  ['Bintang','West Coast',13.2508,-16.212],
+  ['Kanilai','West Coast',13.1699,-16.0097],
+  ['Sintet','West Coast',13.2398,-15.8129],
+  ['Njaba Kunda','North Bank',13.5547,-15.9131],
+  ['Medina Serigne Mass','North Bank',13.4913,-16.4105],
+  ['Katchang','North Bank',13.5,-15.75],
+  ['Jappineh','Lower River',13.423,-15.4212],
+  ['Jareng','Central River',13.6223,-15.1911],
+  ['Kunting','Central River',13.5275,-14.6697],
+  ['Niani Sukuta','Central River',13.617,-14.9231],
+  ['Sambang','Central River',13.5412,-15.3311],
+  ['Demba Kunda','Upper River',13.25,-14.2667],
+  ['Sutukoba','Upper River',13.4977,-14.0162],
+  ['Diabugu','Upper River',13.3833,-14.4],
+  ['Chamoi','Upper River',13.35,-14.5167],  // niet onderbouwd - zie plaatscontrole 30-08-2026
 
   // ── Additional important places (batch 3) ──
-  ['Kaiaf Niji','North Bank',13.50,-16.35],
-  ['Fass','North Bank',13.52,-16.25],
-  ['Jiffarong','Lower River',13.37,-15.77],
-  ['Dankunku','Central River',13.50,-15.08],
-  ['Nianija','Central River',13.55,-14.95],
-  ['Basse Mansajang','Upper River',13.32,-14.22],
-  ['Numuyel','Upper River',13.35,-14.15],
-  ['Konteh Kunda','Upper River',13.38,-14.05],
+  ['Kaiaf Niji','North Bank',13.5,-16.35],  // niet onderbouwd - zie plaatscontrole 30-08-2026
+  ['Fass','North Bank',13.5641,-16.4261],
+  ['Jiffarong','Lower River',13.3008,-15.868],
+  ['Dankunku','Central River',13.5693,-15.3252],
+  ['Nianija','Central River',13.55,-14.95],  // niet onderbouwd - zie plaatscontrole 30-08-2026
+  ['Basse Mansajang','Upper River',13.2959,-14.2095],
+  ['Numuyel','Upper River',13.2759,-14.2946],
+  ['Konteh Kunda','Upper River',13.38,-14.05],  // niet onderbouwd - zie plaatscontrole 30-08-2026
 ];
 
 // Build a lookup map: name (lowercase) → {name, region, lat, lng}

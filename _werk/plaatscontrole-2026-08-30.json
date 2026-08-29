@@ -1,0 +1,2353 @@
+{
+ "titel": "MyKunda plaatscontrole",
+ "datum": "2026-08-30",
+ "methode": "Alle plaatsen vergeleken met OpenStreetMap (Overpass: alle place-nodes en -ways binnen Gambia, 1.112 bruikbare vermeldingen) en GeoNames cities500 (180 plaatsen); Plus Codes van de eigenaar gelden als hoogste bron; steekproef van 12 correcties bevestigd tegen Mapbox Geocoding v6 (de kaartprovider van de site).",
+ "plaatsen": [
+  {
+   "plaats": "Abuko",
+   "regio": "West Coast",
+   "lat": 13.4042,
+   "lng": -16.6558,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Albreda",
+   "regio": "North Bank",
+   "lat": 13.3345,
+   "lng": -16.386,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Allunhari",
+   "regio": "Upper River",
+   "lat": 13.3167,
+   "lng": -14.25,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Badarri",
+   "regio": "Upper River",
+   "lat": 13.3414,
+   "lng": -14.0956,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (\"Badari\")+GeoNames (1,0 km)",
+   "toelichting": "Wuli/Sandu-grens",
+   "oud": {
+    "lat": 13.31,
+    "lng": -14.4,
+    "regio": "Upper River"
+   },
+   "verschuiving_km": 33.16
+  },
+  {
+   "plaats": "Baja Kunda",
+   "regio": "Upper River",
+   "lat": 13.46667,
+   "lng": -14.05,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Bakadaji",
+   "regio": "Upper River",
+   "lat": 13.3,
+   "lng": -14.38333,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Bakau",
+   "regio": "Kanifing",
+   "lat": 13.4775,
+   "lng": -16.6779,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Bakindick",
+   "regio": "North Bank",
+   "lat": 13.4554,
+   "lng": -16.4514,
+   "status": "GECORRIGEERD",
+   "bron": "OSM",
+   "toelichting": "Bakindik ligt in Niumi (North Bank), niet in West Coast",
+   "oud": {
+    "lat": 13.26,
+    "lng": -16.54,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 23.64
+  },
+  {
+   "plaats": "Bakindick Mandinka",
+   "regio": "North Bank",
+   "lat": 13.4554,
+   "lng": -16.4514,
+   "status": "GECORRIGEERD",
+   "bron": "OSM",
+   "toelichting": "zelfde dorp als Bakindick — dubbele vermelding",
+   "oud": {
+    "lat": 13.26,
+    "lng": -16.53,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 23.22
+  },
+  {
+   "plaats": "Bakoteh",
+   "regio": "Kanifing",
+   "lat": 13.4334,
+   "lng": -16.6985,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Bambali",
+   "regio": "Lower River",
+   "lat": 13.4765,
+   "lng": -15.3349,
+   "status": "GECORRIGEERD",
+   "bron": "OSM+GeoNames (0,8 km)",
+   "toelichting": "bij Pakali Ba; regio-aanduiding blijft onzeker (bronnen spreken elkaar tegen)",
+   "oud": {
+    "lat": 13.23,
+    "lng": -16.57,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 136.59
+  },
+  {
+   "plaats": "Bani",
+   "regio": "Lower River",
+   "lat": 13.36,
+   "lng": -15.63,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "vier verschillende Bani/Banni’s in de bronnen; site zegt Lower River maar dáár staat er geen — ambigu",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Banjul",
+   "regio": "Banjul",
+   "lat": 13.4554,
+   "lng": -16.5757,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Banjulunding",
+   "regio": "West Coast",
+   "lat": 13.3765,
+   "lng": -16.6531,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (town \"Banjulinding\")",
+   "toelichting": "",
+   "oud": {
+    "lat": 13.3667,
+    "lng": -16.6833,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 3.45
+  },
+  {
+   "plaats": "Banni",
+   "regio": "Lower River",
+   "lat": 13.35,
+   "lng": -15.58,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "zie Bani — ambigu",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Bansang",
+   "regio": "Central River",
+   "lat": 13.4358,
+   "lng": -14.6588,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Bantango Koto",
+   "regio": "Central River",
+   "lat": 13.55,
+   "lng": -14.72,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "geen bron gevonden",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Bantanto",
+   "regio": "West Coast",
+   "lat": 13.28,
+   "lng": -16.55,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "geen West Coast-Bantanto in de bronnen (wel twee in CRR); tarief past bij Kombo East — onopgelost",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Bantunding",
+   "regio": "Upper River",
+   "lat": 13.4755,
+   "lng": -14.0852,
+   "status": "GECORRIGEERD",
+   "bron": "OSM",
+   "toelichting": "Wuli (Upper River), niet Central River",
+   "oud": {
+    "lat": 13.51,
+    "lng": -14.8,
+    "regio": "Central River"
+   },
+   "verschuiving_km": 77.46
+  },
+  {
+   "plaats": "Banyakang",
+   "regio": "Central River",
+   "lat": 13.54,
+   "lng": -14.65,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "geen bron gevonden",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Barajally",
+   "regio": "Central River",
+   "lat": 13.5852,
+   "lng": -14.9461,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (\"Barajally Tenda\"; \"Suba\" 1,3 km)",
+   "toelichting": "Niani",
+   "oud": {
+    "lat": 13.5,
+    "lng": -14.78,
+    "regio": "Central River"
+   },
+   "verschuiving_km": 20.3
+  },
+  {
+   "plaats": "Baro Kunda",
+   "regio": "Lower River",
+   "lat": 13.48333,
+   "lng": -15.26667,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Barra",
+   "regio": "North Bank",
+   "lat": 13.4855,
+   "lng": -16.543,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Barrow Kunda",
+   "regio": "Upper River",
+   "lat": 13.4882,
+   "lng": -14.1173,
+   "status": "GECORRIGEERD",
+   "bron": "OSM node+way",
+   "toelichting": "Wuli",
+   "oud": {
+    "lat": 13.32,
+    "lng": -14.38,
+    "regio": "Upper River"
+   },
+   "verschuiving_km": 34.0
+  },
+  {
+   "plaats": "Barry Nabeh",
+   "regio": "West Coast",
+   "lat": 13.23,
+   "lng": -16.45,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "geen bron gevonden",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Basse",
+   "regio": "Upper River",
+   "lat": 13.31,
+   "lng": -14.215,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Basse Mansajang",
+   "regio": "Upper River",
+   "lat": 13.2959,
+   "lng": -14.2095,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (\"Mansajang Kunda\")",
+   "toelichting": "bij Basse",
+   "oud": {
+    "lat": 13.32,
+    "lng": -14.22,
+    "regio": "Upper River"
+   },
+   "verschuiving_km": 2.9
+  },
+  {
+   "plaats": "Basse Nding",
+   "regio": "West Coast",
+   "lat": 13.37333,
+   "lng": -16.65722,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "coördinaat klopt exact met GeoNames \"Banjul NDing\" (7.110 inw.); de NAAM op de site is vermoedelijk verkeerd en zou Banjul Nding moeten zijn",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Basse Santa Su",
+   "regio": "Upper River",
+   "lat": 13.31,
+   "lng": -14.215,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Batokunku",
+   "regio": "West Coast",
+   "lat": 13.3268,
+   "lng": -16.7991,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Berefet",
+   "regio": "West Coast",
+   "lat": 13.2439,
+   "lng": -16.3799,
+   "status": "GECORRIGEERD",
+   "bron": "OSM",
+   "toelichting": "Foni Bintang-Karenai",
+   "oud": {
+    "lat": 13.32,
+    "lng": -16.55,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 20.26
+  },
+  {
+   "plaats": "Berending (Kombo)",
+   "regio": "West Coast",
+   "lat": 13.1402,
+   "lng": -16.743,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (als \"Berrending\")",
+   "toelichting": "Kombo South, tussen Gunjur en Kartong; op de oude plek (13.34,-16.745) ligt geen dorp",
+   "oud": {
+    "lat": 13.34,
+    "lng": -16.745,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 22.09
+  },
+  {
+   "plaats": "Berending (Niumi)",
+   "regio": "North Bank",
+   "lat": 13.4909,
+   "lng": -16.4613,
+   "status": "GECORRIGEERD",
+   "bron": "OSM node+way",
+   "toelichting": "Lower Niumi",
+   "oud": {
+    "lat": 13.49,
+    "lng": -16.5,
+    "regio": "North Bank"
+   },
+   "verschuiving_km": 4.19
+  },
+  {
+   "plaats": "Besang Dugu",
+   "regio": "Central River",
+   "lat": 13.52,
+   "lng": -14.71,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "geen bron gevonden",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Bessi Nding",
+   "regio": "West Coast",
+   "lat": 13.3,
+   "lng": -16.5833,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "geen bron gevonden",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Bijilo",
+   "regio": "West Coast",
+   "lat": 13.4219,
+   "lng": -16.7328,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Bintang",
+   "regio": "West Coast",
+   "lat": 13.2508,
+   "lng": -16.212,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (node \"Bintang Bolong\")",
+   "toelichting": "dorp aan de Bintang Bolong; enkelbron",
+   "oud": {
+    "lat": 13.25,
+    "lng": -16.25,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 4.12
+  },
+  {
+   "plaats": "Bohum Kunda",
+   "regio": "Upper River",
+   "lat": 13.5556,
+   "lng": -13.9506,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Bondali",
+   "regio": "West Coast",
+   "lat": 13.2347,
+   "lng": -15.9142,
+   "status": "GECORRIGEERD",
+   "bron": "OSM",
+   "toelichting": "Foni Bondali; oude waarde lag 78 km west",
+   "oud": {
+    "lat": 13.33,
+    "lng": -16.63,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 78.25
+  },
+  {
+   "plaats": "Bonto",
+   "regio": "West Coast",
+   "lat": 13.2884,
+   "lng": -16.5556,
+   "status": "GECORRIGEERD",
+   "bron": "OSM",
+   "toelichting": "Kombo East, bij Pirang",
+   "oud": {
+    "lat": 13.29,
+    "lng": -16.65,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 10.23
+  },
+  {
+   "plaats": "Boro Dampha Kunda",
+   "regio": "Central River",
+   "lat": 13.53,
+   "lng": -14.7,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "geen bron gevonden",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Boro Kanda Kassy",
+   "regio": "Upper River",
+   "lat": 13.4227,
+   "lng": -14.0286,
+   "status": "GECORRIGEERD",
+   "bron": "OSM node+way",
+   "toelichting": "Wuli (Upper River), niet Lower River",
+   "oud": {
+    "lat": 13.34,
+    "lng": -15.68,
+    "regio": "Lower River"
+   },
+   "verschuiving_km": 179.11
+  },
+  {
+   "plaats": "Boro Modi Bane",
+   "regio": "Upper River",
+   "lat": 13.439,
+   "lng": -14.0311,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (\"Boro Modi Bani\", hamlet)",
+   "toelichting": "Wuli; enkelbron",
+   "oud": {
+    "lat": 13.35,
+    "lng": -15.53,
+    "regio": "Lower River"
+   },
+   "verschuiving_km": 162.65
+  },
+  {
+   "plaats": "Brifu",
+   "regio": "Upper River",
+   "lat": 13.5073,
+   "lng": -13.9352,
+   "status": "GECORRIGEERD",
+   "bron": "OSM node+way+GeoNames",
+   "toelichting": "Wuli (Upper River), niet West Coast",
+   "oud": {
+    "lat": 13.21,
+    "lng": -16.56,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 286.35
+  },
+  {
+   "plaats": "Brikama",
+   "regio": "West Coast",
+   "lat": 13.2744,
+   "lng": -16.6454,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Brikama Ba",
+   "regio": "Central River",
+   "lat": 13.5376,
+   "lng": -14.9275,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (town)+GeoNames (0,8 km)",
+   "toelichting": "Fulladu West (Central River), niet North Bank; drievoudige vermelding",
+   "oud": {
+    "lat": 13.55,
+    "lng": -15.9833,
+    "regio": "North Bank"
+   },
+   "verschuiving_km": 114.27
+  },
+  {
+   "plaats": "Brikama Ba (CRR)",
+   "regio": "Central River",
+   "lat": 13.5376,
+   "lng": -14.9275,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (town)+GeoNames",
+   "toelichting": "",
+   "oud": {
+    "lat": 13.53333,
+    "lng": -14.93333,
+    "regio": "Central River"
+   },
+   "verschuiving_km": 0.79
+  },
+  {
+   "plaats": "Brikamaba",
+   "regio": "Central River",
+   "lat": 13.5376,
+   "lng": -14.9275,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (town)+GeoNames",
+   "toelichting": "zelfde stad als Brikama Ba (CRR)",
+   "oud": {
+    "lat": 13.5167,
+    "lng": -14.7333,
+    "regio": "Central River"
+   },
+   "verschuiving_km": 21.15
+  },
+  {
+   "plaats": "Brufut",
+   "regio": "West Coast",
+   "lat": 13.3813,
+   "lng": -16.7517,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Brufut Heights",
+   "regio": "West Coast",
+   "lat": 13.4,
+   "lng": -16.759,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "estate zonder scherp middelpunt; OSM-punt ligt 1,5 km n.o. van de huidige waarde — huidige waarde gehandhaafd",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Brusubi",
+   "regio": "West Coast",
+   "lat": 13.4073,
+   "lng": -16.7306,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Bulok",
+   "regio": "West Coast",
+   "lat": 13.1767,
+   "lng": -16.4158,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Bundung",
+   "regio": "Kanifing",
+   "lat": 13.4251,
+   "lng": -16.6774,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (way \"Bundung Six Junction\"; way \"Bundung Borehole\" 0,8 km)",
+   "toelichting": "",
+   "oud": {
+    "lat": 13.445,
+    "lng": -16.66,
+    "regio": "Kanifing"
+   },
+   "verschuiving_km": 2.9
+  },
+  {
+   "plaats": "Bureng",
+   "regio": "Lower River",
+   "lat": 13.41667,
+   "lng": -15.28333,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Busumbala",
+   "regio": "West Coast",
+   "lat": 13.3334,
+   "lng": -16.6667,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Busura Alieu",
+   "regio": "Upper River",
+   "lat": 13.3,
+   "lng": -14.52,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "geen bron gevonden",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Bwiam",
+   "regio": "West Coast",
+   "lat": 13.23528,
+   "lng": -16.08639,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Cape Point",
+   "regio": "Kanifing",
+   "lat": 13.4849,
+   "lng": -16.6661,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Chamoi",
+   "regio": "Upper River",
+   "lat": 13.35,
+   "lng": -14.5167,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "twee OSM-Chamois (Wuli 13.464,-14.115 en Kantora 13.319,-14.166); huidige punt bij geen van beide — keuze nodig",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Churchills Town",
+   "regio": "Kanifing",
+   "lat": 13.455,
+   "lng": -16.655,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "Kanifing-wijk; geen gazetteer-bron",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Dankunku",
+   "regio": "Central River",
+   "lat": 13.5693,
+   "lng": -15.3252,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (GeoNames 1,0 km)",
+   "toelichting": "Niamina Dankunku",
+   "oud": {
+    "lat": 13.5,
+    "lng": -15.08,
+    "regio": "Central River"
+   },
+   "verschuiving_km": 27.63
+  },
+  {
+   "plaats": "Darsilami",
+   "regio": "West Coast",
+   "lat": 13.1769,
+   "lng": -16.6567,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (als \"Darsalami\")",
+   "toelichting": "Kombo Central, grensplaats t.z.v. Marakissa",
+   "oud": {
+    "lat": 13.21,
+    "lng": -16.48,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 19.5
+  },
+  {
+   "plaats": "Demba Kunda",
+   "regio": "Upper River",
+   "lat": 13.25,
+   "lng": -14.2667,
+   "status": "GECORRIGEERD",
+   "bron": "GeoNames (OSM-cluster Koto/Kuta/Mandinka < 1,2 km)",
+   "toelichting": "",
+   "oud": {
+    "lat": 13.35,
+    "lng": -14.0833,
+    "regio": "Upper River"
+   },
+   "verschuiving_km": 22.73
+  },
+  {
+   "plaats": "Diabugu",
+   "regio": "Upper River",
+   "lat": 13.3833,
+   "lng": -14.4,
+   "status": "GECORRIGEERD",
+   "bron": "GeoNames (OSM \"Diabugu Batapa\" 0,8 km)",
+   "toelichting": "Sandu; Diabugu Basilla (Kantora) is een ander dorp",
+   "oud": {
+    "lat": 13.2667,
+    "lng": -14.1167,
+    "regio": "Upper River"
+   },
+   "verschuiving_km": 33.29
+  },
+  {
+   "plaats": "Dippa Kunda",
+   "regio": "Kanifing",
+   "lat": 13.4383,
+   "lng": -16.6884,
+   "status": "GECORRIGEERD",
+   "bron": "OSM node (way 0,5 km)",
+   "toelichting": "",
+   "oud": {
+    "lat": 13.432,
+    "lng": -16.665,
+    "regio": "Kanifing"
+   },
+   "verschuiving_km": 2.63
+  },
+  {
+   "plaats": "Ebo Town",
+   "regio": "Kanifing",
+   "lat": 13.4366,
+   "lng": -16.668,
+   "status": "GECORRIGEERD",
+   "bron": "OSM+GeoNames (0,2 km)",
+   "toelichting": "",
+   "oud": {
+    "lat": 13.438,
+    "lng": -16.673,
+    "regio": "Kanifing"
+   },
+   "verschuiving_km": 0.56
+  },
+  {
+   "plaats": "Ebou Town",
+   "regio": "Kanifing",
+   "lat": 13.4366,
+   "lng": -16.668,
+   "status": "GECORRIGEERD",
+   "bron": "OSM+GeoNames (\"Ibo Town\", 0,2 km)",
+   "toelichting": "zelfde wijk als Ebo Town — dubbele vermelding",
+   "oud": {
+    "lat": 13.436,
+    "lng": -16.675,
+    "regio": "Kanifing"
+   },
+   "verschuiving_km": 0.76
+  },
+  {
+   "plaats": "Essau",
+   "regio": "North Bank",
+   "lat": 13.4858,
+   "lng": -16.5262,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Fajara",
+   "regio": "Kanifing",
+   "lat": 13.469,
+   "lng": -16.6914,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Faji Kunda",
+   "regio": "Kanifing",
+   "lat": 13.41778,
+   "lng": -16.66667,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Faraba Banta",
+   "regio": "West Coast",
+   "lat": 13.2667,
+   "lng": -16.5167,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Faraba Sutu",
+   "regio": "West Coast",
+   "lat": 13.2044,
+   "lng": -16.4824,
+   "status": "GECORRIGEERD",
+   "bron": "OSM",
+   "toelichting": "Kombo East",
+   "oud": {
+    "lat": 13.2833,
+    "lng": -16.5167,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 9.48
+  },
+  {
+   "plaats": "Farafenni",
+   "regio": "North Bank",
+   "lat": 13.5721,
+   "lng": -15.598,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Farato",
+   "regio": "West Coast",
+   "lat": 13.3152,
+   "lng": -16.6632,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Fass",
+   "regio": "North Bank",
+   "lat": 13.5641,
+   "lng": -16.4261,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (town)",
+   "toelichting": "Fass Njaga Choi (Jokadu); er bestaat ook een Fass in Upper Saloum (13.80,-15.07)",
+   "oud": {
+    "lat": 13.52,
+    "lng": -16.25,
+    "regio": "North Bank"
+   },
+   "verschuiving_km": 19.67
+  },
+  {
+   "plaats": "Fatoto",
+   "regio": "Upper River",
+   "lat": 13.3992,
+   "lng": -13.891,
+   "status": "BEVESTIGD",
+   "bron": "OSM (town)",
+   "toelichting": "Kantora — al juist op areapagina; app.js liep achter",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Folonko",
+   "regio": "West Coast",
+   "lat": 13.1167,
+   "lng": -16.7333,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "geen gazetteer-bron; naam hoort bij de omgeving Kartong (krokodillenpoel) — huidige punt onbevestigd",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Gambissara",
+   "regio": "Upper River",
+   "lat": 13.2383,
+   "lng": -14.3108,
+   "status": "BEVESTIGD",
+   "bron": "OSM",
+   "toelichting": "LET OP: GeoNames \"Gambissar\" (13.317,-13.95) is het dorp Gambisarra Lamoi — daar kwam de oude fout vandaan",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Garowol",
+   "regio": "Upper River",
+   "lat": 13.41667,
+   "lng": -13.95,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Genieri",
+   "regio": "Lower River",
+   "lat": 13.4142,
+   "lng": -15.6181,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (als \"Geniere\")",
+   "toelichting": "Kiang East; enkelbron",
+   "oud": {
+    "lat": 13.3833,
+    "lng": -15.65,
+    "regio": "Lower River"
+   },
+   "verschuiving_km": 4.86
+  },
+  {
+   "plaats": "Ghana Town",
+   "regio": "West Coast",
+   "lat": 13.38444,
+   "lng": -16.77111,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Giboro Koto",
+   "regio": "West Coast",
+   "lat": 13.1761,
+   "lng": -16.5752,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (als \"Jiboro\")",
+   "toelichting": "grensplaats Kombo East; enkelbron",
+   "oud": {
+    "lat": 13.25,
+    "lng": -16.5333,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 9.35
+  },
+  {
+   "plaats": "Gunjur",
+   "regio": "West Coast",
+   "lat": 13.176,
+   "lng": -16.7599,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Illiassa",
+   "regio": "North Bank",
+   "lat": 13.5644,
+   "lng": -15.7493,
+   "status": "GECORRIGEERD",
+   "bron": "OSM",
+   "toelichting": "Upper Baddibu; enkelbron",
+   "oud": {
+    "lat": 13.56,
+    "lng": -15.72,
+    "regio": "North Bank"
+   },
+   "verschuiving_km": 3.21
+  },
+  {
+   "plaats": "Jabang",
+   "regio": "West Coast",
+   "lat": 13.3619,
+   "lng": -16.7023,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Jajari",
+   "regio": "North Bank",
+   "lat": 13.5762,
+   "lng": -15.746,
+   "status": "GECORRIGEERD",
+   "bron": "OSM",
+   "toelichting": "Upper Baddibu; enkelbron",
+   "oud": {
+    "lat": 13.53,
+    "lng": -15.63,
+    "regio": "North Bank"
+   },
+   "verschuiving_km": 13.55
+  },
+  {
+   "plaats": "Jali",
+   "regio": "Lower River",
+   "lat": 13.35,
+   "lng": -15.9667,
+   "status": "GECORRIGEERD",
+   "bron": "GeoNames (OSM \"Jali Nding\" 1,6 km)",
+   "toelichting": "Kiang West",
+   "oud": {
+    "lat": 13.38,
+    "lng": -15.45,
+    "regio": "Lower River"
+   },
+   "verschuiving_km": 56.06
+  },
+  {
+   "plaats": "Jambanjelly",
+   "regio": "West Coast",
+   "lat": 13.2806,
+   "lng": -16.7276,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Jambur",
+   "regio": "West Coast",
+   "lat": 13.3146,
+   "lng": -16.7008,
+   "status": "GECORRIGEERD",
+   "bron": "OSM node+way",
+   "toelichting": "Kombo Central",
+   "oud": {
+    "lat": 13.38,
+    "lng": -16.73,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 7.89
+  },
+  {
+   "plaats": "Janjanbureh",
+   "regio": "Central River",
+   "lat": 13.5391,
+   "lng": -14.7612,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Japineh",
+   "regio": "Lower River",
+   "lat": 13.423,
+   "lng": -15.4212,
+   "status": "GECORRIGEERD",
+   "bron": "OSM node+way",
+   "toelichting": "zelfde dorp als Jappineh",
+   "oud": {
+    "lat": 13.37,
+    "lng": -15.48,
+    "regio": "Lower River"
+   },
+   "verschuiving_km": 8.65
+  },
+  {
+   "plaats": "Jappineh",
+   "regio": "Lower River",
+   "lat": 13.423,
+   "lng": -15.4212,
+   "status": "GECORRIGEERD",
+   "bron": "OSM node+way",
+   "toelichting": "Jarra East; dubbele vermelding met Japineh",
+   "oud": {
+    "lat": 13.45,
+    "lng": -15.4167,
+    "regio": "Lower River"
+   },
+   "verschuiving_km": 3.02
+  },
+  {
+   "plaats": "Jareng",
+   "regio": "Central River",
+   "lat": 13.6223,
+   "lng": -15.1911,
+   "status": "GECORRIGEERD",
+   "bron": "OSM node+way+GeoNames (\"Jarreng\")",
+   "toelichting": "Niamina East (Central River), niet Lower River",
+   "oud": {
+    "lat": 13.4,
+    "lng": -15.55,
+    "regio": "Lower River"
+   },
+   "verschuiving_km": 45.99
+  },
+  {
+   "plaats": "Jattaba",
+   "regio": "Lower River",
+   "lat": 13.2744,
+   "lng": -15.827,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (als \"Jataba\")",
+   "toelichting": "Kiang West; enkelbron — oude punt (Jarra) heeft geen bron",
+   "oud": {
+    "lat": 13.39,
+    "lng": -15.58,
+    "regio": "Lower River"
+   },
+   "verschuiving_km": 29.65
+  },
+  {
+   "plaats": "Jiffarong",
+   "regio": "Lower River",
+   "lat": 13.3008,
+   "lng": -15.868,
+   "status": "GECORRIGEERD",
+   "bron": "OSM+GeoNames (\"Jifarong\", 0,2 km)",
+   "toelichting": "Kiang West",
+   "oud": {
+    "lat": 13.37,
+    "lng": -15.77,
+    "regio": "Lower River"
+   },
+   "verschuiving_km": 13.08
+  },
+  {
+   "plaats": "Juffureh",
+   "regio": "North Bank",
+   "lat": 13.33861,
+   "lng": -16.3825,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Jumangsarr",
+   "regio": "North Bank",
+   "lat": 13.5455,
+   "lng": -15.7522,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (\"Juman Sari Ba\")",
+   "toelichting": "tweede kandidaat \"Juman Sarikoto\" 4,3 km z.w.; enkelbron",
+   "oud": {
+    "lat": 13.51,
+    "lng": -15.65,
+    "regio": "North Bank"
+   },
+   "verschuiving_km": 11.74
+  },
+  {
+   "plaats": "Kabafita",
+   "regio": "West Coast",
+   "lat": 13.3167,
+   "lng": -16.7167,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "geen gazetteer-bron; Kabafita Forest Park grenst aan Brikama — huidige punt onbevestigd",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Kafuta",
+   "regio": "West Coast",
+   "lat": 13.2014,
+   "lng": -16.466,
+   "status": "GECORRIGEERD",
+   "bron": "OSM node (way 1,3 km)",
+   "toelichting": "Kombo East",
+   "oud": {
+    "lat": 13.2333,
+    "lng": -16.5667,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 11.47
+  },
+  {
+   "plaats": "Kaiaf",
+   "regio": "Lower River",
+   "lat": 13.4092,
+   "lng": -15.6082,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (GeoNames 1,4 km)",
+   "toelichting": "Kiang East",
+   "oud": {
+    "lat": 13.4,
+    "lng": -15.61667,
+    "regio": "Lower River"
+   },
+   "verschuiving_km": 1.37
+  },
+  {
+   "plaats": "Kaiaf Niji",
+   "regio": "North Bank",
+   "lat": 13.5,
+   "lng": -16.35,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "onvindbaar; mogelijk verwarring met Konti Kunda Niji (North Bank)",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Kalagi",
+   "regio": "West Coast",
+   "lat": 13.2466,
+   "lng": -15.8379,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (\"Kalaji\")+GeoNames (0,3 km)",
+   "toelichting": "Foni Jarrol",
+   "oud": {
+    "lat": 13.2333,
+    "lng": -16.35,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 55.51
+  },
+  {
+   "plaats": "Kanifing",
+   "regio": "Kanifing",
+   "lat": 13.4538,
+   "lng": -16.6748,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (town-node)",
+   "toelichting": "",
+   "oud": {
+    "lat": 13.45,
+    "lng": -16.6667,
+    "regio": "Kanifing"
+   },
+   "verschuiving_km": 0.97
+  },
+  {
+   "plaats": "Kanilai",
+   "regio": "West Coast",
+   "lat": 13.1699,
+   "lng": -16.0097,
+   "status": "GECORRIGEERD",
+   "bron": "OSM",
+   "toelichting": "Foni Kansala",
+   "oud": {
+    "lat": 13.1833,
+    "lng": -16.2,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 20.68
+  },
+  {
+   "plaats": "Kansala",
+   "regio": "West Coast",
+   "lat": 13.2412,
+   "lng": -16.1215,
+   "status": "GECORRIGEERD",
+   "bron": "OSM",
+   "toelichting": "Foni Kansala; enkelbron",
+   "oud": {
+    "lat": 13.1833,
+    "lng": -16.3167,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 22.1
+  },
+  {
+   "plaats": "Kantora",
+   "regio": "Upper River",
+   "lat": 13.3,
+   "lng": -14.6,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "districtsnaam; huidige punt (13.3,-14.6) ligt in Fulladu, ver buiten Kantora — anker Fatoto mogelijk",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Karantaba",
+   "regio": "Lower River",
+   "lat": 13.43333,
+   "lng": -15.51667,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Kartong",
+   "regio": "West Coast",
+   "lat": 13.0913,
+   "lng": -16.7597,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Katchang",
+   "regio": "North Bank",
+   "lat": 13.5,
+   "lng": -15.75,
+   "status": "GECORRIGEERD",
+   "bron": "GeoNames (OSM \"Katchang Tenda\" 0,7 km)",
+   "toelichting": "Lower Baddibu",
+   "oud": {
+    "lat": 13.5333,
+    "lng": -16.0333,
+    "regio": "North Bank"
+   },
+   "verschuiving_km": 30.88
+  },
+  {
+   "plaats": "Kaur",
+   "regio": "Central River",
+   "lat": 13.7,
+   "lng": -15.333,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Kembujeh",
+   "regio": "West Coast",
+   "lat": 13.37,
+   "lng": -16.71,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "geen bron; mogelijk hetzelfde als \"Kaimbujae Nding\" (13.284,-16.606, 14,8 km oostelijker) — bevestiging nodig",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Keneba",
+   "regio": "Lower River",
+   "lat": 13.32889,
+   "lng": -16.015,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Kerewan",
+   "regio": "North Bank",
+   "lat": 13.4936,
+   "lng": -16.0891,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Kerr Serign",
+   "regio": "West Coast",
+   "lat": 13.4325,
+   "lng": -16.7203,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Kitty",
+   "regio": "West Coast",
+   "lat": 13.2279,
+   "lng": -16.668,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (als \"Kiti\")",
+   "toelichting": "Kombo Central, t.z.v. Brikama",
+   "oud": {
+    "lat": 13.32,
+    "lng": -16.73,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 12.2
+  },
+  {
+   "plaats": "Koina",
+   "regio": "Upper River",
+   "lat": 13.48333,
+   "lng": -13.86667,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Kololi",
+   "regio": "West Coast",
+   "lat": 13.4404,
+   "lng": -16.7156,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Konteh Kunda",
+   "regio": "Upper River",
+   "lat": 13.38,
+   "lng": -14.05,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "site zegt Upper River; alle Konteh Kunda’s in de bronnen liggen in Baddibu (North Bank) — keuze nodig",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Kotu",
+   "regio": "Kanifing",
+   "lat": 13.4553,
+   "lng": -16.7034,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Kudang",
+   "regio": "Central River",
+   "lat": 13.6621,
+   "lng": -15.0602,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (town; way \"Kudang Tenda\" 3 km)",
+   "toelichting": "Niamina East aan de rivier; enkelbron",
+   "oud": {
+    "lat": 13.5333,
+    "lng": -14.8333,
+    "regio": "Central River"
+   },
+   "verschuiving_km": 28.39
+  },
+  {
+   "plaats": "Kulari",
+   "regio": "Upper River",
+   "lat": 13.4,
+   "lng": -14.08333,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Kuloro",
+   "regio": "West Coast",
+   "lat": 13.2806,
+   "lng": -16.5781,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Kuntair",
+   "regio": "North Bank",
+   "lat": 13.5344,
+   "lng": -16.2224,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (als \"Kuntaya\")",
+   "toelichting": "hoofdplaats Jokadu; enkelbron",
+   "oud": {
+    "lat": 13.5167,
+    "lng": -15.95,
+    "regio": "North Bank"
+   },
+   "verschuiving_km": 29.55
+  },
+  {
+   "plaats": "Kuntaur",
+   "regio": "Central River",
+   "lat": 13.6709,
+   "lng": -14.8898,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Kunting",
+   "regio": "Central River",
+   "lat": 13.5275,
+   "lng": -14.6697,
+   "status": "GECORRIGEERD",
+   "bron": "OSM+GeoNames (0,7 km)",
+   "toelichting": "Niani/Sami",
+   "oud": {
+    "lat": 13.55,
+    "lng": -14.85,
+    "regio": "Central River"
+   },
+   "verschuiving_km": 19.67
+  },
+  {
+   "plaats": "Kwinella",
+   "regio": "Lower River",
+   "lat": 13.4,
+   "lng": -15.8,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Lamin",
+   "regio": "West Coast",
+   "lat": 13.3874,
+   "lng": -16.6439,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Latri Kunda",
+   "regio": "Kanifing",
+   "lat": 13.437,
+   "lng": -16.674,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "twee wijken (Latrikunda Sabiji 13.411,-16.674; Latrikunda German 13.450,-16.685); huidige punt ligt ertussen — keuze nodig",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Latriya",
+   "regio": "West Coast",
+   "lat": 13.3,
+   "lng": -16.711,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "schatting; geen gazetteer",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Madiana",
+   "regio": "West Coast",
+   "lat": 13.3533,
+   "lng": -16.7631,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Mamuda",
+   "regio": "West Coast",
+   "lat": 13.3032,
+   "lng": -16.7328,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "schatting; geen gazetteer",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Mandina Ba",
+   "regio": "West Coast",
+   "lat": 13.2804,
+   "lng": -16.5899,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (town)",
+   "toelichting": "zelfde plaats als Mandinaba — dubbele vermelding",
+   "oud": {
+    "lat": 13.24,
+    "lng": -16.51,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 9.74
+  },
+  {
+   "plaats": "Mandinaba",
+   "regio": "West Coast",
+   "lat": 13.2804,
+   "lng": -16.5899,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (town \"Mandina Ba\")",
+   "toelichting": "aan de Trans-Gambia Highway",
+   "oud": {
+    "lat": 13.34,
+    "lng": -16.67,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 10.9
+  },
+  {
+   "plaats": "Manjai Kunda",
+   "regio": "Kanifing",
+   "lat": 13.4422,
+   "lng": -16.6981,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Mansa Konko",
+   "regio": "Lower River",
+   "lat": 13.4585,
+   "lng": -15.534,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Marakissa",
+   "regio": "West Coast",
+   "lat": 13.2126,
+   "lng": -16.6483,
+   "status": "GECORRIGEERD",
+   "bron": "OSM",
+   "toelichting": "dorp bij Senegalese grens, t.z.v. Brikama",
+   "oud": {
+    "lat": 13.32,
+    "lng": -16.68,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 12.36
+  },
+  {
+   "plaats": "Medina Serign Mass",
+   "regio": "North Bank",
+   "lat": 13.4913,
+   "lng": -16.4105,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (\"Medina Seringe Mass\")",
+   "toelichting": "Lower Niumi; dubbele vermelding met Medina Serigne Mass",
+   "oud": {
+    "lat": 13.53,
+    "lng": -15.71,
+    "regio": "North Bank"
+   },
+   "verschuiving_km": 75.94
+  },
+  {
+   "plaats": "Medina Serigne Mass",
+   "regio": "North Bank",
+   "lat": 13.4913,
+   "lng": -16.4105,
+   "status": "GECORRIGEERD",
+   "bron": "OSM",
+   "toelichting": "Lower Niumi",
+   "oud": {
+    "lat": 13.5167,
+    "lng": -16.15,
+    "regio": "North Bank"
+   },
+   "verschuiving_km": 28.34
+  },
+  {
+   "plaats": "Nema Kunku",
+   "regio": "West Coast",
+   "lat": 13.40461,
+   "lng": -16.68401,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "New Jeshwang",
+   "regio": "Kanifing",
+   "lat": 13.4429,
+   "lng": -16.6706,
+   "status": "GECORRIGEERD",
+   "bron": "OSM node (way 0,5 km)",
+   "toelichting": "",
+   "oud": {
+    "lat": 13.46,
+    "lng": -16.664,
+    "regio": "Kanifing"
+   },
+   "verschuiving_km": 2.02
+  },
+  {
+   "plaats": "Niani Sukuta",
+   "regio": "Central River",
+   "lat": 13.617,
+   "lng": -14.9231,
+   "status": "GECORRIGEERD",
+   "bron": "OSM+GeoNames (\"Sukuta\", 0,7 km)",
+   "toelichting": "Niani",
+   "oud": {
+    "lat": 13.5833,
+    "lng": -14.7667,
+    "regio": "Central River"
+   },
+   "verschuiving_km": 17.33
+  },
+  {
+   "plaats": "Nianija",
+   "regio": "Central River",
+   "lat": 13.55,
+   "lng": -14.95,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "districtsnaam; huidige punt ligt zuid van de rivier, Nianija is noordoever — anker Kass Wollof (13.783,-14.933) mogelijk",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Njaba Kunda",
+   "regio": "North Bank",
+   "lat": 13.5547,
+   "lng": -15.9131,
+   "status": "GECORRIGEERD",
+   "bron": "OSM",
+   "toelichting": "Central Baddibu; enkelbron",
+   "oud": {
+    "lat": 13.55,
+    "lng": -15.75,
+    "regio": "North Bank"
+   },
+   "verschuiving_km": 17.66
+  },
+  {
+   "plaats": "Njau",
+   "regio": "Central River",
+   "lat": 13.7474,
+   "lng": -15.2109,
+   "status": "GECORRIGEERD",
+   "bron": "OSM",
+   "toelichting": "Upper Saloum (Central River); dubbele vermelding met Njau (CRR)",
+   "oud": {
+    "lat": 13.53,
+    "lng": -15.7833,
+    "regio": "North Bank"
+   },
+   "verschuiving_km": 66.45
+  },
+  {
+   "plaats": "Njau (CRR)",
+   "regio": "Central River",
+   "lat": 13.7474,
+   "lng": -15.2109,
+   "status": "GECORRIGEERD",
+   "bron": "OSM",
+   "toelichting": "Upper Saloum",
+   "oud": {
+    "lat": 13.66,
+    "lng": -14.91,
+    "regio": "Central River"
+   },
+   "verschuiving_km": 33.95
+  },
+  {
+   "plaats": "No Kunda",
+   "regio": "North Bank",
+   "lat": 13.56667,
+   "lng": -15.83333,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Numuyel",
+   "regio": "Upper River",
+   "lat": 13.2759,
+   "lng": -14.2946,
+   "status": "GECORRIGEERD",
+   "bron": "OSM",
+   "toelichting": "Basse/Jimara",
+   "oud": {
+    "lat": 13.35,
+    "lng": -14.15,
+    "regio": "Upper River"
+   },
+   "verschuiving_km": 17.68
+  },
+  {
+   "plaats": "Nyambai",
+   "regio": "West Coast",
+   "lat": 13.2794,
+   "lng": -16.6541,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (suburb Brikama)",
+   "toelichting": "wijk van Brikama",
+   "oud": {
+    "lat": 13.31,
+    "lng": -16.66,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 3.44
+  },
+  {
+   "plaats": "Old Jeshwang",
+   "regio": "Kanifing",
+   "lat": 13.4533,
+   "lng": -16.6612,
+   "status": "GECORRIGEERD",
+   "bron": "OSM node (way 0,9 km)",
+   "toelichting": "",
+   "oud": {
+    "lat": 13.463,
+    "lng": -16.658,
+    "regio": "Kanifing"
+   },
+   "verschuiving_km": 1.13
+  },
+  {
+   "plaats": "Old Yundum",
+   "regio": "West Coast",
+   "lat": 13.3625,
+   "lng": -16.68611,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Pakalinding",
+   "regio": "Lower River",
+   "lat": 13.4634,
+   "lng": -15.5517,
+   "status": "GECORRIGEERD",
+   "bron": "OSM+GeoNames (\"Pakali Nding\", 0,4 km)",
+   "toelichting": "Jarra West, bij Soma",
+   "oud": {
+    "lat": 13.4,
+    "lng": -15.5,
+    "regio": "Lower River"
+   },
+   "verschuiving_km": 8.97
+  },
+  {
+   "plaats": "Pipeline",
+   "regio": "Kanifing",
+   "lat": 13.463,
+   "lng": -16.6841,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Pirang",
+   "regio": "West Coast",
+   "lat": 13.2725,
+   "lng": -16.5353,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Sabach Sanjal",
+   "regio": "North Bank",
+   "lat": 13.54,
+   "lng": -15.68,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "districtsnaam; anker Ngayen Sanjal (13.597,-15.444) mogelijk",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Sabi",
+   "regio": "Upper River",
+   "lat": 13.23333,
+   "lng": -14.2,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Salagi",
+   "regio": "West Coast",
+   "lat": 13.3928,
+   "lng": -16.7104,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "schatting; staat in geen enkele gazetteer (gedocumenteerd in CLAUDE.md)",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Sambang",
+   "regio": "Central River",
+   "lat": 13.5412,
+   "lng": -15.3311,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (GeoNames 0,9 km)",
+   "toelichting": "Niamina Dankunku",
+   "oud": {
+    "lat": 13.6,
+    "lng": -14.7333,
+    "regio": "Central River"
+   },
+   "verschuiving_km": 65.01
+  },
+  {
+   "plaats": "Sambuya",
+   "regio": "West Coast",
+   "lat": 13.21306,
+   "lng": -16.76556,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "geen gazetteer-bron; huidige waarde (bij Gunjur) is plausibel maar onbevestigd — Plus Code van Edwin welkom",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Sandu",
+   "regio": "Upper River",
+   "lat": 13.36,
+   "lng": -14.15,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "districtsnaam, geen dorp; hoofdplaats Diabugu (13.383,-14.400) als anker mogelijk",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Sankuia",
+   "regio": "Lower River",
+   "lat": 13.46667,
+   "lng": -15.51667,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Sanyang",
+   "regio": "West Coast",
+   "lat": 13.2676,
+   "lng": -16.7584,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Selikene",
+   "regio": "North Bank",
+   "lat": 13.48333,
+   "lng": -15.96667,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Senegambia",
+   "regio": "West Coast",
+   "lat": 13.4431,
+   "lng": -16.7198,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Serekunda",
+   "regio": "Kanifing",
+   "lat": 13.4388,
+   "lng": -16.6748,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Serrekunda",
+   "regio": "Kanifing",
+   "lat": 13.4388,
+   "lng": -16.6748,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Sibanor",
+   "regio": "West Coast",
+   "lat": 13.2059,
+   "lng": -16.1935,
+   "status": "GECORRIGEERD",
+   "bron": "OSM",
+   "toelichting": "Foni Bintang; oude waarde lag 29 km west",
+   "oud": {
+    "lat": 13.3167,
+    "lng": -16.4333,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 28.72
+  },
+  {
+   "plaats": "Sifoe",
+   "regio": "West Coast",
+   "lat": 13.18361,
+   "lng": -16.6975,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Sinchu Alagie",
+   "regio": "West Coast",
+   "lat": 13.37808,
+   "lng": -16.68374,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Sinchu Baliya",
+   "regio": "West Coast",
+   "lat": 13.36,
+   "lng": -16.66,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "geen bron voor dit Kombo-dorp (GeoNames \"Sinchu Balla\" is een ander dorp in CRR)",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Sintet",
+   "regio": "West Coast",
+   "lat": 13.2398,
+   "lng": -15.8129,
+   "status": "GECORRIGEERD",
+   "bron": "OSM+GeoNames (0,8 km)",
+   "toelichting": "Foni Jarrol",
+   "oud": {
+    "lat": 13.2333,
+    "lng": -16.15,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 36.54
+  },
+  {
+   "plaats": "Soma",
+   "regio": "Lower River",
+   "lat": 13.4446,
+   "lng": -15.5355,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Somita",
+   "regio": "West Coast",
+   "lat": 13.20583,
+   "lng": -16.30556,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Sotokoi",
+   "regio": "West Coast",
+   "lat": 13.2262,
+   "lng": -16.5033,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (als \"Medina Sotokoi\")",
+   "toelichting": "Kombo East; enkelbron",
+   "oud": {
+    "lat": 13.2333,
+    "lng": -16.5667,
+    "regio": "West Coast"
+   },
+   "verschuiving_km": 6.91
+  },
+  {
+   "plaats": "Sudowol",
+   "regio": "Upper River",
+   "lat": 13.36667,
+   "lng": -13.96667,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Sukuta",
+   "regio": "West Coast",
+   "lat": 13.4148,
+   "lng": -16.7076,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Sutukoba",
+   "regio": "Upper River",
+   "lat": 13.4977,
+   "lng": -14.0162,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (GeoNames 0,3 km)",
+   "toelichting": "Wuli East",
+   "oud": {
+    "lat": 13.4167,
+    "lng": -14,
+    "regio": "Upper River"
+   },
+   "verschuiving_km": 9.13
+  },
+  {
+   "plaats": "Tabokoto",
+   "regio": "Kanifing",
+   "lat": 13.4066,
+   "lng": -16.6658,
+   "status": "GECORRIGEERD",
+   "bron": "OSM (quarter \"Tabukoto\")",
+   "toelichting": "bij Sukuta/Wellingara; enige Tabokoto in de bronnen",
+   "oud": {
+    "lat": 13.45,
+    "lng": -16.6667,
+    "regio": "Kanifing"
+   },
+   "verschuiving_km": 4.8
+  },
+  {
+   "plaats": "Talinding",
+   "regio": "Kanifing",
+   "lat": 13.42558,
+   "lng": -16.67261,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Tallinding Kunjang",
+   "regio": "Kanifing",
+   "lat": 13.4259,
+   "lng": -16.6722,
+   "status": "GECORRIGEERD",
+   "bron": "OSM+GeoNames",
+   "toelichting": "zelfde wijk als Talinding — dubbele vermelding",
+   "oud": {
+    "lat": 13.437,
+    "lng": -16.683,
+    "regio": "Kanifing"
+   },
+   "verschuiving_km": 1.7
+  },
+  {
+   "plaats": "Tanji",
+   "regio": "West Coast",
+   "lat": 13.3586,
+   "lng": -16.7975,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Tujereng",
+   "regio": "West Coast",
+   "lat": 13.3179,
+   "lng": -16.7889,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Tunjina",
+   "regio": "West Coast",
+   "lat": 13.2833,
+   "lng": -16.5667,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "geen bron gevonden",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Wassu",
+   "regio": "Central River",
+   "lat": 13.69094,
+   "lng": -14.87884,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Wellingara",
+   "regio": "West Coast",
+   "lat": 13.404,
+   "lng": -16.674,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Wuli",
+   "regio": "Upper River",
+   "lat": 13.42,
+   "lng": -14.35,
+   "status": "GEVLAGD",
+   "bron": "",
+   "toelichting": "districtsnaam; huidige punt ligt bovendien op de zuidoever (Wuli is noordoever)",
+   "oud": null,
+   "verschuiving_km": 0
+  },
+  {
+   "plaats": "Yundum",
+   "regio": "West Coast",
+   "lat": 13.3422,
+   "lng": -16.6697,
+   "status": "OK",
+   "bron": "OSM/GeoNames-controle 26-08 + 29-08",
+   "toelichting": "",
+   "oud": null,
+   "verschuiving_km": 0
+  }
+ ]
+}

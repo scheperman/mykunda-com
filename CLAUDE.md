@@ -1212,6 +1212,47 @@ gazetteer** — niet in GeoNames, niet in OpenStreetMap, niet in de nationale
 nederzettingenlaag. Hun coördinaat is een schatting op 1,5 tot 2 km, en dat
 staat ook op de pagina zelf. Farato staat er onder zijn oude naam *Medina
 Suware Kunda*; drie ándere plaatsen in het land heten óók Farato, en
+
+#### Plaatscontrole 30-08-2026: één bron, en de val van 26-08
+
+Edwin zag dat plaatsen op de verkeerde plek op de Mapbox-kaart stonden. De
+oorzaak bleek tweeledig. Eén: de correctieronde van 26-08 heeft
+`gambia-places.js` en de areapagina's gerepareerd, maar **niet** `GM_AREAS`
+en `AREA_COORDS` in `app.js` — en juist die twee voeden de kaart in de
+listing-wizard (list.html) en de Valuation-tool (sell.html). Daardoor stonden
+39 plaatsen er in de site-bronnen onderling tot 40 km naast (Gambissara,
+Fatoto, Sinchu Alagie…), en won bij Jambanjelly een dubbele objectsleutel met
+het oude districtszwaartepunt. Twee: de dorpenstaart (de "additional
+villages"-blokken met twee decimalen) was nooit gecontroleerd; 55 dorpen
+stonden in álle tabellen fout, tot 78 km (Bondali) en 29 km (Sibanor).
+
+Alle 186 plaatsen zijn vergeleken met OpenStreetMap (alle place-nodes én
+-ways binnen Gambia via Overpass, 1.112 bruikbare vermeldingen) en GeoNames
+(cities500): 75 gecorrigeerd met bronvermelding, 31 zonder bron gevlagd
+(`// niet onderbouwd` in `gambia-places.js` — daar niets aan "verbeteren"
+zonder bron; Plus Codes van Edwin zijn de beste route, zoals eerder bij
+Sinchu Alagie en Nema Kunku). Een steekproef van 12 correcties is bevestigd
+tegen Mapbox Geocoding v6 zelf: 11 exact, 1 binnen 0,4 km. Volledige tabel
+met bewijs per plaats: `_werk/plaatscontrole-2026-08-30.json`.
+
+De GeoNames-val die de oude Gambissara-fout verklaart: GeoNames "Gambissar"
+(13,317 / −13,95) is het dorpje Gambisarra Lamoi in Kantora, niet de stad
+Gambissara (13,238 / −14,311). Wie blind op GeoNames-namen geocodeert, zet
+de stad 40 km mis. OSM had het wel goed.
+
+**De regel sinds 30-08-2026: `gambia-places.js` is de enige bron.**
+`GM_AREAS` en `AREA_COORDS` in `app.js` zijn daaruit gegenereerd (zelfde
+waarden; langste naam eerst, zodat substring-matching in `plusCodeRefPoint`
+nooit op een kortere naam als "Banjul" in "Banjulunding" blijft hangen) en
+worden nooit los bijgewerkt. `node _werk/check-plaatsen.mjs` bewaakt de
+gelijkheid van de drie tabellen en hoort in elke controle-run; hij faalde op
+de oude bestanden met 83 verschillen en staat nu op nul.
+
+Nog open na 30-08: vijf districtsnamen (Sandu, Wuli, Kantora, Nianija,
+Sabach Sanjal) hebben geen puntlocatie en staan deels zelfs buiten hun
+district; en 'Basse Nding' heeft exact de coördinaat van GeoNames "Banjul
+NDing" — de naam op de site is dus vermoedelijk verkeerd. Beide wachten op
+een keuze van Edwin (zie het plaatscontrole-rapport).
 kaartdiensten geven meestal die in Upper River.
 
 ## Gebiedsprijzen: één bron, en huur nooit uit een prijs
