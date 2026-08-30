@@ -1360,6 +1360,15 @@ function specsHTML(p){
     return `<span class="card-spec">${ICON.area} ${p.plot.toLocaleString()} m² plot</span>
         <span class="card-spec spec-tag">${p.tag}</span>`;
   }
+  if((p.segment==='commercial') || (typeof mkIsCommercialCat==='function' && mkIsCommercialCat(p.cat))){
+    const bits = [];
+    if(p.sqm) bits.push(`<span class="card-spec">${ICON.area} ${p.sqm} m²</span>`);
+    if(p.units > 1) bits.push(`<span class="card-spec">${p.units} units</span>`);
+    if(p.parking) bits.push(`<span class="card-spec">${p.parking} parking</span>`);
+    if(p.cat === 'business_plot' && p.plot) bits.push(`<span class="card-spec">${ICON.area} ${p.plot.toLocaleString()} m² plot</span>`);
+    bits.push(`<span class="card-spec spec-tag">${p.tag}</span>`);
+    return bits.join('\n        ');
+  }
   return `<span class="card-spec">${ICON.bed} ${p.beds}</span>
         <span class="card-spec">${ICON.bath} ${p.baths}</span>
         <span class="card-spec">${ICON.area} ${p.sqm} m²</span>
@@ -1462,10 +1471,34 @@ const MK_MENUS = {
 };
 
 /* ---------- Shared filter vocabularies (buy/rent search finder + search.html) ---------- */
+/* Woningmarkt. Commercieel stond hier tot 29-08-2026 als losse regel onder
+   "Other" — één vinkje voor winkel, kantoor, opslag en bedrijfskavel samen, op
+   een pagina die verder over woningen gaat. Dat is een eigen kanaal geworden:
+   de commerciële woordenlijst staat hieronder en wordt door commercial.html,
+   search.html?seg=commercial en het commerciële spoor in list.html gebruikt. */
 const MK_CATEGORIES = [
   ['Homes',[['House or villa','house,villa'],['Apartment','apartment'],['Penthouse','penthouse'],['Townhouse','townhouse'],['Compound','compound'],['Lodge','lodge']]],
-  ['Other',[['Commercial','commercial'],['Land / plot','land']]]
+  ['Other',[['Land / plot','land']]]
 ];
+/* Bedrijfsmarkt. business_plot is de commerciële tegenhanger van land: een
+   kavel of ommuurd terrein voor bedrijfsmatig gebruik. */
+const MK_CATEGORIES_COMM = [
+  ['Retail & hospitality',[['Shop / retail unit','retail'],['Restaurant / bar','restaurant']]],
+  ['Work & storage',[['Office','office'],['Warehouse / storage','warehouse']]],
+  ['Buildings & land',[['Mixed-use building','mixed_use'],['Plot / yard','business_plot']]]
+];
+/* Eén lijst als bron van waarheid voor "is dit commercieel?". 'commercial' is
+   de oude verzamelwaarde: nergens meer aan te bieden, maar bestaande rijen
+   hebben hem nog, en die horen in het commerciële kanaal thuis. */
+const MK_COMM_CATS = ['retail','restaurant','office','warehouse','mixed_use','business_plot','commercial'];
+function mkIsCommercialCat(c){ return MK_COMM_CATS.indexOf(String(c||'')) >= 0; }
+/* Opleverniveau en huidig gebruik — twee dingen die een bedrijfsruimte wél
+   heeft en een woning niet. Een pand kan als kantoor te huur staan en op dit
+   moment nog winkel zijn; de categorie zegt daar niets over. */
+const MK_FIT_OUT = [['shell','Shell / bare'],['fitted','Fitted'],['turnkey','Turnkey']];
+const MK_CURRENT_USE = [['vacant','Vacant'],['shop','In use as a shop'],['office','In use as an office'],['restaurant','In use as a restaurant'],['warehouse','In use as storage'],['other','Other use']];
+const MK_SERV_COMM = [['nawec_water','Mains (NAWEC) water'],['backup_power','Backup power (solar/generator)'],['three_phase','Three-phase power'],['parking','Own parking'],['aircon','Air-conditioned'],['loading','Loading access']];
+const MK_FEAT_COMM = [['Street frontage','Street frontage'],['Corner unit','Corner unit'],['Highway access','Highway access'],['Gated','Gated / secured'],['new','Newly listed']];
 const MK_DOC_TYPES = [
   ['freehold','Freehold (with title deed)'],
   ['leasehold','Leasehold'],
@@ -1483,7 +1516,11 @@ const MK_FEAT_LAND = [['Sea view','Sea view'],['Beachfront','Beachfront'],['new'
 
 /* ---------- Header / footer injectors ---------- */
 function headerHTML(active, onHero){
-  const links = [['Buy','buy.html'],['Rent','rent.html'],['List','sell.html'],['Verify','verify.html'],['Areas','#'],['Guides','guides.html']];
+  /* Commercial staat sinds 29-08-2026 naast Buy en Rent: winkels, kantoren,
+     opslag en bedrijfskavels zijn een eigen kanaal en geen filter meer binnen
+     het woningaanbod. Zeven items, één regel op desktop; op mobiel valt het in
+     dezelfde lijst als de rest. */
+  const links = [['Buy','buy.html'],['Rent','rent.html'],['Commercial','commercial.html'],['List','sell.html'],['Verify','verify.html'],['Areas','#'],['Guides','guides.html']];
   const AREA_REGIONS = MK_AREAS;
   const AREAS = AREA_REGIONS.flatMap(r=>r[1]);
   const u = getUser();
@@ -1595,7 +1632,7 @@ function headerHTML(active, onHero){
 
 function footerHTML(){
   const cols = [
-    ['Explore',['Properties for sale','Properties for rent','Area guides','New developments','Price index']],
+    ['Explore',['Properties for sale','Properties for rent','Commercial for sale','Commercial to let','Area guides','New developments','Price index']],
     ['For you',['Saved searches','Favorites','Buyer\u2019s guide','Ownership check','Value my property','Diaspora & investor guide']],
     ['Company',['About MyKunda','Partner agents','FAQ','Safe & supported','Contact','Legal & policies']],
   ];
@@ -1621,7 +1658,7 @@ function footerHTML(){
           <a href="${waLink('Hello MyKunda! I have a question about property in The Gambia.')}" target="_blank" rel="noopener">${_WA_ICON}<span>WhatsApp ${MYKUNDA_PHONE_DISPLAY}</span></a>
         </div>
       </div>
-      ${cols.map(c=>`<div class="footer-col"><h3>${c[0]}</h3>${c[1].map(a=>{const map={'Partner agents':'agent.html','Area guides':'areas-in-the-gambia.html','Buyer\u2019s guide':'guide-cost-of-buying-property-in-the-gambia.html','Ownership check':'verify.html','Diaspora & investor guide':'guide-buying-property-in-the-gambia-as-a-foreigner.html','Properties for sale':'search.html?type=sale','Properties for rent':'search.html?type=rent','New developments':'search.html?type=sale&feat=new','Price index':'gambia-property-prices.html','Value my property':'sell.html#value','Saved searches':'dashboard.html','Favorites':'dashboard.html','About MyKunda':'about.html','Contact':'contact.html','FAQ':'faq.html','Safe & supported':'safe.html','Legal & policies':'legal.html'};return `<a href="${map[a]||'#'}">${a}</a>`;}).join('')}</div>`).join('')}
+      ${cols.map(c=>`<div class="footer-col"><h3>${c[0]}</h3>${c[1].map(a=>{const map={'Partner agents':'agent.html','Area guides':'areas-in-the-gambia.html','Buyer\u2019s guide':'guide-cost-of-buying-property-in-the-gambia.html','Ownership check':'verify.html','Diaspora & investor guide':'guide-buying-property-in-the-gambia-as-a-foreigner.html','Properties for sale':'search.html?type=sale','Properties for rent':'search.html?type=rent','Commercial for sale':'search.html?seg=commercial&type=sale','Commercial to let':'search.html?seg=commercial&type=rent','New developments':'search.html?type=sale&feat=new','Price index':'gambia-property-prices.html','Value my property':'sell.html#value','Saved searches':'dashboard.html','Favorites':'dashboard.html','About MyKunda':'about.html','Contact':'contact.html','FAQ':'faq.html','Safe & supported':'safe.html','Legal & policies':'legal.html'};return `<a href="${map[a]||'#'}">${a}</a>`;}).join('')}</div>`).join('')}
     </div>
     <div class="wrap footer-bottom">
       <span>© 2026 MyKunda.com</span>
@@ -1651,12 +1688,22 @@ function mkFinder(mountId, mode){
   const mount = document.getElementById(mountId);
   if(!mount) return;
   const isRent = mode==='rent';
+  /* Derde modus, 29-08-2026. Commercieel is geen derde kind: een winkel wordt
+     verkocht óf verhuurd, dus koop/huur blijft een keuze BINNEN dit kanaal.
+     S.deal leeg betekent allebei tonen — met een handvol advertenties in de
+     markt verbergt een verplichte keuze meer dan hij ordent. */
+  const isComm = mode==='commercial';
 
   const S = { q:'', cats:[], pmin:'', pmax:'', beds:0, baths:0, sqm:'', plot:'', plotmax:'',
-    cond:'', year:'', beach:'', titles:[], verified:false, serv:[], feats:[], furn:'', from:'' };
+    cond:'', year:'', beach:'', titles:[], verified:false, serv:[], feats:[], furn:'', from:'',
+    deal:'', units:'', parking:'', fitout:'', use:'' };
 
   function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').split('"').join('&quot;'); }
   function isLand(){ return S.cats.length>0 && S.cats.every(c=>c==='land'); }
+  /* Rekent dit veld in maandhuur? Voor Buy en Rent ligt dat vast in de modus,
+     in het commerciële kanaal hangt het aan de gekozen kant van de markt. */
+  function isRentish(){ return isRent || (isComm && S.deal==='rent'); }
+  function catGroups(){ return isComm ? MK_CATEGORIES_COMM : MK_CATEGORIES; }
   function tick(){ return '<svg class="mkf-tick" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'; }
   /* Filterdrempels in DALASI, want listings.price staat in dalasi en een
      filter dat in een andere eenheid rekent dan het veld waarop het filtert
@@ -1665,15 +1712,15 @@ function mkFinder(mountId, mode){
      een paar procent, maar ze lezen nu als bedragen die iemand in Gambia
      ook echt zou noemen. */
   function steps(){
-    return isRent
+    return isRentish()
       ? [8000, 12500, 17500, 25000, 35000, 50000, 70000, 100000, 175000, 300000]
       : [2000000, 4000000, 6500000, 8500000, 12500000, 17500000, 25000000, 42500000, 65000000, 85000000];
   }
   function money(gmd){ return fmtAreaPrice(gmd); }
   function look(list, v){ for(const o of list){ if(String(o[0])===String(v)) return o[1]; } return v; }
-  function catLabel(v){ let out=v; MK_CATEGORIES.forEach(g=>g[1].forEach(t=>{ if(t[1]===v) out=t[0]; })); return out; }
-  function servList(){ return isLand() ? MK_SERV_LAND : MK_SERV_BUILT; }
-  function featList(){ return isRent ? MK_FEAT_RENT : (isLand() ? MK_FEAT_LAND : MK_FEAT_SALE); }
+  function catLabel(v){ let out=v; catGroups().forEach(g=>g[1].forEach(t=>{ if(t[1]===v) out=t[0]; })); return out; }
+  function servList(){ return isComm ? MK_SERV_COMM : (isLand() ? MK_SERV_LAND : MK_SERV_BUILT); }
+  function featList(){ return isComm ? MK_FEAT_COMM : (isRent ? MK_FEAT_RENT : (isLand() ? MK_FEAT_LAND : MK_FEAT_SALE)); }
   function fromLabel(v){
     if(v==='now') return 'Available now';
     if(v==='month') return 'Available within a month';
@@ -1702,8 +1749,13 @@ function mkFinder(mountId, mode){
     <input type="text" id="mkfQ" autocomplete="off" placeholder="Any area in The Gambia" aria-label="Area or town" aria-expanded="false" role="combobox">
   </div>
   <div class="mkf-div"></div>
+  ${isComm ? `<button type="button" class="mkf-field" id="mkfFDeal" aria-expanded="false">
+    <span class="mkf-fl">Sale or let</span>
+    <span class="mkf-fv mkf-empty" id="mkfVDeal">For sale and to let</span>
+  </button>
+  <div class="mkf-div"></div>` : ''}
   <button type="button" class="mkf-field" id="mkfFType" aria-expanded="false">
-    <span class="mkf-fl">Property type</span>
+    <span class="mkf-fl">${isComm?'Space type':'Property type'}</span>
     <span class="mkf-fv mkf-empty" id="mkfVType">Any type</span>
   </button>
   <div class="mkf-div"></div>
@@ -1720,6 +1772,7 @@ function mkFinder(mountId, mode){
     Search
   </button>
   <div class="mkf-pop" id="mkfPopWhere" hidden role="listbox" aria-label="Areas"></div>
+  ${isComm ? '<div class="mkf-pop" id="mkfPopDeal" hidden></div>' : ''}
   <div class="mkf-pop" id="mkfPopType" hidden></div>
   <div class="mkf-pop" id="mkfPopBudget" hidden></div>
   <div class="mkf-pop" id="mkfPopMore" hidden></div>
@@ -1729,6 +1782,7 @@ function mkFinder(mountId, mode){
   const $ = sel => mount.querySelector(sel);
   const FIELD = { where:'#mkfFWhere', type:'#mkfFType', budget:'#mkfFBudget', more:'#mkfFMore' };
   const POP   = { where:'#mkfPopWhere', type:'#mkfPopType', budget:'#mkfPopBudget', more:'#mkfPopMore' };
+  if(isComm){ FIELD.deal = '#mkfFDeal'; POP.deal = '#mkfPopDeal'; }
   let openName = null;
 
   function closePop(){
@@ -1743,6 +1797,7 @@ function mkFinder(mountId, mode){
     if(openName===name){ closePop(); return; }
     closePop();
     openName = name;
+    if(name==='deal') buildDeal();
     if(name==='type') buildType();
     if(name==='budget') buildBudget();
     if(name==='more') buildMore();
@@ -1841,20 +1896,34 @@ function mkFinder(mountId, mode){
   $('#mkfPopWhere').addEventListener('click', e=>{ const b=e.target.closest('.mkf-arow'); if(b) pickArea(b.dataset.area); });
   $('#mkfFWhere').addEventListener('click', e=>{ if(e.target.closest('input')) return; $('#mkfQ').focus(); });
 
+  /* Alleen in het commerciële kanaal: koop of huur is hier een filter, geen pagina. */
+  function buildDeal(){
+    let h = '<h5>Sale or let</h5>'
+      + single('deal', [['sale','For sale'],['rent','To let']], S.deal, 'Both')
+      + '<p class="mkf-hint">Offices are usually let and shops go both ways, so this channel shows both until you narrow it.</p>'
+      + '<div class="mkf-popfoot"><span class="mkf-spacer"></span><button type="button" class="mkf-apply" data-done="1">Done</button></div>';
+    $('#mkfPopDeal').innerHTML = h;
+  }
+
   function buildType(){
     let h = '';
-    MK_CATEGORIES.forEach(g=>{ h += '<h5>'+esc(g[0])+'</h5>'+multi('cats', g[1].map(t=>[t[1],t[0]]), S.cats)+'<div style="height:12px"></div>'; });
+    catGroups().forEach(g=>{ h += '<h5>'+esc(g[0])+'</h5>'+multi('cats', g[1].map(t=>[t[1],t[0]]), S.cats)+'<div style="height:12px"></div>'; });
     h += '<div class="mkf-popfoot"><button type="button" class="mkf-clear" data-clear="cats">Clear</button><span class="mkf-spacer"></span><button type="button" class="mkf-apply" data-done="1">Done</button></div>';
     $('#mkfPopType').innerHTML = h;
   }
 
   function buildBudget(){
-    const st = steps(), per = isRent ? ' /mo' : '';
+    const st = steps(), rentish = isRentish(), per = rentish ? ' /mo' : '';
     function opts(cur, label){ return '<option value="">'+label+'</option>' + st.map(v=>'<option value="'+v+'"'+(String(cur)===String(v)?' selected':'')+'>'+money(v)+per+'</option>').join(''); }
-    const quick = isRent
-      ? [['',400,'Up to '+money(400)+'/mo'],['',800,'Up to '+money(800)+'/mo'],[800,'','Over '+money(800)+'/mo']]
-      : [['',50000,'Up to '+money(50000)],['',150000,'Up to '+money(150000)],[150000,500000,money(150000)+' – '+money(500000)],[500000,'','Over '+money(500000)]];
-    let h = '<h5>'+(isRent?'Monthly rent':'Price')+'</h5>'
+    /* De sneltoetsen komen uit steps(), niet uit een eigen rijtje getallen.
+       Tot 29-08-2026 stonden hier vaste bedragen (400, 800, 50.000, 150.000,
+       500.000) uit de tijd dat de drempels in euro's rekenden; steps() is
+       intussen naar dalasi omgezet en die knoppen niet, dus er stond
+       letterlijk "Up to D400/mo" boven een lijst die bij D8.000 begint. */
+    const at = i => st[Math.min(i, st.length-1)];
+    const q1 = at(2), q2 = at(4), q3 = at(6);
+    const quick = [['',q1,'Up to '+money(q1)+per],['',q2,'Up to '+money(q2)+per],[q2,q3,money(q2)+' – '+money(q3)+per],[q3,'','Over '+money(q3)+per]];
+    let h = '<h5>'+(rentish?'Monthly rent':'Price')+'</h5>'
       + '<div class="mkf-range"><select id="mkfSelMin" aria-label="Minimum">'+opts(S.pmin,'No minimum')+'</select><span>–</span>'
       + '<select id="mkfSelMax" aria-label="Maximum">'+opts(S.pmax,'No maximum')+'</select></div>'
       + '<div class="mkf-presets">'+quick.map(q=>'<button type="button" class="mkf-opt" data-qmin="'+q[0]+'" data-qmax="'+q[1]+'">'+esc(q[2])+'</button>').join('')+'</div>'
@@ -1872,7 +1941,25 @@ function mkFinder(mountId, mode){
   }
   function buildMore(){
     let h = '<div class="mkf-fgrid">';
-    if(isRent){
+    if(isComm){
+      /* Geen slaapkamers, geen badkamers, geen afstand tot het strand: dat zijn
+         kolommen die een winkel of loods niet heeft. Wat een bedrijfsruimte wél
+         onderscheidt is oppervlak, aantal units, parkeren, opleverniveau en wat
+         er nu in zit. Vloeroppervlak leest listings.sqm — dezelfde kolom als de
+         woonoppervlakte, want het is hetzelfde begrip. */
+      h += g('Floor area', single('sqm', [[50,'50 m²+'],[100,'100 m²+'],[200,'200 m²+'],[400,'400 m²+'],[800,'800 m²+']], S.sqm));
+      h += g('Units', single('units', numOpts(4), S.units||''));
+      h += g('Parking spaces', single('parking', numOpts(5), S.parking||''));
+      h += g('Fit-out', single('fitout', MK_FIT_OUT, S.fitout, 'Any'));
+      h += g('Current use', single('use', MK_CURRENT_USE, S.use, 'Any'));
+      h += g('Available from',
+        '<div class="mkf-opts">'+[['now','Now'],['month','Within a month'],['quarter','Within 3 months']].map(o=>
+          '<button type="button" class="mkf-opt'+(S.from===o[0]?' on':'')+'" data-k="from" data-v="'+o[0]+'">'+tick()+o[1]+'</button>').join('')+'</div>'+
+        '<div class="mkf-dateline"><input type="date" id="mkfDateFrom" aria-label="Available from date" value="'+(/^\d{4}-/.test(S.from)?S.from:'')+'"></div>');
+      h += titleGroup();
+      h += g('Services', multi('serv', servList(), S.serv));
+      h += g('Features', multi('feats', featList(), S.feats));
+    } else if(isRent){
       h += g('Bedrooms', single('beds', numOpts(5), S.beds||''));
       h += g('Bathrooms', single('baths', numOpts(3), S.baths||''));
       h += g('Furnishing', single('furn', MK_FURN, S.furn, 'Either'));
@@ -1919,6 +2006,10 @@ function mkFinder(mountId, mode){
     if(t.dataset.k!==undefined && t.dataset.k!==''){
       const k=t.dataset.k, v=t.dataset.v;
       S[k] = (k==='beds'||k==='baths') ? (v?+v:0) : v;
+      /* Koop en huur rekenen op een andere schaal — D8.000 per maand tegenover
+         D8.500.000 koopsom. Een prijsgrens die van de ene kant blijft staan bij
+         de andere filtert alles weg zonder dat iemand ziet waarom. */
+      if(k==='deal'){ S.pmin=''; S.pmax=''; }
     } else if(t.dataset.mk){
       const mk=t.dataset.mk, v=t.dataset.v, arr=S[mk], i=arr.indexOf(v);
       if(i>=0) arr.splice(i,1); else arr.push(v);
@@ -1928,7 +2019,9 @@ function mkFinder(mountId, mode){
       const c = t.dataset.clear;
       if(c==='cats') S.cats=[];
       else if(c==='price'){ S.pmin=''; S.pmax=''; }
-      else { const q=S.q; Object.assign(S,{cats:[],pmin:'',pmax:'',beds:0,baths:0,sqm:'',plot:'',plotmax:'',cond:'',year:'',beach:'',titles:[],verified:false,serv:[],feats:[],furn:'',from:'',q}); }
+      /* S.deal blijft bewust staan: dat is de kant van de markt waar iemand naar
+         kijkt, geen verfijning. Wie hem kwijt wil haalt het chipje weg. */
+      else { const q=S.q, deal=S.deal; Object.assign(S,{cats:[],pmin:'',pmax:'',beds:0,baths:0,sqm:'',plot:'',plotmax:'',cond:'',year:'',beach:'',titles:[],verified:false,serv:[],feats:[],furn:'',from:'',units:'',parking:'',fitout:'',use:'',q,deal}); }
     } else if(t.dataset.done!==undefined){
       closePop(); render(); return;
     } else if(t.dataset.qmin!==undefined){
@@ -1938,20 +2031,26 @@ function mkFinder(mountId, mode){
     if(openName==='more') buildMore();
     if(openName==='type') buildType();
     if(openName==='budget') buildBudget();
+    if(openName==='deal') buildDeal();
   });
 
   function chipsFor(){
     const out = [];
     const add = (l,k,v) => out.push({l,k,v});
     if(S.q) add(S.q,'q');
+    if(S.deal) add(S.deal==='rent'?'To let':'For sale','deal');
     S.cats.forEach(c=>add(catLabel(c),'cats',c));
     if(S.pmin || S.pmax){
-      const per = isRent?'/mo':'';
+      const per = isRentish()?'/mo':'';
       add(S.pmin && S.pmax ? money(+S.pmin)+' – '+money(+S.pmax)+per : S.pmax ? 'Up to '+money(+S.pmax)+per : 'From '+money(+S.pmin)+per, 'price');
     }
     if(S.beds) add(S.beds+'+ bedrooms','beds');
     if(S.baths) add(S.baths+'+ bathrooms','baths');
-    if(S.sqm) add(S.sqm+' m²+ living area','sqm');
+    if(S.sqm) add(S.sqm+(isComm?' m²+ floor area':' m²+ living area'),'sqm');
+    if(S.units) add(S.units+'+ units','units');
+    if(S.parking) add(S.parking+'+ parking','parking');
+    if(S.fitout) add(look(MK_FIT_OUT,S.fitout),'fitout');
+    if(S.use) add(look(MK_CURRENT_USE,S.use),'use');
     if(S.plot || S.plotmax) add(S.plot && S.plotmax ? S.plot+' – '+S.plotmax+' m² plot' : S.plotmax ? 'Plot up to '+S.plotmax+' m²' : 'Plot from '+S.plot+' m²', 'plotpair');
     if(S.cond) add(look(MK_COND,S.cond),'cond');
     if(S.year) add(look([[2024,'2024 or newer'],[2020,'2020 or newer'],[2015,'2015 or newer']],S.year),'year');
@@ -1966,12 +2065,15 @@ function mkFinder(mountId, mode){
   }
   function extraCount(){
     let n = 0;
-    ['beds','baths','sqm','plot','plotmax','cond','year','beach','furn','from'].forEach(k=>{ if(S[k]) n++; });
+    ['beds','baths','sqm','plot','plotmax','cond','year','beach','furn','from','units','parking','fitout','use'].forEach(k=>{ if(S[k]) n++; });
     return n + S.titles.length + S.serv.length + S.feats.length + (S.verified?1:0);
   }
   function buildParams(){
     const p = new URLSearchParams();
-    p.set('type', mode);
+    /* type blijft sale of rent — dat is wat search.html leest. In het
+       commerciële kanaal komt die waarde uit S.deal; 'any' betekent allebei. */
+    p.set('type', isComm ? (S.deal || 'any') : mode);
+    if(isComm) p.set('seg', 'commercial');
     if(S.q) p.set('q', S.q);
     if(S.cats.length) p.set('cat', S.cats.join(','));
     if(S.pmin) p.set('pmin', S.pmin);
@@ -1990,6 +2092,10 @@ function mkFinder(mountId, mode){
     if(S.verified) p.set('verified', '1');
     if(S.serv.length) p.set('serv', S.serv.join(','));
     if(S.feats.length) p.set('feat', S.feats.join(','));
+    if(S.units) p.set('units', S.units);
+    if(S.parking) p.set('parking', S.parking);
+    if(S.fitout) p.set('fitout', S.fitout);
+    if(S.use) p.set('use', S.use);
     return p;
   }
   function goSearch(){ location.href = 'search.html?' + buildParams().toString(); }
@@ -1999,9 +2105,16 @@ function mkFinder(mountId, mode){
     if(S.cats.length){ vt.textContent = S.cats.length===1 ? catLabel(S.cats[0]) : S.cats.length+' types'; vt.classList.remove('mkf-empty'); }
     else { vt.textContent = 'Any type'; vt.classList.add('mkf-empty'); }
 
-    const vb = $('#mkfVBudget'), per = isRent?'/mo':'';
+    if(isComm){
+      const vd = $('#mkfVDeal');
+      if(S.deal){ vd.textContent = S.deal==='rent' ? 'To let' : 'For sale'; vd.classList.remove('mkf-empty'); }
+      else { vd.textContent = 'For sale and to let'; vd.classList.add('mkf-empty'); }
+      const lb = $('#mkfLBudget'); if(lb) lb.textContent = isRentish() ? 'Monthly rent' : 'Budget';
+    }
+
+    const vb = $('#mkfVBudget'), rentish = isRentish(), per = rentish?'/mo':'';
     if(S.pmin || S.pmax){ vb.textContent = S.pmin && S.pmax ? money(+S.pmin)+' – '+money(+S.pmax)+per : S.pmax ? 'Up to '+money(+S.pmax)+per : 'From '+money(+S.pmin)+per; vb.classList.remove('mkf-empty'); }
-    else { vb.textContent = isRent?'Any rent':'Any price'; vb.classList.add('mkf-empty'); }
+    else { vb.textContent = rentish?'Any rent':'Any price'; vb.classList.add('mkf-empty'); }
 
     const n = extraCount(), badge = $('#mkfBadge');
     badge.textContent = n; badge.classList.toggle('mkf-show', n>0);
@@ -2014,17 +2127,19 @@ function mkFinder(mountId, mode){
   }
   $('#mkfChips').addEventListener('click', function(e){
     const b = e.target.closest('[data-rm],[data-clear]'); if(!b) return;
-    if(b.dataset.clear==='all'){ const q=S.q; Object.assign(S,{cats:[],pmin:'',pmax:'',beds:0,baths:0,sqm:'',plot:'',plotmax:'',cond:'',year:'',beach:'',titles:[],verified:false,serv:[],feats:[],furn:'',from:'',q}); render(); return; }
+    if(b.dataset.clear==='all'){ const q=S.q, deal=S.deal; Object.assign(S,{cats:[],pmin:'',pmax:'',beds:0,baths:0,sqm:'',plot:'',plotmax:'',cond:'',year:'',beach:'',titles:[],verified:false,serv:[],feats:[],furn:'',from:'',units:'',parking:'',fitout:'',use:'',q,deal}); render(); return; }
     const c = chipsFor()[+b.dataset.rm]; if(!c) return;
     if(c.k==='q'){ S.q=''; $('#mkfQ').value=''; }
     else if(c.k==='price'){ S.pmin=''; S.pmax=''; }
     else if(c.k==='plotpair'){ S.plot=''; S.plotmax=''; }
+    else if(c.k==='deal'){ S.deal=''; S.pmin=''; S.pmax=''; }
     else if(c.k==='verified'){ S.verified=false; }
     else if(Array.isArray(S[c.k])){ const i=S[c.k].indexOf(c.v); if(i>=0) S[c.k].splice(i,1); }
     else { S[c.k] = (c.k==='beds'||c.k==='baths') ? 0 : ''; }
     render();
   });
 
+  if(isComm) $('#mkfFDeal').addEventListener('click', ()=>openPop('deal'));
   $('#mkfFType').addEventListener('click', ()=>openPop('type'));
   $('#mkfFBudget').addEventListener('click', ()=>openPop('budget'));
   $('#mkfFMore').addEventListener('click', ()=>openPop('more'));

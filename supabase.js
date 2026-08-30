@@ -273,7 +273,12 @@ const OPTIONAL_COLUMNS = ['boundary','beach_m',
   'condition','floors','view','security','furnished','water','power','road','title_type',
   'electricity','land_water','land_beach','plot_shape','flood_risk','fencing',
   'highlights','nearby','custom_features','year_built','available_from','video_url','doc_type',
-  'contact_name','contact_phone','contact_email'];
+  'contact_name','contact_phone','contact_email',
+  /* Commercieel kanaal, 29-08-2026. Staan hier zodat een aanmelding ook slaagt
+     wanneer 20260829_02_commercial_segment.sql nog niet gedraaid is: de kolom
+     valt dan weg en de rest van de advertentie blijft overeind. */
+  'segment','units','parking_spaces','current_use','fit_out',
+  'service_charge','min_term_months','plot_width_m'];
 function missingOptionalColumn(error){
   return OPTIONAL_COLUMNS.find(c => isMissingColumn(error, c)) || null;
 }
@@ -399,8 +404,14 @@ async function saveSearch(filters, area, channel){
 /* Maps a Supabase listing row to the object shape the site's cards/map expect. */
 function dbListingToCard(r){
   const photo = (r.listing_media||[]).find(m=>!m.is_document);
+  /* Woningmarkt of bedrijfsmarkt. De kolom is de bron zodra migratie 02 gedraaid
+     is; staat hij er nog niet, dan leidt de categorie het af. Zo blijven Buy en
+     Rent hun aanbod tonen ongeacht de volgorde van upload en migratie. */
+  const seg = r.segment || ((typeof mkIsCommercialCat==='function' && mkIsCommercialCat(r.category)) ? 'commercial' : 'residential');
   return {
-    id: r.id, cat: r.category, type: r.kind,
+    id: r.id, cat: r.category, type: r.kind, segment: seg,
+    units: r.units||0, parking: r.parking_spaces||0,
+    current_use: r.current_use||'', fit_out: r.fit_out||'',
     isNew: true, verified: !!r.is_verified_title, plan: r.plan,
     price: Number(r.price)||0, title: r.title, street: r.street||'', area: r.area||'',
     beds: r.beds||0, baths: r.baths||0, sqm: r.sqm||0, plot: r.plot_sqm||0,
@@ -501,6 +512,10 @@ async function fetchFilteredListings(filters){
   let q = sb.from('listings').select('*, listing_media(*)').in('status', ['active','under_offer']);
   if(filters.kind)      q = q.eq('kind', filters.kind);
   if(filters.category)  q = q.eq('category', filters.category);
+  /* Alleen meesturen als een aanroeper er expliciet om vraagt: zonder de
+     kolom (migratie 02 nog niet gedraaid) zou een vaste eq('segment',…) elke
+     query laten falen in plaats van iets minder scherp te filteren. */
+  if(filters.segment)   q = q.eq('segment', filters.segment);
   if(filters.minPrice)  q = q.gte('price', filters.minPrice);
   if(filters.maxPrice)  q = q.lte('price', filters.maxPrice);
   if(filters.beds)      q = q.gte('beds', filters.beds);
@@ -779,7 +794,15 @@ async function saveDraft(fields, draftId){
     year_built: fields.year_built || null, available_from: fields.available_from || null,
     video_url: fields.video_url || null, doc_type: fields.doc_type || null,
     contact_name: fields.contact_name || null, contact_phone: fields.contact_phone || null,
-    contact_email: fields.contact_email || null
+    contact_email: fields.contact_email || null,
+    /* Commercieel spoor. segment blijft residential zolang niets anders zegt,
+       zodat een woningadvertentie precies schrijft wat hij altijd al schreef. */
+    segment: fields.segment || 'residential',
+    units: fields.units || null, parking_spaces: fields.parking_spaces || null,
+    current_use: fields.current_use || null, fit_out: fields.fit_out || null,
+    service_charge: fields.service_charge || null,
+    min_term_months: fields.min_term_months || null,
+    plot_width_m: fields.plot_width_m || null
   };
   /* A new row starts as a draft. An existing row keeps its status: editing an
      active listing must not pull it offline. */

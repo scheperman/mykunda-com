@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0uuyvlg--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:18n13pr--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preconnect" href="https://api.mapbox.com" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=264139217890589">
+<link rel="stylesheet" href="styles.min.css?v=65199754878152">
 <style>
 body{background:var(--paper-2);min-height:100vh}
 
@@ -241,7 +241,7 @@ body{background:var(--paper-2);min-height:100vh}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=264139217890589"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=65199754878152"><!--/mk-css-->
 </head>
 <body>
 <div class="wizbar">
@@ -277,6 +277,16 @@ body{background:var(--paper-2);min-height:100vh}
       <div class="opt-cards big" id="dealCards">
         <div class="opt-card" data-deal="sale"><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 12 22l-9.6-9.6a2 2 0 0 1-.4-1.2V4a2 2 0 0 1 2-2h7.2a2 2 0 0 1 1.4.6l8 8a2 2 0 0 1 0 2.8Z"/><circle cx="7.5" cy="7.5" r="1.3"/></svg></span><div><div class="t">Sell a property</div><div class="s">A house, an apartment or a plot of land</div></div></div>
         <div class="opt-card" data-deal="rent"><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v16M3 21h18M12.5 12h.01"/></svg></span><div><div class="t">Let a property</div><div class="s">Rent out a home, long stay or short stay</div></div></div>
+        <div class="opt-card" data-deal="commercial"><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M4 21V10l8-5 8 5v11M9 21v-6h6v6M7 13h.01M17 13h.01"/></svg></span><div><div class="t">Commercial space</div><div class="s">A shop, office, warehouse or business plot</div></div></div>
+      </div>
+      <!-- Commercieel is geen derde soort deal: een winkel wordt verkocht óf
+           verhuurd. Die keuze staat daarom hier, één stap ná de kaart. -->
+      <div id="commDealWrap" style="display:none">
+        <label class="intro-q">Are you selling it or letting it?</label>
+        <div class="opt-cards" id="commDealCards">
+          <div class="opt-card" data-cdeal="sale"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 12 22l-9.6-9.6a2 2 0 0 1-.4-1.2V4a2 2 0 0 1 2-2h7.2a2 2 0 0 1 1.4.6l8 8a2 2 0 0 1 0 2.8Z"/><circle cx="7.5" cy="7.5" r="1.3"/></svg></span><div><div class="t">For sale</div><div class="s">Selling the unit, the building or the plot</div></div></div>
+          <div class="opt-card" data-cdeal="rent"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M10 21v-5h4v5"/></svg></span><div><div class="t">To let</div><div class="s">Letting it to a business, per month or per year</div></div></div>
+        </div>
       </div>
       <label class="intro-q" id="whoQ">And who is behind the listing?</label>
       <div class="opt-cards" id="whoCards">
@@ -364,11 +374,26 @@ body{background:var(--paper-2);min-height:100vh}
       <!-- building details -->
       <div id="buildingDetails">
         <div class="frow">
-          <div class="fld"><label>Bedrooms</label><input type="number" id="bedsIn" min="0" placeholder="3"></div>
-          <div class="fld"><label>Bathrooms</label><input type="number" id="bathsIn" min="0" placeholder="2"></div>
+          <div class="fld" id="bedsWrap"><label>Bedrooms</label><input type="number" id="bedsIn" min="0" placeholder="3"></div>
+          <div class="fld"><label id="bathsLab">Bathrooms</label><input type="number" id="bathsIn" min="0" placeholder="2"></div>
+        </div>
+        <!-- Alleen in het commerciële spoor: wat een bedrijfsruimte onderscheidt
+             en een woning niet heeft. -->
+        <div class="frow" id="commRow1" style="display:none">
+          <div class="fld"><label>Units in the property</label><input type="number" id="unitsIn" min="1" placeholder="1"><div class="hint">One shop is 1. A block with four lettable offices is 4.</div></div>
+          <div class="fld"><label>Parking spaces <span style="font-weight:500;color:var(--muted-2)">— on the property</span></label><input type="number" id="parkingIn" min="0" placeholder="0"></div>
+        </div>
+        <div class="frow" id="commRow2" style="display:none">
+          <div class="fld"><label>Fit-out</label>
+            <select id="fitOutIn"><option value="">Not stated</option><option value="shell">Shell / bare — the tenant fits it out</option><option value="fitted">Fitted — finished, no furniture</option><option value="turnkey">Turnkey — ready to trade from day one</option></select>
+          </div>
+          <div class="fld"><label>Current use</label>
+            <select id="curUseIn"><option value="">Not stated</option><option value="vacant">Vacant</option><option value="shop">In use as a shop</option><option value="office">In use as an office</option><option value="restaurant">In use as a restaurant or bar</option><option value="warehouse">In use as storage</option><option value="other">Another use</option></select>
+            <div class="hint">What is in there now. It can differ from what you are offering it as.</div>
+          </div>
         </div>
         <div class="frow">
-          <div class="fld"><label>Built area (m²)</label><input type="number" id="sqmIn" min="0" placeholder="180"></div>
+          <div class="fld"><label id="sqmLab">Built area (m²)</label><input type="number" id="sqmIn" min="0" placeholder="180"></div>
           <div class="fld"><label>Plot size (m²) <span style="font-weight:500;color:var(--muted-2)">— optional</span></label><input type="number" id="plotIn" min="0" placeholder="600"></div>
         </div>
         <div class="frow">
@@ -386,16 +411,16 @@ body{background:var(--paper-2);min-height:100vh}
             <div class="hint" id="beachDistInHint">Measured in a straight line from your pin to the Atlantic shoreline.</div>
           </div>
         </div>
-        <div class="frow">
+        <div class="frow" id="viewWrap">
           <div class="fld"><label>View</label>
             <select id="viewIn"><option value="none" selected>No special view</option><option value="ocean">Ocean / sea view</option><option value="garden">Garden / green view</option></select>
           </div>
         </div>
         <div class="frow">
-          <div class="fld"><label>Security</label>
+          <div class="fld"><label id="securityLab">Security</label>
             <select id="securityIn"><option value="none" selected>None / open</option><option value="wall">Walled compound</option><option value="gated">Gated compound with guard</option></select>
           </div>
-          <div class="fld"><label>Furnished</label>
+          <div class="fld" id="furnWrap"><label>Furnished</label>
             <select id="furnishedIn"><option value="unfurnished" selected>Unfurnished</option><option value="semi">Semi-furnished</option><option value="furnished">Fully furnished</option></select>
           </div>
         </div>
@@ -505,7 +530,7 @@ body{background:var(--paper-2);min-height:100vh}
           </div>
         </div>
         <div class="frow">
-          <div class="fld"><label>Plot width <span style="font-weight:500;color:var(--muted-2)">— metres</span></label><input type="number" id="plotWIn" min="0" step="0.5" placeholder="15"></div>
+          <div class="fld"><label id="plotWLab">Plot width <span style="font-weight:500;color:var(--muted-2)">— metres</span></label><input type="number" id="plotWIn" min="0" step="0.5" placeholder="15"></div>
           <div class="fld"><label>Plot depth <span style="font-weight:500;color:var(--muted-2)">— metres</span></label><input type="number" id="plotDIn" min="0" step="0.5" placeholder="30"><div class="hint" id="plotDimHint">Most plots here are traded as 15 × 30. Fill both and the square metres follow.</div></div>
         </div>
         <div class="frow">
@@ -540,10 +565,12 @@ body{background:var(--paper-2);min-height:100vh}
 
       <!-- how it is managed, professional lettings only -->
       <div id="gamManage" style="display:none;margin-top:28px;padding-top:24px;border-top:1px solid var(--line)">
-        <label style="display:block;font-size:15px;font-weight:700;color:var(--ink);margin-bottom:6px">How the property is managed</label>
-        <p style="font-size:13.5px;color:var(--muted);margin-bottom:16px">This is what earns the <b>Professionally managed</b> label on your listing.</p>
-        <label style="display:block;font-size:13.5px;font-weight:700;color:var(--ink-2);margin-bottom:11px">Included in the management</label>
-        <div class="checks" id="inclChecks"></div>
+        <label id="mgmtLab" style="display:block;font-size:15px;font-weight:700;color:var(--ink);margin-bottom:6px">How the property is managed</label>
+        <p id="mgmtSub" style="font-size:13.5px;color:var(--muted);margin-bottom:16px">This is what earns the <b>Professionally managed</b> label on your listing.</p>
+        <div id="inclWrap">
+          <label style="display:block;font-size:13.5px;font-weight:700;color:var(--ink-2);margin-bottom:11px">Included in the management</label>
+          <div class="checks" id="inclChecks"></div>
+        </div>
         <div class="frow" style="margin-top:18px">
           <div class="fld"><label>Service charge <span style="font-weight:500;color:var(--muted-2)">— on top of the rent</span></label>
             <div class="input-affix"><span class="pre">D</span><input type="text" id="svcChargeIn" inputmode="numeric" placeholder="2,500"></div>
@@ -797,18 +824,18 @@ body{background:var(--paper-2);min-height:100vh}
   </aside>
 </div>
 
-<script src="valuation-areas.js?v=264139217890589"></script>
-<script src="valuation.js?v=264139217890589"></script>
-<script src="app.min.js?v=264139217890589"></script>
-<script src="gambia-places.js?v=264139217890589" defer></script>
-<script src="image-slot.js?v=264139217890589" defer></script>
+<script src="valuation-areas.js?v=65199754878152"></script>
+<script src="valuation.js?v=65199754878152"></script>
+<script src="app.min.js?v=65199754878152"></script>
+<script src="gambia-places.js?v=65199754878152" defer></script>
+<script src="image-slot.js?v=65199754878152" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel, Leaflet (~145 KB) only when the
    seller reaches the location step. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=264139217890589'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=65199754878152'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -847,7 +874,7 @@ function setSaveNote(state){
 function draftTitle(){
   const custom = (S.customTitle||'').trim();
   if(custom) return custom;
-  const feat = ((S.cat==='land' ? S.landFeats[0] : S.feats[0]) || '').trim();
+  const feat = ((isPlotCat() ? S.landFeats[0] : S.feats[0]) || '').trim();
   const base = (feat ? feat+' ' : '') + catLabel();
   const where = S.area ? S.area.split(' · ')[0].trim() : '';
   return where ? base+' in '+where : base;
@@ -875,9 +902,15 @@ function listingFields(){
   const lat = (typeof S.lat==='number') ? S.lat : null;
   const lng = (typeof S.lng==='number') ? S.lng : null;
   const nm=document.getElementById('nameIn'), ph=document.getElementById('phoneIn'), em=document.getElementById('emailIn');
-  const isLand = S.cat==='land';
+  const isLand = isPlotCat();
   const f = {
-    kind: S.deal==='rent'?'rent':'sale',
+    /* kind blijft sale of rent — ook in het commerciële spoor, want een winkel
+       wordt verkocht óf verhuurd. isRent() kent dat spoor; S.deal alleen niet:
+       die staat dan op 'commercial' en zou hier stil 'sale' opleveren. */
+    kind: isRent()?'rent':'sale',
+    /* De tweede as: woningmarkt of bedrijfsmarkt. Buy en Rent tonen alleen
+       residential, commercial.html alleen commercial. */
+    segment: isComm()?'commercial':'residential',
     category: S.cat||'house',
     title: draftTitle(),
     description: S.desc||null,
@@ -938,7 +971,16 @@ function listingFields(){
     deposit: isRent() ? (parseInt(String(S.deposit||'').replace(/[^0-9]/g,''),10)||null) : null,
     price_period: isRent() ? (S.period||'month') : null,
     min_term_months: isRent() ? (parseInt(S.minTerm)||null) : null,
-    bills_included: (isRent() && S.bills.length) ? S.bills.slice() : null
+    bills_included: (isRent() && S.bills.length) ? S.bills.slice() : null,
+    /* Alleen het commerciële spoor vult deze vier; op het woningspoor blijven
+       ze leeg zodat een woningadvertentie precies schrijft wat hij altijd al
+       schreef. Vloeroppervlak, frontbreedte, servicekosten, huurtermijn en
+       beschikbaarheid krijgen géén eigen kolom: die bestaan al als sqm,
+       plot_width_m, service_charge, min_term_months en available_from. */
+    units: isComm() ? (parseInt(S.units)||null) : null,
+    parking_spaces: isComm() ? (parseInt(S.parking)||null) : null,
+    fit_out: isComm() ? (S.fitOut||null) : null,
+    current_use: isComm() ? (S.curUse||null) : null
   };
   if(!EXTRA_COLS) ['seller_type','company_name','fee_type','fee_value','deposit','price_period','min_term_months','bills_included'].forEach(c=>{ delete f[c]; });
 
@@ -967,13 +1009,15 @@ function listingFields(){
       /* Payment terms are a sale question; rent has the deposit and the bills. */
       payment_terms: (!isRent() && S.payTerms.length) ? S.payTerms.slice() : null,
       instalment_months: (!isRent() && S.payTerms.indexOf('instalments')>-1) ? int(S.instalMonths) : null,
-      /* Service charge in dalasi, like every other amount here. */
-      service_charge: (isRent() && S.who==='business') ? int(S.svcCharge) : null,
-      service_charge_period: (isRent() && S.who==='business' && S.svcCharge) ? (S.svcPeriod||'month') : null,
+      /* Service charge in dalasi, like every other amount here.
+         Ook een particuliere verhuurder van bedrijfsruimte vult dit blok, dus
+         de voorwaarde volgt wie het veld te zien kreeg in applyGambiaUI. */
+      service_charge: (isRent() && (S.who==='business' || isComm())) ? int(S.svcCharge) : null,
+      service_charge_period: (isRent() && (S.who==='business' || isComm()) && S.svcCharge) ? (S.svcPeriod||'month') : null,
       /* The three things that carry the "Professionally managed" label. */
       included_services: (isRent() && S.who==='business' && S.inclServices.length) ? S.inclServices.slice() : null,
-      tenant_criteria:  (isRent() && S.who==='business') ? ((S.tenantCrit||'').trim()||null) : null,
-      management_terms: (isRent() && S.who==='business') ? ((S.mgmtTerms||'').trim()||null) : null,
+      tenant_criteria:  (isRent() && (S.who==='business' || isComm())) ? ((S.tenantCrit||'').trim()||null) : null,
+      management_terms: (isRent() && (S.who==='business' || isComm())) ? ((S.mgmtTerms||'').trim()||null) : null,
       mandate_type: S.who==='business' ? (S.mandateType||null) : 'owner',
       /* Nightly and weekly rents are holiday lets; monthly and yearly are not. */
       rental_mode: isRent() ? ((S.period==='night'||S.period==='week') ? 'holiday' : 'long_term') : null,
@@ -1016,7 +1060,12 @@ async function loadDraft(id){
   try{
     const { data, error } = await sb.from('listings').select('*').eq('id', id).single();
     if(error || !data) return;
-    S.deal = data.kind||'sale';
+    /* Het spoor komt terug uit segment plus kind: een winkel te huur is
+       deal 'commercial' met cdeal 'rent', niet gewoon 'rent'. Staat de kolom
+       er nog niet, dan verraadt de categorie het alsnog. */
+    const wasComm = data.segment==='commercial' || COMM_TYPES.some(t=>t[0]===data.category) || data.category==='commercial';
+    S.deal = wasComm ? 'commercial' : (data.kind||'sale');
+    S.cdeal = wasComm ? (data.kind==='rent'?'rent':'sale') : S.cdeal;
     S.cat = data.category||'villa';
     S.area = data.area||'';
     S.street = data.street||'';
@@ -1026,7 +1075,10 @@ async function loadDraft(id){
     S.baths = data.baths ? String(data.baths) : '';
     S.sqm = data.sqm ? String(data.sqm) : '';
     S.plot = data.plot_sqm ? String(data.plot_sqm) : '';
-    S.landSqm = data.category==='land' && data.plot_sqm ? String(data.plot_sqm) : '';
+    S.landSqm = (data.category==='land'||data.category==='business_plot') && data.plot_sqm ? String(data.plot_sqm) : '';
+    S.units = data.units ? String(data.units) : '';
+    S.parking = (data.parking_spaces||data.parking_spaces===0) ? String(data.parking_spaces) : '';
+    S.fitOut = data.fit_out||''; S.curUse = data.current_use||'';
     S.feats = (data.features||[]).filter(f=>FEATS.includes(f));
     S.landFeats = (data.features||[]).filter(f=>LANDFEATS.includes(f));
     S.plan = ({basic:1,boost:1,verified:1}[data.plan]) ? data.plan : 'basic';
@@ -1074,12 +1126,16 @@ function applyStateToUI(){
     if(S.sqm) document.getElementById('sqmIn').value=S.sqm;
     if(S.plot) document.getElementById('plotIn').value=S.plot;
     if(S.landSqm) document.getElementById('landSqmIn').value=S.landSqm;
+    if(S.units) document.getElementById('unitsIn').value=S.units;
+    if(S.parking) document.getElementById('parkingIn').value=S.parking;
+    if(S.fitOut) document.getElementById('fitOutIn').value=S.fitOut;
+    if(S.curUse) document.getElementById('curUseIn').value=S.curUse;
     if(S.desc) document.getElementById('descIn').value=S.desc;
     if(S.price) priceIn.value=parseInt(S.price).toLocaleString('en-US');
     if(S.plus) document.getElementById('plusIn').value=S.plus;
     S.feats.forEach(f=>{ const el=featChecks.querySelector(`[data-feat="${f}"]`); if(el) el.classList.add('sel'); });
     S.landFeats.forEach(f=>{ const el=landChecks.querySelector(`[data-landfeat="${f}"]`); if(el) el.classList.add('sel'); });
-    const isLand=S.cat==='land';
+    const isLand=isPlotCat();
     document.getElementById('buildingDetails').style.display=isLand?'none':'block';
     document.getElementById('landDetails').style.display=isLand?'block':'none';
     renderPlans();
@@ -1128,15 +1184,18 @@ function prefillFromURL(){
   const p = k => new URLSearchParams(location.search).get(k);
   if(!p('cat') && !p('area') && !p('price') && !p('deal')) return; // no prefill data
   /* Deal type first — it drives the price label and the pricing band. */
-  const deal = p('deal'); if(deal==='rent'||deal==='sale'){
+  /* deal=commercial komt van commercial.html en van de lege staat op de
+     zoekpagina; cdeal kiest daarbinnen koop of huur. */
+  const deal = p('deal'); if(deal==='rent'||deal==='sale'||deal==='commercial'){
     S.deal = deal; S.dealPicked = true;
+    const cd = p('cdeal'); if(deal==='commercial' && (cd==='rent'||cd==='sale')) S.cdeal = cd;
     if(window.__trackReady) applyDealUI(); else updatePriceLabels();
   }
-  const cat = p('cat'); if(cat){ S.cat=cat; typeCards.querySelectorAll('.opt-card').forEach(c=>c.classList.toggle('sel',c.dataset.cat===cat)); const isLand=cat==='land'; document.getElementById('buildingDetails').style.display=isLand?'none':'block'; document.getElementById('landDetails').style.display=isLand?'block':'none'; }
+  const cat = p('cat'); if(cat){ S.cat=cat; typeCards.querySelectorAll('.opt-card').forEach(c=>c.classList.toggle('sel',c.dataset.cat===cat)); const isLand=(cat==='land'||cat==='business_plot'); document.getElementById('buildingDetails').style.display=isLand?'none':'block'; document.getElementById('landDetails').style.display=isLand?'block':'none'; }
   const area = p('area'); if(area){ S.area=area; document.getElementById('locInput').value=area; }
   if(p('beds')){ S.beds=p('beds'); document.getElementById('bedsIn').value=p('beds'); }
   if(p('baths')){ S.baths=p('baths'); document.getElementById('bathsIn').value=p('baths'); }
-  if(p('sqm')){ if(cat==='land'){ S.landSqm=p('sqm'); document.getElementById('landSqmIn').value=p('sqm'); } else { S.sqm=p('sqm'); document.getElementById('sqmIn').value=p('sqm'); } }
+  if(p('sqm')){ if(cat==='land'||cat==='business_plot'){ S.landSqm=p('sqm'); document.getElementById('landSqmIn').value=p('sqm'); } else { S.sqm=p('sqm'); document.getElementById('sqmIn').value=p('sqm'); } }
   if(p('plot')){ S.plot=p('plot'); document.getElementById('plotIn').value=p('plot'); }
   if(p('condition')){ S.condition=p('condition'); document.getElementById('conditionIn').value=p('condition'); }
   if(p('floors')){ S.floors=p('floors'); document.getElementById('floorsIn').value=p('floors'); }
@@ -1175,19 +1234,24 @@ const S = { deal:'sale', dealPicked:false, period:'month', who:'', confirmWho:fa
   tank:'', tankLitres:'', septic:'', meter:'', solarKwp:'', genKva:'',
   plotW:'', plotD:'', highwayM:'', tda:'', leaseYears:'', alkaloName:'', alkaloVillage:'', registryRef:'',
   inclServices:[], svcCharge:'', svcPeriod:'month', tenantCrit:'', mgmtTerms:'',
+  /* commercieel spoor: cdeal is koop of huur BINNEN dat spoor */
+  cdeal:'', units:'', parking:'', fitOut:'', curUse:'',
   /* prijs- en contactstap */
   payTerms:[], instalMonths:'', licBody:'', mandateType:'', emergencyPhone:'', phoneVerified:false };
 /* Plan prices live in PRICING (app.js) — the one place they are defined. */
 function askingGMD(){ return parseInt(String(S.price||'').replace(/[^0-9]/g,''),10)||0; }
-function bandFor(){ return planBandFor(askingGMD(), S.deal); }
-function bandNo(){ return planBandNo(askingGMD(), S.deal); }
+/* planBandFor kent alleen sale en rent. S.deal kan sinds het commerciële spoor
+   ook 'commercial' zijn, en die waarde zou daar stil als 'sale' worden gelezen —
+   een kantoor van D30.000 per maand belandt dan in de duurste verkoopband. */
+function bandFor(){ return planBandFor(askingGMD(), isRent()?'rent':'sale'); }
+function bandNo(){ return planBandNo(askingGMD(), isRent()?'rent':'sale'); }
 function bandLabel(){
   const B=PRICING.bands, i=B.indexOf(bandFor());
   if(i===0) return 'under D'+B[0].max.toLocaleString('en-US');
   if(i===B.length-1) return 'above D'+B[i-1].max.toLocaleString('en-US');
   return 'D'+B[i-1].max.toLocaleString('en-US')+' – D'+B[i].max.toLocaleString('en-US');
 }
-function planPriceGMD(key){ return planPriceFor(key, askingGMD(), S.deal); }
+function planPriceGMD(key){ return planPriceFor(key, askingGMD(), isRent()?'rent':'sale'); }
 function gmdIn(gmd){ return CURRENCIES[getCurrency()].symbol + Math.round(fromGMD(gmd)).toLocaleString('en-US'); }
 
 /* ---- Four tracks, one wizard ----
@@ -1202,29 +1266,38 @@ function gmdIn(gmd){ return CURRENCIES[getCurrency()].symbol + Math.round(fromGM
    back to, so there are as few of them as the content allows.
    Sections after the first in a group carry .sub: their heading drops a level
    and their eyebrow is hidden, so a step reads as one screen. */
+/* Derde spoor, 29-08-2026: commercieel vastgoed. Zelfde schermvolgorde, eigen
+   woorden, eigen typelijst en eigen velden. Koop of huur is binnen dit spoor
+   een tweede vraag (S.cdeal), want een winkel gaat allebei. */
 const TRACK_STEPS={
   sale:[['intro','what'],['where'],['details','gambia'],['photos','proof'],['price','plan','contact'],['preview']],
-  rent:[['intro','what'],['where'],['details','gambia'],['photos','proof'],['price','plan','contact'],['preview']]
+  rent:[['intro','what'],['where'],['details','gambia'],['photos','proof'],['price','plan','contact'],['preview']],
+  commercial:[['intro','what'],['where'],['details','gambia'],['photos','proof'],['price','plan','contact'],['preview']]
 };
-/* Labels hang off the first section of a group. */
-const STEP_LAB={intro:['You & the property','You & the property'],where:['Location','Location'],
-  details:['The property','The home'],photos:['Documents & photos','Documents & photos'],
-  price:['Price & contact','Rent & contact'],preview:['Review','Review']};
-function isRent(){ return S.deal==='rent'; }
+/* Labels hang off the first section of a group. Derde plek: het commerciële spoor. */
+const STEP_LAB={intro:['You & the property','You & the property','You & the space'],where:['Location','Location','Location'],
+  details:['The property','The home','The space'],photos:['Documents & photos','Documents & photos','Documents & photos'],
+  price:['Price & contact','Rent & contact','Price & contact'],preview:['Review','Review','Review']};
+/* isComm zegt in welk spoor je zit; isRent zegt of er met huur gerekend wordt.
+   Een kantoor te huur is allebei waar, en dat is precies de bedoeling: de
+   huurperiodes, de borg en de laagste planband gelden er net zo goed. */
+function isComm(){ return S.deal==='commercial'; }
+function isRent(){ return S.deal==='rent' || (isComm() && S.cdeal==='rent'); }
+function track(){ return isComm() ? 'commercial' : (S.deal==='rent' ? 'rent' : 'sale'); }
 /* A rent of D 25,000 means nothing without its period, and "150,000" for a sale
    must not read as a monthly figure either. One table, used by every label, the
    summary, the preview and the fee maths. */
 const PERIODS={month:{unit:'month',suffix:'per month',per:12},week:{unit:'week',suffix:'per week',per:52},night:{unit:'night',suffix:'per night',per:365}};
 function per(){ return PERIODS[S.period]||PERIODS.month; }
 function priceSuffix(){ return isRent()?per().suffix:'total'; }  // used for the field suffix and the hint
-function keys(){ return TRACK_STEPS[isRent()?'rent':'sale']; }
+function keys(){ return TRACK_STEPS[track()]; }
 function total(){ return keys().length; }          // index total() = success screen
 function groupAt(n){ return keys()[n]||[]; }
 function groupHas(n,k){ return groupAt(n).indexOf(k)>-1; }
 function curKey(){ return groupAt(step)[0]||'done'; }
 /* The review is a confirmation, not a question, so it carries no number. */
 function numberedSteps(){ return keys().filter(g=>g.indexOf('preview')<0).length; }
-function labFor(k){ const l=STEP_LAB[k]; return l?l[isRent()?1:0]:''; }
+function labFor(k){ const l=STEP_LAB[k]; if(!l) return ''; if(isComm()&&l[2]) return l[2]; return l[isRent()?1:0]; }
 let step=0;
 function renderSteps(){
   psteps.innerHTML = keys().filter(g=>g.indexOf('preview')<0)
@@ -1233,12 +1306,28 @@ function renderSteps(){
 renderSteps();
 
 // type cards
-const TYPES=[['villa','Villa','Detached home with land',ICON.area],['apartment','Apartment','Flat or unit',''],['compound','Compound','Walled family compound',''],['townhouse','Townhouse','Terraced / row house',''],['penthouse','Penthouse','Top-floor with terrace',''],['land','Land / plot','Bare land to build on',''],['lodge','Lodge / guesthouse','Hospitality property',''],['commercial','Commercial','Shop, office or unit','']];
+/* Woningtypes. Commercial stond hier tot 29-08-2026 als achtste kaartje tussen
+   de villa's, met dezelfde vervolgvragen als een woonhuis. Dat is er nu uit:
+   winkels en kantoren hebben hun eigen lijst hieronder en hun eigen spoor. */
+const TYPES=[['villa','Villa','Detached home with land',ICON.area],['apartment','Apartment','Flat or unit',''],['compound','Compound','Walled family compound',''],['townhouse','Townhouse','Terraced / row house',''],['penthouse','Penthouse','Top-floor with terrace',''],['land','Land / plot','Bare land to build on',''],['lodge','Lodge / guesthouse','Hospitality property','']];
+const COMM_TYPES=[['retail','Shop / retail unit','Street-facing trading space',''],['office','Office','Office unit or floor',''],['warehouse','Warehouse / storage','Loods, storage or workshop',''],['restaurant','Restaurant / bar','Kitchen or bar premises',''],['mixed_use','Mixed-use building','Shop or office with living space above',''],['business_plot','Plot / yard','Land or a walled yard for business use','']];
 const homeIc='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>';
 const landIc='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18M5 20V9l7-4 7 4v11"/><path d="M4 9h16"/></svg>';
+const commIc='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M4 21V10l8-5 8 5v11M9 21v-6h6v6"/></svg>';
+/* Een bedrijfskavel is de commerciële tegenhanger van land: hij gedraagt zich in
+   de rest van de flow hetzelfde — plotmaat, geen slaapkamers — maar hij mag wél
+   verhuurd worden, want een ommuurd terrein verhuren is hier heel gewoon. */
+function isPlotCat(){ return S.cat==='land' || S.cat==='business_plot'; }
 function renderTypes(){
+  if(isComm()){
+    if(COMM_TYPES.every(t=>t[0]!==S.cat)) S.cat='retail';
+    typeCards.innerHTML = COMM_TYPES.map(t=>`<div class="opt-card ${t[0]===S.cat?'sel':''}" data-cat="${t[0]}"><span class="ic">${t[0]==='business_plot'?landIc:commIc}</span><div><div class="t">${t[1]}</div><div class="s">${t[2]}</div></div></div>`).join('');
+    bindTypeCards();
+    return;
+  }
   /* No land in the rent track: a bare plot is not something you let out here. */
   const list=TYPES.filter(t=>!(isRent()&&t[0]==='land'));
+  if(TYPES.every(t=>t[0]!==S.cat)) S.cat='villa';
   if(isRent()&&S.cat==='land') S.cat='apartment';
   typeCards.innerHTML = list.map(t=>`<div class="opt-card ${t[0]===S.cat?'sel':''}" data-cat="${t[0]}"><span class="ic">${t[0]==='land'?landIc:homeIc}</span><div><div class="t">${t[1]}</div><div class="s">${t[2]}</div></div></div>`).join('');
   bindTypeCards();
@@ -1273,8 +1362,8 @@ const PLANS=[
 ];
 function renderPlans(){
   const price=askingGMD();
-  const plans = S.deal==='rent' ? PLANS.filter(function(p){ return p[0]!=='verified'; }) : PLANS;
-  const bandLine = S.deal==='rent'
+  const plans = isRent() ? PLANS.filter(function(p){ return p[0]!=='verified'; }) : PLANS;
+  const bandLine = isRent()
     ? 'Verification isn\'t available for rentals — Boost is one flat price for every property.'
     : (price
         ? 'Your asking price of <b>D'+price.toLocaleString('en-US')+'</b> puts you in band '+bandNo()+' of 3 — <b>'+bandLabel()+'</b>. That sets the Verified price below — Boost is one flat price for every property.'
@@ -1292,8 +1381,16 @@ renderPlans();
 // ---- interactions ----
 const dealCards=document.getElementById('dealCards'), whoCards=document.getElementById('whoCards');
 const ownerConfirm=document.getElementById('ownerConfirm'), mandateBox=document.getElementById('mandateBox');
+const commDealCards=document.getElementById('commDealCards');
 dealCards.querySelectorAll('.opt-card').forEach(c=>c.addEventListener('click',()=>{
-  S.deal=c.dataset.deal; S.dealPicked=true; applyDealUI(); saveLocalDraft();
+  S.deal=c.dataset.deal; S.dealPicked=true;
+  /* Wie voor commercieel kiest en nog geen kant koos, krijgt koop als
+     startpunt — de knop eronder blijft zichtbaar tot hij zelf kiest. */
+  if(S.deal==='commercial' && !S.cdeal) S.cdeal='sale';
+  applyDealUI(); saveLocalDraft();
+}));
+commDealCards.querySelectorAll('.opt-card').forEach(c=>c.addEventListener('click',()=>{
+  S.cdeal=c.dataset.cdeal; applyDealUI(); saveLocalDraft();
 }));
 whoCards.querySelectorAll('.opt-card').forEach(c=>c.addEventListener('click',()=>{
   S.who=c.dataset.who;
@@ -1306,7 +1403,7 @@ mandateBox.addEventListener('click',e=>{ e.preventDefault(); S.mandate=!S.mandat
 function bindTypeCards(){
   typeCards.querySelectorAll('.opt-card').forEach(c=>c.addEventListener('click',()=>{
     typeCards.querySelectorAll('.opt-card').forEach(x=>x.classList.remove('sel'));c.classList.add('sel');S.cat=c.dataset.cat;
-    const isLand=S.cat==='land';
+    const isLand=isPlotCat();
     document.getElementById('buildingDetails').style.display=isLand?'none':'block';
     document.getElementById('landDetails').style.display=isLand?'block':'none';
     document.getElementById('detailDesc').textContent=isLand?'Add the key facts about your plot.':'Add the key facts buyers look for first.';
@@ -1528,10 +1625,14 @@ function readRationals(tiff,off,count,r32){
   }
   return vals;
 }
-['bedsIn','bathsIn','sqmIn','plotIn','landSqmIn','descIn','highlightsIn','customFeatsIn','customTitle','videoIn'].forEach(id=>{
+['bedsIn','bathsIn','sqmIn','plotIn','landSqmIn','descIn','highlightsIn','customFeatsIn','customTitle','videoIn','unitsIn','parkingIn'].forEach(id=>{
   const el=document.getElementById(id); if(!el) return;
-  const key={bedsIn:'beds',bathsIn:'baths',sqmIn:'sqm',plotIn:'plot',landSqmIn:'landSqm',descIn:'desc',highlightsIn:'highlights',customFeatsIn:'customFeats',customTitle:'customTitle',videoIn:'videoLink'}[id];
+  const key={bedsIn:'beds',bathsIn:'baths',sqmIn:'sqm',plotIn:'plot',landSqmIn:'landSqm',descIn:'desc',highlightsIn:'highlights',customFeatsIn:'customFeats',customTitle:'customTitle',videoIn:'videoLink',unitsIn:'units',parkingIn:'parking'}[id];
   el.addEventListener('input',e=>{ S[key]=e.target.value; updateSummary(); });
+});
+/* Commerciële keuzelijsten: opleverniveau en huidig gebruik. */
+[['fitOutIn','fitOut'],['curUseIn','curUse']].forEach(([id,key])=>{
+  const el=document.getElementById(id); if(el) el.addEventListener('change',e=>{ S[key]=e.target.value; updateSummary(); });
 });
 document.getElementById('yearIn').addEventListener('input',e=>{ S.yearBuilt=e.target.value; });
 const availIn=document.getElementById('availIn'); if(availIn) availIn.addEventListener('change',e=>{ S.availDate=e.target.value; });
@@ -1541,13 +1642,63 @@ const availIn=document.getElementById('availIn'); if(availIn) availIn.addEventLi
 // Show availability date for rentals
 function toggleRentalFields(){ document.getElementById('beachWrapNormal').style.display='block'; if(window.__trackReady) applyDealUI(); }
 
+/* ---- Het commerciële spoor op het scherm ----
+   Eén plek die het verschil tussen een woning en een bedrijfsruimte toont.
+   De detailstap is bewust dezelfde stap: oppervlak, staat, bouwjaar, water,
+   stroom en beveiliging vraagt een winkel net zo goed als een huis, en die
+   antwoorden staan al in dezelfde kolommen. Wat wég moet zijn de woonvragen
+   (slaapkamers, uitzicht, gemeubileerd); wat erbíj komt zijn units, parkeren,
+   opleverniveau en huidig gebruik. */
+function applyCommercialUI(){
+  const comm = isComm(), rent = isRent();
+  const show=(id,on)=>{ const el=document.getElementById(id); if(el) el.style.display = on?'':'none'; };
+  const txt=(id,s)=>{ const el=document.getElementById(id); if(el) el.textContent = s; };
+
+  show('commRow1', comm);
+  show('commRow2', comm);
+  show('bedsWrap', !comm);
+  show('viewWrap', !comm);
+  show('furnWrap', !comm);
+
+  txt('bathsLab', comm ? 'Toilets / washrooms' : 'Bathrooms');
+  txt('sqmLab',   comm ? 'Floor area (m²)'     : 'Built area (m²)');
+  txt('securityLab', comm ? 'Security on site' : 'Security');
+
+  /* De huurzin zei tot 29-08-2026 dat kavels hier niet verhuurd kunnen worden,
+     terwijl rent.html tegen huurders zegt dat commerciële kavels en yards juist
+     regelmatig worden verhuurd. Dat is opgelost: een bedrijfskavel mag in dit
+     spoor wél verhuurd worden, en de woningtekst belooft niets meer over
+     bedrijfsruimte. */
+  txt('whatDesc', comm
+    ? 'Pick the kind of space. It decides which details we ask for from here on.'
+    : (rent
+      ? 'Homes on this track. A shop, an office or a business plot goes through Commercial space.'
+      : 'Pick the kind of property. It decides which details we ask for from here on.'));
+
+  renderFeatChecks();
+}
+
+/* Kenmerken hangen aan het soort object. Een winkel heeft geen personeelsverblijf
+   en een woning geen laadruimte, dus de lijst wisselt mee. Wat al aangevinkt
+   stond en in de nieuwe lijst niet bestaat, valt weg — anders reist een
+   zwembad mee naar een loods. */
+const COMM_FEATS=['Street frontage','Corner unit','Air-con','Parking','Loading access','Three-phase power','Storefront window','Mezzanine','CCTV','Staff toilet'];
+function featList(){ return isComm() ? COMM_FEATS : FEATS; }
+function renderFeatChecks(){
+  const list = featList();
+  S.feats = (S.feats||[]).filter(f=>list.indexOf(f)>-1);
+  featChecks.innerHTML = list.map(f=>`<label class="chk-opt ${S.feats.indexOf(f)>-1?'sel':''}" data-feat="${f}"><span class="box">${checkSm}</span> ${f}</label>`).join('');
+}
+
 /* ---- One place that puts the chosen track on screen ----
    Called on every change of deal or party: wording, which fields exist, which
    are hidden, the progress bar, the sidebar. Nothing else reveals or hides
    these blocks, so a track can never half-apply. */
 function applyDealUI(){
-  const rent=isRent(), biz=S.who==='business', owner=S.who==='owner';
+  const rent=isRent(), biz=S.who==='business', owner=S.who==='owner', comm=isComm();
   dealCards.querySelectorAll('.opt-card').forEach(c=>c.classList.toggle('sel',S.dealPicked&&c.dataset.deal===S.deal));
+  document.getElementById('commDealWrap').style.display = comm?'block':'none';
+  commDealCards.querySelectorAll('.opt-card').forEach(c=>c.classList.toggle('sel',comm&&c.dataset.cdeal===S.cdeal));
   whoCards.querySelectorAll('.opt-card').forEach(c=>c.classList.toggle('sel',c.dataset.who===S.who));
   document.getElementById('whoOwnerS').textContent = rent
     ? "It's mine or my family's, and I let it out myself"
@@ -1560,13 +1711,20 @@ function applyDealUI(){
   document.getElementById('ownerConfirmTxt').textContent = rent
     ? 'This is my own property or my family\u2019s, and I charge tenants no agency fee. If that turns out not to be the case, we remove the badge.'
     : 'This is my own property or my family\u2019s, and I am selling it myself \u2014 no agency fee for the buyer.';
-  document.getElementById('whatH1').textContent = rent?'What are you letting out?':'What are you selling?';
+  document.getElementById('whatH1').textContent = comm
+    ? (rent?'What kind of space are you letting?':'What kind of space are you selling?')
+    : (rent?'What are you letting out?':'What are you selling?');
   document.getElementById('whatDesc').textContent = rent
     ? 'Homes and commercial space only \u2014 bare land and plots cannot be let on MyKunda.'
     : 'Pick the kind of property. It decides which details we ask for from here on.';
   renderTypes();
-  const mt=document.getElementById('mapTools'); if(mt) mt.style.display = rent?'none':'flex';
-  document.getElementById('detailH1').textContent = rent?'Describe the home':'Describe your property';
+  applyCommercialUI();
+  /* Een bedrijfskavel wordt net zo goed ingetekend als een bouwkavel, dus de
+     tekengereedschappen horen bij het soort object en niet bij koop of huur. */
+  const mt=document.getElementById('mapTools'); if(mt) mt.style.display = (rent && !isPlotCat())?'none':'flex';
+  document.getElementById('detailH1').textContent = comm
+    ? (rent?'Describe the space you are letting':'Describe the space you are selling')
+    : (rent?'Describe the home':'Describe your property');
   document.getElementById('photoH1').textContent = rent?'Show renters the home':'Show off your property';
   document.getElementById('photoDesc').textContent = rent
     ? 'Drag photos onto each slot. Renters skip listings with no kitchen and no bathroom photo \u2014 add those two first.'
@@ -1604,10 +1762,16 @@ const NEEDS={
   'sale-owner':['A title deed, lease or alkalo paper \u2014 or tell us you are not sure','Photos of the property','The plot size, or draw the boundary on the map','Your asking price'],
   'sale-business':['Your agency name, and a registration number if you have one','The owner\u2019s written permission to sell it','A title deed, lease or alkalo paper','Photos, plot size and the asking price'],
   'rent-owner':['Photos of the home \u2014 kitchen and bathroom included','The monthly rent and the deposit you ask','When a tenant can move in','Which bills are included in the rent'],
-  'rent-business':['Your agency name, and a registration number if you have one','The owner\u2019s written permission to let it','The rent, the deposit and the fee you charge tenants','Photos, and the date it comes free']
+  'rent-business':['Your agency name, and a registration number if you have one','The owner\u2019s written permission to let it','The rent, the deposit and the fee you charge tenants','Photos, and the date it comes free'],
+  /* Bedrijfsruimte: een huurder vraagt naar oppervlak, oplevering en stroom
+     voordat hij naar de prijs vraagt. */
+  'comm-sale-owner':['A title deed, lease or alkalo paper, or tell us you are not sure','The floor area, and the plot if it comes with land','Photos of the front, the inside and the access','What it is used for now, and your asking price'],
+  'comm-sale-business':['Your agency name, and a registration number if you have one','Written permission from the owner to sell it','A title deed, lease or alkalo paper','Floor area, current use, photos and the asking price'],
+  'comm-rent-owner':['The floor area, and how many units there are','The fit-out level: shell, fitted or turnkey','Power and water, and whether there is backup','The rent, any service charge, and when it comes free'],
+  'comm-rent-business':['Your agency name, and a registration number if you have one','Written permission from the owner to let it','Floor area, fit-out, parking and the service charge','The rent, the deposit and the date it comes free']
 };
 function renderNeeds(){
-  const k=(isRent()?'rent':'sale')+'-'+(S.who==='business'?'business':'owner');
+  const k=(isComm()?'comm-':'')+(isRent()?'rent':'sale')+'-'+(S.who==='business'?'business':'owner');
   document.getElementById('needList').innerHTML = (NEEDS[k]||NEEDS['sale-owner'])
     .map(t=>'<div class="row"><span class="dot">'+checkSm+'</span><span>'+t+'</span></div>').join('');
   document.getElementById('needFoot').textContent = (S.who==='owner')
@@ -1739,7 +1903,14 @@ applyDealUI();
   const key={roadIn:'road',titleIn:'titleType',elecIn:'elec',landWaterIn:'landWater',floodIn:'flood',fenceIn:'fence'}[id];
   el.addEventListener('change',()=>{ S[key]=el.value; applyGambiaUI(); updateSummary(); });
 });
-featChecks.querySelectorAll('.chk-opt').forEach(c=>c.addEventListener('click',()=>{c.classList.toggle('sel');S.feats=[...featChecks.querySelectorAll('.sel')].map(x=>x.dataset.feat);}));
+/* Gedelegeerd, want renderFeatChecks() tekent deze lijst opnieuw zodra het
+   spoor wisselt; met listeners op de labels zelf zou de eerste klik daarna
+   niets meer doen. */
+featChecks.addEventListener('click', e=>{
+  const c = e.target.closest('.chk-opt'); if(!c) return;
+  c.classList.toggle('sel');
+  S.feats=[...featChecks.querySelectorAll('.sel')].map(x=>x.dataset.feat);
+});
 landChecks.querySelectorAll('.chk-opt').forEach(c=>c.addEventListener('click',()=>{c.classList.toggle('sel');S.landFeats=[...landChecks.querySelectorAll('.sel')].map(x=>x.dataset.landfeat);}));
 
 /* ---- Gambia step: bindings and the fields that follow from an answer ---- */
@@ -1772,7 +1943,7 @@ function syncPlotFromDims(){
   const w=parseFloat(S.plotW), d=parseFloat(S.plotD);
   if(!(w>0)||!(d>0)) return;
   const m2=Math.round(w*d);
-  if(S.cat==='land'){ S.landSqm=String(m2); const el=document.getElementById('landSqmIn'); if(el) el.value=m2; }
+  if(isPlotCat()){ S.landSqm=String(m2); const el=document.getElementById('landSqmIn'); if(el) el.value=m2; }
   else { S.plot=String(m2); const el=document.getElementById('plotIn'); if(el) el.value=m2; }
   const h=document.getElementById('plotDimHint');
   if(h) h.textContent = w+' × '+d+' m — that is '+m2.toLocaleString('en-US')+' m², filled in for you.';
@@ -1781,7 +1952,7 @@ function syncPlotFromDims(){
 /* One place that decides which Gambia fields exist, mirroring applyDealUI().
    Nothing else shows or hides these blocks. */
 function applyGambiaUI(){
-  const isLand = S.cat==='land';
+  const isLand = isPlotCat();
   const rent = isRent();
   const biz = S.who==='business';
   const show=(id,on)=>{ const el=document.getElementById(id); if(el) el.style.display = on?'':'none'; };
@@ -1804,9 +1975,23 @@ function applyGambiaUI(){
   show('leaseYearsRow', !rent && (S.titleType==='leasehold'||S.titleType==='sublease'));
   show('alkaloRow',    !rent && S.titleType==='alkalalo');
 
-  /* Management terms are what a property manager is offering. */
-  show('gamManage', rent && biz);
+  /* Management terms are what a property manager is offering.
+     Bij bedrijfsruimte hoort dit blok ook bij een particuliere verhuurder: de
+     servicekosten staan erin, en die zijn bij een kantoor of winkelunit eerder
+     regel dan uitzondering. De inhoud kantelt mee met wie er staat. */
+  const comm = isComm();
+  show('gamManage', rent && (biz || comm));
   show('emergencyRow', rent && biz);
+  show('inclWrap', rent && biz);
+  const mgmtLab=document.getElementById('mgmtLab'), mgmtSub=document.getElementById('mgmtSub');
+  if(mgmtLab) mgmtLab.textContent = (comm && !biz) ? 'Service charge and terms' : 'How the property is managed';
+  if(mgmtSub) mgmtSub.innerHTML = (comm && !biz)
+    ? 'What a tenant pays on top of the rent, and what you expect from them.'
+    : 'This is what earns the <b>Professionally managed</b> label on your listing.';
+  const plotWLab=document.getElementById('plotWLab');
+  if(plotWLab) plotWLab.innerHTML = comm
+    ? 'Frontage to the street <span style="font-weight:500;color:var(--muted-2)">— metres</span>'
+    : 'Plot width <span style="font-weight:500;color:var(--muted-2)">— metres</span>';
 
   /* Payment terms are a sale question; rent has the deposit and the bills. */
   show('payWrap', !rent);
@@ -1814,7 +1999,8 @@ function applyGambiaUI(){
 
   const h1=document.getElementById('gamH1');
   if(h1) h1.textContent = isLand ? 'The plot, and the paperwork behind it'
-                                 : (rent ? 'Power, water and what the tenant pays' : 'Power, water and the compound');
+                                 : (isComm() ? (rent ? 'Power, water and what the tenant pays' : 'Power, water and the premises')
+                                             : (rent ? 'Power, water and what the tenant pays' : 'Power, water and the compound'));
 }
 
 // ---- Real file uploads (photos + documents) ----
@@ -2239,14 +2425,14 @@ function renderPreview(){
   const imgSrc=img?img.src:'';
   const title=S.customTitle || ((S.feats[0]||S.landFeats[0]||'')+' '+catLabel()).trim();
   const priceTxt=S.price?'D '+parseInt(S.price).toLocaleString('en-US')+(isRent()?' '+per().suffix:''):'Price on request';
-  const det=S.cat==='land'?`${S.landSqm||'—'} m² plot`:`${S.beds||'—'} bed · ${S.baths||'—'} bath · ${S.sqm||'—'} m²`;
+  const det=detailLine() || (isPlotCat()?'Plot size not set':'Details not set');
   const featsAll=[...S.feats,...(S.customFeats?S.customFeats.split(',').map(s=>s.trim()).filter(Boolean):[]),...S.landFeats];
   const nearbyHtml=S.nearby.filter(n=>n.place).map(n=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line-2);font-size:14px"><span>${n.place}</span><span style="font-weight:600;color:var(--ink)">${n.dist||'—'}</span></div>`).join('');
   document.getElementById('previewCard').innerHTML=`
     <div style="aspect-ratio:16/9;background:var(--paper-2);overflow:hidden">${imgSrc?`<img src="${imgSrc}" alt="Listing cover photo" style="width:100%;height:100%;object-fit:cover">`:'<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--muted)">No cover photo</div>'}</div>
     <div style="padding:24px">
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
-        <span style="padding:4px 12px;border-radius:99px;font-size:12px;font-weight:700;background:var(--green-50);color:var(--green-700)">${S.deal==='rent'?'FOR RENT':'FOR SALE'}</span>
+        <span style="padding:4px 12px;border-radius:99px;font-size:12px;font-weight:700;background:var(--green-50);color:var(--green-700)">${isRent()?(isComm()?'TO LET':'FOR RENT'):'FOR SALE'}</span>
         ${S.plan!=='basic'?'<span style="padding:4px 12px;border-radius:99px;font-size:12px;font-weight:700;background:var(--amber-50);color:var(--amber-600)">VERIFIED</span>':''}
         ${S.who==='owner'?'<span style="padding:4px 12px;border-radius:99px;font-size:12px;font-weight:700;background:var(--green-700);color:#fff">'+(isRent()?'NO AGENT FEE':'PRIVATE OWNER')+'</span>':''}
         ${S.who==='business'?(feeGMD()>0
@@ -2608,7 +2794,7 @@ document.getElementById('bndUndo').addEventListener('click',()=>{ boundaryPts.po
 document.getElementById('bndClear').addEventListener('click',()=>{ boundaryPts=[]; redrawBoundary(); commitBoundary(); });
 document.getElementById('bndUseSize').addEventListener('click',async function(){
   const sqm=Math.round(polyAreaSqm(boundaryPts)); if(!sqm) return;
-  if(S.cat==='land'){ S.landSqm=String(sqm); const el=document.getElementById('landSqmIn'); if(el) el.value=sqm; }
+  if(isPlotCat()){ S.landSqm=String(sqm); const el=document.getElementById('landSqmIn'); if(el) el.value=sqm; }
   else { S.plot=String(sqm); const el=document.getElementById('plotIn'); if(el) el.value=sqm; }
   updateSummary(); saveLocalDraft();
   const note=document.getElementById('bndNote');
@@ -2744,10 +2930,10 @@ function mkPriceGuide(){
   if(isRent() || !window.MK_VAL || !window.MK_RATES){ box.style.display='none'; return; }
   const r = window.MK_VAL.value({
     type: S.cat==='villa'||S.cat==='compound'||S.cat==='townhouse'||S.cat==='lodge' ? 'villa' : S.cat,
-    area: (S.area||'').split(' \u00b7 ')[0], plotSqm: S.cat==='land' ? S.landSqm : S.plot,
-    builtSqm: S.cat==='land' ? '' : S.sqm, title: S.titleType, road: S.road, elec: S.elec,
-    water: S.cat==='land' ? S.landWater : S.water, fence: S.fence, flood: S.flood,
-    beach: S.cat==='land' ? S.landBeach : S.beach, view: S.view, condition: S.condition,
+    area: (S.area||'').split(' \u00b7 ')[0], plotSqm: isPlotCat() ? S.landSqm : S.plot,
+    builtSqm: isPlotCat() ? '' : S.sqm, title: S.titleType, road: S.road, elec: S.elec,
+    water: isPlotCat() ? S.landWater : S.water, fence: S.fence, flood: S.flood,
+    beach: isPlotCat() ? S.landBeach : S.beach, view: S.view, condition: S.condition,
     yearBuilt: S.yearBuilt, floors: S.floors, baths: S.baths, security: S.security,
     furnished: S.furnished, finish: 'standard'
   }, { LAND_BASE: (window.MK_RATES||{}).LAND || {} });
@@ -2784,13 +2970,23 @@ function updatePriceLabels(){
 updatePriceLabels();
 
 // ---- summary ----
-function catLabel(){return {villa:'Villa',apartment:'Apartment',compound:'Compound',townhouse:'Townhouse',penthouse:'Penthouse',land:'Land / plot',lodge:'Lodge',commercial:'Commercial'}[S.cat];}
+/* Eén tabel voor alle categorieën, woning en bedrijf. 'commercial' staat er nog
+   in als oude verzamelwaarde: hij wordt nergens meer aangeboden, maar een
+   bestaand concept kan hem nog hebben. */
+function catLabel(){return {villa:'Villa',apartment:'Apartment',compound:'Compound',townhouse:'Townhouse',penthouse:'Penthouse',land:'Land / plot',lodge:'Lodge',commercial:'Commercial',
+  retail:'Shop / retail unit',office:'Office',warehouse:'Warehouse / storage',restaurant:'Restaurant / bar',mixed_use:'Mixed-use building',business_plot:'Plot / yard'}[S.cat] || 'Property';}
+/* Wat er op de kaart en in de samenvatting onder de titel staat. Slaapkamers
+   zeggen niets over een loods; oppervlak, units en parkeren wel. */
+function detailLine(){
+  if(isPlotCat()) return S.landSqm ? S.landSqm+' m² plot' : '';
+  if(isComm()) return [S.sqm&&S.sqm+' m²', S.units&&S.units+(+S.units===1?' unit':' units'), S.parking&&S.parking+' parking'].filter(Boolean).join(' · ');
+  return [S.beds&&S.beds+' bed',S.baths&&S.baths+' bath',S.sqm&&S.sqm+' m²'].filter(Boolean).join(' · ');
+}
 function updateSummary(){
   const setV=(id,val)=>{const el=document.getElementById(id);el.textContent=val||'—';el.classList.toggle('empty',!val);};
-  setV('sumType', `${catLabel()} · ${S.deal==='rent'?'For rent':'For sale'}`);
+  setV('sumType', `${catLabel()} · ${isRent()?(isComm()?'To let':'For rent'):'For sale'}`);
   setV('sumLoc', S.area? S.area.split(' · ')[0] : '');
-  let det = S.cat==='land' ? (S.landSqm?S.landSqm+' m² plot':'') : [S.beds&&S.beds+' bed',S.baths&&S.baths+' bath',S.sqm&&S.sqm+' m²'].filter(Boolean).join(' · ');
-  setV('sumDetails', det);
+  setV('sumDetails', detailLine());
   setV('sumPrice', S.price? 'D '+parseInt(S.price).toLocaleString('en-US')+(isRent()?' '+per().suffix:'') : '');
   const depRow=document.getElementById('sumDepRow');
   if(depRow){
@@ -2944,6 +3140,9 @@ function validate(n){
 function validateKey(k){
   if(k==='intro'){
     if(!S.dealPicked){ shake(dealCards); return false; }
+    /* Zonder deze keuze is niet te zeggen of het bedrag een koopsom of een
+       maandhuur is, en dat bepaalt de prijsband, de periode en de borg. */
+    if(isComm() && !S.cdeal){ shake(commDealCards); return false; }
     if(!S.who){ shake(whoCards); return false; }
     if(S.who==='owner' && !S.confirmWho){ shake(ownerConfirm); return false; }
     return true;
@@ -3149,7 +3348,7 @@ async function savePlotClaim(listingId, lat, lng){
     listing_id: listingId,
     centroid: 'SRID=4326;POINT('+lng.toFixed(7)+' '+lat.toFixed(7)+')',
     outline: outline,
-    area_m2: S.boundarySqm || (parseInt(S.cat==='land'?S.landSqm:S.plot)||null),
+    area_m2: S.boundarySqm || (parseInt(isPlotCat()?S.landSqm:S.plot)||null),
     plot_key: (typeof plusCode==='function') ? plusCode(lat,lng,10) : null
   };
   const r=await sb.from('listing_plot_claims').upsert(row,{onConflict:'listing_id'});
@@ -3216,10 +3415,12 @@ async function publish(){
   const lat = (typeof S.lat==='number') ? S.lat : base[0]+(Math.random()*0.01-0.005);
   const lng = (typeof S.lng==='number') ? S.lng : base[1]+(Math.random()*0.01-0.005);
   const feat = S.feats[0] || S.landFeats[0] || (S.plan!=='basic'?'Verified':'New listing');
-  const titleFeat = (S.feats[0] && S.cat!=='land') ? S.feats[0]+' ' : (S.cat==='land' && S.landFeats[0] ? S.landFeats[0]+' ' : '');
+  const titleFeat = (S.feats[0] && !isPlotCat()) ? S.feats[0]+' ' : (isPlotCat() && S.landFeats[0] ? S.landFeats[0]+' ' : '');
   const listing = {
     id:'u'+Date.now(),
-    cat:S.cat, type:S.deal,
+    /* type is de kaartweergave van kind: sale of rent, nooit 'commercial'. */
+    cat:S.cat, type:isRent()?'rent':'sale', segment:isComm()?'commercial':'residential',
+    units:parseInt(S.units)||0, parking:parseInt(S.parking)||0,
     isNew:true, verified:(S.plan!=='basic'),
     plan:S.plan,
     status:(S.plan==='basic'?'Active':'In review'),
@@ -3228,8 +3429,8 @@ async function publish(){
     street:S.street||(S.area?S.area.split(' · ')[0]:'The Gambia'),
     area:S.area||'Kololi · Kombo North',
     beds:parseInt(S.beds)||0, baths:parseInt(S.baths)||0,
-    sqm:parseInt(S.cat==='land'?0:S.sqm)||0,
-    plot:parseInt(S.cat==='land'?S.landSqm:S.plot)||0,
+    sqm:parseInt(isPlotCat()?0:S.sqm)||0,
+    plot:parseInt(isPlotCat()?S.landSqm:S.plot)||0,
     tag:feat,
     photos:photoCount||1,
     img:imgSrc||'',
@@ -3310,7 +3511,8 @@ async function publish(){
           title: listing.title,
           area: listing.area,
           price: parseInt(S.price)||0,
-          deal: S.deal,
+          deal: isRent()?'rent':'sale',
+          segment: isComm()?'commercial':'residential',
           cat: S.cat,
           beds: listing.beds, baths: listing.baths,
           sqm: listing.sqm, plot: listing.plot,
@@ -3354,11 +3556,13 @@ async function publish(){
   if(!listingDbId) document.getElementById('viewListingBtn').href='property.html?id='+listing.id;
 
   const priceTxt = S.price? 'D '+parseInt(S.price).toLocaleString('en-US')+(isRent()?'<span class="per">'+per().suffix+'</span>':'') : 'Price on request';
-  const det = S.cat==='land'? `${S.landSqm||'—'} m² plot` : `${ICON.bed} ${S.beds||'—'} &nbsp; ${ICON.bath} ${S.baths||'—'} &nbsp; ${ICON.area} ${S.sqm||'—'} m²`;
+  const det = isPlotCat()? `${S.landSqm||'—'} m² plot`
+    : isComm() ? `${ICON.area} ${S.sqm||'—'} m² &nbsp; ${S.units||'1'} unit${+S.units===1||!S.units?'':'s'}`
+    : `${ICON.bed} ${S.beds||'—'} &nbsp; ${ICON.bath} ${S.baths||'—'} &nbsp; ${ICON.area} ${S.sqm||'—'} m²`;
   document.getElementById('successCard').innerHTML=`
     <div class="card" style="max-width:340px;margin:0 auto">
       <div class="card-media" style="aspect-ratio:4/3">${imgSrc?`<img src="${imgSrc}" alt="Listing cover photo" style="width:100%;height:100%;object-fit:cover">`:`<div style="width:100%;height:100%;background:linear-gradient(135deg,#DCEAE3,#F6E6D4)"></div>`}
-        <div class="badges">${S.plan!=='basic'?'<span class="badge badge-new">Verified</span>':''}<span class="badge ${S.deal==='rent'?'badge-rent':'badge-sale'}">${S.deal==='rent'?'For rent':'For sale'}</span></div>
+        <div class="badges">${S.plan!=='basic'?'<span class="badge badge-new">Verified</span>':''}<span class="badge ${isRent()?'badge-rent':'badge-sale'}">${isRent()?(isComm()?'To let':'For rent'):'For sale'}</span></div>
       </div>
       <div class="card-body">
         <div class="card-price">${priceTxt}</div>
