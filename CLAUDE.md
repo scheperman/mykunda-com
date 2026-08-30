@@ -1763,3 +1763,97 @@ stap toont meerdere `.step`-secties tegelijk; secties na de eerste krijgen
 `.sub` (kop een niveau lager, eyebrow verborgen). Er is geen HTML verplaatst.
 `validate(n)` loopt de sleutels van de groep af via `validateKey(k)`.
 De review telt niet mee in "Step N of 5".
+
+## Communicatie: wat er wanneer uitgaat — 30-08-2026
+
+Op 30 augustus is elk communicatiemoment op de site nagelopen: negen
+leadformulieren, het berichtencentrum, de bezichtigingen, de advertentieflow,
+de betaalketen, de auth-mails en WhatsApp. Onderstaande regels volgen daaruit.
+Het volledige testplan (138 gevallen) staat als artifact "Communicatie-audit
+MyKunda".
+
+### De levensloop van een advertentie mailt nu wél
+
+`createListing()` en `submitForReview()` zetten **elke** advertentie op
+`pending_review`, en de select-policy op `listings` toont alleen `active` en
+`under_offer` aan het publiek. Een nieuwe advertentie staat dus **niet** live.
+
+De bevestigingsmail zei bij een gratis plan letterlijk "Your listing is live and
+buyers can find it right now", en daarna hoorde de verkoper nooit meer iets —
+er ging geen mail uit bij goedkeuring, afwijzing of uit de lucht halen. Beide
+gerepareerd:
+
+- `listingConfirmationEmail` zegt nu "with our team for a quick check".
+- `listingBackofficeEmail` heet "New listing awaiting review" (stond op "New
+  listing published", tegen de eigen ⚡-onderwerpregel in).
+- Nieuw: **`notify-listing-status`**, aangeroepen door de trigger
+  `listings_notify_status` → `notify_listing_status_change()`. Drie statussen
+  mailen: `active` ("your listing is live"), `rejected` ("we need a bit more",
+  met `listings.review_note` erin) en `archived`. Bewust niet: `sold`, `let` en
+  `under_offer` — die zet de verkoper zelf.
+- **`listings.review_note`** is de reden die bij een afwijzing letterlijk in de
+  mail van de verkoper komt. Schrijf hem dus voor de verkoper, niet voor de
+  backoffice.
+- Elke overgang mailt hooguit één keer. Dat dwingt de unieke index
+  `email_events_listing_status_once` op `(payload->>'listing_id',
+  payload->>'status')` af, met de claim-eerst-constructie van
+  `notify-fulfilment`. Heen en weer zetten levert dus geen tweede mail op.
+
+Er is **geen** verloopmechanisme voor advertenties, en dat is geen omissie: de
+site belooft nergens een looptijd. Wat wél bestaat is `listings.boosted_until`
+en `verified_until` — een Boost is 30 dagen. Daar gaat nog geen enkele mail
+over; dat is de eerstvolgende kans, en de enige met directe herhaalomzet.
+
+### Poorten op de notify-functies
+
+| functie | poort |
+| --- | --- |
+| `notify-payment`, `notify-fulfilment`, `notify-listing-status` | `x-notify-key` = `NOTIFY_SHARED_KEY` (staat in de kluis als `notify_shared_key`, de triggers lezen hem daaruit) |
+| `notify-listing` | `x-notify-key`, óf een ingelogde gebruiker die eigenaar is van de listing |
+| `wa-notify` | `x-notify-key` verplicht — zonder secret weigert hij **alles** |
+| `wa-inbound` | `WA_APP_SECRET` verplicht (handtekening) en `WA_VERIFY_TOKEN` verplicht (geen terugval meer) |
+| `notify-lead` | open, maar met dedupe op `notified_at` en drie auto-replies per adres per uur |
+
+`notify-listing` haalt het ontvangstadres uit de **database**, nooit uit de
+payload. `listing_data` mag de mail alleen verrijken. Zet die regel niet terug:
+met een adres uit de payload is dit endpoint een mailrelay op ons eigen
+geverifieerde domein.
+
+Roep `notify-listing` vanuit de browser aan met `sb.functions.invoke(...)`, niet
+met een losse `fetch` en de anon-sleutel — die levert geen gebruiker op en komt
+dus niet langs de poort.
+
+### Wat er nooit meer een knop mag krijgen
+
+Bezichtigingen, advertentiestatus en betalingen zijn transactioneel. De enige
+opt-out is `profiles.notify_messages` (berichtmeldingen). Op het dashboard
+stonden vier schakelaars, een kanaalkeuze en een WhatsApp-nummerveld waarvan er
+precies één iets bewaarde; de rest is weg. Zet er niets terug wat niet
+daadwerkelijk wordt opgeslagen — dat geldt ook voor de knop "Save search" op
+`search.html`, die tot 30-08-2026 "Search saved" toonde zonder iets op te slaan
+en nu echt naar `saved_searches` schrijft.
+
+### info@mykunda.com werkt wél — voor mensen
+
+De bounce van 14-08-2026 gold voor mail van **Amazon SES/Resend** naar info@
+(Cloud86-blocklist). Gemeten op 30-08-2026: een gewone mail vanaf Gmail naar
+info@mykunda.com komt zonder bounce aan. Dus:
+
+- interne meldingen blijven naar `admin@mykunda.com` — die route loopt via
+  Resend en is de route die bounct;
+- `info@mykunda.com` mag gewoon in de voettekst en op de site blijven staan als
+  contactadres voor klanten.
+
+Test dit opnieuw voordat je een van beide verandert; gis er niet over.
+
+### Twee dingen die nog niets versturen
+
+- **Area alerts.** 47 pagina's schrijven `area_alert`-leads weg en de
+  auto-reply zegt "Your area alert is set up". Er is geen enkele functie of
+  cron die die alerts daadwerkelijk verstuurt. De belofte klopt letterlijk (hij
+  ís ingesteld), maar er komt nog niets.
+- **Het rapport bij een titelcontrole.** De `report_sent`-mail zegt "It comes as
+  a separate email". Geen enkele edge function verstuurt bijlagen; dat rapport
+  gaat met de hand. Zet `fulfilment_status` dus pas op `report_sent` **nadat**
+  je het rapport hebt gemaild, anders stuur je de klant zijn spamfolder in voor
+  iets dat nog niet bestaat.
