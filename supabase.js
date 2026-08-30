@@ -535,6 +535,21 @@ async function turnOffAllAlerts(){
   return true;
 }
 
+/* En weer aan. Symmetrisch met turnOffAllAlerts(): de schakelaar onder Account
+   is een hoofdschakelaar, dus hij zet de alert op elke opgeslagen zoekopdracht
+   ook weer aan. Anders zet je hem aan en gebeurt er niets, omdat elke losse
+   zoekopdracht nog op 'off' staat van de vorige keer. Wie daarna één
+   zoekopdracht stil wil hebben, zet die er los weer uit. */
+async function turnOnAllAlerts(){
+  if(!sb) throw new Error('backend-offline');
+  const u = await currentUser(); if(!u) throw new Error('not-signed-in');
+  const { error: e1 } = await sb.from('profiles').update({ consent_marketing:true }).eq('id', u.id);
+  if(e1) throw e1;
+  const { error: e2 } = await sb.from('saved_searches').update({ channel:'email' }).eq('user_id', u.id);
+  if(e2) throw e2;
+  return true;
+}
+
 /* De bezichtigingen die deze gebruiker zelf heeft aangevraagd — de kant van de
    koper. fetchMyViewings() doet de kant van de verkoper (bezichtigingen op zijn
    advertenties); tot vandaag was er voor de koper niets, die kreeg alleen mail.

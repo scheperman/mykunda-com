@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:11e4jv8--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1bpw5fg--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
 <link rel="apple-touch-icon" href="images/mykunda-icon.png">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#15463A">
-<title>My MyKunda — Seller dashboard</title>
+<title>My MyKunda — your dashboard</title>
 <noscript></noscript>
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=161376117009464">
+<link rel="stylesheet" href="styles.min.css?v=56065524497728">
 <style>
 body{background:var(--paper-2)}
 .dash{max-width:1180px;margin:0 auto;padding:36px 28px 70px}
@@ -197,7 +197,7 @@ body{background:var(--paper-2)}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=161376117009464"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=56065524497728"><!--/mk-css-->
 </head>
 <body>
 <div id="header"></div>
@@ -335,7 +335,7 @@ body{background:var(--paper-2)}
           <p class="sub">What we send you, and what you can turn off.</p>
           <div style="margin-top:6px">
             <div class="notif-row"><div><div class="nl">Email me about new messages</div><div class="nd">Get an email when a buyer or seller sends you a message. Your conversations keep working either way — new messages are always waiting in Messages.</div></div><button class="notif-toggle on" id="msgEmailToggle"></button></div>
-            <div class="notif-row"><div><div class="nl">New listings and area alerts</div><div class="nd" id="alertsNd">A handful a month at most, based on the searches you saved. Switching this off also stops the alerts on every saved search.</div></div><button class="notif-toggle" id="alertsToggle"></button></div>
+            <div class="notif-row"><div><div class="nl">New listings and area alerts</div><div class="nd" id="alertsNd">A handful a month at most, based on the searches you saved. This is the master switch: it turns the alert on — or off — for every saved search at once. You can still silence one search on its own under Saved searches.</div></div><button class="notif-toggle" id="alertsToggle"></button></div>
           </div>
           <p class="sub" style="margin-top:14px">Emails about your viewings, your listings and your payments always come through. They are part of the deal itself, so there is no switch for them.</p>
         </div>
@@ -349,15 +349,15 @@ body{background:var(--paper-2)}
 
 <div id="footer"></div>
 
-<script src="app.min.js?v=161376117009464"></script>
-<script src="image-slot.js?v=161376117009464" defer></script>
+<script src="app.min.js?v=56065524497728"></script>
+<script src="image-slot.js?v=56065524497728" defer></script>
 <script>
 /* 4G: the Supabase client (~205 KB) is not needed to paint this page. It downloads
    in parallel and every backend call awaits window.__sbReady. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=161376117009464'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=56065524497728'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 </script>
@@ -1078,8 +1078,9 @@ document.addEventListener('click', async function(ev){
       if(P) P.consent_marketing=false;
       SAVED.forEach(function(r){ r.channel='off'; });
     } else {
-      await sb.from('profiles').update({ consent_marketing:true }).eq('id', P.id);
-      P.consent_marketing=true;
+      await turnOnAllAlerts();
+      if(P) P.consent_marketing=true;
+      SAVED.forEach(function(r){ r.channel='email'; });
     }
     renderSaved(document.getElementById('savedList'));
     renderSaved(document.getElementById('ovSaved'),3);
