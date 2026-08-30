@@ -141,18 +141,25 @@ serve(async (req) => {
 
     /* Elke overgang hooguit een mail, en dat moet de DATABASE afdwingen — niet
        een controle vooraf. Dezelfde claim-eerst-constructie als
-       notify-fulfilment, met een unieke index op (listing_id, status) voor
-       event_type 'listing_status'. Zet iemand een advertentie op active, dan
-       weer op pending_review en dan weer op active, dan gaat er dus een mail
-       uit. Dat is met opzet: dat is heen-en-weer van de backoffice, geen
-       nieuws voor de verkoper. */
+       notify-fulfilment, met een unieke index op (listing_id, status, reden)
+       voor event_type 'listing_status'. Zet iemand een advertentie op active,
+       dan weer op pending_review en dan weer op active, dan gaat er dus GEEN
+       tweede mail uit. Dat is met opzet: dat is heen-en-weer van de
+       backoffice, geen nieuws voor de verkoper.
+
+       De reden zit sinds 30-08-2026 in de sleutel. Bij active en archived is
+       hij leeg en verandert er niets. Bij rejected wél: wordt een advertentie
+       na herindienen om een ANDERE reden afgewezen, dan is dat een ander
+       bericht en hoort het te vertrekken. Dezelfde reden nog eens is een
+       herhaling en wordt nog steeds tegengehouden. */
+    const claimPayload = { listing_id: listingId, status, reason: reason ?? null, ok: null as boolean | null };
     const { data: claim, error: claimErr } = await db
       .from("email_events")
       .insert({
         event_type: "listing_status",
         recipient: email,
         subject: null,
-        payload: { listing_id: listingId, status, ok: null },
+        payload: claimPayload,
       })
       .select("id").single();
 
@@ -197,7 +204,9 @@ serve(async (req) => {
     try {
       const uit = await sendEmail({ to: email, subject, html, replyTo: ADMIN_EMAIL });
       await db.from("email_events")
-        .update({ resend_email_id: uit?.id ?? null, subject, payload: { listing_id: listingId, status, ok: true } })
+        // De reden blijft in de payload staan: hij is deel van de unieke
+        // sleutel, dus hem hier weglaten zou de claim ongedaan maken.
+        .update({ resend_email_id: uit?.id ?? null, subject, payload: { ...claimPayload, ok: true } })
         .eq("id", claim.id);
       return json({ ok: true, sent_to: email, status });
     } catch (e) {
@@ -205,7 +214,7 @@ serve(async (req) => {
          van de mailserver willen we niet dat de volgende statuswissel het nog
          eens probeert. De regel met ok:false is het spoor. */
       await db.from("email_events")
-        .update({ subject, reason: String((e as Error).message).slice(0, 500), payload: { listing_id: listingId, status, ok: false } })
+        .update({ subject, reason: String((e as Error).message).slice(0, 500), payload: { ...claimPayload, ok: false } })
         .eq("id", claim.id);
       console.error("notify-listing-status: verzenden mislukt:", e);
       return json({ ok: false, error: "send_failed", detail: String((e as Error).message) }, 502);

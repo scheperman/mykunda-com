@@ -1048,11 +1048,15 @@ async function saveDraft(fields, draftId){
   return await insertTolerant('listings', row, draftId?'update':'insert', draftId);
 }
 
-/* Submit a draft for review (changes status from draft to pending_review) */
+/* Submit a draft for review (changes status from draft to pending_review).
+   review_note gaat in dezelfde stap leeg. Die reden hoort bij de vórige ronde:
+   hij staat in het dashboard van de aanbieder boven de advertentie, en zou
+   daar na het herindienen blijven staan alsof er nog iets mis is. Wijst de
+   backoffice hem opnieuw af, dan schrijft die er een nieuwe reden in. */
 async function submitForReview(listingId, opts){
   if(!sb) throw new Error('backend-offline');
   const { data, error } = await sb.from('listings')
-    .update({ status: 'pending_review' })
+    .update({ status: 'pending_review', review_note: null })
     .eq('id', listingId).select().single();
   if(error) throw error;
   if(opts && opts.notify===false) return data;   // caller sends its own richer email

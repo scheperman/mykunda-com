@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:17cmt5c--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0v375ys--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -11,7 +11,7 @@
 <title>Admin — MyKunda</title>
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=231182160696682">
+<link rel="stylesheet" href="styles.min.css?v=103204437418208">
 <style>
 body{background:var(--paper-2)}
 .admin{max-width:1180px;margin:0 auto;padding:34px 28px 70px}
@@ -219,7 +219,7 @@ table.btab{min-width:900px}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=231182160696682"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=103204437418208"><!--/mk-css-->
 </head>
 <body>
 <div id="header"></div>
@@ -257,10 +257,10 @@ table.btab{min-width:900px}
 <div id="footer"></div>
 
 <script src="vendor/supabase-js-2.umd.js"></script>
-<script src="supabase.js?v=231182160696682"></script>
-<script src="app.min.js?v=231182160696682"></script>
-<script src="admin-nav.js?v=231182160696682"></script>
-<script src="admin-guard.js?v=231182160696682"></script>
+<script src="supabase.js?v=103204437418208"></script>
+<script src="app.min.js?v=103204437418208"></script>
+<script src="admin-nav.js?v=103204437418208"></script>
+<script src="admin-guard.js?v=103204437418208"></script>
 <script>
 document.getElementById('header').innerHTML = headerHTML('', false);
 document.getElementById('footer').innerHTML = footerHTML();
@@ -842,7 +842,11 @@ function bankDialog(o){
     try{
       await o.run(vals);
       busy = false; close();
-      await loadBank(); render();
+      /* Standaard is dit een bankregel en halen we de lijst opnieuw op. Andere
+         aanroepers geven hun eigen nazorg mee — de advertentiebeoordeling
+         hieronder haalt alleen de rij uit de wachtrij. */
+      if(o.after) await o.after(); else await loadBank();
+      render();
     }catch(e){
       busy = false; go.disabled = false; go.textContent = label;
       showErr(e.message || 'Something went wrong. Nothing was changed.');
@@ -929,10 +933,44 @@ async function approve(id){
   pending = pending.filter(l=>l.id!==id);
   render();
 }
+/* Afkeuren zonder reden is voor de aanbieder een doodlopende weg: hij ziet in
+   zijn dashboard alleen dát het is afgekeurd. De reden is daarom verplicht.
+   Hij gaat naar listings.review_note, en dat veld gaat twee kanten op: de
+   trigger listings_notify_status stuurt hem mee in de afwijzingsmail, en het
+   dashboard van de aanbieder toont hem woordelijk boven de advertentie. Schrijf
+   hem dus voor de verkoper, niet voor de backoffice. */
 async function reject(id){
-  if(LIVE){ try{ await sb.from('listings').update({status:'rejected'}).eq('id',id); }catch(e){ alert('Could not reject: '+e.message); return; } }
-  pending = pending.filter(l=>l.id!==id);
-  render();
+  const l = pending.find(x=>x.id===id) || {};
+  bankDialog({
+    title: 'Reject this listing?',
+    intro: 'What you write here is what the advertiser reads — in their email and in their dashboard. Say what has to change.',
+    facts: [
+      ['Listing', esc(l.title || 'this listing')],
+      ['Area', esc(l.area || 'not stated')],
+      ['Document', l.hasDoc ? 'Title document attached' : 'No document']
+    ],
+    warn: 'The listing goes to Rejected and stays out of search until the advertiser sends it in again.',
+    fields: noteField('Reason (required)', 'e.g. The title document does not match the plot number on the listing'),
+    action: 'Reject listing',
+    ready: ov => ov.querySelector('textarea').focus(),
+    read: (ov, err) => {
+      const note = ov.querySelector('textarea').value.trim();
+      if(note.length < 10){
+        err('Write a reason of at least ten characters — this is the only thing the advertiser gets to go on.');
+        return false;
+      }
+      return { note };
+    },
+    run: async v => {
+      if(!LIVE) return;
+      /* Eén update, want de trigger leest new.review_note op het moment dat de
+         status wisselt. In twee updates zou de mail zonder reden vertrekken. */
+      const { error } = await sb.from('listings')
+        .update({ status:'rejected', review_note: v.note }).eq('id', id);
+      if(error) throw new Error(error.message);
+    },
+    after: async () => { pending = pending.filter(x=>x.id!==id); }
+  });
 }
 async function setStage(id, stage){
   if(LIVE){ try{ await sb.from('leads').update({stage, contacted_at: stage!=='new'? new Date().toISOString():null}).eq('id',id); }catch(e){ console.warn(e); } }

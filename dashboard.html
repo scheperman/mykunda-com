@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1dq7r9t--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:15hyz41--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <noscript></noscript>
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=231182160696682">
+<link rel="stylesheet" href="styles.min.css?v=103204437418208">
 <style>
 body{background:var(--paper-2)}
 .dash{max-width:1180px;margin:0 auto;padding:36px 28px 70px}
@@ -39,7 +39,12 @@ body{background:var(--paper-2)}
 .panel-head .count{font-size:13px;color:var(--muted);font-weight:600;background:var(--paper-2);padding:4px 11px;border-radius:var(--r-pill)}
 
 /* listing rows */
-.listing{display:grid;grid-template-columns:120px 1fr auto;gap:20px;padding:20px 24px;border-bottom:1px solid var(--line-2);align-items:center}
+.listing{padding:20px 24px;border-bottom:1px solid var(--line-2)}
+/* Twee rijen in plaats van drie kolommen. Het paneel is op een scherm van
+   1440 breed maar ~500px, en met de statuspil en de knoppen ernaast bleef er
+   165px over voor titel, adres en plus code — gemeten op 30-08-2026. Status
+   en knoppen staan daarom onder de rij, over de volle breedte. */
+.listing-main{display:grid;grid-template-columns:120px minmax(0,1fr);gap:20px;align-items:center}
 .listing:last-child{border-bottom:none}
 .listing-thumb{width:120px;height:88px;border-radius:var(--r-md);overflow:hidden;background:var(--paper-2);position:relative}
 .listing-thumb img{width:100%;height:100%;object-fit:cover}
@@ -47,10 +52,21 @@ body{background:var(--paper-2)}
 .listing-info .title{font-family:var(--serif);font-size:18px;font-weight:600;color:var(--ink)}
 .listing-info .addr{font-size:13.5px;color:var(--muted);display:flex;align-items:center;gap:6px;margin-top:3px}
 .listing-info .price{font-weight:800;font-size:17px;color:var(--green-700);margin-top:7px}
-.listing-meta{display:flex;gap:22px;margin-top:11px}
+/* De kolom mag nooit breder worden dan zijn plek. De plus code-chip is een
+   flexknop met een lange code erin en duwde de rij anders buiten het paneel. */
+.listing-info>*{min-width:0;max-width:100%}
+.listing-info .pluscode-chip{max-width:100%}
+/* Past de chip niet, dan valt het woordje "Google Plus Code" weg vóór de code
+   zelf. Halverwege afgeknipte code is erger dan geen label: de code is wat je
+   kopieert, het label vertelt alleen wat het is. Op de brede weergave staan ze
+   allebei. */
+@media(max-width:1200px){
+  .listing-info .pluscode-chip .pc-key{display:none}
+}
+.listing-meta{display:flex;gap:22px;margin-top:11px;flex-wrap:wrap}
 .lmeta{display:flex;align-items:center;gap:7px;font-size:13.5px;color:var(--ink-2);font-weight:600}
 .lmeta svg{color:var(--muted-2)}
-.listing-side{display:flex;flex-direction:column;align-items:flex-end;gap:12px}
+.listing-side{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:14px}
 .status{display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px;border-radius:var(--r-pill);font-size:12.5px;font-weight:700}
 .status.active{background:var(--green-100);color:var(--green-700)}
 .status.review{background:var(--amber-100);color:var(--amber-600)}
@@ -61,6 +77,35 @@ body{background:var(--paper-2)}
 .act:hover{box-shadow:inset 0 0 0 1.5px var(--green-500);color:var(--green-700)}
 .act.primary{background:var(--green-700);color:#fff;box-shadow:none}
 .act.primary:hover{background:var(--green-800);color:#fff}
+
+/* De voet onder een advertentie: waar hij staat, wat er nog te doen is en
+   wat er afloopt. Alle drie afgeleid van wat er in de rij staat — nooit een
+   getal of belofte die we niet kunnen aantonen. */
+.listing-foot{margin-top:15px;padding-top:13px;border-top:1px dashed var(--line);display:flex;flex-direction:column;gap:10px}
+.lsteps{display:flex;align-items:center;flex-wrap:wrap;row-gap:6px}
+.lstep{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--muted-2)}
+.lstep .d{width:9px;height:9px;border-radius:50%;background:var(--line);flex:none}
+.lstep.done{color:var(--green-700)}
+.lstep.done .d{background:var(--green-600)}
+.lstep.now{color:var(--green-800)}
+.lstep.now .d{background:var(--green-700);box-shadow:0 0 0 3.5px var(--green-100)}
+.lsep{width:22px;height:1.5px;background:var(--line);margin:0 9px;flex:none;border-radius:1px}
+.lsep.done{background:var(--green-600)}
+.lnext{display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;color:var(--ink-2);line-height:1.5;flex-wrap:wrap}
+.lnext .lab{font-weight:800;color:var(--muted-2);text-transform:uppercase;letter-spacing:.05em;font-size:11px;flex:none}
+.lnext.ok{color:var(--green-700)}
+.lnext .act{height:30px;padding:0 12px;font-size:12.5px}
+.lnote{display:flex;gap:10px;padding:12px 14px;border-radius:var(--r-sm);background:var(--amber-50);color:var(--amber-700);font-size:13.5px;line-height:1.55}
+.lnote svg{flex:none;margin-top:2px}
+.lnote b{font-weight:800}
+.lclocks{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;font-weight:700;color:var(--muted)}
+.lclock.warn{color:var(--amber-600)}
+.lclock.gone{color:#C2533A}
+@media(max-width:640px){
+  .listing-meta{gap:12px;flex-wrap:wrap;row-gap:6px}
+  .listing-info .addr{font-size:13px}
+  .listing-actions{flex:none}
+}
 
 /* empty state */
 .empty{padding:54px 30px;text-align:center}
@@ -202,14 +247,19 @@ body{background:var(--paper-2)}
 @media(max-width:960px){
   .stat-row{grid-template-columns:1fr 1fr}
   .dash-grid{grid-template-columns:1fr}
-  .listing{grid-template-columns:90px 1fr;grid-template-areas:"thumb info" "side side"}
-  .listing-thumb{width:90px;height:70px;grid-area:thumb}.listing-info{grid-area:info}
-  .listing-side{grid-area:side;flex-direction:row;align-items:center;justify-content:space-between;margin-top:6px}
+  /* Hier stonden named grid-areas ("thumb info" / "side side") op .listing en
+     grid-area op de kinderen. De rij is sinds 30-08-2026 geen grid meer met
+     een zijkolom — status en knoppen staan altijd op hun eigen regel — en die
+     namen mochten niet blijven staan: ze lekten door naar .listing-main, waar
+     geen areas gedefinieerd zijn, en maakten daar twee lege kolommen aan. De
+     rij liep dan 113px buiten het paneel. Gemeten op 375px breed. */
+  .listing-main{grid-template-columns:90px minmax(0,1fr);gap:14px}
+  .listing-thumb{width:90px;height:70px}
 }
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=231182160696682"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=103204437418208"><!--/mk-css-->
 </head>
 <body>
 <div id="header"></div>
@@ -361,15 +411,15 @@ body{background:var(--paper-2)}
 
 <div id="footer"></div>
 
-<script src="app.min.js?v=231182160696682"></script>
-<script src="image-slot.js?v=231182160696682" defer></script>
+<script src="app.min.js?v=103204437418208"></script>
+<script src="image-slot.js?v=103204437418208" defer></script>
 <script>
 /* 4G: the Supabase client (~205 KB) is not needed to paint this page. It downloads
    in parallel and every backend call awaits window.__sbReady. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=231182160696682'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=103204437418208'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 </script>
@@ -410,11 +460,123 @@ function eyeNone(){return '<svg width="20" height="20" viewBox="0 0 24 24" fill=
 function statusFromDb(s){ return {active:'Active',under_offer:'Under offer',pending_review:'In review',draft:'Draft',sold:'Sold',let:'Let',rejected:'Rejected',archived:'Archived'}[s]||s; }
 function statusClass(s){ return (s==='Active'||s==='active')?'active':((s==='In review'||s==='pending_review')?'review':'closed'); }
 
+const warnIc='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></svg>';
+const nextIc='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>';
+
+/* ---- De voet onder een advertentie ---------------------------------------
+   Drie dingen, alle drie afgeleid uit de rij zelf: waar de advertentie in het
+   traject staat, wat de eerstvolgende stap is, en wat er afloopt. Er staat
+   bewust geen enkele uitspraak in over wat een stap "oplevert" — dat is niet
+   gemeten, dus wordt het niet beweerd. Wel wat er ontbreekt, en waar je het
+   toevoegt. */
+
+/* Van statuswaarde naar plek in de baan. -1 betekent: buiten de baan
+   (afgekeurd of gearchiveerd); die krijgen hun eigen regel. */
+const LABEL_TO_DB = { 'Draft':'draft','In review':'pending_review','Active':'active',
+  'Under offer':'under_offer','Sold':'sold','Let':'let','Rejected':'rejected','Archived':'archived' };
+function dbStatusOf(l){ return l.dbStatus || LABEL_TO_DB[l.status] || ''; }
+function stepIndex(s){
+  if(s==='draft') return 0;
+  if(s==='pending_review') return 1;
+  if(s==='active' || s==='under_offer') return 2;
+  if(s==='sold' || s==='let') return 3;
+  return -1;
+}
+function stepsHTML(l){
+  const s = dbStatusOf(l), at = stepIndex(s);
+  if(at < 0) return '';
+  const last = (l.type==='rent' || s==='let') ? 'Let' : 'Sold';
+  const names = ['Draft','In review','Live',last];
+  let out = '<div class="lsteps">';
+  for(let i=0;i<names.length;i++){
+    if(i) out += '<span class="lsep'+(i<=at?' done':'')+'"></span>';
+    const cls = i<at ? 'done' : (i===at ? 'now' : '');
+    out += '<span class="lstep '+cls+'"><span class="d"></span>'+names[i]+'</span>';
+  }
+  return out + '</div>';
+}
+
+/* Eén eerstvolgende stap per advertentie, de eerste die van toepassing is.
+   Elke regel noemt alleen wat aantoonbaar ontbreekt in de rij. */
+function nextAction(l){
+  const s = dbStatusOf(l), edit = 'list.html?draft='+l.id;
+  if(s==='rejected')  return null;               // de reden staat er los boven
+  if(s==='archived')  return { t:'Archived — searchers do not see this listing.', a:'Reopen', h:edit };
+  if(s==='draft')     return { t:'Still a draft. Finish it and send it in for review.', a:'Continue', h:edit };
+  if(s==='pending_review') return { t:'With us for review. You will get an email as soon as it is decided.', a:'', h:'' };
+  const p = l.photos||0;
+  if(p===0)           return { t:'No photos yet.', a:'Add photos', h:edit };
+  if(p<5)             return { t:'Only '+p+' photo'+(p===1?'':'s')+' — more angles make the listing easier to judge.', a:'Add photos', h:edit };
+  if(!l.hasDesc)      return { t:'No description yet.', a:'Write one', h:edit };
+  if(!l.hasGeo)       return { t:'No location on the map yet.', a:'Set location', h:edit };
+  if(!l.verified)     return { t:'No title documents uploaded — they are what earns the Verified badge.', a:'Upload', h:edit };
+  return { ok:true, t:'Nothing outstanding on this listing.', a:'', h:'' };
+}
+
+function daysUntil(iso){
+  const d = new Date(iso);
+  if(isNaN(d)) return null;
+  return Math.ceil((d.getTime() - Date.now()) / 86400000);
+}
+function shortDate(iso){
+  const d = new Date(iso);
+  return isNaN(d) ? '' : d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+}
+/* Wat er afloopt. Alleen tonen wat een datum heeft; geen datum betekent hier
+   "nooit gekocht", en daar hoort geen aftelling bij. */
+function clocksHTML(l){
+  const out = [];
+  if(l.boostedUntil){
+    const d = daysUntil(l.boostedUntil);
+    if(d !== null) out.push(d > 0
+      ? { c: d<=3 ? 'warn' : '', t:'Boost runs for another '+d+' day'+(d===1?'':'s') }
+      : { c:'gone', t:'Boost ended '+shortDate(l.boostedUntil) });
+  }
+  if(l.verifiedUntil){
+    const v = daysUntil(l.verifiedUntil);
+    if(v !== null) out.push(v > 0
+      ? { c: v<=30 ? 'warn' : '', t:'Verified until '+shortDate(l.verifiedUntil)+(v<=30 ? ' — '+v+' day'+(v===1?'':'s')+' left' : '') }
+      : { c:'gone', t:'Verification expired '+shortDate(l.verifiedUntil) });
+  }
+  if(!out.length) return '';
+  return '<div class="lclocks">'+out.map(function(o){
+    return '<span class="lclock '+o.c+'">'+vrEsc(o.t)+'</span>';
+  }).join('')+'</div>';
+}
+
+function listingFoot(l){
+  /* Alleen voor rijen die uit de database komen. De plaatselijke terugval
+     (advertenties die deze bezoeker in de browser bewaarde) heeft geen status,
+     geen beoordeling en geen einddatum — daar iets over zeggen zou raden zijn. */
+  if(!l._db) return '';
+  const s = dbStatusOf(l);
+  let html = '';
+  if(s==='rejected'){
+    html += '<div class="lnote">'+warnIc+'<div><b>Not approved.</b> '
+          + (l.review ? vrEsc(l.review) : 'No reason was recorded — reply to the review email and we will explain.')
+          + '</div></div>'
+          + '<div class="lnext"><span class="lab">Next</span><span>Change what is flagged and send it in again.</span>'
+          + '<a class="act" href="list.html?draft='+l.id+'">Edit</a></div>';
+    return '<div class="listing-foot">'+html+clocksHTML(l)+'</div>';
+  }
+  html += stepsHTML(l);
+  const n = nextAction(l);
+  if(n){
+    html += '<div class="lnext'+(n.ok?' ok':'')+'"><span class="lab">'+(n.ok?'Status':'Next')+'</span>'
+          + '<span>'+vrEsc(n.t)+'</span>'
+          + (n.a ? '<a class="act" href="'+n.h+'">'+nextIc+' '+n.a+'</a>' : '')
+          + '</div>';
+  }
+  html += clocksHTML(l);
+  return html ? '<div class="listing-foot">'+html+'</div>' : '';
+}
+
 function listingRow(l){
   const det = l.cat==='land' ? `${(l.plot||0).toLocaleString()} m² plot` : `${l.beds} bed · ${l.baths} bath · ${l.sqm} m²`;
   const thumb = l.img ? `<img src="${l.img}" alt="" onerror="this.style.display='none'">` : `<div class="ph">${ICON.camera}</div>`;
   const statusLabel = l.status||'Active';
   return `<div class="listing">
+    <div class="listing-main">
     <div class="listing-thumb">${thumb}</div>
     <div class="listing-info">
       <div class="title">${l.title}</div>
@@ -427,6 +589,7 @@ function listingRow(l){
         <span class="lmeta">${cal} ${l._vr||0} viewings</span>
       </div>
     </div>
+    </div>
     <div class="listing-side">
       <span class="status ${statusClass(statusLabel)}"><span class="dot"></span> ${statusLabel}${l.verified?' · Verified':''}</span>
       <div class="listing-actions">
@@ -434,6 +597,7 @@ function listingRow(l){
         <a class="act primary" href="property.html?id=${l.id}">View</a>
       </div>
     </div>
+    ${listingFoot(l)}
   </div>`;
 }
 
@@ -469,6 +633,17 @@ async function initDashboard(){
             plan: r.plan||'basic',
             views: r.views||0,
             lat: r.lat, lng: r.lng,
+            /* Voor de voet onder de rij: de ruwe status (de vertaalde label is
+               voor het oog, niet om op te rekenen), de reden van afkeuring en
+               de twee data die aflopen. Alles wat hier ontbreekt maakt de voet
+               stiller, nooit onwaar. */
+            _db: true,
+            dbStatus: r.status,
+            review: r.review_note || '',
+            boostedUntil: r.boosted_until || null,
+            verifiedUntil: r.verified_until || null,
+            hasDesc: !!(r.description && r.description.trim().length >= 40),
+            hasGeo: typeof r.lat === 'number' && typeof r.lng === 'number',
             _views: r.views||0, _enq: 0, _vr: 0
           };
         });
