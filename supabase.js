@@ -360,49 +360,51 @@ function mediaUrl(path, isDoc){
   return sb.storage.from('listing-photos').getPublicUrl(path).data.publicUrl;
 }
 
-/* ---------------- Viewings ---------------- */
-/* opts.notify === false skips the e-mail: the viewing form also writes a lead,
-   and notify-lead already mails the buyer and the team. Two mails for one
-   request reads as a system talking to itself. The row is still created, so the
-   seller sees the request in the dashboard and can answer it there. */
-async function requestViewing(v, opts){
-  if(!sb){ console.info('[demo] viewing not sent:', v); return { demo:true }; }
+/* ---------------- Viewings ----------------
+   Sinds 30-08-2026 loopt alles over public.viewings; viewings_legacy_v0 is
+   afgedankt en heeft geen schrijfregels meer. Schrijven gaat uitsluitend via de
+   drie SECURITY DEFINER-functies, die zelf controleren of de aanroeper wel
+   deelnemer is: propose_viewing, respond_viewing en cancel_viewing.
 
-  /* Stamp the signed-in buyer on the row. Without it the buyer can never see
-     their own request back — and, worse, the RETURNING below fails the read
-     policy, which rolls the whole insert back. */
-  let u = null;
-  try{ u = await currentUser(); }catch(e){}
-  const row = u ? Object.assign({ buyer_id: u.id }, v) : v;
+   requestViewing() stond hier tot vandaag. Die schreef een losse rij in de oude
+   tabel voor bezoekers zonder account. De knoppen Accept en Change van het
+   dashboard werkten daarop, maar riepen daarna notify-viewing aan met een id
+   dat in `viewings` niet bestaat — het scherm zei "the buyer has been emailed"
+   en er ging niets weg. Een bezoeker zonder account levert nu een lead op
+   (source 'viewing'); die is voor de eigenaar van de advertentie zichtbaar
+   sinds de policy "leads owner read". */
 
-  /* Only ask for the row back when the policy can actually return it. A
-     visitor without an account gets no representation — and no id, so there is
-     nothing to notify about either. The row is saved all the same. */
-  if(!u){
-    const { error } = await sb.from('viewings_legacy_v0').insert(row);
-    if(error) throw error;
-    return { ok:true };
-  }
-
-  const { data, error } = await sb.from('viewings_legacy_v0').insert(row).select().single();
-  if(error) throw error;
-  if(!opts || opts.notify !== false){
-    try{ await sb.functions.invoke('notify-viewing', { body:{ viewing_id: data.id } }); }catch(e){}
-  }
-  return data;
-}
-
-/* Seller/agent accepts the requested time. The "viewings party update" policy
-   allows the listing's owner or agent; notify-viewing mails the buyer, who
-   would otherwise never learn that the viewing is on. */
+/* De uitgenodigde partij bevestigt één van de voorgestelde tijden.
+   respond_viewing() eist dat je de invitee bent en dat de tijd echt is
+   aangeboden; die controle hoort in de database, niet in de knop. */
 async function confirmViewing(viewingId, slotIso){
   if(!sb) throw new Error('backend-offline');
-  const patch = { status:'confirmed' };
-  if(slotIso) patch.chosen_slot = slotIso;
-  const { data, error } = await sb.from('viewings_legacy_v0').update(patch).eq('id', viewingId).select().single();
+  const { error } = await sb.rpc('respond_viewing', {
+    p_viewing_id: viewingId,
+    p_slot: slotIso || null
+  });
   if(error) throw error;
-  try{ await sb.functions.invoke('notify-viewing', { body:{ viewing_id: viewingId } }); }catch(e){}
-  return data;
+  try{ await sb.functions.invoke('notify-viewing', { body:{ viewing_id: viewingId } }); }catch(e){
+    console.warn('notify-viewing:', e && e.message);
+  }
+  return true;
+}
+
+/* Geen van de tijden kan: afwijzen met een leeg slot. respond_viewing zet de
+   status op 'declined' en schrijft er een bericht bij in het gesprek. */
+async function declineViewing(viewingId){
+  return confirmViewing(viewingId, null);
+}
+
+/* Afzeggen kan door beide partijen, zolang de bezichtiging nog loopt. */
+async function cancelViewing(viewingId, reason){
+  if(!sb) throw new Error('backend-offline');
+  const { error } = await sb.rpc('cancel_viewing', { p_viewing_id: viewingId, p_reason: reason || null });
+  if(error) throw error;
+  try{ await sb.functions.invoke('notify-viewing', { body:{ viewing_id: viewingId } }); }catch(e){
+    console.warn('notify-viewing:', e && e.message);
+  }
+  return true;
 }
 /* ---------------- Payments ----------------
    No browser-side receipt call lives here on purpose. The customer receipt and
@@ -412,13 +414,23 @@ async function confirmViewing(viewingId, slotIso){
    bank line behave identically. Calling notify-payment from a page as well
    would send every confirmed payment out twice. */
 
-async function proposeSlots(viewingId, slots){
+/* Andere tijden voorstellen. Dat is geen wijziging van de bestaande rij maar
+   een nieuw voorstel op hetzelfde gesprek; propose_viewing zet het openstaande
+   voorstel zelf op 'cancelled' met reden 'superseded'. Vandaar dat deze functie
+   een conversation_id vraagt en geen viewing_id. Maximaal drie tijden, en geen
+   tijd binnen het komende halfuur — dat bewaakt de database. */
+async function proposeSlots(conversationId, slots, note){
   if(!sb) throw new Error('backend-offline');
-  const { data, error } = await sb.from('viewings_legacy_v0')
-    .update({ proposed_slots: slots, status:'slots_proposed' }).eq('id', viewingId).select().single();
+  const { data: viewingId, error } = await sb.rpc('propose_viewing', {
+    p_conversation_id: conversationId,
+    p_slots: slots,
+    p_note: note || null
+  });
   if(error) throw error;
-  try{ await sb.functions.invoke('notify-viewing', { body:{ viewing_id: viewingId } }); }catch(e){}
-  return data;
+  try{ await sb.functions.invoke('notify-viewing', { body:{ viewing_id: viewingId } }); }catch(e){
+    console.warn('notify-viewing:', e && e.message);
+  }
+  return viewingId;
 }
 
 /* ---------------- Favorites & saved searches ---------------- */
@@ -577,25 +589,8 @@ async function turnOnAllAlerts(){
   return true;
 }
 
-/* De bezichtigingen die deze gebruiker zelf heeft aangevraagd — de kant van de
-   koper. fetchMyViewings() doet de kant van de verkoper (bezichtigingen op zijn
-   advertenties); tot vandaag was er voor de koper niets, die kreeg alleen mail.
-   Zelfde tabel als het verkopersdashboard gebruikt: viewings_legacy_v0. Zodra
-   de twee bezichtigingssystemen zijn samengevoegd verhuist dit mee. */
-async function fetchMyBookings(limit){
-  if(!sb) return null;
-  const u = await currentUser(); if(!u) return null;
-  let q = sb.from('viewings_legacy_v0')
-    .select('*, listings(id, title, area)')
-    .eq('buyer_id', u.id)
-    .order('created_at', { ascending:false });
-  if(limit) q = q.limit(limit);
-  const { data, error } = await q;
-  if(error){ console.warn('fetchMyBookings:', error.message); return null; }
-  return (data || []).map(function(v){
-    return Object.assign({}, v, { _listing_title: (v.listings && v.listings.title) || 'A property' });
-  });
-}
+/* fetchMyBookings() stond hier, op de afgedankte tabel. Hij is samengevoegd
+   met fetchMyViewings() verderop: één query, beide kanten. */
 
 /* Het eigen profiel: rol, naam en de voorkeuren die het dashboard toont.
    unsubscribe_token staat er met opzet NIET bij — dat veld mag de browser
@@ -1113,25 +1108,40 @@ async function fetchMyLeads(limit){
   return data;
 }
 
-/* Fetch viewings for the current user's listings */
+/* Alle bezichtigingen van deze gebruiker — beide kanten in één query.
+   Er waren hier twee functies: fetchMyViewings() voor de verkoperskant en
+   fetchMyBookings() voor de koperskant, allebei op de afgedankte tabel. De
+   leesregel op `viewings` scoopt al op deelnemer, dus één query volstaat.
+
+   Welke kant je bent hangt niet af van wie het voorstel deed maar van wie de
+   advertentie is: een verkoper mag zelf een tijd voorstellen en blijft dan nog
+   steeds de verkoper. _mustRespond zegt of de bal bij jou ligt. */
 async function fetchMyViewings(limit){
   if(!sb) return null;
   const u = await currentUser();
   if(!u) return null;
-  const { data: listings, error: le } = await sb.from('listings')
-    .select('id, title').eq('owner_id', u.id);
-  if(le || !listings || !listings.length) return [];
-  const ids = listings.map(l=>l.id);
-  const titleMap = {};
-  listings.forEach(l=>{ titleMap[l.id]=l.title; });
-  let q = sb.from('viewings_legacy_v0').select('*')
-    .in('listing_id', ids)
+  let q = sb.from('viewings')
+    .select('*, listings(id, title, area, owner_id, agent_id)')
     .order('created_at', { ascending: false });
   if(limit) q = q.limit(limit);
   const { data, error } = await q;
   if(error){ console.warn('fetchMyViewings:', error.message); return null; }
-  // attach listing titles for display
-  return (data||[]).map(v=>({ ...v, _listing_title: titleMap[v.listing_id]||'Property' }));
+  return (data||[]).map(function(v){
+    const l = v.listings || {};
+    const mine = (l.owner_id === u.id) || (l.agent_id === u.id);
+    return Object.assign({}, v, {
+      _listing_title: l.title || 'A property',
+      _side: mine ? 'seller' : 'buyer',
+      _mustRespond: v.status === 'proposed' && v.invitee_id === u.id,
+      _when: v.chosen_slot || (Array.isArray(v.slots) && v.slots.length ? v.slots[0] : null)
+    });
+  });
+}
+/* Blijft bestaan omdat het dashboard er nog naar vraagt; het is nu dezelfde
+   lijst, alleen de koperskant ervan. */
+async function fetchMyBookings(limit){
+  const all = await fetchMyViewings(limit);
+  return all ? all.filter(function(v){ return v._side === 'buyer'; }) : all;
 }
 
 /* Upload a file (photo or document) for a listing — returns the media row */

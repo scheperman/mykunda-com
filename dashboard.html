@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1xc98fb--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1dq7r9t--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <noscript></noscript>
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=36458551520506">
+<link rel="stylesheet" href="styles.min.css?v=231182160696682">
 <style>
 body{background:var(--paper-2)}
 .dash{max-width:1180px;margin:0 auto;padding:36px 28px 70px}
@@ -91,6 +91,18 @@ body{background:var(--paper-2)}
 .vr-btn.no{box-shadow:inset 0 0 0 1.5px var(--line);color:var(--muted)}.vr-btn.no:hover{box-shadow:inset 0 0 0 1.5px var(--muted-2)}
 .vr-done{font-size:13.5px;font-weight:700;color:var(--green-600);display:flex;align-items:center;gap:7px;padding:6px 0}
 .vr-done.alt{color:var(--amber-600)}
+
+/* De aangeboden tijden. Een voorstel kan er drie bevatten, dus bij meer dan
+   één tijd kiest de verkoper hier welke hij bevestigt — de database eist dat
+   de gekozen tijd echt is aangeboden. */
+.vr-picks{display:flex;flex-direction:column;gap:6px;margin-bottom:9px}
+.vr-pick{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;height:36px;padding:0 11px;border-radius:var(--r-sm);font-size:13.5px;font-weight:600;color:var(--ink);background:var(--white);box-shadow:inset 0 0 0 1.5px var(--line);text-align:left;transition:.13s}
+.vr-pick:hover{box-shadow:inset 0 0 0 1.5px var(--green-500);color:var(--green-800)}
+.vr-pick .go{font-size:12px;font-weight:800;color:var(--green-700);flex:none}
+.vr-note{font-size:13px;color:var(--muted);line-height:1.5;margin:-4px 0 10px}
+.vr-foot{display:flex;justify-content:flex-end;margin-top:8px}
+.vr-link{background:none;font-size:12.5px;font-weight:700;color:var(--muted);text-decoration:underline;text-underline-offset:3px;transition:.13s}
+.vr-link:hover{color:#C2533A}
 
 /* propose alternative times */
 .vr-propose{margin-top:11px;padding-top:12px;border-top:1px dashed var(--line)}
@@ -197,7 +209,7 @@ body{background:var(--paper-2)}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=36458551520506"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=231182160696682"><!--/mk-css-->
 </head>
 <body>
 <div id="header"></div>
@@ -349,15 +361,15 @@ body{background:var(--paper-2)}
 
 <div id="footer"></div>
 
-<script src="app.min.js?v=36458551520506"></script>
-<script src="image-slot.js?v=36458551520506" defer></script>
+<script src="app.min.js?v=231182160696682"></script>
+<script src="image-slot.js?v=231182160696682" defer></script>
 <script>
 /* 4G: the Supabase client (~205 KB) is not needed to paint this page. It downloads
    in parallel and every backend call awaits window.__sbReady. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=36458551520506'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=231182160696682'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 </script>
@@ -463,8 +475,9 @@ async function initDashboard(){
       }
       // Fetch real leads
       dbLeads = await fetchMyLeads(10);
-      // Fetch real viewings
-      dbViewings = await fetchMyViewings(5);
+      // Fetch real viewings — beide kanten in één lijst, dus ruimer dan de vier
+      // die het overzicht toont, anders verdringt de koperskant de verkoperskant.
+      dbViewings = await fetchMyViewings(20);
     }catch(e){ console.warn('dashboard DB load:', e); }
   }
 
@@ -482,7 +495,9 @@ async function initDashboard(){
   }
   if(dbViewings && dbViewings.length){
     const vrCounts = {};
-    dbViewings.forEach(v=>{ if(v.listing_id){ vrCounts[v.listing_id]=(vrCounts[v.listing_id]||0)+1; } });
+    // Alleen bezichtigingen op eigen advertenties tellen mee; een bezichtiging
+    // die deze gebruiker zélf als koper aanvroeg is geen aanvraag óp zijn object.
+    dbViewings.forEach(v=>{ if(v.listing_id && v._side==='seller'){ vrCounts[v.listing_id]=(vrCounts[v.listing_id]||0)+1; } });
     listings.forEach(l=>{ l._vr = vrCounts[l.id]||0; });
   }
 
@@ -524,26 +539,149 @@ async function initDashboard(){
   }
 
   // ---- Viewing requests ----
-  const vrEl=document.getElementById('viewReqList');
-  if(dbViewings && dbViewings.length){
-    vrEl.innerHTML = dbViewings.slice(0,4).map((v,i)=>{
-      const nm = v.buyer_name||v.buyer_email||'Buyer';
-      const when = v.requested_slot ? new Date(v.requested_slot).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})+' · '+new Date(v.requested_slot).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}) : 'Time TBD';
-      const statusTxt = v.status==='confirmed'?'Confirmed':(v.status==='completed'?'Completed':(v.status==='declined'?'Declined':''));
-      if(statusTxt){
-        return `<div class="viewreq"><div class="vr-top"><span class="nm">${nm}</span><span class="when">${when}</span></div><div class="for">Re: ${v._listing_title}</div><div class="vr-done${statusTxt==='Declined'?' alt':''}">${ICON.check} ${statusTxt}</div></div>`;
-      }
-      return `<div class="viewreq" data-i="${i}" data-vid="${v.id}" data-slot="${v.requested_slot||''}"><div class="vr-top"><span class="nm">${nm}</span><span class="when">${when}</span></div><div class="for">Re: ${v._listing_title}</div><div class="viewreq-actions"><button class="vr-btn ok" onclick="respondVR(${i})">Accept</button><button class="vr-btn no" onclick="proposeVR(${i})">Change</button></div></div>`;
-    }).join('');
-  } else {
-    vrEl.innerHTML = '<div class="empty" style="padding:22px;color:var(--muted);font-size:14px">No viewing requests yet.</div>';
-  }
+  /* Alleen de kant waarop deze gebruiker de advertentie heeft. fetchMyViewings()
+     geeft beide kanten terug; de koperskant hoort in het koperoverzicht. */
+  VR_ROWS = (dbViewings||[]).filter(function(v){ return v._side==='seller'; }).slice(0,4);
+  paintVR();
 } // end initDashboard
 
-// ---- Viewing request interactions ----
-// Every button here writes to the database and mails the buyer. A click that
-// only repaints the card would leave a buyer waiting for a viewing the seller
-// believes is confirmed.
+/* ---- Bezichtigingen -------------------------------------------------------
+   Elke knop hier schrijft naar de database en mailt de tegenpartij. Een klik
+   die alleen de kaart hertekent laat een koper wachten op een bezichtiging die
+   de verkoper bevestigd denkt te hebben — dat is precies wat er mis was toen
+   deze knoppen nog op `viewings_legacy_v0` schreven en daarna notify-viewing
+   aanriepen met een id dat in `viewings` niet bestond.
+
+   Een rij in `viewings` is een vóórstel van de ene partij aan de andere, met
+   maximaal drie tijden. Wie mag antwoorden bepaalt de database:
+   respond_viewing() eist dat je de uitgenodigde bent. Daarom toont de kaart
+   alleen knoppen als de bal echt bij deze gebruiker ligt (_mustRespond).
+   Andere tijden voorstellen is geen wijziging van de rij maar een nieuw
+   voorstel op hetzelfde gesprek — vandaar conversation_id bij proposeSlots().
+
+   Namen staan er bewust niet bij: `profiles` is alleen voor jezelf leesbaar,
+   dus de naam van de tegenpartij is hier niet te halen. De advertentie is de
+   kop; verzinnen wat er niet is, is erger dan het weglaten. */
+var VR_ROWS = [];
+
+function vrEsc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+function vrWhen(iso){
+  if(!iso) return 'Time to be agreed';
+  var d = new Date(iso);
+  if(isNaN(d)) return 'Time to be agreed';
+  return d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})
+       + ' · ' + d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+}
+
+/* De enum viewing_status draagt nog twee waarden uit het oude model
+   ('requested', 'slots_proposed'). De drie RPC's schrijven ze niet meer, maar
+   een rij die er ooit mee is gemaakt hoort geen kale enumwaarde op het scherm
+   te zetten. */
+var VR_STATE = { confirmed:'Confirmed', declined:'Declined', cancelled:'Cancelled',
+                 completed:'Completed', requested:'Requested', slots_proposed:'Times proposed' };
+
+/* De foutmeldingen van de RPC's zijn korte codes. Ze zijn hier vertaald naar
+   iets waar een verkoper wat aan heeft; alles wat we niet kennen valt terug op
+   de algemene zin, want raden wat er misging helpt niemand. */
+function vrMessage(e, fallback){
+  var m = String((e && (e.message || e.error_description)) || e || '');
+  if(/already-resolved/.test(m))   return 'This request was already answered — reload the page to see where it stands.';
+  if(/not-the-invitee/.test(m))    return 'You proposed these times, so the other side answers them.';
+  if(/slot-not-offered/.test(m))   return 'That time is no longer one of the options — reload the page.';
+  if(/slot-in-past/.test(m))       return 'That time has passed — propose a new one instead.';
+  if(/slots-out-of-range/.test(m)) return 'Pick between one and three times.';
+  if(/not-cancellable/.test(m))    return 'This viewing can no longer be cancelled.';
+  if(/not-a-participant/.test(m))  return 'This viewing is not yours to change.';
+  if(/backend-offline/.test(m))    return 'You appear to be offline — please try again in a moment.';
+  return fallback;
+}
+
+function vrCard(v, i){
+  var head = '<div class="vr-top"><span class="nm">' + vrEsc(v._listing_title) + '</span>'
+           + '<span class="when">' + vrWhen(v._when) + '</span></div>'
+           + '<div class="for">Viewing request</div>';
+  var note = v.note ? '<div class="vr-note">“' + vrEsc(String(v.note).slice(0,180)) + '”</div>' : '';
+
+  if(v.status !== 'proposed' && v.status !== 'confirmed'){
+    return '<div class="viewreq">' + head
+         + '<div class="vr-done alt">' + ICON.check + ' ' + (VR_STATE[v.status] || v.status) + '</div></div>';
+  }
+  if(v.status === 'confirmed'){
+    return '<div class="viewreq" data-i="' + i + '">' + head + note
+         + '<div class="vr-done">' + ICON.check + ' Confirmed</div>'
+         + '<div class="vr-foot"><button class="vr-link" onclick="cancelVR(' + i + ')">Cancel this viewing</button></div></div>';
+  }
+  if(!v._mustRespond){
+    return '<div class="viewreq" data-i="' + i + '">' + head + note
+         + '<div class="vr-done alt">' + ICON.check + ' Waiting for their answer</div>'
+         + '<div class="vr-foot"><button class="vr-link" onclick="cancelVR(' + i + ')">Withdraw</button></div></div>';
+  }
+
+  var slots = Array.isArray(v.slots) ? v.slots : [];
+  var picks = '', actions;
+  if(slots.length > 1){
+    picks = '<div class="vr-picks">' + slots.map(function(s, n){
+      return '<button class="vr-pick" onclick="acceptVR(' + i + ',' + n + ')">'
+           + '<span>' + vrWhen(s) + '</span><span class="go">Accept</span></button>';
+    }).join('') + '</div>';
+    actions = '<div class="viewreq-actions">'
+            + '<button class="vr-btn no" onclick="proposeVR(' + i + ')">Propose other times</button></div>';
+  } else {
+    actions = '<div class="viewreq-actions">'
+            + '<button class="vr-btn ok" onclick="acceptVR(' + i + ',0)">Accept</button>'
+            + '<button class="vr-btn no" onclick="proposeVR(' + i + ')">Change</button></div>';
+  }
+  return '<div class="viewreq" data-i="' + i + '">' + head + note + picks + actions
+       + '<div class="vr-foot"><button class="vr-link" onclick="declineVR(' + i + ')">None of these work</button></div></div>';
+}
+
+function paintVR(){
+  var el = document.getElementById('viewReqList');
+  if(!el) return;
+  if(!VR_ROWS.length){
+    el.innerHTML = '<div class="empty" style="padding:22px;color:var(--muted);font-size:14px">No viewing requests yet.</div>';
+    return;
+  }
+  el.innerHTML = VR_ROWS.map(function(v, i){ return vrCard(v, i); }).join('');
+}
+
+/* Na elke geslaagde actie halen we de lijst opnieuw op, zodat het scherm de
+   database volgt en niet andersom. Lukt dat niet, dan blijft de plaatselijke
+   aanpassing staan — die is al waar, want de RPC is geslaagd. */
+async function vrReload(){
+  try{
+    if(typeof fetchMyViewings !== 'function') return false;
+    var rows = await fetchMyViewings(20);
+    if(!rows) return false;
+    VR_ROWS = rows.filter(function(v){ return v._side === 'seller'; }).slice(0,4);
+    paintVR();
+    return true;
+  }catch(e){ console.warn('vrReload:', (e && e.message) || e); return false; }
+}
+
+function vrNode(i){ return document.querySelector('.viewreq[data-i="' + i + '"]'); }
+
+function vrLock(el, on, text){
+  var btns = el.querySelectorAll('button');
+  for(var k = 0; k < btns.length; k++){
+    var b = btns[k];
+    if(on){
+      if(b.getAttribute('data-lbl') === null) b.setAttribute('data-lbl', b.innerHTML);
+      b.disabled = true;
+    } else {
+      b.disabled = false;
+      var lbl = b.getAttribute('data-lbl');
+      if(lbl !== null){ b.innerHTML = lbl; b.removeAttribute('data-lbl'); }
+    }
+  }
+  if(on && text){
+    var first = el.querySelector('.vr-btn.ok') || el.querySelector('.vr-send')
+             || el.querySelector('.vr-pick') || el.querySelector('.vr-link');
+    if(first) first.textContent = text;
+  }
+}
 
 function vrError(el, text){
   let err = el.querySelector('.vr-err');
@@ -557,56 +695,101 @@ function vrError(el, text){
 }
 function vrClearError(el){ const e=el.querySelector('.vr-err'); if(e) e.remove(); }
 
-window.respondVR=async function(i){
-  const el=document.querySelector(`.viewreq[data-i="${i}"]`);
-  if(!el) return;
-  const block = el.querySelector('.viewreq-actions') || el.querySelector('.vr-propose');
-  if(!block) return;
-  const btn = block.querySelector('.vr-btn.ok');
-  const vid = el.dataset.vid, slot = el.dataset.slot || null;
-  if(btn){ btn.disabled=true; btn.textContent='Confirming…'; }
+/* Eén van de aangeboden tijden bevestigen. respond_viewing() controleert dat
+   je de uitgenodigde bent én dat die tijd echt is aangeboden — die controle
+   hoort in de database, niet in de knop. */
+window.acceptVR = async function(i, n){
+  const v = VR_ROWS[i], el = vrNode(i);
+  if(!v || !el) return;
+  const slot = Array.isArray(v.slots) ? v.slots[n] : null;
+  if(!slot){ vrError(el, 'That time is no longer available — propose other times instead.'); return; }
+  vrClearError(el);
+  vrLock(el, true, 'Confirming…');
   try{
-    if(!vid || typeof confirmViewing!=='function') throw new Error('backend-offline');
-    await confirmViewing(vid, slot);
+    if(typeof confirmViewing !== 'function') throw new Error('backend-offline');
+    await confirmViewing(v.id, slot);
   }catch(e){
-    console.warn('confirmViewing:', e.message || e);
-    if(btn){ btn.disabled=false; btn.textContent='Accept'; }
-    vrError(el, 'Couldn\'t confirm this viewing — please try again, or reply to the buyer by email.');
+    console.warn('confirmViewing:', (e && e.message) || e);
+    vrLock(el, false);
+    vrError(el, vrMessage(e, "Couldn't confirm this viewing — please try again, or reply in your messages."));
     return;
   }
-  vrClearError(el);
-  block.outerHTML = `<div class="vr-done">${ICON.check} Viewing confirmed — the buyer has been emailed</div>`;
+  v.status = 'confirmed'; v.chosen_slot = slot; v._when = slot; v._mustRespond = false;
+  paintVR();
+  vrReload();
 };
 
-// Seller proposes up to 3 alternative date/time slots for the buyer to pick from
+/* Geen van de tijden kan. Een leeg slot zet de status op 'declined' en zet er
+   een bericht bij in het gesprek, zodat de tegenpartij weet waar hij aan toe is. */
+window.declineVR = async function(i){
+  const v = VR_ROWS[i], el = vrNode(i);
+  if(!v || !el) return;
+  vrClearError(el);
+  vrLock(el, true, 'Sending…');
+  try{
+    if(typeof declineViewing !== 'function') throw new Error('backend-offline');
+    await declineViewing(v.id);
+  }catch(e){
+    console.warn('declineViewing:', (e && e.message) || e);
+    vrLock(el, false);
+    vrError(el, vrMessage(e, "Couldn't send that — please try again."));
+    return;
+  }
+  v.status = 'declined'; v._mustRespond = false;
+  paintVR();
+  vrReload();
+};
+
+/* Afzeggen kan door beide partijen zolang de bezichtiging loopt — een
+   voorgestelde tijd intrekken en een bevestigde afzeggen zijn dezelfde stap. */
+window.cancelVR = async function(i){
+  const v = VR_ROWS[i], el = vrNode(i);
+  if(!v || !el) return;
+  vrClearError(el);
+  vrLock(el, true, 'Cancelling…');
+  try{
+    if(typeof cancelViewing !== 'function') throw new Error('backend-offline');
+    await cancelViewing(v.id, null);
+  }catch(e){
+    console.warn('cancelViewing:', (e && e.message) || e);
+    vrLock(el, false);
+    vrError(el, vrMessage(e, "Couldn't cancel this viewing — please try again."));
+    return;
+  }
+  v.status = 'cancelled'; v._mustRespond = false;
+  paintVR();
+  vrReload();
+};
+
+/* Zelf tijden voorstellen. Het paneel vervangt de keuzeknoppen en verbergt de
+   voet, zodat er tijdens het invullen maar één weg vooruit is. Sluiten
+   (closeVR) tekent gewoon de kaart opnieuw uit VR_ROWS — geen losse HTML die
+   uit de pas kan gaan lopen met de werkelijke stand. */
 window.proposeVR=function(i){
-  const el=document.querySelector(`.viewreq[data-i="${i}"]`);
-  if(el.querySelector('.vr-propose')) return;
+  const el=vrNode(i);
+  if(!el || el.querySelector('.vr-propose')) return;
+  const picks=el.querySelector('.vr-picks'); if(picks) picks.style.display='none';
+  const foot=el.querySelector('.vr-foot');   if(foot)  foot.style.display='none';
   const slot=n=>`<div class="vr-slot"><span class="sn">${n}</span><input type="date" id="vrd-${i}-${n}"><input type="time" id="vrt-${i}-${n}"></div>`;
   el.querySelector('.viewreq-actions').outerHTML = `
     <div class="vr-propose">
       <div class="pp-lab">Propose up to 3 alternative times</div>
       ${slot(1)}${slot(2)}${slot(3)}
       <div class="vr-propose-actions">
-        <button class="vr-cancel" onclick="cancelVR(${i})">Cancel</button>
+        <button class="vr-cancel" onclick="closeVR(${i})">Cancel</button>
         <button class="vr-send" onclick="sendVR(${i})">Send options</button>
       </div>
     </div>`;
+  const first=document.getElementById(`vrd-${i}-1`);
+  if(first) first.min = new Date().toISOString().slice(0,10);
 };
 
-window.cancelVR=function(i){
-  const el=document.querySelector(`.viewreq[data-i="${i}"]`);
-  vrClearError(el);
-  el.querySelector('.vr-propose').outerHTML = `
-    <div class="viewreq-actions">
-      <button class="vr-btn ok" onclick="respondVR(${i})">Accept</button>
-      <button class="vr-btn no" onclick="proposeVR(${i})">Change</button>
-    </div>`;
-};
+// Het paneel sluiten zonder iets te versturen.
+window.closeVR=function(i){ paintVR(); };
 
 window.sendVR=async function(i){
-  const el=document.querySelector(`.viewreq[data-i="${i}"]`);
-  if(!el) return;
+  const v=VR_ROWS[i], el=vrNode(i);
+  if(!v || !el) return;
   const panel=el.querySelector('.vr-propose');
   if(!panel) return;
   const fmt=d=>{ const dt=new Date(d+'T00:00'); return dt.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'}); };
@@ -625,24 +808,35 @@ window.sendVR=async function(i){
     setTimeout(()=>first.style.borderColor='',1400);
     return;
   }
-  if(iso.some(s=>new Date(s) < new Date())){
-    vrError(el, 'Those times are in the past — pick future dates.');
+  /* propose_viewing() weigert alles binnen het komende halfuur. Dat hier ook
+     controleren scheelt de gebruiker een omweg langs een databasefout. */
+  const floor = Date.now() + 30*60*1000;
+  if(iso.some(s=>new Date(s).getTime() < floor)){
+    vrError(el, 'Pick times at least half an hour from now.');
     return;
   }
   const send=panel.querySelector('.vr-send');
   if(send){ send.disabled=true; send.textContent='Sending…'; }
   try{
-    if(!el.dataset.vid || typeof proposeSlots!=='function') throw new Error('backend-offline');
-    await proposeSlots(el.dataset.vid, iso);
+    if(!v.conversation_id || typeof proposeSlots!=='function') throw new Error('backend-offline');
+    /* Een tegenvoorstel hangt aan het GESPREK, niet aan de bestaande rij:
+       propose_viewing() zet het openstaande voorstel zelf op 'cancelled' met
+       reden 'superseded' en maakt een nieuwe rij waarin wij de voorsteller zijn. */
+    await proposeSlots(v.conversation_id, iso);
   }catch(e){
-    console.warn('proposeSlots:', e.message || e);
+    console.warn('proposeSlots:', (e && e.message) || e);
     if(send){ send.disabled=false; send.textContent='Send options'; }
-    vrError(el, 'Couldn\'t send those times — please try again.');
+    vrError(el, vrMessage(e, "Couldn't send those times — please try again."));
     return;
   }
   vrClearError(el);
-  panel.outerHTML =
-    `<div class="vr-done alt">${ICON.check} ${opts.length} alternative${opts.length>1?'s':''} emailed to the buyer — awaiting their choice</div>`;
+  /* De lijst opnieuw ophalen, want er staat nu een ándere rij open. Lukt dat
+     niet, dan blijft de bevestigende regel staan — het voorstel is verstuurd. */
+  const fresh = await vrReload();
+  if(!fresh){
+    panel.outerHTML =
+      `<div class="vr-done alt">${ICON.check} ${opts.length} alternative${opts.length>1?'s':''} sent — awaiting their choice</div>`;
+  }
 };
 
 // ---- Notification preferences UI ----
@@ -911,22 +1105,31 @@ function renderBookings(el){
     el.innerHTML = '<div class="empty" style="padding:22px;color:var(--muted);font-size:14px">No viewings booked. You can ask for one from any property page.</div>';
     return;
   }
+  /* _when is de bevestigde tijd, of anders de eerste voorgestelde. Antwoorden
+     gebeurt in het gesprek — daar staat de context bij — dus deze kaarten
+     tonen alleen de stand en wijzen de weg als de bal bij de koper ligt. */
   el.innerHTML = BOOKINGS.slice(0,4).map(function(v){
-    var when = v.chosen_slot || v.requested_slot;
-    var w = when ? new Date(when).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})
-                   +' · '+new Date(when).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})
-                 : 'Waiting for a time';
-    var st = {confirmed:'Confirmed',declined:'Declined',completed:'Completed',cancelled:'Cancelled',slots_proposed:'Times proposed — pick one'}[v.status] || 'Requested';
+    var w = v._when ? new Date(v._when).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})
+                      +' · '+new Date(v._when).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})
+                    : 'Waiting for a time';
+    var st = v._mustRespond
+      ? 'Times proposed — choose one in your messages'
+      : ({confirmed:'Confirmed',declined:'Declined',completed:'Completed',cancelled:'Cancelled'}[v.status]
+         || 'Waiting for the seller');
     return '<div class="viewreq"><div class="vr-top"><span class="nm">'+esc(v._listing_title)+'</span><span class="when">'+esc(w)+'</span></div>'
-      + '<div class="for">'+esc(st)+'</div></div>';
+      + '<div class="for">'+esc(st)+'</div>'
+      + (v._mustRespond ? '<div class="vr-foot"><a class="vr-link" href="messages.html">Open your messages</a></div>' : '')
+      + '</div>';
   }).join('');
 }
 function renderBuyerStats(el){
   if(!el) return;
   var unread=CONVOS.reduce(function(n,c){ return n+(c._unread||0); },0);
+  /* "Geboekt" telt alleen wat nog kan doorgaan: een bevestigde tijd in de
+     toekomst, of een voorstel dat nog openstaat. */
   var upcoming=BOOKINGS.filter(function(v){
-    var w=v.chosen_slot||v.requested_slot;
-    return w && new Date(w).getTime()>Date.now() && v.status!=='cancelled' && v.status!=='declined';
+    if(v.status!=='confirmed' && v.status!=='proposed') return false;
+    return v._when && new Date(v._when).getTime()>Date.now();
   }).length;
   var fresh=0, counted=false;
   SAVED.forEach(function(r){ var s=ssStats(r); if(s){ counted=true; fresh+=s.fresh; } });
