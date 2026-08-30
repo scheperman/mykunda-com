@@ -24,8 +24,9 @@
 // HUISBANK: GUARANTY TRUST BANK (GAMBIA) LTD. Tussen 23-08-2026 en
 // 25-08-2026 stond hier Ecobank; dat is op 25-08-2026 teruggedraaid - de
 // rekening voor bankoverschrijvingen is en blijft die van GT Bank.
-// Dezelfde gegevens staan in create-payment, dat ze naar het scherm van
-// de klant stuurt. Wijzigt de rekening, pas ze dan op BEIDE plekken aan.
+// Dezelfde gegevens gaan naar het scherm van de klant via create-payment.
+// Sinds 30-08-2026 lezen beide functies ze uit ../_shared/bank.ts, zodat
+// er nog maar één plek is om te wijzigen.
 //
 // De mail gebruikt dezelfde opmaak als alle andere MyKunda-mails:
 // dezelfde kleuren, hetzelfde logo, dezelfde voettekst. Juist de mail
@@ -34,6 +35,9 @@
 
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
+// Eén bron voor de bankrekening — zie ../_shared/bank.ts.
+import { BANK, USD } from "../_shared/bank.ts";
+import { isReservedTestAddress } from "../_shared/email-template.ts";
 
 const ALLOWED_ORIGINS = (
   Deno.env.get("ALLOWED_ORIGINS") ??
@@ -70,27 +74,10 @@ const SITE = "https://mykunda.com";
 // mail. Gambia kent geen IBAN - een klant die daarom gevraagd wordt,
 // heeft genoeg aan SWIFT plus rekeningnummer. Voor USD loopt het via de
 // correspondent in Londen, zie USD hieronder.
-const BANK = {
-  bank: "Guaranty Trust Bank (Gambia) Ltd",
-  account_name: "EDWIN SCHEPERMAN T/A MYKUNDA.COM",
-  account_number: "005201300100074795",
-  currency: "GMD (Dalasi)",
-  swift: "GTBGGMGM",
-  swift_11: "GTBGGMGMXXX",
-  branch: "Kairaba (branch code 201)",
-  address: "56 Kairaba Avenue, Fajara, KSMD",
-};
-
-// USD-correspondentgegevens uit dezelfde brief. Alleen nodig voor een
-// overboeking in dollars vanuit het buitenland; bij een dalasi-betaling
-// hoort de klant hier niets mee te doen.
-const USD = {
-  intermediary_bank: "Guaranty Trust Bank (UK) Limited",
-  intermediary_swift: "GTBIGB2L",
-  beneficiary_bank: "Guaranty Trust Bank (Gambia) Limited",
-  beneficiary_swift: "GTBGGMGM",
-  beneficiary_bank_account: "901 10015 002 5033 000",
-};
+/* De rekening en de USD-correspondentgegevens stonden hier hardgecodeerd,
+   met dezelfde reeks in create-payment. Sinds 30-08-2026 is er één bron:
+   ../_shared/bank.ts (geïmporteerd bovenaan). Wijzig daar, en rol deze
+   functie én create-payment opnieuw uit. */
 
 // Dezelfde merkwaarden als _shared/email-template.ts.
 const BRAND = {
@@ -464,6 +451,15 @@ Deno.serve(async (req: Request) => {
   }
 
   if (!ontvanger) return json({ error: "no_email_address" }, 400, headers);
+
+  /* Gereserveerde testdomeinen nooit versturen — zie isReservedTestAddress
+     in _shared/email-template.ts. Amazon SES houdt zo'n mail veertien uur
+     vast en boekt daarna een bounce op de reputatie van mykunda.com.
+     Deze guard stond tot 30-08-2026 alleen in auth-email. */
+  if (isReservedTestAddress(ontvanger)) {
+    console.warn(`send-payment-instructions: gereserveerd testdomein, niet verstuurd — ${ontvanger}`);
+    return json({ error: "reserved_test_domain" }, 422, headers);
+  }
 
   const onderwerp = `Payment instructions — ${ref} — MyKunda`;
   const html = bouwMail({ ref, bedrag, plan: planNaam, vervalt });

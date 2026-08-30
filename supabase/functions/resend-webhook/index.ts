@@ -149,13 +149,25 @@ serve(async (req) => {
     if (recipient && suppressWorthy) {
       await addSuppression(recipient);
 
-      // public.profiles has no column to flag a bounced address (checked
-      // 2026-08-22) and this function does not create one, so the suppression
-      // is recorded on the existing email_events table instead — including the
-      // profile it belongs to, so it can be back-filled once a column exists.
+      /* Sinds 30-08-2026 heeft profiles wél een kolom hiervoor, en dat is
+         de kern: een adres op de suppressielijst kreeg geen enkele mail
+         meer, inclusief de inlogcode, terwijl auth-email vrolijk
+         {ok:true, code_length:6} bleef antwoorden en het scherm "we hebben
+         een code gestuurd" toonde. De gebruiker zat buiten en niemand kon
+         zien waarom. Met deze vlag zegt auth-email het gewoon. */
       const { data: profile, error: profileError } = await sb.from("profiles")
         .select("id").eq("email", recipient).maybeSingle();
       if (profileError) console.error("resend-webhook: profile lookup failed:", profileError);
+
+      if (profile?.id) {
+        const { error: flagError } = await sb.from("profiles")
+          .update({
+            email_bounced_at: new Date().toISOString(),
+            email_bounce_reason: `${type.replace("email.", "")}${reason ? ": " + reason : ""}`.slice(0, 300),
+          })
+          .eq("id", profile.id);
+        if (flagError) console.error("resend-webhook: profiles bounce flag update failed:", flagError);
+      }
 
       const { error: markError } = await sb.from("email_events").insert({
         resend_email_id: data.email_id || null,
@@ -164,8 +176,8 @@ serve(async (req) => {
         subject: data.subject || null,
         reason: `suppressed after ${type.replace("email.", "")}${reason ? ": " + reason : ""}`,
         payload: {
-          note: "profiles has no bounce column — suppression recorded here instead",
           profile_id: profile?.id ?? null,
+          profile_flagged: !!profile?.id,
           source_event: type,
           bounce: data.bounce ?? null,
           suppressed_at: new Date().toISOString(),

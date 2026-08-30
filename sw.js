@@ -20,7 +20,7 @@ const MAX_PAGES = 60;
    the browser treat the precached file as a different URL and the whole precache
    becomes dead weight. Do not edit STAMP by hand: run `node build.mjs` and it
    rewrites this line and every page from one source. */
-const STAMP = '18902858972371';
+const STAMP = '217280968166509';
 const PRECACHE = [
   'styles.min.css?v=' + STAMP,
   'redesign.min.css?v=' + STAMP,

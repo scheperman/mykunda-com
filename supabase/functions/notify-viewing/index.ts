@@ -21,7 +21,7 @@
 // ============================================================
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { viewingNotificationEmail, viewingConfirmationEmail, viewingConfirmedEmail, viewingSlotsEmail, viewingCancelledEmail, viewingCancelledBackofficeEmail, viewingDeclinedEmail, toText } from "../_shared/email-template.ts";
+import { viewingNotificationEmail, viewingConfirmationEmail, viewingConfirmedEmail, viewingSlotsEmail, viewingCancelledEmail, viewingCancelledBackofficeEmail, viewingDeclinedEmail, toText, isReservedTestAddress } from "../_shared/email-template.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY")!;
 const FROM_EMAIL     = Deno.env.get("FROM_EMAIL") ?? "MyKunda <noreply@mykunda.com>";
@@ -50,6 +50,14 @@ function json(body: unknown, status = 200) {
 }
 
 async function sendEmail(to: string, subject: string, html: string, replyTo?: string) {
+  /* Gereserveerde testdomeinen nooit versturen — zie isReservedTestAddress
+     in _shared/email-template.ts. Amazon SES houdt zo'n mail veertien uur
+     vast en boekt daarna een bounce op de reputatie van mykunda.com.
+     Deze guard stond tot 30-08-2026 alleen in auth-email. */
+  if (isReservedTestAddress(to)) {
+    throw new Error(`reserved test domain, not sent: ${to}`);
+  }
+
   const body: Record<string, unknown> = { from: FROM_EMAIL, to: [to], subject, html, text: toText(html) };
   if (replyTo) body.reply_to = replyTo;
   const r = await fetch("https://api.resend.com/emails", {

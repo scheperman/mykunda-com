@@ -2729,6 +2729,88 @@ async function sendLead(source, fields){
   return r;
 }
 
+/* ============================================================
+   ANTI-SPAM OP DE FORMULIEREN — 30-08-2026
+   Geen van de negen formulieren op de site had ook maar iets: geen
+   honeypot, geen captcha, geen rem. create_lead() staat open voor anon,
+   dus twintig inzendingen per minuut was een kwestie van een scriptje —
+   en elke inzending stuurt een auto-reply en een mail naar de backoffice.
+   notify-lead heeft sinds vandaag een rem per ontvangend adres, maar dat
+   houdt de tabel niet leeg.
+
+   Twee eenvoudige remmen, allebei zonder dat een bezoeker er iets van
+   merkt en zonder externe dienst:
+
+   1. Een honeypot. Een veld dat een mens nooit ziet en nooit invult, maar
+      dat een bot netjes meeneemt omdat het gewoon in de HTML staat. Is
+      hij gevuld, dan gaat de inzending stil de prullenbak in — een bot
+      hoeft niet te weten dat hij betrapt is.
+   2. Een ondergrens in tijd. Een mens die naam, e-mail en een bericht
+      typt is nooit binnen twee seconden na het laden klaar. Dat geval
+      krijgt wél een melding, want het kan een echt iemand zijn die de
+      pagina al open had staan en heel snel is.
+
+   Dit hangt zichzelf op aan elk <form> op de pagina, in de capture-fase,
+   dus vóór de eigen submit-handler van de pagina. Er hoeft niets per
+   formulier te worden aangepast — ook niet aan een formulier dat er later
+   bij komt.
+   ============================================================ */
+(function mkFormGuard(){
+  if (typeof document === 'undefined') return;
+  const VELD = 'mk_hp_website';      // klinkt als iets wat een bot wil invullen
+  const MIN_MS = 2000;
+  const geladen = Date.now();
+
+  function voegHoneypotToe(form){
+    if (form.querySelector('input[name="' + VELD + '"]')) return;
+    const wrap = document.createElement('div');
+    // Niet display:none — sommige bots slaan onzichtbare velden over.
+    // Wel volledig uit beeld en uit de tabvolgorde, en met aria-hidden
+    // zodat een schermlezer hem evenmin aanbiedt.
+    wrap.setAttribute('aria-hidden', 'true');
+    wrap.style.cssText = 'position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden';
+    wrap.innerHTML = '<label>Website<input type="text" name="' + VELD + '" tabindex="-1" autocomplete="off"></label>';
+    form.appendChild(wrap);
+  }
+
+  function hang(){
+    document.querySelectorAll('form').forEach(voegHoneypotToe);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', hang);
+  else hang();
+  // Formulieren die pas na het renderen verschijnen (de bezichtigingskaart
+  // op property.html, de wizardstappen) krijgen hem alsnog.
+  document.addEventListener('click', function(){ setTimeout(hang, 0); }, { passive: true });
+
+  document.addEventListener('submit', function(e){
+    const form = e.target;
+    if (!form || form.tagName !== 'FORM') return;
+
+    const hp = form.querySelector('input[name="' + VELD + '"]');
+    if (hp && hp.value.trim() !== '') {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      console.warn('form guard: honeypot ingevuld, inzending genegeerd');
+      return;
+    }
+
+    if (Date.now() - geladen < MIN_MS) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      let melding = form.querySelector('.mk-guard-msg');
+      if (!melding) {
+        melding = document.createElement('p');
+        melding.className = 'mk-guard-msg';
+        melding.style.cssText = 'font-size:13px;font-weight:600;color:#C2533A;line-height:1.45;margin-top:10px';
+        form.appendChild(melding);
+      }
+      melding.textContent = 'That was quick — give it a moment and press send again.';
+      setTimeout(function(){ if (melding) melding.textContent = ''; }, 6000);
+      return;
+    }
+  }, true);
+})();
+
 /* Standard fallback panel — WhatsApp and email always work, even when a
    form doesn't. */
 function contactFallbackHTML(waMsg, intro){

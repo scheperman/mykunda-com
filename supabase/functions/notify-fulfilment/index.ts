@@ -30,6 +30,7 @@
 
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
+import { isReservedTestAddress } from "../_shared/email-template.ts";
 
 const SITE = "https://mykunda.com";
 const FROM = Deno.env.get("FROM_EMAIL") ?? "MyKunda <noreply@mykunda.com>";
@@ -324,6 +325,15 @@ Deno.serve(async (req: Request) => {
 
   const onderwerp = `${STAGES[stage].heading} — ${ref} — MyKunda`;
   const html = bouwMail({ stage, ref, plan: planNaam, naam, waar });
+
+  /* Gereserveerde testdomeinen nooit versturen — zie isReservedTestAddress
+     in _shared/email-template.ts. Amazon SES houdt zo'n mail veertien uur
+     vast en boekt daarna een bounce op de reputatie van mykunda.com.
+     Deze guard stond tot 30-08-2026 alleen in auth-email. */
+  if (isReservedTestAddress(ontvanger)) {
+    console.warn(`notify-fulfilment: gereserveerd testdomein, niet verstuurd — ${ontvanger}`);
+    return json({ ok: false, error: "reserved_test_domain", reference: ref, stage }, 422);
+  }
 
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",

@@ -633,6 +633,48 @@ async function startConversationForListing(listingId, firstMessage){
   return convo || { id: conversationId, listing_id: listingId };
 }
 
+/* ---- Bezichtiging aanvragen via de ECHTE keten (30-08-2026) --------------
+   Er liepen twee bezichtigingssystemen naast elkaar. Het formulier op
+   property.html schreef naar `viewings_legacy_v0`; de chat, de bevestiging,
+   de afwijzing, de annulering en de twee herinneringen werken allemaal op
+   `viewings`. Een aanvraag via de objectpagina viel dus buiten de hele
+   keten: geen bevestiging als de verkoper een tijd koos, geen herinnering,
+   niets.
+
+   Waarom dat zo was: propose_viewing() vraagt om een conversation_id, en
+   start_conversation() vraagt om een ingelogde koper. Een anonieme bezoeker
+   past daar niet in.
+
+   Daarom deze middenweg. Is de bezoeker ingelogd, dan loopt zijn aanvraag
+   voortaan door de echte keten — conversatie, bericht, voorgestelde tijd —
+   en krijgt hij alles wat daaraan hangt. Is hij dat niet, dan blijft het
+   een lead, precies zoals nu. Inloggen verplicht stellen op het moment van
+   hoogste koopintentie is de verkeerde prijs voor deze opschoning. */
+async function requestViewingAsUser(listingId, slotIso, note){
+  if(!sb) throw new Error('backend-offline');
+  const u = await currentUser();
+  if(!u) throw new Error('not-signed-in');
+
+  const convo = await startConversationForListing(listingId);
+  const convId = convo && convo.id;
+  if(!convId) throw new Error('no-conversation');
+
+  const { data: viewingId, error } = await sb.rpc('propose_viewing', {
+    p_conversation_id: convId,
+    p_slots: [slotIso],
+    p_note: note || null
+  });
+  if(error) throw error;
+
+  /* notify-viewing mailt de aanvrager, de tegenpartij en de backoffice.
+     Faalt dat, dan is de aanvraag al opgeslagen — de melding is nooit een
+     reden om de bezoeker een fout te tonen. */
+  try{ await sb.functions.invoke('notify-viewing', { body:{ viewing_id: viewingId } }); }catch(e){
+    console.warn('notify-viewing:', e && e.message);
+  }
+  return { viewing_id: viewingId, conversation_id: convId };
+}
+
 /* Fetch all conversations for the current user. RLS scopes the query to
    the user's own conversations — no .eq()/.or() filter needed. */
 async function fetchConversations(){

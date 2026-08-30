@@ -64,6 +64,8 @@
 
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
+// Eén bron voor de bankrekening — zie ../_shared/bank.ts.
+import { BANK_DETAILS } from "../_shared/bank.ts";
 
 // ---------------------------------------------------------------- config
 const SITE = Deno.env.get("SITE_URL") ?? "https://mykunda.com";
@@ -125,21 +127,11 @@ const WALLET_LIMITS: Record<string, number> = {
 // Gambia kent geen IBAN. Een klant uit de diaspora die om een IBAN
 // gevraagd wordt, heeft genoeg aan SWIFT + rekeningnummer; voor USD loopt
 // het via de correspondent in Londen, zie de usd_-velden.
-const BANK_DETAILS = {
-  bank: "Guaranty Trust Bank (Gambia) Ltd",
-  account_name: "EDWIN SCHEPERMAN T/A MYKUNDA.COM",
-  account_number: "005201300100074795",
-  currency: "GMD",
-  swift: "GTBGGMGM",
-  swift_11: "GTBGGMGMXXX",
-  branch: "Kairaba (branch code 201)",
-  address: "56 Kairaba Avenue, Fajara, KSMD",
-  usd_intermediary_bank: "Guaranty Trust Bank (UK) Limited",
-  usd_intermediary_swift: "GTBIGB2L",
-  usd_beneficiary_bank: "Guaranty Trust Bank (Gambia) Limited",
-  usd_beneficiary_swift: "GTBGGMGM",
-  usd_beneficiary_bank_account: "901 10015 002 5033 000",
-};
+/* De waarden stonden hier hardgecodeerd, met dezelfde reeks in
+   send-payment-instructions en een afspraak in het commentaar om ze op
+   beide plekken bij te werken. Sinds 30-08-2026 is er één bron:
+   ../_shared/bank.ts (geïmporteerd bovenaan). Wijzig daar, en rol deze
+   functie én send-payment-instructions opnieuw uit. */
 
 const VALID_METHODS = ["wave", "afrimoney", "qmoney", "aps", "card", "bank_transfer"];
 const WALLET_METHODS = ["wave", "afrimoney", "qmoney", "aps"];

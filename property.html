@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" id="mkRobots" content="noindex, follow, noai, noimageai"><!--mk:09pyw0t--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" id="mkRobots" content="noindex, follow, noai, noimageai"><!--mk:1rikgnj--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -32,7 +32,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preconnect" href="https://api.mapbox.com" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=18902858972371">
+<link rel="stylesheet" href="styles.min.css?v=217280968166509">
 <style>
 .crumb{padding:18px 0 6px;font-size:14px;color:var(--muted);display:flex;align-items:center;gap:8px}
 .crumb a{font-weight:600}.crumb a:hover{color:var(--green-700)}
@@ -240,7 +240,7 @@
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=18902858972371"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=217280968166509"><!--/mk-css-->
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -537,15 +537,15 @@
     </div>
   </footer><!--/mk-ftr--></div>
 
-<script src="app.min.js?v=18902858972371"></script>
-<script src="image-slot.js?v=18902858972371" defer></script>
+<script src="app.min.js?v=217280968166509"></script>
+<script src="image-slot.js?v=217280968166509" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel instead of blocking the page, and
    Leaflet (~145 KB) is only fetched when the visitor opens the Map tab. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=18902858972371'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=217280968166509'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -1395,18 +1395,42 @@ window.bookViewing = async function(form) {
       listing_id: listingId,
       payload: { date: d, slot: slot }
     });
-    /* Also record it as a real viewing, so it lands in the seller's dashboard
-       instead of only in the mailbox. notify:false — notify-lead just mailed
-       both sides. Never blocks the confirmation: the request is already saved. */
-    if(listingId && typeof requestViewing === 'function'){
+    /* Ook vastleggen als echte bezichtiging, zodat hij in het dashboard van
+       de verkoper landt en niet alleen in de mailbox.
+
+       Sinds 30-08-2026 twee wegen. Is de bezoeker INGELOGD, dan gaat de
+       aanvraag door de echte keten: een conversatie, een voorgestelde tijd in
+       `viewings`, en daarmee de bevestiging, de afwijzing, de annulering en
+       de twee herinneringen die daaraan hangen. Is hij dat niet, dan blijft
+       het de oude rij in `viewings_legacy_v0` — die valt buiten die keten,
+       maar hij staat wel in het dashboard, en inloggen verplicht stellen op
+       dit moment in de flow zou meer kosten dan het oplevert.
+
+       Nooit blokkerend: de aanvraag is op dit punt al opgeslagen als lead. */
+    if(listingId){
       const dt = new Date(d + 'T' + ((slot || '10:00').trim() || '10:00'));
-      try{
-        await requestViewing({
-          listing_id: listingId, buyer_name: name, buyer_email: email,
-          buyer_phone: phone || null, note: note || null,
-          requested_slot: isNaN(dt) ? null : dt.toISOString(), status: 'requested'
-        }, { notify: false });
-      }catch(vErr){ console.warn('viewing row not created:', vErr.message || vErr); }
+      const slotIso = isNaN(dt) ? null : dt.toISOString();
+      let viaKeten = false;
+      if(slotIso && typeof requestViewingAsUser === 'function'){
+        try{
+          await requestViewingAsUser(listingId, slotIso, note || null);
+          viaKeten = true;
+        }catch(vErr){
+          const m = String((vErr && vErr.message) || vErr);
+          // 'not-signed-in' is de normale gang van zaken voor een bezoeker
+          // zonder account, geen fout om over te loggen.
+          if(!/not-signed-in/.test(m)) console.warn('viewing chain:', m);
+        }
+      }
+      if(!viaKeten && typeof requestViewing === 'function'){
+        try{
+          await requestViewing({
+            listing_id: listingId, buyer_name: name, buyer_email: email,
+            buyer_phone: phone || null, note: note || null,
+            requested_slot: slotIso, status: 'requested'
+          }, { notify: false });
+        }catch(vErr){ console.warn('viewing row not created:', vErr.message || vErr); }
+      }
     }
   } catch(e) {
     console.warn('bookViewing lead error:', e);

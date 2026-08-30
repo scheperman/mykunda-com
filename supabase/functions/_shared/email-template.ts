@@ -17,7 +17,28 @@
 //
 //  Listing templates live in ./email-listing.ts and are
 //  re-exported at the bottom, so importers only need this file.
+//  De bankrekening staat in ./bank.ts — één bron, zie daar.
 // ============================================================
+import { BANK } from './bank.ts';
+
+/* ============================================================
+   GERESERVEERDE TESTDOMEINEN (30-08-2026)
+   Domeinen uit RFC 2606/6761 hebben geen DNS. Amazon SES houdt zo'n mail
+   veertien uur in de wachtrij en boekt daarna een bounce op de reputatie
+   van mykunda.com. Deze guard stond alleen in auth-email, terwijl de
+   .invalid-rommel in email_events aantoonbaar uit de ándere functies kwam:
+   viewingtest-buyer@mykunda-test.invalid kreeg een berichtmail én een
+   herinnering, goed voor vijftien delivery_delayed en twee bounces.
+   Nu leest elke verzender dezelfde lijst.
+   Testen doe je met delivered@resend.dev of bounced@resend.dev.
+   ============================================================ */
+const RESERVED_EMAIL_DOMAIN =
+  /(^|\.)(invalid|test|localhost|example|example\.(com|net|org))$/i;
+
+export function isReservedTestAddress(addr: unknown): boolean {
+  const domain = String(addr ?? '').trim().toLowerCase().split('@').pop() ?? '';
+  return RESERVED_EMAIL_DOMAIN.test(domain);
+}
 
 export const BRAND = {
   name: 'MyKunda',
@@ -622,12 +643,22 @@ export function paymentReceiptEmail(p: PaymentInfo): string {
     [waiting ? 'Amount due' : 'Amount paid', `<strong>${esc(p.amount)}</strong>`],
   ];
 
+  /* Derde plek waar een rekeningnummer in beeld kon komen. Dit blok toont
+     wat de aanroeper meegeeft in p.bank — niemand doet dat: de trigger op
+     payments zet awaitingTransfer altijd op false, en de instructiemail
+     komt uit send-payment-instructions, dat zijn gegevens sinds 30-08-2026
+     uit _shared/bank.ts leest. Het blok blijft staan voor een handmatige
+     aanroep, maar wijst nu naar diezelfde ene bron in plaats van een
+     losse set velden te accepteren. Wil je hier ooit weer bankgegevens
+     tonen, geef dan geen eigen waarden mee — pas _shared/bank.ts aan.
+     De IBAN-regel is weg: Gambia kent geen IBAN, en een leeg veld met dat
+     label zet een buitenlandse bank juist op het verkeerde been. */
   const bankBlock = waiting && p.bank
     ? `${sectionLabel('Where to send it')}${detailTable([
-        ['Bank', escOpt(p.bank.name)],
-        ['Account', escOpt(p.bank.account)],
-        ['IBAN', escOpt(p.bank.iban)],
-        ['SWIFT', escOpt(p.bank.swift)],
+        ['Bank', escOpt(p.bank.name) ?? BANK.bank],
+        ['Account name', BANK.account_name],
+        ['Account', escOpt(p.bank.account) ?? BANK.account_number],
+        ['SWIFT', escOpt(p.bank.swift) ?? BANK.swift],
         ['Reference', `<strong>${esc(p.reference)}</strong>`],
       ], 'amber')}`
     : '';
@@ -890,6 +921,9 @@ export function signupBackofficeEmail(u: SignupInfo): string {
     footer: 'Internal notification from the MyKunda website.',
   });
 }
+
+/* Eén bron voor de bankrekening, ook voor het (latente) bankblok in de bon. */
+export { BANK, USD, BANK_DETAILS } from './bank.ts';
 
 /* Listing templates live next door but import from this file. */
 export {

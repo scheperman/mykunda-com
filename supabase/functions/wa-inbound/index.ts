@@ -156,19 +156,44 @@ async function handleMessage(
     const hash = [...new Uint8Array(hashBuf)].map((b) => b.toString(16).padStart(2, "0")).join("");
 
     const { data: pending } = await sb.from("phone_verifications")
-      .select("id, expires_at, verified_at")
+      .select("id, user_id, expires_at, verified_at")
       .eq("code_hash", hash).order("sent_at", { ascending: false }).limit(1);
 
-    const row = pending?.[0] as { id: string; expires_at: string; verified_at: string | null } | undefined;
+    const row = pending?.[0] as
+      { id: string; user_id: string | null; expires_at: string; verified_at: string | null } | undefined;
     const fresh = !!row && !row.verified_at && new Date(row.expires_at) > new Date();
     /* Al bevestigd? Dan is dit een herhaling van Meta of van de verkoper zelf.
        Die kreeg tot nu toe "That code has expired or was already used" na een
        geslaagde bevestiging — verwarrend, en een voorspelbare supportvraag. */
     const repeat = !!row && !!row.verified_at;
     if (fresh) {
+      const nu = new Date().toISOString();
       await sb.from("phone_verifications")
-        .update({ phone: phoneFormatted, verified_at: new Date().toISOString() })
+        .update({ phone: phoneFormatted, verified_at: nu })
         .eq("id", row!.id);
+
+      /* En de advertentie draagt het ook. Toegevoegd 30-08-2026: tot nu toe
+         schreef deze functie alleen in phone_verifications, er stond geen
+         trigger op die tabel, en geen enkele functie vulde
+         listings.phone_verified_at — terwijl die kolom er wel is en de
+         wizard belooft "a confirmed number tells buyers the listing is
+         real". Het vertrouwenssignaal bleef dus in een tabel hangen waar
+         niemand bij komt.
+         Alle advertenties van deze verkoper krijgen het stempel: hij
+         bevestigt zichzelf, niet één pand. Draft en gearchiveerd blijven
+         erbuiten; die zijn niet zichtbaar, en gaan ze later live, dan is
+         een nieuwe bevestiging op zijn plaats. */
+      if (row!.user_id) {
+        const { error: stampErr, count } = await sb.from("listings")
+          .update({ phone_verified_at: nu }, { count: "exact" })
+          .eq("owner_id", row!.user_id)
+          .in("status", ["pending_review", "active", "under_offer"]);
+        if (stampErr) {
+          console.error("wa-inbound: listings.phone_verified_at niet gezet:", stampErr.message);
+        } else {
+          console.log(`wa-inbound: nummer bevestigd, ${count ?? 0} advertentie(s) gestempeld voor ${row!.user_id}`);
+        }
+      }
     }
     try {
       await waNotify(

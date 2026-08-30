@@ -44,7 +44,7 @@ import {
   detailTable,
   callout,
   esc,
-  BRAND,
+  BRAND, isReservedTestAddress,
 } from "../_shared/email-template.ts";
 import type { PaymentInfo } from "../_shared/email-template.ts";
 
@@ -124,6 +124,14 @@ function json(body: unknown, status = 200) {
 }
 
 async function sendEmail(to: string, subject: string, html: string, replyTo?: string) {
+  /* Gereserveerde testdomeinen nooit versturen — zie isReservedTestAddress
+     in _shared/email-template.ts. Amazon SES houdt zo'n mail veertien uur
+     vast en boekt daarna een bounce op de reputatie van mykunda.com.
+     Deze guard stond tot 30-08-2026 alleen in auth-email. */
+  if (isReservedTestAddress(to)) {
+    throw new Error(`reserved test domain, not sent: ${to}`);
+  }
+
   const body: Record<string, unknown> = { from: FROM_EMAIL, to: [to], subject, html, text: toText(html) };
   if (replyTo) body.reply_to = replyTo;
   const r = await fetch("https://api.resend.com/emails", {

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:1kzrz15--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:1730vjn--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -31,7 +31,7 @@
 <noscript></noscript>
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=18902858972371">
+<link rel="stylesheet" href="styles.min.css?v=217280968166509">
 <style>
 .ov-hero{position:relative;color:#fff;isolation:isolate;overflow:hidden;margin-top:calc(-1 * var(--header-h))}
 .ov-hero .bg{position:absolute;inset:0;z-index:0;background:linear-gradient(135deg,#0E2E25,#15463A 60%,#1C5848)}
@@ -174,7 +174,7 @@
 </script>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=18902858972371"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=217280968166509"><!--/mk-css-->
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -493,11 +493,11 @@
 window.__sbReady=new Promise(function(res){window.addEventListener('load',function(){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js';
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=18902858972371'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=217280968166509'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
   document.body.appendChild(s1);
 });});
 </script>
-<script src="app.min.js?v=18902858972371"></script>
+<script src="app.min.js?v=217280968166509"></script>
 <script>
 if(typeof initHeroHeader==='function') initHeroHeader();
 
@@ -619,7 +619,7 @@ document.getElementById('ovSource').dispatchEvent(new Event('change'));
 })();
 
 /* ---- submit ---- */
-document.getElementById('ovForm').addEventListener('submit', function(e){
+document.getElementById('ovForm').addEventListener('submit', async function(e){
   e.preventDefault();
   var err=document.getElementById('ovErr');
   var where=document.getElementById('ovWhere').value.trim();
@@ -645,6 +645,44 @@ document.getElementById('ovForm').addEventListener('submit', function(e){
     at: new Date().toISOString()
   };
   try{ localStorage.setItem('mykunda_ownership_request', JSON.stringify(req)); }catch(err2){}
+
+  /* Leg de aanvraag ook vast op de server, vóór de betaling. Toegevoegd
+     30-08-2026. Tot nu toe ging hij alleen in localStorage en bereikte hij
+     de server pas bij create-payment: wie afhaakte op het betaalscherm was
+     daarmee spoorloos, terwijl dit juist iemand is die op het punt stond
+     honderden dalasi uit te geven aan een titelcontrole. Die aanvraag is
+     nu een lead, dus opvolgbaar.
+
+     Nooit blokkerend: lukt het niet, dan gaat de bezoeker gewoon door naar
+     de betaling — dát is waar hij voor kwam. Een knop die blijft hangen op
+     een leadinsert is erger dan een lead die ontbreekt. */
+  var btn=this.querySelector('button[type="submit"]');
+  var origLabel=btn?btn.textContent:'';
+  if(btn){ btn.disabled=true; btn.textContent='One moment…'; }
+  try{
+    if(window.__sbReady){ try{ await window.__sbReady; }catch(e2){} }
+    if(typeof sendLead==='function'){
+      await sendLead('verification', {
+        name: name, email: email, phone: req.phone || null,
+        area: where,
+        message: 'Ownership check intake — ' + (tier==='full'?'Full Ownership Check':'Document Check')
+          + '\nWhere: ' + where
+          + (req.propertyType?'\nType: '+req.propertyType:'')
+          + (req.source?'\nFound via: '+req.source:'')
+          + (req.link?'\nListing: '+req.link:'')
+          + (req.docs && req.docs.length?'\nAlready has: '+req.docs.join(', '):'')
+          + (req.when?'\nUrgency: '+req.when:'')
+          + (req.notes?'\n\n'+req.notes:''),
+        payload: { form:'ownership-intake', tier:tier, amount_gmd:req.amountGMD,
+                   property_type:req.propertyType, source:req.source, link:req.link,
+                   docs:req.docs, urgency:req.when, stage:'before_payment' }
+      });
+    }
+  }catch(e3){
+    console.warn('ownership intake lead:', (e3&&e3.message)||e3);
+  }
+  if(btn){ btn.disabled=false; btn.textContent=origLabel; }
+
   location.href='checkout.html?plan=ownership-'+tier+'&amount='+req.amountGMD;
 });
 

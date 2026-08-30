@@ -19,6 +19,7 @@
 // ============================================================
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { isReservedTestAddress } from "../_shared/email-template.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY")!;
 const FROM_EMAIL = Deno.env.get("FROM_EMAIL") ?? "MyKunda <noreply@mykunda.com>";
@@ -216,6 +217,14 @@ function reminderEmail(o: {
 }
 
 async function sendEmail(opts: { to: string; subject: string; html: string; unsubscribeUrl?: string }) {
+  /* Gereserveerde testdomeinen nooit versturen — zie isReservedTestAddress
+     in _shared/email-template.ts. Amazon SES houdt zo'n mail veertien uur
+     vast en boekt daarna een bounce op de reputatie van mykunda.com.
+     Deze guard stond tot 30-08-2026 alleen in auth-email. */
+  if (isReservedTestAddress(opts.to)) {
+    throw new Error(`reserved test domain, not sent: ${opts.to}`);
+  }
+
   const body: Record<string, unknown> = {
     from: FROM_EMAIL,
     to: [opts.to],
@@ -295,10 +304,16 @@ serve(async (req) => {
       let person = (people ?? []).find((p) => p.id === id) as P | undefined;
       const other = (people ?? []).find((p) => p.id === otherId) as P | undefined;
 
-      if (person && person.notify_messages === false) {
-        results[id] = "opted out";
-        continue;
-      }
+      /* De opt-out is hier weggehaald op 30-08-2026.
+         profiles.notify_messages is de schakelaar voor CHATberichten: "email
+         me when someone sends me a message". Wie die uitzet omdat hij niet bij
+         elk bericht gemaild wil worden, verloor daarmee ook de herinnering aan
+         een afspraak die hij zelf heeft bevestigd — en dat is transactionele
+         post, geen nieuwsbrief. Iemand die morgen ergens verwacht wordt hoort
+         dat te weten. Wil hij er echt vanaf, dan zegt hij de afspraak af; dat
+         kan met één knop in het gesprek.
+         De uitschrijflink blijft wel in de mail staan, want die zet alleen de
+         berichtmeldingen uit — dat is precies wat hij belooft. */
 
       if (!person?.email) {
         const { data: authUser } = await db.auth.admin.getUserById(id);
@@ -345,7 +360,34 @@ serve(async (req) => {
     }
 
     const anyFailed = Object.values(results).some((r) => r.startsWith("failed"));
-    return json({ ok: !anyFailed, phase, results }, anyFailed ? 500 : 200);
+    const anySent = Object.values(results).some((r) => r === "sent");
+
+    /* Het stempel wordt hier gezet, ná verzending — niet meer vooraf door de
+       cron. run_viewing_reminders() deed dat andersom: eerst
+       send_viewing_reminder_mail() (een fire-and-forget pg_net-call waarvan
+       de status nooit gelezen werd) en meteen daarna
+       `update viewings set reminded_24h_at = now()`. Faalde Resend op dat
+       moment, dan stond het stempel er al en werd de herinnering nooit meer
+       geprobeerd — de 500 die deze functie netjes teruggeeft verdween in het
+       niets.
+       Nu blijft de rij zonder stempel staan zolang er niets is verstuurd, en
+       pikt de cron van een kwartier later hem gewoon opnieuw op. Binnen het
+       venster van 20 tot 24 uur (en van 0 tot 2 uur) levert dat vanzelf een
+       aantal herkansingen op, zonder wachtrij en zonder extra machinerie. */
+    if (anySent) {
+      const kolom = phase === "24h" ? "reminded_24h_at" : "reminded_2h_at";
+      const { error: stampErr } = await db
+        .from("viewings")
+        .update({ [kolom]: new Date().toISOString() })
+        .eq("id", v.id);
+      if (stampErr) {
+        // Niet fataal, maar wel het scenario waarin iemand een tweede
+        // herinnering kan krijgen. Daarom luid in de log.
+        console.error(`notify-viewing-reminder: ${kolom} niet gezet voor ${v.id}:`, stampErr.message);
+      }
+    }
+
+    return json({ ok: !anyFailed, phase, stamped: anySent, results }, anyFailed ? 500 : 200);
   } catch (err) {
     const message = String((err as Error)?.message ?? err);
     console.error("notify-viewing-reminder error:", message);

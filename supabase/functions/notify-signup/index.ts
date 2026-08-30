@@ -20,7 +20,7 @@
 // ============================================================
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { welcomeEmail, signupBackofficeEmail, toText } from "../_shared/email-template.ts";
+import { welcomeEmail, signupBackofficeEmail, toText, isReservedTestAddress } from "../_shared/email-template.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY")!;
 const FROM_EMAIL     = Deno.env.get("FROM_EMAIL") ?? "MyKunda <noreply@mykunda.com>";
@@ -37,6 +37,14 @@ const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { ...cors, "Content-Type": "application/json" } });
 
 async function sendEmail(o: { to: string; subject: string; html: string; replyTo?: string }) {
+  /* Gereserveerde testdomeinen nooit versturen — zie isReservedTestAddress
+     in _shared/email-template.ts. Amazon SES houdt zo'n mail veertien uur
+     vast en boekt daarna een bounce op de reputatie van mykunda.com.
+     Deze guard stond tot 30-08-2026 alleen in auth-email. */
+  if (isReservedTestAddress(o.to)) {
+    throw new Error(`reserved test domain, not sent: ${o.to}`);
+  }
+
   const body: Record<string, unknown> = { from: FROM_EMAIL, to: [o.to], subject: o.subject, html: o.html, text: toText(o.html) };
   if (o.replyTo) body.reply_to = o.replyTo;
   const r = await fetch("https://api.resend.com/emails", {
@@ -105,6 +113,12 @@ serve(async (req) => {
     };
 
     const errors: string[] = [];
+    // Aparte vlag voor de KLANTmail. De claim hieronder werd tot 30-08-2026
+    // alleen vrijgegeven als beide mails faalden; lukte de teammail en
+    // mislukte de welkomstmail, dan bleef welcomed_at staan en probeerde
+    // niemand het ooit nog — pg_net doet geen retry. De nieuwe gebruiker
+    // kreeg dan nooit een welkomstmail, en niets liet dat zien.
+    let welcomeSent = false;
     try {
       const subject = "Welcome to MyKunda — your account is ready";
       const sent = await sendEmail({ to: info.email, subject, html: welcomeEmail(info), replyTo: TEAM_EMAIL });
@@ -113,6 +127,7 @@ serve(async (req) => {
         resend_email_id: sent?.id ? String(sent.id) : null,
         payload: { provider: info.provider, consent_contact: info.consentContact, consent_marketing: info.consentMarketing },
       });
+      welcomeSent = true;
     } catch (e) { errors.push(`welcome: ${(e as Error).message}`); console.error("notify-signup welcome failed:", e); }
     try {
       const teamSubject = `[MyKunda] New account — ${info.name || info.email}`;
@@ -124,8 +139,12 @@ serve(async (req) => {
       });
     } catch (e) { errors.push(`team: ${(e as Error).message}`); console.error("notify-signup team failed:", e); }
 
-    // If nothing at all went out, release the claim so a retry can send.
-    if (errors.length === 2) {
+    /* De claim wordt vrijgegeven zodra de KLANTmail niet is aangekomen —
+       ongeacht hoe het de teammail verging. De teammelding is intern en mag
+       nooit de reden zijn dat een nieuwe gebruiker zijn welkomstmail
+       misloopt; hij komt bovendien in email_events te staan, dus een dubbele
+       teammelding bij een herkansing is zichtbaar en onschadelijk. */
+    if (!welcomeSent) {
       await db.from("profiles").update({ welcomed_at: null }).eq("id", user_id);
     }
     return json({ ok: errors.length === 0, errors }, errors.length ? 502 : 200);

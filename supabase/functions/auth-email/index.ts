@@ -271,6 +271,27 @@ serve(async (req) => {
       const userExists = !!row?.user_exists;
       const confirmed = !!row?.confirmed;
 
+      /* Een adres dat hard gebouncet is of als spam is gemeld staat op de
+         suppressielijst van Resend: daar komt niets meer aan. Tot 30-08-2026
+         antwoordde deze functie dan gewoon {ok:true, code_length:6}, zei het
+         scherm "we hebben een code gestuurd", en zat de gebruiker permanent
+         buiten zonder dat iemand kon zien waarom. In de data staat zo'n geval
+         (testing@mykunda.com, harde bounce op de inlogcode, 18-08-2026).
+         resend-webhook zet sinds vandaag profiles.email_bounced_at; hier
+         wordt dat gelezen en gezegd. */
+      if (userExists) {
+        const { data: prof } = await admin
+          .from("profiles").select("email_bounced_at").eq("email", email).maybeSingle();
+        if (prof?.email_bounced_at) {
+          console.warn(`auth-email: adres staat als gebouncet gemarkeerd, geen code verstuurd — ${email}`);
+          return json({
+            ok: false,
+            address_blocked: true,
+            error: "Mail to this address keeps bouncing, so we cannot send you a code. Write to admin@mykunda.com from an address that works and we will move your account across.",
+          });
+        }
+      }
+
       // Sign-in tab, unknown address: don't create an account, let the
       // screen offer to switch to Create account instead.
       if (authMode === "signin" && !userExists) {
