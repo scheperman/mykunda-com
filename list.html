@@ -103,6 +103,12 @@ body{background:var(--paper-2);min-height:100vh}
 
 @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
 
+/* De regel die zegt wát er ontbreekt. Leeg is hij onzichtbaar en neemt hij
+   geen hoogte in, zodat een geslaagde stap er niets van merkt. */
+.wiz-msg{display:none;margin:0 0 12px;padding:11px 14px;border-radius:var(--r-sm,10px);
+  background:#FBEDE9;border:1px solid #E7C3B8;color:#8C3A24;font-size:14px;line-height:1.45}
+.wiz-msg.on{display:block}
+
 /* option cards */
 .opt-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:560px}
 .opt-card{border:1.5px solid var(--line);border-radius:var(--r-md);padding:20px;cursor:pointer;background:var(--white);transition:.15s;display:flex;align-items:center;gap:15px}
@@ -794,6 +800,7 @@ body{background:var(--paper-2);min-height:100vh}
     </section>
 
     <!-- nav -->
+    <p class="wiz-msg" id="wizMsg" role="alert" aria-live="assertive"></p>
     <div class="wiz-nav" id="wizNav">
       <a class="back" id="backBtn"><span id="backIc"></span> Back</a>
       <span class="spacer"></span>
@@ -3136,9 +3143,31 @@ function showStep(n){
     document.getElementById('summary').style.display='none';
     document.getElementById('wizGrid').style.gridTemplateColumns='1fr';
   }
+  wizSay('');
   window.scrollTo({top:0,behavior:'smooth'});
 }
-function shake(el){ el.style.animation='shake .4s'; setTimeout(()=>el.style.animation='',400); }
+/* ---- Zeggen wat er mis is ----
+   Tot 30-08-2026 deed een afgekeurde stap precies twee dingen: het blok schudde
+   0,4 seconde, of een veldrand werd 1,5 seconde rood. Geen tekst, geen aria,
+   en — dat was de echte fout — geen scroll. Gemeten op een telefoon: de knop
+   Continue staat op y=1959, het blok dat bezwaar maakt op y=992. De verkoper
+   tikt op Continue en er gebeurt zichtbaar NIETS. Zeg daarom altijd wát er
+   ontbreekt, en breng het bezwaar in beeld. */
+function wizSay(msg){
+  const m=document.getElementById('wizMsg'); if(!m) return;
+  m.textContent=msg||'';
+  m.classList.toggle('on', !!msg);
+}
+function wizFocus(el){
+  if(!el) return;
+  const r=el.getBoundingClientRect();
+  if(r.top<80 || r.bottom>innerHeight-80) el.scrollIntoView({block:'center',behavior:'smooth'});
+}
+function shake(el,msg){
+  wizFocus(el);
+  el.style.animation='shake .4s'; setTimeout(()=>el.style.animation='',400);
+  wizSay(msg);
+}
 /* A listing with no photo is a phone number with a headline, and it is what
    makes a property site read like a classifieds page. Four is the floor. */
 const MIN_PHOTOS=4;
@@ -3169,24 +3198,24 @@ function validate(n){
 }
 function validateKey(k){
   if(k==='intro'){
-    if(!S.dealPicked){ shake(dealCards); return false; }
+    if(!S.dealPicked){ shake(dealCards,'Pick what you would like to do — sell, let or commercial space.'); return false; }
     /* Zonder deze keuze is niet te zeggen of het bedrag een koopsom of een
        maandhuur is, en dat bepaalt de prijsband, de periode en de borg. */
-    if(isComm() && !S.cdeal){ shake(commDealCards); return false; }
-    if(!S.who){ shake(whoCards); return false; }
-    if(S.who==='owner' && !S.confirmWho){ shake(ownerConfirm); return false; }
+    if(isComm() && !S.cdeal){ shake(commDealCards,'Let us know whether this commercial space is for sale or to let.'); return false; }
+    if(!S.who){ shake(whoCards,'Tell us who is behind the listing — the owner, or an agent or company.'); return false; }
+    if(S.who==='owner' && !S.confirmWho){ shake(ownerConfirm,'Please tick the box confirming the property is yours to sell or let.'); return false; }
     return true;
   }
-  if(k==='where' && !S.area){ flash(locInput); return false; }
+  if(k==='where' && !S.area){ flash(locInput,'Choose the area the property is in.'); return false; }
   if(k==='details'){
     /* The description starts filled in from the location, so an empty one means
        it was cleared on purpose. A listing without words does not sell. */
     const d=document.getElementById('descIn');
-    if(d && d.value.trim().length<40){ flash(d); return false; }
+    if(d && d.value.trim().length<40){ flash(d,'Add a few more words about the property — at least 40 characters.'); return false; }
   }
   if(k==='photos' && filledPhotos()<MIN_PHOTOS){
     updatePhotoReq();
-    const g=document.getElementById('photoGrid'); if(g) shake(g);
+    const g=document.getElementById('photoGrid'); if(g) shake(g,'Add at least '+MIN_PHOTOS+' photos — you have '+filledPhotos()+' so far.');
     const r=document.getElementById('photoReq');
     if(r){ r.style.color='#C2533A'; setTimeout(()=>r.style.color='',2000); }
     return false;
@@ -3196,41 +3225,41 @@ function validateKey(k){
        listing says so. But the question has to be answered. */
     if(!isRent()){
       const dt=document.getElementById('docType');
-      if(dt && !dt.value){ flash(dt); return false; }
+      if(dt && !dt.value){ flash(dt,'Tell us which document you hold — or pick "I am not sure yet".'); return false; }
     }
-    if(!S.confirm){ shake(confirmBox); return false; }
+    if(!S.confirm){ shake(confirmBox,'Please tick the box to confirm the details you have given are correct.'); return false; }
   }
   if(k==='gambia'){
     /* Customary land without a name and a village is a claim, not a document.
        Ask for it here rather than discovering it during a title check. */
     if(!isRent() && S.titleType==='alkalalo'){
       const an=document.getElementById('alkaloNameIn'), av=document.getElementById('alkaloVillageIn');
-      if(an && !an.value.trim()){ flash(an); return false; }
-      if(av && !av.value.trim()){ flash(av); return false; }
+      if(an && !an.value.trim()){ flash(an,'For customary (alkalo) land, give the name of the alkalo.'); return false; }
+      if(av && !av.value.trim()){ flash(av,'For customary (alkalo) land, give the village as well.'); return false; }
     }
   }
   if(k==='price'){
-    if(!S.price){ flash(priceIn); return false; }
-    if(S.who==='business' && (S.feeType==='pct'||S.feeType==='fixed') && !S.feeVal){ flash(feeValIn); return false; }
+    if(!S.price){ flash(priceIn,'Fill in your asking price.'); return false; }
+    if(S.who==='business' && (S.feeType==='pct'||S.feeType==='fixed') && !S.feeVal){ flash(feeValIn,'Fill in the agency fee, or set it to "Nothing".'); return false; }
   }
   if(k==='contact'){
     const nm=document.getElementById('nameIn'),ph=document.getElementById('phoneIn'),em=document.getElementById('emailIn');
     if(S.who==='business'){
       const co=document.getElementById('companyIn');
-      if(!co.value.trim()){ flash(co); return false; }
+      if(!co.value.trim()){ flash(co,'Fill in your company name.'); return false; }
       const rg=document.getElementById('regIn');
-      if(rg && !rg.value.trim()){ flash(rg); return false; }
+      if(rg && !rg.value.trim()){ flash(rg,'Fill in your company registration number.'); return false; }
       const mt=document.getElementById('mandateTypeIn');
-      if(mt && !mt.value){ flash(mt); return false; }
-      if(!S.mandate){ shake(mandateBox); return false; }
+      if(mt && !mt.value){ flash(mt,'Pick the kind of mandate you hold for this property.'); return false; }
+      if(!S.mandate){ shake(mandateBox,'Please tick the box confirming you are instructed to market this property.'); return false; }
     }
-    if(!nm.value){flash(nm);return false;}
-    if(!ph.value){flash(ph);return false;}
-    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em.value.trim())){flash(em);return false;}
+    if(!nm.value){flash(nm,'Fill in your name, so buyers know who they are speaking to.');return false;}
+    if(!ph.value){flash(ph,'Fill in your phone number — buyers reach you on it.');return false;}
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em.value.trim())){flash(em,'Fill in a valid email address — your listing updates go there.');return false;}
   }
   return true;
 }
-function flash(el){el.style.borderColor='#C2533A';el.focus();setTimeout(()=>el.style.borderColor='',1500);}
+function flash(el,msg){wizFocus(el);el.style.borderColor='#C2533A';el.focus();setTimeout(()=>el.style.borderColor='',1500);wizSay(msg);}
 
 /* ---- The agency behind a professional listing ----
    One row per company, matched on a slug of the name, so a second listing from
@@ -3398,7 +3427,11 @@ nextBtn.addEventListener('click',async ()=>{
     catch(e){ console.warn('publish:', e); }
     nextBtn.disabled=false; nextBtn.textContent=oldTxt; _publishing=false;
     if(typeof backendReady==='function' && backendReady() && !dbId){
-      alert('Sorry — your listing could not be saved. Please check your connection and try again. Nothing has been lost.');
+      /* Was een kale browser-alert(). Die staat buiten de pagina, is niet te
+         kopiëren, en op mobiel dekt hij het formulier af. Dezelfde regel als
+         bij een afgekeurde stap doet het werk beter en blijft staan. */
+      wizSay('We could not save your listing just now. Nothing has been lost — check your connection and press Publish again. If it keeps failing, WhatsApp us on +220 228 2717 and we will put it up for you.');
+      wizFocus(document.getElementById('wizMsg'));
       return;
     }
     // paid plans go to secure checkout; Basic goes straight to the success screen
