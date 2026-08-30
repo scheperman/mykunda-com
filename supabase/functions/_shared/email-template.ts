@@ -289,7 +289,15 @@ export function leadNotificationEmail(lead: {
     ], 'amber');
   }
   if (lead.source === 'contact' && p.subject) {
-    extra = detailTable([['Subject', escOpt(p.subject)]], 'amber');
+    /* Herkomst erbij. contact.html schrijft sinds 30-08-2026 ?ref, ?about en
+       de paginacontext in payload, maar de teammail liet dat weg — je zag wél
+       de vraag en niet waar hij vandaan kwam, en daarvoor moest je de database
+       in. Juist bij "report listing" en "ownership check" is dat het eerste
+       wat je wilt weten. */
+    extra = detailTable([
+      ['Subject', escOpt(p.subject)],
+      ['Came from', escOpt(p.ref) || escOpt(p.about) || escOpt(p.form)],
+    ], 'amber');
   }
   if (lead.source === 'contact' && p.lead_magnet) {
     extra = detailTable([

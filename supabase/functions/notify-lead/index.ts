@@ -107,6 +107,39 @@ async function sendEmail(opts: { to: string; subject: string; html: string; repl
   return r.json();
 }
 
+/* Verzendlogboek. Tot 30-08-2026 schreef deze functie niets in email_events:
+   op de lead stond alleen notified_at ("we hebben het geprobeerd"), zonder
+   ontvanger, onderwerp of Resend-id. Daardoor was notify-health blind voor
+   juist de meest voorkomende mail van de site, en was bij een bounce niet
+   terug te vinden welke bezoeker zijn antwoord miste. Nooit fataal: mislukt
+   het loggen, dan is de mail zelf belangrijker. */
+async function logEmail(
+  db: ReturnType<typeof createClient>,
+  row: {
+    event_type: string;
+    recipient: string;
+    subject: string;
+    resend_email_id?: string | null;
+    ok: boolean;
+    reason?: string | null;
+    lead_id?: string;
+    source?: string;
+  },
+) {
+  try {
+    await db.from("email_events").insert({
+      resend_email_id: row.resend_email_id ?? null,
+      event_type: row.event_type,
+      recipient: row.recipient,
+      subject: row.subject,
+      reason: row.reason ?? null,
+      payload: { ok: row.ok, lead_id: row.lead_id, source: row.source },
+    });
+  } catch (e) {
+    console.warn("notify-lead: email_events niet geschreven:", (e as Error).message);
+  }
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
 
@@ -143,17 +176,27 @@ serve(async (req) => {
     const sent = { team: false, reply: false };
 
     // 1) Team notification — reply-to the visitor so answering is one click.
+    const teamSubject = safeSubject(`[MyKunda] New ${label} — ${who}`);
     try {
-      await sendEmail({
+      const res = await sendEmail({
         to: LEAD_EMAIL,
-        subject: safeSubject(`[MyKunda] New ${label} — ${who}`),
+        subject: teamSubject,
         html: leadNotificationEmail(info),
         replyTo: lead.email || undefined,
       });
       sent.team = true;
+      await logEmail(db, {
+        event_type: "lead_backoffice", recipient: LEAD_EMAIL, subject: teamSubject,
+        resend_email_id: (res as { id?: string })?.id ?? null,
+        ok: true, lead_id: lead.id, source: lead.source,
+      });
     } catch (e) {
       errors.push(`team: ${(e as Error).message}`);
       console.error("notify-lead team email failed:", e);
+      await logEmail(db, {
+        event_type: "lead_backoffice", recipient: LEAD_EMAIL, subject: teamSubject,
+        ok: false, reason: (e as Error).message, lead_id: lead.id, source: lead.source,
+      });
     }
 
     // 2) Auto-reply — attempted even when the team email failed, so the
@@ -183,17 +226,27 @@ serve(async (req) => {
         errors.push("auto-reply: rate limited (3 per address per hour)");
         console.warn("notify-lead: auto-reply gestopt door de rem voor", lead.email);
       } else {
+        const replySubject = REPLY_SUBJECT[lead.source] ?? "Thank you for contacting MyKunda";
         try {
-          await sendEmail({
+          const res = await sendEmail({
             to: lead.email,
-            subject: REPLY_SUBJECT[lead.source] ?? "Thank you for contacting MyKunda",
+            subject: replySubject,
             html: leadAutoReplyEmail(info),
             replyTo: LEAD_EMAIL,
           });
           sent.reply = true;
+          await logEmail(db, {
+            event_type: "lead_autoreply", recipient: lead.email, subject: replySubject,
+            resend_email_id: (res as { id?: string })?.id ?? null,
+            ok: true, lead_id: lead.id, source: lead.source,
+          });
         } catch (e) {
           errors.push(`auto-reply: ${(e as Error).message}`);
           console.error("notify-lead auto-reply failed:", e);
+          await logEmail(db, {
+            event_type: "lead_autoreply", recipient: lead.email, subject: replySubject,
+            ok: false, reason: (e as Error).message, lead_id: lead.id, source: lead.source,
+          });
         }
       }
     } else {
