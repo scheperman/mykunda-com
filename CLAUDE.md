@@ -1795,20 +1795,44 @@ gerepareerd:
   mail van de verkoper komt. Schrijf hem dus voor de verkoper, niet voor de
   backoffice.
 - Elke overgang mailt hooguit één keer. Dat dwingt de unieke index
-  `email_events_listing_status_once` op `(payload->>'listing_id',
-  payload->>'status')` af, met de claim-eerst-constructie van
-  `notify-fulfilment`. Heen en weer zetten levert dus geen tweede mail op.
+  `email_events_listing_status_once` af, sinds 30-08-2026 op
+  `(payload->>'listing_id', payload->>'status', coalesce(payload->>'reason',''))`,
+  met de claim-eerst-constructie van `notify-fulfilment`. Heen en weer zetten
+  levert dus geen tweede mail op — maar een tweede afwijzing met een **andere**
+  reden wél, want dat is een ander bericht.
+- Afkeuren in `admin.html` **vraagt** sinds 30-08-2026 een reden van minstens
+  tien tekens. Die gaat in één update mee met de status (de trigger leest
+  `new.review_note` op het moment van de wissel) en komt op twee plekken terug:
+  in de afwijzingsmail en woordelijk boven de advertentie in het dashboard van
+  de aanbieder. `submitForReview()` maakt `review_note` weer leeg bij
+  herindienen — een reden hoort bij één ronde.
 
 Er is **geen** verloopmechanisme voor advertenties, en dat is geen omissie: de
-site belooft nergens een looptijd. Wat wél bestaat is `listings.boosted_until`
-en `verified_until` — een Boost is 30 dagen. Daar gaat nog geen enkele mail
-over; dat is de eerstvolgende kans, en de enige met directe herhaalomzet.
+site belooft nergens een looptijd. Wat wél een looptijd heeft is
+`listings.boosted_until` (Boost, 30 dagen) en `verified_until` (Verified, 180
+dagen). Daar gaat sinds 30-08-2026 wél post over — zie `notify-plan-expiry`.
+
+### Boost was tot 30-08-2026 een aankoop zonder gevolg
+
+`apply_paid_plan()` zette `boosted_until` netjes, maar **niets op de site las
+die kolom**: de sorteeroptie "Featured" (de standaard!) had geen enkele regel,
+en `fetchFeaturedListings()` keek er niet naar. Wie D2.500 betaalde voor "top of
+search results and featured on the homepage" kreeg letterlijk niets. Nu wel:
+`mkIsBoosted()` in `app.js` is de enige bron voor "loopt er nu een Boost",
+`filtered()` in `search.html` sorteert er als eerste op, en
+`fetchFeaturedListings()` haalt de gebooste advertenties in een aparte query op
+zodat ze niet buiten de nieuwste vier vallen.
+
+Let op de andere kant hiervan: het Verified-vinkje (`is_verified_title`) gaat er
+**niet** vanzelf af als `verified_until` verstrijkt — dat zet een medewerker met
+de hand via admin.html. Schrijf dus nergens dat het vinkje verdwijnt.
 
 ### Poorten op de notify-functies
 
 | functie | poort |
 | --- | --- |
 | `notify-payment`, `notify-fulfilment`, `notify-listing-status` | `x-notify-key` = `NOTIFY_SHARED_KEY` (staat in de kluis als `notify_shared_key`, de triggers lezen hem daaruit) |
+| `notify-saved-search`, `notify-plan-expiry` | `x-notify-key`; gewekt door pg_cron via `run_saved_search_alerts()` (08:00) en `run_plan_expiry_notices()` (08:30), die de sleutel uit de kluis halen. Allebei ondersteunen `{"dry_run":true}` |
 | `notify-listing` | `x-notify-key`, óf een ingelogde gebruiker die eigenaar is van de listing |
 | `wa-notify` | `x-notify-key` verplicht — zonder secret weigert hij **alles** |
 | `wa-inbound` | `WA_APP_SECRET` verplicht (handtekening) en `WA_VERIFY_TOKEN` verplicht (geen terugval meer) |
