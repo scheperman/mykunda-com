@@ -128,14 +128,22 @@ function nearbyBlock(l: ListingInput): string {
 export function listingConfirmationEmail(listing: ListingInput): string {
   const fname = listing.name ? esc(String(listing.name).trim().split(' ')[0]) : '';
   const isBasic = (listing.plan || 'basic') === 'basic';
+  /* Gecorrigeerd 30-08-2026. Hier stond voor een basic-advertentie "Your
+     listing is live and buyers can find it right now". Dat was niet waar:
+     createListing() en submitForReview() zetten élke advertentie op
+     `pending_review`, en de select-policy op listings laat alleen `active` en
+     `under_offer` aan het publiek zien. De verkoper kreeg dus te horen dat hij
+     live stond terwijl niemand hem kon vinden — en hoorde daarna nooit meer
+     iets, want er ging geen mail uit bij goedkeuring. Die mail bestaat nu
+     wel (notify-listing-status); deze mail belooft niet langer iets anders. */
   const statusMsg = isBasic
-    ? 'Your listing is <strong>live</strong> and buyers can find it right now.'
-    : 'Your listing has been <strong>submitted for review</strong>. Our team checks your documents within 1–2 working days and the badge goes live as soon as that is done.';
+    ? 'Your listing is <strong>with our team</strong> for a quick check. That is usually done within one working day, and you get an email the moment it goes live.'
+    : 'Your listing has been <strong>submitted for review</strong>. Our team checks your documents within 1–2 working days; you get an email as soon as it is live, with the badge on it.';
 
   return emailWrap({
-    heading: fname ? `Thank you, ${fname} — your listing is confirmed` : 'Your listing is confirmed',
+    heading: fname ? `Thank you, ${fname} — we have your listing` : 'We have your listing',
     preheader: isBasic
-      ? `${listing.title || 'Your property'} is live on MyKunda.`
+      ? `${listing.title || 'Your property'} is being checked — usually within one working day.`
       : `${listing.title || 'Your property'} is submitted for review — 1–2 working days.`,
     body: `<p style="margin:0 0 16px">${statusMsg}</p>
       ${detailTable(detailRows(listing))}
@@ -145,15 +153,90 @@ export function listingConfirmationEmail(listing: ListingInput): string {
       <div style="border-top:1px solid ${BRAND.line};margin-top:24px;padding-top:16px">
         <p style="font-size:14.5px;color:${BRAND.ink2};margin:0"><strong>What happens next</strong></p>
         <ul style="padding-left:18px;margin:10px 0 0;color:${BRAND.ink2};font-size:14px;line-height:1.75">
-          <li>Buyers find your listing on MyKunda and send enquiries</li>
-          <li>You get an email every time someone asks about your property</li>
+          <li>We check the details and the photos${isBasic ? '' : ', and the documents you uploaded'}</li>
+          <li>You get an email the moment it is live — or, if something is missing, what we need from you</li>
+          <li>After that, buyers find it and you get an email every time someone asks about it</li>
           <li>Edit, pause or remove it any time from <a href="${BRAND.site}/dashboard.html" style="color:${BRAND.green};font-weight:700">My MyKunda</a></li>
         </ul>
       </div>
-      <p style="margin:18px 0 0;font-size:14px;color:${BRAND.muted}">Something not right in the details above? Reply to this email and we will correct it.</p>`,
-    cta: listing.id ? 'View your listing' : 'Go to My MyKunda',
-    ctaUrl: listing.id ? `${BRAND.site}/property.html?id=${encodeURIComponent(String(listing.id))}` : `${BRAND.site}/dashboard.html`,
-    footer: 'You received this because you published a listing on mykunda.com.',
+      <p style="margin:18px 0 0;font-size:14px;color:${BRAND.muted}">Something not right in the details above? Reply to this email and we will correct it before it goes live.</p>`,
+    cta: 'Go to My MyKunda',
+    ctaUrl: `${BRAND.site}/dashboard.html`,
+    footer: 'You received this because you submitted a listing on mykunda.com.',
+  });
+}
+
+/* ---------- levensloop: live, afgewezen, uit de lucht ----------
+   Nieuw op 30-08-2026. Van de zes momenten in het leven van een advertentie —
+   ingediend, in behandeling, goedgekeurd, afgewezen, live, verlopen — leverde
+   er tot nu toe precies één een mail op: het indienen. De verkoper kreeg de
+   belofte "usually within one working day" en hoorde daarna nooit meer iets;
+   hij moest zelf gaan kijken. Voor een betalende Verified-klant is dat het
+   scenario dat klachten oplevert, en bij "uit de lucht" liet het bovendien
+   herhaalomzet liggen. Deze drie sjablonen vullen dat gat. */
+
+export function listingLiveEmail(listing: ListingInput): string {
+  const fname = listing.name ? esc(String(listing.name).trim().split(' ')[0]) : '';
+  const what = listing.title
+    ? `<strong>${esc(listing.title)}</strong>${listing.area ? ' · ' + esc(listing.area) : ''}`
+    : 'your property';
+  const verified = (listing.plan || 'basic') !== 'basic';
+  const url = listing.id
+    ? `${BRAND.site}/property.html?id=${encodeURIComponent(String(listing.id))}`
+    : `${BRAND.site}/dashboard.html`;
+  return emailWrap({
+    heading: fname ? `${fname}, your listing is live` : 'Your listing is live',
+    preheader: `${listing.title || 'Your property'} is now on MyKunda and buyers can find it.`,
+    body: `<p style="margin:0 0 14px">We have checked ${what} and it is <strong>live on MyKunda</strong>. Buyers across The Gambia and the diaspora can find it from now on.</p>
+      ${verified ? callout(`<p style="font-size:14px;color:${BRAND.ink};margin:0"><strong>Your badge is on it.</strong> Buyers see that the documents behind this listing have been checked — that is what gets a serious enquiry rather than a browse.</p>`, 'green') : ''}
+      ${detailTable(detailRows(listing))}
+      <div style="border-top:1px solid ${BRAND.line};margin-top:24px;padding-top:16px">
+        <p style="font-size:14.5px;color:${BRAND.ink2};margin:0"><strong>Getting the most out of it</strong></p>
+        <ul style="padding-left:18px;margin:10px 0 0;color:${BRAND.ink2};font-size:14px;line-height:1.75">
+          <li>Answer enquiries the same day — that is the single thing that sells</li>
+          <li>Share the link on WhatsApp and Facebook; it works as a preview card</li>
+          <li>Keep the price and the availability current from <a href="${BRAND.site}/dashboard.html" style="color:${BRAND.green};font-weight:700">My MyKunda</a></li>
+        </ul>
+      </div>`,
+    cta: 'View your listing',
+    ctaUrl: url,
+    footer: 'You received this because you submitted a listing on mykunda.com.',
+  });
+}
+
+export function listingRejectedEmail(listing: ListingInput & { reason?: string }): string {
+  const fname = listing.name ? esc(String(listing.name).trim().split(' ')[0]) : '';
+  const what = listing.title
+    ? `<strong>${esc(listing.title)}</strong>${listing.area ? ' · ' + esc(listing.area) : ''}`
+    : 'your property';
+  return emailWrap({
+    heading: fname ? `${fname}, we need a bit more before this goes live` : 'We need a bit more before this goes live',
+    preheader: `${listing.title || 'Your listing'} is not live yet — here is what we need.`,
+    body: `<p style="margin:0 0 14px">We looked at ${what} and cannot put it live as it stands. Nothing is lost: the listing is waiting in your dashboard and one edit is usually enough.</p>
+      ${listing.reason
+        ? callout(`<p style="font-size:14px;color:${BRAND.ink};margin:0"><strong>What we need:</strong> ${escLines(listing.reason)}</p>`)
+        : callout(`<p style="font-size:14px;color:${BRAND.ink};margin:0">Reply to this email and we will tell you exactly what is missing — usually it is a photo that is too small, a price that looks like a typo, or a document we could not read.</p>`)}
+      <p style="margin:16px 0 0">Open the listing, make the change, and submit it again. We look at it the same working day.</p>
+      <p style="margin:16px 0 0;font-size:14px;color:${BRAND.muted}">Think we have this wrong? Reply to this email — a person reads it.</p>`,
+    cta: 'Open your listing',
+    ctaUrl: `${BRAND.site}/dashboard.html`,
+    footer: 'You received this because you submitted a listing on mykunda.com.',
+  });
+}
+
+export function listingArchivedEmail(listing: ListingInput): string {
+  const fname = listing.name ? esc(String(listing.name).trim().split(' ')[0]) : '';
+  const what = listing.title
+    ? `<strong>${esc(listing.title)}</strong>${listing.area ? ' · ' + esc(listing.area) : ''}`
+    : 'your property';
+  return emailWrap({
+    heading: fname ? `${fname}, your listing has come off MyKunda` : 'Your listing has come off MyKunda',
+    preheader: `${listing.title || 'Your listing'} is no longer shown to buyers.`,
+    body: `<p style="margin:0 0 14px">${what} is no longer shown to buyers. Everything you entered is still there — photos, documents and all — so putting it back takes a moment.</p>
+      <p style="margin:16px 0 0">Still for sale or to let? Open it in My MyKunda and publish it again. Sold or let through MyKunda? We would like to know: it is the only way we can tell buyers what property really goes for in your area.</p>`,
+    cta: 'Open My MyKunda',
+    ctaUrl: `${BRAND.site}/dashboard.html`,
+    footer: 'You received this because you submitted a listing on mykunda.com.',
   });
 }
 
@@ -162,12 +245,16 @@ export function listingConfirmationEmail(listing: ListingInput): string {
 export function listingBackofficeEmail(listing: ListingInput): string {
   const plan = listing.plan || 'basic';
   const needsReview = plan !== 'basic';
+  /* De kop stond op "New listing published" terwijl elke advertentie op
+     `pending_review` binnenkomt en dus juist NIET gepubliceerd is. Bij een
+     betaald plan sprak hij bovendien de eigen onderwerpregel tegen
+     (⚡ Action required). Beide gecorrigeerd 30-08-2026. */
   return emailWrap({
-    heading: 'New listing published',
+    heading: 'New listing awaiting review',
     preheader: `${PLAN_LABELS[plan] || plan} · ${listing.title || 'Untitled'} · ${listing.area || 'The Gambia'}`,
     body: `${needsReview
-      ? callout(`<p style="font-size:14px;color:${BRAND.ink};margin:0"><strong>Action required.</strong> ${plan === 'managed' ? 'Managed' : 'Verified'} listing — documents need review and approval before the badge goes live.</p>`)
-      : ''}
+      ? callout(`<p style="font-size:14px;color:${BRAND.ink};margin:0"><strong>Action required.</strong> ${plan === 'managed' ? 'Managed' : 'Verified'} listing — check the documents, then set it to <strong>active</strong>. The seller is emailed automatically when you do.</p>`)
+      : callout(`<p style="font-size:14px;color:${BRAND.ink};margin:0"><strong>Waiting on you.</strong> Nobody can see this listing until it is set to <strong>active</strong>. The seller is emailed automatically when you do.</p>`)}
       ${sectionLabel('Property')}
       ${detailTable(([['ID', escOpt(listing.id)], ['Status', escOpt(listing.status)]] as [string, unknown][]).concat(detailRows(listing)))}
       ${featureChips(listing)}

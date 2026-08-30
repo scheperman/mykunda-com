@@ -2,22 +2,52 @@
 // Deploy: supabase functions deploy wa-notify --no-verify-jwt
 //
 // Sends a WhatsApp message via the Meta Cloud API (WhatsApp Business Platform).
-// Called from other Edge Functions (notify-lead, notify-viewing) when the
-// recipient's notification_prefs.channel is 'whatsapp' or 'both'.
+// De enige aanroeper is op dit moment wa-inbound: de auto-reply op een
+// binnenkomend bericht en de twee meldingen rond nummerverificatie. De oude
+// kopregel noemde notify-lead en notify-viewing op basis van
+// notification_prefs.channel — die code bestaat niet (meer) in beide functies.
+//
+// *** POORT — 30-08-2026 ***
+// Deze functie controleerde niets. verify_jwt staat uit (nodig voor de
+// preflight) en de handler begon meteen met req.json(): wie de URL kende, kon
+// dus onbeperkt WhatsApp-berichten sturen naar willekeurige nummers vanaf het
+// geverifieerde MyKunda-bedrijfsnummer. Spam en phishing onder het merk, en
+// blokkade door Meta als sluitstuk. Nu is een gedeelde sleutel verplicht —
+// dezelfde als notify-payment en notify-fulfilment gebruiken.
+// Let op: staat NOTIFY_SHARED_KEY niet, dan weigert deze functie álles. Dat is
+// hier bewust anders dan bij de mailfuncties: een open relay naar een
+// telefoonnummer is erger dan een melding die niet aankomt.
 //
 // Required secrets:
 //   WA_PHONE_NUMBER_ID  — from Meta Business → WhatsApp → Phone Numbers
 //   WA_ACCESS_TOKEN     — permanent System User token with whatsapp_business_messaging permission
+//   NOTIFY_SHARED_KEY   — dezelfde sleutel als de notify-functies
 //
 // Body: { to: "+2201234567", template: "lead_notification", params: ["Fatou Njie", "Beachfront Villa"] }
 //   OR: { to: "+2201234567", text: "Plain text message" }
+// Header: x-notify-key: <NOTIFY_SHARED_KEY>
 
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 
 const WA_API = "https://graph.facebook.com/v21.0";
+const SHARED_KEY = Deno.env.get("NOTIFY_SHARED_KEY") || "";
+
+function sameKey(a: string, b: string): boolean {
+  if (!a || !b || a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
 
 serve(async (req) => {
   try {
+    if (!SHARED_KEY || !sameKey(req.headers.get("x-notify-key") ?? "", SHARED_KEY)) {
+      return new Response(JSON.stringify({ error: "unauthorized" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
     const { to, template, params, text } = await req.json();
     const phoneId = Deno.env.get("WA_PHONE_NUMBER_ID");
     const token = Deno.env.get("WA_ACCESS_TOKEN");
@@ -52,7 +82,7 @@ serve(async (req) => {
           name: template,
           language: { code: "en" },
           components: params && params.length
-            ? [{ type: "body", parameters: params.map((p) => ({ type: "text", text: String(p) })) }]
+            ? [{ type: "body", parameters: (params as unknown[]).map((p: unknown) => ({ type: "text", text: String(p) })) }]
             : [],
         },
       };

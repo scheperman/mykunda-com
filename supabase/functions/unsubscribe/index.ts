@@ -22,13 +22,28 @@ const SITE = "https://mykunda.com";
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-function page(title: string, body: string, showForm: string | null = null, status = 200) {
+/* De voornaam uit profiles.full_name kwam hier tot 30-08-2026 ongefilterd in
+   de <title> en de <h1>. Een gebruiker zet zijn eigen naam, dus een naam zonder
+   spaties met een tag erin voerde script uit op het functions-domein.
+   email-template.ts gebruikt overal esc(); deze functie importeert die helpers
+   niet, dus staat hij hier. */
+function esc(v: unknown): string {
+  return String(v ?? "")
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
+/* backOn: het token, als de pagina ook een "weer aanzetten"-knop moet tonen.
+   Er was tot 30-08-2026 geen weg terug via deze link — alleen inloggen op het
+   dashboard. Voor iemand die zich uitschreef juist omdát hij niet kon inloggen,
+   was dat een doodlopende weg. */
+function page(title: string, body: string, showForm: string | null = null, status = 200, backOn: string | null = null) {
   const html = `<!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>${title} — MyKunda</title>
+<title>${esc(title)} — MyKunda</title>
 <style>
   body{margin:0;background:#F3F0E8;color:#18201D;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Helvetica,Arial,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px}
   .card{background:#fff;border:1px solid #EDE9DF;border-radius:14px;padding:36px 34px;max-width:520px;width:100%}
@@ -38,9 +53,10 @@ function page(title: string, body: string, showForm: string | null = null, statu
   a.link{color:#15463A;font-weight:700;text-decoration:none}
   .muted{font-size:13px;color:#8A958E}
 </style></head><body><div class="card">
-<h1>${title}</h1>
+<h1>${esc(title)}</h1>
 ${body}
 ${showForm ? `<form method="POST" action="?t=${showForm}"><button type="submit">Turn off these emails</button></form>` : ""}
+${backOn ? `<form method="POST" action="?t=${backOn}&amp;on=1"><button type="submit" style="background:#fff;color:#15463A;border:1px solid #15463A">Turn them back on</button></form>` : ""}
 <p class="muted" style="margin-top:18px">You can change this any time in <a class="link" href="${SITE}/dashboard.html">My MyKunda</a>.</p>
 </div></body></html>`;
   return new Response(html, {
@@ -73,23 +89,33 @@ serve(async (req) => {
     const name = profile.full_name ? String(profile.full_name).trim().split(" ")[0] : "";
 
     if (req.method === "POST") {
+      const weerAan = url.searchParams.get("on") === "1";
       const { error } = await db
         .from("profiles")
-        .update({ notify_messages: false })
+        .update({ notify_messages: weerAan })
         .eq("id", profile.id);
       if (error) throw new Error(error.message);
+
+      if (weerAan) {
+        return page(
+          name ? `Back on, ${name}` : "Back on",
+          `<p>You will get an email again when someone sends you a message on MyKunda.</p>`,
+        );
+      }
 
       return page(
         name ? `Done, ${name}` : "Done",
         `<p>You will no longer get an email when someone sends you a message on MyKunda.</p>
          <p>Your conversations keep working — new messages are still waiting for you in <a class="link" href="${SITE}/messages.html">Messages</a>. Emails about viewings, listings and payments are unaffected.</p>`,
+        null, 200, token,
       );
     }
 
     if (!profile.notify_messages) {
       return page(
         "Already turned off",
-        `<p>Message emails are already off for this account. Nothing to do.</p>`,
+        `<p>Message emails are already off for this account. Changed your mind?</p>`,
+        null, 200, token,
       );
     }
 

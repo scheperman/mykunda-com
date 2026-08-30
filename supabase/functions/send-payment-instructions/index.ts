@@ -361,11 +361,18 @@ Deno.serve(async (req: Request) => {
   if (betaling.method !== "bank_transfer") return json({ error: "not_a_bank_transfer" }, 400, headers);
   if (betaling.status !== "pending") return json({ error: "payment_not_open", status: betaling.status }, 409, headers);
 
-  // Niet eindeloos opnieuw kunnen versturen.
+  /* Niet eindeloos opnieuw kunnen versturen — maar tel alleen wat er ECHT uit
+     is gegaan. Tot 30-08-2026 telde deze query ook de mislukte pogingen mee:
+     de logregel wordt namelijk geschreven ongeacht de uitkomst, met
+     payload.ok op false. Vijf Resend-fouten op rij — een storing van een half
+     uur is genoeg — en de klant kreeg voorgoed 429 terwijl hij nul mails had
+     ontvangen en zijn betaalreferentie kwijt was. Dat is precies de klant die
+     dit endpoint nodig heeft. Nu telt alleen ok:true mee. */
   const { count } = await admin.from("email_events")
     .select("id", { count: "exact", head: true })
     .eq("event_type", "payment_instructions")
-    .eq("payload->>reference", ref);
+    .eq("payload->>reference", ref)
+    .eq("payload->>ok", "true");
   if ((count ?? 0) >= MAX_MAILS) {
     return json({ error: "sent_too_often", max: MAX_MAILS }, 429, headers);
   }

@@ -228,6 +228,36 @@ function paymentFailedEmail(p: PaymentInfo, outcome: string): string {
   });
 }
 
+/* Terugbetaling. Nieuw op 30-08-2026.
+   'refunded' viel bewust buiten de trigger, met als reden: "een terugbetaling
+   is boekhoudkundig werk met een eigen bericht, geen automatische bon". Dat
+   eigen bericht was alleen nooit gebouwd, en payment_refunds_sync_status() zet
+   de status om zonder enige melding. De klant kreeg zijn geld terug zonder één
+   regel schriftelijk — en de backoffice had achteraf geen spoor per mail.
+   Dit is geen bon: het is een bevestiging dat het geld onderweg is, met de
+   termijn die banken en wallets in de praktijk nemen. */
+function paymentRefundEmail(p: PaymentInfo, refundAmount?: string): string {
+  const fname = p.name ? esc(String(p.name).trim().split(" ")[0]) : "";
+  const bedrag = refundAmount || p.amount;
+  const perBank = /bank/i.test(String(p.method));
+  return emailWrap({
+    heading: "Your refund is on its way",
+    preheader: `${bedrag} is being returned to you — reference ${p.reference}.`,
+    body: `<p style="margin:0 0 16px">Thanks${fname ? ", " + fname : ""} — we have refunded <strong>${esc(bedrag)}</strong> for <strong>${esc(p.plan)}</strong>. It goes back to the ${perBank ? "account you transferred from" : "same method you paid with"}.</p>
+      ${detailTable([
+        ["Reference", `<strong>${esc(p.reference)}</strong>`],
+        ["Service", esc(p.plan)],
+        ["Refunded", `<strong>${esc(bedrag)}</strong>`],
+        ["Back to", esc(p.method)],
+      ])}
+      ${callout(`<p style="font-size:14px;color:${BRAND.ink};margin:0"><strong>When you will see it.</strong> Mobile money is usually the same day. A card refund takes ${"5 to 10 working days"} to appear on your statement, and a bank transfer depends on your bank. If it has not arrived after that, reply to this email with your reference and we will chase it.</p>`)}
+      <p style="margin:16px 0 0;font-size:14px;color:${BRAND.muted}">Keep this email: together with your original receipt it is the full record of this order.</p>`,
+    cta: "See this order",
+    ctaUrl: `https://mykunda.com/betaling-status.html?ref=${encodeURIComponent(p.reference)}`,
+    footer: "You received this because you paid for a service on mykunda.com.",
+  });
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
 
@@ -269,11 +299,63 @@ serve(async (req) => {
     // backoffice, daarna klaar. De bon-route hieronder blijft ongemoeid.
     const outcome = String(p.outcome ?? "").toLowerCase();
 
+    /* Terugbetaling: eigen bericht aan de klant, eigen melding aan de
+       backoffice. Zie de notitie bij paymentRefundEmail. */
+    if (outcome === "refunded") {
+      const refundBedrag = typeof p.refund_amount === "string" ? p.refund_amount : undefined;
+
+      const teamOnderwerp = `[MyKunda] Refund sent — ${info.plan} · ${info.reference}`;
+      try {
+        const uit = await sendEmail(
+          LEAD_EMAIL,
+          teamOnderwerp,
+          paymentRefundEmail(info, refundBedrag),
+          info.email || undefined,
+        );
+        sent.team = true;
+        await logMail({
+          eventType: "payment_backoffice", recipient: LEAD_EMAIL, subject: teamOnderwerp,
+          ok: true, resendId: uit?.id ?? null, extra: { ...logExtra, outcome },
+        });
+      } catch (e) {
+        errors.push(`team: ${(e as Error).message}`);
+        await logMail({
+          eventType: "payment_backoffice", recipient: LEAD_EMAIL, subject: teamOnderwerp,
+          ok: false, reason: (e as Error).message, extra: { ...logExtra, outcome },
+        });
+      }
+
+      if (info.email) {
+        const onderwerp = `Your refund — ${info.plan} — MyKunda`;
+        try {
+          const uit = await sendEmail(info.email, onderwerp, paymentRefundEmail(info, refundBedrag), LEAD_EMAIL);
+          sent.receipt = true;
+          await logMail({
+            eventType: "payment_refund_notice", recipient: info.email, subject: onderwerp,
+            ok: true, resendId: uit?.id ?? null,
+            extra: { ...logExtra, outcome, address_source: bron.source },
+          });
+        } catch (e) {
+          errors.push(`klant: ${(e as Error).message}`);
+          await logMail({
+            eventType: "payment_refund_notice", recipient: info.email, subject: onderwerp,
+            ok: false, reason: (e as Error).message,
+            extra: { ...logExtra, outcome, address_source: bron.source },
+          });
+        }
+      }
+
+      return json({ ok: errors.length === 0, outcome, sent, errors }, errors.length ? 502 : 200);
+    }
+
     if (FAILED_OUTCOMES.includes(outcome)) {
       {
         const onderwerp = `[MyKunda] ${OUTCOME_LABELS[outcome]} — ${info.plan} · ${info.reference}`;
         try {
-          const uit = await sendEmail(LEAD_EMAIL, onderwerp, paymentBackofficeEmail(info), info.email || undefined);
+          // outcome gaat mee: zonder die parameter kreeg de backoffice bij een
+          // MISLUKTE betaling een groene "Payment received / Status: Paid /
+          // Activate this order"-mail. Zie de notitie bij paymentBackofficeEmail.
+          const uit = await sendEmail(LEAD_EMAIL, onderwerp, paymentBackofficeEmail(info, outcome as "failed" | "cancelled" | "expired"), info.email || undefined);
           sent.team = true;
           await logMail({
             eventType: "payment_backoffice", recipient: LEAD_EMAIL, subject: onderwerp,

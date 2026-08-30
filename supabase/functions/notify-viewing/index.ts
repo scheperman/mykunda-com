@@ -4,11 +4,13 @@
 //  propose_viewing() writes status 'proposed', respond_viewing() 'confirmed'
 //  or 'declined', cancel_viewing() 'cancelled'. Same table and same joins as
 //  notify-viewing-reminder, so both functions stay in step.
-//  Four moments, five branded emails:
+//  Vier momenten, zeven branded e-mails:
 //   · someone proposes times    → team notification
 //                               + confirmation to the proposer
 //                               + the proposed times to the other party
 //   · the other party accepts   → confirmation to the proposer
+//   · the other party declines  → "other times needed" to the proposer
+//                               + a short notice to the team   (30-08-2026)
 //   · someone cancels           → email to the other party
 //                               + a short notice to the team
 //
@@ -19,7 +21,7 @@
 // ============================================================
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { viewingNotificationEmail, viewingConfirmationEmail, viewingConfirmedEmail, viewingSlotsEmail, viewingCancelledEmail, viewingCancelledBackofficeEmail, toText } from "../_shared/email-template.ts";
+import { viewingNotificationEmail, viewingConfirmationEmail, viewingConfirmedEmail, viewingSlotsEmail, viewingCancelledEmail, viewingCancelledBackofficeEmail, viewingDeclinedEmail, toText } from "../_shared/email-template.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY")!;
 const FROM_EMAIL     = Deno.env.get("FROM_EMAIL") ?? "MyKunda <noreply@mykunda.com>";
@@ -40,6 +42,13 @@ const cors = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+function json(body: unknown, status = 200) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { ...cors, "Content-Type": "application/json" },
+  });
+}
+
 async function sendEmail(to: string, subject: string, html: string, replyTo?: string) {
   const body: Record<string, unknown> = { from: FROM_EMAIL, to: [to], subject, html, text: toText(html) };
   if (replyTo) body.reply_to = replyTo;
@@ -59,13 +68,14 @@ async function sendEmail(to: string, subject: string, html: string, replyTo?: st
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   try {
-    const { viewing_id } = await req.json();
+    const { viewing_id } = await req.json().catch(() => ({}));
+    if (!viewing_id) return json({ ok: false, error: "missing viewing_id" }, 400);
     const db = createClient(SUPABASE_URL, SERVICE_KEY);
     const { data: v, error } = await db
       .from("viewings")
       .select("id, conversation_id, listing_id, proposer_id, invitee_id, status, slots, chosen_slot, note, cancelled_by, cancel_reason")
       .eq("id", viewing_id).single();
-    if (error || !v) throw new Error("viewing not found");
+    if (error || !v) return json({ ok: false, error: "viewing not found" }, 404);
 
     const { data: listing } = await db
       .from("listings").select("title, area").eq("id", v.listing_id).single();
@@ -146,12 +156,56 @@ serve(async (req) => {
           await sendEmail(
             invitee.email,
             `New viewing times for ${title} — MyKunda`,
-            viewingSlotsEmail({ title, proposed_slots: slots }),
+            viewingSlotsEmail({ title, proposed_slots: slots, conversation_id: convId }),
             LEAD_EMAIL,
           );
           sent.invitee = true;
         } catch (e) { errors.push(`invitee: ${(e as Error).message}`); }
       }
+    } else if (v.status === "declined") {
+      /* Nieuw op 30-08-2026. respond_viewing() zet deze status zodra de
+         uitgenodigde partij geen van de tijden kan, en schrijft er een bericht
+         bij in de conversatie. Er ging hier tot nu toe geen enkele mail uit:
+         de aanvrager moest toevallig het gesprek openen om te zien dat zijn
+         voorstel was afgewezen. De functie meldde daarbij ook nog 200 ok:true
+         met drie keer false, dus monitoring zag het evenmin. */
+      const decliner = invitee;
+      if (proposer.email) {
+        try {
+          await sendEmail(
+            proposer.email,
+            `Other times needed for ${title} — MyKunda`,
+            viewingDeclinedEmail({
+              recipient_name: proposer.name,
+              decliner_name: decliner.name,
+              title: listing?.title ?? undefined,
+              area,
+              proposed_slots: slots,
+              conversation_id: convId,
+            }),
+            LEAD_EMAIL,
+          );
+          sent.proposer = true;
+        } catch (e) { errors.push(`proposer: ${(e as Error).message}`); }
+      }
+
+      // → korte interne melding: een afwijzing die blijft liggen is een
+      //   bezichtiging die nooit doorgaat, en dat wil de backoffice zien.
+      try {
+        await sendEmail(
+          LEAD_EMAIL,
+          `[MyKunda] Viewing times declined — ${listing?.title ?? "MyKunda"}`,
+          viewingDeclinedEmail({
+            decliner_name: decliner.name,
+            title: listing?.title ?? undefined,
+            area,
+            proposed_slots: slots,
+            conversation_id: convId,
+          }),
+          proposer.email || undefined,
+        );
+        sent.team = true;
+      } catch (e) { errors.push(`team: ${(e as Error).message}`); }
     } else if (v.status === "confirmed" && proposer.email) {
       // The invitee picked a time in the dashboard — the proposer only hears it here.
       try {
@@ -227,10 +281,11 @@ serve(async (req) => {
       headers: { ...cors, "Content-Type": "application/json" },
     });
   } catch (e) {
+    /* Stond tot 30-08-2026 op 400. Een databasestoring of een ontbrekende
+       service key kwam daardoor terug als "Bad Request", en wie 4xx leest als
+       "niet opnieuw proberen" gooide die gevallen permanent weg. Onbekende
+       fouten horen 500 te zijn; 400 en 404 worden hierboven expliciet gegeven. */
     console.error("notify-viewing error:", e);
-    return new Response(JSON.stringify({ ok: false, error: String(e) }), {
-      status: 400,
-      headers: { ...cors, "Content-Type": "application/json" },
-    });
+    return json({ ok: false, error: String((e as Error)?.message ?? e) }, 500);
   }
 });

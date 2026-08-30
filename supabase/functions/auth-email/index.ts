@@ -39,7 +39,7 @@
 // ============================================================
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { authLinkEmail, authCodeEmail } from "../_shared/email-template.ts";
+import { authLinkEmail, authCodeEmail, toText } from "../_shared/email-template.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY")!;
 const FROM_EMAIL     = Deno.env.get("FROM_EMAIL") ?? "MyKunda <noreply@mykunda.com>";
@@ -86,10 +86,14 @@ async function sendEmail(to: string, subject: string, html: string): Promise<{ s
     console.warn(`auth-email: geweigerd, gereserveerd testdomein — ${to}`);
     return { skipped: true, id: null };
   }
+  /* De platte-tekstvariant ontbrak hier als enige van alle mailfuncties, en
+     uitgerekend dit zijn de mails die MOETEN aankomen: de inlogcode en de
+     wachtwoord-reset. Een mail zonder text/plain scoort meetbaar slechter bij
+     spamfilters en is onleesbaar in tekstclients. (30-08-2026) */
   const r = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { "Authorization": `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ from: FROM_EMAIL, to, subject, html }),
+    body: JSON.stringify({ from: FROM_EMAIL, to, subject, html, text: toText(html) }),
   });
   if (!r.ok) {
     const errText = await r.text();
@@ -157,6 +161,8 @@ function callerIp(req: Request): string {
  * Valt de database weg, dan zakken we terug op de geheugen-throttle hierboven:
  * een kapotte rate limit mag inloggen nooit onmogelijk maken.
  */
+type RateVerdict = { ok: true } | { ok: false; bucket: "key" | "ip"; retryAfter: number };
+
 async function maySend(
   admin: any,
   key: string,
@@ -164,29 +170,53 @@ async function maySend(
   windowSeconds = 60,
   maxHits = 1,
   ipMaxHits = 20,
-): Promise<boolean> {
+): Promise<RateVerdict> {
   try {
-    const perKey = await admin.rpc("claim_auth_email_rate", {
-      p_bucket: `key:${key}`, p_window_seconds: windowSeconds, p_max_hits: maxHits,
-    });
-    if (perKey.error) throw perKey.error;
-    if (perKey.data !== true) return false;
-
+    /* De IP-emmer gaat sinds 30-08-2026 EERST. Andersom werd de adres-emmer
+       al verbruikt terwijl het verzoek daarna alsnog op de IP-emmer strandde:
+       de bezoeker was dan twee emmers kwijt voor nul mails. */
     const perIp = await admin.rpc("claim_auth_email_rate", {
       p_bucket: ipBucket, p_window_seconds: IP_WINDOW_SECONDS, p_max_hits: ipMaxHits,
     });
     if (perIp.error) throw perIp.error;
-    return perIp.data === true;
+    if (perIp.data !== true) return { ok: false, bucket: "ip", retryAfter: IP_WINDOW_SECONDS };
+
+    const perKey = await admin.rpc("claim_auth_email_rate", {
+      p_bucket: `key:${key}`, p_window_seconds: windowSeconds, p_max_hits: maxHits,
+    });
+    if (perKey.error) throw perKey.error;
+    if (perKey.data !== true) return { ok: false, bucket: "key", retryAfter: windowSeconds };
+    return { ok: true };
   } catch (e) {
     console.error("claim_auth_email_rate niet beschikbaar, terugval op geheugen-throttle:", String((e as Error)?.message ?? e));
-    return !throttled(key, windowSeconds * 1000);
+    return throttled(key, windowSeconds * 1000)
+      ? { ok: false, bucket: "key", retryAfter: windowSeconds }
+      : { ok: true };
   }
+}
+
+/* Eén tekst voor beide emmers, met de termijn die er écht bij hoort. De
+   melding stond hardgecodeerd op 20 seconden, terwijl dezelfde weigering ook
+   uit de IP-emmer kan komen — en die loopt over een uur. Achter de CGNAT van
+   de Gambiaanse providers deelt een hele wijk één IP, dus dat is niet
+   theoretisch: iemand las "probeer over 20 seconden opnieuw" en bleef een uur
+   lang op een knop drukken die niets deed. */
+function rateMessage(v: Extract<RateVerdict, { ok: false }>): string {
+  return v.bucket === "ip"
+    ? "Too many sign-in requests from your network in the past hour. Wait a while and try again, or use a different connection."
+    : `You just asked for a code. Check your inbox and spam folder, then try again in ${v.retryAfter} seconds.`;
 }
 
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   try {
-    const { type, email, password, next, name, mode, consent, consent_marketing } = await req.json();
+    /* `password` wordt sinds 30-08-2026 NIET meer uit de body gelezen. Dit is
+       een open, ongeauthenticeerd endpoint: wie het adres van een ander opgaf,
+       kon daarmee een wachtwoord zetten op een bestaand-maar-onbevestigd
+       account. De site heeft bovendien geen wachtwoord-login meer — er is dus
+       ook geen reden om er een te aanvaarden. Elk account dat hier ontstaat
+       krijgt een willekeurig wachtwoord dat niemand kent. */
+    const { type, email, next, name, mode, consent, consent_marketing } = await req.json();
     if (!type || !email) throw new Error("type and email are required");
     // 'signup' wordt bewust niet meer geaccepteerd: die route is nooit op de
     // UI aangesloten (de aanmeldtab gebruikt email_code) en een open,
@@ -220,7 +250,8 @@ serve(async (req) => {
       const ipBucket = authMode === "signin" ? `ip:signin:${ip}` : `ip:signup:${ip}`;
       const ipMax    = authMode === "signin" ? IP_MAX_SIGNIN : IP_MAX_SIGNUP;
 
-      if (!(await maySend(admin, `email_code:${email}`, ipBucket, CODE_WINDOW_SECONDS, 1, ipMax))) {
+      const codeRate = await maySend(admin, `email_code:${email}`, ipBucket, CODE_WINDOW_SECONDS, 1, ipMax);
+      if (!codeRate.ok) {
         // Eerlijk zijn. Deze route verraadt via no_account/already_exists toch al
         // of een adres bestaat, dus hier valt niets te verbergen — en een scherm
         // dat "we hebben een code gestuurd" zegt terwijl dat niet zo is, is het
@@ -229,8 +260,8 @@ serve(async (req) => {
         return json({
           ok: false,
           rate_limited: true,
-          retry_after: CODE_WINDOW_SECONDS,
-          error: `You just asked for a code. Check your inbox and spam folder, then try again in ${CODE_WINDOW_SECONDS} seconds.`,
+          retry_after: codeRate.retryAfter,
+          error: rateMessage(codeRate),
         });
       }
 
@@ -270,7 +301,7 @@ serve(async (req) => {
         if (consent === true) meta.consent_contact = true;
         if (consent_marketing === true) meta.consent_marketing = true;
         res = await admin.auth.admin.generateLink({
-          type: "signup", email, password: password || crypto.randomUUID(),
+          type: "signup", email, password: crypto.randomUUID(),
           options: { data: meta, redirectTo: SITE_URL + "/auth.html" },
         } as any);
       }
@@ -285,13 +316,40 @@ serve(async (req) => {
         resend_email_id: sent.id,
         payload: { mode: authMode, verify_type: verifyType, skipped: sent.skipped },
       });
+      /* Overgeslagen is niet verstuurd. Bij een gereserveerd testdomein gaf
+         deze regel tot 30-08-2026 gewoon {ok:true, code_length:6} terug: het
+         scherm zei "we hebben een code gestuurd" en de bezoeker wachtte op een
+         mail die nooit kwam. Precies de klacht die in augustus voor de
+         rate limit al was opgelost, maar hier was blijven staan. */
+      if (sent.skipped) {
+        return json({
+          ok: false,
+          invalid_email: true,
+          error: "We can't use that email address. Please try another one.",
+        });
+      }
       return json({ ok: true, verify_type: verifyType, code_length: String(code).length });
     }
 
-    // Hier blijft de stille okNoop wél staan: recovery en magiclink mogen niet
-    // verraden of een adres een account heeft, en daar is geen no_account-
-    // antwoord dat dat toch al doet.
-    if (!(await maySend(admin, `${type}:${email}`, `ip:link:${ip}`, LINK_WINDOW_SECONDS, 1, IP_MAX_LINK))) return okNoop;
+    /* Gecorrigeerd 30-08-2026. Hier stond okNoop: bij een volle emmer kwam er
+       {ok:true} terug en zei het scherm "we hebben een mail gestuurd" terwijl
+       er niets verstuurd was. Dat is dezelfde fout die in augustus voor de
+       codeflow als bug is bestempeld en gerepareerd, maar voor de link-routes
+       was blijven staan.
+       Een rate limit verraadt niets over het bestaan van een account — hij
+       gaat over de aanroeper zelf, niet over het adres. De okNoop hieronder,
+       bij een onbekend adres, blijft dus wél staan. */
+    const linkRate = await maySend(admin, `${type}:${email}`, `ip:link:${ip}`, LINK_WINDOW_SECONDS, 1, IP_MAX_LINK);
+    if (!linkRate.ok) {
+      return json({
+        ok: false,
+        rate_limited: true,
+        retry_after: linkRate.retryAfter,
+        error: linkRate.bucket === "ip"
+          ? rateMessage(linkRate)
+          : `You just asked for this. Check your inbox and spam folder, then try again in ${linkRate.retryAfter} seconds.`,
+      });
+    }
 
     // Onbekend adres? Hier stoppen. generateLink() geeft bij 'magiclink' geen
     // fout maar maakt het account gewoon aan, en op een open endpoint betekent
@@ -311,7 +369,7 @@ serve(async (req) => {
     // Onbereikbaar zolang 'signup' hierboven geweigerd wordt — blijft staan voor
     // wanneer een aparte "Confirm email"-link wel nodig is. Geef hem dan ook de
     // mode-bewuste behandeling van email_code voordat je het type weer toelaat.
-    if (type === "signup") genOpts.password = password || crypto.randomUUID();
+    if (type === "signup") genOpts.password = crypto.randomUUID();
 
     const { data, error } = await admin.auth.admin.generateLink(genOpts as any);
     if (error) {
@@ -358,8 +416,18 @@ serve(async (req) => {
       }), { status: 200, headers: { ...cors, "Content-Type": "application/json" } });
     }
 
-    return new Response(JSON.stringify({ ok: false, error: msg }), {
-      status: 400,
+    /* Geen rauwe interne foutmelding meer naar de browser. Hier kwamen
+       Postgres-fouten en de volledige Resend-foutbody uit — leesbaar voor
+       iedereen die dit open endpoint aanroept, en waardeloos voor de bezoeker.
+       De details staan hierboven in de functielog. (30-08-2026) */
+    return new Response(JSON.stringify({
+      ok: false,
+      // Status 200 met ok:false, net als de andere gevallen hierboven: bij een
+      // niet-2xx vervangt supabase-js onze tekst door "Edge Function returned a
+      // non-2xx status code" en ziet de bezoeker niets bruikbaars.
+      error: "Sign-in is temporarily unavailable. Please try again in a moment.",
+    }), {
+      status: 200,
       headers: { ...cors, "Content-Type": "application/json" },
     });
   }

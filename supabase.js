@@ -603,21 +603,12 @@ async function updateMessageEmailPref(on){
   if(error) throw error;
 }
 
-/* Send a WhatsApp notification via the wa-notify Edge Function */
-async function sendWhatsAppNotification(to, template, params){
-  if(!sb) return;
-  try{
-    await sb.functions.invoke('wa-notify', { body: { to, template, params } });
-  }catch(e){ console.warn('wa-notify:', e.message); }
-}
-
-/* Send a plain WhatsApp text message (within 24h window) */
-async function sendWhatsAppText(to, text){
-  if(!sb) return;
-  try{
-    await sb.functions.invoke('wa-notify', { body: { to, text } });
-  }catch(e){ console.warn('wa-notify text:', e.message); }
-}
+/* WhatsApp vanuit de browser: weggehaald op 30-08-2026.
+   sendWhatsAppNotification() en sendWhatsAppText() stonden hier maar werden
+   nergens aangeroepen (gecontroleerd over alle pagina's). Ze riepen wa-notify
+   aan, en die functie eist sinds vandaag een gedeelde sleutel — die een browser
+   per definitie niet kan hebben. Ze hadden dus alleen nog 401 kunnen opleveren.
+   WhatsApp gaat uitsluitend server-side: wa-inbound roept wa-notify aan. */
 
 /* ============================================================
    Messaging — wired to the live backend (contract 19-08-2026)

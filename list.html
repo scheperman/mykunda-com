@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:01y19rj--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0z9prp3--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preconnect" href="https://api.mapbox.com" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=62310113260008">
+<link rel="stylesheet" href="styles.min.css?v=24073837892097">
 <style>
 body{background:var(--paper-2);min-height:100vh}
 
@@ -241,7 +241,7 @@ body{background:var(--paper-2);min-height:100vh}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=62310113260008"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=24073837892097"><!--/mk-css-->
 </head>
 <body>
 <div class="wizbar">
@@ -824,18 +824,18 @@ body{background:var(--paper-2);min-height:100vh}
   </aside>
 </div>
 
-<script src="valuation-areas.js?v=62310113260008"></script>
-<script src="valuation.js?v=62310113260008"></script>
-<script src="app.min.js?v=62310113260008"></script>
-<script src="gambia-places.js?v=62310113260008" defer></script>
-<script src="image-slot.js?v=62310113260008" defer></script>
+<script src="valuation-areas.js?v=24073837892097"></script>
+<script src="valuation.js?v=24073837892097"></script>
+<script src="app.min.js?v=24073837892097"></script>
+<script src="gambia-places.js?v=24073837892097" defer></script>
+<script src="image-slot.js?v=24073837892097" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel, Leaflet (~145 KB) only when the
    seller reaches the location step. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=62310113260008'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=24073837892097'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -3428,9 +3428,21 @@ async function publish(){
   clearLocalDraft();
   successSeal.innerHTML='<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
   const planMsg={basic:'Your free listing goes live as soon as our team has checked it — usually within one working day.',boost:'Your Boost starts as soon as the payment is confirmed — top of search and the homepage for 30 days.',verified:'A qualified specialist will review your documents, and your Verified badge goes live once the check is complete.'}[S.plan]||'';
-  const reviewMsg = (typeof backendReady==='function' && backendReady()) ? 'Your listing has been submitted for review. Your listing and documents are checked before it goes live.' : '';
-  document.getElementById('successTitle').textContent = (typeof backendReady==='function' && backendReady()) ? 'Submitted for review!' : 'Your listing is live!';
-  document.getElementById('successMsg').textContent=((typeof backendReady==='function' && backendReady()) ? reviewMsg : 'Buyers across The Gambia and the diaspora can now find your property on MyKunda.') + ' ' + planMsg;
+  /* Gecorrigeerd 30-08-2026. De tak zonder backend zei "Your listing is live!"
+     en "Buyers across The Gambia and the diaspora can now find your property" —
+     terwijl er in die toestand juist NIETS naar de server is gegaan: de
+     advertentie staat alleen in de localStorage van deze browser. Dat was de
+     enige plek op de site waar iemand te horen kreeg dat hij live stond zonder
+     dat er ook maar iets was opgeslagen. */
+  const live = (typeof backendReady==='function' && backendReady());
+  const reviewMsg = 'Your listing has been submitted for review. We check the details, the photos and any documents before it goes live, and you get an email the moment it is.';
+  const offlineMsg = 'We could not reach MyKunda just now, so your listing is saved on this device only — it has not been submitted yet. Open this page again when you are back online and finish the last step.';
+  document.getElementById('successTitle').textContent = live ? 'Submitted for review!' : 'Saved on this device';
+  document.getElementById('successMsg').textContent = (live ? reviewMsg + ' ' + planMsg : offlineMsg).trim();
+  if(!live){
+    const b=document.getElementById('viewListingBtn');
+    if(b){ b.textContent='Back to My MyKunda'; b.href='dashboard.html'; }
+  }
   // mini card
   const cover=document.querySelector('#list-photo-0');
   const img=cover && cover.shadowRoot && cover.shadowRoot.querySelector('img');
@@ -3580,10 +3592,18 @@ async function publish(){
           negotiable: S.neg
         }
       };
-      await fetch('https://jejaerpqltqryqzjvbjp.supabase.co/functions/v1/notify-listing', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + MYKUNDA_SUPABASE_ANON }, body: JSON.stringify(emailData) });
+      /* Ging tot 30-08-2026 als losse fetch met de ANON-sleutel de deur uit.
+         notify-listing eist sinds vandaag een ingelogde eigenaar (de anon-
+         sleutel is openbaar en levert geen gebruiker op), dus dit loopt nu via
+         sb.functions.invoke — die stuurt het sessietoken van de verkoper mee.
+         Publiceren vereist toch al een account, dus dat token is er altijd. */
+      await sb.functions.invoke('notify-listing', { body: emailData });
     }catch(e){ console.warn('notify-listing:', e.message); }
   }
-  if(!listingDbId) document.getElementById('viewListingBtn').href='property.html?id='+listing.id;
+  /* Alleen als de backend wél bereikbaar was maar er geen DB-id uitkwam.
+     Zonder backend wijst de knop bewust naar het dashboard (zie hierboven):
+     een property.html met een lokaal id toont niets. */
+  if(!listingDbId && live) document.getElementById('viewListingBtn').href='property.html?id='+listing.id;
 
   const priceTxt = S.price? 'D '+parseInt(S.price).toLocaleString('en-US')+(isRent()?'<span class="per">'+per().suffix+'</span>':'') : 'Price on request';
   const det = isPlotCat()? `${S.landSqm||'—'} m² plot`

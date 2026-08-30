@@ -388,9 +388,17 @@ export function leadAutoReplyEmail(lead: { source: string; name?: string; payloa
    VIEWINGS
    ============================================================ */
 
+/* Tijden staan in UTC in de database en worden hier in Gambiaanse tijd gezet.
+   De timeZone stond hier tot 30-08-2026 niet in: Africa/Banjul is UTC+0 en de
+   Deno-runtime draait op UTC, dus het viel niet op. Het is wel een stille val —
+   verandert de runtime-tijdzone, dan staan er verkeerde tijden in bevestigings-
+   en annuleringsmails. notify-viewing-reminder deed het al wel goed. */
 const fmtSlot = (d: string) => {
-  try { return new Date(d).toLocaleString('en-GB', { dateStyle: 'full', timeStyle: 'short' }); }
-  catch { return String(d); }
+  try {
+    return new Date(d).toLocaleString('en-GB', {
+      dateStyle: 'full', timeStyle: 'short', timeZone: 'Africa/Banjul',
+    });
+  } catch { return String(d); }
 };
 
 /** To the seller / team: someone wants to see a property. */
@@ -460,20 +468,122 @@ export function viewingConfirmedEmail(v: {
 }
 
 /** To the buyer: the seller proposed times. */
-export function viewingSlotsEmail(v: { title: string; proposed_slots: string[] }): string {
+/* De knop wees tot 30-08-2026 naar WhatsApp en de mail bevatte geen enkele link
+   naar het gesprek — terwijl de ontvanger in Messages met een klik een tijd kan
+   kiezen (respond_viewing). Elke acceptatie werd zo handwerk voor de backoffice.
+   Nu: de knop gaat naar het gesprek, WhatsApp blijft als tweede weg staan. */
+export function viewingSlotsEmail(v: {
+  title: string; proposed_slots: string[]; conversation_id?: string;
+}): string {
   const slots = (v.proposed_slots || []).map((s) =>
     `<li style="margin:8px 0;color:${BRAND.ink};font-weight:600;font-size:15px">${esc(fmtSlot(s))}</li>`).join('');
+  const url = v.conversation_id
+    ? `${BRAND.site}/messages.html?c=${encodeURIComponent(v.conversation_id)}`
+    : `${BRAND.site}/messages.html`;
   return emailWrap({
     heading: 'Viewing times proposed',
     preheader: `New times to view ${v.title} — pick the one that suits you.`,
-    body: `<p style="margin:0 0 14px">The seller has proposed these times to view <strong>${esc(v.title)}</strong>:</p>
+    body: `<p style="margin:0 0 14px">These times have been proposed to view <strong>${esc(v.title)}</strong>:</p>
       <div style="background:${BRAND.paper};border-radius:10px;padding:16px 22px;margin:8px 0">
         <ul style="padding-left:20px;margin:0">${slots}</ul>
       </div>
-      <p style="margin:14px 0 0">Reply to this email with the time that suits you, or send it to us on WhatsApp — we confirm it with the owner the same day. None of them work? Say so and we ask for others.</p>`,
-    cta: 'Confirm on WhatsApp',
-    ctaUrl: BRAND.waLink,
+      <p style="margin:14px 0 0">Open the conversation and tap the time that suits you — the other party sees your choice straight away. None of them work? There is a button for that too, and you will be asked for other times.</p>
+      <p style="margin:14px 0 0;font-size:14px;color:${BRAND.muted}">Rather not go online? WhatsApp us at <a href="${BRAND.waLink}" style="color:${BRAND.green};font-weight:600">${BRAND.waNumber}</a> and we set it for you.</p>`,
+    cta: 'Choose a time',
+    ctaUrl: url,
     footer: 'You received this because you requested a viewing on mykunda.com.',
+  });
+}
+
+/** To the party that did NOT cancel: the viewing is off. */
+export function viewingCancelledEmail(v: {
+  recipient_name?: string; canceller_name?: string; title?: string; area?: string;
+  slot?: string; reason?: string; conversation_id?: string;
+}): string {
+  const fname = v.recipient_name ? esc(String(v.recipient_name).trim().split(' ')[0]) : '';
+  const who = v.canceller_name ? esc(String(v.canceller_name).trim().split(' ')[0]) : 'the other party';
+  const what = v.title
+    ? `<strong>${esc(v.title)}</strong>${v.area ? ' · ' + esc(v.area) : ''}`
+    : 'a property on MyKunda';
+  // Zonder voornaam begint de zin met deze naam, dus dan een hoofdletter.
+  const whoStart = fname ? who : who.charAt(0).toUpperCase() + who.slice(1);
+  const url = v.conversation_id
+    ? `${BRAND.site}/messages.html?c=${encodeURIComponent(v.conversation_id)}`
+    : `${BRAND.site}/messages.html`;
+  return emailWrap({
+    heading: 'The viewing has been cancelled',
+    preheader: `${v.canceller_name ? v.canceller_name : 'The other party'} cancelled the viewing of ${v.title ?? 'a property on MyKunda'}.`,
+    body: `<p style="margin:0 0 14px">${fname ? fname + ', ' : ''}<strong>${whoStart}</strong> has cancelled the viewing of ${what}.</p>
+      ${detailTable([
+        ['Property', v.title ? `${esc(v.title)}${v.area ? ' · ' + esc(v.area) : ''}` : undefined],
+        ['Was planned', v.slot ? esc(fmtSlot(v.slot)) : undefined],
+        ['Cancelled by', v.canceller_name ? esc(v.canceller_name) : undefined],
+      ])}
+      ${v.reason ? callout(`<p style="font-size:14px;color:${BRAND.ink};margin:0"><strong>Reason given:</strong> ${escLines(v.reason)}</p>`) : ''}
+      <p style="margin:16px 0 0">Nothing is lost — a new appointment is made in a moment. Open the conversation and propose another time that suits you both.</p>`,
+    cta: 'Propose another time',
+    ctaUrl: url,
+    footer: 'You received this because you requested a viewing on mykunda.com.',
+  });
+}
+
+/** To the team: a viewing was cancelled. */
+export function viewingCancelledBackofficeEmail(v: {
+  canceller_name?: string; other_name?: string; title?: string; area?: string;
+  slot?: string; reason?: string; conversation_id?: string;
+}): string {
+  const who = escOpt(v.canceller_name) || 'A participant';
+  const url = v.conversation_id
+    ? `${BRAND.site}/messages.html?c=${encodeURIComponent(v.conversation_id)}`
+    : `${BRAND.site}/messages.html`;
+  return emailWrap({
+    heading: 'Viewing cancelled',
+    preheader: `${v.canceller_name ?? 'A participant'} cancelled a viewing${v.title ? ' — ' + v.title : ''}.`,
+    body: `<p style="margin:0 0 14px"><strong>${who}</strong> cancelled a viewing. The other party has been emailed.</p>
+      ${detailTable([
+        ['Property', v.title ? `${esc(v.title)}${v.area ? ' · ' + esc(v.area) : ''}` : undefined],
+        ['Was planned', v.slot ? esc(fmtSlot(v.slot)) : undefined],
+        ['Cancelled by', escOpt(v.canceller_name)],
+        ['Other party', escOpt(v.other_name)],
+        ['Reason', escOpt(v.reason)],
+      ])}`,
+    cta: 'Open the conversation',
+    ctaUrl: url,
+    footer: 'Internal notification from the MyKunda website.',
+  });
+}
+
+/* Nieuw op 30-08-2026. respond_viewing() zet de status op 'declined' en schrijft
+   een bericht in de conversatie, maar notify-viewing kende alleen proposed,
+   confirmed en cancelled — de aanvrager hoorde per mail nooit dat zijn tijden
+   niet uitkwamen. Dit sjabloon vult dat gat, aan beide kanten: de aanvrager
+   krijgt hem, de backoffice een korte kopie. */
+export function viewingDeclinedEmail(v: {
+  recipient_name?: string; decliner_name?: string; title?: string; area?: string;
+  proposed_slots?: string[]; conversation_id?: string;
+}): string {
+  const fname = v.recipient_name ? esc(String(v.recipient_name).trim().split(' ')[0]) : '';
+  const who = v.decliner_name ? esc(String(v.decliner_name).trim().split(' ')[0]) : 'The other party';
+  const what = v.title
+    ? `<strong>${esc(v.title)}</strong>${v.area ? ' · ' + esc(v.area) : ''}`
+    : 'a property on MyKunda';
+  const slots = (v.proposed_slots || []).map((s) =>
+    `<li style="margin:6px 0;color:${BRAND.muted};font-size:14px">${esc(fmtSlot(s))}</li>`).join('');
+  const url = v.conversation_id
+    ? `${BRAND.site}/messages.html?c=${encodeURIComponent(v.conversation_id)}`
+    : `${BRAND.site}/messages.html`;
+  return emailWrap({
+    heading: fname ? `${fname}, those times did not work` : 'Those times did not work',
+    preheader: `${v.decliner_name ?? 'The other party'} asked for different times to view ${v.title ?? 'the property'}.`,
+    body: `<p style="margin:0 0 14px"><strong>${who}</strong> could not make any of the times you proposed for ${what}, and has asked for a few others.</p>
+      ${slots ? `<div style="background:${BRAND.paper};border-radius:10px;padding:14px 22px;margin:8px 0">
+        <p style="font-size:12px;color:${BRAND.muted};font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin:0 0 6px">You had proposed</p>
+        <ul style="padding-left:20px;margin:0">${slots}</ul>
+      </div>` : ''}
+      <p style="margin:14px 0 0">Open the conversation and propose one to three new times. It takes a moment, and the other party is notified straight away.</p>`,
+    cta: 'Propose other times',
+    ctaUrl: url,
+    footer: 'You received this because you arranged a viewing on mykunda.com.',
   });
 }
 
@@ -543,12 +653,29 @@ export function paymentReceiptEmail(p: PaymentInfo): string {
   });
 }
 
-export function paymentBackofficeEmail(p: PaymentInfo): string {
+/* De uitkomst hoort erbij. Tot 30-08-2026 nam deze functie alleen PaymentInfo,
+   en notify-payment hergebruikte hem óók voor failed/cancelled/expired. De
+   backoffice kreeg dan een groene mail met de kop "Payment received", de regel
+   "Status: Paid" en de instructie "Activate this order" — bij een betaling die
+   niet doorging. Alleen de onderwerpregel klopte. Dat is de enige plek in de
+   hele mailketen waar geld verkeerd kon gaan, dus de uitkomst gaat nu mee. */
+type PayOutcome = 'succeeded' | 'failed' | 'cancelled' | 'expired';
+
+const BACKOFFICE_OUTCOME: Record<Exclude<PayOutcome, 'succeeded'>, { heading: string; status: string; note: string }> = {
+  failed:    { heading: 'Payment failed',              status: 'Failed — nothing received',   note: 'The payment did not go through. <strong>Do not activate this order.</strong> The customer has been emailed and can try again.' },
+  cancelled: { heading: 'Payment cancelled',           status: 'Cancelled by the customer',   note: 'The customer stopped before paying. <strong>Do not activate this order.</strong> They have been emailed and can start again.' },
+  expired:   { heading: 'Payment reference expired',   status: 'Expired — never paid',        note: 'This reference has passed its date without payment. <strong>Do not activate this order.</strong> The customer has been emailed a fresh start.' },
+};
+
+export function paymentBackofficeEmail(p: PaymentInfo, outcome: PayOutcome = 'succeeded'): string {
   const waiting = !!p.awaitingTransfer;
+  const bad = outcome !== 'succeeded' ? BACKOFFICE_OUTCOME[outcome] : null;
   return emailWrap({
-    heading: waiting ? 'Bank transfer registered' : 'Payment received',
-    preheader: `${p.amount} · ${p.plan} · ${p.reference}`,
-    body: `${waiting
+    heading: bad ? bad.heading : (waiting ? 'Bank transfer registered' : 'Payment received'),
+    preheader: `${bad ? bad.heading + ' · ' : ''}${p.amount} · ${p.plan} · ${p.reference}`,
+    body: `${bad
+      ? callout(`<p style="font-size:14px;color:${BRAND.ink};margin:0">${bad.note}</p>`, 'red')
+      : waiting
       ? callout(`<p style="font-size:14px;color:${BRAND.ink};margin:0"><strong>Action required.</strong> Watch the bank account for <strong>${esc(p.amount)}</strong> with reference <strong>${esc(p.reference)}</strong>, then activate the order.</p>`)
       : callout(`<p style="font-size:14px;color:${BRAND.ink};margin:0"><strong>Action required.</strong> Activate this order and confirm to the customer.</p>`, 'green')}
       ${sectionLabel('Order')}
@@ -557,7 +684,7 @@ export function paymentBackofficeEmail(p: PaymentInfo): string {
         ['Service', esc(p.plan)],
         ['Amount', `<strong>${esc(p.amount)}</strong>`],
         ['Method', esc(p.method)],
-        ['Status', waiting ? 'Awaiting bank transfer' : 'Paid'],
+        ['Status', bad ? bad.status : (waiting ? 'Awaiting bank transfer' : 'Paid')],
         ['Date', esc(payDate(p.date))],
       ])}
       ${sectionLabel('Customer')}
@@ -765,4 +892,10 @@ export function signupBackofficeEmail(u: SignupInfo): string {
 }
 
 /* Listing templates live next door but import from this file. */
-export { listingConfirmationEmail, listingBackofficeEmail } from './email-listing.ts';
+export {
+  listingConfirmationEmail,
+  listingBackofficeEmail,
+  listingLiveEmail,
+  listingRejectedEmail,
+  listingArchivedEmail,
+} from './email-listing.ts';

@@ -47,6 +47,10 @@ const TEAM_LABEL: Record<string, string> = {
   consultation: "consultation booking",
   whatsapp_inbound: "WhatsApp message",
   verification: "ownership check request",
+  // agent.html schrijft deze bron al sinds de partnerpagina bestaat, maar hij
+  // stond in geen van beide lijsten — de mail viel terug op "enquiry" en op de
+  // generieke bedanktekst. (30-08-2026)
+  agent_partner: "agency registration",
 };
 
 const REPLY_SUBJECT: Record<string, string> = {
@@ -59,7 +63,15 @@ const REPLY_SUBJECT: Record<string, string> = {
   consultation: "Your free consultation is booked — MyKunda",
   whatsapp_inbound: "We received your WhatsApp message — MyKunda",
   verification: "Your ownership check request — MyKunda",
+  agent_partner: "Your agency registration — MyKunda",
 };
+
+/* Een onderwerpregel is een header. Regeleinden en tabs horen er niet in, en
+   een naam die iemand zelf invult kan alles bevatten: create_lead staat open
+   voor anon en de escaping in de templates geldt alleen voor de body. */
+function safeSubject(v: unknown, max = 120): string {
+  return String(v ?? "").replace(/[\r\n\t]+/g, " ").trim().slice(0, max);
+}
 
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -98,6 +110,16 @@ serve(async (req) => {
     const { data: lead, error } = await db.from("leads").select("*").eq("id", lead_id).single();
     if (error || !lead) return json({ ok: false, error: "lead not found" }, 404);
 
+    /* ---- Dedupe. Toegevoegd 30-08-2026. ---------------------------------
+       notified_at werd wél geschreven en nooit gelezen. Deze functie staat op
+       verify_jwt:false en create_lead() is uitvoerbaar door anon en geeft het
+       id terug — dus wie de URL kende kon dezelfde lead onbeperkt opnieuw
+       POSTen, en elke keer vertrokken er twee mails: één naar een adres naar
+       keuze en één naar onze eigen backoffice. Eén lead is nu één ronde. */
+    if (lead.notified_at) {
+      return json({ ok: true, skipped: "already notified", lead_id: lead.id });
+    }
+
     const info = {
       source: lead.source,
       name: lead.name ?? undefined,
@@ -116,7 +138,7 @@ serve(async (req) => {
     try {
       await sendEmail({
         to: LEAD_EMAIL,
-        subject: `[MyKunda] New ${label} — ${who}`,
+        subject: safeSubject(`[MyKunda] New ${label} — ${who}`),
         html: leadNotificationEmail(info),
         replyTo: lead.email || undefined,
       });
@@ -129,18 +151,48 @@ serve(async (req) => {
     // 2) Auto-reply — attempted even when the team email failed, so the
     //    visitor is never left wondering whether anything arrived.
     if (lead.email) {
+      /* Rem per ontvangend adres. Zonder deze regel is een handvol
+         create_lead-aanroepen met het adres van een ander genoeg om iemand
+         onder te spammen vanaf ons eigen geverifieerde domein — en de
+         reputatie van mykunda.com gaat mee. Drie per uur is ruim voor een
+         mens die twee formulieren invult, en waardeloos voor een script.
+         Hergebruikt claim_auth_email_rate, dezelfde teller als auth-email. */
+      let mayReply = true;
       try {
-        await sendEmail({
-          to: lead.email,
-          subject: REPLY_SUBJECT[lead.source] ?? "Thank you for contacting MyKunda",
-          html: leadAutoReplyEmail(info),
-          replyTo: LEAD_EMAIL,
+        const { data: allowed, error: rateErr } = await db.rpc("claim_auth_email_rate", {
+          p_bucket: `lead_reply:${String(lead.email).toLowerCase()}`,
+          p_window_seconds: 3600,
+          p_max_hits: 3,
         });
-        sent.reply = true;
+        if (rateErr) throw new Error(rateErr.message);
+        mayReply = allowed === true;
       } catch (e) {
-        errors.push(`auto-reply: ${(e as Error).message}`);
-        console.error("notify-lead auto-reply failed:", e);
+        // Faalt de teller zelf, dan blijft de mail belangrijker dan de rem.
+        console.warn("notify-lead: rate-teller niet beschikbaar:", (e as Error).message);
       }
+
+      if (!mayReply) {
+        errors.push("auto-reply: rate limited (3 per address per hour)");
+        console.warn("notify-lead: auto-reply gestopt door de rem voor", lead.email);
+      } else {
+        try {
+          await sendEmail({
+            to: lead.email,
+            subject: REPLY_SUBJECT[lead.source] ?? "Thank you for contacting MyKunda",
+            html: leadAutoReplyEmail(info),
+            replyTo: LEAD_EMAIL,
+          });
+          sent.reply = true;
+        } catch (e) {
+          errors.push(`auto-reply: ${(e as Error).message}`);
+          console.error("notify-lead auto-reply failed:", e);
+        }
+      }
+    } else {
+      /* Een lead zonder e-mailadres kreeg notified_at én notify_error null,
+         precies alsof er netjes gemaild was. Achteraf was dat niet meer te
+         onderscheiden van een geslaagde verzending. */
+      errors.push("auto-reply: lead has no email address");
     }
 
     // 3) Audit trail on the lead row. Silently skipped when
@@ -152,7 +204,10 @@ serve(async (req) => {
       }).eq("id", lead.id);
     } catch (_) { /* columns not present — not fatal */ }
 
-    return json({ ok: errors.length === 0, sent, errors }, errors.length ? 502 : 200);
+    /* Alleen een echte verzendfout is een 502. Een lead zonder adres en een
+       lead die door de rem is gestopt zijn genoteerd, geen storing. */
+    const hardFail = errors.some((e) => !e.startsWith("auto-reply: lead has no email") && !e.startsWith("auto-reply: rate limited"));
+    return json({ ok: !errors.length, sent, errors }, hardFail ? 502 : 200);
   } catch (err) {
     console.error("notify-lead error:", err);
     return json({ ok: false, error: String((err as Error)?.message ?? err) }, 500);

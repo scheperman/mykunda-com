@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:1fodskt--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:17ap5yx--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -33,7 +33,7 @@
 <noscript></noscript>
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=62310113260008">
+<link rel="stylesheet" href="styles.min.css?v=24073837892097">
 <style>
 .ct-hero{background:linear-gradient(135deg,#0E2E25,#1C5848);color:#fff;padding:calc(var(--header-h) + 8px) 0 0;margin-top:calc(-1 * var(--header-h))}
 .ct-hero .wrap{padding-top:48px;padding-bottom:40px}
@@ -85,7 +85,7 @@
 </script>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=62310113260008"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=24073837892097"><!--/mk-css-->
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -177,11 +177,17 @@
       </div>
       <div class="fld">
         <label for="ctSubject">Subject</label>
+        <!-- report-listing en ownership-check zijn op 30-08-2026 toegevoegd:
+             property.html en verify.html linken hierheen met ?subject=…, en
+             die twee onderwerpen stonden niet in de lijst. Zie het blok
+             onderaan deze pagina dat de URL uitleest. -->
         <select id="ctSubject">
           <option value="general">General enquiry</option>
           <option value="buying">Buying a property</option>
           <option value="selling">Selling / listing</option>
           <option value="valuation">Valuation request</option>
+          <option value="report-listing">Report a listing</option>
+          <option value="ownership-check">Ownership check</option>
           <option value="partnership">Partnership / business</option>
           <option value="technical">Technical / account issue</option>
         </select>
@@ -261,14 +267,60 @@
 window.__sbReady=new Promise(function(res){window.addEventListener('load',function(){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js';
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=62310113260008'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=24073837892097'; s2.onload=res; s2.onerror=res; document.body.appendChild(s2); };
   document.body.appendChild(s1);
 });});
 </script>
-<script src="app.min.js?v=62310113260008"></script>
+<script src="app.min.js?v=24073837892097"></script>
 <script>
 document.getElementById('icMail').innerHTML = _MAIL_ICON;
 document.getElementById('icWa').innerHTML = _WA_ICON;
+
+/* ---- context uit de URL -----------------------------------------------
+   Toegevoegd 30-08-2026. property.html linkt hierheen met
+   ?subject=Report listing: <titel>&ref=<id> en verify.html met
+   ?subject=ownership-check&about=<omschrijving>, maar deze pagina las geen
+   enkele parameter. De bezoeker kwam dus aan bij een leeg formulier, moest
+   alles opnieuw typen, en "Report listing" stond niet eens in de keuzelijst.
+   Nu: het onderwerp wordt voorgekozen, de context staat al in het bericht, en
+   de referentie reist mee in de payload zodat de melding herleidbaar is.
+   Ook ?unsubscribe=1 komt hier binnen — dat is de link die in de area-alert
+   mail staat. */
+(function prefillFromUrl(){
+  var p; try{ p = new URLSearchParams(location.search); }catch(e){ return; }
+  var subject = (p.get('subject')||'').trim();
+  var about   = (p.get('about')||'').trim();
+  var ref     = (p.get('ref')||'').trim();
+  var sel = document.getElementById('ctSubject');
+  var msg = document.getElementById('ctMessage');
+  var lines = [];
+
+  if(p.get('unsubscribe') === '1'){
+    sel.value = 'technical';
+    lines.push('Please remove me from the MyKunda area alerts.');
+  } else if(/^report listing/i.test(subject)){
+    sel.value = 'report-listing';
+    var titel = subject.replace(/^report listing:?\s*/i,'').trim();
+    lines.push('I want to report a problem with this listing'+(titel?': '+titel:'')+'.');
+    if(ref) lines.push('Listing reference: '+ref);
+    lines.push('');
+    lines.push('What is wrong: ');
+  } else if(subject === 'ownership-check'){
+    sel.value = 'ownership-check';
+    lines.push('I have a question about an ownership check'+(about?' for: '+about:'')+'.');
+    lines.push('');
+  } else if(subject){
+    // Een bekende waarde uit de keuzelijst mag hem gewoon zetten.
+    var ok = Array.prototype.some.call(sel.options, function(o){ return o.value === subject; });
+    if(ok) sel.value = subject;
+  }
+
+  if(lines.length && !msg.value){
+    msg.value = lines.join('\n');
+    // Cursor achteraan, zodat de bezoeker meteen verder kan typen.
+    try{ msg.setSelectionRange(msg.value.length, msg.value.length); }catch(e){}
+  }
+})();
 
 // contact form → lead
 document.getElementById('contactForm').addEventListener('submit', async function(e){
@@ -278,7 +330,8 @@ document.getElementById('contactForm').addEventListener('submit', async function
   var phone=document.getElementById('ctPhone').value.trim();
   var subject=document.getElementById('ctSubject').value;
   var message=document.getElementById('ctMessage').value.trim();
-  if(!name||!message){ document.getElementById('ctErr').textContent='Please fill in name, email and message.'; return; }
+  // Noemde ook e-mail, terwijl die een regel lager zijn eigen melding heeft.
+  if(!name||!message){ document.getElementById('ctErr').textContent='Please fill in your name and your message.'; return; }
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ document.getElementById('ctErr').textContent='Please enter a valid email address so we can reply.'; return; }
   document.getElementById('ctErr').textContent='';
 
@@ -292,7 +345,10 @@ document.getElementById('contactForm').addEventListener('submit', async function
      that was never stored can never show a "sent" confirmation. */
   if(window.__sbReady){ try{ await window.__sbReady; }catch(e){} }
   try{
-    var fields={name:name,email:email,phone:phone,message:'['+subject+'] '+message,payload:{subject:subject,form:'contact'}};
+    // De referentie uit de URL reist mee, zodat een gemelde advertentie
+    // herleidbaar is zonder dat de bezoeker hem hoeft over te typen.
+    var urlRef=''; try{ urlRef=(new URLSearchParams(location.search).get('ref')||'').trim(); }catch(e2){}
+    var fields={name:name,email:email,phone:phone,message:'['+subject+'] '+message,payload:{subject:subject,form:'contact',ref:urlRef||undefined}};
     if(typeof sendLead==='function'){ await sendLead('contact',fields); }
     else{ var result=await submitLead('contact',fields); if(result&&result.demo) throw new Error('backend-offline'); }
   }catch(err){

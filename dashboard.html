@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1rawqv9--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1gs5qzl--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <noscript></noscript>
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=62310113260008">
+<link rel="stylesheet" href="styles.min.css?v=24073837892097">
 <style>
 body{background:var(--paper-2)}
 .dash{max-width:1180px;margin:0 auto;padding:36px 28px 70px}
@@ -151,7 +151,7 @@ body{background:var(--paper-2)}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=62310113260008"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=24073837892097"><!--/mk-css-->
 </head>
 <body>
 <div id="header"></div>
@@ -193,24 +193,27 @@ body{background:var(--paper-2)}
         <div class="panel-head"><h2>Viewing requests</h2></div>
         <div id="viewReqList"></div>
       </div>
+      <!-- Opgeschoond 30-08-2026. Er stonden vier schakelaars, een kanaalkeuze
+           (Email / WhatsApp / Both) en een WhatsApp-nummerveld in deze kaart.
+           Precies één daarvan werd bewaard: "Email me about new messages"
+           (profiles.notify_messages). De rest deed aantoonbaar niets — dat
+           stond letterlijk in het commentaar hieronder: "there is no prefs
+           table behind them (and none is coming)". Een schakelaar die
+           terugspringt naar zijn oude stand zodra je de pagina ververst is
+           erger dan geen schakelaar.
+           "New enquiries" was bovendien een dubbeling van de schakelaar die
+           er wél is, en "Listing alerts" beloofde iets wat nog nergens
+           verstuurd wordt. Wat MyKunda altijd stuurt — bezichtigingen,
+           advertenties, betalingen — is transactioneel en hoort geen knop te
+           hebben; dat staat nu als zin onder de schakelaar in plaats van als
+           knop die niets doet. -->
       <div class="notif-card" id="notifCard">
-        <h3>Notifications</h3>
-        <p class="sub">How should we reach you?</p>
-        <div class="notif-channel" id="notifChannel">
-          <button class="notif-ch on" data-ch="email"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> Email</button>
-          <button class="notif-ch" data-ch="whatsapp"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2Zm5.5 14c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.2-.7-2.7-1.1-4.4-3.8-4.5-4-.1-.2-1.1-1.4-1.1-2.7s.7-1.9.9-2.1c.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.5c-.2.2-.3.4-.1.7.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.2 0 .4 0 .6-.2l.7-.8c.2-.2.4-.2.6-.1l1.9.9c.2.1.4.2.5.3.1.3.1.7-.1 1.2Z"/></svg> WhatsApp</button>
-          <button class="notif-ch" data-ch="both">Both</button>
+        <h3>Email notifications</h3>
+        <p class="sub">What we send you, and the one thing you can turn off.</p>
+        <div style="margin-top:6px">
+          <div class="notif-row"><div><div class="nl">Email me about new messages</div><div class="nd">Get an email when a buyer or seller sends you a message. Your conversations keep working either way — new messages are always waiting in Messages.</div></div><button class="notif-toggle on" id="msgEmailToggle"></button></div>
         </div>
-        <div class="notif-wa-input" id="notifWaInput">
-          <input type="tel" id="waNumberIn" placeholder="+220 ...">
-          <div class="hint">Your WhatsApp number in international format</div>
-        </div>
-        <div style="margin-top:18px">
-          <div class="notif-row"><div><div class="nl">New enquiries</div><div class="nd">When a buyer messages you</div></div><button class="notif-toggle on" data-pref="lead_notify"></button></div>
-          <div class="notif-row"><div><div class="nl">Viewing requests</div><div class="nd">When someone wants to visit</div></div><button class="notif-toggle on" data-pref="viewing_notify"></button></div>
-          <div class="notif-row"><div><div class="nl">Email me about new messages</div><div class="nd">Get an email when a buyer or seller sends you a message. Your conversations keep working either way.</div></div><button class="notif-toggle on" id="msgEmailToggle"></button></div>
-          <div class="notif-row"><div><div class="nl">Listing alerts</div><div class="nd">New properties in your saved areas</div></div><button class="notif-toggle on" data-pref="listing_alerts"></button></div>
-        </div>
+        <p class="sub" style="margin-top:14px">Emails about your viewings, your listings and your payments always come through. They are part of the deal itself, so there is no switch for them.</p>
       </div>
       <div class="upgrade">
         <div class="eyebrow">Sell faster</div>
@@ -224,15 +227,15 @@ body{background:var(--paper-2)}
 
 <div id="footer"></div>
 
-<script src="app.min.js?v=62310113260008"></script>
-<script src="image-slot.js?v=62310113260008" defer></script>
+<script src="app.min.js?v=24073837892097"></script>
+<script src="image-slot.js?v=24073837892097" defer></script>
 <script>
 /* 4G: the Supabase client (~205 KB) is not needed to paint this page. It downloads
    in parallel and every backend call awaits window.__sbReady. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=62310113260008'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=24073837892097'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 </script>
@@ -523,26 +526,11 @@ window.sendVR=async function(i){
   try{ await window.__sbReady; }catch(e){}
   const isLive = typeof backendReady==='function' && backendReady();
 
-  // Channel buttons
-  const channelBtns = document.querySelectorAll('#notifChannel .notif-ch');
-  const waInput = document.getElementById('notifWaInput');
-  let currentChannel = 'email';
-
-  function setChannel(ch){
-    currentChannel = ch;
-    channelBtns.forEach(b=>b.classList.toggle('on', b.dataset.ch===ch));
-    waInput.classList.toggle('show', ch==='whatsapp' || ch==='both');
-  }
-
-  // Channel, enquiry/viewing/alert toggles and the WhatsApp number are UI-only:
-  // there is no prefs table behind them (and none is coming). The one stored
-  // preference is profiles.notify_messages — msgEmailToggle below.
-  channelBtns.forEach(b=>b.addEventListener('click',()=>{ setChannel(b.dataset.ch); }));
-
-  // Toggle buttons (msgEmailToggle is wired separately — it lives on profiles)
-  document.querySelectorAll('.notif-toggle[data-pref]').forEach(t=>{
-    t.addEventListener('click',()=>{ t.classList.toggle('on'); });
-  });
+  /* De kanaalkeuze, het WhatsApp-nummerveld en de drie schakelaars met
+     data-pref zijn op 30-08-2026 uit de pagina gehaald; deze code hoorde
+     daarbij en is mee weg. Ze bewaarden niets — het commentaar dat hier stond
+     zei dat zelf: "there is no prefs table behind them (and none is coming)".
+     Wat er overblijft is de enige schakelaar die echt iets doet. */
 
   // "Email me about new messages" — profiles.notify_messages, read by the
   // notify-message edge function. Default on; saved on its own, never with role.
