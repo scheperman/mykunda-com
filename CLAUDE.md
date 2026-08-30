@@ -570,7 +570,7 @@ kaarten te maken heeft staat sindsdien op één plek: het blok `MapTiler` boveni
 | `mkTileLayer('satellite'\|'streets')` | één laag, met de juiste tegelgrootte, zoomgrenzen en attributie |
 | `mkBaseToggle(map)` | de satelliet/kaart-knop, plus beide lagen |
 | `mkScale(map)` | schaalbalk, metrisch |
-| `mkAreaMap(id, center, zoom)` | de kleine kaart van de wijkpagina's — alle 41 roepen alleen dit aan |
+| `mkAreaMap(id, center, zoom)` | de kleine kaart van de gebiedspagina's — alle 46 roepen alleen dit aan |
 | `mkStaticMapUrl(bbox, w, h, opts)` | één kaartafbeelding, bijvoorbeeld de perceelfoto |
 | `mkGeocode` / `mkReverseGeocode` / `mkGeoSuggest` | zoeken op plaats en adres, vastgezet op Gambia |
 
@@ -750,10 +750,67 @@ afgewezen sleutel; daarvoor blijft `tileerror` het vangnet.
 Die drie hosts staan daarom in `img-src` van de CSP. **`.htaccess`, `_headers` en
 `vercel.json` moeten dezelfde CSP bevatten** — ze liepen uiteen tot 25-08-2026,
 waardoor de OpenStreetMap-terugval op de live site geblokkeerd zou zijn geweest.
+`node _werk/check-csp.mjs` vergelijkt de drie sinds 30-08-2026 letterlijk, toetst
+of elke host die de site echt aanroept erin staat, en of wat bewust geweerd is
+er níét in staat.
+
+**De Meta Pixel stond sinds 23-08-2026 stil, en niemand kon dat zien.** Hij zit
+in `app.js` (`loadAnalytics`, alleen na "Accept all") en staat in de
+cookieverklaring, maar de CSP noemde zijn hosts niet — dus blokkeerde de browser
+het script en meette hij nooit iets. Sinds 30-08-2026 staat
+`https://connect.facebook.net` in `script-src` en `https://www.facebook.com` in
+`img-src` én `connect-src`. Die drie zijn gemeten aan de inhoud van
+`fbevents.js` zelf, niet gegokt: het bestand draagt één `ENDPOINT` en dat is
+`https://www.facebook.com/tr/`. Wat er bewust **niet** bij hoeft: de
+Topics-registratie van Meta (`Permissions-Policy` zet `browsing-topics` uit) en
+`'unsafe-eval'` (het enige `new Function` in dat bestand is de
+globalThis-noodgreep, in een try/catch).
+
+**Cloudflare Insights blijft bewust geblokkeerd.** Dat script wordt door
+Cloudflare zelf in elke pagina gespoten en draait dus vóór de cookiekeuze — dat
+spreekt de eigen cookieverklaring tegen, die zegt dat analytics pas na
+toestemming laadt. De console toont daarom een CSP-melding voor
+`static.cloudflareinsights.com`; dat is bedoeld gedrag, geen fout. Wil je die
+meting wél, zet Web Analytics dan uit óf aan bij Cloudflare zelf en pas hier
+niets aan zonder ook de cookieverklaring aan te passen.
 
 De perceelfoto in de verkoopflow heeft géén terugval: levert MapTiler niets, dan
 komt er geen foto. Een wazige of lege kaart als hoofdfoto van een advertentie is
 erger dan geen kaart, en de omtrek staat toch al als data bij de advertentie.
+
+## De gebiedspagina's: twee generaties
+
+Er zijn er 46, in twee soorten. De **41 oudere** (tot juli 2026) hebben zeven
+vaste secties en 532–693 woorden lopende tekst. De **vijf van augustus 2026** —
+Mamuda, Latriya, Jambanjelly, Salagi, Farato — hebben er zes en 1.021–1.220
+woorden. Ze missen Lifestyle scores, Getting around en What's nearby, en dat is
+**bewust**: voor die dorpen bestaat die data niet, en de sectie "What we have
+not measured here yet" zegt dat ook. Vul dat niet in.
+
+Wat er wél ontbrak was de kaart, want die hangt in het blok What's nearby. Sinds
+30-08-2026 hebben alle 46 er een (`_werk/patch-kaart-nieuwe-gebieden.mjs`). Het
+zoomniveau van die vijf volgt de nauwkeurigheid die de pagina zelf noemt — Farato
+staat op 194 m van zijn bron en krijgt 15, Mamuda en Latriya zeggen "roughly
+2 km" en krijgen 13. Een kaart die strak inzoomt op een punt dat twee kilometer
+kan schelen, liegt over zijn eigen precisie.
+
+**De helft van de tekst was standaardtekst.** Gemeten met
+`_werk/audit-areatekst.mjs`, dat elke alinea met die van alle andere pagina's
+vergelijkt met plaatsnamen en bedragen weggemaskeerd: 15.214 van 30.130 woorden
+kwam op tien of meer pagina's letterlijk terug. Twee alinea's onder de
+prijstabel waren samen goed voor ~8.100 woorden site-breed en zeiden twee keer
+hetzelfde. Die zijn op 30-08-2026 ingekort (`_werk/patch-standaardtekst.mjs`,
+omkeerbaar met `--terug`): 30.130 → 26.411 woorden, zonder dat er één feit uit
+is. Alinea 1 heeft zes staarten (wel/geen rendement, met welke percentages) —
+het script raakt alleen de openingszin, die op alle 46 gelijk is.
+
+**De uitleg zelf staat op `how-we-measure-prices.html`,** waar elke
+gebiedspagina onderaan al naar linkt. Wil je de waarschuwing uitbreiden, doe het
+daar en niet 46 keer op de gebiedspagina's — dat is precies hoe deze situatie
+ontstond.
+
+`node _werk/audit-areapaginas.mjs` zet de opbouw van alle 46 op een rij (secties,
+kaart, woordentelling) en meldt welke pagina een sectie mist die de rest wel heeft.
 
 ## Pushen na elke sessie
 
