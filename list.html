@@ -3153,20 +3153,28 @@ function showStep(n){
    Continue staat op y=1959, het blok dat bezwaar maakt op y=992. De verkoper
    tikt op Continue en er gebeurt zichtbaar NIETS. Zeg daarom altijd wát er
    ontbreekt, en breng het bezwaar in beeld. */
-function wizSay(msg){
+const _wizMsgHome=(function(){ const m=document.getElementById('wizMsg'); return m?{p:m.parentNode,next:m.nextSibling}:null; })();
+function wizSay(msg, el){
   const m=document.getElementById('wizMsg'); if(!m) return;
   m.textContent=msg||'';
   m.classList.toggle('on', !!msg);
+  /* De regel hoort bij het veld, niet bij de knop. Gemeten: met de melding
+     onderaan sprong de pagina wél naar het bezwaar, maar stond de zin die
+     uitlegt waaróm buiten beeld. Hang hem daarom vlak boven het blok dat
+     bezwaar maakt, en scroll naar die twee samen. Geen veld erbij (of een
+     lege melding): terug naar zijn eigen plek boven de knoppen. */
+  if(msg && el && el.parentNode) el.parentNode.insertBefore(m, el);
+  else if(_wizMsgHome && _wizMsgHome.p) _wizMsgHome.p.insertBefore(m, _wizMsgHome.next);
 }
 function wizFocus(el){
   if(!el) return;
   const r=el.getBoundingClientRect();
-  if(r.top<80 || r.bottom>innerHeight-80) el.scrollIntoView({block:'center',behavior:'smooth'});
+  if(r.top<90 || r.bottom>innerHeight-90) el.scrollIntoView({block:'center',behavior:'smooth'});
 }
 function shake(el,msg){
-  wizFocus(el);
+  wizSay(msg, el);
+  wizFocus(msg ? document.getElementById('wizMsg') : el);
   el.style.animation='shake .4s'; setTimeout(()=>el.style.animation='',400);
-  wizSay(msg);
 }
 /* A listing with no photo is a phone number with a headline, and it is what
    makes a property site read like a classifieds page. Four is the floor. */
@@ -3259,7 +3267,15 @@ function validateKey(k){
   }
   return true;
 }
-function flash(el,msg){wizFocus(el);el.style.borderColor='#C2533A';el.focus();setTimeout(()=>el.style.borderColor='',1500);wizSay(msg);}
+function flash(el,msg){
+  /* Bij een invoerveld hangt de melding boven het veld zelf; focus() brengt
+     het veld daarna sowieso in beeld en zet de cursor op de goede plek. */
+  wizSay(msg, el);
+  el.style.borderColor='#C2533A';
+  wizFocus(msg ? document.getElementById('wizMsg') : el);
+  el.focus({preventScroll:true});
+  setTimeout(()=>el.style.borderColor='',1500);
+}
 
 /* ---- The agency behind a professional listing ----
    One row per company, matched on a slug of the name, so a second listing from
