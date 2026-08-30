@@ -863,6 +863,14 @@ export interface SignupInfo {
   consentAt?: string;
   consentMarketing: boolean;
   createdAt?: string;
+  /** profiles.role op het moment van versturen: 'buyer' | 'seller' | 'agent'.
+   *  Sinds 30-08-2026 kiest de bezoeker zijn rol bij het aanmelden, dus de
+   *  welkomstmail hoeft niet meer alle vier de dingen tegelijk aan te prijzen.
+   *  Let op bij Google: de rol wordt daar pas ná het aanmaken van het account
+   *  gezet (set-role), en de databasetrigger stuurt deze mail al bij het
+   *  aanmaken. Een Google-aanmelding krijgt daardoor meestal de zoekersversie.
+   *  Dat is bewust: liever een iets te algemene mail dan geen mail. */
+  role?: string;
 }
 
 /** One row of the "what your account unlocks" list. */
@@ -880,18 +888,34 @@ export function welcomeEmail(u: SignupInfo): string {
   const fname = u.name ? esc(String(u.name).trim().split(' ')[0]) : '';
   const S = BRAND.site;
   const marketing = !!u.consentMarketing;
+
+  /* De rol komt sinds 30-08-2026 uit de aanmeldflow. Hij bepaalt waar de mail
+     mee opent en welke rij bovenaan staat; alle vier de rijen blijven staan,
+     want een verkoper mag ook zoeken en een zoeker mag ook aanbieden. Zo blijft
+     de mail kloppen als de rol later verandert. */
+  const role = u.role === 'seller' || u.role === 'agent' ? u.role : 'buyer';
+  const opener = {
+    buyer: 'Your account is ready. From here you can save the properties and searches you care about, message sellers directly, and ask us to check a title before any money moves.',
+    seller: 'Your account is ready. You can publish your first listing in a few minutes — it is free to start — and every enquiry, viewing request and message lands in My MyKunda.',
+    agent: 'Your account is ready. You can publish listings straight away. The agency profile, with your licence details and your name on every listing, is the next thing we set up with you.',
+  }[role];
+  const rowSave = featureRow('♥', 'Save homes and searches', 'Keep favourites and saved searches in one place in My MyKunda, and pick a search back up in one tap.', `${S}/dashboard.html#saved`);
+  const rowList = featureRow('⌂', 'List a property or plot — free', 'Publish a listing in a few minutes; add Verified or Managed later for a title check and full handling.', `${S}/list.html`);
+  const rowCheck = featureRow('✓', 'Check ownership before you pay', 'Ask us to review title documents so you know what you are buying.', `${S}/verify.html`);
+  const rowMarket = featureRow('%', 'Follow the market', 'Area guides, live prices and the MyKunda market index for the coast and upcountry.', `${S}/market.html`);
+  const rows = role === 'buyer'
+    ? rowSave + rowCheck + rowMarket + rowList
+    : rowList + rowCheck + rowMarket + rowSave;
+
   return emailWrap({
     heading: fname ? `Welcome to MyKunda, ${fname}` : 'Welcome to MyKunda',
     preheader: 'Your account is ready — here is what you can do now.',
-    body: `<p style="margin:0 0 16px">Your account is ready. MyKunda is the property platform for The Gambia — built for buyers, renters, sellers and the diaspora, with local knowledge and professional standards. Here is what your account unlocks:</p>
+    body: `<p style="margin:0 0 16px">${opener}</p>
       <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin:6px 0 4px">
-        ${featureRow('♥', 'Save homes and searches', 'Keep favourites in one place and get an email when a matching property comes online.', `${S}/search.html`)}
-        ${featureRow('⌂', 'List a property or plot — free', 'Publish a listing in a few minutes; add Verified or Managed later for a title check and full handling.', `${S}/list.html`)}
-        ${featureRow('✓', 'Check ownership before you pay', 'Ask us to review title documents so you know what you are buying.', `${S}/verify.html`)}
-        ${featureRow('%', 'Follow the market', 'Area guides, live prices and the MyKunda market index for the coast and upcountry.', `${S}/market.html`)}
+        ${rows}
       </table>
       ${callout(`<p style="font-size:14px;color:${BRAND.ink};margin:0"><strong>Good to know:</strong> MyKunda only ever charges listing and service fees. We never collect deposits, down payments or purchase money — those go to your lawyer or notary's escrow account. Anyone asking otherwise is not us.</p>`, 'green')}
-      ${marketing ? `<p style="margin:16px 0 0;font-size:14px;color:${BRAND.muted}">You chose to receive new listings and area alerts by email — a handful a month at most, and you can switch them off any time from your dashboard.</p>` : ''}
+      ${marketing ? `<p style="margin:16px 0 0;font-size:14px;color:${BRAND.muted}">You asked us to email you about new listings and area alerts. You can switch them off — all at once, or per saved search — under Account in <a href="${S}/dashboard.html#account" style="color:${BRAND.green};font-weight:600">My MyKunda</a>.</p>` : ''}
       <div style="border-top:1px solid ${BRAND.line};margin-top:22px;padding-top:18px">
         <p style="font-size:14px;color:${BRAND.muted};margin:0">Questions? Reply to this email, or WhatsApp us at <a href="${BRAND.waLink}" style="color:${BRAND.green};font-weight:600">${BRAND.waNumber}</a> — office hours 9:00–18:00, Monday to Saturday.</p>
       </div>`,
@@ -901,6 +925,15 @@ export function welcomeEmail(u: SignupInfo): string {
     unsubscribeUrl: marketing ? `${S}/dashboard.html?alerts=off` : undefined,
   });
 }
+
+/** Hoe de rol uit de aanmeldflow in de teammail heet. Een kantoor krijgt hier
+ *  nadruk: dat is de enige rol waar iemand iets mee moet doen (licentiecheck). */
+const ROLE_WORDS: Record<string, string> = {
+  buyer: 'Searching (buyer or renter)',
+  seller: 'Private seller',
+  agent: '<strong>Business / agency</strong> — licence still to be checked',
+  admin: 'Admin',
+};
 
 /** To the team: a new account, with the consent state spelled out. */
 export function signupBackofficeEmail(u: SignupInfo): string {
@@ -917,6 +950,7 @@ export function signupBackofficeEmail(u: SignupInfo): string {
       ${detailTable([
         ['Name', escOpt(u.name) || '—'],
         ['Email', `<a href="mailto:${esc(u.email)}" style="color:${BRAND.green};font-weight:600">${esc(u.email)}</a>`],
+        ['Signed up as', ROLE_WORDS[String(u.role ?? '')] ?? 'Searching (buyer or renter)'],
         ['Signed up via', via],
         ['Terms accepted', consent],
         ['Listing alerts', u.consentMarketing ? 'Opted in' : 'No'],

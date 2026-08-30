@@ -96,7 +96,7 @@ serve(async (req) => {
       .update({ welcomed_at: new Date().toISOString() })
       .eq("id", user_id)
       .is("welcomed_at", null)
-      .select("id, full_name, email, consent_contact, consent_marketing, consent_at, created_at")
+      .select("id, full_name, email, role, consent_contact, consent_marketing, consent_at, created_at")
       .maybeSingle();
     if (claimErr) throw claimErr;
     if (!claimed) return json({ ok: true, skipped: "already_welcomed" });
@@ -110,6 +110,13 @@ serve(async (req) => {
       consentAt: claimed.consent_at ?? undefined,
       consentMarketing: !!claimed.consent_marketing,
       createdAt: user.created_at,
+      /* De rol die de bezoeker bij het aanmelden koos. Bij de e-mailcode-route
+         staat hij hier al goed: handle_new_user() schrijft hem uit de
+         signup-metadata. Bij Google zet set-role hem pas ná het aanmaken, en
+         deze functie vuurt al vanuit de databasetrigger — die krijgt dan
+         'buyer' te zien. Bewuste keuze: liever een iets algemenere mail dan
+         een mail die niet komt. */
+      role: (claimed.role as string) ?? undefined,
     };
 
     const errors: string[] = [];

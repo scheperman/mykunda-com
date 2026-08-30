@@ -437,6 +437,137 @@ async function saveSearch(filters, area, channel){
   return data;
 }
 
+/* ---- Teruglezen (30-08-2026) ----
+   Tot vandaag schreven saveSearch() en dbToggleFavorite() wél, maar was er geen
+   enkele leesfunctie: de voetlinks "Saved searches" en "Favorites" wezen naar
+   dashboard.html en dat toonde geen van beide. Wat een bezoeker bewaarde
+   verdween uit zijn zicht op het moment dat hij het bewaarde. */
+
+async function fetchSavedSearches(){
+  if(!sb) return null;
+  const u = await currentUser(); if(!u) return null;
+  const { data, error } = await sb.from('saved_searches')
+    .select('*').eq('user_id', u.id).order('created_at', { ascending:false });
+  if(error){ console.warn('fetchSavedSearches:', error.message); return null; }
+  return data || [];
+}
+/* patch: { label } of { channel:'email'|'off' } — meer velden mag deze functie niet zetten. */
+async function updateSavedSearch(id, patch){
+  if(!sb) throw new Error('backend-offline');
+  const u = await currentUser(); if(!u) throw new Error('not-signed-in');
+  const clean = {};
+  if(typeof patch.label === 'string') clean.label = patch.label.trim().slice(0,80) || null;
+  if(patch.channel === 'email' || patch.channel === 'off') clean.channel = patch.channel;
+  if(!Object.keys(clean).length) return null;
+  const { data, error } = await sb.from('saved_searches')
+    .update(clean).eq('id', id).eq('user_id', u.id).select().single();
+  if(error) throw error;
+  return data;
+}
+async function deleteSavedSearch(id){
+  if(!sb) throw new Error('backend-offline');
+  const u = await currentUser(); if(!u) throw new Error('not-signed-in');
+  const { error } = await sb.from('saved_searches').delete().eq('id', id).eq('user_id', u.id);
+  if(error) throw error;
+  return true;
+}
+
+/* Favorieten mét de advertentie erbij. Let op de lege embed: RLS op listings
+   laat alleen active/under_offer door (of je eigen advertenties), dus een
+   favoriet die is verkocht of ingetrokken komt terug als listings:null. Dat is
+   informatie, geen fout — het dashboard zegt dan dat hij niet meer aanstaat. */
+async function fetchFavorites(){
+  if(!sb) return null;
+  const u = await currentUser(); if(!u) return null;
+  const { data, error } = await sb.from('favorites')
+    .select('listing_id, created_at, listings(*, listing_media(*))')
+    .eq('user_id', u.id).order('created_at', { ascending:false });
+  if(error){ console.warn('fetchFavorites:', error.message); return null; }
+  return (data || []).map(function(r){
+    return {
+      listing_id: r.listing_id,
+      saved_at: r.created_at,
+      listing: r.listings ? dbListingToCard(r.listings) : null
+    };
+  });
+}
+async function removeFavorite(listingId){
+  if(!sb) throw new Error('backend-offline');
+  const u = await currentUser(); if(!u) throw new Error('not-signed-in');
+  const { error } = await sb.from('favorites').delete().eq('user_id', u.id).eq('listing_id', listingId);
+  if(error) throw error;
+  return true;
+}
+
+/* Gesprekken van deze gebruiker, beide kanten. conversations draagt de
+   ongelezen-tellers zelf (buyer_unread / seller_unread), dus dit is één query
+   en geen telling over messages. */
+async function fetchMyConversations(limit){
+  if(!sb) return null;
+  const u = await currentUser(); if(!u) return null;
+  let q = sb.from('conversations')
+    .select('*, listings(id, title, area)')
+    .order('last_message_at', { ascending:false });
+  if(limit) q = q.limit(limit);
+  const { data, error } = await q;
+  if(error){ console.warn('fetchMyConversations:', error.message); return null; }
+  return (data || []).map(function(c){
+    const asBuyer = c.buyer_id === u.id;
+    return Object.assign({}, c, {
+      _asBuyer: asBuyer,
+      _unread: asBuyer ? (c.buyer_unread||0) : (c.seller_unread||0),
+      _listing_title: (c.listings && c.listings.title) || 'A property'
+    });
+  });
+}
+
+/* Alles uit. Gebruikt door de afmeldlink onderaan de welkomstmail
+   (dashboard.html?alerts=off): die wees tot 30-08-2026 naar een pagina die er
+   niets mee deed. Zet zowel de marketingtoestemming als elke losse
+   zoekopdracht-alert uit, zodat "uit" ook echt overal uit betekent. */
+async function turnOffAllAlerts(){
+  if(!sb) throw new Error('backend-offline');
+  const u = await currentUser(); if(!u) throw new Error('not-signed-in');
+  const { error: e1 } = await sb.from('profiles').update({ consent_marketing:false }).eq('id', u.id);
+  if(e1) throw e1;
+  const { error: e2 } = await sb.from('saved_searches').update({ channel:'off' }).eq('user_id', u.id);
+  if(e2) throw e2;
+  return true;
+}
+
+/* De bezichtigingen die deze gebruiker zelf heeft aangevraagd — de kant van de
+   koper. fetchMyViewings() doet de kant van de verkoper (bezichtigingen op zijn
+   advertenties); tot vandaag was er voor de koper niets, die kreeg alleen mail.
+   Zelfde tabel als het verkopersdashboard gebruikt: viewings_legacy_v0. Zodra
+   de twee bezichtigingssystemen zijn samengevoegd verhuist dit mee. */
+async function fetchMyBookings(limit){
+  if(!sb) return null;
+  const u = await currentUser(); if(!u) return null;
+  let q = sb.from('viewings_legacy_v0')
+    .select('*, listings(id, title, area)')
+    .eq('buyer_id', u.id)
+    .order('created_at', { ascending:false });
+  if(limit) q = q.limit(limit);
+  const { data, error } = await q;
+  if(error){ console.warn('fetchMyBookings:', error.message); return null; }
+  return (data || []).map(function(v){
+    return Object.assign({}, v, { _listing_title: (v.listings && v.listings.title) || 'A property' });
+  });
+}
+
+/* Het eigen profiel: rol, naam en de voorkeuren die het dashboard toont.
+   unsubscribe_token staat er met opzet NIET bij — dat veld mag de browser
+   nooit zien. */
+async function fetchMyProfile(){
+  if(!sb) return null;
+  const u = await currentUser(); if(!u) return null;
+  const { data, error } = await sb.from('profiles')
+    .select('id, role, full_name, email, phone, agency_id, consent_marketing, notify_messages, created_at')
+    .eq('id', u.id).maybeSingle();
+  if(error){ console.warn('fetchMyProfile:', error.message); return null; }
+  return data;
+}
+
 /* ---------------- DB → demo card shape ---------------- */
 /* Maps a Supabase listing row to the object shape the site's cards/map expect. */
 function dbListingToCard(r){
