@@ -8,7 +8,7 @@
    First visit   : network with a 6 s guard, then whatever is in cache. A stalled
                    4G socket no longer leaves the visitor on a blank page.
    Map tiles     : never cached here (external, volume too large). */
-const V = 'mk-v87';
+const V = 'mk-v88';
 const STATIC = V + '-static';
 const PAGES  = V + '-pages';
 const MAX_PAGES = 60;
@@ -20,7 +20,7 @@ const MAX_PAGES = 60;
    the browser treat the precached file as a different URL and the whole precache
    becomes dead weight. Do not edit STAMP by hand: run `node build.mjs` and it
    rewrites this line and every page from one source. */
-const STAMP = '65199754878152';
+const STAMP = '62310113260008';
 const PRECACHE = [
   'styles.min.css?v=' + STAMP,
   'redesign.min.css?v=' + STAMP,
@@ -45,7 +45,12 @@ self.addEventListener('activate', e => {
   ).then(()=>self.clients.claim()));
 });
 
-const isStatic = p => /\.(css|js|woff2?|webp|png|jpg|jpeg|svg|ico)$/i.test(p);
+/* .json staat er sinds 30-08-2026 bij vanwege gambia-osm.json, het straten- en
+   plekkenregister. Zonder die extensie viel het in de HTML-tak: dan belandde een
+   bestand van 120 kB in de paginacache en telde het mee voor MAX_PAGES, waardoor
+   het echte pagina's uit de cache duwde. Het draagt de buildstempel in de URL,
+   dus cache-first is veilig: een nieuw register krijgt een nieuwe URL. */
+const isStatic = p => /\.(css|js|json|woff2?|webp|png|jpg|jpeg|svg|ico)$/i.test(p);
 
 /* Signed-in pages are never cached: on a shared phone the next person must not
    be able to page back into someone else's dashboard, inbox or checkout. */

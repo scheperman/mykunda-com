@@ -450,7 +450,28 @@ Hoe het geschakeld is, allemaal bovenin `app.js`:
   hoekpunten als `[lat,lng]`, zoals Leaflet ze geeft) en hij bouwt bij MapTiler
   een path-string en bij Mapbox een GeoJSON-overlay. `list.html` levert sinds
   29-08-2026 alleen nog de hoekpunten aan.
-- `mkGeocode`/`mkReverseGeocode` praten bij Mapbox met Geocoding **v6**;
+- **`mkGeocode` is sinds 30-08-2026 twee bronnen, eigen register eerst.** Mapbox
+  kent Gambia niet op straatniveau. Live gemeten op mykunda.com, tegen zowel
+  Geocoding v6 als de Search Box API, beide met `country=gm`: "Palma Rima Road"
+  gaf één treffer — *Paima*, 45 km ernaast — en "Kairaba Avenue", "Bertil
+  Harding Highway", "Coco Ocean" en "Senegambia Strip" gaven er **nul**. Een
+  verkoper die op de List-pagina zijn eigen straat intikte kreeg dus geen
+  suggestie en een kaart die bleef staan. `gambia-osm.json` (120 kB, 2.944
+  namen: 376 straten, 1.343 plaatsen, 1.225 herkenningspunten, uit
+  OpenStreetMap) staat nu vóór Mapbox; `mkRemoteGeocode` is de oude functie en
+  blijft als tweede bron staan. Het bestand wordt **pas opgehaald zodra iemand
+  in een locatieveld begint te typen**, staat op onze eigen server (geen live
+  afhankelijkheid van een gratis dienst, werkt ook offline) en draagt de
+  buildstempel in de URL — `app.js` leest die uit zijn eigen `<script src>`.
+  Het staat daarom in `SITE_ASSETS` én in `VERSIONED` van `build.mjs`, en
+  `.json` is aan `isStatic` in `sw.js` toegevoegd (anders belandde 120 kB in de
+  paginacache en duwde het echte pagina's eruit).
+  Verversen: `_werk/bouw-gambia-osm.py` opnieuw draaien, bestand vervangen,
+  `node build.mjs`. Controle: `node _werk/check-locatiezoek.mjs` — die draait de
+  zoeklogica op het bestand zonder browser en toetst tien bekende adressen.
+  Bronvermelding: OpenStreetMap-bijdragers, ODbL 1.0 (staat al in de
+  kaartattributie).
+- `mkRemoteGeocode`/`mkReverseGeocode` praten bij Mapbox met Geocoding **v6**;
   `mkMbFeature` vertaalt het antwoord naar de vorm die de pagina's al lazen
   (`center`, `text`, `place_name`, `place_type`, `context`). Let op:
   uitkomsten die worden **opgeslagen** vereisen bij Mapbox `permanent=true` —
@@ -1272,6 +1293,20 @@ De GeoNames-val die de oude Gambissara-fout verklaart: GeoNames "Gambissar"
 (13,317 / −13,95) is het dorpje Gambisarra Lamoi in Kantora, niet de stad
 Gambissara (13,238 / −14,311). Wie blind op GeoNames-namen geocodeert, zet
 de stad 40 km mis. OSM had het wel goed.
+
+Voor **straten en herkenningspunten** is `gambia-places.js` niet de bron —
+dat is `gambia-osm.json` (zie het Mapbox-hoofdstuk hierboven). De twee staan
+los van elkaar: `gambia-places.js` bepaalt de gebiedsindeling en de prijzen,
+`gambia-osm.json` alleen wat het zoekveld herkent.
+
+Het locatieveld op `list.html` heeft sinds 30-08-2026 twee vangnetten die het
+daarvoor niet had. Eén: op Enter of blur neemt het de klaarstaande suggestie
+over, en vindt het er geen, dan zoekt het alsnog één keer — daarvoor stond er
+meteen "not a recognised area" en bleef de kaart staan, ook als de treffer
+eronder klopte. Twee: `locAdopted` onthoudt wat een aangeklikte suggestie in
+het veld heeft gezet, want de blur daarna las die volledige naam ("Palma Rima
+Road, Kololi, The Gambia") als een gebiedsnaam, herkende hem niet en gooide
+een goede treffer alsnog weg.
 
 **De regel sinds 30-08-2026: `gambia-places.js` is de enige bron.**
 `GM_AREAS` en `AREA_COORDS` in `app.js` zijn daaruit gegenereerd (zelfde

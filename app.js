@@ -535,11 +535,15 @@ window.mkStaticMapUrl = function(bbox, w, h, opts){
 
 
 
-/* ---------- Zoeken op plaats en adres (MapTiler Geocoding) ----------
+/* ---------- Zoeken op plaats en adres, tweede bron ----------
    Onze eigen lijst kent zo'n veertig gebieden. Een bezoeker denkt in "Palma
-   Rima Road" of "Coco Ocean", dus vragen we het daarnaast aan MapTiler, strak
-   op Gambia gezet. Een treffer draagt een echte coördinaat, dus staat de pin
-   meteen goed in plaats van op een gebiedsmiddelpunt.
+   Rima Road" of "Coco Ocean", dus vragen we het daarnaast aan de kaartleverancier,
+   strak op Gambia gezet. Een treffer draagt een echte coördinaat, dus staat de
+   pin meteen goed in plaats van op een gebiedsmiddelpunt.
+
+   LET OP: dit is sinds 30-08-2026 de tweede bron, niet de eerste. Mapbox kent
+   Gambia niet op straatniveau; het eigen register hieronder wel. Wat hier staat
+   is nog geschreven voor MapTiler, dat het destijds wél kon.
 
    proximity is een magneet, geen hek: het duwt Groot-Banjul naar boven zonder
    iets in het binnenland weg te gooien. country=gm is wél een hek.
@@ -571,7 +575,7 @@ window.mkMbFeature = function(f){
   };
 };
 
-window.mkGeocode = function(q, opts){
+window.mkRemoteGeocode = function(q, opts){
   opts = opts || {};
   if(!q || q.length < (opts.min || 3)) return Promise.resolve([]);
   if(window.mkProvider() === 'mapbox'){
@@ -604,6 +608,135 @@ window.mkGeocode = function(q, opts){
     .then(function(r){ return r.ok ? r.json() : { features: [] }; })
     .then(function(j){ return (j.features || []).filter(function(f){ return f && f.center; }); })
     .catch(function(){ return []; });          /* offline: de eigen lijst blijft werken */
+};
+
+/* ---------- Eigen straten- en plekkenregister (OpenStreetMap) ----------
+   Mapbox' geocoder kent Gambia op straatniveau niet. Gemeten op 30-08-2026,
+   live op mykunda.com, tegen zowel Geocoding v6 als de Search Box API, beide
+   met country=gm:
+
+       "Palma Rima Road"        -> 1 treffer: Paima, West Coast Division (45 km ernaast)
+       "Kairaba Avenue"         -> 0 treffers
+       "Bertil Harding Highway" -> 0 treffers
+       "Coco Ocean"             -> 0 treffers
+       "Senegambia Strip"       -> 0 treffers
+
+   Een verkoper die op de List-pagina zijn eigen straat intikte, kreeg dus geen
+   suggestie, daarna "not a recognised area", en een kaart die bleef staan. De
+   toelichting bij mkGeocode ging nog uit van MapTiler, die dat wél kon.
+
+   OpenStreetMap kent die namen wel. gambia-osm.json is daar de neerslag van:
+   2.944 namen (376 straten, 1.343 plaatsen, 1.225 herkenningspunten), 120 kB,
+   gebouwd door _werk/bouw-gambia-osm.py uit het landextract. Het staat op onze
+   eigen server, wordt pas opgehaald zodra iemand begint te typen, en is dus
+   geen live afhankelijkheid van een dienst die vandaag gratis is. Het werkt
+   ook als het netwerk hapert — precies waar de rest van de site op gebouwd is.
+
+   Verversen: het script opnieuw draaien, het bestand vervangen, `node build.mjs`.
+   Het staat in VERSIONED, dus de stempel verschuift en iedereen haalt het op. */
+window.MK_OSM_FILE = 'gambia-osm.json';
+var mkOsmRows = null, mkOsmLoading = null;
+
+window.mkOsmIndex = function(){
+  if(mkOsmRows) return Promise.resolve(mkOsmRows);
+  if(mkOsmLoading) return mkOsmLoading;
+  /* Dezelfde stempel als app.min.js: één build, één versie van beide. */
+  var stamp = '', s = document.querySelector('script[src*="app.min.js"],script[src*="app.js"]');
+  if(s){ var m = /[?&]v=(\d+)/.exec(s.getAttribute('src') || ''); if(m) stamp = '?v=' + m[1]; }
+  mkOsmLoading = fetch(window.MK_OSM_FILE + stamp, { credentials:'omit' })
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(j){
+      var kinds = (j && j.kinds) || ['street','place','poi'];
+      mkOsmRows = ((j && j.items) || []).map(function(a){
+        return { n:a[0], lc:String(a[0]).toLowerCase(), lat:a[1], lng:a[2], k:kinds[a[3]] || 'place' };
+      });
+      return mkOsmRows;
+    })
+    .catch(function(){ mkOsmRows = []; return mkOsmRows; });   /* offline: de eigen gebiedenlijst blijft werken */
+  return mkOsmLoading;
+};
+
+/* Lager is beter. Een exacte naam wint van een beginnend woord, een beginnend
+   woord van een losse letterreeks ergens in het midden — anders staat
+   "Brikama Bus Station" boven "Brikama". */
+function mkOsmRank(lc, q){
+  if(lc === q) return 0;
+  if(lc.indexOf(q) === 0) return 1;
+  if(lc.indexOf(' ' + q) > -1) return 2;
+  if(lc.indexOf(q) > -1) return 3;
+  return -1;
+}
+/* Een straat weegt zwaarder dan een winkel op diezelfde straat: wie een adres
+   intikt, bedoelt het adres. */
+var MK_OSM_KIND_W = { street:0, place:1, poi:2 };
+
+/* Het label eronder ("· Kololi") komt uit het register zelf: de dichtstbijzijnde
+   plaatsnaam. Zo draagt het bestand geen tweede kolom met dezelfde informatie. */
+function mkOsmFeature(row, rows){
+  var near = null, best = Infinity;
+  for(var i = 0; i < rows.length; i++){
+    var p = rows[i];
+    if(p.k !== 'place' || p === row) continue;
+    var d = Math.abs(p.lat - row.lat) + Math.abs(p.lng - row.lng);
+    if(d < best){ best = d; near = p; }
+  }
+  var label = (near && near.n.toLowerCase() !== row.lc) ? near.n : null;
+  return {
+    center: [row.lng, row.lat],
+    text: row.n,
+    place_name: row.n + (label ? ', ' + label : '') + ', The Gambia',
+    place_type: [row.k === 'poi' ? 'poi' : (row.k === 'street' ? 'street' : 'place')],
+    context: label ? [{ id:'place', text:label }] : [],
+    source: 'osm'
+  };
+}
+
+window.mkLocalGeocode = function(q, opts){
+  opts = opts || {};
+  q = String(q || '').trim().toLowerCase();
+  if(q.length < (opts.min || 3)) return Promise.resolve([]);
+  return window.mkOsmIndex().then(function(rows){
+    var hits = [];
+    rows.forEach(function(r){
+      var s = mkOsmRank(r.lc, q);
+      if(s > -1) hits.push({ r:r, s:s });
+    });
+    /* Niets? Dan is het waarschijnlijk in de verkeerde volgorde getypt
+       ("Road Palma Rima"). Elk woord moet dan wél voorkomen. */
+    if(!hits.length){
+      var words = q.split(/\s+/).filter(function(w){ return w.length > 1; });
+      if(words.length > 1) rows.forEach(function(r){
+        var all = words.every(function(w){ return r.lc.indexOf(w) > -1; });
+        if(all) hits.push({ r:r, s:4 });
+      });
+    }
+    hits.sort(function(a, b){
+      return (a.s - b.s)
+          || ((MK_OSM_KIND_W[a.r.k] || 3) - (MK_OSM_KIND_W[b.r.k] || 3))
+          || (a.r.n.length - b.r.n.length);
+    });
+    return hits.slice(0, (opts.limit || 6) * 2).map(function(h){ return mkOsmFeature(h.r, rows); });
+  });
+};
+
+/* Het eigen register eerst, Mapbox erachter voor wat daar nog bovenop komt.
+   Beide leveren dezelfde vorm op, dus de pagina's merken het verschil niet. */
+window.mkGeocode = function(q, opts){
+  opts = opts || {};
+  if(!q || q.length < (opts.min || 3)) return Promise.resolve([]);
+  return Promise.all([
+    window.mkLocalGeocode(q, opts).catch(function(){ return []; }),
+    window.mkRemoteGeocode(q, opts).catch(function(){ return []; })
+  ]).then(function(both){
+    var seen = {}, out = [];
+    both[0].concat(both[1]).forEach(function(f){
+      var key = String(f.text || '').trim().toLowerCase();
+      if(!key || seen[key]) return;
+      seen[key] = 1;
+      out.push(f);
+    });
+    return out.slice(0, opts.limit || 6);
+  });
 };
 
 /* Omgekeerd: van een pin naar de naam van de plek waar hij staat. */
