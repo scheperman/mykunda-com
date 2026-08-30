@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1bpw5fg--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1xc98fb--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <noscript></noscript>
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=56065524497728">
+<link rel="stylesheet" href="styles.min.css?v=36458551520506">
 <style>
 body{background:var(--paper-2)}
 .dash{max-width:1180px;margin:0 auto;padding:36px 28px 70px}
@@ -197,7 +197,7 @@ body{background:var(--paper-2)}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=56065524497728"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=36458551520506"><!--/mk-css-->
 </head>
 <body>
 <div id="header"></div>
@@ -349,15 +349,15 @@ body{background:var(--paper-2)}
 
 <div id="footer"></div>
 
-<script src="app.min.js?v=56065524497728"></script>
-<script src="image-slot.js?v=56065524497728" defer></script>
+<script src="app.min.js?v=36458551520506"></script>
+<script src="image-slot.js?v=36458551520506" defer></script>
 <script>
 /* 4G: the Supabase client (~205 KB) is not needed to paint this page. It downloads
    in parallel and every backend call awaits window.__sbReady. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=56065524497728'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=36458551520506'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 </script>
@@ -692,7 +692,7 @@ window.sendVR=async function(i){
 
 var ROLE_LABEL = { buyer:'Searching', seller:'Private seller', agent:'Agency', admin:'Admin' };
 var P=null, ROLE='buyer', SHOW='buyer', LIVE=false;
-var SAVED=[], FAVS=[], CONVOS=[], BOOKINGS=[], MARKET=null;
+var SAVED=[], FAVS=[], CONVOS=[], BOOKINGS=[], MARKET=null, DROPS={};
 
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){
   return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
@@ -874,10 +874,17 @@ function renderFavs(el, limit){
     var l=f.listing;
     var thumb = l.img ? '<div class="thumb"><img src="'+esc(l.img)+'" alt="" onerror="this.style.display=\'none\'"></div>'
                       : '<div class="thumb"></div>';
+    /* Prijsdaling. Komt alleen mee als de aanbieder prijshistorie aan heeft
+       laten staan en de hoofdschakelaar aan staat; anders is DROPS voor deze
+       advertentie gewoon leeg en zegt de rij er niets over. */
+    var drop = DROPS[f.listing_id];
+    var dropPill = drop
+      ? '<span class="tagpill new">Price dropped · was '+money(drop.old_price)+'</span> '
+      : '';
     return '<div class="srow" data-fav="'+f.listing_id+'">'+thumb+'<div class="grow">'
       + '<div class="t1">'+esc(l.title||'Untitled')+'</div>'
       + '<div class="t2">'+esc((l.area||'').split('· ')[1]||l.area||'')+' · '+fmtPrice(l.price,l.type)+'</div>'
-      + '<div class="acts">'+(l.verified?'<span class="tagpill on">Verified title</span> ':'')
+      + '<div class="acts">'+dropPill+(l.verified?'<span class="tagpill on">Verified title</span> ':'')
       + '<a class="mini solid" href="property.html?id='+esc(l.id)+'">View</a>'
       + ' <button class="mini danger" data-act="unfav">Remove</button>'
       + '</div></div></div>';
@@ -1158,6 +1165,12 @@ function applyRole(){
        query van de site, maar hij is gedeeld en vijf minuten geldig. */
     if(SAVED.length && typeof primeListings==='function'){
       try{ MARKET = await primeListings(); }catch(e){}
+    }
+    /* Prijsdalingen op de favorieten. Eén query, alleen als er favorieten zijn
+       die nog echt aanstaan. */
+    var favIds = FAVS.filter(function(f){ return f.listing; }).map(function(f){ return f.listing_id; });
+    if(favIds.length && typeof fetchPriceDrops==='function'){
+      try{ DROPS = await fetchPriceDrops(favIds) || {}; }catch(e){}
     }
   }
 

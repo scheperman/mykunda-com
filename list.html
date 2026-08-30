@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:017qzam--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:18izo8x--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preconnect" href="https://api.mapbox.com" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=56065524497728">
+<link rel="stylesheet" href="styles.min.css?v=36458551520506">
 <style>
 body{background:var(--paper-2);min-height:100vh}
 
@@ -264,7 +264,7 @@ body{background:var(--paper-2);min-height:100vh}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=56065524497728"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=36458551520506"><!--/mk-css-->
 </head>
 <body>
 <div class="wizbar">
@@ -682,6 +682,16 @@ body{background:var(--paper-2);min-height:100vh}
       <label class="chk-opt sel" id="negToggle" style="max-width:400px;display:flex">
         <span class="box" id="negCk"></span> <span id="negTxt">Open to offers / negotiable</span>
       </label>
+      <!-- Prijshistorie, 30-08-2026. Standaard aan, omdat een zichtbare
+           prijsdaling voor een koper het sterkste signaal is dat er te praten
+           valt — maar het is een keuze, en die hoort hier te staan waar de
+           prijs staat, niet verstopt in een instelling. -->
+      <label class="chk-opt sel" id="priceHistToggle" style="max-width:400px;display:flex;margin-top:10px">
+        <span class="box" id="priceHistCk"></span>
+        <span>Show price changes to buyers
+          <span style="display:block;font-weight:500;color:var(--muted);font-size:12.5px;line-height:1.45;margin-top:3px">Lower the price later and buyers see “was D…”. Switch this off and the history stays between you and us.</span>
+        </span>
+      </label>
       <div id="termsWrap" style="display:none">
         <div class="frow" style="margin-top:30px">
           <div class="fld">
@@ -848,18 +858,18 @@ body{background:var(--paper-2);min-height:100vh}
   </aside>
 </div>
 
-<script src="valuation-areas.js?v=56065524497728"></script>
-<script src="valuation.js?v=56065524497728"></script>
-<script src="app.min.js?v=56065524497728"></script>
-<script src="gambia-places.js?v=56065524497728" defer></script>
-<script src="image-slot.js?v=56065524497728" defer></script>
+<script src="valuation-areas.js?v=36458551520506"></script>
+<script src="valuation.js?v=36458551520506"></script>
+<script src="app.min.js?v=36458551520506"></script>
+<script src="gambia-places.js?v=36458551520506" defer></script>
+<script src="image-slot.js?v=36458551520506" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel, Leaflet (~145 KB) only when the
    seller reaches the location step. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=56065524497728'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=36458551520506'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -1049,7 +1059,12 @@ function listingFields(){
       /* Only ever set by a code that came back correct. Nothing in the browser
          can talk itself into this: the check runs in the edge function. */
       phone_verified_at: S.phoneVerified ? new Date().toISOString() : null,
-      phone_verify_channel: S.phoneVerified ? 'whatsapp' : null
+      phone_verify_channel: S.phoneVerified ? 'whatsapp' : null,
+      /* Mag een bezoeker zien dat de prijs gezakt is? De aanbieder kiest dit in
+         de prijsstap; standaard aan. De database heeft er nog een
+         hoofdschakelaar boven (app_settings.price_history_public), dus dit veld
+         zet niets aan wat het platform uit heeft staan. */
+      show_price_history: S.priceHist !== false
     });
   }
   return f;
@@ -1095,6 +1110,12 @@ async function loadDraft(id){
     S.street = data.street||'';
     S.desc = data.description||'';
     S.neg = !!data.negotiable;
+    /* Ontbreekt de kolom (oudere database), dan blijft prijshistorie aan staan
+       — dat is ook de standaard van de kolom zelf. De schakelaar wordt hier
+       meteen bijgetekend, want deze functie kan zowel vóór als ná het aankoppelen
+       van de knoppen draaien. */
+    S.priceHist = (data.show_price_history !== false);
+    try{ var _ph=document.getElementById('priceHistToggle'); if(_ph) _ph.classList.toggle('sel', S.priceHist); }catch(e){}
     S.beds = data.beds ? String(data.beds) : '';
     S.baths = data.baths ? String(data.baths) : '';
     S.sqm = data.sqm ? String(data.sqm) : '';
@@ -2092,6 +2113,17 @@ priceIn.addEventListener('input',()=>{
 });
 negCk.innerHTML=checkSm;
 negToggle.addEventListener('click',()=>{S.neg=!S.neg;negToggle.classList.toggle('sel',S.neg);});
+
+/* Prijshistorie tonen of niet. Staat standaard aan; een hervat concept brengt
+   zijn eigen stand mee (S.priceHist wordt in restoreDraft gezet). */
+if(S.priceHist === undefined) S.priceHist = true;
+priceHistCk.innerHTML=checkSm;
+priceHistToggle.classList.toggle('sel', S.priceHist !== false);
+priceHistToggle.addEventListener('click',()=>{
+  S.priceHist = (S.priceHist === false);
+  priceHistToggle.classList.toggle('sel', S.priceHist);
+  if(typeof autoSaveDraft==='function') autoSaveDraft();
+});
 
 // ---- Beach points along Gambian coast (lat, lng, name) ----
 const BEACH_POINTS=[

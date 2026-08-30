@@ -315,7 +315,9 @@ const OPTIONAL_COLUMNS = ['boundary','beach_m',
      wanneer 20260829_02_commercial_segment.sql nog niet gedraaid is: de kolom
      valt dan weg en de rest van de advertentie blijft overeind. */
   'segment','units','parking_spaces','current_use','fit_out',
-  'service_charge','min_term_months','plot_width_m'];
+  'service_charge','min_term_months','plot_width_m',
+  /* Prijshistorie, 30-08-2026. */
+  'show_price_history'];
 function missingOptionalColumn(error){
   return OPTIONAL_COLUMNS.find(c => isMissingColumn(error, c)) || null;
 }
@@ -491,6 +493,31 @@ async function fetchFavorites(){
     };
   });
 }
+/* De laatste prijswijziging per advertentie, voor de "was D…"-melding op
+   favorieten. De trigger listings_price_event() schrijft drie soorten:
+   'listed' bij publicatie, 'change' bij een prijswijziging (pct negatief is een
+   daling) en 'sold' bij verkoop. Alleen 'change' is hier interessant.
+
+   Ziet een bezoeker niets, dan komt hier gewoon een lege lijst terug en blijft
+   de melding weg: de leesregel op listing_price_events eist dat de advertentie
+   publiek staat, dat de aanbieder prijshistorie aan heeft laten staan, en dat
+   de hoofdschakelaar app_settings.price_history_public aan staat. Geen fout,
+   geen lege badge — niets. */
+async function fetchPriceDrops(listingIds){
+  if(!sb || !listingIds || !listingIds.length) return {};
+  const { data, error } = await sb.from('listing_price_events')
+    .select('listing_id, old_price, new_price, pct, occurred_at')
+    .in('listing_id', listingIds)
+    .eq('event','change')
+    .order('occurred_at', { ascending:false });
+  if(error){ console.warn('fetchPriceDrops:', error.message); return {}; }
+  const out = {};
+  (data||[]).forEach(function(e){
+    if(!out[e.listing_id] && Number(e.new_price) < Number(e.old_price)) out[e.listing_id] = e;
+  });
+  return out;
+}
+
 async function removeFavorite(listingId){
   if(!sb) throw new Error('backend-offline');
   const u = await currentUser(); if(!u) throw new Error('not-signed-in');
