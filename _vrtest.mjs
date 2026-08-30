@@ -201,5 +201,102 @@ check('rest houdt zijn volgorde', gesorteerd.indexOf('a') < gesorteerd.indexOf('
 check('andere sortering blijft ongemoeid',
   featuredSort([...lijst], 'low', mkIsBoosted).map(x=>x.id).join(',') === 'a,b,c,d,e');
 
+/* ---- Fase 5: pijplijn, portefeuille en statistiek -------------------------
+   Weer één aaneengesloten stuk bron uit de gebouwde pagina, van LEAD_STAGES
+   tot aan de routering. De functies die de DOM aanraken roepen we niet aan;
+   de rekenende en tekenende functies wel. */
+const proSrc = (() => {
+  const a = src.indexOf('var LEAD_STAGES =');
+  const b = src.indexOf("/* ---------- routering ---------- */");
+  if(a < 0 || b < 0 || b < a) throw new Error('fase 5-blok niet gevonden');
+  return src.slice(a, b);
+})();
+
+function makePro(state){
+  const st = Object.assign({ LEADS:[], PORTFOLIO:[], VIEWINGS:[], VIEWDAYS:[], PAYMENTS:[],
+    PF:{ status:'', kind:'', sel:{} } }, state||{});
+  const fn = new Function('esc','ago','money','shortDate','statusFromDb','statusClass','emptyBox',
+    'LEADS','PORTFOLIO','VIEWINGS','VIEWDAYS','PAYMENTS','PF','document',
+    proSrc + '\nreturn { hoursTxt, median, leadCard, pfRows, viewsPerDay, agendaRow };');
+  return fn(esc,
+    d => 'x ago',
+    g => 'D' + Math.round(+g||0).toLocaleString('en-US'),
+    iso => new Date(iso).toISOString().slice(0,10),
+    s => ({active:'Active',draft:'Draft',pending_review:'In review',sold:'Sold'}[s]||s),
+    s => s==='Active' ? 'active' : 'closed',
+    () => '<div class="empty"></div>',
+    st.LEADS, st.PORTFOLIO, st.VIEWINGS, st.VIEWDAYS, st.PAYMENTS, st.PF,
+    { getElementById: () => null, querySelectorAll: () => [] });
+}
+
+const pro = makePro();
+
+// 13. reactietijd in woorden
+check('minuten onder het uur',  pro.hoursTxt(0.5) === '30 min');
+check('uren tot twee dagen',    pro.hoursTxt(6) === '6 h');
+check('dagen daarboven',        pro.hoursTxt(72) === '3 d');
+check('niets zonder waarde',    pro.hoursTxt(null) === '');
+
+// 14. mediaan, en niets verzinnen als er niets te meten valt
+check('mediaan van drie',       pro.median([1,5,100]) === 5);
+check('mediaan van vier',       pro.median([2,4,6,8]) === 5);
+check('lege reeks geeft null',  pro.median([null,undefined,NaN]) === null);
+
+// 15. de leadkaart
+const L1 = { id:'l1', stage:'new', name:'Fatou', message:'Kan ik dit zien?',
+  _listing_title:'Kololi villa', _listing_area:'Kololi', created_at:new Date().toISOString(),
+  source:'viewing', _reply_hours:null, note:null, lost_reason:null, email:'f@x.gm' };
+let k = pro.leadCard(L1);
+check('nieuwe lead krijgt de volgende stap', /data-stage="contacted"/.test(k));
+check('nieuwe lead kan verloren',            /data-stage="lost"/.test(k));
+check('nieuwe lead heeft geen Reopen',       !/Reopen/.test(k));
+check('elk metablokje in een eigen span',    (k.match(/<div class="met">(.*?)<\/div>/)||['',''])[1].startsWith('<span>'), k);
+check('geen reactietijd zonder stempel',     !/answered in/.test(k));
+
+k = pro.leadCard(Object.assign({}, L1, { stage:'won' }));
+check('gewonnen lead heeft geen volgende stap', !/data-stage="qualified"/.test(k) && !/→/.test(k));
+check('gewonnen lead kan heropend',             /data-stage="new"/.test(k));
+
+k = pro.leadCard(Object.assign({}, L1, { _reply_hours: 30 }));
+check('trage reactie is rood', /class="slow">answered in 30 h/.test(k), k);
+k = pro.leadCard(Object.assign({}, L1, { _reply_hours: 2 }));
+check('snelle reactie is neutraal', /class="">answered in 2 h/.test(k));
+
+k = pro.leadCard(Object.assign({}, L1, { name:'<script>x</script>', note:'<b>let op</b>' }));
+check('naam en notitie worden ontsmet', k.includes('&lt;script&gt;') && k.includes('&lt;b&gt;'));
+
+// 16. filters op de portefeuille
+const PORT = [
+  { id:'a', dbStatus:'active',         type:'sale' },
+  { id:'b', dbStatus:'draft',          type:'sale' },
+  { id:'c', dbStatus:'active',         type:'rent' },
+  { id:'d', dbStatus:'pending_review', type:'rent' }
+];
+const alles = makePro({ PORTFOLIO: PORT }).pfRows().map(x=>x.id).join(',');
+check('zonder filter alles', alles === 'a,b,c,d');
+check('filter op status',
+  makePro({ PORTFOLIO: PORT, PF:{status:'active',kind:'',sel:{}} }).pfRows().map(x=>x.id).join(',') === 'a,c');
+check('filter op type',
+  makePro({ PORTFOLIO: PORT, PF:{status:'',kind:'rent',sel:{}} }).pfRows().map(x=>x.id).join(',') === 'c,d');
+check('twee filters samen',
+  makePro({ PORTFOLIO: PORT, PF:{status:'active',kind:'rent',sel:{}} }).pfRows().map(x=>x.id).join(',') === 'c');
+
+// 17. de reeks bezoeken per dag
+const vandaag = new Date().toISOString().slice(0,10);
+const gister  = new Date(Date.now()-86400e3).toISOString().slice(0,10);
+const reeks = makePro({ VIEWDAYS:[{listing_id:'a',day:vandaag,views:5},{listing_id:'b',day:vandaag,views:2},{listing_id:'a',day:gister,views:3}] }).viewsPerDay(30);
+check('reeks is dertig dagen lang', reeks.length === 30);
+check('vandaag telt beide advertenties op', reeks[29].n === 7, JSON.stringify(reeks.slice(-2)));
+check('gisteren klopt',                     reeks[28].n === 3);
+check('een dag zonder bezoek is nul, geen gat', reeks[0].n === 0);
+
+// 18. de agenda
+const A = { _listing_title:'Kololi villa', _when:new Date(Date.now()+86400e3).toISOString(),
+  status:'proposed', _mustRespond:true, _side:'seller' };
+check('de bal bij jou staat er zo bij', /Waiting for your answer/.test(pro.agendaRow(A)));
+check('op je eigen advertentie',        /on your listing/.test(pro.agendaRow(A)));
+check('zonder tijd geen verzonnen tijd',
+  /No time yet/.test(pro.agendaRow(Object.assign({}, A, { _when:null }))));
+
 console.log(fails ? '\n' + fails + ' test(s) mislukt.' : '\nAlle tests geslaagd.');
 process.exit(fails ? 1 : 0);

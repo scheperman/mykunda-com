@@ -1139,6 +1139,101 @@ async function fetchMyListings(){
   return data;
 }
 
+/* ---------------- De professionele back-office (fase 5) ----------------
+   Alles hieronder is voor de aanbieder met een portefeuille. Het leunt op wat
+   er al lag en nergens op aangesloten was: leads.stage met zeven fases,
+   leads.assigned_to, mandate_expires_on, en de bezoekcijfers. */
+
+/* De leads op de eigen advertenties, met de advertentie erbij zodat de
+   pijplijn kan tonen waar een lead over gaat. Eén query in plaats van een
+   lijstje ids: de leesregel "leads owner read" scoopt al op eigenaar/agent. */
+async function fetchLeadPipeline(limit){
+  if(!sb) return null;
+  const u = await currentUser();
+  if(!u) return null;
+  let q = sb.from('leads')
+    .select('*, listings(id, title, area, owner_id, agent_id)')
+    .order('created_at', { ascending: false });
+  if(limit) q = q.limit(limit);
+  const { data, error } = await q;
+  if(error){ console.warn('fetchLeadPipeline:', error.message); return null; }
+  return (data||[]).map(function(l){
+    const li = l.listings || {};
+    /* Reactietijd in uren, en alleen als hij écht meetbaar is: contacted_at
+       gezet én na created_at. Een lead die nog niemand aanraakte heeft geen
+       reactietijd, geen nul. */
+    let hrs = null;
+    if(l.contacted_at && l.created_at){
+      const d = (new Date(l.contacted_at) - new Date(l.created_at)) / 3600000;
+      if(isFinite(d) && d >= 0) hrs = d;
+    }
+    return Object.assign({}, l, {
+      _listing_title: li.title || (l.listing_id ? 'A property' : 'General enquiry'),
+      _listing_area: li.area || '',
+      _reply_hours: hrs
+    });
+  });
+}
+
+/* Eén lead bijwerken. De database staat alleen stage, contacted_at, note,
+   lost_reason en assigned_to toe (kolomrechten sinds 30-08-2026), dus wat hier
+   langs komt wordt eerst tot die vijf teruggebracht — een tikfout hoort een
+   lege update te zijn, geen fout op iets waar we toch niet bij mogen. */
+const LEAD_WRITABLE = ['stage','contacted_at','note','lost_reason','assigned_to'];
+async function updateLead(leadId, patch){
+  if(!sb) throw new Error('backend-offline');
+  const clean = {};
+  LEAD_WRITABLE.forEach(function(k){ if(patch && k in patch) clean[k] = patch[k]; });
+  if(!Object.keys(clean).length) return null;
+  const { data, error } = await sb.from('leads').update(clean).eq('id', leadId).select().single();
+  if(error) throw error;
+  return data;
+}
+
+/* Dagtotalen van de bezoeken, voor de statistiekweergave. Vult de rollup niet
+   aan en verzint niets: staat er voor een dag niets, dan waren er die dag geen
+   bezoeken (of draaide de rollup nog niet). */
+async function fetchViewDays(listingIds, sinceIso){
+  if(!sb || !listingIds || !listingIds.length) return [];
+  let q = sb.from('listing_view_days')
+    .select('listing_id, day, views')
+    .in('listing_id', listingIds)
+    .order('day', { ascending: true });
+  if(sinceIso) q = q.gte('day', String(sinceIso).slice(0,10));
+  const { data, error } = await q;
+  if(error){ console.warn('fetchViewDays:', error.message); return []; }
+  return data || [];
+}
+
+/* De eigen betalingen — bonnen en facturen. De leesregel op payments scoopt op
+   user_id, dus dit zijn alleen aankopen van deze gebruiker. */
+async function fetchMyPayments(limit){
+  if(!sb) return null;
+  const u = await currentUser();
+  if(!u) return null;
+  let q = sb.from('payments')
+    .select('id, reference, listing_id, plan_id, amount_minor, currency, status, method, paid_at, created_at, fulfilment_status, listings(id, title)')
+    .order('created_at', { ascending: false });
+  if(limit) q = q.limit(limit);
+  const { data, error } = await q;
+  if(error){ console.warn('fetchMyPayments:', error.message); return null; }
+  return data || [];
+}
+
+/* Meerdere advertenties tegelijk op een status zetten. Bewust één rij per
+   aanroep in plaats van één update met .in(): zo weet de knop precies welke
+   advertentie niet lukte, en blijft de rest staan. */
+async function bulkSetListingStatus(listingIds, status){
+  if(!sb) throw new Error('backend-offline');
+  const ok = [], mis = [];
+  for(const id of (listingIds||[])){
+    const { error } = await sb.from('listings').update({ status: status }).eq('id', id);
+    if(error){ mis.push({ id: id, message: error.message }); }
+    else ok.push(id);
+  }
+  return { ok: ok, failed: mis };
+}
+
 /* Fetch leads related to the current user's listings */
 async function fetchMyLeads(limit){
   if(!sb) return null;
