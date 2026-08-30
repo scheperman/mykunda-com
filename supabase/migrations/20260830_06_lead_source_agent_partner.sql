@@ -1,0 +1,18 @@
+-- ============================================================
+--  MyKunda — lead_source krijgt 'agent_partner' (30-08-2026)
+--  Toegepast via de Supabase-MCP als 'lead_source_agent_partner'.
+--
+--  Gevonden tijdens het reparatiewerk, stond niet in het testplan.
+--  agent.html roept sendLead('agent_partner', …) aan, maar die waarde
+--  bestond niet in de enum lead_source. create_lead() doet
+--  `p_source::lead_source` en klapt daar dus op; de terugval in
+--  submitLead() is een gewone insert op dezelfde kolom en klapt op
+--  hetzelfde. Resultaat: het aanmeldformulier voor partnermakelaars
+--  sloeg NIETS op en toonde de bezoeker het terugvalpaneel.
+--
+--  De tabel is leeg, dus er is niets verloren gegaan — maar dit is wel
+--  het soort fout dat pas opvalt als er echt makelaars langskomen.
+--  notify-lead kent 'agent_partner' sinds vandaag ook als label en
+--  onderwerpregel ("Your agency registration — MyKunda").
+-- ============================================================
+alter type public.lead_source add value if not exists 'agent_partner';

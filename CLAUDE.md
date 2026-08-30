@@ -1857,3 +1857,77 @@ Test dit opnieuw voordat je een van beide verandert; gis er niet over.
   gaat met de hand. Zet `fulfilment_status` dus pas op `report_sent` **nadat**
   je het rapport hebt gemaild, anders stuur je de klant zijn spamfolder in voor
   iets dat nog niet bestaat.
+
+### Tweede ronde, 30-08-2026: de laatste elf
+
+**Eén bron voor de bankrekening.** `supabase/functions/_shared/bank.ts`.
+`create-payment`, `send-payment-instructions` en het (latente) bankblok in
+`paymentReceiptEmail` lezen daar allemaal uit. Wijzigt de rekening, dan
+wijzig je dat ene bestand en rol je `create-payment` én
+`send-payment-instructions` opnieuw uit. Zet nooit weer losse waarden in een
+functie — er is geschiedenis met Ecobank, en een klant die naar het
+verkeerde nummer overmaakt is niet met een deploy te helpen.
+
+**Gereserveerde testdomeinen.** `isReservedTestAddress()` staat in
+`_shared/email-template.ts` en zit in élke verzender. Test met
+`delivered@resend.dev` of `bounced@resend.dev`, nooit met een `.invalid`- of
+`.test`-adres: die blijven veertien uur bij Amazon SES hangen en worden
+daarna als bounce op de reputatie van mykunda.com geboekt.
+
+**`profiles.email_bounced_at`.** Gezet door `resend-webhook` bij een harde
+bounce of een spamklacht. `auth-email` leest hem en zegt dan dat er niets
+aankomt, in plaats van "we hebben een code gestuurd" te tonen bij een adres
+dat op de suppressielijst staat. Maak hem leeg zodra iemand een werkend
+adres heeft, anders blijft die persoon buiten.
+
+**De herinnering stempelt zichzelf.** `run_viewing_reminders()` zet
+`reminded_24h_at` / `reminded_2h_at` niet meer vooraf;
+`notify-viewing-reminder` doet dat na een geslaagde verzending. Een mislukte
+herinnering wordt daardoor binnen het venster vanzelf opnieuw geprobeerd.
+Zet dat stempelen niet terug in de cron.
+
+**Transactionele post heeft geen knop.** De opt-out
+`profiles.notify_messages` geldt alleen voor chatberichten. De
+bezichtigingsherinnering luistert er sinds deze ronde niet meer naar: wie
+een afspraak heeft bevestigd, hoort te weten dat hij morgen ergens wordt
+verwacht. Wil hij er vanaf, dan zegt hij de afspraak af.
+
+**`notify-health` en de dagelijkse controle.** Elke ochtend om 07:30 UTC
+kijkt `run_mail_health_check()` wat er in 24 uur is misgegaan — mislukte
+verzendingen, bounces, leads met `notify_error`, accounts met
+`email_bounced_at` — en mailt dat één keer. Staat er niets in, dan gaat er
+niets uit; dat is met opzet. Dit is het vangnet onder alle `pg_net`-triggers,
+die hun eigen antwoord nooit lezen.
+
+**Twee wegen naar een bezichtiging.** `propose_viewing()` vraagt om een
+conversatie en dus om een account. Is de bezoeker ingelogd, dan loopt zijn
+aanvraag via `requestViewingAsUser()` door de echte keten (`viewings`, met
+bevestiging, afwijzing, annulering en herinneringen). Is hij dat niet, dan
+blijft het `viewings_legacy_v0` plus een lead. Inloggen verplicht stellen op
+het moment van hoogste koopintentie is bewust niet gedaan.
+
+**Anti-spam.** `mkFormGuard()` in `app.js` hangt zichzelf aan élk `<form>`:
+een honeypot (`mk_hp_website`, absoluut uit beeld, niet `display:none`) en
+een ondergrens van twee seconden na het laden. Je hoeft per formulier niets
+te doen, ook niet bij een nieuw formulier. Een gevulde honeypot wordt stil
+genegeerd; te snel verzenden krijgt wél een melding, want dat kan een mens
+zijn.
+
+**De eigendomscheck legt zijn aanvraag vast vóór de betaling.**
+`verify.html` schrijft nu een `verification`-lead bij het intakeformulier.
+Wie afhaakt op het betaalscherm is daarmee opvolgbaar in plaats van
+spoorloos. De lead mag nooit blokkeren: lukt hij niet, dan gaat de bezoeker
+gewoon door naar de betaling.
+
+**`lead_source` bevat `agent_partner`.** Die waarde ontbrak, terwijl
+`agent.html` hem al schreef — het aanmeldformulier voor partnermakelaars
+sloeg dus niets op en toonde het terugvalpaneel. Voeg je een nieuwe
+leadbron toe in de front-end, voeg hem dan in dezelfde wijziging toe aan de
+enum én aan `TEAM_LABEL`/`REPLY_SUBJECT` in `notify-lead`.
+
+**Wat bewust NIET is gebouwd.** Een uitschrijflink op transactionele mail
+(een bon of een bevestiging van je eigen afspraak hoort er geen te hebben;
+alleen een echte stroom als de area-alerts heeft `List-Unsubscribe` nodig,
+en die verstuurt nog niets). En een pad om je e-mailadres te wijzigen —
+dat bestaat nergens op de site, dus er valt ook niets terug op de mailer van
+Supabase; het is een ontbrekende functie, geen defect.
