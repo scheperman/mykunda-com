@@ -1931,3 +1931,52 @@ alleen een echte stroom als de area-alerts heeft `List-Unsubscribe` nodig,
 en die verstuurt nog niets). En een pad om je e-mailadres te wijzigen —
 dat bestaat nergens op de site, dus er valt ook niets terug op de mailer van
 Supabase; het is een ontbrekende functie, geen defect.
+
+## Derde ronde, 30-08-2026: de wizard op een telefoon
+
+Reis 2 van de testronde, met de browser op `list.html` en één echte
+advertentie helemaal door de keten. Vijf regels die hieruit volgen.
+
+**Een afgekeurde stap moet zeggen wát er ontbreekt.** `shake()` en `flash()`
+deden alleen een animatie van 0,4 seconde en een rode rand van 1,5 seconde.
+Beide nemen nu een tweede argument: de zin die de gebruiker leest. Die komt
+in `#wizMsg` (`role="alert"`, `aria-live="assertive"`), en dat element wordt
+vlak boven het veld gehangen dat bezwaar maakt, waarna `wizFocus()` regel en
+veld samen in beeld brengt. Voeg je een validatieregel toe aan
+`validateKey()`, geef hem dan een zin mee. Zonder tekst is de afkeuring op
+een telefoon onzichtbaar: gemeten stond de knop Continue op y=1959 en het
+bezwaar op y=992, en de pagina scrolde er niet heen.
+
+**Geen `alert()` meer in de site.** Er staat er geen enkele meer in
+`list.html`. Een fout die de gebruiker moet lezen gaat via `wizSay()` of via
+het bestaande terugvalpaneel van de leadformulieren.
+
+**Meet een nieuw scherm altijd op 375 pixels.** De wizard had een
+grid-blowout: `.stepwrap` was een grid-item met `min-width:auto` en weigerde
+te krimpen, waardoor `document.scrollWidth` 419 werd tegen een `clientWidth`
+van 375. Controleer bij elke nieuwe pagina of `scrollWidth === clientWidth`
+op 375px. Let op de volgorde van de media queries in `list.html`: de
+520px-query staat bewust ná de 900px-query, anders wint die laatste met
+dezelfde specificiteit.
+
+**Verwijder de foto's vóór de advertentierij.** Het verwijderbeleid op
+`listing-photos` en `listing-docs` eist een `EXISTS` op `listings` met
+dezelfde mapnaam, en `is_admin()` staat bínnen die EXISTS. Verdwijnt de rij
+eerst, dan kan niemand de bestanden nog weg krijgen: de Storage API
+antwoordt `0 verwijderd` zónder fout, en `storage.objects` weigert een
+directe SQL-delete. Migratie `20260830_07` voegt een admin-ontsnappingsluik
+toe dat niet van de advertentierij afhangt, plus `on delete cascade` op
+`listing_media`. Houd de volgorde toch aan: eerst storage, dan de rij.
+
+**En één correctie op de tweede ronde.** De honeypot uit `mkFormGuard()`
+hangt aan elk `<form>`-element — dat zijn de negen leadformulieren.
+`list.html`, `auth.html`, `checkout.html` en `messages.html` hebben geen
+`<form>` en vallen er dus buiten. Dat mag: die schrijven niet naar `leads`,
+en `listings` eist volgens de RLS-regel `auth.uid() = owner_id`. Schrijf
+niet dat "elk formulier" is afgedekt.
+
+**Werkomgeving.** PowerShell's `Add-Content` en een exclusieve
+`[System.IO.File]::Open(...,'None')` mislukken op deze map met "wordt
+gebruikt door een ander proces", ook voor bestanden die niemand open heeft.
+Dat is de mount, geen vergrendeling. Bewerk bestanden hier met `edit_block`
+of `write_file`, niet met `Add-Content`.
