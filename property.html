@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" id="mkRobots" content="noindex, follow, noai, noimageai"><!--mk:17e9ce0--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" id="mkRobots" content="noindex, follow, noai, noimageai"><!--mk:1hbbkuz--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -32,7 +32,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preconnect" href="https://api.mapbox.com" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=89296321324134">
+<link rel="stylesheet" href="styles.min.css?v=163785407837317">
 <style>
 .crumb{padding:18px 0 6px;font-size:14px;color:var(--muted);display:flex;align-items:center;gap:8px}
 .crumb a{font-weight:600}.crumb a:hover{color:var(--green-700)}
@@ -240,7 +240,7 @@
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=89296321324134"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=163785407837317"><!--/mk-css-->
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -537,15 +537,15 @@
     </div>
   </footer><!--/mk-ftr--></div>
 
-<script src="app.min.js?v=89296321324134"></script>
-<script src="image-slot.js?v=89296321324134" defer></script>
+<script src="app.min.js?v=163785407837317"></script>
+<script src="image-slot.js?v=163785407837317" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel instead of blocking the page, and
    Leaflet (~145 KB) is only fetched when the visitor opens the Map tab. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=89296321324134'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=163785407837317'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -1388,6 +1388,7 @@ window.bookViewing = async function(form) {
   err.innerHTML = '';
   const label = btn ? btn.textContent : 'Request viewing';
   if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+  let viaKetenVoorScherm = false;   // buiten de try, want de slottekst leest hem
   try {
     const listingId = (typeof P !== 'undefined' && P && P.id) || null;
 
@@ -1401,13 +1402,13 @@ window.bookViewing = async function(form) {
        het dashboard, en inloggen verplicht stellen op dit punt in de flow zou
        meer kosten dan het oplevert.
 
-       De keten gaat nu VOOR de lead, omdat de uitkomst bepaalt of de teammail
-       nog nodig is. Slaagt de keten, dan heeft notify-viewing de verkoper al
-       gemaild mét de knop "Choose a time"; de teammail van notify-lead zou daar
-       een tweede bericht over dezelfde aanvraag naast zetten. Gemeten tijdens
-       reis 3: twee mails binnen een halve seconde, met verschillende
-       onderwerpen en verschillende knoppen. De auto-reply aan de bezoeker gaat
-       altijd door — het scherm belooft er een.
+       De keten gaat nu VOOR de lead, omdat de uitkomst bepaalt of notify-lead
+       nog iets hoeft te sturen. Slaagt de keten, dan heeft notify-viewing al
+       béide partijen gemaild: de verkoper de tijden mét de knop "Choose a
+       time", de aanvrager zijn bevestiging. Liet je notify-lead er dan óók op
+       los, dan kreeg de verkoper drie mails en de koper twee, binnen twee
+       seconden, met bijna dezelfde onderwerpen. Gemeten tijdens reis 3. De
+       lead wordt in dat geval alleen vastgelegd, zonder melding.
 
        De lead wordt in beide gevallen vastgelegd, dus de aanvraag kan niet
        zoekraken. */
@@ -1420,6 +1421,7 @@ window.bookViewing = async function(form) {
         try{
           await requestViewingAsUser(listingId, slotIso, note || null);
           viaKeten = true;
+          viaKetenVoorScherm = true;
         }catch(vErr){
           const m = String((vErr && vErr.message) || vErr);
           // 'not-signed-in' is de normale gang van zaken voor een bezoeker
@@ -1433,7 +1435,7 @@ window.bookViewing = async function(form) {
       name, email, phone: phone || null, message: note || null,
       listing_id: listingId,
       payload: { date: d, slot: slot, via: viaKeten ? 'conversation' : 'legacy' }
-    }, { skipTeam: viaKeten });
+    }, { notify: !viaKeten });
 
     if(listingId){
       if(!viaKeten && typeof requestViewing === 'function'){
@@ -1452,7 +1454,14 @@ window.bookViewing = async function(form) {
     err.innerHTML = contactFallbackHTML((typeof window.MYKUNDA_WA_MESSAGE === 'string' ? window.MYKUNDA_WA_MESSAGE : 'Hello MyKunda! I would like to request a viewing.') + ' Preferred: ' + d + ' at ' + slot + '.', "Your viewing request didn't go through. Please reach us directly \u2014 these all work right now:");
     return;
   }
-  form.innerHTML = `<div style="text-align:center;padding:14px 6px"><div style="width:54px;height:54px;border-radius:50%;background:var(--green-50);color:var(--green-700);display:flex;align-items:center;justify-content:center;margin:0 auto 14px">${ICON.check}</div><div style="font-family:var(--serif);font-size:19px;font-weight:600;margin-bottom:6px">Viewing requested</div><p style="font-size:14px;color:var(--muted)">A confirmation is on its way to ${email.replace(/[<>&"]/g,'')}. We come back to you with the time — usually within 1–2 working days.</p></div>`;
+  /* Twee paden, twee waarheden. Ging de aanvraag door de keten, dan staat de
+     tijd al voorgesteld en kan de verkoper hem in het gesprek bevestigen; dan
+     is "we komen bij u terug met de tijd" niet wat er gebeurt. Ging hij langs
+     de oude weg, dan klopt die zin wel. Gevonden in reis 3, 30-08-2026. */
+  const naTekst = viaKetenVoorScherm
+    ? `Your time is with the seller — you will get an email as soon as it is confirmed, and you can follow it in your messages.`
+    : `A confirmation is on its way to ${email.replace(/[<>&"]/g,'')}. We come back to you with the time — usually within 1–2 working days.`;
+  form.innerHTML = `<div style="text-align:center;padding:14px 6px"><div style="width:54px;height:54px;border-radius:50%;background:var(--green-50);color:var(--green-700);display:flex;align-items:center;justify-content:center;margin:0 auto 14px">${ICON.check}</div><div style="font-family:var(--serif);font-size:19px;font-weight:600;margin-bottom:6px">Viewing requested</div><p style="font-size:14px;color:var(--muted)">${naTekst}</p>${viaKetenVoorScherm ? `<a class="btn btn-ghost btn-sm" style="margin-top:14px" href="messages.html">Open your messages</a>` : ``}</div>`;
 };
 
 } // end renderProperty

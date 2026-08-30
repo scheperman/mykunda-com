@@ -225,16 +225,24 @@ async function submitLead(source, fields, opts){
 
   /* 2) fire the notification email (Edge Function) — only if we got an id.
 
-     opts.skipTeam laat de teammail weg en houdt de auto-reply aan de bezoeker
-     wél overeind. Eén geval gebruikt dat: de bezichtigingsaanvraag van een
-     INGELOGDE bezoeker op property.html. Die loopt sinds 30-08-2026 óók door
-     de echte keten (conversatie + viewings-rij), en die keten mailt de
-     verkoper zelf — met de knop "Choose a time" erin, wat de bruikbare mail
-     van de twee is. Zonder deze schakelaar kreeg de verkoper twee mails binnen
-     een halve seconde over dezelfde aanvraag, met verschillende onderwerpen.
-     Gemeten tijdens reis 3 van de testronde. De bezoeker moet zijn
-     bevestiging wél houden: het scherm belooft er een. */
-  if(leadId) {
+     Twee schakelaars, allebei uit reis 3 van de testronde (30-08-2026).
+
+     opts.notify === false slaat de melding hélemaal over: de lead wordt alleen
+     vastgelegd. Eén aanroeper gebruikt dat — de bezichtigingsaanvraag van een
+     INGELOGDE bezoeker op property.html. Die loopt door de echte keten, en
+     notify-viewing mailt dan al béide partijen: de verkoper krijgt de tijden
+     mét de knop "Choose a time", de aanvrager zijn bevestiging. Liet je
+     notify-lead er daarnaast op los, dan kreeg de verkoper drie mails en de
+     koper twee, allemaal binnen twee seconden, met bijna dezelfde onderwerpen.
+     Gemeten, eerst aan de verkoperskant en na een halve reparatie aan de
+     koperskant. De keten is de eigenaar van die communicatie; deze functie
+     legt alleen de lead vast.
+
+     opts.skipTeam laat alleen de teammail weg en houdt de auto-reply overeind.
+     Nu niet in gebruik, maar het is de juiste schakelaar zodra er een pad komt
+     waar de bezoeker wél een bevestiging van ons moet krijgen en de backoffice
+     al langs een andere weg is ingelicht. */
+  if(leadId && !(opts && opts.notify === false)) {
     try{
       const body = { lead_id: leadId };
       if(opts && opts.skipTeam) body.skip_team = true;
