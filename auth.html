@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-no-wa>
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1f6d0x2--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1qei85g--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <noscript></noscript>
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=163785407837317">
+<link rel="stylesheet" href="styles.min.css?v=79842792470957">
 <style>
 body{min-height:100vh;display:flex}
 .auth-wrap{display:grid;grid-template-columns:1fr 1fr;width:100%;min-height:100vh}
@@ -72,6 +72,19 @@ body{min-height:100vh;display:flex}
 .otp-resend button{font-weight:700;color:var(--green-700)}
 .otp-demo{text-align:center;font-size:12px;color:var(--amber-600);background:var(--amber-50);border:1px solid var(--amber-100);border-radius:var(--r-pill);padding:7px 14px;margin-top:16px;font-weight:600}
 
+/* role picker — sign-up only. Drie kaarten in plaats van een dropdown: de
+   keuze bepaalt de hele back-office, dus hij hoort zichtbaar te zijn. */
+.role-q{display:block;font-size:13.5px;font-weight:700;color:var(--ink-2);margin-bottom:9px}
+.role-cards{display:flex;flex-direction:column;gap:9px;margin-bottom:20px}
+.role-card{display:flex;gap:11px;align-items:flex-start;text-align:left;width:100%;padding:12px 14px;border-radius:var(--r-md);box-shadow:inset 0 0 0 1.5px var(--line);background:var(--white);font-family:var(--sans);transition:.14s;cursor:pointer}
+.role-card:hover{box-shadow:inset 0 0 0 1.5px var(--green-500)}
+.role-card.on{box-shadow:inset 0 0 0 2px var(--green-700);background:var(--green-50)}
+.role-card .rc-ic{width:34px;height:34px;border-radius:9px;background:var(--paper-2);color:var(--green-700);display:flex;align-items:center;justify-content:center;flex:none}
+.role-card.on .rc-ic{background:var(--white)}
+.role-card .rc-t{font-size:14.5px;font-weight:700;color:var(--ink);line-height:1.3}
+.role-card .rc-s{font-size:12.5px;color:var(--muted);line-height:1.45;margin-top:2px}
+.role-cards.warn .role-card{box-shadow:inset 0 0 0 1.5px #C2533A}
+
 .terms{font-size:12px;color:var(--muted-2);text-align:center;margin-top:20px;line-height:1.5}
 .consent{display:flex;flex-direction:column;gap:10px;margin:2px 0 18px}
 .consent label{display:flex;gap:9px;align-items:flex-start;font-size:12.5px;color:var(--muted);line-height:1.5;cursor:pointer}
@@ -96,7 +109,7 @@ body{min-height:100vh;display:flex}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=163785407837317"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=79842792470957"><!--/mk-css-->
 </head>
 <body>
 <div class="auth-wrap">
@@ -130,6 +143,25 @@ body{min-height:100vh;display:flex}
         <div class="auth-tabs">
           <button class="on" data-tab="signin">Sign in</button>
           <button data-tab="signup">Create account</button>
+        </div>
+
+        <!-- role choice (signup only) -->
+        <div id="roleBlock" style="display:none">
+          <label class="role-q">How will you use MyKunda?</label>
+          <div class="role-cards" id="roleCards">
+            <button type="button" class="role-card" data-role="buyer" aria-pressed="false">
+              <span class="rc-ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span>
+              <span><span class="rc-t">I'm looking</span><span class="rc-s">Search, save and compare homes, land or commercial space</span></span>
+            </button>
+            <button type="button" class="role-card" data-role="seller" aria-pressed="false">
+              <span class="rc-ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg></span>
+              <span><span class="rc-t">I'm offering my own property</span><span class="rc-s">One house, flat or plot that belongs to me or my family</span></span>
+            </button>
+            <button type="button" class="role-card" data-role="agent" aria-pressed="false">
+              <span class="rc-ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V4h10v17M14 9h6v12M8 8h2M8 12h2M8 16h2"/></svg></span>
+              <span><span class="rc-t">We're a business</span><span class="rc-s">An agency, developer or manager with several properties</span></span>
+            </button>
+          </div>
         </div>
 
         <!-- name (signup only) -->
@@ -188,14 +220,14 @@ body{min-height:100vh;display:flex}
   </div>
 </div>
 
-<script src="app.min.js?v=163785407837317"></script>
+<script src="app.min.js?v=79842792470957"></script>
 <script>
 /* 4G: the Supabase client (~205 KB) is not needed to show the sign-in form.
    It downloads in parallel; everything that talks to the backend awaits it. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=163785407837317'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=79842792470957'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 </script>
@@ -217,9 +249,60 @@ try{ const s=parseInt(localStorage.getItem('mk_otp_len'),10); if(s>=4&&s<=10) ot
 function live(){ return typeof backendReady==='function' && backendReady(); }
 async function liveReady(){ try{ await window.__sbReady; }catch(e){} return live(); }
 
+/* ---- Rolkeuze (alleen op de aanmeldtab) ----
+   De gekozen rol reist mee in de body van auth-email, komt daar in de
+   signup-metadata van generateLink terecht en wordt door handle_new_user()
+   in profiles.role gezet. De browser schrijft die kolom nooit zelf: de rol
+   'authenticated' heeft er geen UPDATE-recht op, en dat is precies wat
+   voorkomt dat iemand zichzelf admin maakt (is_admin() leest deze kolom).
+   Bij Google gaat het anders — zie de OAuth-terugkeer verderop.
+
+   De voorselectie volgt de knop waar iemand vandaan kwam. Eén uitzondering:
+   wie via "List your property" binnenkomt krijgt geen voorselectie, want
+   particulier-of-bedrijf is daar juist de vraag die ertoe doet. */
+const ROLE_BY_INTENT = { search:'buyer', list:'', sell:'', pro:'agent', agency:'agent' };
+/* Waar wilde iemand naartoe? Dat staat al in ?next=, dat requireAuth() overal
+   op de site meegeeft. Zo hoeft er geen enkele knop aangepast te worden en
+   klopt de voorselectie toch. ?intent= blijft bestaan als expliciete
+   overschrijving voor losse knoppen die het beter weten. */
+const ROLE_BY_NEXT = { 'list.html':'', 'sell.html':'', 'agent.html':'agent' };
+let role = (function(){
+  const i = (qs('intent')||'').toLowerCase();
+  if(Object.prototype.hasOwnProperty.call(ROLE_BY_INTENT, i)) return ROLE_BY_INTENT[i];
+  const n = String(qs('next')||'').split('?')[0].split('/').pop().toLowerCase();
+  if(Object.prototype.hasOwnProperty.call(ROLE_BY_NEXT, n)) return ROLE_BY_NEXT[n];
+  return 'buyer';
+})();
+function paintRole(){
+  document.querySelectorAll('#roleCards .role-card').forEach(function(b){
+    const on = b.dataset.role === role;
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+}
+document.querySelectorAll('#roleCards .role-card').forEach(function(b){
+  b.addEventListener('click', function(){
+    role = b.dataset.role;
+    document.getElementById('roleCards').classList.remove('warn');
+    authErr('');
+    paintRole();
+  });
+});
+paintRole();
+/* Geen rol gekozen terwijl dat wel moet: één plek, zodat de knop en de
+   Google-knop hetzelfde zeggen. */
+function roleMissing(){
+  if(mode!=='signup' || role) return false;
+  document.getElementById('roleCards').classList.add('warn');
+  authErr('Tell us how you’ll use MyKunda so we can set your account up right.');
+  return true;
+}
+
 function applyMode(){
   const signup = mode==='signup';
   document.getElementById('authTitle').textContent = signup ? 'Create your account' : 'Welcome back';
+  document.getElementById('roleBlock').style.display = signup ? 'block' : 'none';
+  document.getElementById('roleCards').classList.remove('warn');
   document.getElementById('nameFld').style.display = signup ? 'block' : 'none';
   document.getElementById('termsLine').style.display = signup ? 'block' : 'none';
   document.getElementById('consentBlock').style.display = signup ? 'flex' : 'none';
@@ -274,6 +357,7 @@ async function sendCode(isResend){
   const email = document.getElementById('emailIn').value.trim();
   if(mode==='signup' && !name && !isResend){ flash(document.getElementById('nameIn')); return false; }
   if(!/.+@.+\..+/.test(email)){ flash(document.getElementById('emailIn')); return false; }
+  if(roleMissing()) return false;
   const consent = document.getElementById('consentIn').checked;
   const consentMarketing = document.getElementById('consentMktIn').checked;
   if(mode==='signup' && !consent){
@@ -296,7 +380,7 @@ async function sendCode(isResend){
   if(await liveReady()){
     try{
       // Our own function mails the sign-in code from noreply@mykunda.com.
-      const r = await sendEmailCode(email, { name: pendingUser.name, mode, consent, consentMarketing });
+      const r = await sendEmailCode(email, { name: pendingUser.name, mode, consent, consentMarketing, role });
       // Wrong tab for this address — say so instead of mailing a code.
       if(r && r.no_account){
         btn.textContent='Send my code'; btn.style.opacity='';
@@ -373,6 +457,7 @@ async function oauth(provider){
 }
 document.getElementById('googleBtn').addEventListener('click',()=>{
   if(mode==='signup'){
+    if(roleMissing()) return;
     const consent = document.getElementById('consentIn').checked;
     if(!consent){
       document.getElementById('consentBlock').classList.add('warn');
@@ -386,6 +471,7 @@ document.getElementById('googleBtn').addEventListener('click',()=>{
         consent: true,
         marketing: document.getElementById('consentMktIn').checked,
         name: document.getElementById('nameIn').value.trim(),
+        role: role,
         ts: Date.now()
       }));
     }catch(e){}
@@ -411,6 +497,17 @@ document.getElementById('googleBtn').addEventListener('click',()=>{
           const patch = { consent_contact:true, consent_marketing:!!pend.marketing, consent_at:new Date().toISOString() };
           if(pend.name) patch.full_name = pend.name;
           await sb.from('profiles').update(patch).eq('id', u.id);
+          /* De rol kan niet in diezelfde update mee: authenticated heeft geen
+             UPDATE-recht op profiles.role, en dat moet zo blijven. Bij Google
+             komt de rol ook niet in de signup-metadata terecht — die vult
+             Google zelf — dus handle_new_user() maakte er 'buyer' van en zet
+             set-role hem hier alsnog goed, serverzijdig, met het token van
+             deze sessie. Mislukt dat, dan blijft het account gewoon werken als
+             zoeker; het is geen reden om de aanmelding te laten stranden. */
+          if((pend.role==='seller' || pend.role==='agent') && typeof setMyRole==='function'){
+            try{ await setMyRole(pend.role); }
+            catch(e){ console.warn('set-role:', e && e.message); }
+          }
         }
         fetch(MYKUNDA_SUPABASE_URL.replace(/\/+$/,'') + '/functions/v1/notify-signup', {
           method:'POST', headers:{'Content-Type':'application/json'},

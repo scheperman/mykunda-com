@@ -216,7 +216,7 @@ serve(async (req) => {
        account. De site heeft bovendien geen wachtwoord-login meer — er is dus
        ook geen reden om er een te aanvaarden. Elk account dat hier ontstaat
        krijgt een willekeurig wachtwoord dat niemand kent. */
-    const { type, email, next, name, mode, consent, consent_marketing } = await req.json();
+    const { type, email, next, name, mode, consent, consent_marketing, role } = await req.json();
     if (!type || !email) throw new Error("type and email are required");
     // 'signup' wordt bewust niet meer geaccepteerd: die route is nooit op de
     // UI aangesloten (de aanmeldtab gebruikt email_code) en een open,
@@ -321,6 +321,13 @@ serve(async (req) => {
         if (name) meta.full_name = name;
         if (consent === true) meta.consent_contact = true;
         if (consent_marketing === true) meta.consent_marketing = true;
+        /* De rolkeuze van het aanmeldscherm (30-08-2026). Alleen deze drie
+           waarden reizen mee; alles anders wordt genegeerd en handle_new_user()
+           maakt er dan 'buyer' van. 'admin' staat er met opzet niet bij: dit is
+           een open, ongeauthenticeerd endpoint, dus wat hier binnenkomt is een
+           wens van de bezoeker, geen bewijs. De database herhaalt dezelfde
+           witte lijst als laatste poort vóór de kolom. */
+        if (role === "seller" || role === "agent" || role === "buyer") meta.role = role;
         res = await admin.auth.admin.generateLink({
           type: "signup", email, password: crypto.randomUUID(),
           options: { data: meta, redirectTo: SITE_URL + "/auth.html" },

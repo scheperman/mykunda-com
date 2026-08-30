@@ -174,7 +174,7 @@ async function sendMagicLink(email){ return sendAuthEmail('magiclink', email); }
 // The sign-in screen asks for a 6-digit code, so we mail a code, not a link:
 // auth-email generates the OTP server-side and sends it from noreply@mykunda.com.
 // Returns { verify_type } — pass it to verifyEmailOtp().
-// opts: { name, mode:'signin'|'signup', consent, consentMarketing }
+// opts: { name, mode:'signin'|'signup', consent, consentMarketing, role }
 // mode tells the function which tab the visitor is on, so an unknown address on
 // Sign in never silently creates an account (and vice versa). consent carries
 // the Terms/Privacy tick through to the profiles trigger.
@@ -185,8 +185,25 @@ async function sendEmailCode(email, opts){
   if(body.mode === 'signup'){
     body.consent = !!o.consent;
     body.consent_marketing = !!o.consentMarketing;
+    /* De rolkeuze van het aanmeldscherm. auth-email zet hem in de
+       signup-metadata en handle_new_user() schrijft profiles.role. Beide
+       kanten filteren op dezelfde drie waarden; 'admin' hoort er niet bij. */
+    if(o.role === 'buyer' || o.role === 'seller' || o.role === 'agent') body.role = o.role;
   }
   return sendAuthEmail('email_code', email, body);
+}
+
+/* Rol van de ingelogde gebruiker zetten (buyer -> seller -> agent, alleen
+   omhoog). Loopt via de edge function set-role omdat de rol 'authenticated'
+   geen UPDATE-recht heeft op profiles.role — met opzet, want is_admin() leest
+   die kolom. Gebruikt na een Google-aanmelding en straks vanuit het dashboard
+   als een zoeker gaat aanbieden. */
+async function setMyRole(role){
+  if(!sb) throw new Error('backend-offline');
+  const { data, error } = await sb.functions.invoke('set-role', { body: { role } });
+  if(error) throw error;
+  if(data && data.ok === false) throw new Error(data.error || 'set-role failed');
+  return data;
 }
 
 /* ---------------- Leads (every form) ---------------- */
