@@ -2761,7 +2761,16 @@ async function sendLead(source, fields){
   const MIN_MS = 2000;
   const geladen = Date.now();
 
+  /* Niet elk <form> is een inzending. De zoekbalk in de kop is een formulier
+     dat alleen navigeert, en zoeken binnen twee seconden na het laden is
+     normaal gedrag — daar hoort geen rem op. Gevonden tijdens de testronde
+     van 30-08-2026: de rem gold ook voor de zoekbalk. */
+  function overslaan(form){
+    return !!(form.matches('[data-mk-noguard]') || form.id === 'mdSearchForm');
+  }
+
   function voegHoneypotToe(form){
+    if (overslaan(form)) return;
     if (form.querySelector('input[name="' + VELD + '"]')) return;
     const wrap = document.createElement('div');
     // Niet display:none — sommige bots slaan onzichtbare velden over.
@@ -2785,6 +2794,7 @@ async function sendLead(source, fields){
   document.addEventListener('submit', function(e){
     const form = e.target;
     if (!form || form.tagName !== 'FORM') return;
+    if (overslaan(form)) return;
 
     const hp = form.querySelector('input[name="' + VELD + '"]');
     if (hp && hp.value.trim() !== '') {
@@ -2801,6 +2811,7 @@ async function sendLead(source, fields){
       if (!melding) {
         melding = document.createElement('p');
         melding.className = 'mk-guard-msg';
+        melding.setAttribute('role', 'alert');
         melding.style.cssText = 'font-size:13px;font-weight:600;color:#C2533A;line-height:1.45;margin-top:10px';
         form.appendChild(melding);
       }
@@ -2815,7 +2826,10 @@ async function sendLead(source, fields){
    form doesn't. */
 function contactFallbackHTML(waMsg, intro){
   const msg = waMsg || 'Hello MyKunda! I tried to send a message through the website but it did not go through.';
-  return '<div style="margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--amber-50);border:1px solid var(--amber-100);text-align:left">'
+  /* role="alert" zodat een schermlezer dit paneel hoort zodra het verschijnt.
+     Het vervangt een mislukte verzending; zonder aria komt het er stil in te
+     staan en denkt de bezoeker dat er niets is gebeurd. */
+  return '<div role="alert" style="margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--amber-50);border:1px solid var(--amber-100);text-align:left">'
     + '<p style="font-size:13.5px;color:var(--amber-600);font-weight:600;line-height:1.5;margin:0 0 10px">' + (intro || "We couldn't send that just now. Please reach us directly \u2014 these all work right away:") + '</p>'
     + '<div style="display:flex;gap:8px;flex-wrap:wrap">'
     + '<a class="btn wa btn-sm" target="_blank" rel="noopener" href="' + waLink(msg) + '">' + _WA_ICON + '<span>WhatsApp</span></a>'
