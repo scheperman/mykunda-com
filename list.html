@@ -244,6 +244,23 @@ body{background:var(--paper-2);min-height:100vh}
   .frow{grid-template-columns:1fr}
   .pstep .lab{display:none}
 }
+
+/* ---- De wizard paste niet op een telefoon ----
+   Gemeten 30-08-2026 op 375px: document.scrollWidth was 419 tegen een
+   clientWidth van 375, dus de hele stap schoof 44px naar rechts weg en de
+   tekst van de rechterkaarten liep buiten beeld. Twee oorzaken, allebei
+   klassiek: .stepwrap is een grid-item met min-width:auto en weigert daardoor
+   te krimpen onder de intrinsieke breedte van zijn inhoud, en de keuzekaarten
+   bleven tot 375px in twee kolommen staan. Deze query moet ná de 900px-query
+   komen, anders wint die laatste met dezelfde specificiteit. */
+.stepwrap{min-width:0}
+@media(max-width:520px){
+  .opt-cards,.opt-cards.big,.checks{grid-template-columns:1fr}
+  .photo-grid{grid-template-columns:1fr 1fr}
+  .opt-card{padding:16px}
+  .opt-card .ic{width:40px;height:40px}
+  .opt-card .t{font-size:16px}
+}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
