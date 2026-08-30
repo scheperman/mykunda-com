@@ -1827,6 +1827,37 @@ Let op de andere kant hiervan: het Verified-vinkje (`is_verified_title`) gaat er
 **niet** vanzelf af als `verified_until` verstrijkt — dat zet een medewerker met
 de hand via admin.html. Schrijf dus nergens dat het vinkje verdwijnt.
 
+### De professionele back-office (fase 5, 30-08-2026)
+
+Voor `role = agent` of `admin` krijgt het dashboard vier weergaven erbij:
+Portfolio, Leads, Viewings en Statistics. Een particuliere aanbieder houdt zijn
+overzicht — de rol bepaalt wat je erbij krijgt, nooit wat je verliest.
+
+Twee dingen lagen klaar en waren nergens op aangesloten:
+
+- **De leadpijplijn.** `leads.stage` kent zeven fases en `assigned_to` bestond,
+  maar geen scherm gebruikte ze en de eigenaar mócht ze niet aanraken: de enige
+  updateregel was `is_admin() OR auth.uid() = assigned_to`. Er is nu een regel
+  `leads owner update` bij, plus de kolommen `note` en `lost_reason`. De
+  tabelbrede UPDATE (op alle zeventien kolommen, ook voor `anon`) is ingetrokken
+  en vervangen door een kolomrecht op vijf kolommen: een aanbieder zet de fase
+  en zijn eigen aantekeningen, en kan de naam of het bericht van de aanvrager
+  niet herschrijven.
+- **De bezoekcijfers.** `bump_listing_views()` schreef bij elke objectpagina een
+  rij, en `rollup_listing_views()` telde die op bij `listings.views` — maar die
+  rollup stond in **geen enkele cron-taak**. Hij heeft dus nooit gedraaid en
+  elke "0 views" in het dashboard was onwaar in plaats van leeg. Nu draait hij
+  om 02:10, en hij bewaart voortaan dagtotalen in de nieuwe tabel
+  `listing_view_days` (`listing_views` is de ruwe buffer van één dag, die tabel
+  is het geheugen). Zonder dat had een aanbieder alleen een totaal en nooit een
+  verloop.
+
+De reactietijd is `leads.contacted_at` tegenover `created_at`, en wordt gestempeld
+op het moment dat een lead voor het eerst uit `new` gaat. Getoond als **mediaan**,
+niet als gemiddelde, en alleen als er iets te meten valt — anders staat er een
+streepje. Geen geschatte conversie, geen trend uit twee datapunten: staat er
+niets in de database, dan staat er niets op het scherm.
+
 ### Poorten op de notify-functies
 
 | functie | poort |
@@ -1837,6 +1868,16 @@ de hand via admin.html. Schrijf dus nergens dat het vinkje verdwijnt.
 | `wa-notify` | `x-notify-key` verplicht — zonder secret weigert hij **alles** |
 | `wa-inbound` | `WA_APP_SECRET` verplicht (handtekening) en `WA_VERIFY_TOKEN` verplicht (geen terugval meer) |
 | `notify-lead` | open, maar met dedupe op `notified_at` en drie auto-replies per adres per uur |
+
+De wekkers zelf (`run_mail_health_check`, `run_saved_search_alerts`,
+`run_plan_expiry_notices`, `rollup_listing_views`) zijn sinds 30-08-2026
+dichtgezet voor `anon` en `authenticated`: ze zijn SECURITY DEFINER en stonden
+via `/rest/v1/rpc/<naam>` voor iedereen open — gevonden met de Supabase security
+advisor. Zet ze niet terug open, en let op dat intrekken bij die twee rollen
+**niet** genoeg is: Postgres geeft een nieuwe functie EXECUTE aan `PUBLIC`, en
+daar erven ze het van. Revoke dus altijd ook van `public`. Nieuwe cron-wekkers
+krijgen dezelfde behandeling; `bump_listing_views()` en `price_history_public()`
+blijven met opzet open, want die roept de site zelf aan.
 
 `notify-listing` haalt het ontvangstadres uit de **database**, nooit uit de
 payload. `listing_data` mag de mail alleen verrijken. Zet die regel niet terug:
