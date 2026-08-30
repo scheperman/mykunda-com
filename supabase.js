@@ -530,6 +530,21 @@ async function fetchPriceDrops(listingIds){
   return out;
 }
 
+/* De hele prijsgeschiedenis van één advertentie, voor de objectpagina.
+   Dezelfde leesregel als hierboven: mag de bezoeker niets zien, dan komt er een
+   lege lijst terug en blijft het blok op de pagina weg. Geen fout, geen lege
+   kop — niets. De oplopende volgorde is met opzet: een prijsverloop lees je
+   van de eerste vraagprijs naar de laatste. */
+async function fetchPriceHistory(listingId){
+  if(!sb || !listingId) return [];
+  const { data, error } = await sb.from('listing_price_events')
+    .select('event, old_price, new_price, pct, occurred_at')
+    .eq('listing_id', listingId)
+    .order('occurred_at', { ascending: true });
+  if(error){ console.warn('fetchPriceHistory:', error.message); return []; }
+  return data || [];
+}
+
 async function removeFavorite(listingId){
   if(!sb) throw new Error('backend-offline');
   const u = await currentUser(); if(!u) throw new Error('not-signed-in');
@@ -618,6 +633,10 @@ function dbListingToCard(r){
     units: r.units||0, parking: r.parking_spaces||0,
     current_use: r.current_use||'', fit_out: r.fit_out||'',
     isNew: true, verified: !!r.is_verified_title, plan: r.plan,
+    /* Sinds 30-08-2026 mee, want de sortering "Featured" en de voorpagina
+       lezen hem nu echt. Zonder dit veld op de kaart is een Boost een
+       aankoop zonder gevolg. Zie mkIsBoosted() in app.js. */
+    boosted_until: r.boosted_until || null,
     price: Number(r.price)||0, title: r.title, street: r.street||'', area: r.area||'',
     beds: r.beds||0, baths: r.baths||0, sqm: r.sqm||0, plot: r.plot_sqm||0,
     tag: (r.features&&r.features[0])||'', photos: (r.listing_media||[]).filter(m=>!m.is_document).length||1,
@@ -750,16 +769,43 @@ async function fetchAreaListings(areaName, limit){
   return (data||[]).map(dbListingToCard);
 }
 
-/* Fetch featured/newest listings for the home page */
+/* De strook op de voorpagina. "Featured on the homepage for 30 days" is de
+   helft van wat een Boost verkoopt, dus die komt eerst — en dan pas de rest.
+
+   Twee queries en geen sortering achteraf, met opzet: een advertentie met een
+   lopende Boost die buiten de nieuwste tien valt zou anders nooit bovenaan
+   komen, precies bij de aanbieder die ervoor betaald heeft. De eerste query
+   vraagt alleen wat nu geboost is, de tweede vult aan en laat die eruit.
+   Staat er niets geboost, dan is het één query zoals vroeger. */
 async function fetchFeaturedListings(limit){
   if(!sb) return null;
-  const { data, error } = await sb.from('listings').select('*, listing_media(*)')
+  const n = limit || 4;
+  const nu = new Date().toISOString();
+  const kolommen = '*, listing_media(*)';
+
+  let geboost = [];
+  const { data: b, error: be } = await sb.from('listings').select(kolommen)
+    .in('status',['active','under_offer'])
+    .gt('boosted_until', nu)
+    .order('boosted_until',{ascending:false})   // wie het langst nog loopt, bovenaan
+    .limit(n);
+  if(be) console.warn('fetchFeaturedListings (boost):', be.message);
+  else geboost = b || [];
+
+  if(geboost.length >= n) return geboost.slice(0, n).map(dbListingToCard);
+
+  let q = sb.from('listings').select(kolommen)
     .in('status',['active','under_offer'])
     .order('is_verified_title',{ascending:false})  // verified first
     .order('created_at',{ascending:false})
-    .limit(limit||4);
-  if(error){ console.warn('fetchFeaturedListings:', error.message); return null; }
-  return (data||[]).map(dbListingToCard);
+    .limit(n - geboost.length);
+  if(geboost.length) q = q.not('id','in','('+geboost.map(r=>r.id).join(',')+')');
+  const { data, error } = await q;
+  if(error){
+    console.warn('fetchFeaturedListings:', error.message);
+    return geboost.length ? geboost.map(dbListingToCard) : null;
+  }
+  return geboost.concat(data||[]).map(dbListingToCard);
 }
 
 /* Plots for sale. Stond hier voor de strip op de grondpagina; die pagina is

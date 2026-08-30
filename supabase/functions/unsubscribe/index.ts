@@ -3,8 +3,16 @@
 //  Zet berichtmeldingen uit zonder dat iemand hoeft in te loggen,
 //  via het geheime token uit profiles.unsubscribe_token.
 //
-//    GET  /unsubscribe?t=<token>  → bevestigingspagina met knop
-//    POST /unsubscribe?t=<token>  → voert het uit
+//    GET  /unsubscribe?t=<token>            → bevestigingspagina met knop
+//    POST /unsubscribe?t=<token>            → voert het uit
+//
+//  Sinds 30-08-2026 hangt er een tweede soort aan dezelfde link:
+//    &k=messages  (of niets)  → profiles.notify_messages
+//    &k=plans                 → profiles.notify_plan_expiry
+//  Zonder k blijft alles precies als het was, dus oude links in verstuurde
+//  mails blijven werken. Twee soorten en niet één schakelaar, want "geen
+//  aanbiedingen meer" mag nooit stilletjes ook de berichten over je eigen
+//  gesprekken uitzetten.
 //
 //  GET voert bewust niets uit: mailscanners en previews halen links
 //  op zonder dat een mens klikt, en zouden mensen anders ongevraagd
@@ -65,12 +73,59 @@ ${backOn ? `<form method="POST" action="?t=${backOn}&amp;on=1"><button type="sub
   });
 }
 
+/* De twee soorten, met per soort de kolom en de teksten. Alles wat de pagina
+   zegt staat hier, zodat er geen tekst over "berichten" op een afmelding voor
+   iets anders kan belanden. */
+type Soort = {
+  column: "notify_messages" | "notify_plan_expiry";
+  askTitle: (n: string) => string;
+  askBody: string;
+  offTitle: (n: string) => string;
+  offBody: string;
+  onTitle: (n: string) => string;
+  onBody: string;
+  alreadyBody: string;
+};
+const SOORTEN: Record<string, Soort> = {
+  messages: {
+    column: "notify_messages",
+    askTitle: (n) => (n ? `${n}, turn off message emails?` : "Turn off message emails?"),
+    askBody: `<p>You are about to stop receiving an email when someone sends you a message on MyKunda. Your conversations keep working — you will just have to open Messages yourself to see new ones.</p>
+       <p>Emails about viewings, listings and payments are not affected.</p>`,
+    offTitle: (n) => (n ? `Done, ${n}` : "Done"),
+    offBody: `<p>You will no longer get an email when someone sends you a message on MyKunda.</p>
+         <p>Your conversations keep working — new messages are still waiting for you in <a class="link" href="${SITE}/messages.html">Messages</a>. Emails about viewings, listings and payments are unaffected.</p>`,
+    onTitle: (n) => (n ? `Back on, ${n}` : "Back on"),
+    onBody: `<p>You will get an email again when someone sends you a message on MyKunda.</p>`,
+    alreadyBody: `<p>Message emails are already off for this account. Changed your mind?</p>`,
+  },
+  plans: {
+    column: "notify_plan_expiry",
+    askTitle: (n) => (n ? `${n}, turn off renewal reminders?` : "Turn off renewal reminders?"),
+    askBody: `<p>You are about to stop receiving an email when a Boost or a Verified check on one of your listings is about to run out, or has run out.</p>
+       <p>Your listings, your conversations and your payment receipts are not affected. You can always see what is running out in <a class="link" href="${SITE}/dashboard.html">My MyKunda</a>.</p>`,
+    offTitle: (n) => (n ? `Done, ${n}` : "Done"),
+    offBody: `<p>You will no longer get an email when a Boost or a Verified check runs out.</p>
+         <p>Nothing else changes: your listings stay online, and what is running out is still shown under each listing in <a class="link" href="${SITE}/dashboard.html">My MyKunda</a>.</p>`,
+    onTitle: (n) => (n ? `Back on, ${n}` : "Back on"),
+    onBody: `<p>You will get an email again when a Boost or a Verified check is about to run out.</p>`,
+    alreadyBody: `<p>Renewal reminders are already off for this account. Changed your mind?</p>`,
+  },
+};
+
 serve(async (req) => {
   const url = new URL(req.url);
   const token = (url.searchParams.get("t") ?? "").trim();
+  /* Onbekende k valt terug op 'messages': dat is wat elke link deed voordat
+     deze parameter bestond, en een afmeldlink hoort nooit te falen. */
+  const kind = SOORTEN[(url.searchParams.get("k") ?? "").trim()] ? (url.searchParams.get("k") ?? "").trim() : "messages";
+  const soort = SOORTEN[kind];
+  /* &amp; en niet &, want dit stukje gaat rechtstreeks in een action-attribuut
+     in de HTML van page(). */
+  const qk = kind === "messages" ? "" : `&amp;k=${encodeURIComponent(kind)}`;
 
   if (!UUID_RE.test(token)) {
-    return page("Link not valid", `<p>This unsubscribe link is incomplete or has expired. Open <a class="link" href="${SITE}/dashboard.html">My MyKunda</a> and turn message emails off there.</p>`, null, 400);
+    return page("Link not valid", `<p>This unsubscribe link is incomplete or has expired. Open <a class="link" href="${SITE}/dashboard.html">My MyKunda</a> and change your email settings there.</p>`, null, 400);
   }
 
   const db = createClient(SUPABASE_URL, SERVICE_KEY);
@@ -78,55 +133,37 @@ serve(async (req) => {
   try {
     const { data: profile } = await db
       .from("profiles")
-      .select("id, full_name, notify_messages")
+      .select(`id, full_name, ${soort.column}`)
       .eq("unsubscribe_token", token)
       .maybeSingle();
 
     if (!profile) {
-      return page("Link not valid", `<p>We could not match this link to an account. Open <a class="link" href="${SITE}/dashboard.html">My MyKunda</a> and turn message emails off there.</p>`, null, 404);
+      return page("Link not valid", `<p>We could not match this link to an account. Open <a class="link" href="${SITE}/dashboard.html">My MyKunda</a> and change your email settings there.</p>`, null, 404);
     }
 
     const name = profile.full_name ? String(profile.full_name).trim().split(" ")[0] : "";
+    const aanNu = (profile as Record<string, unknown>)[soort.column] !== false;
 
     if (req.method === "POST") {
       const weerAan = url.searchParams.get("on") === "1";
       const { error } = await db
         .from("profiles")
-        .update({ notify_messages: weerAan })
+        .update({ [soort.column]: weerAan })
         .eq("id", profile.id);
       if (error) throw new Error(error.message);
 
-      if (weerAan) {
-        return page(
-          name ? `Back on, ${name}` : "Back on",
-          `<p>You will get an email again when someone sends you a message on MyKunda.</p>`,
-        );
-      }
+      if (weerAan) return page(soort.onTitle(name), soort.onBody);
 
-      return page(
-        name ? `Done, ${name}` : "Done",
-        `<p>You will no longer get an email when someone sends you a message on MyKunda.</p>
-         <p>Your conversations keep working — new messages are still waiting for you in <a class="link" href="${SITE}/messages.html">Messages</a>. Emails about viewings, listings and payments are unaffected.</p>`,
-        null, 200, token,
-      );
+      return page(soort.offTitle(name), soort.offBody, null, 200, token + qk);
     }
 
-    if (!profile.notify_messages) {
-      return page(
-        "Already turned off",
-        `<p>Message emails are already off for this account. Changed your mind?</p>`,
-        null, 200, token,
-      );
+    if (!aanNu) {
+      return page("Already turned off", soort.alreadyBody, null, 200, token + qk);
     }
 
-    return page(
-      name ? `${name}, turn off message emails?` : "Turn off message emails?",
-      `<p>You are about to stop receiving an email when someone sends you a message on MyKunda. Your conversations keep working — you will just have to open Messages yourself to see new ones.</p>
-       <p>Emails about viewings, listings and payments are not affected.</p>`,
-      token,
-    );
+    return page(soort.askTitle(name), soort.askBody, token + qk);
   } catch (err) {
     console.error("unsubscribe error:", err);
-    return page("Something went wrong", `<p>We could not process this just now. Please try again later, or turn message emails off in <a class="link" href="${SITE}/dashboard.html">My MyKunda</a>.</p>`, null, 500);
+    return page("Something went wrong", `<p>We could not process this just now. Please try again later, or change your email settings in <a class="link" href="${SITE}/dashboard.html">My MyKunda</a>.</p>`, null, 500);
   }
 });

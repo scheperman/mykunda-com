@@ -1511,6 +1511,19 @@ function specsHTML(p){
 /* small grid icon for inline Google Plus Code on cards */
 const PLUS_GRID_ICON='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>';
 
+/* Loopt er nu een Boost op deze advertentie?
+   Een Boost is dertig dagen bovenaan de zoekresultaten en op de voorpagina —
+   dat is letterlijk wat listing_plans.boost_30 verkoopt. Tot 30-08-2026 werd
+   listings.boosted_until nergens op de site gelezen: de sorteeroptie
+   "Featured" had geen regel en de voorpagina keek er niet naar. Wie een Boost
+   kocht kreeg dus niets. Dit is sindsdien de enige bron voor die vraag; een
+   verlopen datum telt niet mee. */
+function mkIsBoosted(p){
+  if(!p || !p.boosted_until) return false;
+  var t = new Date(p.boosted_until).getTime();
+  return !isNaN(t) && t > Date.now();
+}
+
 /* ---------- Card renderer ---------- */
 function cardHTML(p){
   const badges = [];

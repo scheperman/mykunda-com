@@ -151,5 +151,55 @@ check('geen datum, geen afteller', !/lclocks/.test(foot.listingFoot(L())));
 check('rij zonder database krijgt geen voet', foot.listingFoot(L({_db:false})) === '');
 check('label zonder dbStatus wordt herkend', foot.dbStatusOf({ status:'In review' }) === 'pending_review');
 
+/* ---- Boost: telt hij mee, en sorteert "Featured" er echt op? --------------
+   mkIsBoosted() staat in app.js (de bron, niet de geminificeerde kopie), de
+   sortering in search.html. Allebei uit het bestand geknipt in plaats van
+   nagetypt, zodat de test meegaat als de code verandert. */
+const appSrc = readFileSync('app.js', 'utf8');
+const boostFn = (() => {
+  const a = appSrc.indexOf('function mkIsBoosted(');
+  if(a < 0) throw new Error('mkIsBoosted niet gevonden');
+  let depth = 0, i = appSrc.indexOf('{', a);
+  for(; i < appSrc.length; i++){
+    if(appSrc[i] === '{') depth++;
+    else if(appSrc[i] === '}'){ depth--; if(depth === 0) break; }
+  }
+  return appSrc.slice(a, i + 1);
+})();
+const mkIsBoosted = new Function(boostFn + '\nreturn mkIsBoosted;')();
+
+const searchSrc = readFileSync('search.html', 'utf8');
+const sortBlok = (() => {
+  const a = searchSrc.indexOf("if(s==='featured') r=[...r].sort(");
+  if(a < 0) throw new Error('featured-sortering niet gevonden in search.html');
+  const b = searchSrc.indexOf("if(s==='low')", a);
+  return searchSrc.slice(a, b);
+})();
+const featuredSort = new Function('r', 's', 'mkIsBoosted', sortBlok + '\nreturn r;');
+
+const dag = n => new Date(Date.now() + n*86400e3).toISOString();
+
+check('lopende boost telt',        mkIsBoosted({ boosted_until: dag(3) }) === true);
+check('verlopen boost telt niet',  mkIsBoosted({ boosted_until: dag(-1) }) === false);
+check('geen datum telt niet',      mkIsBoosted({ boosted_until: null }) === false);
+check('onzin telt niet',           mkIsBoosted({ boosted_until: 'later' }) === false);
+
+const lijst = [
+  { id:'a', verified:false, boosted_until:null },
+  { id:'b', verified:true,  boosted_until:null },
+  { id:'c', verified:false, boosted_until:dag(5) },   // lopende boost
+  { id:'d', verified:false, boosted_until:dag(-5) },  // verlopen boost
+  { id:'e', verified:true,  boosted_until:dag(2) }    // boost én verified
+];
+const gesorteerd = featuredSort(lijst, 'featured', mkIsBoosted).map(x => x.id);
+// De twee met een lopende Boost staan vooraan; binnen die twee wint verified.
+check('geboost staat bovenaan', gesorteerd.slice(0,2).sort().join(',')==='c,e', gesorteerd.join(','));
+check('verified wint binnen de boosts', gesorteerd[0]==='e', gesorteerd.join(','));
+check('daarna verified zonder boost',   gesorteerd[2]==='b', gesorteerd.join(','));
+check('verlopen boost zakt naar de rest', gesorteerd.indexOf('d') > gesorteerd.indexOf('b'), gesorteerd.join(','));
+check('rest houdt zijn volgorde', gesorteerd.indexOf('a') < gesorteerd.indexOf('d'), gesorteerd.join(','));
+check('andere sortering blijft ongemoeid',
+  featuredSort([...lijst], 'low', mkIsBoosted).map(x=>x.id).join(',') === 'a,b,c,d,e');
+
 console.log(fails ? '\n' + fails + ' test(s) mislukt.' : '\nAlle tests geslaagd.');
 process.exit(fails ? 1 : 0);

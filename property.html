@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" id="mkRobots" content="noindex, follow, noai, noimageai"><!--mk:1vni5o8--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" id="mkRobots" content="noindex, follow, noai, noimageai"><!--mk:0ppazzb--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -32,7 +32,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preconnect" href="https://api.mapbox.com" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=103204437418208">
+<link rel="stylesheet" href="styles.min.css?v=43882044973280">
 <style>
 .crumb{padding:18px 0 6px;font-size:14px;color:var(--muted);display:flex;align-items:center;gap:8px}
 .crumb a{font-weight:600}.crumb a:hover{color:var(--green-700)}
@@ -106,6 +106,23 @@
 .feat-list{display:grid;grid-template-columns:1fr 1fr;gap:11px 30px;margin-top:6px}
 .feat-list .fi{display:flex;align-items:center;gap:11px;font-size:15px;color:var(--ink-2);font-weight:500;padding:9px 0;border-bottom:1px solid var(--line-2)}
 .feat-list .fi .ic{width:30px;height:30px;border-radius:8px;background:var(--green-50);color:var(--green-700);display:flex;align-items:center;justify-content:center;flex:none}
+
+/* prijsverloop */
+.phist{margin-top:10px;max-width:560px}
+.ph-row{display:flex;align-items:baseline;gap:14px;padding:11px 0;border-bottom:1px solid var(--line-2)}
+.ph-row:last-child{border-bottom:none}
+/* Met .phist ervoor, want een latere regel in redesign.css zet min-width op 0
+   en de datums stonden dan niet onder elkaar. Gemeten op 30-08-2026. */
+.phist .ph-when{font-size:13.5px;color:var(--muted-2);font-weight:600;flex:0 0 112px}
+.ph-what{font-size:15.5px;color:var(--ink-2);font-weight:600;flex:1;min-width:0}
+.ph-what b{font-weight:800;color:var(--ink)}
+.ph-tag{font-size:12.5px;font-weight:800;padding:3px 9px;border-radius:var(--r-pill);flex:none}
+.ph-tag.down{background:var(--green-100);color:var(--green-700)}
+.ph-tag.up{background:var(--amber-100);color:var(--amber-600)}
+@media(max-width:560px){
+  .ph-row{flex-wrap:wrap;gap:4px 12px}
+  .phist .ph-when{flex:0 0 100%;order:-1}
+}
 
 /* neighborhood mini */
 .hood-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:8px}
@@ -240,7 +257,7 @@
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=103204437418208"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=43882044973280"><!--/mk-css-->
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -357,6 +374,14 @@
         <p class="blk-lede" id="evidenceLede"></p>
         <div class="ladder" id="evidenceList"></div>
         <div class="gaps" id="evidenceGaps"></div>
+      </div>
+
+      <!-- Prijsverloop. Staat er alleen als er ook echt iets veranderd is;
+           een advertentie die nooit van prijs wijzigde heeft geen verhaal. -->
+      <div class="block" id="priceHistBlock" hidden>
+        <h2>Price history</h2>
+        <p class="blk-lede" id="priceHistLede"></p>
+        <div class="phist" id="priceHistList"></div>
       </div>
 
       <div class="block" id="utilBlock" hidden>
@@ -537,15 +562,15 @@
     </div>
   </footer><!--/mk-ftr--></div>
 
-<script src="app.min.js?v=103204437418208"></script>
-<script src="image-slot.js?v=103204437418208" defer></script>
+<script src="app.min.js?v=43882044973280"></script>
+<script src="image-slot.js?v=43882044973280" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel instead of blocking the page, and
    Leaflet (~145 KB) is only fetched when the visitor opens the Map tab. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=103204437418208'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=43882044973280'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -913,6 +938,55 @@ if(FEATS.length){
     if(!lines.length) return;
     document.getElementById('compoundList').innerHTML = lines.join('');
     show('compoundBlock', true);
+  })();
+
+  /* ---- 2b. Prijsverloop ----------------------------------------------
+     De trigger listings_price_event() legt elke prijswijziging vast: 'listed'
+     bij publicatie, 'change' bij een wijziging en 'sold' bij verkoop. Of een
+     bezoeker die mag zien beslist de database, niet deze pagina: de leesregel
+     op listing_price_events eist dat de advertentie publiek staat, dat de
+     aanbieder prijshistorie aan heeft laten staan en dat de hoofdschakelaar
+     aan staat. Mag het niet, dan komt er een lege lijst terug en blijft het
+     blok weg — geen kop zonder inhoud, en geen uitleg over waarom.
+
+     Het blok verschijnt alleen als de prijs ook echt bewogen heeft. Eén regel
+     "listed at D…" is geen geschiedenis, dat staat al bovenaan de pagina. */
+  (async function(){
+    /* Eerst wachten, dán kijken of de functie er is: supabase.js komt los en
+       laat binnen. Andersom valt het blok altijd weg bij een verse pagina. */
+    try{ await window.__sbReady; }catch(e){}
+    if(typeof fetchPriceHistory !== 'function') return;
+    let rows;
+    try{ rows = await fetchPriceHistory(P.id); }
+    catch(e){ console.warn('price history:', (e && e.message) || e); return; }
+    if(!rows || !rows.length) return;
+    if(!rows.some(r => r.event === 'change')) return;
+
+    const when = iso => {
+      const d = new Date(iso);
+      return isNaN(d) ? '' : d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+    };
+    const html = rows.map(function(r){
+      const now = Number(r.new_price), was = Number(r.old_price);
+      let what, tag = '';
+      if(r.event === 'listed'){
+        what = 'Listed at <b>'+fmtPrice(now)+'</b>';
+      } else if(r.event === 'sold'){
+        what = isRent ? 'Let at <b>'+fmtPrice(now)+'</b>' : 'Sold at <b>'+fmtPrice(now)+'</b>';
+      } else {
+        const down = now < was;
+        what = (down ? 'Reduced to <b>' : 'Raised to <b>')+fmtPrice(now)+'</b> from '+fmtPrice(was);
+        const pct = Math.round(Math.abs(Number(r.pct) || (was ? (now-was)/was*100 : 0)));
+        if(pct) tag = '<span class="ph-tag '+(down?'down':'up')+'">'+(down?'−':'+')+pct+'%</span>';
+      }
+      return '<div class="ph-row"><span class="ph-when">'+when(r.occurred_at)+'</span>'
+           + '<span class="ph-what">'+what+'</span>'+tag+'</div>';
+    }).join('');
+
+    document.getElementById('priceHistLede').textContent =
+      'Every change to the asking price since this listing went live, as it was recorded at the time.';
+    document.getElementById('priceHistList').innerHTML = html;
+    show('priceHistBlock', true);
   })();
 
   /* ---- 3. Rent, terms and management -------------------------------- */

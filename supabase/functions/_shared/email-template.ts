@@ -1057,6 +1057,130 @@ export function savedSearchAlertEmail(a: SavedSearchAlertInput): string {
   });
 }
 
+/* ---------- aflopende extra's (Boost, Verified) ---------- */
+
+export interface ExpiryItem {
+  listingId: string;
+  title?: string;
+  area?: string;
+  /** 'boost' of 'verified' — de twee producten met een looptijd. */
+  product: 'boost' | 'verified';
+  /** 'soon' = loopt binnenkort af, 'ended' = is afgelopen. */
+  phase: 'soon' | 'ended';
+  /** De einddatum zelf, als ISO-string. */
+  until: string;
+  /** Hele dagen tot het einde; negatief als het al voorbij is. */
+  days: number;
+}
+export interface PlanExpiryInput {
+  name?: string;
+  items: ExpiryItem[];
+  unsubscribeUrl?: string;
+}
+
+const PRODUCT_WORD: Record<ExpiryItem['product'], string> = {
+  boost: 'Boost',
+  verified: 'Verified listing',
+};
+
+function expiryDate(iso: string): string {
+  const d = new Date(iso);
+  return isNaN(d.getTime())
+    ? ''
+    : d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+}
+
+/** Eén regel: welke advertentie, welk product, en wanneer het afloopt of afliep. */
+function expiryRow(i: ExpiryItem): string {
+  const url = `${BRAND.site}/property.html?id=${encodeURIComponent(String(i.listingId))}`;
+  const when = i.phase === 'ended'
+    ? `Ended ${expiryDate(i.until)}`
+    : i.days <= 0
+      ? `Ends today`
+      : `Ends ${expiryDate(i.until)} — ${i.days} day${i.days === 1 ? '' : 's'} left`;
+  const tone = i.phase === 'ended' ? BRAND.muted : BRAND.amber;
+  return `<tr>
+    <td style="padding:13px 0;border-bottom:1px solid ${BRAND.line}">
+      <p style="margin:0;font-size:15px;font-weight:700;line-height:1.35"><a href="${url}" style="color:${BRAND.ink};text-decoration:none">${escOpt(i.title) || 'Your listing'}</a></p>
+      ${i.area ? `<p style="margin:3px 0 0;font-size:13.5px;color:${BRAND.muted}">${esc(String(i.area))}</p>` : ''}
+      <p style="margin:6px 0 0;font-size:14px;font-weight:700;color:${tone}">${esc(PRODUCT_WORD[i.product])} · ${esc(when)}</p>
+    </td></tr>`;
+}
+
+/** Naar de aanbieder: zijn Boost of zijn Verified-periode loopt af of is af.
+ *
+ *  Dit is post over iets wat hij zelf gekocht heeft, en daarom geen mail die
+ *  achter de marketingtoestemming zit — wie voor dertig dagen betaalt hoort te
+ *  horen dat die dertig dagen om zijn. Hij draagt wél een afmeldlink, want er
+ *  staat ook een verlengknop in, en dat maakt hem deels een aanbieding. */
+export function planExpiryEmail(a: PlanExpiryInput): string {
+  const S = BRAND.site;
+  const fname = a.name ? esc(String(a.name).trim().split(' ')[0]) : '';
+  const items = a.items;
+  const ended = items.filter((i) => i.phase === 'ended');
+  const soon = items.filter((i) => i.phase === 'soon');
+
+  /* De kop zegt wat er aan de hand is. Bij precies één ding kan dat concreet;
+     bij meer wordt het één zin die niet doet alsof het er één is. */
+  let heading: string;
+  if (items.length === 1) {
+    const i = items[0];
+    heading = i.phase === 'ended'
+      ? `Your ${PRODUCT_WORD[i.product]} has ended`
+      : i.days <= 0
+        ? `Your ${PRODUCT_WORD[i.product]} ends today`
+        : `Your ${PRODUCT_WORD[i.product]} ends in ${i.days} day${i.days === 1 ? '' : 's'}`;
+  } else if (!soon.length) {
+    heading = `${items.length} of your extras have ended`;
+  } else if (!ended.length) {
+    heading = `${items.length} of your extras are running out`;
+  } else {
+    heading = 'Some of your extras are running out';
+  }
+  if (fname) heading = `${fname}, ${heading.charAt(0).toLowerCase()}${heading.slice(1)}`;
+
+  const rows = items.map(expiryRow).join('');
+
+  /* Wat er feitelijk verandert als het afloopt, en niets meer dan dat.
+     Geen uitspraken over aantallen kijkers of enquiries: die zijn nergens
+     gemeten, dus die horen niet in een mail.
+
+     De Verified-regel zegt met opzet NIET dat het vinkje eraf gaat. Dat gaat
+     er namelijk niet af: apply_paid_plan() verlengt alleen verified_until, en
+     is_verified_title zet een medewerker met de hand — niets zet hem terug.
+     Schrijf hier dus niets over een badge die verdwijnt zolang dat niet zo is. */
+  const gevolg: string[] = [];
+  if (items.some((i) => i.product === 'boost')) {
+    gevolg.push('A Boost puts your listing at the top of the search results in their normal order, and first on the homepage. When it ends the listing stays online exactly as it is — it simply takes its usual place in the results again.');
+  }
+  if (items.some((i) => i.product === 'verified')) {
+    gevolg.push('A Verified check is paid for six months at a time. When those six months are up the listing stays exactly as it is; the check is simply no longer current, and a new one runs for another six months.');
+  }
+
+  return emailWrap({
+    heading,
+    /* De preheader is de regel naast het onderwerp in de inbox, dus hij moet
+       kloppen met wat er in de mail staat — ook in aantal. */
+    preheader: !soon.length
+      ? (ended.length === 1
+          ? 'An extra on your listing has run out. Nothing has been taken offline.'
+          : `${ended.length} extras on your listings have run out. Nothing has been taken offline.`)
+      : (items.length === 1
+          ? 'An extra on your listing runs out shortly. Nothing will be taken offline.'
+          : `${items.length} extras on your listings need a look. Nothing will be taken offline.`),
+    body: `<p style="margin:0 0 4px">${ended.length && !soon.length
+        ? 'This is what has run out on your side of MyKunda.'
+        : 'This is what is running out on your side of MyKunda.'}</p>
+      <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin:12px 0 0">${rows}</table>
+      ${gevolg.map((g) => `<p style="margin:16px 0 0;font-size:14.5px;color:${BRAND.ink2};line-height:1.6">${g}</p>`).join('')}
+      ${callout(`<p style="font-size:14px;color:${BRAND.ink};margin:0"><strong>Your listing is not going anywhere.</strong> Nothing is removed, hidden or changed when an extra ends. You only lose the extra.</p>`, 'green')}`,
+    cta: ended.length ? 'See what it costs to renew' : 'See the plans',
+    ctaUrl: `${S}/sell.html#pricing`,
+    footer: 'You get this because you bought a Boost or a Verified check for a listing on mykunda.com. We write once when it is about to run out, and once when it has.',
+    unsubscribeUrl: a.unsubscribeUrl,
+  });
+}
+
 /* Eén bron voor de bankrekening, ook voor het (latente) bankblok in de bon. */
 export { BANK, USD, BANK_DETAILS } from './bank.ts';
 
