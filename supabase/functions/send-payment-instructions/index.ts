@@ -254,7 +254,7 @@ function bouwMail(o: { ref: string; bedrag: string; plan: string; vervalt: strin
       <p style="font-size:13.5px;color:${BRAND.ink2};line-height:1.6;margin:0">Only if your bank sends dollars, give them the correspondent bank as well: <strong>${esc(USD.intermediary_bank)}</strong>, SWIFT <strong>${esc(USD.intermediary_swift)}</strong>, for the account of <strong>${esc(USD.beneficiary_bank)}</strong> (SWIFT ${esc(USD.beneficiary_swift)}, account ${esc(USD.beneficiary_bank_account)}). The beneficiary name and account number stay exactly as above.</p>
     </div>
 
-    <p style="margin:18px 0 0">We confirm your payment by hand once it appears on our statement, usually within one working day. You get a receipt by email as soon as that is done.</p>
+    <p style="margin:18px 0 0">We confirm your payment by hand once it appears on our statement, usually within 1–2 working days. You get a receipt by email as soon as that is done.</p>
     <p style="margin:12px 0 0;font-size:14px;color:${BRAND.muted}">This reference stays valid until <strong>${esc(o.vervalt)}</strong>. If you have not paid by then, start again on the site and you get a fresh one.</p>
 
     <div style="border-top:1px solid ${BRAND.line};margin-top:22px;padding-top:16px">

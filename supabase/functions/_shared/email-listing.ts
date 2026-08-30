@@ -137,13 +137,13 @@ export function listingConfirmationEmail(listing: ListingInput): string {
      iets, want er ging geen mail uit bij goedkeuring. Die mail bestaat nu
      wel (notify-listing-status); deze mail belooft niet langer iets anders. */
   const statusMsg = isBasic
-    ? 'Your listing is <strong>with our team</strong> for a quick check. That is usually done within one working day, and you get an email the moment it goes live.'
+    ? 'Your listing is <strong>with our team</strong> for a quick check. That is usually done within 1–2 working days, and you get an email the moment it goes live.'
     : 'Your listing has been <strong>submitted for review</strong>. Our team checks your documents within 1–2 working days; you get an email as soon as it is live, with the badge on it.';
 
   return emailWrap({
     heading: fname ? `Thank you, ${fname} — we have your listing` : 'We have your listing',
     preheader: isBasic
-      ? `${listing.title || 'Your property'} is being checked — usually within one working day.`
+      ? `${listing.title || 'Your property'} is being checked — usually within 1–2 working days.`
       : `${listing.title || 'Your property'} is submitted for review — 1–2 working days.`,
     body: `<p style="margin:0 0 16px">${statusMsg}</p>
       ${detailTable(detailRows(listing))}
@@ -216,7 +216,7 @@ export function listingRejectedEmail(listing: ListingInput & { reason?: string }
       ${listing.reason
         ? callout(`<p style="font-size:14px;color:${BRAND.ink};margin:0"><strong>What we need:</strong> ${escLines(listing.reason)}</p>`)
         : callout(`<p style="font-size:14px;color:${BRAND.ink};margin:0">Reply to this email and we will tell you exactly what is missing — usually it is a photo that is too small, a price that looks like a typo, or a document we could not read.</p>`)}
-      <p style="margin:16px 0 0">Open the listing, make the change, and submit it again. We look at it the same working day.</p>
+      <p style="margin:16px 0 0">Open the listing, make the change, and submit it again. We look at it again within 1–2 working days.</p>
       <p style="margin:16px 0 0;font-size:14px;color:${BRAND.muted}">Think we have this wrong? Reply to this email — a person reads it.</p>`,
     cta: 'Open your listing',
     ctaUrl: `${BRAND.site}/dashboard.html`,

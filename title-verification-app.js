@@ -498,7 +498,7 @@ function SellerView({
     };
     setVerifications(prev => [newVerif, ...prev]);
     setSubView('list');
-    showToast("Verification submitted \u2014 we'll review your documents shortly");
+    showToast("Verification submitted \u2014 we'll review your documents within 1–2 working days");
   }
   if (subView === 'submit' && selectedListing) {
     return React.createElement(SellerSubmitView, {

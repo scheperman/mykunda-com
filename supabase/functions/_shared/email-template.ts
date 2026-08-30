@@ -304,8 +304,8 @@ export function leadAutoReplyEmail(lead: { source: string; name?: string; payloa
 
   switch (lead.source) {
     case 'valuation':
-      intro = 'Thanks for requesting a property valuation. A valuer we work with will review your property and confirm the exact figure with you within <strong>one working day</strong>.';
-      preheader = 'Your valuation request is in — a valuer confirms the figure within one working day.';
+      intro = 'Thanks for requesting a property valuation. A valuer we work with will review your property and confirm the exact figure with you within <strong>1–2 working days</strong>.';
+      preheader = 'Your valuation request is in — a valuer confirms the figure within 1–2 working days.';
       if (lead.payload?.estimate_low && lead.payload?.estimate_high) {
         extraBlock = `<div style="background:${BRAND.paper};border-radius:10px;padding:20px 22px;margin:18px 0 6px;border-left:4px solid ${BRAND.amber}">
             <p style="font-size:12px;color:${BRAND.muted};font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin:0 0 6px">Automated estimate</p>
@@ -322,12 +322,12 @@ export function leadAutoReplyEmail(lead: { source: string; name?: string; payloa
         ctaLabel = 'Download the checklist';
         ctaUrl = DIASPORA_CHECKLIST_URL;
       } else {
-        intro = 'Thanks for reaching out to MyKunda. Your message is with our team and someone will get back to you within <strong>one working day</strong>.';
-        preheader = 'Your message reached us — expect a reply within one working day.';
+        intro = 'Thanks for reaching out to MyKunda. Your message is with our team and someone will get back to you within <strong>1–2 working days</strong>.';
+        preheader = 'Your message reached us — expect a reply within 1–2 working days.';
       }
       break;
     case 'listing_enquiry':
-      intro = 'Thanks for your enquiry about this property. The listing agent has been notified and will respond within <strong>one working day</strong>.';
+      intro = 'Thanks for your enquiry about this property. The listing agent has been notified and will respond within <strong>1–2 working days</strong>.';
       preheader = 'Your enquiry is with the listing agent.';
       ctaLabel = 'View more properties';
       break;
@@ -338,7 +338,7 @@ export function leadAutoReplyEmail(lead: { source: string; name?: string; payloa
       unsubscribeUrl = `${BRAND.site}/contact.html?unsubscribe=1`;
       break;
     case 'viewing':
-      intro = 'Your viewing request has been received. We are checking it with the owner and will come back with times that work — usually the same day.';
+      intro = 'Your viewing request has been received. We are checking it with the owner and will come back with times that work — usually within 1–2 working days.';
       preheader = 'Viewing request received — we are lining up times with the owner.';
       ctaLabel = 'View your dashboard';
       ctaUrl = `${BRAND.site}/dashboard.html`;
@@ -348,8 +348,8 @@ export function leadAutoReplyEmail(lead: { source: string; name?: string; payloa
       preheader = 'Your message is with the agent.';
       break;
     case 'consultation':
-      intro = 'Your free consultation is booked. An advisor will email you shortly with a time slot and a calendar invite. The call takes 20 minutes and there is no obligation.';
-      preheader = 'Your free consultation is booked — we will confirm a time shortly.';
+      intro = 'Your free consultation is booked. An advisor will email you within 1–2 working days with a time slot and a calendar invite. The call takes 20 minutes and there is no obligation.';
+      preheader = 'Your free consultation is booked — we will confirm a time within 1–2 working days.';
       ctaLabel = 'Browse properties while you wait';
       break;
     case 'whatsapp_inbound':
@@ -357,13 +357,13 @@ export function leadAutoReplyEmail(lead: { source: string; name?: string; payloa
       preheader = 'We have your WhatsApp message.';
       break;
     case 'verification':
-      intro = 'Thanks for requesting an ownership check. We confirm by email within <strong>one working day</strong> that we can run the check on this property, and what we will need from you.';
-      preheader = 'Your ownership check request is in — we confirm within one working day.';
+      intro = 'Thanks for requesting an ownership check. We confirm by email within <strong>1–2 working days</strong> that we can run the check on this property, and what we will need from you.';
+      preheader = 'Your ownership check request is in — we confirm within 1–2 working days.';
       ctaLabel = 'Read how the check works';
       ctaUrl = `${BRAND.site}/verify.html`;
       break;
     default:
-      intro = 'Thanks for getting in touch with MyKunda. A member of our team will reply within one working day.';
+      intro = 'Thanks for getting in touch with MyKunda. A member of our team will reply within 1–2 working days.';
   }
 
   const body = `<p style="margin:0 0 16px">${intro}</p>
@@ -432,7 +432,7 @@ export function viewingConfirmationEmail(v: {
   return emailWrap({
     heading: fname ? `Your viewing request, ${fname}` : 'Your viewing request',
     preheader: `We are confirming a time for ${v.title} with the owner.`,
-    body: `<p style="margin:0 0 14px">Thanks — your request to view <strong>${esc(v.title)}</strong> is with the owner. They confirm the time or propose alternatives, and you get an email the moment they do. That is usually the same day.</p>
+    body: `<p style="margin:0 0 14px">Thanks — your request to view <strong>${esc(v.title)}</strong> is with the owner. They confirm the time or propose alternatives, and you get an email the moment they do. That is usually within 1–2 working days.</p>
       ${detailTable([
         ['Property', `${esc(v.title)}${v.area ? ' · ' + esc(v.area) : ''}`],
         ['Your preferred time', v.requested_slot ? esc(fmtSlot(v.requested_slot)) : 'Flexible'],
@@ -801,7 +801,7 @@ export function whatsappAutoReply(name?: string): string {
   const fname = name ? String(name).trim().split(' ')[0] : '';
   return `Hello${fname ? ' ' + fname : ''}, thanks for messaging MyKunda.
 
-We have your message and a member of our team will reply here shortly. Office hours are 9:00–18:00, Monday to Saturday.
+We have your message and a member of our team will reply here within 1–2 working days. Office hours are 9:00–18:00, Monday to Saturday.
 
 In the meantime you can browse every property and plot we list at mykunda.com.
 
