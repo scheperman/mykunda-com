@@ -2721,10 +2721,10 @@ const MYKUNDA_PHONE_DISPLAY='+220 228 2717';
 /* Wait for the lazily-loaded Supabase client, then submit the lead. Throws when
    the backend is offline or in demo mode, so no form on the site can ever show a
    "sent" confirmation for a message that was never actually delivered. */
-async function sendLead(source, fields){
+async function sendLead(source, fields, opts){
   if(window.__sbReady){ try{ await window.__sbReady; }catch(e){} }
   if(typeof submitLead!=='function') throw new Error('backend-offline');
-  const r = await submitLead(source, fields);
+  const r = await submitLead(source, fields, opts);
   if(r && r.demo) throw new Error('backend-offline');
   return r;
 }

@@ -144,7 +144,12 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
 
   try {
-    const { lead_id } = await req.json().catch(() => ({}));
+    /* skip_team: de teammail overslaan en alleen de auto-reply sturen. Eén
+       aanroeper gebruikt dat — de bezichtigingsaanvraag van een ingelogde
+       bezoeker, waar notify-viewing de verkoper al mailt mét de knop om een
+       tijd te kiezen. Zonder dit kreeg de verkoper twee mails binnen een halve
+       seconde over dezelfde aanvraag. Gemeten tijdens reis 3, 30-08-2026. */
+    const { lead_id, skip_team } = await req.json().catch(() => ({}));
     if (!lead_id) return json({ ok: false, error: "missing lead_id" }, 400);
 
     const db = createClient(SUPABASE_URL, SERVICE_KEY);
@@ -177,7 +182,10 @@ serve(async (req) => {
 
     // 1) Team notification — reply-to the visitor so answering is one click.
     const teamSubject = safeSubject(`[MyKunda] New ${label} — ${who}`);
-    try {
+    if (skip_team === true) {
+      sent.team = false;
+      console.info("notify-lead: teammail overgeslagen op verzoek (skip_team) voor lead", lead.id);
+    } else try {
       const res = await sendEmail({
         to: LEAD_EMAIL,
         subject: teamSubject,

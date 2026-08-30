@@ -470,7 +470,7 @@ export function viewingConfirmationEmail(v: {
       <p style="margin:16px 0 0;font-size:14px;color:${BRAND.muted}">Need to change the time? Reply to this email or WhatsApp <a href="${BRAND.waLink}" style="color:${BRAND.green};font-weight:600">${BRAND.waNumber}</a>.</p>`,
     cta: 'View your dashboard',
     ctaUrl: `${BRAND.site}/dashboard.html`,
-    footer: 'You received this because you requested a viewing on mykunda.com.',
+    footer: 'You received this because you are part of a viewing arranged on mykunda.com.',
   });
 }
 
@@ -492,7 +492,7 @@ export function viewingConfirmedEmail(v: {
       <p style="margin:16px 0 0;font-size:14px;color:${BRAND.muted}">Can't make it after all? Reply to this email or WhatsApp <a href="${BRAND.waLink}" style="color:${BRAND.green};font-weight:600">${BRAND.waNumber}</a> and we move it.</p>`,
     cta: 'Message us on WhatsApp',
     ctaUrl: BRAND.waLink,
-    footer: 'You received this because you requested a viewing on mykunda.com.',
+    footer: 'You received this because you are part of a viewing arranged on mykunda.com.',
   });
 }
 
@@ -520,7 +520,7 @@ export function viewingSlotsEmail(v: {
       <p style="margin:14px 0 0;font-size:14px;color:${BRAND.muted}">Rather not go online? WhatsApp us at <a href="${BRAND.waLink}" style="color:${BRAND.green};font-weight:600">${BRAND.waNumber}</a> and we set it for you.</p>`,
     cta: 'Choose a time',
     ctaUrl: url,
-    footer: 'You received this because you requested a viewing on mykunda.com.',
+    footer: 'You received this because you are part of a viewing arranged on mykunda.com.',
   });
 }
 
@@ -552,7 +552,7 @@ export function viewingCancelledEmail(v: {
       <p style="margin:16px 0 0">Nothing is lost — a new appointment is made in a moment. Open the conversation and propose another time that suits you both.</p>`,
     cta: 'Propose another time',
     ctaUrl: url,
-    footer: 'You received this because you requested a viewing on mykunda.com.',
+    footer: 'You received this because you are part of a viewing arranged on mykunda.com.',
   });
 }
 

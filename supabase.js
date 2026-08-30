@@ -191,7 +191,7 @@ async function sendEmailCode(email, opts){
 
 /* ---------------- Leads (every form) ---------------- */
 /* source: 'valuation' | 'viewing' | 'agent_message' | 'area_alert' | 'contact' | 'listing_enquiry' */
-async function submitLead(source, fields){
+async function submitLead(source, fields, opts){
   const row = {
     source,
     name:  fields.name  || null,
@@ -223,10 +223,22 @@ async function submitLead(source, fields){
     if(insertErr) throw insertErr;
   }
 
-  // 2) fire the notification email (Edge Function) — only if we got an id
+  /* 2) fire the notification email (Edge Function) — only if we got an id.
+
+     opts.skipTeam laat de teammail weg en houdt de auto-reply aan de bezoeker
+     wél overeind. Eén geval gebruikt dat: de bezichtigingsaanvraag van een
+     INGELOGDE bezoeker op property.html. Die loopt sinds 30-08-2026 óók door
+     de echte keten (conversatie + viewings-rij), en die keten mailt de
+     verkoper zelf — met de knop "Choose a time" erin, wat de bruikbare mail
+     van de twee is. Zonder deze schakelaar kreeg de verkoper twee mails binnen
+     een halve seconde over dezelfde aanvraag, met verschillende onderwerpen.
+     Gemeten tijdens reis 3 van de testronde. De bezoeker moet zijn
+     bevestiging wél houden: het scherm belooft er een. */
   if(leadId) {
     try{
-      const fnRes = await sb.functions.invoke('notify-lead', { body: { lead_id: leadId } });
+      const body = { lead_id: leadId };
+      if(opts && opts.skipTeam) body.skip_team = true;
+      const fnRes = await sb.functions.invoke('notify-lead', { body });
       if(fnRes.error) console.warn('notify-lead returned error:', fnRes.error.message || fnRes.error);
     } catch(e){
       console.warn('notify-lead Edge Function not reachable — lead saved but no email sent:', e.message);

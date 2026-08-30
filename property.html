@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" id="mkRobots" content="noindex, follow, noai, noimageai"><!--mk:00l4bjx--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" id="mkRobots" content="noindex, follow, noai, noimageai"><!--mk:17e9ce0--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -32,7 +32,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preconnect" href="https://api.mapbox.com" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=24338754756936">
+<link rel="stylesheet" href="styles.min.css?v=89296321324134">
 <style>
 .crumb{padding:18px 0 6px;font-size:14px;color:var(--muted);display:flex;align-items:center;gap:8px}
 .crumb a{font-weight:600}.crumb a:hover{color:var(--green-700)}
@@ -240,7 +240,7 @@
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=24338754756936"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=89296321324134"><!--/mk-css-->
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -537,15 +537,15 @@
     </div>
   </footer><!--/mk-ftr--></div>
 
-<script src="app.min.js?v=24338754756936"></script>
-<script src="image-slot.js?v=24338754756936" defer></script>
+<script src="app.min.js?v=89296321324134"></script>
+<script src="image-slot.js?v=89296321324134" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel instead of blocking the page, and
    Leaflet (~145 KB) is only fetched when the visitor opens the Map tab. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=24338754756936'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=89296321324134'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -1390,27 +1390,32 @@ window.bookViewing = async function(form) {
   if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
   try {
     const listingId = (typeof P !== 'undefined' && P && P.id) || null;
-    await sendLead('viewing', {
-      name, email, phone: phone || null, message: note || null,
-      listing_id: listingId,
-      payload: { date: d, slot: slot }
-    });
-    /* Ook vastleggen als echte bezichtiging, zodat hij in het dashboard van
-       de verkoper landt en niet alleen in de mailbox.
 
-       Sinds 30-08-2026 twee wegen. Is de bezoeker INGELOGD, dan gaat de
-       aanvraag door de echte keten: een conversatie, een voorgestelde tijd in
-       `viewings`, en daarmee de bevestiging, de afwijzing, de annulering en
-       de twee herinneringen die daaraan hangen. Is hij dat niet, dan blijft
-       het de oude rij in `viewings_legacy_v0` — die valt buiten die keten,
-       maar hij staat wel in het dashboard, en inloggen verplicht stellen op
-       dit moment in de flow zou meer kosten dan het oplevert.
+    /* Twee wegen, en sinds reis 3 van de testronde in deze volgorde.
 
-       Nooit blokkerend: de aanvraag is op dit punt al opgeslagen als lead. */
+       Is de bezoeker INGELOGD, dan gaat de aanvraag door de echte keten: een
+       conversatie, een voorgestelde tijd in `viewings`, en daarmee de
+       bevestiging, de afwijzing, de annulering en de twee herinneringen die
+       daaraan hangen. Is hij dat niet, dan blijft het de oude rij in
+       `viewings_legacy_v0` — die valt buiten die keten, maar hij staat wel in
+       het dashboard, en inloggen verplicht stellen op dit punt in de flow zou
+       meer kosten dan het oplevert.
+
+       De keten gaat nu VOOR de lead, omdat de uitkomst bepaalt of de teammail
+       nog nodig is. Slaagt de keten, dan heeft notify-viewing de verkoper al
+       gemaild mét de knop "Choose a time"; de teammail van notify-lead zou daar
+       een tweede bericht over dezelfde aanvraag naast zetten. Gemeten tijdens
+       reis 3: twee mails binnen een halve seconde, met verschillende
+       onderwerpen en verschillende knoppen. De auto-reply aan de bezoeker gaat
+       altijd door — het scherm belooft er een.
+
+       De lead wordt in beide gevallen vastgelegd, dus de aanvraag kan niet
+       zoekraken. */
+    let viaKeten = false;
+    let slotIso = null;
     if(listingId){
       const dt = new Date(d + 'T' + ((slot || '10:00').trim() || '10:00'));
-      const slotIso = isNaN(dt) ? null : dt.toISOString();
-      let viaKeten = false;
+      slotIso = isNaN(dt) ? null : dt.toISOString();
       if(slotIso && typeof requestViewingAsUser === 'function'){
         try{
           await requestViewingAsUser(listingId, slotIso, note || null);
@@ -1422,6 +1427,15 @@ window.bookViewing = async function(form) {
           if(!/not-signed-in/.test(m)) console.warn('viewing chain:', m);
         }
       }
+    }
+
+    await sendLead('viewing', {
+      name, email, phone: phone || null, message: note || null,
+      listing_id: listingId,
+      payload: { date: d, slot: slot, via: viaKeten ? 'conversation' : 'legacy' }
+    }, { skipTeam: viaKeten });
+
+    if(listingId){
       if(!viaKeten && typeof requestViewing === 'function'){
         try{
           await requestViewing({
