@@ -964,6 +964,99 @@ export function signupBackofficeEmail(u: SignupInfo): string {
   });
 }
 
+/* ============================================================
+   SAVED SEARCH ALERT — nieuw aanbod voor een bewaarde zoekopdracht
+   ============================================================ */
+
+export interface AlertListing {
+  id: string;
+  title?: string;
+  area?: string;
+  price?: number;
+  kind?: string;            // 'sale' | 'rent'
+  beds?: number; baths?: number; sqm?: number; plot?: number;
+  cat?: string;
+  verified?: boolean;
+  img?: string;             // publieke storage-URL van de omslagfoto
+}
+export interface AlertGroup {
+  label: string;            // hoe de zoekopdracht heet in het dashboard
+  url: string;              // search.html?… om de hele zoekopdracht te openen
+  listings: AlertListing[]; // de nieuwe treffers, al afgekapt
+  more: number;             // hoeveel er niet in de mail passen
+}
+export interface SavedSearchAlertInput {
+  name?: string;
+  groups: AlertGroup[];
+  total: number;
+}
+
+const alertPrice = (l: AlertListing) =>
+  l.price ? `D ${Number(l.price).toLocaleString('en-US')}${l.kind === 'rent' ? ' /mo' : ''}` : 'Price on request';
+
+function alertSpecs(l: AlertListing): string {
+  const bits: string[] = [];
+  if (l.cat === 'land' || l.cat === 'business_plot') {
+    if (l.plot) bits.push(`${Number(l.plot).toLocaleString('en-US')} m² plot`);
+  } else {
+    if (l.beds) bits.push(`${l.beds} bed`);
+    if (l.baths) bits.push(`${l.baths} bath`);
+    if (l.sqm) bits.push(`${Number(l.sqm).toLocaleString('en-US')} m²`);
+  }
+  return bits.join(' · ');
+}
+
+/** Eén advertentie als rij: kleine foto links, de feiten rechts. */
+function alertRow(l: AlertListing): string {
+  const S = BRAND.site;
+  const url = `${S}/property.html?id=${encodeURIComponent(String(l.id))}`;
+  const specs = alertSpecs(l);
+  const photo = l.img
+    ? `<img src="${safeUrl(l.img)}" width="108" alt="" style="display:block;width:108px;height:78px;object-fit:cover;border-radius:8px;border:0">`
+    : `<table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="width:108px;height:78px;border-radius:8px;background:${BRAND.paper2}"></td></tr></table>`;
+  return `<tr>
+    <td style="width:120px;vertical-align:top;padding:12px 12px 12px 0"><a href="${url}" style="text-decoration:none">${photo}</a></td>
+    <td style="vertical-align:top;padding:12px 0;border-bottom:1px solid ${BRAND.line}">
+      <p style="margin:0;font-size:15px;font-weight:700;line-height:1.35"><a href="${url}" style="color:${BRAND.ink};text-decoration:none">${escOpt(l.title) || 'Untitled'}</a></p>
+      ${l.area ? `<p style="margin:3px 0 0;font-size:13.5px;color:${BRAND.muted}">${esc(String(l.area))}</p>` : ''}
+      <p style="margin:6px 0 0;font-size:15px;font-weight:800;color:${BRAND.green}">${alertPrice(l)}${l.verified ? ` <span style="font-size:12px;font-weight:700;color:${BRAND.muted}">· Verified title</span>` : ''}</p>
+      ${specs ? `<p style="margin:4px 0 0;font-size:13px;color:${BRAND.muted}">${esc(specs)}</p>` : ''}
+    </td></tr>`;
+}
+
+/** Naar de zoeker: wat er nieuw is op zijn bewaarde zoekopdrachten.
+ *  Eén mail per persoon, met de zoekopdrachten eronder gegroepeerd — niet één
+ *  mail per zoekopdracht, want dan krijgt iemand met vier zoekopdrachten vier
+ *  mails over hetzelfde huis. */
+export function savedSearchAlertEmail(a: SavedSearchAlertInput): string {
+  const S = BRAND.site;
+  const fname = a.name ? esc(String(a.name).trim().split(' ')[0]) : '';
+  const n = a.total;
+  const what = n === 1 ? 'one new property' : `${n} new properties`;
+  const blocks = a.groups.map((g) => `
+    <div style="margin:22px 0 0">
+      ${sectionLabel(esc(g.label))}
+      <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+        ${g.listings.map(alertRow).join('')}
+      </table>
+      ${g.more > 0
+        ? `<p style="margin:10px 0 0;font-size:13.5px"><a href="${safeUrl(g.url)}" style="color:${BRAND.green};font-weight:700;text-decoration:none">See ${g.more} more like this →</a></p>`
+        : `<p style="margin:10px 0 0;font-size:13.5px"><a href="${safeUrl(g.url)}" style="color:${BRAND.green};font-weight:700;text-decoration:none">Open this search →</a></p>`}
+    </div>`).join('');
+
+  return emailWrap({
+    heading: fname ? `${fname}, ${what} for you` : `${what.charAt(0).toUpperCase()}${what.slice(1)} for you`,
+    preheader: `New on MyKunda since we last wrote: ${what} matching your saved ${a.groups.length === 1 ? 'search' : 'searches'}.`,
+    body: `<p style="margin:0 0 4px">These came online since our last email and match what you asked us to watch.</p>
+      ${blocks}
+      ${callout(`<p style="font-size:14px;color:${BRAND.ink};margin:0"><strong>Before you pay anything:</strong> ask for the title documents and have them checked. We never collect deposits or purchase money — that goes to your lawyer or notary. <a href="${S}/verify.html" style="color:${BRAND.green};font-weight:600">How an ownership check works</a></p>`, 'green')}`,
+    cta: 'Open My MyKunda',
+    ctaUrl: `${S}/dashboard.html#saved`,
+    footer: 'You get this because you saved a search on mykunda.com and asked for alerts. One email at a time, never more than one a day.',
+    unsubscribeUrl: `${S}/dashboard.html?alerts=off`,
+  });
+}
+
 /* Eén bron voor de bankrekening, ook voor het (latente) bankblok in de bon. */
 export { BANK, USD, BANK_DETAILS } from './bank.ts';
 
