@@ -77,6 +77,22 @@ export function esc(v: unknown): string {
     .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
+/* Duizendtallen groeperen zonder Intl.
+   Gemeten op 31-08-2026 in de Supabase edge runtime: (20000).toLocaleString('en-US')
+   geeft daar "20000" — de cijfergroepering ontbreekt in de meegeleverde
+   Intl-gegevens, terwijl datums wél goed opmaken. Elke prijs in een mail kwam
+   dus zonder scheidingsteken bij de klant aan ("D4500000"), en een bedrag van
+   die lengte leest niemand in één keer goed. In de browser werkt
+   toLocaleString wel; alleen de mailtemplates moeten het zonder doen. */
+export function nummer(v: unknown, decimalen = 0): string {
+  const n = Number(v);
+  if (!isFinite(n)) return '';
+  const vast = Math.abs(n).toFixed(decimalen);
+  const [heel, deel] = vast.split('.');
+  const gegroepeerd = heel.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return (n < 0 ? '-' : '') + gegroepeerd + (deel ? '.' + deel : '');
+}
+
 /** Escaped, or undefined when there is nothing worth showing. */
 export function escOpt(v: unknown): string | undefined {
   if (v === null || v === undefined || String(v).trim() === '') return undefined;
@@ -284,7 +300,7 @@ export function leadNotificationEmail(lead: {
       ['Property type', escOpt(p.type)],
       ['Size', p.sqm ? `${esc(p.sqm)} m²` : undefined],
       ['Estimated range', p.estimate_low && p.estimate_high
-        ? `$${Number(p.estimate_low).toLocaleString()} – $${Number(p.estimate_high).toLocaleString()}` : undefined],
+        ? `$${nummer(p.estimate_low)} – $${nummer(p.estimate_high)}` : undefined],
       ['Location input', escOpt(p.raw_location)],
     ], 'amber');
   }
@@ -338,7 +354,7 @@ export function leadAutoReplyEmail(lead: { source: string; name?: string; payloa
       if (lead.payload?.estimate_low && lead.payload?.estimate_high) {
         extraBlock = `<div style="background:${BRAND.paper};border-radius:10px;padding:20px 22px;margin:18px 0 6px;border-left:4px solid ${BRAND.amber}">
             <p style="font-size:12px;color:${BRAND.muted};font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin:0 0 6px">Automated estimate</p>
-            <p style="font-size:22px;font-weight:800;color:${BRAND.ink};margin:0">$${Number(lead.payload.estimate_low).toLocaleString()} – $${Number(lead.payload.estimate_high).toLocaleString()}</p>
+            <p style="font-size:22px;font-weight:800;color:${BRAND.ink};margin:0">$${nummer(lead.payload.estimate_low)} – $${nummer(lead.payload.estimate_high)}</p>
             <p style="font-size:13px;color:${BRAND.muted2};margin:6px 0 0">Based on recent sales data · subject to in-person review</p>
           </div>`;
       }
@@ -1001,16 +1017,16 @@ export interface SavedSearchAlertInput {
 }
 
 const alertPrice = (l: AlertListing) =>
-  l.price ? `D ${Number(l.price).toLocaleString('en-US')}${l.kind === 'rent' ? ' /mo' : ''}` : 'Price on request';
+  l.price ? `D ${nummer(l.price)}${l.kind === 'rent' ? ' /mo' : ''}` : 'Price on request';
 
 function alertSpecs(l: AlertListing): string {
   const bits: string[] = [];
   if (l.cat === 'land' || l.cat === 'business_plot') {
-    if (l.plot) bits.push(`${Number(l.plot).toLocaleString('en-US')} m² plot`);
+    if (l.plot) bits.push(`${nummer(l.plot)} m² plot`);
   } else {
     if (l.beds) bits.push(`${l.beds} bed`);
     if (l.baths) bits.push(`${l.baths} bath`);
-    if (l.sqm) bits.push(`${Number(l.sqm).toLocaleString('en-US')} m²`);
+    if (l.sqm) bits.push(`${nummer(l.sqm)} m²`);
   }
   return bits.join(' · ');
 }

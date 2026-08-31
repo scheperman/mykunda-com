@@ -57,14 +57,20 @@ async function signInEmailOtp(email, meta){   // sends a 6-digit code (or magic 
 }
 async function verifyEmailOtp(email, token, type){
   if(!sb) throw new Error('backend-offline');
-  const tries = [type, 'email', 'magiclink', 'signup'].filter((t,i,a)=>t && a.indexOf(t)===i);
+  /* Twee pogingen, niet vier. Supabase geeft bij een verkeerd getypte code
+     dezelfde melding als bij een verkeerd type ("Token has expired or is
+     invalid"), dus de `break` hieronder greep nooit: elke vertypte cijferreeks
+     kostte vier verify-aanroepen en vulde de pogingenteller van Supabase vier
+     keer zo snel. Gemeten op 31-08-2026 met een echt account: type 'email'
+     verifieert óók een signup-code, en auth-email geeft het juiste type
+     tegenwoordig zelf mee. 'email' als enige terugval dekt dus alles wat
+     'magiclink' en 'signup' dekten. */
+  const tries = [type, 'email'].filter((t,i,a)=>t && a.indexOf(t)===i);
   let last;
   for(const t of tries){
     const res = await sb.auth.verifyOtp({ email, token, type: t });
     if(!res.error) return res;
     last = res;
-    // a wrong code is a wrong code — only a type mismatch is worth retrying
-    if(!/token|type|invalid/i.test(String(res.error.message||''))) break;
   }
   return last;
 }

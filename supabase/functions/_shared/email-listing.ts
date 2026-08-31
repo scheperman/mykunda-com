@@ -7,7 +7,7 @@
 //  NOTE: everything here is seller-typed input — it is escaped
 //  before it reaches the HTML.
 // ============================================================
-import { BRAND, emailWrap, esc, escOpt, escLines, safeUrl, detailTable, sectionLabel, callout } from './email-template.ts';
+import { BRAND, emailWrap, esc, escOpt, escLines, safeUrl, detailTable, sectionLabel, callout, nummer } from './email-template.ts';
 
 export interface ListingInput {
   title?: string; area?: string; price?: number; deal?: string; cat?: string;
@@ -46,7 +46,7 @@ const CAT: Record<string, string> = {
 };
 
 const priceOf = (l: ListingInput) =>
-  l.price ? `D ${Number(l.price).toLocaleString()}${l.deal === 'rent' ? '/mo' : ''}` : 'Price on request';
+  l.price ? `D ${nummer(l.price)}${l.deal === 'rent' ? '/mo' : ''}` : 'Price on request';
 
 function allFeatures(l: ListingInput): string[] {
   return (l.features || []).concat(

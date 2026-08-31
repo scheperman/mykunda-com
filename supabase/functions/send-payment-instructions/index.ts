@@ -416,8 +416,17 @@ Deno.serve(async (req: Request) => {
      de balie van de bank verkeerd overschrijft. De bon en de mislukt-mail uit
      notify_payment_status_change schrijven al "D 3,500"; dit is dezelfde vorm,
      zodat de twee mails over dezelfde bestelling elkaar niet tegenspreken. */
-  const bedragTekst = Number(betaling.amount_minor / 100)
-    .toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  /* Met de hand gegroepeerd, niet met toLocaleString: gemeten op 31-08-2026 gaf
+     de edge runtime voor 20000 gewoon "20000" terug — de Intl-gegevens voor
+     cijfergroepering zitten er niet volledig in, terwijl datums wél goed
+     opmaken. Een bedrag zonder scheiding is precies wat je aan de bankbalie
+     verkeerd overschrijft, dus dit mag niet van de omgeving afhangen. */
+  const bedragTekst = (() => {
+    const heel = Math.trunc(betaling.amount_minor / 100);
+    const cent = Math.abs(betaling.amount_minor % 100);
+    const gegroepeerd = String(heel).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return cent ? `${gegroepeerd}.${String(cent).padStart(2, "0")}` : gegroepeerd;
+  })();
   const vervalt = new Date(
     new Date(betaling.created_at).getTime() + GELDIG_DAGEN * 86_400_000,
   ).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "Africa/Banjul" });
