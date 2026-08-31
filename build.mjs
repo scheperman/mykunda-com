@@ -17,6 +17,7 @@
  */
 import { readFile, writeFile, readdir, mkdir, copyFile, stat, rm } from 'node:fs/promises';
 import { join, extname } from 'node:path';
+import { buildSearchIndex } from './build-search-index.mjs';
 import { createHash } from 'node:crypto';
 
 /* De versiestempel STAMP wordt niet hier gezet maar verderop berekend, uit de
@@ -35,6 +36,10 @@ const SITE_ASSETS = [
   /* Het straten- en plekkenregister uit OpenStreetMap. Geen <script>: app.js
      haalt het pas op zodra iemand in een locatieveld begint te typen. */
   'gambia-osm.json',
+  /* De inhoudsindex achter de zoekbalken. Ook geen <script>: app.js haalt hem
+     pas op zodra iemand in een zoekveld typt. Wordt hieronder geschreven door
+     build-search-index.mjs, vlak voordat de stempel wordt berekend. */
+  'search-content.json',
   'market-index.js', 'market-sources.js',
   'valuation.js', 'valuation-areas.js',
   'title-verification-app.js', 'title-verification-components.js',
@@ -277,11 +282,18 @@ const VERSIONED = [
      app.js hangt die stempel er zelf aan als het bestand wordt opgehaald, dus
      een nieuw register bereikt zo iedereen. */
   'gambia-osm.json',
+  'search-content.json',
   'market-index.js', 'market-sources.js',
   'valuation.js', 'valuation-areas.js',
   'title-verification-app.js', 'title-verification-components.js',
   'guide-bodies-2.js'
 ];
+
+/* De inhoudsindex moet klaar zijn VOOR de stempel: hij telt mee in VERSIONED,
+   dus een nieuwe index hoort een nieuwe stempel te geven. Andersom zouden
+   terugkerende bezoekers een oude index blijven houden. */
+const searchIndex = await buildSearchIndex();
+await writeIfChanged(searchIndex.name, searchIndex.body);
 
 const digest = createHash('sha256');
 for (const name of VERSIONED) {

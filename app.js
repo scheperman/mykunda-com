@@ -634,6 +634,66 @@ window.mkRemoteGeocode = function(q, opts){
 
    Verversen: het script opnieuw draaien, het bestand vervangen, `node build.mjs`.
    Het staat in VERSIONED, dus de stempel verschuift en iedereen haalt het op. */
+
+/* ---------- Inhoudszoek: gidsen en FAQ ----------------------------------
+   Tot 31-08-2026 doorzocht geen enkele zoekbalk de inhoud. Het vergrootglas
+   in de header ging naar search.html?q= (alleen advertenties, op area,
+   street en title), en het zoekveld in het Guides-menu matchte uitsluitend
+   de GIDSTITEL — gemeten gaven "stamp duty", "consent", "erosion" en "faq"
+   alle vier "No match", terwijl dat juist de onderwerpen zijn.
+
+   search-content.json is de neerslag van de gebouwde pagina's: elke <h2 id>
+   en elke Q&A-vraag uit de dertien gidsen, plus alle vragen uit faq.html met
+   hun eigen anker. Gebouwd door build-search-index.mjs vanuit build.mjs,
+   en net als gambia-osm.json pas opgehaald zodra iemand een toets indrukt.
+   Het staat in VERSIONED, dus een nieuwe index geeft een nieuwe stempel. */
+function mkScEsc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').split('"').join('&quot;'); }
+window.MK_SEARCH_FILE = 'search-content.json';
+var mkScRows = null, mkScLoading = null;
+
+window.mkContentIndex = function(){
+  if(mkScRows) return Promise.resolve(mkScRows);
+  if(mkScLoading) return mkScLoading;
+  var stamp = '', s = document.querySelector('script[src*="app.min.js"],script[src*="app.js"]');
+  if(s){ var m = /[?&]v=(\d+)/.exec(s.getAttribute('src') || ''); if(m) stamp = '?v=' + m[1]; }
+  mkScLoading = fetch(window.MK_SEARCH_FILE + stamp, { credentials:'omit' })
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(j){
+      var pages = (j && j.pages) || [];
+      mkScRows = ((j && j.items) || []).map(function(a){
+        var p = pages[a[0]] || ['', '', ''];
+        return { t:a[2], u:p[0] + (a[1] ? '#' + a[1] : ''), page:p[1], g:p[2], k:a[3],
+                 hay:(a[2] + ' ' + p[1] + ' ' + p[2]).toLowerCase() };
+      });
+      return mkScRows;
+    })
+    .catch(function(){ mkScRows = []; return mkScRows; });
+  return mkScLoading;
+};
+
+/* Alle woorden moeten voorkomen, zodat "stamp duty" en "ministerial consent"
+   werken. De rangschikking zet een treffer in de kop of de vraag zelf boven
+   een treffer die alleen in de paginatitel zit. */
+window.mkContentSearch = function(term, limit){
+  var rows = mkScRows; if(!rows) return [];
+  var t = String(term || '').trim().toLowerCase();
+  if(t.length < 2) return [];
+  var words = t.split(/\s+/).filter(Boolean), out = [];
+  for(var i=0;i<rows.length;i++){
+    var r = rows[i], ok = true;
+    for(var w=0;w<words.length;w++){ if(r.hay.indexOf(words[w]) < 0){ ok = false; break; } }
+    if(!ok) continue;
+    var low = r.t.toLowerCase(), score;
+    if(low.indexOf(t) === 0) score = 0;
+    else if(new RegExp('\\b' + t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).test(low)) score = 1;
+    else if(low.indexOf(t) > -1) score = 2;
+    else score = 3;
+    out.push({ r:r, s:score * 10 + (r.k === 2 ? 5 : r.k) });
+  }
+  out.sort(function(a,b){ return a.s - b.s || a.r.t.length - b.r.t.length; });
+  return out.slice(0, limit || 8).map(function(o){ return o.r; });
+};
+
 window.MK_OSM_FILE = 'gambia-osm.json';
 var mkOsmRows = null, mkOsmLoading = null;
 
@@ -1703,7 +1763,7 @@ function headerHTML(active, onHero){
           if(l[0]==='Guides'){
             /* Guides: onderwerp kiezen, dan gidsen. Zelfde paneel en gedrag als Areas
                (de klasse nav-dd-areas draagt het gedeelde paneelgedrag). Zie initAreaMenu(). */
-            return `<div class="nav-dd nav-dd-areas"><button class="nav-dd-btn" aria-haspopup="true" ${active==='Guides'?'style="color:var(--green-700)"':''}>Guides <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="mkam mkam-guides" data-menu="guides"><div class="mkam-search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg><input type="text" class="mkam-input" autocomplete="off" spellcheck="false" placeholder="Find a guide — buying, land, money…" aria-label="Find a guide"></div><div class="mkam-body"><div class="mkam-rail" role="tablist" aria-label="Topics">${MK_GUIDE_GROUPS.map((r,i)=>`<button type="button" role="tab" class="mkam-rbtn" data-reg="${i}" aria-selected="${i===0?'true':'false'}">${r[0]}<span class="mkam-n">${r[1].length}</span></button>`).join('')}</div><div class="mkam-panes">${MK_GUIDE_GROUPS.map((r,i)=>`<div class="mkam-pane${i===0?' on':''}" data-reg="${i}"><div class="mkam-ph">${r[0]}<span>${r[1].length} guide${r[1].length===1?'':'s'}</span></div><div class="mkam-list">${r[1].map(a=>`<a href="${a[1]}">${a[0]}</a>`).join('')}</div></div>`).join('')}<div class="mkam-pane mkam-res"></div></div></div><div class="mkam-foot"><a href="guides.html">All ${GUIDES.length} guides &rarr;</a></div></div></div>`;
+            return `<div class="nav-dd nav-dd-areas"><button class="nav-dd-btn" aria-haspopup="true" ${active==='Guides'?'style="color:var(--green-700)"':''}>Guides <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="mkam mkam-guides" data-menu="guides"><div class="mkam-search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg><input type="text" class="mkam-input" autocomplete="off" spellcheck="false" placeholder="Find a guide — buying, land, money…" aria-label="Find a guide"></div><div class="mkam-body"><div class="mkam-rail" role="tablist" aria-label="Topics">${MK_GUIDE_GROUPS.map((r,i)=>`<button type="button" role="tab" class="mkam-rbtn" data-reg="${i}" aria-selected="${i===0?'true':'false'}">${r[0]}<span class="mkam-n">${r[1].length}</span></button>`).join('')}</div><div class="mkam-panes">${MK_GUIDE_GROUPS.map((r,i)=>`<div class="mkam-pane${i===0?' on':''}" data-reg="${i}"><div class="mkam-ph">${r[0]}<span>${r[1].length} guide${r[1].length===1?'':'s'}</span></div><div class="mkam-list">${r[1].map(a=>`<a href="${a[1]}">${a[0]}</a>`).join('')}</div></div>`).join('')}<div class="mkam-pane mkam-res"></div></div></div><div class="mkam-foot mkam-foot2"><a href="guides.html">All ${GUIDES.length} guides &rarr;</a><a href="faq.html">FAQ &mdash; 164 answers &rarr;</a></div></div></div>`;
           }
           if(l[0]==='Verify'){
             return `<a href="${l[1]}" style="display:inline-flex;align-items:center;gap:6px${active==='Verify'?';color:var(--green-700)':''}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M12 3 4 6v6c0 5 3.4 7.8 8 9 4.6-1.2 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg>Verify</a>`;
@@ -1722,10 +1782,11 @@ function headerHTML(active, onHero){
   <div class="hdr-search" id="hdrSearch" hidden>
     <div class="wrap hdr-search-inner">
       <span class="hdr-s-ic">${ICON.search}</span>
-      <input type="text" id="hdrSearchInput" aria-label="Search properties" placeholder="Search by area or town — Kololi, Brufut, Cape Point…">
+      <input type="text" id="hdrSearchInput" aria-label="Search properties" placeholder="Search an area, or ask a question — Kololi, stamp duty, consent…">
       <button class="btn btn-primary btn-sm" id="hdrSearchGo">Search</button>
       <button class="hdr-search-x" id="hdrSearchX" aria-label="Close search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
     </div>
+    <div class="hdr-s-res" id="hdrSearchRes" hidden></div>
   </div>
   <div class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
     <div class="md-backdrop" id="mdBackdrop"></div>
@@ -1760,7 +1821,7 @@ function headerHTML(active, onHero){
       <!-- Areas en Guides op mobiel: elk hun eigen scherm met drie niveaus. Ook hier
            staat de opmaak op lange regels; deze blokken komen letterlijk in elke pagina. -->
       <div class="md-sub" id="mdAreaSub" data-menu="areas"><div class="md-sub-head"><button type="button" class="md-sub-back"><span class="md-sub-backtxt">Menu</span></button><span class="md-sub-title">Areas</span></div><div class="md-sub-search"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg><input type="search" class="md-sub-input" placeholder="Find an area" aria-label="Find an area"></div><div class="md-sub-scroll"><div class="md-sub-regions">${AREA_REGIONS.map((r,i)=>`<button type="button" class="md-reg" data-reg="${i}">${r[0]}<span class="md-n">${r[1].length}</span></button>`).join('')}<a class="md-sub-all" href="areas-in-the-gambia.html">All ${AREAS.length} areas, compared &rarr;</a></div><div class="md-sub-results"></div>${AREA_REGIONS.map((r,i)=>`<div class="md-lvl3" data-reg="${i}">${r[1].map(a=>`<a href="${a[1]}">${a[0]}</a>`).join('')}</div>`).join('')}</div></div>
-      <div class="md-sub" id="mdGuideSub" data-menu="guides"><div class="md-sub-head"><button type="button" class="md-sub-back"><span class="md-sub-backtxt">Menu</span></button><span class="md-sub-title">Guides</span></div><div class="md-sub-search"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg><input type="search" class="md-sub-input" placeholder="Find a guide" aria-label="Find a guide"></div><div class="md-sub-scroll"><div class="md-sub-regions">${MK_GUIDE_GROUPS.map((r,i)=>`<button type="button" class="md-reg" data-reg="${i}">${r[0]}<span class="md-n">${r[1].length}</span></button>`).join('')}<a class="md-sub-all" href="guides.html">All ${GUIDES.length} guides &rarr;</a></div><div class="md-sub-results"></div>${MK_GUIDE_GROUPS.map((r,i)=>`<div class="md-lvl3" data-reg="${i}">${r[1].map(a=>`<a href="${a[1]}">${a[0]}</a>`).join('')}</div>`).join('')}</div></div>
+      <div class="md-sub" id="mdGuideSub" data-menu="guides"><div class="md-sub-head"><button type="button" class="md-sub-back"><span class="md-sub-backtxt">Menu</span></button><span class="md-sub-title">Guides</span></div><div class="md-sub-search"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg><input type="search" class="md-sub-input" placeholder="Find a guide" aria-label="Find a guide"></div><div class="md-sub-scroll"><div class="md-sub-regions">${MK_GUIDE_GROUPS.map((r,i)=>`<button type="button" class="md-reg" data-reg="${i}">${r[0]}<span class="md-n">${r[1].length}</span></button>`).join('')}<a class="md-sub-all" href="guides.html">All ${GUIDES.length} guides &rarr;</a><a class="md-sub-all" href="faq.html">FAQ &mdash; 164 answers &rarr;</a></div><div class="md-sub-results"></div>${MK_GUIDE_GROUPS.map((r,i)=>`<div class="md-lvl3" data-reg="${i}">${r[1].map(a=>`<a href="${a[1]}">${a[0]}</a>`).join('')}</div>`).join('')}</div></div>
       <div class="md-actions">
         ${u
           ? `<a class="md-user" href="dashboard.html"><span class="user-av">${initials(u.name)}</span><div><b>${u.name}</b><span>My MyKunda dashboard</span></div></a>
@@ -2383,6 +2444,28 @@ function initHdrSearch(){
     document.getElementById('hdrSearchX').addEventListener('click',function(){ panel.hidden=true; });
     document.getElementById('hdrSearchGo').addEventListener('click',go);
     input.addEventListener('keydown',function(e){ if(e.key==='Enter') go(); if(e.key==='Escape') panel.hidden=true; });
+    /* De knop blijft de objectzoek: dit vergrootglas staat naast "Add your
+       property" op een woningportaal, dus wie hem gebruikt wil meestal
+       advertenties. De inhoud komt eronder als suggestie. */
+    var res = document.getElementById('hdrSearchRes'), tmr = null;
+    var draw = function(){
+      var term = input.value.trim();
+      if(term.length < 2){ res.hidden = true; res.innerHTML = ''; return; }
+      var hits = window.mkContentSearch(term, 6);
+      if(!hits.length){ res.hidden = true; res.innerHTML = ''; return; }
+      res.innerHTML = '<div class="wrap hdr-s-list"><div class="hdr-s-hd">In the guides and FAQ</div>' +
+        hits.map(function(h){
+          return '<a href="' + h.u + '"><span class="t">' + mkScEsc(h.t) + '</span>' +
+                 '<span class="g">' + mkScEsc(h.g) + '</span></a>';
+        }).join('') +
+        '<div class="hdr-s-more">Enter searches properties for &ldquo;' + mkScEsc(term) + '&rdquo;</div></div>';
+      res.hidden = false;
+    };
+    input.addEventListener('input', function(){
+      clearTimeout(tmr);
+      tmr = setTimeout(function(){ window.mkContentIndex().then(draw); }, 120);
+    });
+    document.getElementById('hdrSearchX').addEventListener('click', function(){ res.hidden = true; });
   }
   const mdForm=document.getElementById('mdSearchForm');
   if(mdForm && !mdForm.dataset.wired){
@@ -2537,10 +2620,31 @@ function initAreaMenu(){
     res.innerHTML = list.length
       ? '<div class="mkam-ph">'+list.length+' result'+(list.length>1?'s':'')+'<span>for “'+esc(term)+'”</span></div>' +
         '<div class="mkam-list">'+list.map(h=>'<a href="'+h[0][1]+'">'+esc(h[0][0])+'<span class="mkam-reg">'+esc(h[1])+'</span></a>').join('')+'</div>'
-      : '<div class="mkam-ph">No match</div><p class="mkam-none">Nothing matches “'+esc(term)+'”. Try the first letters, or open all '+totalOf(src)+' '+src.plural+' below.</p>';
+      : '<div class="mkam-nores"><div class="mkam-ph">No match</div><p class="mkam-none">Nothing matches “'+esc(term)+'”. Try the first letters, or open all '+totalOf(src)+' '+src.plural+' below.</p></div>';
     panel.querySelectorAll('.mkam-pane').forEach(p=>p.classList.remove('on'));
     panel.querySelectorAll('.mkam-rbtn').forEach(b=>b.setAttribute('aria-selected','false'));
     res.classList.add('on');
+    /* Het Guides-menu doorzoekt sinds 31-08-2026 ook de inhoud. De titels
+       staan er meteen, de secties en vragen komen erbij zodra de index
+       binnen is — en alleen als het zoekveld dan nog dezelfde term bevat. */
+    if(panel.dataset.menu === 'guides' && window.mkContentIndex){
+      window.mkContentIndex().then(function(){
+        var inp = panel.querySelector('.mkam-input');
+        if(!inp || inp.value.trim() !== term) return;
+        var deep = window.mkContentSearch(term, 7);
+        if(!deep.length) return;
+        var box = panel.querySelector('.mkam-res'); if(!box) return;
+        /* Er stond "No match" toen alleen titels werden vergeleken. Nu er wel
+           treffers zijn, moet die melding weg — anders spreekt het paneel
+           zichzelf tegen. */
+        var nores = box.querySelector('.mkam-nores'); if(nores) nores.remove();
+        box.insertAdjacentHTML('beforeend',
+          '<div class="mkam-ph mkam-ph2">In the guides and FAQ<span>' + deep.length + '</span></div>' +
+          '<div class="mkam-list">' + deep.map(function(h){
+            return '<a href="' + h.u + '">' + mkScEsc(h.t) + '<span class="mkam-reg">' + mkScEsc(h.g) + '</span></a>';
+          }).join('') + '</div>');
+      });
+    }
   }
   function resetPanel(panel){
     const inp = panel.querySelector('.mkam-input'); if(inp) inp.value='';
@@ -2608,7 +2712,20 @@ function initAreaMenu(){
     const list = hits(term, src);
     box.innerHTML = list.length
       ? list.map(h=>'<a href="'+h[0][1]+'">'+esc(h[0][0])+'<span class="mkam-reg">'+esc(h[1])+'</span></a>').join('')
-      : '<p class="md-sub-none">No '+src.single+' matches “'+esc(term)+'”.</p>';
+      : '<p class="md-sub-none md-sub-nores">No '+src.single+' matches “'+esc(term)+'”.</p>';
+    /* Mobiel doorzoekt sinds 31-08-2026 dezelfde inhoud als het bureaubladmenu. */
+    if(sub.dataset.menu === 'guides' && window.mkContentIndex){
+      window.mkContentIndex().then(function(){
+        if(inp.value.trim() !== term) return;
+        var deep = window.mkContentSearch(term, 8);
+        if(!deep.length) return;
+        var nores = box.querySelector('.md-sub-nores'); if(nores) nores.remove();
+        box.insertAdjacentHTML('beforeend',
+          '<p class="md-sub-none md-sub-hd">In the guides and FAQ</p>' +
+          deep.map(function(h){ return '<a href="' + h.u + '">' + mkScEsc(h.t) +
+            '<span class="mkam-reg">' + mkScEsc(h.g) + '</span></a>'; }).join(''));
+      });
+    }
   }
   document.addEventListener('click', e=>{
     const t = e.target.closest ? e.target : null; if(!t) return;
