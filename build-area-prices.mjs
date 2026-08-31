@@ -32,7 +32,7 @@ const Dk  = n => n >= 1e6 ? 'D' + (n / 1e6).toFixed(n >= 1e7 ? 0 : 1) + 'M'
                : 'D' + Math.round(n / 1000) + 'k';
 
 const SRC = { observed: 'local listings', band: 'area band', thin: 'few observations',
-              derived: 'derived', none: 'no data' };
+              ref: 'neighbouring area', derived: 'derived', none: 'no data' };
 
 /* ---------- de publicatieregel van 27-08-2026 ----------
    Een gebied krijgt alleen een eigen grondtarief bij MIN_OBS of meer
@@ -48,6 +48,12 @@ const MIN_OBS = 5;
 function note(r) {
   if (r.src === 'observed') return r.n + ' local plot listings';
   if (r.src === 'band')     return 'band rate — ' + DB.bands[r.band].n + ' listings across the band';
+  /* 31-08-2026 — bewijsklasse 'ref'. Voor een gebied zonder eigen advertenties
+     waar géén band overheen ligt, tonen we het tarief van de dichtstbijzijnde
+     gemeten plaats en noemen die bij naam. Een band die de plaats niet omvat
+     doen alsof, is erger dan de buurplaats eerlijk opschrijven. */
+  if (r.src === 'ref')      return A[r.ref].label + '’s rate — ' + A[r.ref].n + ' listings there, ' +
+                                   (r.n ? r.n + (r.n === 1 ? ' here' : ' here') : 'none here');
   if (r.src === 'thin')     return r.n + ' observation' + (r.n === 1 ? '' : 's') + ' only';
   /* Stond hier vast op "no local observations", ook waar er wél één was. Farafenni
      zei daardoor in de bewijsregel dat er niets is en twee alinea's lager dat er
@@ -140,6 +146,15 @@ function priceBlock(key, r) {
     if (r.n > 0 && r.own_med) {
       expl += ` The ${r.n === 1 ? 'one listing' : r.n + ' listings'} we can price in ${name} itself ask${r.n === 1 ? 's' : ''} ${r.n === 1 ? '' : 'a median of '}${D(r.own_med)} per m² — ${r.n === 1 ? 'one seller’s opinion of one plot' : 'too few to call a market'}, shown here as context, not as a rate.`;
     }
+  } else if (r.src === 'ref') {
+    const N = A[r.ref];
+    expl = `${name} has ${r.n === 0 ? 'no' : 'only ' + r.n} priced plot listing${r.n === 1 ? '' : 's'} with a known size, and no measured band covers it either: the bands we publish are built from listings in named places, and ${name} is in none of them. Rather than stretch a band over it, the rate above is <strong>${N.label}’s</strong> — the nearest place we have actually measured, ${N.n} priced plot listings, ${r.ref_km} km away. It tells you what ${N.label} asks.`;
+    if (r.n > 0 && r.own_med) {
+      expl += ` The ${r.n === 1 ? 'one listing' : r.n + ' listings'} we can price in ${name} itself ask${r.n === 1 ? 's' : ''} ${r.n === 1 ? '' : 'a median of '}${D(r.own_med)} per m² — ${r.n === 1 ? 'one seller’s opinion of one plot' : 'too few to call a market'}, shown here as context, not as a rate.`;
+    } else {
+      expl += ` What ${name} asks, we do not know.`;
+    }
+    if (r.ref_note) expl += ' ' + r.ref_note;
   } else if (r.src === 'thin') {
     expl = `We have only ${r.n} usable observation${r.n === 1 ? '' : 's'} in ${name}. The figure is the best we can see, not a market average — treat it as a starting point and check it against what you are shown.`;
   } else {
@@ -170,7 +185,7 @@ function priceBlock(key, r) {
         <h2>What property costs in ${name}</h2>
         <p class="lead">Asking prices, measured ${DB.measured_label}. Land and buildings are priced separately here, because in The Gambia they are usually sold separately.</p>
         <div style="margin-top:16px;padding:6px 20px 18px;background:#FAF8F3;border-radius:10px;font-size:14.5px;line-height:1.6">
-          ${factRow('pf0', 'Land, per m²', D(r.gmd_m2), r.src === 'band' ? `band middle half ${D(r.lo)}–${D(r.hi)}` : `range ${D(r.lo)}–${D(r.hi)}`)}
+          ${factRow('pf0', 'Land, per m²', D(r.gmd_m2), r.src === 'band' ? `band middle half ${D(r.lo)}–${D(r.hi)}` : r.src === 'ref' ? `${A[r.ref].label}’s middle half ${D(r.lo)}–${D(r.hi)}` : `range ${D(r.lo)}–${D(r.hi)}`)}
           ${factRow('pf1', 'Plot of 20 × 20 m (400 m²)', D(r.plot400), r.plot_src === 'observed' ? 'median asking price' : 'at the rate above')}
           ${houseLine}
           ${rentLine}
@@ -223,6 +238,20 @@ let changed = 0, skipped = 0;
       if (!B) fouten.push(`${key}: verwijst naar onbekende band '${r.band}'`);
       else if (r.gmd_m2 !== B.gmd_m2 || r.lo !== B.lo || r.hi !== B.hi)
         fouten.push(`${key}: tarief/band wijkt af van bands.${r.band} (${r.gmd_m2} vs ${B.gmd_m2})`);
+    }
+    /* 31-08-2026 — 'ref' mag alleen waar er echt niets eigens is, moet naar een
+       bestaand gebied wijzen, en moet dat tarief letterlijk overnemen. Anders
+       ontstaat er via een omweg alsnog een zelfverzonnen gebiedscijfer. */
+    if (r.src === 'ref') {
+      const R = A[r.ref];
+      if (!R) fouten.push(`${key}: verwijst naar onbekend gebied '${r.ref}'`);
+      else {
+        if (r.gmd_m2 !== R.gmd_m2 || r.lo !== R.lo || r.hi !== R.hi)
+          fouten.push(`${key}: tarief wijkt af van ${r.ref} (${r.gmd_m2} vs ${R.gmd_m2})`);
+        if (R.src === 'ref') fouten.push(`${key}: verwijst naar ${r.ref}, dat zelf een verwijzing is`);
+        if (r.n >= MIN_OBS) fouten.push(`${key}: src=ref met ${r.n} eigen waarnemingen — vanaf ${MIN_OBS} hoort daar een eigen tarief`);
+        if (typeof r.ref_km !== 'number') fouten.push(`${key}: ref zonder afstand (ref_km)`);
+      }
     }
     if (r.src === 'thin' && r.zone !== 'upcountry')
       fouten.push(`${key}: src=thin buiten upcountry — onder de drempel hoort een band, geen eigen mediaan`);
@@ -339,6 +368,7 @@ for (const key of Object.keys(A)) {
    de band, en staat het eigen aantal (onder de drempel) er apart bij. */
 function evCell(r) {
   if (r.src === 'band') return `area band (${DB.bands[r.band].n})${r.n ? ' · local n=' + r.n : ''}`;
+  if (r.src === 'ref')  return `${A[r.ref].label}’s rate (${A[r.ref].n}) · none here`;
   return `${SRC[r.src]}${r.n ? ' · n=' + r.n : ''}`;
 }
 
@@ -569,8 +599,9 @@ for (const page of ['home.html', 'index.html', 'buy.html']) {
 await patch('valuation.js', src => {
   const regels = Object.keys(A).sort().map(k => {
     const r = A[k];
-    const src = (r.src === 'observed' || r.src === 'band' || r.src === 'thin') ? r.src : 'regional';
+    const src = (r.src === 'observed' || r.src === 'band' || r.src === 'thin' || r.src === 'ref') ? r.src : 'regional';
     const b = ["gmd: " + r.gmd_m2, "src: '" + src + "'", "n: " + r.n];
+    if (src === 'ref') b.push("ref: '" + r.ref + "'");
     if (r.own_med) b.push('own_med: ' + r.own_med);
     return "  '" + k + "': { " + b.join(', ') + " }";
   }).join(',\n');

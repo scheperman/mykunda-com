@@ -828,15 +828,75 @@ erger dan geen kaart, en de omtrek staat toch al als data bij de advertentie.
 
 ## De gebiedspagina's: twee generaties
 
-Er zijn er 46, in twee soorten. De **41 oudere** (tot juli 2026) hebben zeven
-vaste secties en 532–693 woorden lopende tekst. De **vijf van augustus 2026** —
-Mamuda, Latriya, Jambanjelly, Salagi, Farato — hebben er zes en 1.021–1.220
+Er zijn er 52, in twee soorten. De **41 oudere** (tot juli 2026) hebben zeven
+vaste secties en 532–693 woorden lopende tekst. De **elf van augustus 2026** —
+Mamuda, Latriya, Jambanjelly, Salagi, Farato, en sinds 31-08 Madiana, Jambur,
+Ghana Town, Tintinto, Tranquil en Old Yundum — hebben er zes en 1.021–1.240
 woorden. Ze missen Lifestyle scores, Getting around en What's nearby, en dat is
 **bewust**: voor die dorpen bestaat die data niet, en de sectie "What we have
 not measured here yet" zegt dat ook. Vul dat niet in.
 
+### De zes van 31-08-2026
+
+Madiana, Jambur, Ghana Town, Tintinto, Tranquil en Old Yundum zijn gebouwd met
+`_werk/_bouw-nieuwe-gebiedspaginas.mjs`; elke bewering erop heeft een bron in
+`_werk/onderzoek-nieuwe-gebieden-2026-08-31.md`. Wat daar "niet gevonden" heet,
+staat niet op de pagina — ook niet omgeschreven. Alle bevolkingscijfers komen
+uit de GBoS-census 2013 (Volume 10, Directory of Settlements), rechtstreeks
+uitgelezen, inclusief de districtsindeling: Madiana, Ghana Town, Trankill en
+Yundum Koto in Kombo North, Jambur en Tintinto in Kombo South. Jambur stond op
+de site als Kombo Central; dat was fout.
+
+Twee plaatsen zijn nieuw in `gambia-places.js` en daar zit een keuze in.
+**Tintinto** staat op het gazetteer- en censuspunt (13,29556 / −16,78861, Kombo
+South, 218 inwoners, aan de Coastal Road) en níét op de OSM-node vijf kilometer
+landinwaarts: die is in 2017 uit luchtfoto's gezet, draagt geen bron en komt in
+geen enkele gazetteer of census voor. **Tranquil** heet in de census en in
+GeoNames *Trankill*; de pagina gebruikt de naam die makelaars en bewoners
+gebruiken en noemt de censusnaam erbij. Zoek in een register altijd op Trankill.
+
+### Bewijsklasse 'ref': het tarief van de buurplaats
+
+Sinds 31-08-2026 kent `area-prices.json` naast `observed`, `band` en `thin` ook
+**`ref`**. Die is voor een gebied dat te weinig eigen advertenties heeft én
+waar geen enkele band overheen ligt — de banden zijn gebouwd uit advertenties
+in met naam genoemde plaatsen, en Ghana Town en Tranquil zitten in geen ervan.
+De pagina toont dan het tarief van de dichtstbijzijnde plaats die we wél hebben
+gemeten en noemt die bij naam: "Brufut's rate — 7 listings there, 1 here". Een
+band over een plaats heen trekken die er niet in zit, is minder eerlijk dan de
+buurplaats opschrijven.
+
+Een `ref` vraagt `ref` (de sleutel van dat gebied), `ref_km` (de afstand) en
+optioneel `ref_note`. De vangrail in `build-area-prices.mjs` eist dat het
+tarief, de lo en de hi letterlijk gelijk zijn aan die van het gebied waarnaar
+wordt verwezen, weigert een verwijzing naar een gebied dat zelf een verwijzing
+is, en weigert `ref` zodra er vijf eigen waarnemingen zijn. `valuation.js` kent
+dezelfde klasse en trekt er 42 punten vertrouwen voor af — tussen een band (30)
+en een regionale afleiding (52) in, want het is één gemeten plaats in plaats van
+een gebundelde band, maar het is wél in de buurt echt gemeten.
+
+Twee gebieden gebruiken hem: **Ghana Town** → Brufut (2,1 km) en **Tranquil** →
+Brusubi (0,9 km). Madiana stond er eerst ook op, maar de ene advertentie die we
+daar kennen vraagt D1.333 per m² — binnen de middelste helft van de band voor de
+landinwaartse Kombo-dorpen en ver onder Brufut. Met die waarneming in de hand is
+de band beter onderbouwd, en staat Madiana op `kombo_inland`.
+
+Let op waar de metingen vandaan kwamen: Jambur (4 advertenties, mediaan
+D1.612), Madiana (1, D1.333) en Ghana Town (1, D2.500) stonden in `LAND_HALF`
+in `valuation.js`, omdat ze op 26-08-2026 nog geen pagina hadden. Ze zijn daar
+weggehaald en staan nu als `n` en `own_med` in `area-prices.json`. Krijgt een
+plaats uit `LAND_OBSERVED` of `LAND_HALF` een pagina, doe dat dan altijd —
+`valuation-selftest.mjs` blok D valt er anders over.
+
+En één valkuil die geld kost: de sleutels in `area-prices.json` gebruiken voor
+een naam van twee woorden een **spatie**, niet een streepje ('cape point',
+'ghana town', 'old yundum'). Het `slug`-veld draagt het streepje. Het model
+zoekt met genormaliseerde plaatsnamen, dus een sleutel met een streepje wordt
+nooit gevonden en valt stil terug op de oude portaaltabel.
+
 Wat er wél ontbrak was de kaart, want die hangt in het blok What's nearby. Sinds
-30-08-2026 hebben alle 46 er een (`_werk/patch-kaart-nieuwe-gebieden.mjs`). Het
+30-08-2026 hebben alle 52 er een (`_werk/patch-kaart-nieuwe-gebieden.mjs`; de
+zes van 31-08 krijgen hem uit hun eigen bouwscript). Het
 zoomniveau van die vijf volgt de nauwkeurigheid die de pagina zelf noemt — Farato
 staat op 194 m van zijn bron en krijgt 15, Mamuda en Latriya zeggen "roughly
 2 km" en krijgen 13. Een kaart die strak inzoomt op een punt dat twee kilometer
@@ -854,11 +914,22 @@ het script raakt alleen de openingszin, die op alle 46 gelijk is.
 
 **De uitleg zelf staat op `how-we-measure-prices.html`,** waar elke
 gebiedspagina onderaan al naar linkt. Wil je de waarschuwing uitbreiden, doe het
-daar en niet 46 keer op de gebiedspagina's — dat is precies hoe deze situatie
+daar en niet 52 keer op de gebiedspagina's — dat is precies hoe deze situatie
 ontstond.
 
-`node _werk/audit-areapaginas.mjs` zet de opbouw van alle 46 op een rij (secties,
+`node _werk/audit-areapaginas.mjs` zet de opbouw van alle 52 op een rij (secties,
 kaart, woordentelling) en meldt welke pagina een sectie mist die de rest wel heeft.
+
+**Een gebied erbij is meer dan een pagina.** In volgorde: `area-prices.json`
+(sleutel met spatie, `slug` met streepje), `gambia-places.js` plus
+`_werk/_patch-appjs-plaatsen.mjs` voor `GM_AREAS`/`AREA_COORDS`, `MK_AREAS` in
+`app.js` (het menu telt zichzelf, de regiotellingen hoef je niet aan te raken),
+een kaartje in `areas-in-the-gambia.html` en een rij in
+`gambia-property-prices.html`, en een regel in `sitemap-pages.xml`. Daarna
+`node build-area-prices.mjs --write` en `node build.mjs`. Controleren met
+`check-plaatsen.mjs`, `check-areaprices.mjs`, `audit-areapaginas.mjs`,
+`valuation-selftest.mjs` en `_syntaxcheck.mjs`. De aantallen in de lopende tekst
+("52 areas") zet `build-area-prices.mjs` zelf; typ ze nergens met de hand.
 
 ## Pushen na elke sessie
 

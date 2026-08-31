@@ -99,9 +99,6 @@ var LAND_OBSERVED = {
    zijn eigen grond. confidence() rekent daar zwaar op af. */
 var LAND_HALF = {
   'brufut heights':{ gmd:  3625, n:  2 },
-  'ghana town':    { gmd:  2500, n:  1 },
-  'jambur':        { gmd:  1612, n:  4 },
-  'madiana':       { gmd:  1333, n:  1 },
   'jalanbang':     { gmd:  1087, n:  1 },
   'bafuloto':      { gmd:   722, n:  1 },
   'sifoe':         { gmd:   625, n:  3 },
@@ -151,9 +148,11 @@ var LAND_PUBLISHED = {
   'farato': { gmd: 1560, src: 'band', n: 4, own_med: 1827 },
   'fatoto': { gmd: 71, src: 'regional', n: 0 },
   'gambissara': { gmd: 71, src: 'regional', n: 0 },
+  'ghana town': { gmd: 2282, src: 'ref', n: 1, ref: 'brufut', own_med: 2500 },
   'gunjur': { gmd: 682, src: 'observed', n: 7 },
   'jabang': { gmd: 2894, src: 'observed', n: 9 },
   'jambanjelly': { gmd: 1560, src: 'band', n: 1, own_med: 1202 },
+  'jambur': { gmd: 1560, src: 'band', n: 4, own_med: 1612 },
   'janjanbureh': { gmd: 236, src: 'regional', n: 0 },
   'kartong': { gmd: 970, src: 'band', n: 2, own_med: 742 },
   'kerewan': { gmd: 189, src: 'regional', n: 0 },
@@ -163,10 +162,12 @@ var LAND_PUBLISHED = {
   'kuntaur': { gmd: 141, src: 'regional', n: 0 },
   'lamin': { gmd: 1833, src: 'observed', n: 9 },
   'latriya': { gmd: 1560, src: 'band', n: 4, own_med: 2644 },
+  'madiana': { gmd: 1560, src: 'band', n: 1, own_med: 1333 },
   'mamuda': { gmd: 1560, src: 'band', n: 4, own_med: 948 },
   'manjai kunda': { gmd: 2330, src: 'band', n: 0 },
   'mansa konko': { gmd: 141, src: 'regional', n: 0 },
   'nema kunku': { gmd: 2330, src: 'band', n: 0 },
+  'old yundum': { gmd: 2330, src: 'band', n: 0 },
   'pipeline': { gmd: 2330, src: 'band', n: 0 },
   'salagi': { gmd: 2330, src: 'band', n: 2, own_med: 2915 },
   'sanyang': { gmd: 972, src: 'observed', n: 14 },
@@ -176,6 +177,8 @@ var LAND_PUBLISHED = {
   'soma': { gmd: 141, src: 'regional', n: 0 },
   'sukuta': { gmd: 2326, src: 'observed', n: 8 },
   'tanji': { gmd: 2163, src: 'observed', n: 5 },
+  'tintinto': { gmd: 2280, src: 'band', n: 0 },
+  'tranquil': { gmd: 6460, src: 'ref', n: 0, ref: 'brusubi' },
   'tujereng': { gmd: 2280, src: 'observed', n: 11 },
   'yundum': { gmd: 1844, src: 'observed', n: 5 }
 };
@@ -519,6 +522,17 @@ function landRate(areaKey, base) {
       return { gmd: pub.gmd, src: 'band', n: pub.n,
                note: 'area band rate for ' + titel(areaKey) + eigen };
     }
+    /* 31-08-2026 — 'ref': geen eigen advertenties en geen band die dit
+       gebied omvat, dus toont de pagina het tarief van de dichtstbijzijnde
+       gemeten plaats, met naam. De tool hoort exact hetzelfde te zeggen. */
+    if (pub.src === 'ref') {
+      var eigenRef = pub.own_med
+        ? ' — the ' + (pub.n === 1 ? 'one listing we can price here asks' : pub.n + ' listings we can price here ask a median of')
+          + ' D' + pub.own_med.toLocaleString('en-US') + ' per m², too few to set a rate'
+        : ' — no priced plot listing in ' + titel(areaKey) + ' itself, and no band covers it';
+      return { gmd: pub.gmd, src: 'ref', n: pub.n || 0, ref: pub.ref,
+               note: 'rate of ' + titel(pub.ref) + ', the nearest area we have measured' + eigenRef };
+    }
     if (pub.src === 'thin') {
       /* Upcountry publiceert de pagina soms een cijfer op één of twee
          waarnemingen. Dat is dun, maar het is wél lokaal gemeten — en de
@@ -620,6 +634,14 @@ function confidence(parts) {
     why.push(parts.landN
       ? 'only ' + parts.landN + ' priced listing' + (parts.landN === 1 ? '' : 's') + ' in this area \u2014 rate taken from the surrounding band'
       : 'no priced listing in this area \u2014 rate taken from the surrounding band');
+  }
+  else if (parts.landSrc === 'ref') {
+    /* Het tarief van een gemeten buurplaats. Zwakker dan een band - die
+       bundelt advertenties uit meerdere omliggende gebieden - en sterker
+       dan een regionale afleiding, want het is wel ergens in de buurt
+       echt gemeten. De aftrek ligt daarom tussen die twee in. */
+    s -= 42;
+    why.push('no priced listing in this area, rate borrowed from the nearest area we have measured');
   }
   else if (parts.landSrc === 'regional') { s -= 52; why.push('no plot listings we can price in this area \u2014 regional rate'); }
   else if (parts.landSrc === 'half') { s -= 38; why.push((parts.landN || 1) + ' observation' + ((parts.landN || 1) === 1 ? '' : 's') + ' in this area \u2014 one plot is not a market'); }

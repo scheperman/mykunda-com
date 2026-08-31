@@ -93,6 +93,8 @@ const GAMBIA_PLACES = [
   ['Mamuda','West Coast',13.3032,-16.7328],  // eigenaar gehandhaafd 30-08-2026, geen gazetteer-bron
   ['Latriya','West Coast',13.3,-16.711],  // eigenaar gehandhaafd 30-08-2026, geen gazetteer-bron
   ['Madiana','West Coast',13.3533,-16.7631],
+  ['Tintinto','West Coast',13.29556,-16.78861],  // 31-08-2026: GeoNames 2411768 + census 2013 (Kombo South, 218 inw.). NIET de OSM-node op 13.3753,-16.73385 — die staat in Kombo North, is in 2017 uit luchtfoto's gezet en komt in geen gazetteer of census voor.
+  ['Tranquil','West Coast',13.40306,-16.73806],  // 31-08-2026: GeoNames 2411757, daar gespeld "Trankill"; zo staat het ook in de census 2013 (Kombo North, 1.990 inw.). OSM-node "Tranquil" ligt 430 m noordelijker. Niet verwarren met GeoNames 2411756 "Tranquil" bij Darsilami (13.16917,-16.65861).
   ['Berefet','West Coast',13.2439,-16.3799],
   ['Bondali','West Coast',13.2347,-15.9142],
   ['Bakindick','North Bank',13.4554,-16.4514],

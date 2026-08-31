@@ -200,7 +200,9 @@ console.log('\n=== D · EEN BRON — tool naast areapagina ===\n');
     if (!p) { fouten.push(`${r.label}: ontbreekt in LAND_PUBLISHED`); continue; }
     if (p.gmd !== r.gmd_m2) fouten.push(`${r.label}: tarief ${p.gmd} tegen ${r.gmd_m2} op de pagina`);
     if (p.n !== r.n)        fouten.push(`${r.label}: n=${p.n} tegen n=${r.n} op de pagina`);
-    const verwacht = (r.src === 'observed' || r.src === 'band' || r.src === 'thin') ? r.src : 'regional';
+    /* 31-08-2026: 'ref' erbij — een gebied zonder eigen advertenties waar geen band
+     overheen ligt, dat het tarief van de dichtstbijzijnde gemeten plaats toont. */
+  const verwacht = (r.src === 'observed' || r.src === 'band' || r.src === 'thin' || r.src === 'ref') ? r.src : 'regional';
     if (p.src !== verwacht) fouten.push(`${r.label}: bewijsklasse '${p.src}' tegen '${verwacht}'`);
   }
   const extra = Object.keys(P).filter(k => !DB.areas[k]);
