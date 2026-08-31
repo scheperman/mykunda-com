@@ -686,8 +686,12 @@ export function paymentReceiptEmail(p: PaymentInfo): string {
       ${p.planNote ? `<p style="margin:16px 0 0;font-size:14.5px;color:${BRAND.ink2}">${esc(p.planNote)}</p>` : ''}
       ${callout(`<p style="font-size:14px;color:${BRAND.ink};margin:0"><strong>MyKunda only ever charges listing and service fees.</strong> We never collect a deposit, a down payment or the purchase price of a property. Anyone asking you to send property money through us is not us — tell us straight away.</p>`)}
       <p style="margin:16px 0 0;font-size:14px;color:${BRAND.muted}">Questions about this payment? Reply to this email with your reference, or WhatsApp <a href="${BRAND.waLink}" style="color:${BRAND.green};font-weight:600">${BRAND.waNumber}</a>.</p>`,
-    cta: 'Go to My MyKunda',
-    ctaUrl: `${BRAND.site}/dashboard.html`,
+    /* Naar de bestelling zelf, niet naar het dashboard in het algemeen. Bij een
+       titelcontrole staat daar ook hoe ver het werk is — precies de vraag die
+       een klant na de bon stelt. De terugbetaalmail wijst er al naartoe; nu doen
+       de bon en de betaalinstructies dat ook. (31-08-2026) */
+    cta: 'See this order',
+    ctaUrl: `${BRAND.site}/betaling-status.html?ref=${encodeURIComponent(p.reference)}`,
     footer: 'You received this because you completed an order on mykunda.com. This email is your receipt.',
   });
 }
@@ -900,7 +904,12 @@ export function welcomeEmail(u: SignupInfo): string {
     agent: 'Your account is ready. You can publish listings straight away. The agency profile, with your licence details and your name on every listing, is the next thing we set up with you.',
   }[role];
   const rowSave = featureRow('♥', 'Save homes and searches', 'Keep favourites and saved searches in one place in My MyKunda, and pick a search back up in one tap.', `${S}/dashboard.html#saved`);
-  const rowList = featureRow('⌂', 'List a property or plot — free', 'Publish a listing in a few minutes; add Verified or Managed later for a title check and full handling.', `${S}/list.html`);
+  /* "Managed" stond hier tot 31-08-2026 in. Dat plan is geparkeerd tot er een
+     partnerkantoor getekend heeft: het staat als commentaar in sell.html en in
+     checkout.html en is nergens te koop. Een welkomstmail die een dienst noemt
+     die niemand kan bestellen, kost precies het vertrouwen dat de rest van deze
+     mail probeert op te bouwen. Terugzetten zodra Managed echt bestaat. */
+  const rowList = featureRow('⌂', 'List a property or plot — free', 'Publish a listing in a few minutes; add Boost or Verified later for more views and a title check.', `${S}/list.html`);
   const rowCheck = featureRow('✓', 'Check ownership before you pay', 'Ask us to review title documents so you know what you are buying.', `${S}/verify.html`);
   const rowMarket = featureRow('%', 'Follow the market', 'Area guides, live prices and the MyKunda market index for the coast and upcountry.', `${S}/market.html`);
   const rows = role === 'buyer'

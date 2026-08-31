@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1ok03nw--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1w12d6j--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -13,7 +13,7 @@
 <noscript></noscript>
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=28592358088367">
+<link rel="stylesheet" href="styles.min.css?v=171038295966875">
 <style>
 body{background:var(--paper-2)}
 .co{max-width:1040px;margin:0 auto;padding:34px 28px 70px}
@@ -128,7 +128,7 @@ body{background:var(--paper-2)}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=28592358088367"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=171038295966875"><!--/mk-css-->
 </head>
 <body>
 <div id="header"></div>
@@ -234,15 +234,15 @@ body{background:var(--paper-2)}
 
 <div id="footer"></div>
 
-<script src="app.min.js?v=28592358088367"></script>
-<script src="image-slot.js?v=28592358088367" defer></script>
+<script src="app.min.js?v=171038295966875"></script>
+<script src="image-slot.js?v=171038295966875" defer></script>
 <script>
 /* 4G: the Supabase client (~205 KB) is not needed to paint this page. It downloads
    in parallel and every backend call awaits window.__sbReady. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=28592358088367'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=171038295966875'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 </script>
@@ -394,7 +394,20 @@ const ERRORS={
   listing_required_for_verified: () => 'Select the listing you want to verify first.',
   verified_is_for_sale_listings_only: () => 'Verified is only available for properties for sale.',
   invalid_contact_email: () => 'The email address on your request does not look right. Please go back and check it.',
-  too_many_payments_today: () => 'You have started a lot of payments today. Please wait a while, or email info@mykunda.com and we will help you finish this one by hand.'
+  too_many_payments_today: () => 'You have started a lot of payments today. Please wait a while, or email info@mykunda.com and we will help you finish this one by hand.',
+  /* Deze twee weigert create-payment bij Verified als de vraagprijs van de
+     advertentie niet in dalasi lijkt te staan. Ze ontbraken hier, dus kreeg de
+     aanbieder de algemene zin en had hij geen idee dat het aan zijn eigen
+     vraagprijs lag — terwijl dat het enige is wat hij kan repareren.
+     (31-08-2026) */
+  asking_price_implausible: () => 'The asking price on that listing looks too low to be a real price in dalasi, so we cannot work out which Verified band applies. Open the listing, check the price, and try again.',
+  listing_price_currency_unsupported: () => 'The asking price on that listing is not in dalasi, so we cannot work out which Verified band applies. Open the listing, set the price in dalasi, and try again.',
+  listing_price_required: () => 'That listing has no asking price yet. Add one and try again — the Verified band is set by the price.',
+  listing_not_found: () => 'We cannot find that listing any more. Open it from My MyKunda and try again.',
+  not_your_listing: () => 'That listing is not on your account. Sign in with the account that published it.',
+  unknown_or_inactive_plan: () => 'That plan is not available right now. Please pick another one, or contact us and we will sort it out.',
+  amount_below_provider_minimum: () => 'This amount is below the minimum the payment provider accepts.',
+  amount_above_provider_maximum: () => 'This amount is above the maximum for card and mobile money. Please use bank transfer.'
 };
 function showError(d){
   const key = d && d.error;
@@ -473,17 +486,26 @@ document.getElementById('payBtn').addEventListener('click', async () => {
     return showError({ error:'gateway_unreachable' });
   }
   if(status===401 || status===403 || data.error==='unauthorized') return signInAndReturn();
-  /* De aanvraag staat nu bij de betaling in de database. Laten staan zou
-     betekenen dat een volgende ownership check de gegevens van deze erbij
-     krijgt. */
-  function clearIntake(){ try{ localStorage.removeItem(OWNERSHIP_KEY); }catch(e){} }
+  /* De aanvraag staat nu bij de betaling in de database (create-payment zet hem
+     in metadata.ownership_intake), dus hier is hij alleen nog nodig om een
+     HERKANSING te kunnen vullen.
+
+     Tot 31-08-2026 werd hij gewist vlak vóór het doorsturen naar Waychit. Wie
+     daar afhaakte en het opnieuw probeerde, ging zonder contact_email en zonder
+     intake de deur uit: de bevestiging belandde dan op het accountadres en de
+     backoffice kreeg een titelcontrole zonder te weten om welk pand het ging —
+     precies de fout die op 23-08-2026 met MK-VKWX6DJ is gerepareerd.
+
+     De aanvraag wordt nu pas weggegooid als er ook echt betaald is; dat doet
+     betaling-status.html bij status 'succeeded'. Hij vervalt hoe dan ook na een
+     etmaal (zie readIntake hierboven), dus hij kan nooit aan een bestelling van
+     morgen blijven plakken. */
   if(data.mode==='redirect' && data.payment_link){
     /* A plain navigation, not a form post — Waychit's own hosted page takes over. */
-    clearIntake();
     location.href = data.payment_link;
     return;
   }
-  if(data.mode==='bank_transfer'){ clearIntake(); return showBank(data); }
+  if(data.mode==='bank_transfer'){ return showBank(data); }
   busy(false);
   showError(data);
 });

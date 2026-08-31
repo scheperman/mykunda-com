@@ -163,8 +163,13 @@ async function sendAuthEmail(type, email, extra){
   // sign-in screen turns them into a "switch tab" message.
   // rate_limited en invalid_email horen er sinds 27-08-2026 bij: ook dat zijn
   // verwachte uitkomsten die het scherm zelf netjes moet tonen, geen storingen.
+  // address_blocked erbij op 31-08-2026: auth-email weigert sinds 30-08 een
+  // code naar een adres dat hard gebouncet is en zegt in `error` precies wat de
+  // bezoeker moet doen. Die vlag ontbrak hier, dus werd het een exception en
+  // zag de bezoeker "Something went wrong" — de enige melding waar hij niets
+  // mee kan, uitgerekend bij het enige geval dat hij zelf moet oplossen.
   if(data && data.ok===false && !data.no_account && !data.already_exists
-     && !data.rate_limited && !data.invalid_email){
+     && !data.rate_limited && !data.invalid_email && !data.address_blocked){
     throw new Error(data.error || 'auth-email failed');
   }
   return data;

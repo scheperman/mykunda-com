@@ -252,8 +252,13 @@ function bouwMail(o: { ref: string; bedrag: string; plan: string; vervalt: strin
     heading: "How to pay by bank transfer",
     preheader: `Reference ${o.ref} · D ${o.bedrag} · GT Bank`,
     body,
-    cta: "Go to My MyKunda",
-    ctaUrl: `${SITE}/dashboard.html`,
+    /* Wees de klant naar zijn eigen bestelling in plaats van naar het
+       dashboard in het algemeen. Daar staat wat er met deze referentie
+       gebeurt — en zodra de overschrijving is afgeletterd, ook de bon. Zonder
+       die link moest hij de mail bewaren om ooit nog iets over MK-XXXXXXX te
+       kunnen opzoeken. (31-08-2026) */
+    cta: "See this order",
+    ctaUrl: `${SITE}/betaling-status.html?ref=${encodeURIComponent(o.ref)}`,
     footer: "You received this because you chose to pay by bank transfer on mykunda.com.",
   });
 }
@@ -403,7 +408,16 @@ Deno.serve(async (req: Request) => {
     .select("name").eq("id", betaling.plan_id).maybeSingle();
 
   const planNaam = plan?.name ?? betaling.plan_id ?? "MyKunda service";
+  // Ruwe waarde voor de administratie in email_events — die blijft "3500.00".
   const bedrag = (betaling.amount_minor / 100).toFixed(2);
+  /* Wat de KLANT leest. Tot 31-08-2026 stond hier hetzelfde "D 3500.00" als in
+     de administratie: geen duizendtalscheiding en twee nullen die niets zeggen.
+     Bij een Verified van D16.000 werd dat "D 16000.00" — een bedrag dat je aan
+     de balie van de bank verkeerd overschrijft. De bon en de mislukt-mail uit
+     notify_payment_status_change schrijven al "D 3,500"; dit is dezelfde vorm,
+     zodat de twee mails over dezelfde bestelling elkaar niet tegenspreken. */
+  const bedragTekst = Number(betaling.amount_minor / 100)
+    .toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
   const vervalt = new Date(
     new Date(betaling.created_at).getTime() + GELDIG_DAGEN * 86_400_000,
   ).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "Africa/Banjul" });
@@ -421,7 +435,7 @@ Deno.serve(async (req: Request) => {
   if (internal) {
     try {
       const boHtml = bouwBackofficeMail({
-        ref, bedrag, plan: planNaam, vervalt, klant: ontvanger ?? null,
+        ref, bedrag: bedragTekst, plan: planNaam, vervalt, klant: ontvanger ?? null,
       });
       const boRes = await fetch("https://api.resend.com/emails", {
         method: "POST",
@@ -462,7 +476,7 @@ Deno.serve(async (req: Request) => {
   }
 
   const onderwerp = `Payment instructions — ${ref} — MyKunda`;
-  const html = bouwMail({ ref, bedrag, plan: planNaam, vervalt });
+  const html = bouwMail({ ref, bedrag: bedragTekst, plan: planNaam, vervalt });
 
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",

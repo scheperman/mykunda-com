@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-no-wa>
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:17ul626--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1hrslgx--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <noscript></noscript>
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=28592358088367">
+<link rel="stylesheet" href="styles.min.css?v=171038295966875">
 <style>
 body{min-height:100vh;display:flex}
 .auth-wrap{display:grid;grid-template-columns:1fr 1fr;width:100%;min-height:100vh}
@@ -109,7 +109,7 @@ body{min-height:100vh;display:flex}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=28592358088367"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=171038295966875"><!--/mk-css-->
 </head>
 <body>
 <div class="auth-wrap">
@@ -220,14 +220,14 @@ body{min-height:100vh;display:flex}
   </div>
 </div>
 
-<script src="app.min.js?v=28592358088367"></script>
+<script src="app.min.js?v=171038295966875"></script>
 <script>
 /* 4G: the Supabase client (~205 KB) is not needed to show the sign-in form.
    It downloads in parallel; everything that talks to the backend awaits it. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=28592358088367'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=171038295966875'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 </script>
@@ -239,7 +239,24 @@ bp3.innerHTML='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" strok
 gIc.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.5 12.2c0-.7-.1-1.4-.2-2H12v4h5.9a5 5 0 0 1-2.2 3.3v2.7h3.6c2.1-1.9 3.2-4.7 3.2-8Z"/><path fill="#34A853" d="M12 23c2.9 0 5.4-1 7.2-2.6l-3.6-2.7c-1 .7-2.3 1.1-3.6 1.1-2.8 0-5.1-1.9-6-4.4H2.3v2.8A11 11 0 0 0 12 23Z"/><path fill="#FBBC05" d="M6 14.4a6.6 6.6 0 0 1 0-4.2V7.4H2.3a11 11 0 0 0 0 9.8L6 14.4Z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3 .5 4.1 1.6l3.1-3.1A11 11 0 0 0 12 1a11 11 0 0 0-9.7 6l3.7 2.8c.9-2.5 3.2-4.4 6-4.4Z"/></svg>';
 otpBackIc.innerHTML='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>';
 
-const nextUrl = qs('next') || 'dashboard.html';
+/* Waar de bezoeker na het inloggen heen gaat. `next` komt uit de URL en die
+   mag iedereen typen of in een link zetten, dus hij wordt hier op één ding
+   getoetst: is het een pad op mykunda.com zelf. Zonder die toets stuurt
+   auth.html?next=https://ergens-anders/ een zojuist ingelogde bezoeker
+   rechtstreeks naar een vreemde site — met de MyKunda-inlogpagina als
+   aanloop, wat precies de vorm van phishing is die we bezoekers leren
+   herkennen. (31-08-2026) */
+function safeNext(v){
+  const s = String(v || '').trim();
+  if(!s) return 'dashboard.html';
+  // Geen absolute URL, geen protocol-relatieve //host, geen backslash-truc.
+  if(/^[a-z][a-z0-9+.-]*:/i.test(s)) return 'dashboard.html';
+  if(/^[\\/]{2}/.test(s)) return 'dashboard.html';
+  // Alleen een eigen pagina, eventueel met query en anker.
+  if(!/^[A-Za-z0-9._-]+\.html([?#].*)?$/.test(s.replace(/^\//,''))) return 'dashboard.html';
+  return s.replace(/^\//,'');
+}
+const nextUrl = safeNext(qs('next'));
 let mode='signin';      // signin | signup
 let pendingUser=null;
 let otpVerifyType='email';
@@ -408,6 +425,17 @@ async function sendCode(isResend){
         btn.textContent='Send my code'; btn.style.opacity='';
         flash(document.getElementById('emailIn'));
         authErr(r.error || 'We can’t use that email address. Please try another one.');
+        return false;
+      }
+      /* Adres staat als gebouncet gemarkeerd — auth-email stuurt dan bewust
+         geen code en zegt in `error` wat de bezoeker moet doen. Zonder deze
+         tak werd het een exception en las hij "Something went wrong", terwijl
+         dit juist het enige geval is waarin hij zelf iets kan ondernemen.
+         (31-08-2026) */
+      if(r && r.address_blocked){
+        btn.textContent='Send my code'; btn.style.opacity='';
+        flash(document.getElementById('emailIn'));
+        authErr(r.error || 'Mail to this address keeps bouncing, so we cannot send you a code. Write to admin@mykunda.com from an address that works and we will move your account across.');
         return false;
       }
       otpVerifyType = (r && r.verify_type) || 'email';
@@ -580,7 +608,15 @@ document.getElementById('verifyBtn').addEventListener('click',async ()=>{
     }catch(e){
       btn.textContent='Verify & continue'; btn.style.opacity='';
       const d=document.getElementById('otpDemo');
-      d.style.display='block'; d.textContent='That code didn\u2019t match. Please try again.';
+      d.style.display='block'; d.textContent='That code didn\u2019t match, or it has expired. Ask for a fresh code below.';
+      /* Supabase geeft voor een verkeerd getypte code en voor een verlopen code
+         exact dezelfde melding ("Token has expired or is invalid"), dus die twee
+         zijn hier niet uit elkaar te houden. Dan is het eerlijker ze allebei te
+         noemen: "probeer opnieuw" is nutteloos advies als de code verlopen is.
+         De vakjes gaan leeg zodat opnieuw typen niet op een halve invoer stuit.
+         (31-08-2026) */
+      otpEls.forEach(function(el){ el.value=''; });
+      if(otpEls[0]) otpEls[0].focus();
       return;
     }
   }

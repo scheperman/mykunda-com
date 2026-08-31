@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0flt3f6--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1kkqzjx--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <noscript></noscript>
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=28592358088367">
+<link rel="stylesheet" href="styles.min.css?v=171038295966875">
 <style>
 body{background:var(--paper-2)}
 .dash{max-width:1180px;margin:0 auto;padding:36px 28px 70px}
@@ -313,7 +313,7 @@ body{background:var(--paper-2)}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=28592358088367"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=171038295966875"><!--/mk-css-->
 </head>
 <body>
 <div id="header"></div>
@@ -551,15 +551,15 @@ body{background:var(--paper-2)}
 
 <div id="footer"></div>
 
-<script src="app.min.js?v=28592358088367"></script>
-<script src="image-slot.js?v=28592358088367" defer></script>
+<script src="app.min.js?v=171038295966875"></script>
+<script src="image-slot.js?v=171038295966875" defer></script>
 <script>
 /* 4G: the Supabase client (~205 KB) is not needed to paint this page. It downloads
    in parallel and every backend call awaits window.__sbReady. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=28592358088367'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=171038295966875'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 </script>
@@ -1816,21 +1816,42 @@ function renderStats(){
 }
 
 /* ---------- bonnen en facturen ---------- */
+/* De id's uit listing_plans in de woorden van de klant. Zonder deze tabel stond
+   er letterlijk "doc_check" of "verified_m" in de kolom "What for" — een
+   databasesleutel op het scherm van een betalende klant. Dezelfde lijst staat
+   in betaling-status.html; verandert listing_plans, dan horen ze allebei mee.
+   (31-08-2026) */
+var PLAN_WORDS = {
+  boost_30:        'Boost — 30 days',
+  doc_check:       'Ownership Verification · Document Check',
+  ownership_check: 'Ownership Verification · Full Check',
+  verified_s:      'Verified listing',
+  verified_m:      'Verified listing',
+  verified_l:      'Verified listing'
+};
 function renderBilling(){
   var panel = document.getElementById('acctBillingPanel');
   var el = document.getElementById('acctBilling');
   if(!panel || !el) return;
   if(!PAYMENTS.length){ panel.hidden = true; return; }
   panel.hidden = false;
-  el.innerHTML = '<table class="ptable" style="min-width:520px"><thead><tr>'
+  el.innerHTML = '<table class="ptable" style="min-width:560px"><thead><tr>'
     + '<th>Reference</th><th>What for</th><th class="num">Amount</th><th>Status</th><th class="num">Date</th>'
     + '</tr></thead><tbody>'
     + PAYMENTS.map(function(p){
         var li = p.listings || {};
         var bedrag = (p.currency||'GMD') + ' ' + (Number(p.amount_minor||0)/100).toLocaleString('en-US',{minimumFractionDigits:2});
         var wanneer = p.paid_at || p.created_at;
-        return '<tr><td><div class="ti">'+esc(p.reference||'—')+'</div></td>'
-          + '<td><div class="sub" style="margin:0">'+esc(p.plan_id||'')+(li.title?' · '+esc(li.title):'')+'</div></td>'
+        var waarvoor = PLAN_WORDS[p.plan_id] || p.plan_id || '';
+        /* De referentie is een link naar de bestelpagina: daar staat de stand
+           van de betaling en, bij een titelcontrole, hoe ver het werk is. Dat
+           is precies waar de bon en de betaalinstructies naar verwijzen. */
+        var ref = esc(p.reference||'—');
+        var cel = p.reference
+          ? '<a href="betaling-status.html?ref='+encodeURIComponent(p.reference)+'">'+ref+'</a>'
+          : ref;
+        return '<tr><td><div class="ti">'+cel+'</div></td>'
+          + '<td><div class="sub" style="margin:0">'+esc(waarvoor)+(li.title?' · '+esc(li.title):'')+'</div></td>'
           + '<td class="num">'+esc(bedrag)+'</td>'
           + '<td>'+esc(String(p.status||'').replace(/_/g,' '))+'</td>'
           + '<td class="num">'+esc(wanneer ? shortDate(wanneer) : '')+'</td></tr>';
@@ -2198,19 +2219,30 @@ function applyRole(){
       try{ DROPS = await fetchPriceDrops(favIds) || {}; }catch(e){}
     }
 
-    /* De professionele weergaven. Drie queries, alleen voor wie ze te zien
+    /* Bonnen en facturen horen bij IEDEREEN, niet alleen bij een kantoor.
+       Tot 31-08-2026 stond deze query in het PRO-blok hieronder, dus werd hij
+       alleen gedraaid voor rol agent en admin. Gevolg: wie een Document Check
+       of een Ownership Check kocht (dat is per definitie een zoeker) of een
+       particuliere aanbieder die een Boost afrekende, zag onder Account nooit
+       een bestelling staan — terwijl de bon in de mail wél zegt "Go to My
+       MyKunda". De leesregel op payments scoopt op user_id, dus dit zijn altijd
+       alleen de eigen aankopen. */
+    if(typeof fetchMyPayments==='function'){
+      try{ PAYMENTS = await fetchMyPayments(50) || []; }catch(e){ PAYMENTS = []; }
+    }
+
+    /* De professionele weergaven. Twee queries, alleen voor wie ze te zien
        krijgt, en de dagtotalen alleen als er advertenties zijn om ze aan op te
        hangen. Een zoeker haalt hier niets extra's op. */
     if(PRO){
       var pro = await Promise.all([
         (typeof fetchLeadPipeline==='function') ? fetchLeadPipeline(300) : null,
-        (typeof fetchMyPayments==='function') ? fetchMyPayments(50) : null,
         (PORTFOLIO.length && typeof fetchViewDays==='function')
           ? fetchViewDays(PORTFOLIO.map(function(l){ return l.id; }),
                           new Date(Date.now()-30*86400e3).toISOString())
           : null
       ].map(function(p){ return Promise.resolve(p).catch(function(){ return null; }); }));
-      LEADS = pro[0]||[]; PAYMENTS = pro[1]||[]; VIEWDAYS = pro[2]||[];
+      LEADS = pro[0]||[]; VIEWDAYS = pro[1]||[];
       /* Het aantal reacties per advertentie komt nu uit de volledige pijplijn
          in plaats van uit de tien nieuwste; anders klopt de kolom "Enquiries"
          in de portefeuille niet zodra er meer dan tien zijn. */

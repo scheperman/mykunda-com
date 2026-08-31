@@ -103,7 +103,11 @@ Deno.serve(async (req: Request) => {
   // ook al draait deze functie met service_role en omzeilt hij RLS.
   const { data: payment } = await admin
     .from("payments")
-    .select("reference, status, method, amount_minor, currency, paid_at, created_at, plan_id, fulfilment_status, fulfilment_updated_at")
+    // listing_id komt sinds 31-08-2026 mee: de knop "Try again" op
+    // betaling-status.html moet bij Verified de advertentie kunnen meegeven,
+    // anders weigert create-payment de nieuwe bestelling met
+    // listing_required_for_verified.
+    .select("reference, status, method, amount_minor, currency, paid_at, created_at, plan_id, listing_id, fulfilment_status, fulfilment_updated_at")
     .eq("reference", reference)
     .eq("user_id", userData.user.id)
     .maybeSingle();
@@ -141,6 +145,7 @@ Deno.serve(async (req: Request) => {
     currency: payment.currency,
     method: payment.method,
     plan_id: payment.plan_id,
+    listing_id: payment.listing_id,
     paid_at: payment.paid_at,
     created_at: payment.created_at,
     ...voortgang,

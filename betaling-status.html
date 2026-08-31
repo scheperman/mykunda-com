@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:0le3aud--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:0t7bvio--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -14,7 +14,7 @@
 <noscript></noscript>
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=28592358088367">
+<link rel="stylesheet" href="styles.min.css?v=171038295966875">
 <style>
 body{background:var(--paper-2)}
 .ps-wrap{max-width:620px;margin:0 auto;padding:46px 24px 76px}
@@ -52,7 +52,7 @@ body{background:var(--paper-2)}
 .prog .when{margin:10px 0 0;font-size:12.5px;color:var(--muted-2,#8A958E)}
 .prog .hint{margin:12px 0 0;font-size:13.5px;color:var(--muted,#5C6B64);line-height:1.6}
 </style>
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=28592358088367"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=171038295966875"><!--/mk-css-->
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -179,14 +179,14 @@ body{background:var(--paper-2)}
     </div>
   </footer><!--/mk-ftr--></div>
 
-<script src="app.min.js?v=28592358088367"></script>
+<script src="app.min.js?v=171038295966875"></script>
 <script>
 /* The Supabase client is not needed to paint this page; it downloads in
    parallel and the status poll awaits window.__sbReady. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=28592358088367'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=171038295966875'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 </script>
@@ -210,12 +210,35 @@ const receipt = document.getElementById('psReceipt'), actionsEl = document.getEl
 const againEl = document.getElementById('psAgain'), timeEl = document.getElementById('psTime');
 const progEl = document.getElementById('psProg');
 
-/* Plan ids as create-payment knows them, in the customer's words. */
-const PLAN_NAMES = {
-  verified:'Verified listing', boost:'Boost',
-  'ownership-standard':'Ownership Verification · Document Check',
-  'ownership-full':'Ownership Verification · Full Check'
+/* De id's zoals ze in listing_plans staan — dat is wat payment-status
+   teruggeeft, en dus wat hier vertaald moet worden.
+
+   Tot 31-08-2026 stonden hier de FRONT-END sleutels van checkout.html
+   (verified, boost, ownership-standard, ownership-full). Die komen in een
+   betaling nooit voor: checkout vertaalt ze vóór het versturen naar
+   boost_30 / doc_check / ownership_check, en bij Verified kiest de server
+   zelf de band. Gevolg: op de bon van de klant stond letterlijk "boost_30"
+   of "verified_m". De oude sleutels blijven er als alias in staan, voor het
+   geval er nog een oude link rondgaat.
+
+   `to` is de sleutel waarmee checkout.html hetzelfde product weer opent —
+   nodig voor de knop "Try again", die anders met een serverid aankwam en
+   door checkout stil werd teruggezet op Verified: een andere dienst, een
+   andere prijs. */
+const PLAN_INFO = {
+  boost_30:        { name:'Boost',                                        to:'boost' },
+  doc_check:       { name:'Ownership Verification · Document Check',      to:'ownership-standard' },
+  ownership_check: { name:'Ownership Verification · Full Check',          to:'ownership-full' },
+  verified_s:      { name:'Verified listing',                             to:'verified' },
+  verified_m:      { name:'Verified listing',                             to:'verified' },
+  verified_l:      { name:'Verified listing',                             to:'verified' },
+  /* aliassen: de oude front-endsleutels */
+  verified:            { name:'Verified listing',                         to:'verified' },
+  boost:               { name:'Boost',                                    to:'boost' },
+  'ownership-standard':{ name:'Ownership Verification · Document Check',  to:'ownership-standard' },
+  'ownership-full':    { name:'Ownership Verification · Full Check',      to:'ownership-full' }
 };
+function planName(id){ return (PLAN_INFO[id] && PLAN_INFO[id].name) || id; }
 
 const IC = {
   spin: '<div class="ps-spin"></div>',
@@ -248,7 +271,7 @@ function stamp(d){
   receipt.hidden = false;
   document.getElementById('psRef').textContent = LAST.reference || REF;
   if(LAST.plan_id){
-    document.getElementById('psPlan').textContent = PLAN_NAMES[LAST.plan_id] || LAST.plan_id;
+    document.getElementById('psPlan').textContent = planName(LAST.plan_id);
     document.getElementById('psPlanRow').hidden = false;
   }
   const amt = Number(LAST.amount_gmd);
@@ -260,8 +283,17 @@ function stamp(d){
 }
 function tell(){ return LINK.dashboard + LINK.contact; }
 function retry(){
-  return '<a class="btn btn-primary" href="checkout.html' +
-    (LAST.plan_id ? '?plan=' + encodeURIComponent(LAST.plan_id) : '') + '">Try again</a>';
+  /* De sleutel die checkout.html kent, niet het serverid. Verified hangt
+     bovendien aan een advertentie: zonder ?listing= weigert create-payment de
+     bestelling met listing_required_for_verified, dus die gaat mee als
+     payment-status hem meestuurt. */
+  const info = PLAN_INFO[LAST.plan_id];
+  let href = 'checkout.html';
+  if(info){
+    href += '?plan=' + encodeURIComponent(info.to);
+    if(LAST.listing_id) href += '&listing=' + encodeURIComponent(LAST.listing_id);
+  }
+  return '<a class="btn btn-primary" href="' + href + '">Try again</a>';
 }
 
 /* payment-status returns status on every response — pending, processing,
@@ -387,6 +419,13 @@ async function poll(){
   if(out && out.settled === true){
     stopped = true;
     const tone = toneOf(out);
+    /* De aanvraag uit verify.html mag pas weg als er echt betaald is. Checkout
+       liet hem sinds 31-08-2026 staan zodat een herkansing na een afgebroken
+       betaling het opgegeven e-mailadres en het pand nog meeneemt; hier is de
+       bestelling rond, dus hier hoort hij opgeruimd te worden. */
+    if(statusOf(out) === 'succeeded'){
+      try{ localStorage.removeItem('mykunda_ownership_request'); }catch(e){}
+    }
     if(statusOf(out) === 'refunded'){
       return render({
         tone: 'neutral', icon: 'info',
