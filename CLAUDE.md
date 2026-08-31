@@ -140,6 +140,54 @@ een nieuwe wijzigingsdatum, en WinSCP vergelijkt op tijd — dan was het effect 
 hele exercitie weg. Nagemeten op 26-08-2026: twee bouwen achter elkaar zonder
 bronwijziging veranderen geen enkel tijdstempel in `deploy/` (288 bestanden).
 
+## De inhoudszoek: `search-content.json` (31-08-2026)
+
+Tot 31 augustus 2026 doorzocht **geen enkele zoekbalk op de site de inhoud**. Het was
+er twee keer bijna, en allebei net niet:
+
+* het vergrootglas in de header stuurt door naar `search.html?q=`, en dáár wordt
+  alleen op `area + street + title` van **advertenties** gefilterd;
+* het zoekveld in het Guides-menu vergeleek uitsluitend de **gidstitel** (`hits()`
+  kijkt naar `a[0]`).
+
+Gemeten op de gebouwde pagina: `stamp duty`, `consent`, `erosion` en `faq` gaven alle
+vier "No match", terwijl dat precies de onderwerpen zijn waar de gidsen sinds de
+feitencontrole over gaan. Alleen woorden die toevallig in een titel staan — `mortgage`,
+`tax`, `land` — gaven een treffer.
+
+`build-search-index.mjs` leest nu de bronpagina's en schrijft `search-content.json`:
+per gids elke `<h2 id>` en elke Q&A-vraag, plus alle vragen uit `faq.html` met hun
+eigen anker, plus een handvol losse pagina's op titel. Nu 531 regels over 22 pagina's,
+38 kB.
+
+Drie dingen die je niet moet omdraaien:
+
+1. **Het script draait vanuit `build.mjs`, vóór de stempelberekening.** Het staat in
+   `VERSIONED`, dus een nieuwe index hoort een nieuwe stempel te geven. Genereer je
+   hem ná de digest, dan verschuift de inhoud wel en de stempel niet, en houden
+   terugkerende bezoekers de oude index — precies de stille fout waar bovenin
+   `build.mjs` voor gewaarschuwd wordt.
+2. **Het staat ook in `SITE_ASSETS`**, anders komt het bestand nooit op de server.
+   Zelfde patroon als `gambia-osm.json`: geen `<script>`, `app.js` haalt het pas op
+   zodra iemand een toets indrukt in een zoekveld, en hangt er zelf de stempel aan.
+3. **Het anker van de Q&A-vragen wordt structureel bepaald** — de laatste `<h2 id>`
+   vóór het eerste `.qa`-blok — niet op de tekst van de kop. Alle dertien gidsen komen
+   nu op `#qa` uit, maar een gids die die kop anders noemt blijft zo gewoon werken.
+
+In `app.js` hangen er drie dingen aan: `mkContentIndex()` (laden), `mkContentSearch()`
+(alle woorden moeten voorkomen, treffers in de kop of de vraag boven treffers in de
+paginatitel) en de weergave in de headerzoek, het Guides-menu en het mobiele menu.
+
+**De knop van het vergrootglas blijft de objectzoek.** Hij staat naast "Add your
+property" op een woningportaal; wie hem gebruikt wil meestal advertenties. De
+inhoudstreffers staan eronder als suggestie. Draai dat niet om zonder er goed over na
+te denken — het is de hoofdtrechter van de site.
+
+Let op bij het aanpassen van de meldingen: het Guides-menu toont eerst de titeltreffers
+en pas daarna, als de index binnen is, de inhoudstreffers. Staat er "No match" van de
+titelronde, dan moet die melding weg zodra er wél inhoudstreffers zijn — dat doet
+`.mkam-nores` / `.md-sub-nores`. Zonder dat sprak het paneel zichzelf tegen.
+
 ## Wat er per upload mee moet
 
 `deploy/` is 27,8 MB, maar een gewone upload is 4,7 MB. Het verschil zijn de
