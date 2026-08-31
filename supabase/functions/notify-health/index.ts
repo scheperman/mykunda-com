@@ -173,7 +173,7 @@ serve(async (req) => {
           ["Since", r.email_bounced_at ? esc(fmt(r.email_bounced_at)) : undefined],
           ["Reason", escOpt(r.email_bounce_reason)],
         ] as [string, unknown][])), n.geblokkeerd)}
-        <p style="margin:18px 0 0;font-size:14px;color:${BRAND.muted}">An account in that last list cannot sign in either — the code never arrives. Clear <code>profiles.email_bounced_at</code> once they have a working address.</p>`,
+        ${n.geblokkeerd ? `<p style="margin:18px 0 0;font-size:14px;color:${BRAND.muted}">An account in that last list cannot sign in either — the code never arrives. Clear <code>profiles.email_bounced_at</code> once they have a working address.</p>` : ""}`,
       cta: "Open admin console",
       ctaUrl: `${BRAND.site}/admin.html`,
       footer: "Daily check on outgoing mail. Sent only when there is something to report.",

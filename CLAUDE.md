@@ -2199,3 +2199,32 @@ terwijl de bon wel naar My MyKunda verwijst. De leesregel op `payments` scoopt o
 Bon, betaalinstructies en terugbetaalmail wijzen naar
 `betaling-status.html?ref=<referentie>` — niet naar `dashboard.html`. Daar staat de
 stand van de betaling en, bij een titelcontrole, de voortgang van het werk.
+
+## Het mailalarm bewijzen (alarmproef)
+
+`notify-health` mailt alleen als er iets mis is. Stilte is dus dubbelzinnig: het
+betekent "niets aan de hand" óf "het alarm werkt niet". Bewezen op 31-08-2026 dat
+het werkt; herhaal deze proef na elke wijziging aan de mailketen.
+
+1. Kunstmatige fout invoeren:
+   `insert into email_events (event_type, recipient, subject, reason, payload)
+    values ('payment_receipt','alarmproef@mykunda.com','TEST — alarmproef','Kunstmatige fout','{"ok": false, "alarmproef": true}'::jsonb);`
+2. De echte productieroute afvuren: `select public.run_mail_health_check();`
+   (niet de function met curl aanroepen — deze weg bewijst óók dat de sleutel uit
+   de kluis komt en dat pg_net de function bereikt)
+3. Na ~20 seconden controleren in Resend: mail aan admin@mykunda.com met onderwerp
+   `[MyKunda] N mail issue(s) in the past 24 hours`, status `delivered`.
+   De backoffice-mailbox is niet vanuit deze omgeving te lezen; de bezorgstatus in
+   Resend is het bewijs.
+4. Opruimen: `delete from email_events where payload->>'alarmproef' = 'true';`
+5. Nog één keer `run_mail_health_check()` en controleren dat er GEEN mail komt.
+   Die tweede helft is het punt: een alarm dat niet meer stil kan worden, leert je
+   het te negeren.
+
+Let op: `notify-health` schrijft zijn eigen verzending NIET naar `email_events`.
+Mislukt de alarmmail zelf, dan legt niets dat vast — Resend is dan de enige bron.
+
+De vierde controle (accounts met `profiles.email_bounced_at`) heeft geen
+tijdvenster. Eén geblokkeerd account laat het alarm dus elke dag afgaan tot iemand
+die kolom leegmaakt. Dat is met opzet, maar weet het voordat je je afvraagt waarom
+de mail blijft komen.
