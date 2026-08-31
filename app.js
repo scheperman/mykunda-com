@@ -674,6 +674,27 @@ window.mkContentIndex = function(){
 /* Alle woorden moeten voorkomen, zodat "stamp duty" en "ministerial consent"
    werken. De rangschikking zet een treffer in de kop of de vraag zelf boven
    een treffer die alleen in de paginatitel zit. */
+/* De 46 gebieden komen NIET uit search-content.json maar rechtstreeks uit
+   MK_AREAS. Twee redenen: MK_AREAS is volgens de werkafspraken de enige bron
+   voor het areamenu, dus zo kan de zoek er niet vanaf drijven; en het scheelt
+   het wachten op de index, waardoor "Kotu" al een treffer geeft bij de eerste
+   toetsaanslag. Reden dat dit er op 31-08-2026 bij moest: "Soma" en "Basse"
+   gaven niets, en "Kotu" gaf de TDA-sectie in plaats van de gebiedspagina. */
+window.mkAreaSearch = function(term, limit){
+  var t = String(term || '').trim().toLowerCase();
+  if(t.length < 2) return [];
+  var out = [];
+  (window.MK_AREAS || []).forEach(function(reg){
+    (reg[1] || []).forEach(function(a){
+      var i = a[0].toLowerCase().indexOf(t);
+      if(i < 0) return;
+      out.push({ t:a[0], u:a[1], g:reg[0], s:(i === 0 ? 0 : 1) });
+    });
+  });
+  out.sort(function(x, y){ return x.s - y.s || x.t.length - y.t.length; });
+  return out.slice(0, limit || 4);
+};
+
 window.mkContentSearch = function(term, limit){
   var rows = mkScRows; if(!rows) return [];
   var t = String(term || '').trim().toLowerCase();
@@ -1799,9 +1820,10 @@ function headerHTML(active, onHero){
       </div>
       <form class="md-search" id="mdSearchForm" role="search">
         <span class="md-search-ic">${ICON.search}</span>
-        <input type="search" id="mdSearchInput" placeholder="Search area or town" aria-label="Search properties">
+        <input type="search" id="mdSearchInput" placeholder="Area, town or a question" aria-label="Search areas, guides and properties">
         <button type="submit" class="md-search-go" aria-label="Search">${ICON.arrow}</button>
       </form>
+      <div class="md-search-res" id="mdSearchRes" hidden></div>
       <nav class="md-nav">
         ${links.map(l=>{
           if(l[0]==='Areas'){
@@ -2451,19 +2473,27 @@ function initHdrSearch(){
     var draw = function(){
       var term = input.value.trim();
       if(term.length < 2){ res.hidden = true; res.innerHTML = ''; return; }
-      var hits = window.mkContentSearch(term, 6);
-      if(!hits.length){ res.hidden = true; res.innerHTML = ''; return; }
-      res.innerHTML = '<div class="wrap hdr-s-list"><div class="hdr-s-hd">In the guides and FAQ</div>' +
-        hits.map(function(h){
-          return '<a href="' + h.u + '"><span class="t">' + mkScEsc(h.t) + '</span>' +
-                 '<span class="g">' + mkScEsc(h.g) + '</span></a>';
-        }).join('') +
+      var areas = window.mkAreaSearch(term, 4);
+      var hits  = window.mkContentSearch(term, areas.length ? 5 : 7);
+      if(!areas.length && !hits.length){ res.hidden = true; res.innerHTML = ''; return; }
+      var row = function(h){
+        return '<a href="' + h.u + '"><span class="t">' + mkScEsc(h.t) + '</span>' +
+               '<span class="g">' + mkScEsc(h.g) + '</span></a>';
+      };
+      res.innerHTML = '<div class="wrap hdr-s-list">' +
+        (areas.length ? '<div class="hdr-s-hd">Areas</div>' + areas.map(row).join('') : '') +
+        (hits.length ? '<div class="hdr-s-hd">In the guides and FAQ</div>' + hits.map(row).join('') : '') +
         '<div class="hdr-s-more">Enter searches properties for &ldquo;' + mkScEsc(term) + '&rdquo;</div></div>';
       res.hidden = false;
     };
     input.addEventListener('input', function(){
       clearTimeout(tmr);
-      tmr = setTimeout(function(){ window.mkContentIndex().then(draw); }, 120);
+      /* Meteen tekenen met de gebieden erin, en opnieuw zodra de index binnen
+         is. Zo staat er bij "Kotu" al iets voordat er iets is opgehaald. */
+      draw();
+      tmr = setTimeout(function(){ window.mkContentIndex().then(function(){
+        if(input.value.trim().length >= 2) draw();
+      }); }, 120);
     });
     document.getElementById('hdrSearchX').addEventListener('click', function(){ res.hidden = true; });
   }
@@ -2474,6 +2504,33 @@ function initHdrSearch(){
       e.preventDefault();
       goToSearch(document.getElementById('mdSearchInput').value);
     });
+    /* Het laatje had helemaal geen suggesties. Op mobiel is dit hetzelfde
+       vergrootglas als in de header, dus het hoort hetzelfde te doen. */
+    var mi = document.getElementById('mdSearchInput'), mr = document.getElementById('mdSearchRes'), mt = null;
+    if(mi && mr){
+      var mdraw = function(){
+        var term = mi.value.trim();
+        if(term.length < 2){ mr.hidden = true; mr.innerHTML = ''; return; }
+        var areas = window.mkAreaSearch(term, 4);
+        var hits  = window.mkContentSearch(term, areas.length ? 4 : 6);
+        if(!areas.length && !hits.length){ mr.hidden = true; mr.innerHTML = ''; return; }
+        var row = function(h){
+          return '<a href="' + h.u + '"><span class="t">' + mkScEsc(h.t) + '</span>' +
+                 '<span class="g">' + mkScEsc(h.g) + '</span></a>';
+        };
+        mr.innerHTML =
+          (areas.length ? '<div class="hdr-s-hd">Areas</div>' + areas.map(row).join('') : '') +
+          (hits.length ? '<div class="hdr-s-hd">In the guides and FAQ</div>' + hits.map(row).join('') : '');
+        mr.hidden = false;
+      };
+      mi.addEventListener('input', function(){
+        clearTimeout(mt);
+        mdraw();
+        mt = setTimeout(function(){ window.mkContentIndex().then(function(){
+          if(mi.value.trim().length >= 2) mdraw();
+        }); }, 120);
+      });
+    }
   }
 }
 
