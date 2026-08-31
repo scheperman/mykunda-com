@@ -2164,3 +2164,38 @@ niet dat "elk formulier" is afgedekt.
 gebruikt door een ander proces", ook voor bestanden die niemand open heeft.
 Dat is de mount, geen vergrendeling. Bewerk bestanden hier met `edit_block`
 of `write_file`, niet met `Add-Content`.
+
+## Intl in de Supabase edge runtime groepeert geen cijfers
+
+Gemeten 31-08-2026: `(20000).toLocaleString('en-US')` geeft in een edge function
+gewoon `"20000"` terug. Datums opmaken werkt daar wél. Elke prijs in een mail kwam
+dus zonder scheidingsteken bij de klant aan.
+
+Gebruik in `supabase/functions/**` daarom **nooit** `toLocaleString` voor een getal.
+Er staat één helper klaar: `nummer(waarde, decimalen)` in
+`_shared/email-template.ts`. In de browser mag `toLocaleString` gewoon.
+
+## Plan-id's staan op twee plekken in mensentaal
+
+`listing_plans` heet in de database `boost_30`, `doc_check`, `ownership_check`,
+`verified_s|m|l`. `checkout.html` gebruikt eigen sleutels (`boost`, `verified`,
+`ownership-standard`, `ownership-full`) en vertaalt vóór het versturen. Alles wat
+een betaling terugleest krijgt dus het SERVERid te zien:
+
+- `betaling-status.html` → `PLAN_INFO` (naam + de checkout-sleutel voor "Try again")
+- `dashboard.html` → `PLAN_WORDS` (naam in de facturentabel)
+
+Verandert `listing_plans`, dan horen die twee tabellen mee. Staat een id er niet in,
+dan valt de pagina terug op het kale id en leest de klant een databasesleutel.
+
+## Wat een klant na een betaling ziet
+
+`fetchMyPayments()` hoort voor ELKE rol te draaien, niet alleen voor agent/admin.
+De koperproducten (Document Check, Ownership Check) worden per definitie door een
+zoeker gekocht; die zag tot 31-08-2026 nooit een bestelling in zijn dashboard,
+terwijl de bon wel naar My MyKunda verwijst. De leesregel op `payments` scoopt op
+`user_id`, dus er lekt niets.
+
+Bon, betaalinstructies en terugbetaalmail wijzen naar
+`betaling-status.html?ref=<referentie>` — niet naar `dashboard.html`. Daar staat de
+stand van de betaling en, bij een titelcontrole, de voortgang van het werk.
