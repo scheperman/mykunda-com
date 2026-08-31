@@ -266,6 +266,21 @@ var BUILD_HERIJKT = '2026-08-26';
    afronding is 0,9% op `standard`. Dat is ruim binnen de bandbreedte die
    het model zelf afgeeft, en deze getallen zijn afgeleid, niet gemeten —
    ronde bedragen zijn hier eerlijker dan D25.722. */
+/* HERKOMST, vastgesteld bij de feitencontrole van 31-08-2026: deze drie
+   tarieven zijn GEEN gemeten Gambiaanse bouwkosten. Er bestaat geen
+   Gambiaanse bouwkostenindex — GBoS publiceert er geen, en Turner &
+   Townsend en Arcadis dekken het land niet. Het enige gepubliceerde cijfer
+   staat op een commerciele pagina (accessgambia, 07-01-2026) die "between
+   300 per square metre and 500 or more" zegt ZONDER munteenheid; wij lazen
+   dat als euro, CAHF leest dezelfde pagina als dollar en voetnoot hem — dus
+   CAHF is geen onafhankelijke bevestiging maar dezelfde bron, dubbel geteld.
+   CAHF zet bouwkosten per m2 in zijn eigen datatabel op n/a. De laagste band
+   (17000) heeft in het geheel geen bron.
+   Behandel dit dus als rekenaanname, niet als marktgegeven. sell.html zegt
+   dat nu ook tegen de bezoeker, en guide-building-a-house-in-the-gambia.html
+   legt de hele keten uit. Wijzigt dit blok, dan moeten die twee mee.
+   Het juiste moment om er echte cijfers onder te leggen is een herijking met
+   offertes van Gambiaanse aannemers. */
 var BUILD_COST = {
   basic:    17000,  /* was EUR 200 — betonblok, cementvloer of eenvoudige tegel,
                        stalen ramen, golfplaat, geen airco                      */

@@ -1441,45 +1441,45 @@ function requireAuth(returnTo){
 
 /* ---------- Guides / content hub (metadata; full bodies live in guide.html) ---------- */
 const GUIDES = [
-  { slug:'buying-property-in-the-gambia-as-a-foreigner', cat:'Buying', mins:9, date:'2026-08-15',
+  { slug:'buying-property-in-the-gambia-as-a-foreigner', cat:'Buying', mins:20, date:'2026-08-31',
     title:'Buying property in The Gambia as a foreigner', img:'images/home-hero-mobile.webp',
-    excerpt:'Can non-residents own property in The Gambia? A clear, step-by-step guide to buying as an expat or diaspora investor — from title checks to transfer.' },
-  { slug:'freehold-leasehold-customary-land-explained', cat:'Land & title', mins:8, date:'2026-08-15',
+    excerpt:'What Gambian law actually says about non-Gambian buyers — the allocation bar, the Minister’s consent to assign, lease terms, ground rent and the true cost and timeline.' },
+  { slug:'freehold-leasehold-customary-land-explained', cat:'Land & title', mins:18, date:'2026-08-31',
     title:'Freehold, leasehold & customary land explained', img:'images/sanyang.webp',
-    excerpt:'The single most important thing to understand before you buy land in The Gambia: what kind of title you are actually getting, and why it matters.' },
-  { slug:'cost-of-buying-property-in-the-gambia', cat:'Buying', mins:8, date:'2026-08-15',
+    excerpt:'There are four kinds of Gambian land tenure, not three. What each one means, who has to consent to a sale, and what happens when a 99-year lease ends.' },
+  { slug:'cost-of-buying-property-in-the-gambia', cat:'Buying', mins:16, date:'2026-08-31',
     title:'The real cost of buying property in The Gambia', img:'images/kololi.webp',
-    excerpt:'Beyond the asking price: transfer fees, legal costs, agent fees and the taxes to budget for when you buy a home or plot on the coast.' },
-  { slug:'best-areas-to-buy-on-the-gambian-coast', cat:'Areas', mins:9, date:'2026-08-15',
+    excerpt:'Stamp duty is 2%, not 5% — and the “5% transfer tax” everyone quotes is the seller’s capital gains tax. What buying, owning and selling really cost.' },
+  { slug:'best-areas-to-buy-on-the-gambian-coast', cat:'Areas', mins:24, date:'2026-08-31',
     title:'The best areas to buy on the Gambian coast', img:'images/capepoint.webp',
-    excerpt:'Kololi, Cape Point, Brufut, Bijilo, Sanyang and Kartong compared — prices, vibe and who each area suits, from holiday lets to family homes.' },
-  { slug:'bank-mortgages-in-the-gambia', cat:'Buying', mins:7, date:'2026-08-15',
+    excerpt:'Kololi to Kartong on the evidence: asking prices, airport distances, the Tourism Development Area, documented erosion and the land disputes nobody advertises.' },
+  { slug:'bank-mortgages-in-the-gambia', cat:'Buying', mins:16, date:'2026-08-31',
     title:'Bank mortgages in The Gambia — rates, conditions and eligibility', img:'images/banjul.webp',
-    excerpt:'Can you get a bank mortgage in The Gambia? A frank look at local housing finance, sky-high interest rates and why it almost never works for foreign buyers.' },
-  { slug:'developer-financing-in-the-gambia', cat:'Buying', mins:8, date:'2026-08-15',
-    title:'Developer financing in The Gambia — the smart alternative to a mortgage', img:'images/fajara.webp',
-    excerpt:'How instalment plans from Gambian developers work, what to expect from TAF Africa Global, Blue Ocean and others, and how to protect yourself.' },
-  { slug:'how-to-verify-land-title-in-the-gambia', cat:'Land & title', mins:12, date:'2026-08-15',
+    excerpt:'No Gambian bank publishes a mortgage rate sheet. What is published, the consent rule that decides whether a bank can lend at all, and Sharia-compliant finance.' },
+  { slug:'developer-financing-in-the-gambia', cat:'Buying', mins:22, date:'2026-08-31',
+    title:'Developer financing in The Gambia — instalment plans explained', img:'images/fajara.webp',
+    excerpt:'How Gambian instalment plans work, what the law does and does not protect — and the registration step that gives an instalment buyer real priority.' },
+  { slug:'how-to-verify-land-title-in-the-gambia', cat:'Land & title', mins:26, date:'2026-08-31',
     title:'Land in The Gambia: prices, sizes and how to verify title safely', img:'images/brikama.webp',
-    excerpt:'What bare land costs by area, what those square metres look like on the ground, and the documents, checks and red flags that establish who actually owns a plot before you pay.' },
-  { slug:'building-a-house-in-the-gambia', cat:'Building', mins:11, date:'2026-08-15',
+    excerpt:'What land is asking by area, how big a plot really is, and how ownership is actually checked — the Deeds Registry, ministerial consent, tax and the real risks.' },
+  { slug:'building-a-house-in-the-gambia', cat:'Building', mins:22, date:'2026-08-31',
     title:'Building your own house in The Gambia', img:'images/gambia-street-aerial.webp',
-    excerpt:'Permits, material prices, cost per square metre and how to control a build from 4,000 km away — the practical guide to building on your own plot.' },
-  { slug:'renting-out-property-in-the-gambia', cat:'Renting out', mins:10, date:'2026-08-15',
+    excerpt:'The development permit and its two-year limit, dated 2026 cement prices, why nobody publishes a Gambian build cost per m², and who is liable for defects.' },
+  { slug:'renting-out-property-in-the-gambia', cat:'Renting out', mins:18, date:'2026-08-31',
     title:'Renting out property in The Gambia — season, yields and tax', img:'images/senegambia.webp',
-    excerpt:'Occupancy swings from 90% in winter to 25% in summer. What that does to your yield, what tax you owe on gross rent, and how to run a let from abroad.' },
-  { slug:'sending-money-to-the-gambia', cat:'Money', mins:8, date:'2026-08-15',
+    excerpt:'The rent law landlords are never told about, 8% and 15% on gross rent, the tenants who withhold it at source, and a yield table with its assumptions labelled.' },
+  { slug:'sending-money-to-the-gambia', cat:'Money', mins:18, date:'2026-08-31',
     title:'Sending money to The Gambia — what it really costs', img:'images/serrekunda.webp',
-    excerpt:'The fee is not the cost. World Bank corridor data shows the exchange-rate margin doing the damage — and what that means on a purchase-sized transfer.' },
-  { slug:'residency-and-retiring-in-the-gambia', cat:'Living there', mins:9, date:'2026-08-15',
+    excerpt:'The fee is only part of the cost. World Bank corridor data, the cash you must declare, and whether sale proceeds can leave the country again.' },
+  { slug:'residency-and-retiring-in-the-gambia', cat:'Living there', mins:16, date:'2026-08-31',
     title:'Residency, permits and retiring in The Gambia', img:'images/kotu.webp',
-    excerpt:'Buying a house gives you no right to live in it. The permits, the published fees, the annual renewal and what retiring on the coast actually involves.' },
-  { slug:'inheritance-and-wills-for-gambian-property', cat:'Land & title', mins:10, date:'2026-08-15',
+    excerpt:'Buying a house gives you no right to live in it. The three permit types, entry rules by nationality, and the pension and tax facts a retiree needs.' },
+  { slug:'inheritance-and-wills-for-gambian-property', cat:'Land & title', mins:18, date:'2026-08-31',
     title:'Inheritance and wills for Gambian property', img:'images/river-gambia.webp',
-    excerpt:'Statutory, Sharia or customary — which law governs your house, why estates freeze without a grant of probate, and the checklist that protects your family.' },
-  { slug:'estate-agent-regulation-in-the-gambia', cat:'Land & title', mins:9, date:'2026-08-25',
+    excerpt:'Which law governs a Gambian estate, the six-month Curator rule, what actually proves the heirs may sell, and the tax that bites when they do.' },
+  { slug:'estate-agent-regulation-in-the-gambia', cat:'Land & title', mins:22, date:'2026-08-31',
     title:'Are estate agents regulated in The Gambia?', img:'images/banjul.webp',
-    excerpt:'No licence, no register, no regulator — anyone can trade as an estate agent today. What the draft Real Estate Agents Bill would change, how far it has actually got, and what it means for a buyer right now.' },
+    excerpt:'No licence, no register and no licensing regulator — but not no rules. What binds an agent today, where to complain, and where the draft bill really stands.' },
 ];
 
 /* ---------- User-fillable image (drop real Gambia photos over the fallback) ---------- */
@@ -1570,8 +1570,8 @@ function payFooterHTML(){
   return `<div class="fb-pay"><div class="wrap fb-pay-in">
       <div class="fp-label">Ways to pay on MyKunda</div>
         ${payChipsHTML()}
-        <p class="fp-note"><b>Pay by mobile money or card, or by bank transfer.</b> Online payments are processed by Waychit, a licensed Gambian payment provider. MyKunda never sees your card or wallet details.</p>
-        <p class="fp-note">Bank transfers clear once the banks release them. MyKunda only collects listing and service fees — <b>we never take deposits, down payments or purchase money</b>. Those are always paid into the escrow account of your lawyer or notary.</p>
+        <p class="fp-note"><b>Pay by mobile money or card, or by bank transfer.</b> Online payments are processed by Waychit, a Gambian payment aggregator that works through payment partners licensed by the Central Bank of The Gambia. MyKunda never sees your card or wallet details.</p>
+        <p class="fp-note">Bank transfers clear once the banks release them. MyKunda only collects listing and service fees — <b>we never take deposits, down payments or purchase money</b>. Those belong in your lawyer&rsquo;s client account &mdash; insist on that in writing, because no Gambian rule compels it.</p>
         <p class="fp-note">Currency conversions are indicative only, based on approximate exchange rates. No rights can be derived from displayed amounts in any currency.</p>
     </div></div>`;
 }
