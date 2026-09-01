@@ -1242,11 +1242,20 @@ function fmtAreaPriceK(gmd){
 function ccyLabel(){ return getCurrency(); }
 
 /* ---------- Formatting (currency-aware) ---------- */
-function priceInner(p, type){
+/* Het achtervoegsel achter een huurprijs volgt de periode waarin de aanbieder
+   hem heeft opgegeven. Tot 01-09-2026 stond hier onvoorwaardelijk "/mo", en
+   dat is bij twee soorten aanbod aantoonbaar onwaar: een vakantiewoning die
+   per nacht of per week wordt verhuurd (die keuze staat gewoon in de wizard)
+   en bedrijfsruimte die per jaar wordt verhuurd. listings.price_period is de
+   bron; de kolom laat night, week, month en year toe. Ontbreekt hij, dan
+   blijft het maand — dat is wat de wizard invult als er niets gekozen is. */
+const PRICE_SUFFIX = { night:'/night', week:'/wk', month:'/mo', year:'/yr' };
+function priceSuffixFor(period){ return PRICE_SUFFIX[period] || PRICE_SUFFIX.month; }
+function priceInner(p, type, period){
   const c=CURRENCIES[getCurrency()];
   const v=Math.round(convert(p));
   const s = c.symbol + v.toLocaleString('en-US');
-  return type === 'rent' ? `${s}<span class="per">/mo</span>` : s;
+  return type === 'rent' ? `${s}<span class="per">${priceSuffixFor(period)}</span>` : s;
 }
 function pinInner(p, type){
   const c=CURRENCIES[getCurrency()];
@@ -1259,8 +1268,8 @@ function pinInner(p, type){
    tot 27-08-2026; de inhoud is nu dalasi, dus de naam moest mee — een
    attribuut dat "eur" heet met dalasi erin is precies hoe een eenheid
    zoekraakt. */
-function fmtPrice(p, type){
-  return '<span data-gmd="'+p+'" data-ptype="'+(type||'')+'">'+priceInner(p,type)+'</span>';
+function fmtPrice(p, type, period){
+  return '<span data-gmd="'+p+'" data-ptype="'+(type||'')+'" data-pper="'+(period||'')+'">'+priceInner(p,type,period)+'</span>';
 }
 function fmtPin(p, type){
   return '<span data-gmd="'+p+'" data-ptype="'+(type||'')+'" data-pin="1">'+pinInner(p,type)+'</span>';
@@ -1273,7 +1282,8 @@ function onRatesUpdated(){
     const gmd = parseFloat(el.getAttribute('data-gmd'));
     if(!(gmd > 0)) return;
     const t = el.getAttribute('data-ptype') || undefined;
-    el.innerHTML = el.hasAttribute('data-pin') ? pinInner(gmd, t) : priceInner(gmd, t);
+    const per = el.getAttribute('data-pper') || undefined;
+    el.innerHTML = el.hasAttribute('data-pin') ? pinInner(gmd, t) : priceInner(gmd, t, per);
   });
   document.querySelectorAll('[data-ccy-cross]').forEach(function(el){
     const k = el.getAttribute('data-ccy-cross');
@@ -1621,7 +1631,7 @@ function cardHTML(p){
       <div class="count">${ICON.camera} ${p.photos}</div>
     </div>
     <div class="card-body">
-      <div class="card-price">${fmtPrice(p.price, p.type)}</div>
+      <div class="card-price">${fmtPrice(p.price, p.type, p.price_period)}</div>
       <div class="card-title">${p.title}</div>
       <div class="card-addr">${ICON.pin} ${p.street} · ${p.area.split('· ')[1]||p.area}</div>
       ${typeof p.lat==='number' ? `<div class="card-plus">${PLUS_GRID_ICON} ${plusCodeShort(p.lat,p.lng)}</div>` : ''}

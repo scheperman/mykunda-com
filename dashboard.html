@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0eufiua--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:18ntx28--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <noscript></noscript>
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=85945305027659">
+<link rel="stylesheet" href="styles.min.css?v=81231947035353">
 <style>
 body{background:var(--paper-2)}
 .dash{max-width:1180px;margin:0 auto;padding:36px 28px 70px}
@@ -313,7 +313,7 @@ body{background:var(--paper-2)}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=85945305027659"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=81231947035353"><!--/mk-css-->
 </head>
 <body>
 <div id="header"></div>
@@ -399,10 +399,16 @@ body{background:var(--paper-2)}
            alleen voor aanbieders. Daar staat nu ook de alertschakelaar, die
            consent_marketing én de alert op elke opgeslagen zoekopdracht zet —
            eerder was "Listing alerts" een knop die niets bewaarde. -->
-      <div class="upgrade">
-        <div class="eyebrow">Sell faster</div>
-        <h3>Get the Verified badge</h3>
-        <p>Listings with a verified title get more enquiries and rank higher in search. From <b id="dashVerFrom">D4,500</b> — the exact price depends on your asking price.</p>
+      <!-- De kaart hieronder gaat over Verified, en Verified bestaat alleen bij
+           verkoop (create-payment weigert een huuradvertentie met
+           verified_is_for_sale_listings_only). Wie alleen verhuurt kreeg hier
+           dus een product aangeboden dat hij niet kan kopen, onder de kop "Sell
+           faster". Voor die verhuurder wisselt applyUpgradeCard() de tekst om
+           naar Boost, dat wel voor beide geldt. -->
+      <div class="upgrade" id="upgradeCard">
+        <div class="eyebrow" id="upgradeEyebrow">Sell faster</div>
+        <h3 id="upgradeTitle">Get the Verified badge</h3>
+        <p id="upgradeText">Listings with a verified title get more enquiries and rank higher in search. From <b id="dashVerFrom">D4,500</b> — the exact price depends on your asking price.</p>
         <a class="btn btn-amber btn-block" href="sell.html#pricing">See plans</a>
       </div>
     </aside>
@@ -551,15 +557,15 @@ body{background:var(--paper-2)}
 
 <div id="footer"></div>
 
-<script src="app.min.js?v=85945305027659"></script>
-<script src="image-slot.js?v=85945305027659" defer></script>
+<script src="app.min.js?v=81231947035353"></script>
+<script src="image-slot.js?v=81231947035353" defer></script>
 <script>
 /* 4G: the Supabase client (~205 KB) is not needed to paint this page. It downloads
    in parallel and every backend call awaits window.__sbReady. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=85945305027659'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=81231947035353'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 </script>
@@ -684,6 +690,53 @@ function clocksHTML(l){
   }).join('')+'</div>';
 }
 
+/* De Boost (en waar het kan de Verified-badge) op de advertentie zelf.
+   Tot 01-09-2026 liep de enige route naar een upgrade via de planstap in de
+   wizard, dus via Edit — en "See plans" op deze pagina wees naar sell.html,
+   dat óók weer in de wizard uitkomt. Met meer dan één object is dat niet te
+   doen, en erger: create-payment eist voor een Boost geen listing_id, dus een
+   Boost die zonder id wordt afgerekend zet nergens boosted_until. Die knop
+   MOET de advertentie meegeven.
+
+   Drie voorwaarden, want een knop die geld kost mag niet staan waar hij niets
+   kan doen:
+   - alleen rijen uit de database (een lokale terugval heeft geen id die de
+     server kent);
+   - alleen zolang de advertentie in de zoekresultaten staat (active of under
+     offer — dat is precies waar mkIsBoosted() en de featured-query naar
+     kijken; een Boost op een concept of een advertentie in beoordeling koopt
+     dertig dagen niets);
+   - Verified alleen bij verkoop met een echte vraagprijs, want create-payment
+     weigert daar anders op (verified_is_for_sale_listings_only en
+     listing_price_required). Bij verhuur is de vraagprijs een maandhuur en
+     slaan de banden nergens op. */
+function boostPriceHTML(){
+  return '<span class="boostprice">'+boostPriceText()+'</span>';
+}
+function boostPriceText(){
+  try{
+    if(typeof PRICING==='undefined' || !PRICING.boost) return '';
+    var c = CURRENCIES[getCurrency()];
+    return c.symbol + Math.round(fromGMD(PRICING.boost.gmd)).toLocaleString('en-US');
+  }catch(e){ return ''; }
+}
+function promoteHTML(l){
+  if(!l._db) return '';
+  var s = dbStatusOf(l);
+  if(s!=='active' && s!=='under_offer') return '';
+  var d = l.boostedUntil ? daysUntil(l.boostedUntil) : null;
+  var boosting = (d!==null && d>0);
+  var canVerify = (l.type==='sale' && !l.verified && (Number(l.price)||0) > 0);
+  var acts = '<a class="act" href="checkout.html?plan=boost&listing='+encodeURIComponent(l.id)+'">'
+           + (boosting ? 'Extend the Boost' : 'Boost this listing') + '</a>';
+  if(canVerify) acts += '<a class="act" href="checkout.html?plan=verified&listing='+encodeURIComponent(l.id)+'">Get Verified</a>';
+  var txt = boosting
+    ? 'The Boost is running. Extending adds another 30 days at the top of search and on the home page.'
+    : 'Top of search and on the home page for 30 days, for ' + boostPriceHTML() + '.';
+  if(!boosting && canVerify) txt += ' Verified adds a title check and the badge on this listing.';
+  return '<div class="lnext"><span class="lab">Promote</span><span>'+txt+'</span>'+acts+'</div>';
+}
+
 function listingFoot(l){
   /* Alleen voor rijen die uit de database komen. De plaatselijke terugval
      (advertenties die deze bezoeker in de browser bewaarde) heeft geen status,
@@ -707,6 +760,7 @@ function listingFoot(l){
           + (n.a ? '<a class="act" href="'+n.h+'">'+nextIc+' '+n.a+'</a>' : '')
           + '</div>';
   }
+  html += promoteHTML(l);
   html += clocksHTML(l);
   return html ? '<div class="listing-foot">'+html+'</div>' : '';
 }
@@ -722,7 +776,7 @@ function listingRow(l){
       <div class="title">${l.title}</div>
       <div class="addr">${ICON.pin} ${l.street||''} · ${(l.area||'').split('· ')[1]||(l.area||'')}</div>
       ${(()=>{ const lat=l.lat, lng=l.lng; return (typeof lat==='number') ? `<div style="margin-top:7px">${plusCodeChip(lat,lng,(l.area||'').split('·')[0].trim())}</div>` : ''; })()}
-      <div class="price">${fmtPrice(l.price,l.type)}</div>
+      <div class="price">${fmtPrice(l.price,l.type,l.price_period)}</div>
       <div class="listing-meta">
         <span class="lmeta">${eye} ${(l._views||l.views||0).toLocaleString()} views</span>
         <span class="lmeta">${chat} ${l._enq||0} enquiries</span>
@@ -764,6 +818,10 @@ async function initDashboard(){
             id: r.id, cat: r.category, type: r.kind,
             title: r.title||'Untitled', street: r.street||'',
             area: r.area||'', price: Number(r.price)||0,
+            /* De periode hoort bij het bedrag. Zonder deze regel schreef de
+               rij "/mo" onder een huur die per nacht, per week of per jaar is
+               opgegeven — zie priceSuffixFor() in app.js. */
+            price_period: r.price_period || null,
             beds: r.beds||0, baths: r.baths||0, sqm: r.sqm||0,
             plot: r.plot_sqm||0, tag: (r.features&&r.features[0])||'',
             photos: (r.listing_media||[]).filter(m=>!m.is_document).length||0,
@@ -838,7 +896,7 @@ async function initDashboard(){
     listEl.innerHTML = listings.map(listingRow).join('');
     document.getElementById('listingCount').textContent = listings.length+' total';
   } else {
-    listEl.innerHTML = `<div class="empty"><div class="ic">${ICON.camera}</div><h3>No listings yet</h3><p>List your first property or plot — it's free to start, and you'll see views and enquiries here.</p><a class="btn btn-primary" href="list.html">List a property</a></div>`;
+    listEl.innerHTML = `<div class="empty"><div class="ic">${ICON.camera}</div><h3>No listings yet</h3><p>List your first property, plot or commercial space — to sell or to let. It's free to start, and you'll see views and enquiries here.</p><a class="btn btn-primary" href="list.html">List a property</a></div>`;
     document.getElementById('listingCount').textContent = '0';
   }
 
@@ -1420,7 +1478,7 @@ function renderFavs(el, limit){
       : '';
     return '<div class="srow" data-fav="'+f.listing_id+'">'+thumb+'<div class="grow">'
       + '<div class="t1">'+esc(l.title||'Untitled')+'</div>'
-      + '<div class="t2">'+esc((l.area||'').split('· ')[1]||l.area||'')+' · '+fmtPrice(l.price,l.type)+'</div>'
+      + '<div class="t2">'+esc((l.area||'').split('· ')[1]||l.area||'')+' · '+fmtPrice(l.price,l.type,l.price_period)+'</div>'
       + '<div class="acts">'+dropPill+(l.verified?'<span class="tagpill on">Verified title</span> ':'')
       + '<a class="mini solid" href="property.html?id='+esc(l.id)+'">View</a>'
       + ' <button class="mini danger" data-act="unfav">Remove</button>'
@@ -2161,6 +2219,26 @@ function paintHeadCta(n){
   ctaTxt.textContent = (n>0) ? 'Add another property' : 'Add your property';
 }
 
+/* De kaart in de zijkolom. Verified is een titelcontrole op een verkoop, dus
+   voor iemand die uitsluitend verhuurt is het een product dat hij niet kan
+   kopen — create-payment weigert het ook. Die krijgt Boost te lezen, dat voor
+   koop en huur allebei geldt. Wie nog niets heeft aangeboden houdt de kaart
+   zoals hij staat: dan is er niets om uit af te leiden. */
+function applyUpgradeCard(rows){
+  var eyebrow=document.getElementById('upgradeEyebrow');
+  var title=document.getElementById('upgradeTitle');
+  var text=document.getElementById('upgradeText');
+  if(!eyebrow||!title||!text) return;
+  var list=rows||[];
+  if(!list.length) return;
+  for(var i=0;i<list.length;i++){ if(list[i].type==='sale') return; }
+  eyebrow.textContent='Let faster';
+  title.textContent='Boost your listing';
+  text.innerHTML='Verified is a title check on a sale, so it does not apply to a letting. Boost does: '
+    + 'it puts one listing at the top of search and on the home page for 30 days, for <b>'
+    + boostPriceHTML() + '</b>. You can start it from the listing itself, below.';
+}
+
 /* ---------- rol toepassen ---------- */
 function applyRole(){
   var first=((P&&P.full_name) || (getUser()||{}).name || '').split(' ')[0];
@@ -2203,6 +2281,7 @@ function applyRole(){
       var init = await initDashboard();
       if(init){ PORTFOLIO = init.listings || []; VIEWINGS = init.viewings || []; }
       paintHeadCta(PORTFOLIO.length);
+      applyUpgradeCard(PORTFOLIO);
     }catch(e){ console.warn('initDashboard:', e && e.message); }
   }
 
@@ -2287,9 +2366,20 @@ window.addEventListener('hashchange', route);
     var c=CURRENCIES[getCurrency()];
     el.textContent=c.symbol+Math.round(fromGMD(PRICING.bands[0].verified.gmd)).toLocaleString('en-US');
   }
+  /* De Boost-prijs in de voet van elke advertentie. Die staat er al goed op het
+     moment dat de rij wordt getekend; dit is er alleen voor wie daarna van munt
+     wisselt — zonder dit bleef er een bedrag in de oude munt staan. */
+  function paintBoostPrice(){
+    var els=document.querySelectorAll('.boostprice');
+    if(!els.length||typeof PRICING==='undefined'||!PRICING.boost) return;
+    var c=CURRENCIES[getCurrency()];
+    var t=c.symbol+Math.round(fromGMD(PRICING.boost.gmd)).toLocaleString('en-US');
+    for(var i=0;i<els.length;i++) els[i].textContent=t;
+  }
+  function paintPrices(){ paintDashVer(); paintBoostPrice(); }
   paintDashVer();
-  window.addEventListener('mykunda:rates',paintDashVer);
-  document.addEventListener('currencychange',paintDashVer);
+  window.addEventListener('mykunda:rates',paintPrices);
+  document.addEventListener('currencychange',paintPrices);
 })();
 </script>
 </body>

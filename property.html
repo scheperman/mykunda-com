@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" id="mkRobots" content="noindex, follow, noai, noimageai"><!--mk:0n1nt4l--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" id="mkRobots" content="noindex, follow, noai, noimageai"><!--mk:1bimq7r--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -32,7 +32,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preconnect" href="https://api.mapbox.com" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=85945305027659">
+<link rel="stylesheet" href="styles.min.css?v=81231947035353">
 <style>
 .crumb{padding:18px 0 6px;font-size:14px;color:var(--muted);display:flex;align-items:center;gap:8px}
 .crumb a{font-weight:600}.crumb a:hover{color:var(--green-700)}
@@ -257,7 +257,7 @@
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=85945305027659"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=81231947035353"><!--/mk-css-->
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -564,15 +564,15 @@
     </div>
   </footer><!--/mk-ftr--></div>
 
-<script src="app.min.js?v=85945305027659"></script>
-<script src="image-slot.js?v=85945305027659" defer></script>
+<script src="app.min.js?v=81231947035353"></script>
+<script src="image-slot.js?v=81231947035353" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel instead of blocking the page, and
    Leaflet (~145 KB) is only fetched when the visitor opens the Map tab. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=85945305027659'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=81231947035353'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -637,7 +637,7 @@ function renderProperty(){
 (function(){
   const dealTxt = P.cat==='land' ? 'land for sale' : (P.type==='rent'?'for rent':'for sale');
   const areaTxt = P.area.replace(' · ', ', ');
-  const priceFmt = fmtPrice(P.price,P.type).replace(/<[^>]+>/g,'');
+  const priceFmt = fmtPrice(P.price,P.type,P.price_period).replace(/<[^>]+>/g,'');
   const specTxt = P.cat==='land' ? `${(P.plot||0).toLocaleString()} m² plot` : `${P.beds} bed, ${P.baths} bath, ${P.sqm} m²`;
   const title = `${P.title}, ${areaTxt} — ${priceFmt} — MyKunda`;
   const desc = `${P.title} ${dealTxt} in ${areaTxt}, The Gambia. ${specTxt}. ${priceFmt}. View photos, floor plan and contact an English-speaking agent on MyKunda.`;
@@ -767,7 +767,7 @@ dTitle.textContent = P.title;
 crumbTitle.textContent = P.title;
 dAddr.innerHTML = ICON.pin+' '+P.street+', '+P.area.replace('· ','');
 if(typeof P.lat==='number'){ dPlusCode.innerHTML = plusCodeChip(P.lat, P.lng, P.area.split('·')[0].trim()); }
-dPrice.innerHTML = fmtPrice(P.price,P.type);
+dPrice.innerHTML = fmtPrice(P.price,P.type,P.price_period);
 
 // specbar
 function pTypeLabel(p){return {villa:'Villa',apartment:'Apartment',compound:'Compound',penthouse:'Penthouse',townhouse:'Townhouse',land:'Land / plot',lodge:'Lodge',commercial:'Commercial',
@@ -1351,7 +1351,7 @@ shareBtn.addEventListener('click',()=>{
     text:listingShareText(P,{tail:'Shared via MyKunda'}),
     url:url,
     plus: typeof P.lat==='number' ? plusCodeShort(P.lat,P.lng,loc) : '',
-    previewHTML:`<img src="${P.img}" alt="" onerror="this.style.background='#DCEAE3';this.removeAttribute('src')"><div><div class="sp-t">${P.title}</div><div class="sp-m">${fmtPrice(P.price,P.type)} · ${loc}</div></div>`
+    previewHTML:`<img src="${P.img}" alt="" onerror="this.style.background='#DCEAE3';this.removeAttribute('src')"><div><div class="sp-t">${P.title}</div><div class="sp-m">${fmtPrice(P.price,P.type,P.price_period)} · ${loc}</div></div>`
   });
 });
 
@@ -1375,7 +1375,7 @@ shareBtn.addEventListener('click',()=>{
     wa.href = waLink(enquiry);
     document.getElementById('pbarWaIc').innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2Zm5.5 14c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.2-.7-2.7-1.1-4.4-3.8-4.5-4-.1-.2-1.1-1.4-1.1-2.7s.7-1.9.9-2.1c.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.5c-.2.2-.3.4-.1.7.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.2 0 .4 0 .6-.2l.7-.8c.2-.2.4-.2.6-.1l1.9.9c.2.1.4.2.5.3.1.3.1.7-.1 1.2Z"/></svg>';
     /* fmtPrice carries data-gmd, so the currency picker keeps this in step. */
-    document.getElementById('pbarPrice').innerHTML = fmtPrice(P.price, P.type);
+    document.getElementById('pbarPrice').innerHTML = fmtPrice(P.price, P.type, P.price_period);
     const sub=document.getElementById('pbarSub');
     if(sub) sub.textContent = P.area ? P.area.split('·')[0].trim() : '';
     bar.hidden=false;

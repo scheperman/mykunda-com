@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:05qf2lr--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="index, follow, max-image-preview:large, noai, noimageai"><!--mk:1sun3kx--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -46,7 +46,7 @@
 </script>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=85945305027659"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=81231947035353"><!--/mk-css-->
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -305,7 +305,7 @@ var areaName = "Madiana";
   var wrap=document.querySelector(".aside-card p");
   if(!minis.length){ if(wrap) wrap.textContent="No listings here yet"; miniList.innerHTML=""; }
   else {
-    miniList.innerHTML = minis.map(function(p){return '<a class="mini" href="property.html?id='+p.id+'"><img src="'+p.img+'" alt="" loading="lazy" onerror="this.style.background=\'#DCEAE3\'"><div><div class="mp">'+fmtPrice(p.price,p.type)+'</div><div class="mt">'+p.title+"</div></div></a>";}).join("");
+    miniList.innerHTML = minis.map(function(p){return '<a class="mini" href="property.html?id='+p.id+'"><img src="'+p.img+'" alt="" loading="lazy" onerror="this.style.background=\'#DCEAE3\'"><div><div class="mp">'+fmtPrice(p.price,p.type,p.price_period)+'</div><div class="mt">'+p.title+"</div></div></a>";}).join("");
     if(typeof countAreaListings==="function" && typeof backendReady==="function" && backendReady()){
       var count = await countAreaListings(areaName);
       if(count!==null && wrap){

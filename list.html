@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1bms5x8--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1xswspm--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preconnect" href="https://api.mapbox.com" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=85945305027659">
+<link rel="stylesheet" href="styles.min.css?v=81231947035353">
 <style>
 body{background:var(--paper-2);min-height:100vh}
 
@@ -264,7 +264,7 @@ body{background:var(--paper-2);min-height:100vh}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=85945305027659"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=81231947035353"><!--/mk-css-->
 </head>
 <body>
 <div class="wizbar">
@@ -858,18 +858,18 @@ body{background:var(--paper-2);min-height:100vh}
   </aside>
 </div>
 
-<script src="valuation-areas.js?v=85945305027659"></script>
-<script src="valuation.js?v=85945305027659"></script>
-<script src="app.min.js?v=85945305027659"></script>
-<script src="gambia-places.js?v=85945305027659" defer></script>
-<script src="image-slot.js?v=85945305027659" defer></script>
+<script src="valuation-areas.js?v=81231947035353"></script>
+<script src="valuation.js?v=81231947035353"></script>
+<script src="app.min.js?v=81231947035353"></script>
+<script src="gambia-places.js?v=81231947035353" defer></script>
+<script src="image-slot.js?v=81231947035353" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel, Leaflet (~145 KB) only when the
    seller reaches the location step. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=85945305027659'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=81231947035353'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -1355,7 +1355,7 @@ renderSteps();
    de villa's, met dezelfde vervolgvragen als een woonhuis. Dat is er nu uit:
    winkels en kantoren hebben hun eigen lijst hieronder en hun eigen spoor. */
 const TYPES=[['villa','Villa','Detached home with land',ICON.area],['apartment','Apartment','Flat or unit',''],['compound','Compound','Walled family compound',''],['townhouse','Townhouse','Terraced / row house',''],['penthouse','Penthouse','Top-floor with terrace',''],['land','Land / plot','Bare land to build on',''],['lodge','Lodge / guesthouse','Hospitality property','']];
-const COMM_TYPES=[['retail','Shop / retail unit','Street-facing trading space',''],['office','Office','Office unit or floor',''],['warehouse','Warehouse / storage','Loods, storage or workshop',''],['restaurant','Restaurant / bar','Kitchen or bar premises',''],['mixed_use','Mixed-use building','Shop or office with living space above',''],['business_plot','Plot / yard','Land or a walled yard for business use','']];
+const COMM_TYPES=[['retail','Shop / retail unit','Street-facing trading space',''],['office','Office','Office unit or floor',''],['warehouse','Warehouse / storage','Depot, storage or workshop',''],['restaurant','Restaurant / bar','Kitchen or bar premises',''],['mixed_use','Mixed-use building','Shop or office with living space above',''],['business_plot','Plot / yard','Land or a walled yard for business use','']];
 const homeIc='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>';
 const landIc='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18M5 20V9l7-4 7 4v11"/><path d="M4 9h16"/></svg>';
 const commIc='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M4 21V10l8-5 8 5v11M9 21v-6h6v6"/></svg>';
@@ -1429,9 +1429,12 @@ const ownerConfirm=document.getElementById('ownerConfirm'), mandateBox=document.
 const commDealCards=document.getElementById('commDealCards');
 dealCards.querySelectorAll('.opt-card').forEach(c=>c.addEventListener('click',()=>{
   S.deal=c.dataset.deal; S.dealPicked=true;
-  /* Wie voor commercieel kiest en nog geen kant koos, krijgt koop als
-     startpunt — de knop eronder blijft zichtbaar tot hij zelf kiest. */
-  if(S.deal==='commercial' && !S.cdeal) S.cdeal='sale';
+  /* Geen voorselectie op het commerciële spoor. Tot 01-09-2026 stond hier
+     S.cdeal='sale' als startpunt, en dat maakte de controle hieronder in
+     validateKey('intro') dode code: wie een winkel wilde VERHUREN en de
+     tweede vraag niet zag, publiceerde hem te koop — met de maandhuur als
+     vraagprijs. Het verschil bepaalt de prijsband, de periode, de borg en de
+     servicekosten, dus het hoort een echte keuze te zijn. */
   applyDealUI(); saveLocalDraft();
 }));
 commDealCards.querySelectorAll('.opt-card').forEach(c=>c.addEventListener('click',()=>{

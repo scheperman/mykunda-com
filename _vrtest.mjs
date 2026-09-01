@@ -95,7 +95,7 @@ const footSrc = (() => {
 })();
 
 const foot = new Function('vrEsc',
-  footSrc + '\nreturn { listingFoot, nextAction, stepIndex, dbStatusOf };')(esc);
+  footSrc + '\nreturn { listingFoot, nextAction, stepIndex, dbStatusOf, promoteHTML };')(esc);
 
 function L(extra){
   return Object.assign({ _db:true, id:'L1', type:'sale', dbStatus:'active', review:'',
@@ -149,6 +149,31 @@ check('geen datum, geen afteller', !/lclocks/.test(foot.listingFoot(L())));
 
 // 12. plaatselijke terugval krijgt geen voet
 check('rij zonder database krijgt geen voet', foot.listingFoot(L({_db:false})) === '');
+
+/* ---- De Boost-knop op de advertentie zelf (01-09-2026) --------------------
+   Een knop die geld kost mag alleen staan waar hij iets kan doen, en hij moet
+   de advertentie meegeven — zonder listing_id zet een betaalde Boost nergens
+   boosted_until. */
+const P = extra => foot.promoteHTML(L(extra));
+check('actieve advertentie krijgt een Boost-knop met de id',
+  /Boost this listing/.test(P({price:3000000})) && /checkout\.html\?plan=boost&listing=L1/.test(P({price:3000000})));
+check('een concept krijgt geen Boost-knop', P({dbStatus:'draft', price:3000000}) === '');
+check('in beoordeling krijgt geen Boost-knop', P({dbStatus:'pending_review', price:3000000}) === '');
+check('verkocht krijgt geen Boost-knop', P({dbStatus:'sold', price:3000000}) === '');
+check('rij zonder database krijgt geen Boost-knop', P({_db:false, price:3000000}) === '');
+check('lopende boost biedt verlengen aan',
+  /Extend the Boost/.test(P({price:3000000, boostedUntil: iso(9)})) &&
+  !/Boost this listing/.test(P({price:3000000, boostedUntil: iso(9)})));
+check('verlopen boost biedt gewoon Boost aan',
+  /Boost this listing/.test(P({price:3000000, boostedUntil: iso(-2)})));
+check('verkoop zonder badge krijgt ook Verified',
+  /plan=verified&listing=L1/.test(P({price:3000000, verified:false})));
+check('verhuur krijgt nooit Verified',
+  !/plan=verified/.test(P({type:'rent', price:25000, verified:false})));
+check('verkoop zonder vraagprijs krijgt geen Verified',
+  !/plan=verified/.test(P({price:0, verified:false})));
+check('met badge geen tweede Verified',
+  !/plan=verified/.test(P({price:3000000, verified:true})));
 check('label zonder dbStatus wordt herkend', foot.dbStatusOf({ status:'In review' }) === 'pending_review');
 
 /* ---- Boost: telt hij mee, en sorteert "Featured" er echt op? --------------
