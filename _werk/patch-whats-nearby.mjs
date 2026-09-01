@@ -94,7 +94,7 @@ for (const f of files) {
   const bron = existsSync(`${BACKUP}/${f}`) ? await readFile(`${BACKUP}/${f}`, 'utf8') : src;
   const mOud = bron.match(/var amenData=(\[.*?\]);/s) || bron.match(/const amen=(\[.*?\]);/s);
   const oud = Function('return ' + mOud[1].replace(/,\s*[A-Za-z_$][\w$]*\s*\]/g, ']'))();
-  diff.push(`| **${g.name}** | ${oud.map(r => `${r[0]} ${r[1]}`).join(' · ')} | ` +
+  diff.push(`| **${g.name}** | ${oud.map(r => `${r[0]} ${String(r[1]).replace(/&amp;/g, '&')}`).join(' · ')} | ` +
     `${g.tiles.map(t => `${t.n} ${t.label}`).join(' · ')} |`);
 
   geraakt++;
