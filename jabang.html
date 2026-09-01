@@ -186,8 +186,9 @@
 
       <div class="block">
         <h2>Getting around</h2>
-        <p class="lead">Typical times from the heart of Jabang.</p>
+        <p class="lead">Distance by road from Jabang.</p>
         <div class="commute-list" id="commuteList"></div>
+        <!--mk-travelsrc--><p class="src">Shortest route on the OpenStreetMap road network, measured with OSRM. We do not publish travel times: the road model drives the posted speed with no traffic, and it gives the ferry a fixed speed rather than the wait that actually decides your morning.</p>
       </div>
 
       <div class="block">
@@ -316,8 +317,8 @@ var scores=[["Affordability",29,"D2,894 per m² asking"],["Growth",null,"Fastest
   scoresGrid.insertAdjacentHTML('afterend','<div class="score-local"><div class="sl-txt"><div class="sl-k">Local strength</div><div class="lab">'+loc[0]+'</div><div class="desc">'+loc[2]+'</div></div></div><div class="bench-key"><i></i> Outer arc = Senegambia. The figure under each ring is the gap to it.</div>');
 })();
 
-var commutes=[["Sukuta","Car","6 min"],["Brusubi","Car","6 min"],["Banjul Int. Airport","Car","18 min"],["Senegambia","Car","16 min"],["Banjul","Car","38 min"]];
-var modeIc=function(m){return m==="Walk"?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4" r="2"/><path d="M13 6v6l3 3M13 9l-3 2-2 5M13 12l1 8"/></svg>':'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11l1.5-4.5A2 2 0 0 1 8.4 5h7.2a2 2 0 0 1 1.9 1.5L19 11M5 11h14v5H5z"/><circle cx="7.5" cy="16.5" r="1.5"/><circle cx="16.5" cy="16.5" r="1.5"/></svg>';};
+var commutes=[["Sukuta","Car","6.6 km"],["Brusubi","Car","7.4 km"],["Banjul Int. Airport","Car","9.4 km"],["Senegambia","Car","12 km"],["Banjul","Car","24 km"]];
+var modeIc=function(m){return m==="Walk"? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4" r="2"/><path d="M13 6v6l3 3M13 9l-3 2-2 5M13 12l1 8"/></svg>' : (m.indexOf('erry')>-1 ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18c2 1 3 1 5 0s3-1 5 0 3 1 5 0M5 18l-1-5h16l-1 5M8 13V8h8v5M12 8V5"/></svg>' : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11l1.5-4.5A2 2 0 0 1 8.4 5h7.2a2 2 0 0 1 1.9 1.5L19 11M5 11h14v5H5z"/><circle cx="7.5" cy="16.5" r="1.5"/><circle cx="16.5" cy="16.5" r="1.5"/></svg>');};
 commuteList.innerHTML = commutes.map(function(c){return '<div class="commute"><span class="dest">'+c[0]+'</span><span class="mode">'+modeIc(c[1])+" "+c[1]+'</span><span class="time">'+c[2]+"</span></div>";}).join("");
 
 var amenData=[["3","Mosques"],["2","Fuel stations"]];

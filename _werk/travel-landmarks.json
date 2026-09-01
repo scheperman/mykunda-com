@@ -1,0 +1,363 @@
+{
+ "source": "OpenStreetMap contributors (ODbL 1.0), Overpass API",
+ "fetched": "2026-09-01T17:48:30.853Z",
+ "bbox": "12.90,-17.20,14.30,-13.70",
+ "results": {
+  "Westfield": [
+   {
+    "osm": "node/6988066185",
+    "name": "Stop Step Pharmacy Westfield",
+    "lat": 13.444103,
+    "lon": -16.6754314,
+    "tags": {
+     "amenity": "pharmacy",
+     "name": "Stop Step Pharmacy Westfield"
+    }
+   },
+   {
+    "osm": "way/370184914",
+    "name": "Westfield Car Park",
+    "lat": 13.4466092,
+    "lon": -16.6741471,
+    "tags": {
+     "amenity": "taxi",
+     "name": "Westfield Car Park"
+    }
+   },
+   {
+    "osm": "way/370438953",
+    "name": "Westfield Youth Monument",
+    "lat": 13.4453955,
+    "lon": -16.6750703,
+    "tags": {
+     "historic": "monument",
+     "name": "Westfield Youth Monument"
+    }
+   },
+   {
+    "osm": "way/761858141",
+    "name": "Westfield",
+    "lat": 13.4451154,
+    "lon": -16.6755628,
+    "tags": {
+     "name": "Westfield",
+     "place": "square"
+    }
+   },
+   {
+    "osm": "way/784166815",
+    "name": "Westfield Clinic",
+    "lat": 13.4445502,
+    "lon": -16.6754324,
+    "tags": {
+     "amenity": "hospital",
+     "name": "Westfield Clinic"
+    }
+   }
+  ],
+  "Banjul Int. Airport": [
+   {
+    "osm": "way/109445333",
+    "name": "Banjul International Airport",
+    "lat": 13.3361095,
+    "lon": -16.6505521,
+    "tags": {
+     "aeroway": "aerodrome",
+     "name": "Banjul International Airport"
+    }
+   },
+   {
+    "osm": "way/363744762",
+    "name": "Aérodrome de Djilor",
+    "lat": 14.0864126,
+    "lon": -16.6660452,
+    "tags": {
+     "aeroway": "aerodrome",
+     "name": "Aérodrome de Djilor"
+    }
+   },
+   {
+    "osm": "way/1004224154",
+    "name": "Kolda Airport",
+    "lat": 12.8990852,
+    "lon": -14.9681218,
+    "tags": {
+     "aeroway": "aerodrome",
+     "name": "Kolda Airport"
+    }
+   },
+   {
+    "osm": "way/1191885180",
+    "name": "(zonder naam)",
+    "lat": 14.0378805,
+    "lon": -16.7271271,
+    "tags": {
+     "aeroway": "aerodrome"
+    }
+   },
+   {
+    "osm": "relation/13467625",
+    "name": "Aérodrome de Kaolack",
+    "lat": 14.1488074,
+    "lon": -16.0501115,
+    "tags": {
+     "aeroway": "aerodrome",
+     "name": "Aérodrome de Kaolack"
+    }
+   }
+  ],
+  "Brikama Craft Market": [],
+  "Bakau market": [
+   {
+    "osm": "node/12509527077",
+    "name": "Bakau Old Town Market",
+    "lat": 13.4810168,
+    "lon": -16.6760725,
+    "tags": {
+     "amenity": "marketplace",
+     "name": "Bakau Old Town Market"
+    }
+   }
+  ],
+  "Amdallai": [
+   {
+    "osm": "node/10970598620",
+    "name": "Hamdallai",
+    "lat": 13.3825098,
+    "lon": -14.2605754,
+    "tags": {
+     "name": "Hamdallai",
+     "place": "hamlet"
+    }
+   }
+  ],
+  "Wassu stone circles": [
+   {
+    "osm": "node/2487617261",
+    "name": "Wassu",
+    "lat": 13.692398,
+    "lon": -14.878805,
+    "tags": {
+     "name": "Wassu",
+     "place": "town"
+    }
+   },
+   {
+    "osm": "node/6029690791",
+    "name": "Wassu Police and Immigration Station",
+    "lat": 13.6930859,
+    "lon": -14.8796855,
+    "tags": {
+     "amenity": "police",
+     "name": "Wassu Police and Immigration Station"
+    }
+   },
+   {
+    "osm": "node/7203554985",
+    "name": "Wassu",
+    "lat": 13.6909866,
+    "lon": -14.8785746,
+    "tags": {
+     "highway": "bus_stop",
+     "name": "Wassu"
+    }
+   },
+   {
+    "osm": "node/9394394344",
+    "name": "Wassu Stone Circles Quarry Site",
+    "lat": 13.6959447,
+    "lon": -14.8590795,
+    "tags": {
+     "historic": "archaeological_site",
+     "name": "Wassu Stone Circles Quarry Site"
+    }
+   },
+   {
+    "osm": "way/421696680",
+    "name": "Wassu Stone Circles",
+    "lat": 13.6917733,
+    "lon": -14.873088,
+    "tags": {
+     "historic": "archaeological_site",
+     "name": "Wassu Stone Circles"
+    }
+   },
+   {
+    "osm": "way/1018524259",
+    "name": "Wassu Stone Circles Museum",
+    "lat": 13.6910948,
+    "lon": -14.8737768,
+    "tags": {
+     "name": "Wassu Stone Circles Museum",
+     "tourism": "museum"
+    }
+   }
+  ],
+  "Lamin Lodge": [
+   {
+    "osm": "node/2076484642",
+    "name": "Lamin Lodge",
+    "lat": 13.3936352,
+    "lon": -16.6244541,
+    "tags": {
+     "amenity": "bar",
+     "name": "Lamin Lodge"
+    }
+   },
+   {
+    "osm": "node/2076488129",
+    "name": "Lamin Lodge jetty",
+    "lat": 13.3936587,
+    "lon": -16.6242108,
+    "tags": {
+     "name": "Lamin Lodge jetty"
+    }
+   },
+   {
+    "osm": "way/1483526187",
+    "name": "Lamin Lodge Cruise",
+    "lat": 13.4302911,
+    "lon": -16.6185898,
+    "tags": {
+     "name": "Lamin Lodge Cruise"
+    }
+   }
+  ],
+  "Senegambia bridge": [
+   {
+    "osm": "way/539520356",
+    "name": "Senegambia Bridge",
+    "lat": 13.5161936,
+    "lon": -15.5723622,
+    "tags": {
+     "bridge": "yes",
+     "highway": "trunk",
+     "name": "Senegambia Bridge"
+    }
+   }
+  ],
+  "UTG Faraba campus": [
+   {
+    "osm": "node/3750198026",
+    "name": "Faraba Sorry Kandel",
+    "lat": 13.6998834,
+    "lon": -14.8137338,
+    "tags": {
+     "name": "Faraba Sorry Kandel",
+     "place": "village"
+    }
+   },
+   {
+    "osm": "node/4315541990",
+    "name": "Nyantan Faraba",
+    "lat": 13.1883688,
+    "lon": -16.7646999,
+    "tags": {
+     "name": "Nyantan Faraba",
+     "place": "village"
+    }
+   },
+   {
+    "osm": "node/9361028753",
+    "name": "Faraba Sutu",
+    "lat": 13.2043725,
+    "lon": -16.4823791,
+    "tags": {
+     "name": "Faraba Sutu",
+     "place": "village"
+    }
+   },
+   {
+    "osm": "node/13070938382",
+    "name": "Faraba",
+    "lat": 13.2488786,
+    "lon": -16.5235599,
+    "tags": {
+     "name": "Faraba",
+     "place": "village"
+    }
+   },
+   {
+    "osm": "node/13598255993",
+    "name": "Faraba Banta",
+    "lat": 13.2597512,
+    "lon": -16.5198108,
+    "tags": {
+     "name": "Faraba Banta",
+     "place": "village"
+    }
+   },
+   {
+    "osm": "way/4117918",
+    "name": "Ba Faraba Island",
+    "lat": 13.6569287,
+    "lon": -15.1789026,
+    "tags": {
+     "name": "Ba Faraba Island",
+     "place": "island"
+    }
+   },
+   {
+    "osm": "way/406476258",
+    "name": "Faraba Sutu",
+    "lat": 13.204485,
+    "lon": -16.4813066,
+    "tags": {
+     "name": "Faraba Sutu"
+    }
+   },
+   {
+    "osm": "way/1331662021",
+    "name": "Faraba University",
+    "lat": 13.244979,
+    "lon": -16.5388359,
+    "tags": {
+     "amenity": "school",
+     "name": "Faraba University"
+    }
+   },
+   {
+    "osm": "way/1547917611",
+    "name": "Faraba Swamp",
+    "lat": 13.3627059,
+    "lon": -14.1257344,
+    "tags": {
+     "name": "Faraba Swamp"
+    }
+   },
+   {
+    "osm": "way/1547927492",
+    "name": "East Nyantan Faraba Forest Park",
+    "lat": 13.1694399,
+    "lon": -16.7786841,
+    "tags": {
+     "name": "East Nyantan Faraba Forest Park"
+    }
+   }
+  ],
+  "Bansang Hospital": [
+   {
+    "osm": "way/243107254",
+    "name": "Bansang Hospital",
+    "lat": 13.4449473,
+    "lon": -14.6660297,
+    "tags": {
+     "amenity": "hospital",
+     "name": "Bansang Hospital"
+    }
+   }
+  ],
+  "Kaolack": [
+   {
+    "osm": "node/3329033430",
+    "name": "Kaolack",
+    "lat": 14.138815,
+    "lon": -16.076391,
+    "tags": {
+     "name": "Kaolack",
+     "place": "city"
+    }
+   }
+  ]
+ }
+}

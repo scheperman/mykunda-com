@@ -985,9 +985,14 @@ met vangrail `check-areascores.mjs`. Wat er nu staat:
 criminaliteitsstatistiek per plaats; "70" voor Essau tegenover "66" voor Barra
 was niet te verdedigen en het is de gevoeligste van de vier. Voor Transport zou
 elke score een zelfbedachte weging van afstand, wegtype en vervoersknopen zijn.
-Reken hem niet alsnog uit met een routeringsdienst zonder de veerboot op te
-lossen: OSRM stuurt Essau→Banjul over de brug bij Farafenni en komt op drie uur
-uit, terwijl de overtocht 35 minuten is.
+Reken hem ook niet alsnog uit met een routeringsdienst: zie de volgende
+paragraaf, waar staat waarom reistijd wél gemeten kán worden en toch niet
+deugt.
+
+*Correctie 01-09-2026:* hier stond eerst dat OSRM Essau→Banjul over de brug bij
+Farafenni zou sturen. Dat was niet gemeten maar aangenomen, en het is onjuist:
+OSRM kent de veerboot en geeft hem als aparte stap terug ("Banjul - Barra
+Ferry", 4,9 km). De echte reden om geen tijd te tonen staat hieronder.
 
 `_scores-data.json` is daarmee grotendeels historisch; alleen de vijfde regel
 per gebied wordt nog gelezen. De kop van dat bestand zegt dat ook.
@@ -998,6 +1003,45 @@ scholen verwijderd (`_werk/patch-schoolwaarderingen.mjs`, omkeerbaar met
 "Satisfactory", geen ervan met een bron. Naam, schooltype en afstand staan er
 nog. Let op: de renderregel bestaat in drie vormen — string-concat met dubbele
 aanhalingstekens, met enkele, en een template literal in `kololi.html`.
+
+### "Getting around" toont afstand, geen tijd
+
+Er stonden 205 handgeschreven reistijden over 41 pagina's, in 38 notaties
+("2 hrs", "2 hr", "1 hr 30", "5–6 hrs"), zonder bron, en ze spraken elkaar
+tegen: Bakau zei 45 minuten naar de luchthaven, Kotu 35 en Serrekunda 20,
+terwijl die drie een paar kilometer uit elkaar liggen.
+
+`build-area-travel.mjs` → `area-travel.json` → `_werk/patch-getting-around.mjs`,
+vangrail `check-areatravel.mjs`. Er staat nu **afstand over de weg**, gemeten
+met OSRM op het OpenStreetMap-wegennet, vanaf het punt in de JSON-LD.
+
+**Waarom geen tijd, terwijl OSRM die wél geeft.** Twee gemeten redenen. OSRM
+rijdt de getagde maximumsnelheid zonder verkeer: Serrekunda–Banjul in tien
+minuten, waar de pagina 25 zei en de spits meer vraagt. En de veerboot krijgt
+een modelsnelheid van 5 km/u, dus 59 minuten voor een overtocht van 35 —
+terwijl juist het wáchten bepaalt hoe laat je aankomt. Afstand heeft die
+aannames niet.
+
+**De veerboot zit er wél in.** OSRM geeft hem terug als aparte stap met naam
+("Banjul - Barra Ferry"), dus de modus wordt automatisch `Ferry` of
+`Car + ferry` en `modeIc` heeft daar sinds vandaag een eigen icoon voor.
+Zeventien regels over de hele site gaan over water.
+
+**Bestemmingen komen uit `gambia-places.js` of uit OpenStreetMap** met een id
+(`_werk/travel-landmarks-ophalen.mjs` → `_werk/travel-landmarks.json`; de
+nagelopen treffers staan als `LANDMARKS` in het bouwscript). Wat geen punt is
+— "Atlantic beach", "River jetty", "Senegal border" — krijgt geen regel, en
+"Amdallai" is bewust afgewezen omdat Overpass alleen Hamdallai in Upper River
+vond, een andere plaats. Elke pagina wordt aangevuld tot maximaal vijf regels
+met Banjul, de luchthaven en Westfield.
+
+**Een label dat de veerboot noemt terwijl de route er geen gebruikt** wordt
+vervangen door de naam van het punt: "Banjul (ferry)" naast de modus "Car" is
+dezelfde tegenspraak die we overal aan het opruimen zijn. Een veerhaven áls
+bestemming ("Barra ferry terminal") blijft staan — dat is een plek.
+
+Routeringen staan in `_werk/osrm-cache.json`; een nieuwe run vraagt de publieke
+OSRM-server alleen wat hij nog niet kent, met een seconde ertussen.
 
 ### Het gebiedsblok op property.html komt uit dezelfde bron
 
@@ -1061,11 +1105,13 @@ kaart, woordentelling) en meldt welke pagina een sectie mist die de rest wel hee
 een kaartje in `areas-in-the-gambia.html` en een rij in
 `gambia-property-prices.html`, en een regel in `sitemap-pages.xml`. Daarna
 `node build-area-prices.mjs --write`, `node build-area-amenities.mjs --write`,
-`node build-area-scores.mjs --write` (die laatste twee alleen zinvol als de
-pagina die blokken krijgt) en `node build.mjs`. Controleren met
+`node build-area-scores.mjs --write`, `node build-area-travel.mjs --write` en
+`node build-property-areas.mjs --write` (die vier alleen zinvol als de pagina
+die blokken krijgt; property-areas ná area-prices, want het leest de
+bewijsregel van de gebiedspagina), en dan `node build.mjs`. Controleren met
 `check-plaatsen.mjs`, `check-areaprices.mjs`, `check-areaamenities.mjs`,
-`check-areascores.mjs`, `audit-areapaginas.mjs`, `valuation-selftest.mjs` en
-`_syntaxcheck.mjs`. De aantallen in de lopende tekst
+`check-areascores.mjs`, `check-areatravel.mjs`, `check-propertyareas.mjs`,
+`audit-areapaginas.mjs`, `valuation-selftest.mjs` en `_syntaxcheck.mjs`. De aantallen in de lopende tekst
 ("52 areas") zet `build-area-prices.mjs` zelf; typ ze nergens met de hand.
 
 ## Pushen na elke sessie

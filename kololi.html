@@ -331,8 +331,9 @@
       <!-- commute -->
       <div class="block">
         <h2>Getting around</h2>
-        <p class="lead">Typical times from the heart of Kololi.</p>
+        <p class="lead">Distance by road from Kololi.</p>
         <div class="commute-list" id="commuteList"></div>
+        <!--mk-travelsrc--><p class="src">Shortest route on the OpenStreetMap road network, measured with OSRM. We do not publish travel times: the road model drives the posted speed with no traffic, and it gives the ferry a fixed speed rather than the wait that actually decides your morning.</p>
       </div>
 
       <!-- amenities -->
@@ -472,7 +473,7 @@ var scores=[["Affordability",14,"D6,460 per m² asking"],["Places to eat",100,"9
 const car='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11l1.5-4.5A2 2 0 0 1 8.4 5h7.2a2 2 0 0 1 1.9 1.5L19 11M5 11h14v5H5z"/><circle cx="7.5" cy="16.5" r="1.5"/><circle cx="16.5" cy="16.5" r="1.5"/></svg>';
 const plane='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 16l20-7-7 13-3-6-6-2z"/></svg>';
 const walk='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4" r="2"/><path d="M13 6v6l3 3M13 9l-3 2-2 5M13 12l1 8"/></svg>';
-const commutes=[['The beach',walk,'Walk','5 min'],['Banjul Int. Airport',car,'Car','35 min'],['Serrekunda market',car,'Car','15 min'],['Banjul ferry / city',car,'Car','30 min'],['Senegambia strip',walk,'Walk','8 min']];
+const commutes=[['Banjul Int. Airport',car,'Car','18 km'],['Serrekunda market',car,'Car','5.5 km'],['Banjul',car,'Car','18 km'],['Senegambia strip',walk,'Walk','0.7 km'],['Westfield',car,'Car','5.2 km']];
 commuteList.innerHTML = commutes.map(c=>`<div class="commute"><span class="dest">${c[0]}</span><span class="mode">${c[1]} ${c[2]}</span><span class="time">${c[3]}</span></div>`).join('');
 
 // amenities

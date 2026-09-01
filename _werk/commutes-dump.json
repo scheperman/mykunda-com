@@ -1,0 +1,1232 @@
+[
+ {
+  "file": "bakau.html",
+  "rijen": [
+   [
+    "Bakau beach",
+    "Walk",
+    "5 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "45 min"
+   ],
+   [
+    "Fajara",
+    "Walk",
+    "10 min"
+   ],
+   [
+    "Kololi",
+    "Car",
+    "12 min"
+   ],
+   [
+    "Banjul (ferry)",
+    "Car",
+    "20 min"
+   ]
+  ]
+ },
+ {
+  "file": "bakoteh.html",
+  "rijen": [
+   [
+    "Serrekunda market",
+    "Car",
+    "5 min"
+   ],
+   [
+    "Kololi",
+    "Car",
+    "10 min"
+   ],
+   [
+    "Westfield",
+    "Car",
+    "8 min"
+   ],
+   [
+    "Banjul",
+    "Car",
+    "28 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "28 min"
+   ]
+  ]
+ },
+ {
+  "file": "banjul.html",
+  "rijen": [
+   [
+    "Banjul ferry terminal",
+    "Walk",
+    "5 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "40 min"
+   ],
+   [
+    "Serrekunda",
+    "Car",
+    "20 min"
+   ],
+   [
+    "Bakau / Fajara",
+    "Car",
+    "25 min"
+   ],
+   [
+    "Kololi",
+    "Car",
+    "35 min"
+   ]
+  ]
+ },
+ {
+  "file": "bansang.html",
+  "rijen": [
+   [
+    "Bansang Hospital",
+    "Walk",
+    "5 min"
+   ],
+   [
+    "Janjanbureh",
+    "Car",
+    "25 min"
+   ],
+   [
+    "Basse",
+    "Car",
+    "1 hr"
+   ],
+   [
+    "Soma",
+    "Car",
+    "2 hr"
+   ],
+   [
+    "Banjul",
+    "Car",
+    "5 hr"
+   ]
+  ]
+ },
+ {
+  "file": "barra.html",
+  "rijen": [
+   [
+    "Barra ferry terminal",
+    "Walk",
+    "2 min"
+   ],
+   [
+    "Banjul (by ferry)",
+    "Ferry",
+    "30 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car + ferry",
+    "1.5 hrs"
+   ],
+   [
+    "Farafenni",
+    "Car",
+    "2 hrs"
+   ],
+   [
+    "Kerewan",
+    "Car",
+    "45 min"
+   ]
+  ]
+ },
+ {
+  "file": "basse.html",
+  "rijen": [
+   [
+    "River Gambia bank",
+    "Walk",
+    "5 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "5–6 hrs"
+   ],
+   [
+    "Basse ferry crossing",
+    "Walk",
+    "8 min"
+   ],
+   [
+    "Fatoto (border town)",
+    "Car",
+    "30 min"
+   ],
+   [
+    "Janjanbureh (Georgetown)",
+    "Car",
+    "2 hrs"
+   ]
+  ]
+ },
+ {
+  "file": "batokunku.html",
+  "rijen": [
+   [
+    "Batokunku beach",
+    "Walk",
+    "10 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "30 min"
+   ],
+   [
+    "Tanji",
+    "Car",
+    "5 min"
+   ],
+   [
+    "Brufut",
+    "Car",
+    "12 min"
+   ],
+   [
+    "Kololi / Senegambia",
+    "Car",
+    "25 min"
+   ]
+  ]
+ },
+ {
+  "file": "bijilo.html",
+  "rijen": [
+   [
+    "Bijilo beach",
+    "Walk",
+    "10 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "38 min"
+   ],
+   [
+    "Kololi / Senegambia",
+    "Car",
+    "8 min"
+   ],
+   [
+    "Serrekunda",
+    "Car",
+    "15 min"
+   ],
+   [
+    "Brufut",
+    "Car",
+    "10 min"
+   ]
+  ]
+ },
+ {
+  "file": "brikama.html",
+  "rijen": [
+   [
+    "Brufut beach",
+    "Car",
+    "20 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "30 min"
+   ],
+   [
+    "Serrekunda / Westfield",
+    "Car",
+    "18 min"
+   ],
+   [
+    "Sanyang beach",
+    "Car",
+    "25 min"
+   ],
+   [
+    "Brikama Craft Market",
+    "Walk",
+    "5 min"
+   ]
+  ]
+ },
+ {
+  "file": "brufut.html",
+  "rijen": [
+   [
+    "Brufut beach",
+    "Car",
+    "8 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "40 min"
+   ],
+   [
+    "Kololi / Senegambia",
+    "Car",
+    "15 min"
+   ],
+   [
+    "Serrekunda",
+    "Car",
+    "20 min"
+   ],
+   [
+    "Bijilo",
+    "Car",
+    "10 min"
+   ]
+  ]
+ },
+ {
+  "file": "brusubi.html",
+  "rijen": [
+   [
+    "Kololi beach",
+    "Car",
+    "12 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "18 min"
+   ],
+   [
+    "Serrekunda",
+    "Car",
+    "10 min"
+   ],
+   [
+    "Bijilo",
+    "Car",
+    "8 min"
+   ],
+   [
+    "Brikama",
+    "Car",
+    "15 min"
+   ]
+  ]
+ },
+ {
+  "file": "busumbala.html",
+  "rijen": [
+   [
+    "Brikama",
+    "Car",
+    "10 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "15 min"
+   ],
+   [
+    "Sukuta",
+    "Car",
+    "15 min"
+   ],
+   [
+    "Senegambia",
+    "Car",
+    "25 min"
+   ],
+   [
+    "Banjul",
+    "Car",
+    "45 min"
+   ]
+  ]
+ },
+ {
+  "file": "cape-point.html",
+  "rijen": [
+   [
+    "Atlantic beach",
+    "Walk",
+    "3 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "30 min"
+   ],
+   [
+    "Kololi / Senegambia",
+    "Car",
+    "10 min"
+   ],
+   [
+    "Serrekunda market",
+    "Car",
+    "18 min"
+   ],
+   [
+    "Bakau market & fish landing",
+    "Walk",
+    "12 min"
+   ]
+  ]
+ },
+ {
+  "file": "essau.html",
+  "rijen": [
+   [
+    "Barra ferry terminal",
+    "Car",
+    "6 min"
+   ],
+   [
+    "Banjul",
+    "Car",
+    "35 min"
+   ],
+   [
+    "Senegal border (Amdallai)",
+    "Car",
+    "25 min"
+   ],
+   [
+    "Kerewan",
+    "Car",
+    "55 min"
+   ],
+   [
+    "Farafenni",
+    "Car",
+    "2 hr"
+   ]
+  ]
+ },
+ {
+  "file": "fajara.html",
+  "rijen": [
+   [
+    "Fajara beach",
+    "Walk",
+    "8 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "40 min"
+   ],
+   [
+    "Kololi",
+    "Car",
+    "8 min"
+   ],
+   [
+    "Bakau / Cape Point",
+    "Walk",
+    "10 min"
+   ],
+   [
+    "Serrekunda",
+    "Car",
+    "10 min"
+   ]
+  ]
+ },
+ {
+  "file": "farafenni.html",
+  "rijen": [
+   [
+    "Trans-Gambia Highway",
+    "Walk",
+    "10 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "3 hrs"
+   ],
+   [
+    "Barra (ferry)",
+    "Car",
+    "2 hrs"
+   ],
+   [
+    "Kaolack (Senegal)",
+    "Car",
+    "1.5 hrs"
+   ],
+   [
+    "Kerewan",
+    "Car",
+    "1 hr"
+   ]
+  ]
+ },
+ {
+  "file": "fatoto.html",
+  "rijen": [
+   [
+    "Fatoto ferry",
+    "Walk",
+    "5 min"
+   ],
+   [
+    "Basse Santa Su",
+    "Car",
+    "1 hr"
+   ],
+   [
+    "Gambissara",
+    "Car",
+    "50 min"
+   ],
+   [
+    "Bansang",
+    "Car",
+    "2 hr"
+   ],
+   [
+    "Banjul",
+    "Car",
+    "8 hr"
+   ]
+  ]
+ },
+ {
+  "file": "gambissara.html",
+  "rijen": [
+   [
+    "Basse Santa Su",
+    "Car",
+    "30 min"
+   ],
+   [
+    "Sabi",
+    "Car",
+    "20 min"
+   ],
+   [
+    "Fatoto",
+    "Car",
+    "50 min"
+   ],
+   [
+    "Bansang",
+    "Car",
+    "1 hr 30"
+   ],
+   [
+    "Banjul",
+    "Car",
+    "7 hr"
+   ]
+  ]
+ },
+ {
+  "file": "gunjur.html",
+  "rijen": [
+   [
+    "Gunjur beach",
+    "Walk",
+    "5 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "35 min"
+   ],
+   [
+    "Sanyang",
+    "Car",
+    "8 min"
+   ],
+   [
+    "Tanji",
+    "Car",
+    "15 min"
+   ],
+   [
+    "Kartong",
+    "Car",
+    "15 min"
+   ]
+  ]
+ },
+ {
+  "file": "jabang.html",
+  "rijen": [
+   [
+    "Sukuta",
+    "Car",
+    "6 min"
+   ],
+   [
+    "Brusubi",
+    "Car",
+    "6 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "18 min"
+   ],
+   [
+    "Senegambia",
+    "Car",
+    "16 min"
+   ],
+   [
+    "Banjul",
+    "Car",
+    "38 min"
+   ]
+  ]
+ },
+ {
+  "file": "janjanbureh.html",
+  "rijen": [
+   [
+    "River jetty",
+    "Walk",
+    "2 min"
+   ],
+   [
+    "Bansang",
+    "Car",
+    "25 min"
+   ],
+   [
+    "Kuntaur",
+    "Car",
+    "45 min"
+   ],
+   [
+    "Basse",
+    "Car",
+    "1 hr 30"
+   ],
+   [
+    "Banjul",
+    "Car",
+    "5 hr"
+   ]
+  ]
+ },
+ {
+  "file": "kartong.html",
+  "rijen": [
+   [
+    "Kartong beach",
+    "Walk",
+    "5 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "45 min"
+   ],
+   [
+    "Sanyang",
+    "Car",
+    "15 min"
+   ],
+   [
+    "Tanji",
+    "Car",
+    "25 min"
+   ],
+   [
+    "Senegal border",
+    "Walk",
+    "10 min"
+   ]
+  ]
+ },
+ {
+  "file": "kerewan.html",
+  "rijen": [
+   [
+    "Kerewan bolong",
+    "Walk",
+    "3 min"
+   ],
+   [
+    "Farafenni",
+    "Car",
+    "1 hr 10"
+   ],
+   [
+    "Essau",
+    "Car",
+    "55 min"
+   ],
+   [
+    "Barra ferry",
+    "Car",
+    "1 hr"
+   ],
+   [
+    "Banjul",
+    "Car",
+    "2 hr"
+   ]
+  ]
+ },
+ {
+  "file": "kerr-serign.html",
+  "rijen": [
+   [
+    "Bijilo",
+    "Car",
+    "6 min"
+   ],
+   [
+    "Kotu beach",
+    "Car",
+    "10 min"
+   ],
+   [
+    "Kololi / Senegambia",
+    "Car",
+    "8 min"
+   ],
+   [
+    "Serrekunda",
+    "Car",
+    "15 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "25 min"
+   ]
+  ]
+ },
+ {
+  "file": "kololi.html",
+  "rijen": [
+   [
+    "The beach",
+    "Walk",
+    "5 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "35 min"
+   ],
+   [
+    "Serrekunda market",
+    "Car",
+    "15 min"
+   ],
+   [
+    "Banjul ferry / city",
+    "Car",
+    "30 min"
+   ],
+   [
+    "Senegambia strip",
+    "Walk",
+    "8 min"
+   ]
+  ]
+ },
+ {
+  "file": "kotu.html",
+  "rijen": [
+   [
+    "Kotu Beach",
+    "Walk",
+    "5 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "35 min"
+   ],
+   [
+    "Kololi / Senegambia",
+    "Car",
+    "6 min"
+   ],
+   [
+    "Fajara",
+    "Car",
+    "5 min"
+   ],
+   [
+    "Serrekunda",
+    "Car",
+    "12 min"
+   ]
+  ]
+ },
+ {
+  "file": "kuntaur.html",
+  "rijen": [
+   [
+    "Wassu stone circles",
+    "Car",
+    "10 min"
+   ],
+   [
+    "Janjanbureh",
+    "Car",
+    "45 min"
+   ],
+   [
+    "Farafenni",
+    "Car",
+    "2 hr"
+   ],
+   [
+    "Basse",
+    "Car",
+    "2 hr 15"
+   ],
+   [
+    "Banjul",
+    "Car",
+    "5 hr 30"
+   ]
+  ]
+ },
+ {
+  "file": "lamin.html",
+  "rijen": [
+   [
+    "Lamin Lodge",
+    "Walk",
+    "12 min"
+   ],
+   [
+    "Brikama",
+    "Car",
+    "15 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "12 min"
+   ],
+   [
+    "Westfield",
+    "Car",
+    "18 min"
+   ],
+   [
+    "Banjul",
+    "Car",
+    "30 min"
+   ]
+  ]
+ },
+ {
+  "file": "manjai-kunda.html",
+  "rijen": [
+   [
+    "Westfield",
+    "Walk",
+    "8 min"
+   ],
+   [
+    "Serrekunda market",
+    "Car",
+    "7 min"
+   ],
+   [
+    "Kololi",
+    "Car",
+    "15 min"
+   ],
+   [
+    "Banjul",
+    "Car",
+    "25 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "30 min"
+   ]
+  ]
+ },
+ {
+  "file": "mansa-konko.html",
+  "rijen": [
+   [
+    "Soma junction",
+    "Car",
+    "8 min"
+   ],
+   [
+    "Senegambia bridge",
+    "Car",
+    "15 min"
+   ],
+   [
+    "Farafenni",
+    "Car",
+    "30 min"
+   ],
+   [
+    "Basse",
+    "Car",
+    "2 hr 30"
+   ],
+   [
+    "Banjul",
+    "Car",
+    "3 hr"
+   ]
+  ]
+ },
+ {
+  "file": "nema-kunku.html",
+  "rijen": [
+   [
+    "Sukuta",
+    "Car",
+    "8 min"
+   ],
+   [
+    "Brusubi",
+    "Car",
+    "7 min"
+   ],
+   [
+    "Senegambia",
+    "Car",
+    "15 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "18 min"
+   ],
+   [
+    "Banjul",
+    "Car",
+    "40 min"
+   ]
+  ]
+ },
+ {
+  "file": "pipeline.html",
+  "rijen": [
+   [
+    "Westfield",
+    "Car",
+    "6 min"
+   ],
+   [
+    "Fajara",
+    "Car",
+    "8 min"
+   ],
+   [
+    "Kotu beach",
+    "Car",
+    "10 min"
+   ],
+   [
+    "Banjul",
+    "Car",
+    "22 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "30 min"
+   ]
+  ]
+ },
+ {
+  "file": "sanyang.html",
+  "rijen": [
+   [
+    "Sanyang beach",
+    "Walk",
+    "5 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "55 min"
+   ],
+   [
+    "Kololi / Senegambia",
+    "Car",
+    "30 min"
+   ],
+   [
+    "Brufut",
+    "Car",
+    "20 min"
+   ],
+   [
+    "Kartong (south)",
+    "Car",
+    "15 min"
+   ]
+  ]
+ },
+ {
+  "file": "senegambia.html",
+  "rijen": [
+   [
+    "Senegambia beach",
+    "Walk",
+    "3 min"
+   ],
+   [
+    "Kololi",
+    "Walk",
+    "8 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "25 min"
+   ],
+   [
+    "Westfield",
+    "Car",
+    "15 min"
+   ],
+   [
+    "Banjul",
+    "Car",
+    "30 min"
+   ]
+  ]
+ },
+ {
+  "file": "serrekunda.html",
+  "rijen": [
+   [
+    "Kololi / Senegambia",
+    "Car",
+    "12 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "20 min"
+   ],
+   [
+    "Banjul city centre",
+    "Car",
+    "25 min"
+   ],
+   [
+    "Westfield Junction",
+    "Walk",
+    "10 min"
+   ],
+   [
+    "Kotu Beach",
+    "Car",
+    "8 min"
+   ]
+  ]
+ },
+ {
+  "file": "sinchu-alagie.html",
+  "rijen": [
+   [
+    "Westfield",
+    "Car",
+    "12 min"
+   ],
+   [
+    "Brusubi",
+    "Car",
+    "8 min"
+   ],
+   [
+    "Senegambia",
+    "Car",
+    "18 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "20 min"
+   ],
+   [
+    "Banjul",
+    "Car",
+    "35 min"
+   ]
+  ]
+ },
+ {
+  "file": "soma.html",
+  "rijen": [
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "2.5 hrs"
+   ],
+   [
+    "Serrekunda",
+    "Car",
+    "2 hrs"
+   ],
+   [
+    "Farafenni (north bank)",
+    "Car",
+    "45 min"
+   ],
+   [
+    "Janjanbureh",
+    "Car",
+    "1.5 hrs"
+   ],
+   [
+    "Mansakonko (LRR capital)",
+    "Car",
+    "20 min"
+   ]
+  ]
+ },
+ {
+  "file": "sukuta.html",
+  "rijen": [
+   [
+    "Sukuta market",
+    "Walk",
+    "5 min"
+   ],
+   [
+    "Senegambia",
+    "Car",
+    "12 min"
+   ],
+   [
+    "Westfield",
+    "Car",
+    "15 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "20 min"
+   ],
+   [
+    "Banjul",
+    "Car",
+    "35 min"
+   ]
+  ]
+ },
+ {
+  "file": "tanji.html",
+  "rijen": [
+   [
+    "Tanji beach",
+    "Walk",
+    "3 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "25 min"
+   ],
+   [
+    "Brufut",
+    "Car",
+    "10 min"
+   ],
+   [
+    "Kololi / Senegambia",
+    "Car",
+    "20 min"
+   ],
+   [
+    "Sanyang",
+    "Car",
+    "12 min"
+   ]
+  ]
+ },
+ {
+  "file": "tujereng.html",
+  "rijen": [
+   [
+    "Tujereng beach",
+    "Walk",
+    "8 min"
+   ],
+   [
+    "Tanji",
+    "Car",
+    "8 min"
+   ],
+   [
+    "Sanyang",
+    "Car",
+    "7 min"
+   ],
+   [
+    "Brufut",
+    "Car",
+    "15 min"
+   ],
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "30 min"
+   ]
+  ]
+ },
+ {
+  "file": "yundum.html",
+  "rijen": [
+   [
+    "Banjul Int. Airport",
+    "Car",
+    "5 min"
+   ],
+   [
+    "UTG Faraba campus",
+    "Car",
+    "3 min"
+   ],
+   [
+    "Brikama",
+    "Car",
+    "12 min"
+   ],
+   [
+    "Senegambia",
+    "Car",
+    "22 min"
+   ],
+   [
+    "Banjul",
+    "Car",
+    "40 min"
+   ]
+  ]
+ }
+]
