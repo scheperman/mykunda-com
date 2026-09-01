@@ -1,0 +1,889 @@
+{
+ "about": "Lifestyle scores per gebied. Alleen wat uit te rekenen is; zie build-area-scores.mjs voor wat er weg is en waarom.",
+ "built": "2026-09-01",
+ "benchmark": {
+  "area": "Senegambia",
+  "scores": {
+   "Affordability": 14,
+   "Places to eat": 100
+  }
+ },
+ "method": {
+  "Affordability": "100 × (ln(13333) − ln(prijs)) / (ln(13333) − ln(71)), met de vraagprijs voor grond per m² uit area-prices.json. Goedkoopste gemeten gebied 100, duurste 0.",
+  "Places to eat": "100 × ln(1+n) / ln(1+95), met n = restaurants, cafés en bars binnen 2 km uit area-amenities.json. Geen ring waar n = 0: dat betekent niet gekarteerd.",
+  "removed": "Safety en Transport zijn verwijderd — geen bron, en elke score zou een eigen verzinsel zijn."
+ },
+ "sources": {
+  "prices": "area-prices.json",
+  "amenities": "OpenStreetMap contributors (ODbL 1.0), Overpass API — opgehaald 2026-09-01",
+  "local": "_scores-data.json (kwalitatief, geen meting)"
+ },
+ "areas": {
+  "bakau": {
+   "slug": "bakau",
+   "name": "Bakau",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 14,
+     "desc": "D6,460 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 72,
+     "desc": "26 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Heritage",
+    "desc": "Kachikally and the old town"
+   }
+  },
+  "bakoteh": {
+   "slug": "bakoteh",
+   "name": "Bakoteh",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 33,
+     "desc": "D2,330 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 48,
+     "desc": "8 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Rental demand",
+    "desc": "Never dips, room by room"
+   }
+  },
+  "banjul": {
+   "slug": "banjul",
+   "name": "Banjul",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 14,
+     "desc": "D6,460 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 54,
+     "desc": "11 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Government & port",
+    "desc": "Every ministry and the port"
+   }
+  },
+  "bansang": {
+   "slug": "bansang",
+   "name": "Bansang",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 87,
+     "desc": "D141 per m² asking",
+     "source": "area-prices.json"
+    }
+   ],
+   "local": {
+    "label": "Hospital",
+    "desc": "Main referral centre"
+   }
+  },
+  "barra": {
+   "slug": "barra",
+   "name": "Barra",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 71,
+     "desc": "D330 per m² asking",
+     "source": "area-prices.json"
+    }
+   ],
+   "local": {
+    "label": "Ferry gateway",
+    "desc": "Direct crossing to Banjul"
+   }
+  },
+  "basse santa su": {
+   "slug": "basse",
+   "name": "Basse Santa Su",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 81,
+     "desc": "D189 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 53,
+     "desc": "10 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Regional market",
+    "desc": "Biggest lumo in the east"
+   }
+  },
+  "batokunku": {
+   "slug": "batokunku",
+   "name": "Batokunku",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 34,
+     "desc": "D2,280 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 15,
+     "desc": "1 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Tranquillity",
+    "desc": "Almost no development"
+   }
+  },
+  "bijilo": {
+   "slug": "bijilo",
+   "name": "Bijilo",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 15,
+     "desc": "D6,000 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 59,
+     "desc": "14 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Green space",
+    "desc": "Forest park on the doorstep"
+   }
+  },
+  "brikama": {
+   "slug": "brikama",
+   "name": "Brikama",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 48,
+     "desc": "D1,053 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 24,
+     "desc": "2 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Craft heritage",
+    "desc": "Carvers, kora and djembe"
+   }
+  },
+  "brufut": {
+   "slug": "brufut",
+   "name": "Brufut",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 34,
+     "desc": "D2,282 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 24,
+     "desc": "2 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Growth",
+    "desc": "Fastest-moving coastal market"
+   }
+  },
+  "brusubi": {
+   "slug": "brusubi",
+   "name": "Brusubi",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 14,
+     "desc": "D6,460 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 65,
+     "desc": "18 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "New build quality",
+    "desc": "Modern estates, real roads"
+   }
+  },
+  "busumbala": {
+   "slug": "busumbala",
+   "name": "Busumbala",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 33,
+     "desc": "D2,330 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 15,
+     "desc": "1 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Plot size",
+    "desc": "Most ground for the money"
+   }
+  },
+  "cape point": {
+   "slug": "cape-point",
+   "name": "Cape Point",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 14,
+     "desc": "D6,460 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 48,
+     "desc": "8 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Privacy",
+    "desc": "Low-density cliffside"
+   }
+  },
+  "essau": {
+   "slug": "essau",
+   "name": "Essau",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 77,
+     "desc": "D236 per m² asking",
+     "source": "area-prices.json"
+    }
+   ],
+   "local": {
+    "label": "Senegal road",
+    "desc": "Border twenty-five minutes"
+   }
+  },
+  "fajara": {
+   "slug": "fajara",
+   "name": "Fajara",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 0,
+     "desc": "D13,333 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 77,
+     "desc": "33 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Schools & clinics",
+    "desc": "Four intl. schools nearby"
+   }
+  },
+  "farafenni": {
+   "slug": "farafenni",
+   "name": "Farafenni",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 81,
+     "desc": "D189 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 35,
+     "desc": "4 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Cross-border trade",
+    "desc": "The lumo and the highway"
+   }
+  },
+  "fatoto": {
+   "slug": "fatoto",
+   "name": "Fatoto",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 100,
+     "desc": "D71 per m² asking",
+     "source": "area-prices.json"
+    }
+   ],
+   "local": {
+    "label": "Farmland",
+    "desc": "Cheapest ground anywhere"
+   }
+  },
+  "gambissara": {
+   "slug": "gambissara",
+   "name": "Gambissara",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 100,
+     "desc": "D71 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 24,
+     "desc": "2 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Build standard",
+    "desc": "Remittance-built two-storeys"
+   }
+  },
+  "gunjur": {
+   "slug": "gunjur",
+   "name": "Gunjur",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 57,
+     "desc": "D682 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 24,
+     "desc": "2 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Nature reserve",
+    "desc": "Bolong Fenyo and mangroves"
+   }
+  },
+  "jabang": {
+   "slug": "jabang",
+   "name": "Jabang",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 29,
+     "desc": "D2,894 per m² asking",
+     "source": "area-prices.json"
+    }
+   ],
+   "local": {
+    "label": "Growth",
+    "desc": "Fastest price rise in Kombo"
+   }
+  },
+  "janjanbureh": {
+   "slug": "janjanbureh",
+   "name": "Janjanbureh",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 77,
+     "desc": "D236 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 39,
+     "desc": "5 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Heritage",
+    "desc": "Six sites on the island"
+   }
+  },
+  "kartong": {
+   "slug": "kartong",
+   "name": "Kartong",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 50,
+     "desc": "D970 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 24,
+     "desc": "2 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Eco-tourism",
+    "desc": "River, birds and lodges"
+   }
+  },
+  "kerewan": {
+   "slug": "kerewan",
+   "name": "Kerewan",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 81,
+     "desc": "D189 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 15,
+     "desc": "1 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Administration",
+    "desc": "North Bank regional HQ"
+   }
+  },
+  "kerr serign": {
+   "slug": "kerr-serign",
+   "name": "Kerr Serign",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 14,
+     "desc": "D6,460 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 98,
+     "desc": "87 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Quiet",
+    "desc": "Low-density, leafy streets"
+   }
+  },
+  "kololi": {
+   "slug": "kololi",
+   "name": "Kololi",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 14,
+     "desc": "D6,460 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 100,
+     "desc": "95 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Beach access",
+    "desc": "Five minutes on foot"
+   }
+  },
+  "kotu": {
+   "slug": "kotu",
+   "name": "Kotu",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 14,
+     "desc": "D6,460 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 89,
+     "desc": "56 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Birdlife",
+    "desc": "Kotu Stream, top birding"
+   }
+  },
+  "kuntaur": {
+   "slug": "kuntaur",
+   "name": "Kuntaur",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 87,
+     "desc": "D141 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 24,
+     "desc": "2 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Wildlife",
+    "desc": "Wassu circles, chimp islands"
+   }
+  },
+  "lamin": {
+   "slug": "lamin",
+   "name": "Lamin",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 38,
+     "desc": "D1,833 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 15,
+     "desc": "1 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Creek setting",
+    "desc": "Mangroves and oyster beds"
+   }
+  },
+  "manjai kunda": {
+   "slug": "manjai-kunda",
+   "name": "Manjai Kunda",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 33,
+     "desc": "D2,330 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 53,
+     "desc": "10 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Walkability",
+    "desc": "Westfield on foot"
+   }
+  },
+  "mansa konko": {
+   "slug": "mansa-konko",
+   "name": "Mansa Konko",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 87,
+     "desc": "D141 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 15,
+     "desc": "1 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Administration",
+    "desc": "Lower River regional HQ"
+   }
+  },
+  "nema kunku": {
+   "slug": "nema-kunku",
+   "name": "Nema Kunku",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 33,
+     "desc": "D2,330 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 15,
+     "desc": "1 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Plot turnover",
+    "desc": "Heart of the diaspora market"
+   }
+  },
+  "pipeline": {
+   "slug": "pipeline",
+   "name": "Pipeline",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 33,
+     "desc": "D2,330 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 77,
+     "desc": "33 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Rental demand",
+    "desc": "Steady all year, not seasonal"
+   }
+  },
+  "sanyang": {
+   "slug": "sanyang",
+   "name": "Sanyang",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 50,
+     "desc": "D972 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 15,
+     "desc": "1 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Beach",
+    "desc": "Paradise Beach, wide and wild"
+   }
+  },
+  "senegambia": {
+   "slug": "senegambia",
+   "name": "Senegambia",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 14,
+     "desc": "D6,460 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 100,
+     "desc": "93 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Nightlife",
+    "desc": "Best in the country"
+   }
+  },
+  "serrekunda": {
+   "slug": "serrekunda",
+   "name": "Serrekunda",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 33,
+     "desc": "D2,330 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 43,
+     "desc": "6 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Market & commerce",
+    "desc": "West Africa's great bazaar"
+   }
+  },
+  "sinchu alagie": {
+   "slug": "sinchu-alagie",
+   "name": "Sinchu Alagie",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 33,
+     "desc": "D2,330 per m² asking",
+     "source": "area-prices.json"
+    }
+   ],
+   "local": {
+    "label": "Build standard",
+    "desc": "Permanent family homes"
+   }
+  },
+  "soma": {
+   "slug": "soma",
+   "name": "Soma",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 87,
+     "desc": "D141 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 24,
+     "desc": "2 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Crossroads",
+    "desc": "The country's road junction"
+   }
+  },
+  "sukuta": {
+   "slug": "sukuta",
+   "name": "Sukuta",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 33,
+     "desc": "D2,326 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 35,
+     "desc": "4 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Plot supply",
+    "desc": "Land still available"
+   }
+  },
+  "tanji": {
+   "slug": "tanji",
+   "name": "Tanji",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 35,
+     "desc": "D2,163 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 30,
+     "desc": "3 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Fish market",
+    "desc": "Daily landings on the beach"
+   }
+  },
+  "tujereng": {
+   "slug": "tujereng",
+   "name": "Tujereng",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 34,
+     "desc": "D2,280 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 15,
+     "desc": "1 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Tranquillity",
+    "desc": "Empty beach, no pressure"
+   }
+  },
+  "yundum": {
+   "slug": "yundum",
+   "name": "Yundum",
+   "measures": [
+    {
+     "label": "Affordability",
+     "score": 38,
+     "desc": "D1,844 per m² asking",
+     "source": "area-prices.json"
+    },
+    {
+     "label": "Places to eat",
+     "score": 15,
+     "desc": "1 mapped within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    }
+   ],
+   "local": {
+    "label": "Airport access",
+    "desc": "Five minutes to the runway"
+   }
+  }
+ }
+}

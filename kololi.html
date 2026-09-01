@@ -323,8 +323,9 @@
       <!-- lifestyle scores -->
       <div class="block">
         <h2>Lifestyle scores</h2>
-        <p class="lead">The four measures buyers, expats and visitors weigh most, with Kololi scored against Senegambia &mdash; the best-connected, busiest and best-served area on the coast.</p>
+        <p class="lead">What we can measure for Kololi, scored against Senegambia &mdash; the best-connected, busiest and best-served area on the coast.</p>
         <div class="scores-grid" id="scoresGrid"></div>
+        <!--mk-scoresrc--><p class="src">Affordability is the land asking price per m² on a log scale, where the cheapest area we measure scores 100 and the priciest 0. Places to eat counts restaurants, cafés and bars mapped in OpenStreetMap within 2 km on 1 September 2026; where nothing is mapped there is no ring, because that is not a score of zero. Scores for safety and transport used to sit here. Nothing measurable stood behind either, so they are gone.</p>
       </div>
 
       <!-- commute -->
@@ -449,8 +450,8 @@ vibeTags.innerHTML = tags.map(t=>`<span class="tag">${ICON.check} ${t}</span>`).
 
 
 // lifestyle scores (ring)
-var SG={Affordability:23,Safety:74,Transport:96,Dining:97};
-var scores=[["Affordability",24,"Among the highest per m²"],["Safety",82,"Patrolled, quieter roads"],["Transport",92,"Taxis constant, strip on foot"],["Dining",90,"Excellent, off the strip"],["Beach access",97,"Five minutes on foot"]];
+var SG={"Affordability":14,"Places to eat":100};
+var scores=[["Affordability",14,"D6,460 per m² asking"],["Places to eat",100,"95 mapped within 2 km"],["Beach access",null,"Five minutes on foot"]];
 (function(){
   function ring(v,b){
     var r=42,c=2*Math.PI*r,ri=31,ci=2*Math.PI*ri;
@@ -458,13 +459,13 @@ var scores=[["Affordability",24,"Among the highest per m²"],["Safety",82,"Patro
     var rr=b?ri:r,cc=b?ci:c;
     return '<div class="ring"><svg width="96" height="96" aria-hidden="true"><circle cx="48" cy="48" r="'+r+'" fill="none" stroke="#EFEBE1" stroke-width="8"/>'+bench+'<circle cx="48" cy="48" r="'+rr+'" fill="none" stroke="#2A7561" stroke-width="'+(b?7:8)+'" stroke-linecap="round" stroke-dasharray="'+cc+'" stroke-dashoffset="'+(cc*(1-v/100))+'"/></svg><div class="num">'+v+'</div></div>';
   }
-  var loc=scores[4];
-  scoresGrid.innerHTML=scores.slice(0,4).map(function(s){
+  var loc=scores[scores.length-1];
+  scoresGrid.innerHTML=scores.slice(0,-1).map(function(s){
     var b=SG[s[0]],d=s[1]-b,cls=d>3?'up':(d<-3?'down':'eq');
     var txt=d>3?'\u25B2 '+d:(d<-3?'\u25BC '+(-d):'level');
     return '<div class="score">'+ring(s[1],b)+'<div class="lab">'+s[0]+'</div><div class="desc">'+s[2]+'</div><div class="delta '+cls+'">'+txt+'</div></div>';
   }).join("");
-  scoresGrid.insertAdjacentHTML('afterend','<div class="score-local">'+ring(loc[1],0)+'<div class="sl-txt"><div class="sl-k">Local strength</div><div class="lab">'+loc[0]+'</div><div class="desc">'+loc[2]+'</div></div></div><div class="bench-key"><i></i> Outer arc = Senegambia. The figure under each ring is the gap to it.</div>');
+  scoresGrid.insertAdjacentHTML('afterend','<div class="score-local"><div class="sl-txt"><div class="sl-k">Local strength</div><div class="lab">'+loc[0]+'</div><div class="desc">'+loc[2]+'</div></div></div><div class="bench-key"><i></i> Outer arc = Senegambia. The figure under each ring is the gap to it.</div>');
 })();
 
 // commute

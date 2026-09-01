@@ -955,6 +955,43 @@ kreeg zodra de volgorde veranderde.
 rij. Elk script dat het blok aanraakt moet beide kennen en achteraf op 41
 pagina's uitkomen — bij de audit sloeg de eerste telling Kololi stil over.
 
+### Lifestyle scores: van vijf handgezette getallen naar twee gemeten
+
+Tot 01-09-2026 stonden hier vijf getallen per gebied, 205 in totaal, getoond
+als ringen met een benchmark en een verschil ("▼ 54") — wat leest als een
+meting. Alleen Affordability had een methode in `_scores-data.json` staan, en
+die werd nergens uitgevoerd.
+
+`build-area-scores.mjs` → `area-scores.json` → `_werk/patch-lifestyle-scores.mjs`,
+met vangrail `check-areascores.mjs`. Wat er nu staat:
+
+- **Affordability** uit `area-prices.json`: de vraagprijs voor grond per m² op
+  een logschaal, goedkoopste gemeten gebied 100, duurste 0. Logaritmisch omdat
+  de spreiding dat is — Fajara is bijna tweehonderd keer Fatoto, niet honderd
+  punten. De score erft de bewijsklasse van de prijs: waar de prijs een band is,
+  is de score dat ook, en dan scoren acht kustgebieden hetzelfde. Dat is geen
+  fout maar de data die eronder ligt.
+- **Places to eat** uit `area-amenities.json`: restaurants, cafés en bars binnen
+  twee kilometer, ook op een logschaal. **Geen ring waar n = 0** — dat betekent
+  niet gekarteerd, geen nul. Zes gebieden hebben daarom één ring in plaats van
+  twee, en het rooster tekent daarom `scores.slice(0,-1)` in plaats van vast
+  vier.
+- **Local strength** houdt zijn label en omschrijving uit `_scores-data.json`
+  maar verliest zijn getal en zijn ring: het is een kwalificatie, geen meting.
+  De omschrijvingen die een reistijd noemen ("Border twenty-five minutes")
+  horen bij de ronde over de lopende tekst, niet hier.
+
+**Safety en Transport zijn weg.** Voor Safety bestaat geen Gambiaanse
+criminaliteitsstatistiek per plaats; "70" voor Essau tegenover "66" voor Barra
+was niet te verdedigen en het is de gevoeligste van de vier. Voor Transport zou
+elke score een zelfbedachte weging van afstand, wegtype en vervoersknopen zijn.
+Reken hem niet alsnog uit met een routeringsdienst zonder de veerboot op te
+lossen: OSRM stuurt Essau→Banjul over de brug bij Farafenni en komt op drie uur
+uit, terwijl de overtocht 35 minuten is.
+
+`_scores-data.json` is daarmee grotendeels historisch; alleen de vijfde regel
+per gebied wordt nog gelezen. De kop van dat bestand zegt dat ook.
+
 Bij dezelfde ronde zijn de kwaliteitsoordelen bij 121 met naam genoemde
 scholen verwijderd (`_werk/patch-schoolwaarderingen.mjs`, omkeerbaar met
 `--terug`): 56× "Good", 38× "Very good", 21× "Excellent", 5× "Adequate", 1×
@@ -986,10 +1023,12 @@ kaart, woordentelling) en meldt welke pagina een sectie mist die de rest wel hee
 `app.js` (het menu telt zichzelf, de regiotellingen hoef je niet aan te raken),
 een kaartje in `areas-in-the-gambia.html` en een rij in
 `gambia-property-prices.html`, en een regel in `sitemap-pages.xml`. Daarna
-`node build-area-prices.mjs --write`, `node build-area-amenities.mjs --write`
-(alleen zinvol als de pagina een blok What's nearby krijgt) en `node build.mjs`. Controleren met
+`node build-area-prices.mjs --write`, `node build-area-amenities.mjs --write`,
+`node build-area-scores.mjs --write` (die laatste twee alleen zinvol als de
+pagina die blokken krijgt) en `node build.mjs`. Controleren met
 `check-plaatsen.mjs`, `check-areaprices.mjs`, `check-areaamenities.mjs`,
-`audit-areapaginas.mjs`, `valuation-selftest.mjs` en `_syntaxcheck.mjs`. De aantallen in de lopende tekst
+`check-areascores.mjs`, `audit-areapaginas.mjs`, `valuation-selftest.mjs` en
+`_syntaxcheck.mjs`. De aantallen in de lopende tekst
 ("52 areas") zet `build-area-prices.mjs` zelf; typ ze nergens met de hand.
 
 ## Pushen na elke sessie

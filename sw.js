@@ -8,7 +8,7 @@
    First visit   : network with a 6 s guard, then whatever is in cache. A stalled
                    4G socket no longer leaves the visitor on a blank page.
    Map tiles     : never cached here (external, volume too large). */
-const V = 'mk-v108';
+const V = 'mk-v109';
 const STATIC = V + '-static';
 const PAGES  = V + '-pages';
 const MAX_PAGES = 60;
