@@ -324,7 +324,11 @@ const contactEmail = (intake && typeof intake.email === 'string' && intake.email
 
 document.getElementById('sumPlanName').textContent=plan.name;
 document.getElementById('sumPlanDesc').textContent=plan.desc;
-document.getElementById('sumPlanPrice').textContent=CURRENCIES[getCurrency()].symbol+Math.round(fromGMD(plan.priceGMD)).toLocaleString();
+/* Met 'en-US' erbij, net als overal elders op de site. Zonder die opgave volgt
+   het scheidingsteken de taal van de browser: op een Nederlandse browser stond
+   hier "D2.500" waar de rest van de site "D2,500" schrijft — en dat is bij een
+   bedrag geen schoonheidsfoutje. */
+document.getElementById('sumPlanPrice').textContent=CURRENCIES[getCurrency()].symbol+Math.round(fromGMD(plan.priceGMD)).toLocaleString('en-US');
 document.getElementById('coTitle').textContent = isOwnership ? 'Pay for your ownership check' : 'Get '+plan.name.replace(' listing','').replace(' service','');
 if(isOwnership){
   var coBack=document.getElementById('coBack');
@@ -334,7 +338,7 @@ if(isOwnership){
 t1.parentElement.childNodes[1].textContent=' '+plan.foot[0];
 t2.parentElement.childNodes[1].textContent=' '+plan.foot[1];
 
-function money(n){ var c=CURRENCIES[getCurrency()]; return c.symbol+Math.round(fromGMD(n)).toLocaleString(); }
+function money(n){ var c=CURRENCIES[getCurrency()]; return c.symbol+Math.round(fromGMD(n)).toLocaleString('en-US'); }
 function recalc(){
   document.getElementById('sumSub').textContent=money(plan.priceGMD);
   document.getElementById('sumFee').textContent=money(0);
