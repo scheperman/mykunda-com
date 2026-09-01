@@ -1,0 +1,27 @@
+{
+  "about": "Zorgvoorzieningen uit het openbare register van het Gambiaanse ministerie van Volksgezondheid, uitgelezen op 1 september 2026. Alleen de regels die aan een MyKunda-gebied zijn gekoppeld staan hier; de volledige regiolijsten staan op de bronpagina's. Vier van de zes regionale directoraten publiceren een lijst; Western Region (de kust) en North Bank East doen dat niet — daar is OpenStreetMap de enige bron.",
+  "read_on": "2026-09-01",
+  "sources": {
+    "NBW": "https://moh.gov.gm/regional-health-directorate-north-bank-west-region/",
+    "CRR": "https://moh.gov.gm/regional-health-directorate-central-river-region/",
+    "LRR": "https://moh.gov.gm/regional-health-directorate-lower-river-region/",
+    "URR": "https://moh.gov.gm/regional-health-directorate-upper-river-region/"
+  },
+  "regions_without_register": ["Western Region (Kombo / kust)", "North Bank East"],
+  "rule": "Een registerregel wordt alleen gebruikt als OpenStreetMap binnen de straal NUL objecten in die zorgcategorie kent. Zo kan een voorziening nooit dubbel worden geteld. De regio van het gebied moet gelijk zijn aan de regio van het register — er zijn naamdubbels (Nema Kunku bestaat in North Bank én in West Coast).",
+  "facilities": [
+    { "area": "Essau",       "region": "NBW", "name": "Essau District Hospital",   "type": "district_hospital", "label_one": "District hospital", "label_many": "District hospitals" },
+    { "area": "Basse Santa Su", "region": "URR", "name": "Basse District Hospital", "type": "district_hospital", "label_one": "District hospital", "label_many": "District hospitals" },
+    { "area": "Soma",        "region": "LRR", "name": "Soma District Hospital",    "type": "district_hospital", "label_one": "District hospital", "label_many": "District hospitals" },
+    { "area": "Fatoto",      "region": "URR", "name": "Fatoto Health Centre",      "type": "health_centre",     "label_one": "Health centre",     "label_many": "Health centres" },
+    { "area": "Gambissara",  "region": "URR", "name": "Gambisara Health Centre",   "type": "health_centre",     "label_one": "Health centre",     "label_many": "Health centres" },
+    { "area": "Janjanbureh", "region": "CRR", "name": "Janjanbureh Minor Health Centre", "type": "health_centre", "label_one": "Health centre",   "label_many": "Health centres" },
+    { "area": "Kuntaur",     "region": "CRR", "name": "Kuntaur Major Health Centre",     "type": "health_centre", "label_one": "Health centre",   "label_many": "Health centres" }
+  ],
+  "notes": [
+    "Gambisara staat in het register met één s; de gebiedspagina heet Gambissara. Bewust zo overgenomen: de naam van de voorziening is die van het register.",
+    "Kuntaur staat in het register zowel onder Major als onder Minor Health Centre. Alleen de Major is overgenomen — bij twijfel de minst verstrekkende regel.",
+    "Bansang Hospital staat niet in de CRR-lijst (het is een nationaal referral hospital, niet regionaal beheerd), maar staat wél in OpenStreetMap binnen 2 km van Bansang. Daar is dus geen registerregel nodig.",
+    "Farafenni valt onder North Bank East, dat geen lijst publiceert; het ziekenhuis daar staat in OpenStreetMap."
+  ]
+}

@@ -902,6 +902,66 @@ staat op 194 m van zijn bron en krijgt 15, Mamuda en Latriya zeggen "roughly
 2 km" en krijgen 13. Een kaart die strak inzoomt op een punt dat twee kilometer
 kan schelen, liegt over zijn eigen precisie.
 
+### Het blok "What's nearby" is sinds 01-09-2026 gegenereerd
+
+Tot die dag stonden de zes tegels als ingetypte tekst in elke pagina: 246
+getallen, 83 verschillende opschriften, geen bron, geen datum, geen straal.
+Ze klopten ook niet. Van de 97 tegels die eenduidig te toetsen waren stonden er
+33 hoger dan wat OpenStreetMap binnen vijf kilometer kent en 19 lager dan wat
+er binnen twee kilometer staat: Kololi beloofde 40 "beach bars & restaurants"
+waar er binnen twee kilometer 96 gekarteerd zijn, Sukuta beloofde twaalf
+scholen waar er twee staan.
+
+**De keten.** `_werk/osm-amenities-ophalen.mjs` haalt alle voorzieningen van
+Gambia uit OpenStreetMap (Overpass, per tag-sleutel apart met cache in
+`_werk/osm-cache/`; zonder `User-Agent` geeft Overpass 406) naar
+`_werk/gambia-amenities.json`. `build-area-amenities.mjs` telt die binnen twee
+kilometer van het punt in de JSON-LD van elke pagina, vult de gaten met
+`_werk/moh-register-*.json` en schrijft `area-amenities.json`.
+`_werk/patch-whats-nearby.mjs` zet het in de pagina's, met een diffrapport
+(`_werk/amen-diff-<datum>.md`) en `--terug`. `check-areaamenities.mjs` toetst
+achteraf of pagina en JSON nog hetzelfde zeggen.
+
+**Vijf telregels, elk omdat de ruwe telling er anders naast zat.** Chalet en
+apartment tellen niet als logies (28 losse chalets van één resort maakten er in
+Bakoteh 41 van); `shop=yes` telt als winkel, nooit als supermarkt;
+`leisure=pitch` valt buiten het rooster; een gebedshuis zonder `religion` wordt
+geen moskee; en ziekenhuis en kliniek gaan op één hoop, want in Gambia draagt
+in OSM van alles `amenity=hospital` — "Basse health centre", "mbowen clinic".
+Daarbovenop wordt ontdubbeld: een voorziening staat vaak twee keer in OSM, als
+punt én als gebouw, met verschillende ids. Zelfde categorie en zelfde naam
+binnen 250 m is één voorziening; zonder naam is de grens 40 m. Dat scheelde 101
+van de 2.090 treffers.
+
+**Het register vult alleen echte gaten.** Vier van de zes regionale
+directoraten van het ministerie publiceren hun voorzieningen met naam en type;
+Western Region (de kust) en North Bank East niet. Een registerregel wordt
+alléén gebruikt als OSM binnen de straal nul zorgobjecten kent, zodat niets
+dubbel telt, en de regio moet kloppen — er zijn naamdubbels, Nema Kunku bestaat
+in North Bank én in West Coast. Zo komt Essau aan zijn "1 District hospital",
+en dat is nu de enige tegel op de site die niet uit OSM komt.
+
+**Scholen staan bewust niet in het rooster.** Ze hebben een eigen blok
+("Schools nearby") direct eronder, en de tegel sprak dat blok op zestien
+pagina's tegen — Essau tegel 6, lijst 3; Sukuta tegel 12, lijst 3.
+
+**Iconen horen bij hun categorie** (`_werk/amen-iconen.mjs`). Ze werden op
+volgorde uitgedeeld (`amenIc[i % 6]`), waardoor "3 Mosques" een mes en vork
+kreeg zodra de volgorde veranderde.
+
+**Twee codevormen, en dat blijft zo.** Veertig pagina's dragen
+`var amenData=[["3","Mosques"]]` plus een losse `var amenIc=[...]`;
+`kololi.html` draagt `const amen=[['76','..','<svg…>']]` met het icoon ín de
+rij. Elk script dat het blok aanraakt moet beide kennen en achteraf op 41
+pagina's uitkomen — bij de audit sloeg de eerste telling Kololi stil over.
+
+Bij dezelfde ronde zijn de kwaliteitsoordelen bij 121 met naam genoemde
+scholen verwijderd (`_werk/patch-schoolwaarderingen.mjs`, omkeerbaar met
+`--terug`): 56× "Good", 38× "Very good", 21× "Excellent", 5× "Adequate", 1×
+"Satisfactory", geen ervan met een bron. Naam, schooltype en afstand staan er
+nog. Let op: de renderregel bestaat in drie vormen — string-concat met dubbele
+aanhalingstekens, met enkele, en een template literal in `kololi.html`.
+
 **De helft van de tekst was standaardtekst.** Gemeten met
 `_werk/audit-areatekst.mjs`, dat elke alinea met die van alle andere pagina's
 vergelijkt met plaatsnamen en bedragen weggemaskeerd: 15.214 van 30.130 woorden
@@ -926,9 +986,10 @@ kaart, woordentelling) en meldt welke pagina een sectie mist die de rest wel hee
 `app.js` (het menu telt zichzelf, de regiotellingen hoef je niet aan te raken),
 een kaartje in `areas-in-the-gambia.html` en een rij in
 `gambia-property-prices.html`, en een regel in `sitemap-pages.xml`. Daarna
-`node build-area-prices.mjs --write` en `node build.mjs`. Controleren met
-`check-plaatsen.mjs`, `check-areaprices.mjs`, `audit-areapaginas.mjs`,
-`valuation-selftest.mjs` en `_syntaxcheck.mjs`. De aantallen in de lopende tekst
+`node build-area-prices.mjs --write`, `node build-area-amenities.mjs --write`
+(alleen zinvol als de pagina een blok What's nearby krijgt) en `node build.mjs`. Controleren met
+`check-plaatsen.mjs`, `check-areaprices.mjs`, `check-areaamenities.mjs`,
+`audit-areapaginas.mjs`, `valuation-selftest.mjs` en `_syntaxcheck.mjs`. De aantallen in de lopende tekst
 ("52 areas") zet `build-area-prices.mjs` zelf; typ ze nergens met de hand.
 
 ## Pushen na elke sessie

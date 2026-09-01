@@ -1,0 +1,4728 @@
+{
+ "about": "Gemeten voorzieningen rond elk MyKunda-gebied, uit OpenStreetMap (ODbL 1.0) via Overpass, opgehaald 1 september 2026. Straal in km hemelsbreed vanaf het punt in de JSON-LD van de pagina (of gambia-places.js voor de elf pagina’s zonder JSON-LD-geo).",
+ "measured": "2026-09-01",
+ "source": "OpenStreetMap contributors (ODbL 1.0), Overpass API",
+ "categories": {
+  "shop": "Shops",
+  "supermarket": "Supermarkets",
+  "market": "Markets",
+  "mosque": "Mosques",
+  "church": "Churches",
+  "worship_other": "Places of worship (other)",
+  "school": "Schools",
+  "kindergarten": "Nurseries",
+  "tertiary": "Colleges",
+  "hospital": "Hospitals",
+  "clinic": "Clinics",
+  "pharmacy": "Pharmacies",
+  "bank": "Banks",
+  "atm": "ATMs",
+  "money": "Money transfer",
+  "fuel": "Fuel stations",
+  "eat": "Restaurants & cafes",
+  "bar": "Bars",
+  "police": "Police",
+  "post": "Post offices",
+  "fire": "Fire stations",
+  "ferry": "Ferry terminals",
+  "transport": "Bus & taxi ranks",
+  "water": "Public water points",
+  "gov": "Government offices",
+  "stay": "Hotels & guesthouses",
+  "sport": "Sports grounds & gyms",
+  "reserve": "Nature reserves",
+  "library": "Libraries",
+  "craft": "Workshops"
+ },
+ "areas": [
+  {
+   "area": "Bakau",
+   "file": "bakau.html",
+   "lat": 13.4775,
+   "lon": -16.6779,
+   "published": [
+    [
+     "25",
+     "Restaurants & bars"
+    ],
+    [
+     "10",
+     "Shops & markets"
+    ],
+    [
+     "3",
+     "Supermarkets"
+    ],
+    [
+     "1",
+     "Crocodile Pool"
+    ],
+    [
+     "4",
+     "Mosques & churches"
+    ],
+    [
+     "3",
+     "Clinics & pharmacies"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "bank": 2,
+     "fuel": 1,
+     "eat": 2,
+     "market": 1,
+     "mosque": 4,
+     "school": 3,
+     "shop": 2,
+     "stay": 3,
+     "sport": 6
+    },
+    "2": {
+     "bank": 4,
+     "transport": 1,
+     "school": 15,
+     "eat": 25,
+     "tertiary": 3,
+     "atm": 3,
+     "fuel": 3,
+     "clinic": 2,
+     "kindergarten": 1,
+     "market": 1,
+     "mosque": 6,
+     "bar": 1,
+     "hospital": 2,
+     "church": 2,
+     "police": 1,
+     "shop": 19,
+     "supermarket": 5,
+     "stay": 11,
+     "sport": 20,
+     "gov": 8
+    },
+    "3": {
+     "bank": 9,
+     "transport": 3,
+     "school": 29,
+     "eat": 39,
+     "library": 2,
+     "pharmacy": 1,
+     "tertiary": 6,
+     "atm": 3,
+     "fuel": 6,
+     "clinic": 2,
+     "money": 2,
+     "kindergarten": 1,
+     "hospital": 4,
+     "market": 1,
+     "mosque": 8,
+     "bar": 1,
+     "post": 1,
+     "church": 2,
+     "police": 1,
+     "shop": 36,
+     "supermarket": 6,
+     "stay": 17,
+     "sport": 32,
+     "gov": 14,
+     "craft": 1
+    },
+    "5": {
+     "bank": 17,
+     "transport": 12,
+     "fuel": 16,
+     "school": 39,
+     "fire": 2,
+     "police": 3,
+     "eat": 51,
+     "library": 2,
+     "pharmacy": 2,
+     "tertiary": 7,
+     "atm": 6,
+     "bar": 5,
+     "market": 3,
+     "clinic": 2,
+     "mosque": 12,
+     "church": 7,
+     "money": 3,
+     "post": 2,
+     "kindergarten": 1,
+     "hospital": 5,
+     "gov": 15,
+     "shop": 53,
+     "supermarket": 10,
+     "stay": 71,
+     "sport": 50,
+     "craft": 2
+    }
+   }
+  },
+  {
+   "area": "Bakoteh",
+   "file": "bakoteh.html",
+   "lat": 13.4334,
+   "lon": -16.6985,
+   "published": [
+    [
+     "40+",
+     "Shops & bitiks"
+    ],
+    [
+     "1",
+     "Market"
+    ],
+    [
+     "2",
+     "Supermarkets"
+    ],
+    [
+     "5",
+     "Banks & ATMs"
+    ],
+    [
+     "9",
+     "Mosques & churches"
+    ],
+    [
+     "8",
+     "Clinics & pharmacies"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "transport": 3,
+     "fuel": 1,
+     "bar": 2,
+     "church": 2,
+     "bank": 2,
+     "market": 1,
+     "school": 4,
+     "mosque": 1,
+     "shop": 2,
+     "sport": 5
+    },
+    "2": {
+     "transport": 5,
+     "fuel": 4,
+     "eat": 6,
+     "bar": 2,
+     "market": 3,
+     "mosque": 3,
+     "church": 3,
+     "bank": 2,
+     "school": 9,
+     "hospital": 1,
+     "police": 1,
+     "money": 1,
+     "shop": 5,
+     "supermarket": 1,
+     "stay": 41,
+     "sport": 11
+    },
+    "3": {
+     "fuel": 12,
+     "bank": 11,
+     "eat": 82,
+     "pharmacy": 2,
+     "transport": 12,
+     "hospital": 6,
+     "bar": 16,
+     "fire": 2,
+     "atm": 6,
+     "police": 3,
+     "library": 1,
+     "market": 5,
+     "mosque": 11,
+     "school": 20,
+     "tertiary": 2,
+     "church": 5,
+     "money": 3,
+     "post": 1,
+     "supermarket": 11,
+     "shop": 56,
+     "stay": 70,
+     "sport": 36,
+     "craft": 2
+    },
+    "5": {
+     "transport": 24,
+     "bank": 23,
+     "fuel": 27,
+     "eat": 129,
+     "pharmacy": 10,
+     "hospital": 16,
+     "bar": 22,
+     "school": 49,
+     "police": 8,
+     "fire": 2,
+     "atm": 11,
+     "library": 2,
+     "tertiary": 9,
+     "market": 12,
+     "mosque": 33,
+     "clinic": 4,
+     "church": 7,
+     "money": 11,
+     "post": 2,
+     "kindergarten": 1,
+     "gov": 15,
+     "shop": 152,
+     "supermarket": 19,
+     "stay": 110,
+     "reserve": 1,
+     "sport": 79,
+     "craft": 2
+    }
+   }
+  },
+  {
+   "area": "Banjul",
+   "file": "banjul.html",
+   "lat": 13.4554,
+   "lon": -16.5757,
+   "published": [
+    [
+     "20",
+     "Restaurants & cafés"
+    ],
+    [
+     "15",
+     "Shops & markets"
+    ],
+    [
+     "2",
+     "Supermarkets"
+    ],
+    [
+     "3",
+     "Government offices"
+    ],
+    [
+     "2",
+     "Hospitals"
+    ],
+    [
+     "5",
+     "Banks & services"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "eat": 7,
+     "fire": 1,
+     "transport": 1,
+     "bank": 5,
+     "money": 1,
+     "worship_other": 1,
+     "bar": 1,
+     "atm": 1,
+     "hospital": 1,
+     "gov": 10,
+     "mosque": 3,
+     "school": 5,
+     "church": 3,
+     "post": 1,
+     "market": 2,
+     "stay": 5,
+     "sport": 7,
+     "craft": 3
+    },
+    "2": {
+     "eat": 10,
+     "fire": 1,
+     "ferry": 1,
+     "transport": 2,
+     "bank": 5,
+     "money": 1,
+     "worship_other": 1,
+     "bar": 1,
+     "fuel": 1,
+     "atm": 1,
+     "hospital": 2,
+     "gov": 11,
+     "mosque": 4,
+     "school": 8,
+     "church": 3,
+     "post": 1,
+     "tertiary": 1,
+     "market": 3,
+     "library": 1,
+     "shop": 2,
+     "stay": 5,
+     "sport": 9,
+     "reserve": 1,
+     "craft": 4
+    },
+    "3": {
+     "eat": 10,
+     "fire": 1,
+     "ferry": 1,
+     "transport": 2,
+     "bank": 5,
+     "money": 1,
+     "worship_other": 1,
+     "bar": 1,
+     "fuel": 1,
+     "atm": 1,
+     "hospital": 2,
+     "gov": 11,
+     "mosque": 4,
+     "school": 8,
+     "church": 3,
+     "post": 1,
+     "tertiary": 1,
+     "market": 3,
+     "library": 1,
+     "shop": 2,
+     "stay": 5,
+     "sport": 9,
+     "reserve": 1,
+     "craft": 4
+    },
+    "5": {
+     "ferry": 3,
+     "eat": 10,
+     "fire": 1,
+     "transport": 2,
+     "bank": 6,
+     "money": 1,
+     "worship_other": 1,
+     "bar": 1,
+     "fuel": 1,
+     "atm": 1,
+     "hospital": 2,
+     "gov": 11,
+     "mosque": 6,
+     "school": 8,
+     "church": 3,
+     "post": 1,
+     "tertiary": 1,
+     "market": 3,
+     "library": 1,
+     "police": 1,
+     "shop": 2,
+     "stay": 6,
+     "sport": 10,
+     "reserve": 1,
+     "craft": 4
+    }
+   }
+  },
+  {
+   "area": "Bansang",
+   "file": "bansang.html",
+   "lat": 13.4358,
+   "lon": -14.6588,
+   "published": [
+    [
+     "18",
+     "Shops & bitiks"
+    ],
+    [
+     "1",
+     "Market"
+    ],
+    [
+     "1",
+     "Referral hospital"
+    ],
+    [
+     "4",
+     "Mosques"
+    ],
+    [
+     "6",
+     "Schools"
+    ],
+    [
+     "3",
+     "Pharmacies"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "ferry": 2,
+     "mosque": 1,
+     "transport": 1,
+     "money": 1,
+     "school": 1,
+     "market": 1,
+     "police": 1,
+     "gov": 2
+    },
+    "2": {
+     "ferry": 2,
+     "mosque": 1,
+     "transport": 1,
+     "money": 1,
+     "atm": 1,
+     "hospital": 1,
+     "school": 1,
+     "market": 1,
+     "police": 1,
+     "gov": 2
+    },
+    "3": {
+     "ferry": 2,
+     "mosque": 2,
+     "transport": 1,
+     "money": 1,
+     "atm": 1,
+     "hospital": 1,
+     "school": 3,
+     "market": 1,
+     "police": 1,
+     "gov": 2
+    },
+    "5": {
+     "ferry": 2,
+     "mosque": 3,
+     "transport": 1,
+     "money": 1,
+     "atm": 1,
+     "hospital": 1,
+     "school": 6,
+     "market": 1,
+     "police": 1,
+     "gov": 2
+    }
+   }
+  },
+  {
+   "area": "Barra",
+   "file": "barra.html",
+   "lat": 13.4855,
+   "lon": -16.543,
+   "published": [
+    [
+     "3",
+     "Local restaurants & chop shops"
+    ],
+    [
+     "2",
+     "Guesthouses"
+    ],
+    [
+     "2",
+     "Markets near ferry"
+    ],
+    [
+     "1",
+     "River beach"
+    ],
+    [
+     "1",
+     "Health centre"
+    ],
+    [
+     "1",
+     "Pharmacy"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "ferry": 2,
+     "mosque": 4,
+     "police": 1,
+     "bank": 1,
+     "stay": 2
+    },
+    "2": {
+     "ferry": 2,
+     "school": 2,
+     "mosque": 4,
+     "police": 1,
+     "bank": 1,
+     "stay": 4,
+     "sport": 1
+    },
+    "3": {
+     "ferry": 2,
+     "school": 2,
+     "mosque": 4,
+     "police": 1,
+     "bank": 1,
+     "stay": 5,
+     "sport": 2
+    },
+    "5": {
+     "ferry": 2,
+     "transport": 1,
+     "bank": 5,
+     "eat": 4,
+     "money": 1,
+     "worship_other": 1,
+     "bar": 1,
+     "atm": 1,
+     "school": 3,
+     "hospital": 1,
+     "gov": 8,
+     "church": 1,
+     "post": 1,
+     "market": 1,
+     "mosque": 4,
+     "police": 1,
+     "stay": 7,
+     "sport": 8
+    }
+   }
+  },
+  {
+   "area": "Basse Santa Su",
+   "file": "basse.html",
+   "lat": 13.31,
+   "lon": -14.215,
+   "published": [
+    [
+     "5",
+     "Local restaurants & chop shops"
+    ],
+    [
+     "2",
+     "Guesthouses"
+    ],
+    [
+     "3",
+     "Markets & shops"
+    ],
+    [
+     "1",
+     "River beach"
+    ],
+    [
+     "1",
+     "Health centre"
+    ],
+    [
+     "2",
+     "Pharmacies"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "ferry": 3,
+     "bar": 3,
+     "eat": 2,
+     "bank": 9,
+     "hospital": 3,
+     "church": 3,
+     "atm": 2,
+     "fuel": 4,
+     "mosque": 2,
+     "school": 3,
+     "shop": 17,
+     "stay": 5,
+     "sport": 1,
+     "gov": 6,
+     "craft": 3
+    },
+    "2": {
+     "ferry": 3,
+     "school": 11,
+     "bar": 5,
+     "eat": 5,
+     "bank": 9,
+     "fuel": 6,
+     "fire": 1,
+     "hospital": 5,
+     "church": 3,
+     "mosque": 5,
+     "atm": 2,
+     "clinic": 1,
+     "shop": 21,
+     "stay": 10,
+     "sport": 3,
+     "gov": 13,
+     "craft": 3
+    },
+    "3": {
+     "ferry": 3,
+     "school": 11,
+     "bar": 5,
+     "eat": 5,
+     "bank": 9,
+     "fuel": 6,
+     "fire": 1,
+     "hospital": 5,
+     "church": 3,
+     "mosque": 5,
+     "atm": 2,
+     "clinic": 1,
+     "shop": 21,
+     "stay": 11,
+     "sport": 3,
+     "gov": 13,
+     "craft": 3
+    },
+    "5": {
+     "ferry": 3,
+     "school": 14,
+     "bar": 5,
+     "eat": 5,
+     "bank": 9,
+     "fuel": 6,
+     "fire": 1,
+     "hospital": 5,
+     "church": 3,
+     "mosque": 5,
+     "atm": 2,
+     "clinic": 1,
+     "kindergarten": 1,
+     "shop": 21,
+     "stay": 11,
+     "sport": 3,
+     "gov": 13,
+     "craft": 3
+    }
+   }
+  },
+  {
+   "area": "Batokunku",
+   "file": "batokunku.html",
+   "lat": 13.3268,
+   "lon": -16.7991,
+   "published": [
+    [
+     "2",
+     "Restaurants & bars"
+    ],
+    [
+     "1",
+     "Shop"
+    ],
+    [
+     "0",
+     "Supermarkets"
+    ],
+    [
+     "1",
+     "Beach"
+    ],
+    [
+     "1",
+     "Guest lodge"
+    ],
+    [
+     "1",
+     "Mosque"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "clinic": 1,
+     "eat": 1,
+     "school": 1,
+     "mosque": 1
+    },
+    "2": {
+     "clinic": 1,
+     "eat": 1,
+     "school": 1,
+     "mosque": 1,
+     "stay": 1,
+     "sport": 1
+    },
+    "3": {
+     "clinic": 2,
+     "fuel": 1,
+     "eat": 1,
+     "library": 1,
+     "transport": 1,
+     "mosque": 3,
+     "school": 3,
+     "shop": 2,
+     "stay": 3,
+     "sport": 2
+    },
+    "5": {
+     "fuel": 3,
+     "clinic": 5,
+     "library": 2,
+     "eat": 5,
+     "transport": 2,
+     "mosque": 3,
+     "school": 6,
+     "church": 2,
+     "shop": 3,
+     "supermarket": 1,
+     "stay": 12,
+     "sport": 4
+    }
+   }
+  },
+  {
+   "area": "Bijilo",
+   "file": "bijilo.html",
+   "lat": 13.4219,
+   "lon": -16.7328,
+   "published": [
+    [
+     "30",
+     "Restaurants & cafés"
+    ],
+    [
+     "6",
+     "Shops & mini-marts"
+    ],
+    [
+     "4",
+     "Supermarkets"
+    ],
+    [
+     "1",
+     "Nature reserve"
+    ],
+    [
+     "5",
+     "Gyms & wellness"
+    ],
+    [
+     "3",
+     "Clinics & pharmacies"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "eat": 1,
+     "school": 1,
+     "hospital": 1,
+     "shop": 2,
+     "supermarket": 1,
+     "stay": 9,
+     "sport": 1
+    },
+    "2": {
+     "transport": 4,
+     "bank": 4,
+     "fuel": 5,
+     "hospital": 3,
+     "pharmacy": 5,
+     "eat": 11,
+     "bar": 3,
+     "police": 2,
+     "atm": 2,
+     "mosque": 3,
+     "money": 5,
+     "market": 5,
+     "clinic": 2,
+     "tertiary": 1,
+     "school": 1,
+     "shop": 46,
+     "supermarket": 3,
+     "stay": 19,
+     "reserve": 1,
+     "sport": 5
+    },
+    "3": {
+     "transport": 7,
+     "bank": 7,
+     "eat": 69,
+     "pharmacy": 7,
+     "hospital": 5,
+     "bar": 13,
+     "police": 3,
+     "fuel": 7,
+     "atm": 4,
+     "mosque": 9,
+     "school": 6,
+     "money": 7,
+     "market": 8,
+     "clinic": 2,
+     "tertiary": 2,
+     "shop": 84,
+     "supermarket": 7,
+     "stay": 37,
+     "reserve": 1,
+     "sport": 15
+    },
+    "5": {
+     "transport": 12,
+     "bank": 9,
+     "fuel": 12,
+     "eat": 98,
+     "pharmacy": 9,
+     "hospital": 9,
+     "bar": 23,
+     "police": 5,
+     "atm": 6,
+     "fire": 1,
+     "mosque": 18,
+     "school": 19,
+     "church": 3,
+     "money": 9,
+     "market": 10,
+     "clinic": 2,
+     "tertiary": 2,
+     "shop": 102,
+     "supermarket": 11,
+     "stay": 62,
+     "reserve": 1,
+     "sport": 34
+    }
+   }
+  },
+  {
+   "area": "Brikama",
+   "file": "brikama.html",
+   "lat": 13.2744,
+   "lon": -16.6454,
+   "published": [
+    [
+     "15+",
+     "Restaurants & chop shops"
+    ],
+    [
+     "3",
+     "Guesthouses"
+    ],
+    [
+     "8",
+     "Markets & shops"
+    ],
+    [
+     "3",
+     "Banks & ATMs"
+    ],
+    [
+     "2",
+     "Gyms"
+    ],
+    [
+     "5",
+     "Clinics & pharmacies"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "fuel": 5,
+     "transport": 4,
+     "post": 1,
+     "school": 7,
+     "eat": 1,
+     "bank": 4,
+     "hospital": 2,
+     "police": 2,
+     "gov": 1,
+     "market": 2,
+     "mosque": 6,
+     "pharmacy": 1,
+     "kindergarten": 1,
+     "supermarket": 2,
+     "shop": 3,
+     "sport": 2
+    },
+    "2": {
+     "fuel": 8,
+     "transport": 4,
+     "post": 1,
+     "school": 20,
+     "eat": 3,
+     "pharmacy": 2,
+     "bank": 4,
+     "hospital": 2,
+     "worship_other": 1,
+     "police": 4,
+     "clinic": 1,
+     "gov": 1,
+     "market": 2,
+     "mosque": 18,
+     "kindergarten": 1,
+     "shop": 7,
+     "supermarket": 2,
+     "stay": 1,
+     "sport": 7
+    },
+    "3": {
+     "market": 4,
+     "fuel": 11,
+     "transport": 4,
+     "post": 1,
+     "school": 26,
+     "eat": 4,
+     "pharmacy": 2,
+     "bank": 4,
+     "hospital": 2,
+     "worship_other": 1,
+     "police": 4,
+     "clinic": 1,
+     "gov": 1,
+     "mosque": 21,
+     "kindergarten": 1,
+     "shop": 7,
+     "supermarket": 2,
+     "stay": 1,
+     "sport": 14
+    },
+    "5": {
+     "market": 5,
+     "fuel": 12,
+     "transport": 5,
+     "post": 1,
+     "school": 31,
+     "eat": 4,
+     "pharmacy": 2,
+     "bank": 4,
+     "hospital": 2,
+     "worship_other": 1,
+     "police": 4,
+     "clinic": 2,
+     "gov": 1,
+     "mosque": 24,
+     "kindergarten": 2,
+     "shop": 8,
+     "supermarket": 2,
+     "stay": 2,
+     "reserve": 2,
+     "sport": 19
+    }
+   }
+  },
+  {
+   "area": "Brufut",
+   "file": "brufut.html",
+   "lat": 13.3813,
+   "lon": -16.7517,
+   "published": [
+    [
+     "15",
+     "Restaurants & grills"
+    ],
+    [
+     "8",
+     "Shops & mini-marts"
+    ],
+    [
+     "3",
+     "Supermarkets"
+    ],
+    [
+     "2",
+     "Beaches nearby"
+    ],
+    [
+     "4",
+     "Mosques"
+    ],
+    [
+     "2",
+     "Health clinics"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "school": 3,
+     "mosque": 1,
+     "pharmacy": 2,
+     "sport": 2
+    },
+    "2": {
+     "school": 4,
+     "mosque": 4,
+     "eat": 2,
+     "hospital": 2,
+     "shop": 4,
+     "pharmacy": 2,
+     "stay": 1,
+     "sport": 2
+    },
+    "3": {
+     "water": 8,
+     "school": 7,
+     "bar": 2,
+     "mosque": 7,
+     "eat": 5,
+     "money": 1,
+     "worship_other": 1,
+     "hospital": 2,
+     "church": 1,
+     "market": 1,
+     "fuel": 1,
+     "shop": 15,
+     "pharmacy": 2,
+     "supermarket": 1,
+     "stay": 4,
+     "sport": 5
+    },
+    "5": {
+     "transport": 4,
+     "bank": 4,
+     "police": 3,
+     "fuel": 6,
+     "hospital": 8,
+     "pharmacy": 8,
+     "water": 30,
+     "eat": 19,
+     "mosque": 15,
+     "school": 16,
+     "bar": 5,
+     "atm": 2,
+     "money": 7,
+     "market": 7,
+     "clinic": 5,
+     "worship_other": 1,
+     "tertiary": 1,
+     "church": 1,
+     "shop": 69,
+     "supermarket": 5,
+     "stay": 27,
+     "reserve": 3,
+     "sport": 21
+    }
+   }
+  },
+  {
+   "area": "Brusubi",
+   "file": "brusubi.html",
+   "lat": 13.4073,
+   "lon": -16.7306,
+   "published": [
+    [
+     "15",
+     "Restaurants & cafés"
+    ],
+    [
+     "8",
+     "Shops & mini-marts"
+    ],
+    [
+     "3",
+     "Supermarkets"
+    ],
+    [
+     "2",
+     "Mosques & churches"
+    ],
+    [
+     "3",
+     "Gyms"
+    ],
+    [
+     "2",
+     "Clinics"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "transport": 4,
+     "bank": 4,
+     "police": 3,
+     "fuel": 5,
+     "hospital": 2,
+     "pharmacy": 6,
+     "eat": 10,
+     "bar": 1,
+     "atm": 2,
+     "mosque": 3,
+     "money": 6,
+     "market": 6,
+     "clinic": 2,
+     "tertiary": 1,
+     "school": 1,
+     "shop": 55,
+     "supermarket": 4,
+     "stay": 4,
+     "sport": 9
+    },
+    "2": {
+     "transport": 4,
+     "bank": 4,
+     "police": 3,
+     "fuel": 6,
+     "hospital": 4,
+     "pharmacy": 6,
+     "eat": 15,
+     "bar": 3,
+     "school": 5,
+     "atm": 2,
+     "mosque": 5,
+     "money": 7,
+     "market": 6,
+     "clinic": 2,
+     "tertiary": 1,
+     "shop": 62,
+     "supermarket": 4,
+     "stay": 19,
+     "sport": 11
+    },
+    "3": {
+     "transport": 4,
+     "bank": 4,
+     "police": 3,
+     "fuel": 6,
+     "hospital": 7,
+     "pharmacy": 7,
+     "eat": 19,
+     "mosque": 12,
+     "bar": 3,
+     "school": 7,
+     "atm": 2,
+     "money": 7,
+     "market": 6,
+     "clinic": 2,
+     "tertiary": 1,
+     "shop": 69,
+     "supermarket": 4,
+     "stay": 23,
+     "reserve": 1,
+     "sport": 12
+    },
+    "5": {
+     "transport": 8,
+     "bank": 7,
+     "eat": 91,
+     "pharmacy": 9,
+     "hospital": 10,
+     "bar": 22,
+     "police": 3,
+     "fuel": 9,
+     "atm": 6,
+     "water": 18,
+     "mosque": 23,
+     "school": 16,
+     "money": 9,
+     "market": 9,
+     "clinic": 2,
+     "tertiary": 2,
+     "worship_other": 1,
+     "church": 1,
+     "shop": 100,
+     "supermarket": 10,
+     "stay": 50,
+     "reserve": 2,
+     "sport": 35
+    }
+   }
+  },
+  {
+   "area": "Busumbala",
+   "file": "busumbala.html",
+   "lat": 13.3334,
+   "lon": -16.6667,
+   "published": [
+    [
+     "9",
+     "Shops & bitiks"
+    ],
+    [
+     "1",
+     "Weekly lumo"
+    ],
+    [
+     "0",
+     "Supermarkets"
+    ],
+    [
+     "3",
+     "Mosques"
+    ],
+    [
+     "4",
+     "Schools"
+    ],
+    [
+     "1",
+     "Clinic"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "market": 1,
+     "mosque": 1,
+     "shop": 1,
+     "stay": 2,
+     "sport": 3
+    },
+    "2": {
+     "bar": 1,
+     "fuel": 1,
+     "worship_other": 1,
+     "school": 3,
+     "police": 1,
+     "transport": 1,
+     "market": 2,
+     "mosque": 1,
+     "shop": 1,
+     "stay": 3,
+     "sport": 11
+    },
+    "3": {
+     "bar": 1,
+     "fuel": 3,
+     "transport": 3,
+     "mosque": 3,
+     "worship_other": 2,
+     "school": 6,
+     "police": 1,
+     "market": 3,
+     "fire": 1,
+     "supermarket": 1,
+     "shop": 2,
+     "stay": 4,
+     "sport": 14
+    },
+    "5": {
+     "bar": 1,
+     "fuel": 5,
+     "transport": 3,
+     "mosque": 7,
+     "worship_other": 3,
+     "police": 4,
+     "school": 14,
+     "bank": 2,
+     "market": 5,
+     "fire": 1,
+     "supermarket": 1,
+     "shop": 3,
+     "stay": 5,
+     "sport": 28,
+     "reserve": 1
+    }
+   }
+  },
+  {
+   "area": "Cape Point",
+   "file": "cape-point.html",
+   "lat": 13.4849,
+   "lon": -16.6661,
+   "published": [
+    [
+     "8",
+     "Restaurants & cafés"
+    ],
+    [
+     "3",
+     "Hotels nearby"
+    ],
+    [
+     "4",
+     "Supermarkets"
+    ],
+    [
+     "2",
+     "Beaches"
+    ],
+    [
+     "3",
+     "Gyms"
+    ],
+    [
+     "3",
+     "Clinics"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "atm": 1,
+     "eat": 6,
+     "bar": 1,
+     "mosque": 3,
+     "school": 1,
+     "stay": 3
+    },
+    "2": {
+     "bank": 1,
+     "atm": 1,
+     "eat": 7,
+     "fuel": 1,
+     "market": 1,
+     "mosque": 5,
+     "bar": 1,
+     "school": 2,
+     "shop": 2,
+     "stay": 6,
+     "sport": 2
+    },
+    "3": {
+     "bank": 2,
+     "fuel": 3,
+     "atm": 1,
+     "eat": 11,
+     "clinic": 2,
+     "school": 13,
+     "hospital": 4,
+     "market": 1,
+     "mosque": 6,
+     "bar": 1,
+     "tertiary": 2,
+     "church": 2,
+     "shop": 6,
+     "stay": 11,
+     "sport": 19,
+     "gov": 8
+    },
+    "5": {
+     "bank": 14,
+     "transport": 6,
+     "school": 32,
+     "fuel": 12,
+     "eat": 43,
+     "library": 2,
+     "pharmacy": 2,
+     "tertiary": 7,
+     "atm": 6,
+     "clinic": 2,
+     "mosque": 11,
+     "money": 3,
+     "post": 2,
+     "kindergarten": 1,
+     "hospital": 5,
+     "market": 1,
+     "church": 4,
+     "bar": 1,
+     "gov": 15,
+     "police": 1,
+     "shop": 47,
+     "supermarket": 8,
+     "stay": 24,
+     "sport": 40,
+     "craft": 2
+    }
+   }
+  },
+  {
+   "area": "Essau",
+   "file": "essau.html",
+   "lat": 13.4858,
+   "lon": -16.5262,
+   "published": [
+    [
+     "16",
+     "Shops & bitiks"
+    ],
+    [
+     "1",
+     "Market"
+    ],
+    [
+     "1",
+     "District hospital"
+    ],
+    [
+     "4",
+     "Mosques"
+    ],
+    [
+     "6",
+     "Schools"
+    ],
+    [
+     "3",
+     "Pharmacies"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "school": 2,
+     "mosque": 1,
+     "stay": 2,
+     "sport": 2
+    },
+    "2": {
+     "school": 2,
+     "mosque": 3,
+     "stay": 5,
+     "sport": 2
+    },
+    "3": {
+     "ferry": 2,
+     "school": 2,
+     "mosque": 4,
+     "police": 1,
+     "bank": 1,
+     "stay": 5,
+     "sport": 2
+    },
+    "5": {
+     "ferry": 2,
+     "school": 2,
+     "mosque": 4,
+     "police": 1,
+     "bank": 1,
+     "stay": 5,
+     "sport": 3
+    }
+   }
+  },
+  {
+   "area": "Fajara",
+   "file": "fajara.html",
+   "lat": 13.469,
+   "lon": -16.6914,
+   "published": [
+    [
+     "30",
+     "Restaurants & cafés"
+    ],
+    [
+     "8",
+     "Shops & mini-marts"
+    ],
+    [
+     "4",
+     "Supermarkets"
+    ],
+    [
+     "2",
+     "Golf courses"
+    ],
+    [
+     "6",
+     "Clinics & hospitals"
+    ],
+    [
+     "4",
+     "Gyms & spas"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "transport": 1,
+     "school": 4,
+     "bank": 3,
+     "eat": 21,
+     "tertiary": 2,
+     "kindergarten": 1,
+     "atm": 2,
+     "hospital": 1,
+     "fuel": 1,
+     "church": 2,
+     "police": 1,
+     "shop": 22,
+     "supermarket": 5,
+     "stay": 5,
+     "sport": 9,
+     "gov": 1,
+     "money": 1
+    },
+    "2": {
+     "bank": 9,
+     "transport": 1,
+     "fuel": 6,
+     "school": 22,
+     "eat": 33,
+     "library": 1,
+     "pharmacy": 1,
+     "tertiary": 3,
+     "clinic": 1,
+     "money": 2,
+     "kindergarten": 1,
+     "atm": 2,
+     "mosque": 4,
+     "hospital": 1,
+     "church": 2,
+     "police": 1,
+     "shop": 31,
+     "supermarket": 6,
+     "stay": 17,
+     "sport": 27,
+     "gov": 8
+    },
+    "3": {
+     "bank": 9,
+     "transport": 5,
+     "fuel": 9,
+     "school": 36,
+     "fire": 1,
+     "police": 3,
+     "eat": 41,
+     "library": 2,
+     "pharmacy": 1,
+     "tertiary": 6,
+     "clinic": 2,
+     "money": 3,
+     "kindergarten": 1,
+     "hospital": 4,
+     "atm": 3,
+     "market": 1,
+     "church": 3,
+     "mosque": 9,
+     "bar": 1,
+     "post": 1,
+     "shop": 39,
+     "supermarket": 6,
+     "stay": 32,
+     "sport": 42,
+     "gov": 14,
+     "craft": 2
+    },
+    "5": {
+     "bank": 20,
+     "transport": 16,
+     "fuel": 17,
+     "eat": 120,
+     "pharmacy": 3,
+     "hospital": 7,
+     "bar": 21,
+     "school": 43,
+     "fire": 2,
+     "atm": 10,
+     "police": 3,
+     "library": 2,
+     "tertiary": 7,
+     "market": 6,
+     "clinic": 2,
+     "mosque": 16,
+     "church": 7,
+     "money": 4,
+     "post": 2,
+     "kindergarten": 1,
+     "gov": 15,
+     "shop": 85,
+     "supermarket": 16,
+     "stay": 98,
+     "sport": 62,
+     "craft": 2
+    }
+   }
+  },
+  {
+   "area": "Farafenni",
+   "file": "farafenni.html",
+   "lat": 13.5721,
+   "lon": -15.598,
+   "published": [
+    [
+     "8",
+     "Restaurants & chop shops"
+    ],
+    [
+     "3",
+     "Hotels & guesthouses"
+    ],
+    [
+     "4",
+     "Markets & superettes"
+    ],
+    [
+     "1",
+     "Farafenni Hospital"
+    ],
+    [
+     "3",
+     "Banks & money transfer"
+    ],
+    [
+     "4",
+     "Pharmacies"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "fuel": 2,
+     "police": 1,
+     "school": 5,
+     "eat": 4,
+     "bank": 5,
+     "post": 1,
+     "pharmacy": 2,
+     "mosque": 5,
+     "market": 1,
+     "transport": 4,
+     "fire": 1,
+     "shop": 8,
+     "supermarket": 3,
+     "stay": 1,
+     "sport": 1,
+     "gov": 6
+    },
+    "2": {
+     "fuel": 3,
+     "police": 1,
+     "school": 7,
+     "eat": 4,
+     "mosque": 6,
+     "bank": 5,
+     "post": 1,
+     "pharmacy": 2,
+     "church": 1,
+     "market": 2,
+     "transport": 4,
+     "hospital": 1,
+     "fire": 1,
+     "tertiary": 1,
+     "shop": 8,
+     "supermarket": 5,
+     "stay": 1,
+     "sport": 6,
+     "gov": 6
+    },
+    "3": {
+     "fuel": 3,
+     "police": 1,
+     "school": 7,
+     "eat": 4,
+     "mosque": 9,
+     "bank": 5,
+     "post": 1,
+     "pharmacy": 2,
+     "church": 1,
+     "market": 2,
+     "transport": 4,
+     "hospital": 1,
+     "fire": 1,
+     "tertiary": 1,
+     "shop": 8,
+     "supermarket": 5,
+     "stay": 1,
+     "sport": 7,
+     "gov": 9
+    },
+    "5": {
+     "fuel": 4,
+     "police": 1,
+     "school": 12,
+     "eat": 4,
+     "mosque": 14,
+     "bank": 5,
+     "post": 1,
+     "pharmacy": 2,
+     "church": 1,
+     "clinic": 1,
+     "market": 2,
+     "transport": 4,
+     "hospital": 1,
+     "fire": 1,
+     "kindergarten": 1,
+     "tertiary": 1,
+     "shop": 9,
+     "supermarket": 5,
+     "stay": 1,
+     "sport": 12,
+     "gov": 9
+    }
+   }
+  },
+  {
+   "area": "Farato",
+   "file": "farato.html",
+   "lat": 13.3152,
+   "lon": -16.6632,
+   "published": null,
+   "counts": {
+    "1": {
+     "fuel": 2,
+     "transport": 2,
+     "worship_other": 1,
+     "school": 1,
+     "market": 1,
+     "stay": 1,
+     "sport": 2
+    },
+    "2": {
+     "fuel": 2,
+     "transport": 2,
+     "worship_other": 1,
+     "school": 4,
+     "market": 2,
+     "stay": 1,
+     "sport": 6
+    },
+    "3": {
+     "market": 3,
+     "fuel": 2,
+     "transport": 2,
+     "worship_other": 1,
+     "school": 4,
+     "eat": 1,
+     "mosque": 1,
+     "shop": 1,
+     "stay": 4,
+     "reserve": 1,
+     "sport": 8
+    },
+    "5": {
+     "market": 6,
+     "fuel": 9,
+     "bar": 1,
+     "transport": 3,
+     "eat": 4,
+     "mosque": 12,
+     "pharmacy": 1,
+     "worship_other": 4,
+     "bank": 3,
+     "school": 23,
+     "hospital": 2,
+     "police": 3,
+     "clinic": 1,
+     "fire": 1,
+     "shop": 7,
+     "supermarket": 1,
+     "stay": 4,
+     "reserve": 1,
+     "sport": 23
+    }
+   }
+  },
+  {
+   "area": "Fatoto",
+   "file": "fatoto.html",
+   "lat": 13.3993,
+   "lon": -13.891,
+   "published": [
+    [
+     "6",
+     "Shops & bitiks"
+    ],
+    [
+     "1",
+     "Weekly lumo"
+    ],
+    [
+     "1",
+     "Health post"
+    ],
+    [
+     "3",
+     "Mosques"
+    ],
+    [
+     "3",
+     "Schools"
+    ],
+    [
+     "1",
+     "Pharmacy"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "ferry": 2,
+     "school": 1,
+     "sport": 1
+    },
+    "2": {
+     "ferry": 2,
+     "school": 1,
+     "sport": 1
+    },
+    "3": {
+     "ferry": 2,
+     "school": 1,
+     "sport": 1
+    },
+    "5": {
+     "ferry": 2,
+     "water": 1,
+     "school": 2,
+     "mosque": 2,
+     "sport": 2
+    }
+   }
+  },
+  {
+   "area": "Gambissara",
+   "file": "gambissara.html",
+   "lat": 13.2383,
+   "lon": -14.3108,
+   "published": [
+    [
+     "15",
+     "Shops & bitiks"
+    ],
+    [
+     "1",
+     "Market"
+    ],
+    [
+     "1",
+     "Health centre"
+    ],
+    [
+     "5",
+     "Mosques"
+    ],
+    [
+     "6",
+     "Schools"
+    ],
+    [
+     "2",
+     "Pharmacies"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "eat": 2,
+     "clinic": 1,
+     "money": 1,
+     "pharmacy": 1,
+     "bank": 1,
+     "mosque": 1,
+     "supermarket": 2,
+     "shop": 10,
+     "stay": 1,
+     "craft": 2
+    },
+    "2": {
+     "eat": 2,
+     "clinic": 1,
+     "money": 1,
+     "pharmacy": 1,
+     "bank": 1,
+     "mosque": 1,
+     "supermarket": 2,
+     "shop": 10,
+     "stay": 2,
+     "craft": 2
+    },
+    "3": {
+     "eat": 2,
+     "clinic": 1,
+     "money": 1,
+     "pharmacy": 1,
+     "bank": 1,
+     "mosque": 1,
+     "supermarket": 2,
+     "shop": 10,
+     "stay": 2,
+     "craft": 2
+    },
+    "5": {
+     "eat": 2,
+     "clinic": 1,
+     "money": 1,
+     "pharmacy": 1,
+     "bank": 1,
+     "mosque": 1,
+     "school": 1,
+     "supermarket": 2,
+     "shop": 10,
+     "stay": 2,
+     "craft": 2
+    }
+   }
+  },
+  {
+   "area": "Ghana Town",
+   "file": "ghana-town.html",
+   "lat": 13.38444,
+   "lon": -16.77111,
+   "published": null,
+   "counts": {
+    "1": {
+     "bar": 2,
+     "market": 1,
+     "school": 1,
+     "shop": 1
+    },
+    "2": {
+     "bar": 2,
+     "eat": 2,
+     "mosque": 1,
+     "market": 1,
+     "school": 2,
+     "shop": 2,
+     "stay": 1,
+     "reserve": 2,
+     "sport": 1
+    },
+    "3": {
+     "school": 5,
+     "bar": 2,
+     "eat": 2,
+     "mosque": 3,
+     "market": 1,
+     "hospital": 1,
+     "pharmacy": 2,
+     "shop": 2,
+     "stay": 2,
+     "reserve": 2,
+     "sport": 2
+    },
+    "5": {
+     "fuel": 6,
+     "bank": 1,
+     "pharmacy": 3,
+     "water": 7,
+     "eat": 11,
+     "school": 13,
+     "bar": 5,
+     "mosque": 9,
+     "clinic": 4,
+     "library": 1,
+     "transport": 2,
+     "police": 1,
+     "market": 3,
+     "money": 1,
+     "worship_other": 1,
+     "hospital": 2,
+     "church": 1,
+     "shop": 24,
+     "supermarket": 2,
+     "stay": 17,
+     "reserve": 2,
+     "sport": 9
+    }
+   }
+  },
+  {
+   "area": "Gunjur",
+   "file": "gunjur.html",
+   "lat": 13.176,
+   "lon": -16.7599,
+   "published": [
+    [
+     "12",
+     "Restaurants & bars"
+    ],
+    [
+     "8",
+     "Shops & markets"
+    ],
+    [
+     "1",
+     "Wildlife reserve"
+    ],
+    [
+     "3",
+     "Mosques"
+    ],
+    [
+     "2",
+     "Clinics"
+    ],
+    [
+     "1",
+     "Craft centre"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "police": 1,
+     "eat": 1,
+     "hospital": 1,
+     "mosque": 1,
+     "market": 2,
+     "school": 1,
+     "kindergarten": 1,
+     "shop": 1,
+     "sport": 1
+    },
+    "2": {
+     "bar": 1,
+     "police": 1,
+     "eat": 1,
+     "hospital": 1,
+     "mosque": 3,
+     "market": 2,
+     "school": 2,
+     "kindergarten": 1,
+     "shop": 3,
+     "supermarket": 1,
+     "sport": 2
+    },
+    "3": {
+     "bar": 3,
+     "police": 1,
+     "eat": 1,
+     "hospital": 1,
+     "mosque": 3,
+     "market": 2,
+     "school": 3,
+     "kindergarten": 1,
+     "shop": 3,
+     "supermarket": 1,
+     "stay": 7,
+     "sport": 2,
+     "reserve": 1
+    },
+    "5": {
+     "bar": 4,
+     "police": 1,
+     "eat": 2,
+     "hospital": 1,
+     "clinic": 1,
+     "mosque": 4,
+     "market": 3,
+     "school": 6,
+     "kindergarten": 1,
+     "shop": 4,
+     "supermarket": 1,
+     "stay": 7,
+     "sport": 3,
+     "reserve": 1
+    }
+   }
+  },
+  {
+   "area": "Jabang",
+   "file": "jabang.html",
+   "lat": 13.3619,
+   "lon": -16.7023,
+   "published": [
+    [
+     "10",
+     "Shops & bitiks"
+    ],
+    [
+     "1",
+     "Fuel station"
+    ],
+    [
+     "1",
+     "Supermarket"
+    ],
+    [
+     "3",
+     "Mosques"
+    ],
+    [
+     "4",
+     "Schools"
+    ],
+    [
+     "2",
+     "Clinics & pharmacies"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "mosque": 2,
+     "fuel": 2,
+     "school": 2,
+     "sport": 1
+    },
+    "2": {
+     "water": 1,
+     "mosque": 3,
+     "fuel": 2,
+     "school": 4,
+     "stay": 2,
+     "sport": 2
+    },
+    "3": {
+     "water": 24,
+     "worship_other": 1,
+     "mosque": 11,
+     "bank": 2,
+     "market": 2,
+     "police": 2,
+     "fuel": 4,
+     "hospital": 2,
+     "school": 9,
+     "shop": 2,
+     "stay": 3,
+     "sport": 15,
+     "reserve": 1
+    },
+    "5": {
+     "water": 30,
+     "eat": 2,
+     "mosque": 17,
+     "transport": 1,
+     "school": 16,
+     "worship_other": 2,
+     "clinic": 1,
+     "police": 3,
+     "bank": 2,
+     "market": 3,
+     "fuel": 5,
+     "hospital": 4,
+     "church": 1,
+     "supermarket": 3,
+     "shop": 20,
+     "stay": 11,
+     "sport": 25,
+     "reserve": 1
+    }
+   }
+  },
+  {
+   "area": "Jambanjelly",
+   "file": "jambanjelly.html",
+   "lat": 13.2806,
+   "lon": -16.7276,
+   "published": null,
+   "counts": {
+    "1": {
+     "fuel": 1,
+     "school": 1,
+     "sport": 1
+    },
+    "2": {
+     "atm": 1,
+     "fuel": 1,
+     "mosque": 1,
+     "school": 2,
+     "shop": 1,
+     "sport": 1
+    },
+    "3": {
+     "atm": 1,
+     "fuel": 1,
+     "mosque": 1,
+     "school": 2,
+     "shop": 1,
+     "sport": 1
+    },
+    "5": {
+     "transport": 1,
+     "fuel": 3,
+     "atm": 1,
+     "library": 1,
+     "worship_other": 1,
+     "eat": 1,
+     "school": 6,
+     "mosque": 2,
+     "church": 2,
+     "clinic": 1,
+     "hospital": 1,
+     "shop": 2,
+     "stay": 2,
+     "sport": 7
+    }
+   }
+  },
+  {
+   "area": "Jambur",
+   "file": "jambur.html",
+   "lat": 13.3146,
+   "lon": -16.7008,
+   "published": null,
+   "counts": {
+    "1": {
+     "worship_other": 1,
+     "school": 1,
+     "sport": 1
+    },
+    "2": {
+     "worship_other": 1,
+     "school": 1,
+     "sport": 1
+    },
+    "3": {
+     "worship_other": 1,
+     "school": 2,
+     "sport": 2
+    },
+    "5": {
+     "fuel": 3,
+     "transport": 2,
+     "atm": 1,
+     "worship_other": 3,
+     "school": 11,
+     "police": 1,
+     "hospital": 1,
+     "market": 3,
+     "clinic": 1,
+     "mosque": 1,
+     "shop": 1,
+     "stay": 6,
+     "reserve": 1,
+     "sport": 17
+    }
+   }
+  },
+  {
+   "area": "Janjanbureh",
+   "file": "janjanbureh.html",
+   "lat": 13.5391,
+   "lon": -14.7612,
+   "published": [
+    [
+     "12",
+     "Shops & bitiks"
+    ],
+    [
+     "1",
+     "Market"
+    ],
+    [
+     "1",
+     "Health centre"
+    ],
+    [
+     "4",
+     "Lodges & camps"
+    ],
+    [
+     "5",
+     "Schools"
+    ],
+    [
+     "2",
+     "Pharmacies"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "ferry": 2,
+     "eat": 5,
+     "market": 1,
+     "post": 1,
+     "school": 2,
+     "hospital": 1,
+     "police": 1,
+     "shop": 2,
+     "stay": 11,
+     "gov": 5
+    },
+    "2": {
+     "ferry": 2,
+     "eat": 5,
+     "market": 1,
+     "post": 1,
+     "school": 2,
+     "hospital": 1,
+     "police": 1,
+     "shop": 2,
+     "stay": 14,
+     "gov": 5
+    },
+    "3": {
+     "ferry": 2,
+     "water": 4,
+     "eat": 5,
+     "market": 1,
+     "post": 1,
+     "school": 3,
+     "hospital": 1,
+     "police": 1,
+     "shop": 2,
+     "stay": 14,
+     "gov": 5
+    },
+    "5": {
+     "ferry": 2,
+     "water": 4,
+     "school": 4,
+     "eat": 5,
+     "market": 1,
+     "post": 1,
+     "hospital": 1,
+     "police": 1,
+     "shop": 2,
+     "stay": 15,
+     "sport": 1,
+     "gov": 5
+    }
+   }
+  },
+  {
+   "area": "Kartong",
+   "file": "kartong.html",
+   "lat": 13.0913,
+   "lon": -16.7597,
+   "published": [
+    [
+     "4",
+     "Restaurants & bars"
+    ],
+    [
+     "2",
+     "Shops"
+    ],
+    [
+     "2",
+     "Eco-lodges"
+    ],
+    [
+     "1",
+     "Bird observatory"
+    ],
+    [
+     "1",
+     "Mosque"
+    ],
+    [
+     "1",
+     "Clinic"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "school": 3,
+     "mosque": 1,
+     "hospital": 2,
+     "church": 1,
+     "bar": 1,
+     "eat": 1,
+     "pharmacy": 1,
+     "clinic": 1,
+     "market": 1,
+     "sport": 1
+    },
+    "2": {
+     "school": 4,
+     "mosque": 1,
+     "hospital": 2,
+     "church": 1,
+     "bar": 1,
+     "eat": 1,
+     "pharmacy": 1,
+     "clinic": 1,
+     "market": 1,
+     "stay": 2,
+     "sport": 1
+    },
+    "3": {
+     "ferry": 3,
+     "bar": 2,
+     "school": 4,
+     "mosque": 1,
+     "hospital": 2,
+     "church": 1,
+     "eat": 3,
+     "pharmacy": 1,
+     "clinic": 1,
+     "market": 1,
+     "stay": 9,
+     "sport": 1
+    },
+    "5": {
+     "ferry": 4,
+     "bar": 4,
+     "school": 4,
+     "mosque": 1,
+     "hospital": 2,
+     "church": 1,
+     "eat": 3,
+     "pharmacy": 1,
+     "clinic": 1,
+     "market": 1,
+     "shop": 1,
+     "stay": 11,
+     "sport": 1,
+     "reserve": 1
+    }
+   }
+  },
+  {
+   "area": "Kerewan",
+   "file": "kerewan.html",
+   "lat": 13.4936,
+   "lon": -16.0891,
+   "published": [
+    [
+     "10",
+     "Shops & bitiks"
+    ],
+    [
+     "1",
+     "Market"
+    ],
+    [
+     "1",
+     "Hospital"
+    ],
+    [
+     "3",
+     "Mosques"
+    ],
+    [
+     "5",
+     "Schools"
+    ],
+    [
+     "2",
+     "Pharmacies"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "police": 1,
+     "clinic": 2,
+     "school": 3,
+     "mosque": 1,
+     "eat": 1,
+     "pharmacy": 1,
+     "atm": 1,
+     "shop": 11,
+     "supermarket": 1,
+     "stay": 2,
+     "sport": 1,
+     "gov": 3,
+     "craft": 1
+    },
+    "2": {
+     "police": 1,
+     "clinic": 2,
+     "school": 4,
+     "mosque": 1,
+     "eat": 1,
+     "pharmacy": 1,
+     "atm": 1,
+     "shop": 11,
+     "supermarket": 1,
+     "stay": 2,
+     "sport": 1,
+     "gov": 3,
+     "craft": 1
+    },
+    "3": {
+     "police": 1,
+     "clinic": 2,
+     "school": 4,
+     "mosque": 1,
+     "eat": 1,
+     "pharmacy": 1,
+     "atm": 1,
+     "shop": 11,
+     "supermarket": 1,
+     "stay": 2,
+     "sport": 1,
+     "reserve": 1,
+     "gov": 3,
+     "craft": 1
+    },
+    "5": {
+     "police": 1,
+     "clinic": 2,
+     "school": 4,
+     "mosque": 1,
+     "eat": 1,
+     "pharmacy": 1,
+     "atm": 1,
+     "shop": 11,
+     "supermarket": 1,
+     "stay": 2,
+     "sport": 1,
+     "reserve": 1,
+     "gov": 3,
+     "craft": 1
+    }
+   }
+  },
+  {
+   "area": "Kerr Serign",
+   "file": "kerr-serign.html",
+   "lat": 13.4325,
+   "lon": -16.7203,
+   "published": [
+    [
+     "12",
+     "Restaurants & cafés"
+    ],
+    [
+     "7",
+     "Shops & mini-marts"
+    ],
+    [
+     "2",
+     "Supermarkets"
+    ],
+    [
+     "1",
+     "Beach (Kotu, 10 min)"
+    ],
+    [
+     "5",
+     "Embassies & NGOs"
+    ],
+    [
+     "2",
+     "Health clinics"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "eat": 11,
+     "pharmacy": 1,
+     "transport": 1,
+     "bar": 4,
+     "tertiary": 1,
+     "mosque": 2,
+     "market": 1,
+     "shop": 2,
+     "stay": 9,
+     "reserve": 1
+    },
+    "2": {
+     "bank": 3,
+     "eat": 73,
+     "pharmacy": 1,
+     "transport": 4,
+     "hospital": 3,
+     "bar": 15,
+     "fuel": 1,
+     "atm": 4,
+     "school": 2,
+     "money": 1,
+     "market": 3,
+     "tertiary": 1,
+     "mosque": 3,
+     "supermarket": 6,
+     "shop": 32,
+     "stay": 33,
+     "reserve": 1,
+     "sport": 11
+    },
+    "3": {
+     "transport": 8,
+     "bank": 6,
+     "eat": 86,
+     "pharmacy": 4,
+     "hospital": 4,
+     "bar": 20,
+     "fuel": 5,
+     "atm": 5,
+     "mosque": 8,
+     "school": 13,
+     "police": 2,
+     "money": 6,
+     "clinic": 1,
+     "market": 5,
+     "tertiary": 1,
+     "church": 1,
+     "shop": 65,
+     "supermarket": 9,
+     "stay": 48,
+     "reserve": 1,
+     "sport": 28
+    },
+    "5": {
+     "transport": 16,
+     "bank": 20,
+     "fuel": 20,
+     "eat": 114,
+     "pharmacy": 8,
+     "hospital": 11,
+     "bar": 24,
+     "police": 7,
+     "fire": 2,
+     "atm": 11,
+     "library": 1,
+     "tertiary": 5,
+     "market": 12,
+     "mosque": 19,
+     "school": 26,
+     "church": 3,
+     "money": 12,
+     "clinic": 2,
+     "post": 1,
+     "shop": 136,
+     "supermarket": 19,
+     "stay": 106,
+     "reserve": 1,
+     "sport": 49,
+     "gov": 1,
+     "craft": 2
+    }
+   }
+  },
+  {
+   "area": "Kololi",
+   "file": "kololi.html",
+   "lat": 13.4404,
+   "lon": -16.7156,
+   "published": null,
+   "counts": {
+    "1": {
+     "bank": 3,
+     "eat": 67,
+     "pharmacy": 1,
+     "transport": 3,
+     "hospital": 2,
+     "bar": 11,
+     "fuel": 1,
+     "atm": 3,
+     "money": 1,
+     "market": 2,
+     "mosque": 2,
+     "supermarket": 5,
+     "shop": 28,
+     "stay": 20,
+     "sport": 7
+    },
+    "2": {
+     "bank": 3,
+     "eat": 77,
+     "pharmacy": 1,
+     "transport": 5,
+     "hospital": 2,
+     "bar": 19,
+     "fuel": 3,
+     "atm": 4,
+     "school": 7,
+     "police": 1,
+     "money": 1,
+     "market": 3,
+     "tertiary": 1,
+     "church": 1,
+     "mosque": 3,
+     "supermarket": 7,
+     "shop": 30,
+     "stay": 35,
+     "reserve": 1,
+     "sport": 19
+    },
+    "3": {
+     "fuel": 6,
+     "bank": 5,
+     "eat": 81,
+     "pharmacy": 1,
+     "transport": 8,
+     "hospital": 4,
+     "bar": 20,
+     "atm": 4,
+     "fire": 1,
+     "police": 2,
+     "mosque": 5,
+     "church": 3,
+     "school": 12,
+     "money": 2,
+     "market": 4,
+     "tertiary": 1,
+     "supermarket": 7,
+     "shop": 34,
+     "stay": 52,
+     "reserve": 1,
+     "sport": 25
+    },
+    "5": {
+     "transport": 19,
+     "bank": 21,
+     "fuel": 21,
+     "eat": 128,
+     "pharmacy": 9,
+     "hospital": 11,
+     "bar": 24,
+     "school": 43,
+     "police": 7,
+     "fire": 2,
+     "atm": 11,
+     "library": 2,
+     "tertiary": 8,
+     "market": 12,
+     "mosque": 20,
+     "church": 7,
+     "clinic": 3,
+     "money": 11,
+     "post": 2,
+     "kindergarten": 1,
+     "gov": 6,
+     "shop": 143,
+     "supermarket": 20,
+     "stay": 114,
+     "reserve": 1,
+     "sport": 64,
+     "craft": 2
+    }
+   }
+  },
+  {
+   "area": "Kotu",
+   "file": "kotu.html",
+   "lat": 13.4553,
+   "lon": -16.7034,
+   "published": [
+    [
+     "20",
+     "Restaurants & bars"
+    ],
+    [
+     "5",
+     "Hotels & resorts"
+    ],
+    [
+     "4",
+     "Shops & mini-marts"
+    ],
+    [
+     "2",
+     "Supermarkets"
+    ],
+    [
+     "3",
+     "Gyms & spas"
+    ],
+    [
+     "2",
+     "Clinics"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "fuel": 1,
+     "fire": 1,
+     "police": 1,
+     "eat": 3,
+     "school": 4,
+     "stay": 8,
+     "sport": 3
+    },
+    "2": {
+     "transport": 2,
+     "fuel": 5,
+     "school": 9,
+     "bank": 5,
+     "fire": 1,
+     "police": 3,
+     "eat": 49,
+     "pharmacy": 1,
+     "tertiary": 2,
+     "bar": 7,
+     "money": 3,
+     "atm": 3,
+     "mosque": 1,
+     "church": 1,
+     "shop": 33,
+     "supermarket": 9,
+     "stay": 27,
+     "sport": 17,
+     "gov": 1
+    },
+    "3": {
+     "transport": 10,
+     "fuel": 10,
+     "bank": 13,
+     "eat": 111,
+     "pharmacy": 2,
+     "hospital": 3,
+     "bar": 19,
+     "school": 33,
+     "atm": 7,
+     "fire": 1,
+     "police": 3,
+     "library": 1,
+     "tertiary": 4,
+     "market": 5,
+     "mosque": 6,
+     "church": 6,
+     "money": 4,
+     "kindergarten": 1,
+     "post": 1,
+     "supermarket": 14,
+     "shop": 68,
+     "stay": 79,
+     "sport": 44,
+     "gov": 4,
+     "craft": 2
+    },
+    "5": {
+     "bank": 20,
+     "transport": 16,
+     "fuel": 18,
+     "eat": 120,
+     "pharmacy": 4,
+     "hospital": 11,
+     "bar": 22,
+     "school": 50,
+     "fire": 2,
+     "atm": 9,
+     "police": 4,
+     "library": 2,
+     "tertiary": 8,
+     "market": 7,
+     "mosque": 20,
+     "clinic": 2,
+     "church": 7,
+     "money": 5,
+     "post": 2,
+     "kindergarten": 1,
+     "gov": 15,
+     "shop": 96,
+     "supermarket": 16,
+     "stay": 103,
+     "reserve": 1,
+     "sport": 68,
+     "craft": 2
+    }
+   }
+  },
+  {
+   "area": "Kuntaur",
+   "file": "kuntaur.html",
+   "lat": 13.6709,
+   "lon": -14.8898,
+   "published": [
+    [
+     "7",
+     "Shops & bitiks"
+    ],
+    [
+     "1",
+     "Weekly lumo"
+    ],
+    [
+     "1",
+     "Health post"
+    ],
+    [
+     "2",
+     "Mosques"
+    ],
+    [
+     "3",
+     "Schools"
+    ],
+    [
+     "1",
+     "Pharmacy"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "ferry": 4,
+     "eat": 2,
+     "shop": 1,
+     "stay": 1
+    },
+    "2": {
+     "ferry": 4,
+     "water": 1,
+     "eat": 2,
+     "shop": 1,
+     "stay": 1
+    },
+    "3": {
+     "ferry": 4,
+     "bank": 1,
+     "police": 1,
+     "market": 1,
+     "water": 1,
+     "eat": 2,
+     "shop": 2,
+     "stay": 2,
+     "gov": 1
+    },
+    "5": {
+     "ferry": 4,
+     "bank": 1,
+     "police": 1,
+     "school": 1,
+     "market": 1,
+     "water": 1,
+     "eat": 2,
+     "shop": 2,
+     "stay": 2,
+     "gov": 1
+    }
+   }
+  },
+  {
+   "area": "Lamin",
+   "file": "lamin.html",
+   "lat": 13.3874,
+   "lon": -16.6439,
+   "published": [
+    [
+     "18",
+     "Shops & bitiks"
+    ],
+    [
+     "1",
+     "Daily market"
+    ],
+    [
+     "1",
+     "Supermarket"
+    ],
+    [
+     "5",
+     "Mosques & churches"
+    ],
+    [
+     "7",
+     "Schools"
+    ],
+    [
+     "3",
+     "Clinics & pharmacies"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "fuel": 2,
+     "school": 2,
+     "clinic": 1,
+     "transport": 1,
+     "stay": 1,
+     "reserve": 1,
+     "sport": 1
+    },
+    "2": {
+     "fuel": 2,
+     "school": 3,
+     "clinic": 1,
+     "police": 1,
+     "transport": 1,
+     "eat": 2,
+     "mosque": 1,
+     "shop": 3,
+     "stay": 1,
+     "reserve": 1,
+     "sport": 7,
+     "gov": 1
+    },
+    "3": {
+     "fuel": 5,
+     "bar": 2,
+     "transport": 2,
+     "school": 4,
+     "clinic": 1,
+     "police": 2,
+     "eat": 2,
+     "market": 1,
+     "mosque": 1,
+     "shop": 12,
+     "stay": 5,
+     "reserve": 1,
+     "sport": 8,
+     "gov": 1
+    },
+    "5": {
+     "fuel": 13,
+     "bar": 3,
+     "transport": 6,
+     "school": 12,
+     "clinic": 2,
+     "hospital": 3,
+     "mosque": 18,
+     "police": 5,
+     "bank": 2,
+     "market": 3,
+     "eat": 3,
+     "shop": 32,
+     "supermarket": 4,
+     "stay": 9,
+     "reserve": 2,
+     "sport": 27,
+     "gov": 1
+    }
+   }
+  },
+  {
+   "area": "Latriya",
+   "file": "latriya.html",
+   "lat": 13.3,
+   "lon": -16.711,
+   "published": null,
+   "counts": {
+    "1": {},
+    "2": {
+     "school": 2,
+     "sport": 1
+    },
+    "3": {
+     "atm": 1,
+     "worship_other": 1,
+     "school": 3,
+     "sport": 3
+    },
+    "5": {
+     "atm": 1,
+     "worship_other": 1,
+     "fuel": 1,
+     "school": 8,
+     "mosque": 1,
+     "clinic": 1,
+     "shop": 1,
+     "stay": 1,
+     "sport": 7
+    }
+   }
+  },
+  {
+   "area": "Madiana",
+   "file": "madiana.html",
+   "lat": 13.3533,
+   "lon": -16.7631,
+   "published": null,
+   "counts": {
+    "1": {
+     "school": 1,
+     "stay": 1,
+     "sport": 1
+    },
+    "2": {
+     "eat": 1,
+     "school": 2,
+     "supermarket": 1,
+     "stay": 5,
+     "sport": 1
+    },
+    "3": {
+     "clinic": 4,
+     "library": 1,
+     "transport": 1,
+     "mosque": 3,
+     "eat": 1,
+     "school": 6,
+     "shop": 3,
+     "supermarket": 1,
+     "stay": 6,
+     "sport": 4,
+     "reserve": 1
+    },
+    "5": {
+     "fuel": 3,
+     "clinic": 5,
+     "water": 30,
+     "library": 2,
+     "school": 16,
+     "bar": 2,
+     "mosque": 11,
+     "transport": 2,
+     "eat": 6,
+     "hospital": 3,
+     "worship_other": 1,
+     "church": 3,
+     "market": 1,
+     "shop": 9,
+     "pharmacy": 2,
+     "supermarket": 1,
+     "stay": 15,
+     "reserve": 2,
+     "sport": 13
+    }
+   }
+  },
+  {
+   "area": "Mamuda",
+   "file": "mamuda.html",
+   "lat": 13.3032,
+   "lon": -16.7328,
+   "published": null,
+   "counts": {
+    "1": {},
+    "2": {
+     "atm": 1,
+     "school": 1,
+     "stay": 1,
+     "sport": 1
+    },
+    "3": {
+     "atm": 1,
+     "library": 1,
+     "fuel": 1,
+     "school": 4,
+     "church": 2,
+     "shop": 1,
+     "stay": 2,
+     "sport": 2
+    },
+    "5": {
+     "transport": 1,
+     "fuel": 3,
+     "atm": 1,
+     "library": 1,
+     "worship_other": 1,
+     "school": 7,
+     "mosque": 1,
+     "church": 2,
+     "hospital": 1,
+     "shop": 2,
+     "stay": 4,
+     "sport": 7
+    }
+   }
+  },
+  {
+   "area": "Manjai Kunda",
+   "file": "manjai-kunda.html",
+   "lat": 13.4422,
+   "lon": -16.6981,
+   "published": [
+    [
+     "35+",
+     "Shops & bitiks"
+    ],
+    [
+     "1",
+     "Market"
+    ],
+    [
+     "3",
+     "Supermarkets"
+    ],
+    [
+     "7",
+     "Banks & ATMs"
+    ],
+    [
+     "8",
+     "Mosques & churches"
+    ],
+    [
+     "7",
+     "Clinics & pharmacies"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "transport": 2,
+     "bar": 2,
+     "fuel": 2,
+     "bank": 1,
+     "eat": 1,
+     "police": 1,
+     "mosque": 1,
+     "school": 4,
+     "church": 1,
+     "shop": 2,
+     "stay": 5,
+     "sport": 7
+    },
+    "2": {
+     "fuel": 5,
+     "transport": 5,
+     "fire": 1,
+     "police": 2,
+     "eat": 7,
+     "bar": 3,
+     "market": 3,
+     "mosque": 3,
+     "church": 3,
+     "bank": 2,
+     "school": 12,
+     "shop": 8,
+     "supermarket": 2,
+     "stay": 44,
+     "sport": 11,
+     "craft": 1
+    },
+    "3": {
+     "transport": 14,
+     "fuel": 13,
+     "bank": 17,
+     "eat": 103,
+     "pharmacy": 3,
+     "hospital": 6,
+     "bar": 20,
+     "fire": 2,
+     "atm": 9,
+     "police": 3,
+     "library": 1,
+     "tertiary": 4,
+     "market": 5,
+     "mosque": 11,
+     "school": 30,
+     "church": 5,
+     "money": 5,
+     "post": 2,
+     "gov": 2,
+     "supermarket": 15,
+     "shop": 74,
+     "stay": 87,
+     "sport": 42,
+     "craft": 2
+    },
+    "5": {
+     "bank": 20,
+     "transport": 17,
+     "fuel": 22,
+     "eat": 122,
+     "pharmacy": 6,
+     "hospital": 14,
+     "bar": 21,
+     "school": 50,
+     "fire": 2,
+     "atm": 9,
+     "police": 5,
+     "library": 2,
+     "tertiary": 8,
+     "market": 7,
+     "mosque": 26,
+     "clinic": 2,
+     "church": 7,
+     "money": 5,
+     "post": 2,
+     "kindergarten": 1,
+     "gov": 15,
+     "shop": 114,
+     "supermarket": 17,
+     "stay": 111,
+     "reserve": 1,
+     "sport": 79,
+     "craft": 2
+    }
+   }
+  },
+  {
+   "area": "Mansa Konko",
+   "file": "mansa-konko.html",
+   "lat": 13.4585,
+   "lon": -15.534,
+   "published": [
+    [
+     "8",
+     "Shops & bitiks"
+    ],
+    [
+     "1",
+     "Market (Soma)"
+    ],
+    [
+     "1",
+     "Health centre"
+    ],
+    [
+     "3",
+     "Mosques"
+    ],
+    [
+     "5",
+     "Schools"
+    ],
+    [
+     "2",
+     "Pharmacies"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "water": 1,
+     "worship_other": 1,
+     "gov": 3,
+     "fire": 1,
+     "police": 1,
+     "stay": 7,
+     "school": 1
+    },
+    "2": {
+     "church": 2,
+     "water": 1,
+     "fuel": 3,
+     "pharmacy": 1,
+     "bank": 1,
+     "mosque": 2,
+     "worship_other": 2,
+     "gov": 4,
+     "fire": 1,
+     "police": 2,
+     "tertiary": 1,
+     "school": 3,
+     "transport": 1,
+     "eat": 1,
+     "hospital": 1,
+     "shop": 1,
+     "stay": 9,
+     "sport": 4,
+     "craft": 1
+    },
+    "3": {
+     "church": 2,
+     "water": 1,
+     "police": 3,
+     "fuel": 4,
+     "pharmacy": 1,
+     "bank": 2,
+     "mosque": 2,
+     "market": 2,
+     "worship_other": 2,
+     "school": 6,
+     "gov": 4,
+     "fire": 1,
+     "eat": 2,
+     "tertiary": 1,
+     "transport": 1,
+     "hospital": 1,
+     "shop": 2,
+     "stay": 10,
+     "sport": 4,
+     "craft": 2
+    },
+    "5": {
+     "church": 2,
+     "water": 1,
+     "police": 3,
+     "fuel": 4,
+     "pharmacy": 1,
+     "bank": 2,
+     "mosque": 2,
+     "market": 2,
+     "worship_other": 2,
+     "school": 6,
+     "gov": 4,
+     "fire": 1,
+     "eat": 2,
+     "tertiary": 1,
+     "transport": 1,
+     "hospital": 1,
+     "shop": 2,
+     "stay": 10,
+     "sport": 4,
+     "craft": 2
+    }
+   }
+  },
+  {
+   "area": "Nema Kunku",
+   "file": "nema-kunku.html",
+   "lat": 13.40461,
+   "lon": -16.68401,
+   "published": [
+    [
+     "12",
+     "Shops & bitiks"
+    ],
+    [
+     "1",
+     "Weekly market"
+    ],
+    [
+     "1",
+     "Supermarket"
+    ],
+    [
+     "4",
+     "Mosques"
+    ],
+    [
+     "5",
+     "Schools"
+    ],
+    [
+     "2",
+     "Clinics & pharmacies"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "mosque": 2,
+     "stay": 1,
+     "sport": 1
+    },
+    "2": {
+     "transport": 3,
+     "fuel": 5,
+     "hospital": 4,
+     "police": 2,
+     "mosque": 6,
+     "school": 3,
+     "eat": 1,
+     "shop": 17,
+     "supermarket": 1,
+     "stay": 3,
+     "sport": 8
+    },
+    "3": {
+     "transport": 4,
+     "fuel": 9,
+     "mosque": 19,
+     "hospital": 6,
+     "police": 2,
+     "school": 9,
+     "clinic": 1,
+     "eat": 1,
+     "money": 1,
+     "market": 2,
+     "pharmacy": 1,
+     "shop": 33,
+     "supermarket": 3,
+     "stay": 7,
+     "sport": 12
+    },
+    "5": {
+     "transport": 17,
+     "bank": 11,
+     "police": 8,
+     "fuel": 23,
+     "fire": 1,
+     "hospital": 10,
+     "eat": 14,
+     "bar": 3,
+     "market": 12,
+     "mosque": 33,
+     "school": 23,
+     "tertiary": 2,
+     "pharmacy": 5,
+     "church": 4,
+     "clinic": 2,
+     "post": 1,
+     "atm": 3,
+     "money": 5,
+     "gov": 2,
+     "shop": 88,
+     "supermarket": 7,
+     "stay": 56,
+     "reserve": 2,
+     "sport": 46,
+     "craft": 1
+    }
+   }
+  },
+  {
+   "area": "Old Yundum",
+   "file": "old-yundum.html",
+   "lat": 13.3625,
+   "lon": -16.68611,
+   "published": null,
+   "counts": {
+    "1": {
+     "bank": 2,
+     "market": 2,
+     "police": 2,
+     "fuel": 2,
+     "school": 1,
+     "mosque": 2,
+     "sport": 3
+    },
+    "2": {
+     "mosque": 7,
+     "bank": 2,
+     "market": 2,
+     "police": 2,
+     "fuel": 3,
+     "school": 6,
+     "shop": 3,
+     "supermarket": 1,
+     "stay": 2,
+     "sport": 9
+    },
+    "3": {
+     "transport": 1,
+     "mosque": 8,
+     "worship_other": 1,
+     "clinic": 1,
+     "police": 3,
+     "bank": 2,
+     "market": 3,
+     "fuel": 5,
+     "school": 10,
+     "supermarket": 2,
+     "shop": 3,
+     "stay": 5,
+     "sport": 16
+    },
+    "5": {
+     "fuel": 7,
+     "bar": 1,
+     "water": 27,
+     "mosque": 21,
+     "transport": 2,
+     "school": 17,
+     "police": 5,
+     "worship_other": 2,
+     "clinic": 1,
+     "bank": 2,
+     "market": 4,
+     "hospital": 3,
+     "fire": 1,
+     "church": 1,
+     "supermarket": 4,
+     "shop": 28,
+     "stay": 12,
+     "reserve": 2,
+     "sport": 31
+    }
+   }
+  },
+  {
+   "area": "Pipeline",
+   "file": "pipeline.html",
+   "lat": 13.463,
+   "lon": -16.6841,
+   "published": [
+    [
+     "22",
+     "Restaurants & cafés"
+    ],
+    [
+     "16",
+     "Shops"
+    ],
+    [
+     "3",
+     "Supermarkets"
+    ],
+    [
+     "6",
+     "Banks & ATMs"
+    ],
+    [
+     "5",
+     "Mosques & churches"
+    ],
+    [
+     "6",
+     "Clinics & pharmacies"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "transport": 1,
+     "bank": 7,
+     "eat": 18,
+     "library": 1,
+     "pharmacy": 1,
+     "tertiary": 4,
+     "fuel": 3,
+     "clinic": 1,
+     "money": 2,
+     "atm": 2,
+     "mosque": 2,
+     "school": 14,
+     "church": 1,
+     "police": 1,
+     "shop": 28,
+     "supermarket": 4,
+     "stay": 5,
+     "sport": 8,
+     "gov": 8
+    },
+    "2": {
+     "bank": 9,
+     "transport": 3,
+     "school": 31,
+     "eat": 33,
+     "library": 2,
+     "pharmacy": 1,
+     "tertiary": 6,
+     "fuel": 8,
+     "clinic": 2,
+     "money": 3,
+     "kindergarten": 1,
+     "hospital": 4,
+     "atm": 3,
+     "church": 3,
+     "mosque": 6,
+     "post": 1,
+     "police": 1,
+     "shop": 39,
+     "supermarket": 6,
+     "stay": 12,
+     "sport": 37,
+     "gov": 14,
+     "craft": 1
+    },
+    "3": {
+     "bank": 15,
+     "transport": 8,
+     "fuel": 12,
+     "school": 36,
+     "fire": 1,
+     "police": 3,
+     "eat": 43,
+     "library": 2,
+     "pharmacy": 2,
+     "tertiary": 7,
+     "market": 2,
+     "clinic": 2,
+     "mosque": 11,
+     "bar": 2,
+     "money": 3,
+     "post": 2,
+     "kindergarten": 1,
+     "hospital": 5,
+     "atm": 5,
+     "church": 4,
+     "gov": 15,
+     "shop": 51,
+     "supermarket": 9,
+     "stay": 57,
+     "sport": 41,
+     "craft": 2
+    },
+    "5": {
+     "bank": 20,
+     "transport": 16,
+     "fuel": 18,
+     "eat": 120,
+     "pharmacy": 4,
+     "hospital": 10,
+     "bar": 21,
+     "school": 46,
+     "fire": 2,
+     "atm": 10,
+     "police": 3,
+     "library": 2,
+     "tertiary": 7,
+     "market": 7,
+     "clinic": 2,
+     "mosque": 19,
+     "church": 7,
+     "money": 5,
+     "post": 2,
+     "kindergarten": 1,
+     "gov": 15,
+     "shop": 92,
+     "supermarket": 16,
+     "stay": 95,
+     "sport": 64,
+     "craft": 2
+    }
+   }
+  },
+  {
+   "area": "Salagi",
+   "file": "salagi.html",
+   "lat": 13.393,
+   "lon": -16.71,
+   "published": null,
+   "counts": {
+    "1": {
+     "eat": 1,
+     "mosque": 2,
+     "shop": 1
+    },
+    "2": {
+     "police": 1,
+     "eat": 2,
+     "mosque": 4,
+     "school": 2,
+     "hospital": 1,
+     "shop": 1,
+     "stay": 2,
+     "reserve": 1,
+     "sport": 1
+    },
+    "3": {
+     "transport": 4,
+     "bank": 3,
+     "police": 3,
+     "fuel": 6,
+     "hospital": 4,
+     "pharmacy": 6,
+     "water": 1,
+     "eat": 12,
+     "mosque": 10,
+     "school": 5,
+     "bar": 1,
+     "atm": 2,
+     "money": 6,
+     "clinic": 2,
+     "market": 5,
+     "tertiary": 1,
+     "shop": 43,
+     "supermarket": 2,
+     "stay": 6,
+     "reserve": 1,
+     "sport": 10
+    },
+    "5": {
+     "transport": 5,
+     "bank": 6,
+     "police": 7,
+     "fuel": 16,
+     "hospital": 11,
+     "pharmacy": 8,
+     "water": 30,
+     "eat": 20,
+     "bar": 5,
+     "mosque": 33,
+     "school": 28,
+     "clinic": 3,
+     "market": 9,
+     "atm": 2,
+     "money": 8,
+     "tertiary": 2,
+     "worship_other": 1,
+     "church": 1,
+     "shop": 96,
+     "supermarket": 7,
+     "stay": 35,
+     "reserve": 2,
+     "sport": 41
+    }
+   }
+  },
+  {
+   "area": "Sanyang",
+   "file": "sanyang.html",
+   "lat": 13.2676,
+   "lon": -16.7584,
+   "published": [
+    [
+     "10",
+     "Beach bars & local restaurants"
+    ],
+    [
+     "5",
+     "Shops & stalls"
+    ],
+    [
+     "1",
+     "Fish market"
+    ],
+    [
+     "1",
+     "Beach (2 km stretch)"
+    ],
+    [
+     "1",
+     "Community clinic"
+    ],
+    [
+     "2",
+     "Mosques"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "transport": 1,
+     "eat": 1,
+     "mosque": 1,
+     "school": 1,
+     "hospital": 1,
+     "sport": 2
+    },
+    "2": {
+     "transport": 1,
+     "fuel": 2,
+     "eat": 1,
+     "mosque": 1,
+     "school": 1,
+     "hospital": 1,
+     "shop": 1,
+     "sport": 2
+    },
+    "3": {
+     "transport": 1,
+     "fuel": 2,
+     "eat": 1,
+     "mosque": 2,
+     "school": 1,
+     "hospital": 1,
+     "shop": 2,
+     "sport": 2
+    },
+    "5": {
+     "eat": 6,
+     "transport": 1,
+     "fuel": 3,
+     "bar": 1,
+     "atm": 1,
+     "library": 1,
+     "kindergarten": 1,
+     "mosque": 2,
+     "school": 6,
+     "church": 2,
+     "hospital": 1,
+     "shop": 3,
+     "stay": 5,
+     "sport": 5,
+     "reserve": 1
+    }
+   }
+  },
+  {
+   "area": "Senegambia",
+   "file": "senegambia.html",
+   "lat": 13.4431,
+   "lon": -16.7198,
+   "published": [
+    [
+     "60+",
+     "Restaurants & bars"
+    ],
+    [
+     "12",
+     "Hotels & lodges"
+    ],
+    [
+     "4",
+     "Supermarkets"
+    ],
+    [
+     "2",
+     "Casinos"
+    ],
+    [
+     "8",
+     "Banks & ATMs"
+    ],
+    [
+     "5",
+     "Clinics & pharmacies"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "bank": 3,
+     "eat": 68,
+     "pharmacy": 1,
+     "transport": 4,
+     "hospital": 2,
+     "bar": 15,
+     "fuel": 1,
+     "atm": 4,
+     "money": 1,
+     "market": 2,
+     "mosque": 2,
+     "supermarket": 6,
+     "shop": 28,
+     "stay": 25,
+     "sport": 8
+    },
+    "2": {
+     "bank": 3,
+     "eat": 76,
+     "pharmacy": 1,
+     "transport": 5,
+     "hospital": 2,
+     "bar": 18,
+     "fuel": 3,
+     "atm": 4,
+     "school": 6,
+     "police": 1,
+     "money": 1,
+     "market": 3,
+     "tertiary": 1,
+     "church": 1,
+     "mosque": 3,
+     "supermarket": 7,
+     "shop": 29,
+     "stay": 33,
+     "reserve": 1,
+     "sport": 17
+    },
+    "3": {
+     "fuel": 4,
+     "bank": 4,
+     "eat": 81,
+     "pharmacy": 1,
+     "transport": 5,
+     "hospital": 3,
+     "bar": 20,
+     "atm": 4,
+     "fire": 1,
+     "police": 2,
+     "mosque": 5,
+     "school": 11,
+     "money": 2,
+     "market": 3,
+     "tertiary": 1,
+     "church": 1,
+     "supermarket": 7,
+     "shop": 33,
+     "stay": 49,
+     "reserve": 1,
+     "sport": 25
+    },
+    "5": {
+     "transport": 18,
+     "bank": 21,
+     "fuel": 19,
+     "eat": 127,
+     "pharmacy": 9,
+     "hospital": 10,
+     "bar": 24,
+     "school": 37,
+     "police": 6,
+     "fire": 2,
+     "atm": 11,
+     "library": 1,
+     "tertiary": 6,
+     "market": 11,
+     "mosque": 17,
+     "church": 7,
+     "money": 11,
+     "kindergarten": 1,
+     "clinic": 2,
+     "post": 1,
+     "shop": 137,
+     "supermarket": 20,
+     "stay": 112,
+     "reserve": 1,
+     "sport": 57,
+     "gov": 4,
+     "craft": 2
+    }
+   }
+  },
+  {
+   "area": "Serrekunda",
+   "file": "serrekunda.html",
+   "lat": 13.4388,
+   "lon": -16.6748,
+   "published": [
+    [
+     "25+",
+     "Restaurants & street food"
+    ],
+    [
+     "6",
+     "Hotels & lodges"
+    ],
+    [
+     "10+",
+     "Supermarkets & shops"
+    ],
+    [
+     "4",
+     "Banks & ATMs"
+    ],
+    [
+     "5",
+     "Gyms & sports"
+    ],
+    [
+     "8",
+     "Clinics & pharmacies"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "fire": 1,
+     "eat": 2,
+     "transport": 4,
+     "market": 1,
+     "bank": 5,
+     "mosque": 3,
+     "tertiary": 1,
+     "pharmacy": 1,
+     "bar": 1,
+     "atm": 2,
+     "gov": 1,
+     "fuel": 3,
+     "church": 1,
+     "hospital": 1,
+     "school": 2,
+     "supermarket": 3,
+     "shop": 12,
+     "stay": 9,
+     "sport": 5
+    },
+    "2": {
+     "transport": 10,
+     "fuel": 7,
+     "fire": 1,
+     "eat": 5,
+     "market": 3,
+     "bank": 8,
+     "tertiary": 2,
+     "school": 10,
+     "mosque": 6,
+     "pharmacy": 2,
+     "bar": 1,
+     "church": 4,
+     "post": 2,
+     "money": 1,
+     "atm": 3,
+     "gov": 6,
+     "hospital": 1,
+     "supermarket": 4,
+     "shop": 32,
+     "stay": 40,
+     "sport": 14,
+     "craft": 2
+    },
+    "3": {
+     "transport": 11,
+     "fuel": 13,
+     "bank": 13,
+     "fire": 1,
+     "library": 2,
+     "pharmacy": 3,
+     "eat": 17,
+     "bar": 3,
+     "market": 3,
+     "hospital": 9,
+     "clinic": 2,
+     "police": 2,
+     "school": 29,
+     "tertiary": 6,
+     "mosque": 12,
+     "church": 4,
+     "money": 3,
+     "post": 2,
+     "atm": 3,
+     "gov": 13,
+     "shop": 46,
+     "supermarket": 4,
+     "stay": 46,
+     "sport": 30,
+     "craft": 2
+    },
+    "5": {
+     "bank": 18,
+     "transport": 18,
+     "fuel": 26,
+     "eat": 98,
+     "pharmacy": 4,
+     "hospital": 13,
+     "bar": 14,
+     "school": 51,
+     "fire": 2,
+     "atm": 7,
+     "police": 6,
+     "library": 2,
+     "tertiary": 7,
+     "market": 7,
+     "mosque": 31,
+     "clinic": 2,
+     "church": 7,
+     "money": 5,
+     "post": 2,
+     "kindergarten": 1,
+     "gov": 16,
+     "shop": 109,
+     "supermarket": 15,
+     "stay": 87,
+     "sport": 74,
+     "craft": 2
+    }
+   }
+  },
+  {
+   "area": "Sinchu Alagie",
+   "file": "sinchu-alagie.html",
+   "lat": 13.37808,
+   "lon": -16.68374,
+   "published": [
+    [
+     "13",
+     "Shops & bitiks"
+    ],
+    [
+     "1",
+     "Market"
+    ],
+    [
+     "1",
+     "Supermarket"
+    ],
+    [
+     "4",
+     "Mosques"
+    ],
+    [
+     "5",
+     "Schools"
+    ],
+    [
+     "3",
+     "Clinics & pharmacies"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "mosque": 3,
+     "supermarket": 1,
+     "shop": 1,
+     "stay": 1,
+     "sport": 4
+    },
+    "2": {
+     "clinic": 1,
+     "mosque": 5,
+     "bank": 2,
+     "market": 2,
+     "police": 2,
+     "fuel": 2,
+     "school": 4,
+     "supermarket": 2,
+     "shop": 6,
+     "stay": 4,
+     "sport": 7
+    },
+    "3": {
+     "mosque": 13,
+     "police": 3,
+     "clinic": 1,
+     "bank": 2,
+     "market": 2,
+     "fuel": 4,
+     "school": 7,
+     "supermarket": 4,
+     "shop": 24,
+     "stay": 8,
+     "sport": 11
+    },
+    "5": {
+     "fuel": 15,
+     "transport": 6,
+     "clinic": 2,
+     "water": 17,
+     "eat": 5,
+     "mosque": 28,
+     "hospital": 8,
+     "police": 7,
+     "school": 19,
+     "worship_other": 1,
+     "bank": 2,
+     "market": 4,
+     "supermarket": 4,
+     "shop": 34,
+     "stay": 14,
+     "reserve": 2,
+     "sport": 36,
+     "gov": 1
+    }
+   }
+  },
+  {
+   "area": "Soma",
+   "file": "soma.html",
+   "lat": 13.4446,
+   "lon": -15.5355,
+   "published": [
+    [
+     "8",
+     "Restaurants & dibitair stalls"
+    ],
+    [
+     "2",
+     "Guesthouses"
+    ],
+    [
+     "5",
+     "Markets & shops"
+    ],
+    [
+     "1",
+     "Hospital"
+    ],
+    [
+     "3",
+     "Pharmacies"
+    ],
+    [
+     "2",
+     "Petrol stations"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "church": 2,
+     "police": 2,
+     "fuel": 4,
+     "pharmacy": 1,
+     "bank": 2,
+     "mosque": 2,
+     "market": 2,
+     "worship_other": 2,
+     "gov": 2,
+     "eat": 2,
+     "school": 3,
+     "transport": 1,
+     "hospital": 1,
+     "shop": 2,
+     "stay": 3,
+     "sport": 4,
+     "craft": 2
+    },
+    "2": {
+     "church": 2,
+     "police": 3,
+     "fuel": 4,
+     "pharmacy": 1,
+     "bank": 2,
+     "mosque": 2,
+     "market": 2,
+     "worship_other": 2,
+     "school": 5,
+     "gov": 4,
+     "fire": 1,
+     "eat": 2,
+     "transport": 1,
+     "hospital": 1,
+     "shop": 2,
+     "stay": 7,
+     "sport": 4,
+     "craft": 2
+    },
+    "3": {
+     "church": 2,
+     "water": 1,
+     "police": 3,
+     "fuel": 4,
+     "pharmacy": 1,
+     "bank": 2,
+     "mosque": 2,
+     "market": 2,
+     "worship_other": 2,
+     "school": 6,
+     "gov": 4,
+     "fire": 1,
+     "eat": 2,
+     "tertiary": 1,
+     "transport": 1,
+     "hospital": 1,
+     "shop": 2,
+     "stay": 10,
+     "sport": 4,
+     "craft": 2
+    },
+    "5": {
+     "water": 4,
+     "church": 2,
+     "hospital": 3,
+     "police": 3,
+     "fuel": 4,
+     "pharmacy": 1,
+     "bank": 2,
+     "mosque": 3,
+     "market": 3,
+     "worship_other": 2,
+     "school": 7,
+     "gov": 4,
+     "fire": 1,
+     "eat": 2,
+     "clinic": 1,
+     "tertiary": 1,
+     "transport": 1,
+     "shop": 3,
+     "stay": 10,
+     "sport": 4,
+     "craft": 2
+    }
+   }
+  },
+  {
+   "area": "Sukuta",
+   "file": "sukuta.html",
+   "lat": 13.4148,
+   "lon": -16.7076,
+   "published": [
+    [
+     "30+",
+     "Shops & bitiks"
+    ],
+    [
+     "1",
+     "Large market"
+    ],
+    [
+     "3",
+     "Supermarkets"
+    ],
+    [
+     "9",
+     "Mosques & churches"
+    ],
+    [
+     "12",
+     "Schools"
+    ],
+    [
+     "6",
+     "Clinics & pharmacies"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "eat": 1,
+     "mosque": 3,
+     "fuel": 1,
+     "hospital": 1,
+     "money": 1,
+     "school": 1,
+     "shop": 2,
+     "sport": 2
+    },
+    "2": {
+     "eat": 4,
+     "mosque": 6,
+     "fuel": 1,
+     "hospital": 1,
+     "police": 1,
+     "money": 1,
+     "school": 2,
+     "shop": 3,
+     "stay": 4,
+     "sport": 2
+    },
+    "3": {
+     "transport": 7,
+     "bank": 6,
+     "police": 3,
+     "fuel": 6,
+     "hospital": 6,
+     "pharmacy": 6,
+     "eat": 16,
+     "bar": 3,
+     "mosque": 14,
+     "church": 1,
+     "school": 11,
+     "atm": 2,
+     "money": 7,
+     "clinic": 2,
+     "market": 7,
+     "tertiary": 2,
+     "shop": 57,
+     "supermarket": 3,
+     "stay": 19,
+     "reserve": 1,
+     "sport": 16
+    },
+    "5": {
+     "transport": 20,
+     "bank": 14,
+     "fuel": 24,
+     "eat": 101,
+     "pharmacy": 9,
+     "hospital": 15,
+     "bar": 24,
+     "police": 7,
+     "fire": 2,
+     "atm": 9,
+     "market": 12,
+     "mosque": 34,
+     "tertiary": 3,
+     "church": 4,
+     "school": 28,
+     "money": 10,
+     "clinic": 2,
+     "shop": 143,
+     "supermarket": 17,
+     "stay": 102,
+     "reserve": 2,
+     "sport": 55,
+     "craft": 2
+    }
+   }
+  },
+  {
+   "area": "Tanji",
+   "file": "tanji.html",
+   "lat": 13.3586,
+   "lon": -16.7975,
+   "published": [
+    [
+     "8",
+     "Restaurants & bars"
+    ],
+    [
+     "3",
+     "Shops & mini-marts"
+    ],
+    [
+     "1",
+     "Fish market (daily)"
+    ],
+    [
+     "1",
+     "Bird reserve"
+    ],
+    [
+     "2",
+     "Mosques"
+    ],
+    [
+     "1",
+     "Clinic"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "fuel": 3,
+     "transport": 1,
+     "eat": 3,
+     "stay": 3
+    },
+    "2": {
+     "fuel": 3,
+     "clinic": 4,
+     "library": 1,
+     "transport": 2,
+     "mosque": 2,
+     "eat": 3,
+     "school": 2,
+     "shop": 3,
+     "stay": 4,
+     "sport": 1
+    },
+    "3": {
+     "fuel": 3,
+     "clinic": 4,
+     "library": 1,
+     "transport": 2,
+     "mosque": 2,
+     "eat": 4,
+     "school": 2,
+     "shop": 3,
+     "supermarket": 1,
+     "stay": 8,
+     "reserve": 2,
+     "sport": 2
+    },
+    "5": {
+     "fuel": 3,
+     "clinic": 5,
+     "eat": 5,
+     "bar": 2,
+     "library": 1,
+     "transport": 2,
+     "mosque": 4,
+     "school": 6,
+     "market": 1,
+     "shop": 4,
+     "supermarket": 1,
+     "stay": 11,
+     "reserve": 2,
+     "sport": 3
+    }
+   }
+  },
+  {
+   "area": "Tintinto",
+   "file": "tintinto.html",
+   "lat": 13.29556,
+   "lon": -16.78861,
+   "published": null,
+   "counts": {
+    "1": {
+     "school": 1,
+     "sport": 1
+    },
+    "2": {
+     "school": 1,
+     "sport": 1
+    },
+    "3": {
+     "school": 2,
+     "stay": 3,
+     "sport": 1
+    },
+    "5": {
+     "eat": 7,
+     "transport": 1,
+     "fuel": 2,
+     "clinic": 1,
+     "bar": 1,
+     "library": 1,
+     "school": 5,
+     "mosque": 2,
+     "church": 2,
+     "hospital": 1,
+     "shop": 2,
+     "stay": 8,
+     "sport": 6
+    }
+   }
+  },
+  {
+   "area": "Tranquil",
+   "file": "tranquil.html",
+   "lat": 13.40306,
+   "lon": -16.73806,
+   "published": null,
+   "counts": {
+    "1": {
+     "fuel": 5,
+     "bank": 1,
+     "pharmacy": 3,
+     "eat": 8,
+     "transport": 1,
+     "bar": 2,
+     "school": 2,
+     "police": 1,
+     "money": 3,
+     "market": 3,
+     "mosque": 2,
+     "clinic": 1,
+     "shop": 21,
+     "supermarket": 1,
+     "stay": 8,
+     "sport": 3
+    },
+    "2": {
+     "transport": 4,
+     "bank": 4,
+     "police": 3,
+     "fuel": 6,
+     "hospital": 4,
+     "pharmacy": 7,
+     "eat": 15,
+     "bar": 3,
+     "mosque": 6,
+     "school": 4,
+     "atm": 2,
+     "money": 7,
+     "market": 6,
+     "clinic": 2,
+     "tertiary": 1,
+     "shop": 65,
+     "supermarket": 4,
+     "stay": 15,
+     "sport": 10
+    },
+    "3": {
+     "transport": 4,
+     "bank": 4,
+     "police": 3,
+     "fuel": 6,
+     "hospital": 6,
+     "pharmacy": 8,
+     "eat": 19,
+     "school": 8,
+     "bar": 3,
+     "mosque": 8,
+     "atm": 2,
+     "money": 7,
+     "market": 6,
+     "clinic": 2,
+     "tertiary": 1,
+     "shop": 67,
+     "supermarket": 4,
+     "stay": 21,
+     "sport": 11
+    },
+    "5": {
+     "transport": 7,
+     "bank": 7,
+     "eat": 62,
+     "pharmacy": 9,
+     "hospital": 10,
+     "bar": 14,
+     "police": 3,
+     "fuel": 7,
+     "atm": 4,
+     "water": 25,
+     "mosque": 23,
+     "school": 14,
+     "money": 8,
+     "market": 9,
+     "clinic": 2,
+     "tertiary": 2,
+     "worship_other": 1,
+     "church": 1,
+     "shop": 85,
+     "supermarket": 7,
+     "stay": 38,
+     "reserve": 2,
+     "sport": 23
+    }
+   }
+  },
+  {
+   "area": "Tujereng",
+   "file": "tujereng.html",
+   "lat": 13.3179,
+   "lon": -16.7889,
+   "published": [
+    [
+     "8",
+     "Shops & bitiks"
+    ],
+    [
+     "1",
+     "Village market"
+    ],
+    [
+     "3",
+     "Eco-lodges & camps"
+    ],
+    [
+     "2",
+     "Mosques"
+    ],
+    [
+     "3",
+     "Schools"
+    ],
+    [
+     "1",
+     "Clinic"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "school": 1,
+     "stay": 1
+    },
+    "2": {
+     "clinic": 1,
+     "eat": 1,
+     "school": 2,
+     "mosque": 1,
+     "stay": 3,
+     "sport": 1
+    },
+    "3": {
+     "clinic": 1,
+     "eat": 1,
+     "school": 2,
+     "mosque": 1,
+     "stay": 3,
+     "sport": 2
+    },
+    "5": {
+     "fuel": 3,
+     "clinic": 5,
+     "library": 2,
+     "eat": 5,
+     "transport": 2,
+     "mosque": 3,
+     "school": 8,
+     "church": 2,
+     "shop": 3,
+     "supermarket": 1,
+     "stay": 13,
+     "sport": 6
+    }
+   }
+  },
+  {
+   "area": "Yundum",
+   "file": "yundum.html",
+   "lat": 13.3422,
+   "lon": -16.6697,
+   "published": [
+    [
+     "14",
+     "Shops & bitiks"
+    ],
+    [
+     "1",
+     "Market"
+    ],
+    [
+     "1",
+     "Supermarket"
+    ],
+    [
+     "4",
+     "Mosques"
+    ],
+    [
+     "6",
+     "Schools"
+    ],
+    [
+     "2",
+     "Clinics & pharmacies"
+    ]
+   ],
+   "counts": {
+    "1": {
+     "police": 1,
+     "school": 1,
+     "market": 1,
+     "shop": 1,
+     "stay": 1,
+     "sport": 5
+    },
+    "2": {
+     "bar": 1,
+     "transport": 1,
+     "mosque": 2,
+     "worship_other": 1,
+     "police": 1,
+     "school": 3,
+     "market": 2,
+     "fuel": 1,
+     "supermarket": 1,
+     "shop": 3,
+     "stay": 3,
+     "sport": 10
+    },
+    "3": {
+     "bar": 1,
+     "fuel": 3,
+     "transport": 2,
+     "mosque": 5,
+     "worship_other": 2,
+     "school": 5,
+     "police": 1,
+     "market": 2,
+     "fire": 1,
+     "supermarket": 1,
+     "shop": 3,
+     "stay": 3,
+     "sport": 14
+    },
+    "5": {
+     "fuel": 8,
+     "bar": 1,
+     "transport": 4,
+     "mosque": 10,
+     "worship_other": 3,
+     "police": 4,
+     "school": 15,
+     "clinic": 1,
+     "bank": 2,
+     "market": 5,
+     "fire": 1,
+     "supermarket": 3,
+     "shop": 8,
+     "stay": 8,
+     "sport": 27
+    }
+   }
+  }
+ ]
+}

@@ -17,3 +17,12 @@ supabase/.temp/
 
 # Lokale Claude Code-instellingen voor deze repo
 .claude/
+
+# Terugdraai-kopieen van de patchscripts en de Overpass-cache: git is hier zelf
+# al de geschiedenis, en de cache is opnieuw op te halen
+_werk/backup-*/
+_werk/osm-cache/
+_werk/osm-log.txt
+
+# Map met bestanden die weg mogen
+_to_delete/

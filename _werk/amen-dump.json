@@ -1,0 +1,2458 @@
+[
+ {
+  "file": "bakau.html",
+  "area": "Bakau",
+  "lat": 13.4775,
+  "lng": -16.6779,
+  "lead": "Key amenities and services close to Bakau.",
+  "amen": [
+   [
+    "25",
+    "Restaurants & bars"
+   ],
+   [
+    "10",
+    "Shops & markets"
+   ],
+   [
+    "3",
+    "Supermarkets"
+   ],
+   [
+    "1",
+    "Crocodile Pool"
+   ],
+   [
+    "4",
+    "Mosques & churches"
+   ],
+   [
+    "3",
+    "Clinics & pharmacies"
+   ]
+  ],
+  "schoolHead": "International schools",
+  "schoolLead": "English-language and international options serving the area.",
+  "schools": [
+   [
+    "Banjul American Intl. School",
+    "BA",
+    "American curriculum",
+    "Very good",
+    "3.0 km"
+   ],
+   [
+    "Marina International School",
+    "MI",
+    "British curriculum",
+    "Excellent",
+    "5.0 km"
+   ],
+   [
+    "Bakau Lower Basic School",
+    "BK",
+    "Gambian public",
+    "Good",
+    "0.8 km"
+   ]
+  ]
+ },
+ {
+  "file": "bakoteh.html",
+  "area": "Bakoteh",
+  "lat": 13.4334,
+  "lng": -16.6985,
+  "lead": "Key amenities and services close to Bakoteh.",
+  "amen": [
+   [
+    "40+",
+    "Shops & bitiks"
+   ],
+   [
+    "1",
+    "Market"
+   ],
+   [
+    "2",
+    "Supermarkets"
+   ],
+   [
+    "5",
+    "Banks & ATMs"
+   ],
+   [
+    "9",
+    "Mosques & churches"
+   ],
+   [
+    "8",
+    "Clinics & pharmacies"
+   ]
+  ],
+  "schoolHead": "Schools nearby",
+  "schoolLead": "Public, private and international options within reach.",
+  "schools": [
+   [
+    "Bakoteh Lower Basic School",
+    "BK",
+    "Gambian public",
+    "Good",
+    "0.5 km"
+   ],
+   [
+    "SBEC International School",
+    "SB",
+    "British / Gambian",
+    "Very good",
+    "3.0 km"
+   ],
+   [
+    "Marina International School",
+    "MI",
+    "British curriculum",
+    "Excellent",
+    "5.5 km"
+   ]
+  ]
+ },
+ {
+  "file": "banjul.html",
+  "area": "Banjul",
+  "lat": 13.4554,
+  "lng": -16.5757,
+  "lead": "Key amenities and services close to Banjul.",
+  "amen": [
+   [
+    "20",
+    "Restaurants & cafés"
+   ],
+   [
+    "15",
+    "Shops & markets"
+   ],
+   [
+    "2",
+    "Supermarkets"
+   ],
+   [
+    "3",
+    "Government offices"
+   ],
+   [
+    "2",
+    "Hospitals"
+   ],
+   [
+    "5",
+    "Banks & services"
+   ]
+  ],
+  "schoolHead": "International schools",
+  "schoolLead": "English-language and international options serving the area.",
+  "schools": [
+   [
+    "St Augustine’s SHS",
+    "SA",
+    "Gambian / Catholic",
+    "Good",
+    "1.0 km"
+   ],
+   [
+    "Banjul American Intl. School",
+    "BA",
+    "American curriculum",
+    "Very good",
+    "5.0 km"
+   ],
+   [
+    "Methodist Academy",
+    "MA",
+    "Gambian / Methodist",
+    "Good",
+    "0.5 km"
+   ]
+  ]
+ },
+ {
+  "file": "bansang.html",
+  "area": "Bansang",
+  "lat": 13.4358,
+  "lng": -14.6588,
+  "lead": "Key amenities and services close to Bansang.",
+  "amen": [
+   [
+    "18",
+    "Shops & bitiks"
+   ],
+   [
+    "1",
+    "Market"
+   ],
+   [
+    "1",
+    "Referral hospital"
+   ],
+   [
+    "4",
+    "Mosques"
+   ],
+   [
+    "6",
+    "Schools"
+   ],
+   [
+    "3",
+    "Pharmacies"
+   ]
+  ],
+  "schoolHead": "Schools nearby",
+  "schoolLead": "Public schools serving Bansang and the surrounding villages.",
+  "schools": [
+   [
+    "Bansang Senior Secondary",
+    "BS",
+    "Gambian public",
+    "Good",
+    "0.7 km"
+   ],
+   [
+    "Bansang Lower Basic School",
+    "BL",
+    "Gambian public",
+    "Good",
+    "0.4 km"
+   ],
+   [
+    "Armitage Senior Secondary",
+    "AR",
+    "Gambian public / boarding",
+    "Very good",
+    "25 km"
+   ]
+  ]
+ },
+ {
+  "file": "barra.html",
+  "area": "Barra",
+  "lat": 13.4855,
+  "lng": -16.543,
+  "lead": "Key amenities and services close to Barra.",
+  "amen": [
+   [
+    "3",
+    "Local restaurants & chop shops"
+   ],
+   [
+    "2",
+    "Guesthouses"
+   ],
+   [
+    "2",
+    "Markets near ferry"
+   ],
+   [
+    "1",
+    "River beach"
+   ],
+   [
+    "1",
+    "Health centre"
+   ],
+   [
+    "1",
+    "Pharmacy"
+   ]
+  ],
+  "schoolHead": "Schools nearby",
+  "schoolLead": "Schools serving Barra and the North Bank Region.",
+  "schools": [
+   [
+    "Barra Upper Basic School",
+    "BU",
+    "Government · Upper basic",
+    "Adequate",
+    "0.4 km"
+   ],
+   [
+    "Essau Senior Secondary",
+    "ES",
+    "Government · Senior secondary",
+    "Good",
+    "3 km"
+   ],
+   [
+    "Barra Lower Basic School",
+    "BL",
+    "Government · Lower basic",
+    "Adequate",
+    "0.6 km"
+   ]
+  ]
+ },
+ {
+  "file": "basse.html",
+  "area": "Basse Santa Su",
+  "lat": 13.31,
+  "lng": -14.215,
+  "lead": "Key amenities and services close to Basse Santa Su.",
+  "amen": [
+   [
+    "5",
+    "Local restaurants & chop shops"
+   ],
+   [
+    "2",
+    "Guesthouses"
+   ],
+   [
+    "3",
+    "Markets & shops"
+   ],
+   [
+    "1",
+    "River beach"
+   ],
+   [
+    "1",
+    "Health centre"
+   ],
+   [
+    "2",
+    "Pharmacies"
+   ]
+  ],
+  "schoolHead": "Schools nearby",
+  "schoolLead": "Schools serving Basse and the Upper River Region.",
+  "schools": [
+   [
+    "Basse Senior Secondary School",
+    "BS",
+    "Government · Senior secondary",
+    "Good",
+    "0.5 km"
+   ],
+   [
+    "Gambia Methodist Academy",
+    "GM",
+    "Methodist · Primary & junior",
+    "Good",
+    "1.2 km"
+   ],
+   [
+    "Basse Basic Cycle School",
+    "BB",
+    "Government · Lower & upper basic",
+    "Adequate",
+    "0.8 km"
+   ]
+  ]
+ },
+ {
+  "file": "batokunku.html",
+  "area": "Batokunku",
+  "lat": 13.3268,
+  "lng": -16.7991,
+  "lead": "Key amenities and services close to Batokunku.",
+  "amen": [
+   [
+    "2",
+    "Restaurants & bars"
+   ],
+   [
+    "1",
+    "Shop"
+   ],
+   [
+    "0",
+    "Supermarkets"
+   ],
+   [
+    "1",
+    "Beach"
+   ],
+   [
+    "1",
+    "Guest lodge"
+   ],
+   [
+    "1",
+    "Mosque"
+   ]
+  ],
+  "schoolHead": "International schools",
+  "schoolLead": "English-language and international options serving the coast.",
+  "schools": [
+   [
+    "Batokunku Lower Basic School",
+    "BT",
+    "Gambian public",
+    "Satisfactory",
+    "0.3 km"
+   ],
+   [
+    "Marina International School",
+    "MI",
+    "British curriculum · Ages 3–18",
+    "Excellent",
+    "18.0 km"
+   ]
+  ]
+ },
+ {
+  "file": "bijilo.html",
+  "area": "Bijilo",
+  "lat": 13.4219,
+  "lng": -16.7328,
+  "lead": "Key amenities and services close to Bijilo.",
+  "amen": [
+   [
+    "30",
+    "Restaurants & cafés"
+   ],
+   [
+    "6",
+    "Shops & mini-marts"
+   ],
+   [
+    "4",
+    "Supermarkets"
+   ],
+   [
+    "1",
+    "Nature reserve"
+   ],
+   [
+    "5",
+    "Gyms & wellness"
+   ],
+   [
+    "3",
+    "Clinics & pharmacies"
+   ]
+  ],
+  "schoolHead": "International schools",
+  "schoolLead": "English-language and international options serving the coast.",
+  "schools": [
+   [
+    "Marina International School",
+    "MI",
+    "British curriculum · Ages 3–18",
+    "Excellent",
+    "5.0 km"
+   ],
+   [
+    "SBEC International School",
+    "SB",
+    "British / IGCSE",
+    "Very good",
+    "4.0 km"
+   ],
+   [
+    "Bijilo Lower Basic School",
+    "BJ",
+    "Gambian public",
+    "Good",
+    "0.8 km"
+   ]
+  ]
+ },
+ {
+  "file": "brikama.html",
+  "area": "Brikama",
+  "lat": 13.2744,
+  "lng": -16.6454,
+  "lead": "Key amenities and services close to Brikama.",
+  "amen": [
+   [
+    "15+",
+    "Restaurants & chop shops"
+   ],
+   [
+    "3",
+    "Guesthouses"
+   ],
+   [
+    "8",
+    "Markets & shops"
+   ],
+   [
+    "3",
+    "Banks & ATMs"
+   ],
+   [
+    "2",
+    "Gyms"
+   ],
+   [
+    "5",
+    "Clinics & pharmacies"
+   ]
+  ],
+  "schoolHead": "Schools nearby",
+  "schoolLead": "Schools serving Brikama and the West Coast Region.",
+  "schools": [
+   [
+    "Brikama Senior Secondary",
+    "BS",
+    "Government · Senior secondary",
+    "Good",
+    "0.8 km"
+   ],
+   [
+    "Mingdaw Lamin Darbo Memorial",
+    "ML",
+    "Private · Lower & upper basic",
+    "Good",
+    "1.5 km"
+   ],
+   [
+    "Bottrop Senior Secondary",
+    "BT",
+    "Government · Senior secondary",
+    "Adequate",
+    "2.0 km"
+   ]
+  ]
+ },
+ {
+  "file": "brufut.html",
+  "area": "Brufut",
+  "lat": 13.3813,
+  "lng": -16.7517,
+  "lead": "Key amenities and services close to Brufut.",
+  "amen": [
+   [
+    "15",
+    "Restaurants & grills"
+   ],
+   [
+    "8",
+    "Shops & mini-marts"
+   ],
+   [
+    "3",
+    "Supermarkets"
+   ],
+   [
+    "2",
+    "Beaches nearby"
+   ],
+   [
+    "4",
+    "Mosques"
+   ],
+   [
+    "2",
+    "Health clinics"
+   ]
+  ],
+  "schoolHead": "International schools",
+  "schoolLead": "English-language and international options serving the coast.",
+  "schools": [
+   [
+    "Marina International School",
+    "MI",
+    "British curriculum · Ages 3–18",
+    "Excellent",
+    "8.0 km"
+   ],
+   [
+    "SBEC International School",
+    "SB",
+    "British / IGCSE",
+    "Very good",
+    "6.5 km"
+   ],
+   [
+    "Brufut Lower Basic School",
+    "BL",
+    "Gambian public",
+    "Good",
+    "1.2 km"
+   ]
+  ]
+ },
+ {
+  "file": "brusubi.html",
+  "area": "Brusubi",
+  "lat": 13.4073,
+  "lng": -16.7306,
+  "lead": "Key amenities and services close to Brusubi.",
+  "amen": [
+   [
+    "15",
+    "Restaurants & cafés"
+   ],
+   [
+    "8",
+    "Shops & mini-marts"
+   ],
+   [
+    "3",
+    "Supermarkets"
+   ],
+   [
+    "2",
+    "Mosques & churches"
+   ],
+   [
+    "3",
+    "Gyms"
+   ],
+   [
+    "2",
+    "Clinics"
+   ]
+  ],
+  "schoolHead": "International schools",
+  "schoolLead": "English-language and international options serving the coast.",
+  "schools": [
+   [
+    "SBEC International School",
+    "SB",
+    "British / IGCSE",
+    "Very good",
+    "6.0 km"
+   ],
+   [
+    "Marina International School",
+    "MI",
+    "British curriculum · Ages 3–18",
+    "Excellent",
+    "8.0 km"
+   ],
+   [
+    "Brusubi Lower Basic School",
+    "BR",
+    "Gambian public",
+    "Good",
+    "1.0 km"
+   ]
+  ]
+ },
+ {
+  "file": "busumbala.html",
+  "area": "Busumbala",
+  "lat": 13.3334,
+  "lng": -16.6667,
+  "lead": "Key amenities and services close to Busumbala.",
+  "amen": [
+   [
+    "9",
+    "Shops & bitiks"
+   ],
+   [
+    "1",
+    "Weekly lumo"
+   ],
+   [
+    "0",
+    "Supermarkets"
+   ],
+   [
+    "3",
+    "Mosques"
+   ],
+   [
+    "4",
+    "Schools"
+   ],
+   [
+    "1",
+    "Clinic"
+   ]
+  ],
+  "schoolHead": "Schools nearby",
+  "schoolLead": "Local options and the larger schools in Brikama.",
+  "schools": [
+   [
+    "Busumbala Lower Basic",
+    "BU",
+    "Gambian public",
+    "Good",
+    "0.8 km"
+   ],
+   [
+    "Brikama Senior Secondary",
+    "BR",
+    "Gambian public",
+    "Good",
+    "9.0 km"
+   ],
+   [
+    "Charles Jow Memorial Academy",
+    "CJ",
+    "Private / Gambian",
+    "Very good",
+    "8.0 km"
+   ]
+  ]
+ },
+ {
+  "file": "cape-point.html",
+  "area": "Cape Point",
+  "lat": 13.4849,
+  "lng": -16.6661,
+  "lead": "Key amenities and services close to Cape Point.",
+  "amen": [
+   [
+    "8",
+    "Restaurants & cafés"
+   ],
+   [
+    "3",
+    "Hotels nearby"
+   ],
+   [
+    "4",
+    "Supermarkets"
+   ],
+   [
+    "2",
+    "Beaches"
+   ],
+   [
+    "3",
+    "Gyms"
+   ],
+   [
+    "3",
+    "Clinics"
+   ]
+  ],
+  "schoolHead": "International schools",
+  "schoolLead": "English-language and international options serving the coast.",
+  "schools": [
+   [
+    "Marina International School",
+    "MI",
+    "British curriculum · Ages 3–18",
+    "Excellent",
+    "3.8 km"
+   ],
+   [
+    "SBEC International School",
+    "SB",
+    "British / IGCSE · Ages 4–18",
+    "Very good",
+    "5.5 km"
+   ],
+   [
+    "Banjul American Intl. School",
+    "BA",
+    "American curriculum",
+    "Very good",
+    "8.0 km"
+   ]
+  ]
+ },
+ {
+  "file": "essau.html",
+  "area": "Essau",
+  "lat": 13.4858,
+  "lng": -16.5262,
+  "lead": "Key amenities and services close to Essau.",
+  "amen": [
+   [
+    "16",
+    "Shops & bitiks"
+   ],
+   [
+    "1",
+    "Market"
+   ],
+   [
+    "1",
+    "District hospital"
+   ],
+   [
+    "4",
+    "Mosques"
+   ],
+   [
+    "6",
+    "Schools"
+   ],
+   [
+    "3",
+    "Pharmacies"
+   ]
+  ],
+  "schoolHead": "Schools nearby",
+  "schoolLead": "Public and private options serving Essau and Barra.",
+  "schools": [
+   [
+    "Essau Senior Secondary",
+    "ES",
+    "Gambian public",
+    "Good",
+    "0.8 km"
+   ],
+   [
+    "Essau Lower Basic School",
+    "EL",
+    "Gambian public",
+    "Good",
+    "0.5 km"
+   ],
+   [
+    "Barra Lower Basic School",
+    "BA",
+    "Gambian public",
+    "Good",
+    "5.0 km"
+   ]
+  ]
+ },
+ {
+  "file": "fajara.html",
+  "area": "Fajara",
+  "lat": 13.469,
+  "lng": -16.6914,
+  "lead": "Key amenities and services close to Fajara.",
+  "amen": [
+   [
+    "30",
+    "Restaurants & cafés"
+   ],
+   [
+    "8",
+    "Shops & mini-marts"
+   ],
+   [
+    "4",
+    "Supermarkets"
+   ],
+   [
+    "2",
+    "Golf courses"
+   ],
+   [
+    "6",
+    "Clinics & hospitals"
+   ],
+   [
+    "4",
+    "Gyms & spas"
+   ]
+  ],
+  "schoolHead": "International schools",
+  "schoolLead": "English-language and international options serving the area.",
+  "schools": [
+   [
+    "Banjul American Intl. School",
+    "BA",
+    "American curriculum",
+    "Very good",
+    "2.5 km"
+   ],
+   [
+    "The American Intl. School Gambia",
+    "AI",
+    "US / IB",
+    "Excellent",
+    "4.0 km"
+   ],
+   [
+    "Marina International School",
+    "MI",
+    "British curriculum",
+    "Excellent",
+    "6.0 km"
+   ],
+   [
+    "St Joseph’s SHS",
+    "SJ",
+    "Gambian / Catholic",
+    "Good",
+    "1.5 km"
+   ]
+  ]
+ },
+ {
+  "file": "farafenni.html",
+  "area": "Farafenni",
+  "lat": 13.5721,
+  "lng": -15.598,
+  "lead": "Key amenities and services close to Farafenni.",
+  "amen": [
+   [
+    "8",
+    "Restaurants & chop shops"
+   ],
+   [
+    "3",
+    "Hotels & guesthouses"
+   ],
+   [
+    "4",
+    "Markets & superettes"
+   ],
+   [
+    "1",
+    "Farafenni Hospital"
+   ],
+   [
+    "3",
+    "Banks & money transfer"
+   ],
+   [
+    "4",
+    "Pharmacies"
+   ]
+  ],
+  "schoolHead": "Schools nearby",
+  "schoolLead": "Schools serving Farafenni and the North Bank Region.",
+  "schools": [
+   [
+    "Farafenni Senior Secondary",
+    "FS",
+    "Government · Senior secondary",
+    "Good",
+    "0.8 km"
+   ],
+   [
+    "Farafenni Upper Basic School",
+    "FU",
+    "Government · Upper basic",
+    "Good",
+    "0.5 km"
+   ],
+   [
+    "North Bank Academy",
+    "NA",
+    "Private · Nursery to senior",
+    "Good",
+    "1.5 km"
+   ]
+  ]
+ },
+ {
+  "file": "farato.html",
+  "area": "Farato",
+  "lat": null,
+  "lng": null,
+  "lead": null,
+  "amen": null,
+  "schoolHead": null,
+  "schoolLead": null,
+  "schools": null
+ },
+ {
+  "file": "fatoto.html",
+  "area": "Fatoto",
+  "lat": 13.3993,
+  "lng": -13.891,
+  "lead": "Key amenities and services close to Fatoto.",
+  "amen": [
+   [
+    "6",
+    "Shops & bitiks"
+   ],
+   [
+    "1",
+    "Weekly lumo"
+   ],
+   [
+    "1",
+    "Health post"
+   ],
+   [
+    "3",
+    "Mosques"
+   ],
+   [
+    "3",
+    "Schools"
+   ],
+   [
+    "1",
+    "Pharmacy"
+   ]
+  ],
+  "schoolHead": "Schools nearby",
+  "schoolLead": "Village schools serving Fatoto and the border settlements.",
+  "schools": [
+   [
+    "Fatoto Lower Basic School",
+    "FA",
+    "Gambian public",
+    "Good",
+    "0.4 km"
+   ],
+   [
+    "Fatoto Basic Cycle School",
+    "FB",
+    "Gambian public",
+    "Good",
+    "0.8 km"
+   ],
+   [
+    "Basse Senior Secondary",
+    "BA",
+    "Gambian public",
+    "Good",
+    "60 km"
+   ]
+  ]
+ },
+ {
+  "file": "gambissara.html",
+  "area": "Gambissara",
+  "lat": 13.2383,
+  "lng": -14.3108,
+  "lead": "Key amenities and services close to Gambissara.",
+  "amen": [
+   [
+    "15",
+    "Shops & bitiks"
+   ],
+   [
+    "1",
+    "Market"
+   ],
+   [
+    "1",
+    "Health centre"
+   ],
+   [
+    "5",
+    "Mosques"
+   ],
+   [
+    "6",
+    "Schools"
+   ],
+   [
+    "2",
+    "Pharmacies"
+   ]
+  ],
+  "schoolHead": "Schools nearby",
+  "schoolLead": "Public and community schools serving Gambissara.",
+  "schools": [
+   [
+    "Gambissara Senior Secondary",
+    "GA",
+    "Gambian public",
+    "Good",
+    "0.6 km"
+   ],
+   [
+    "Gambissara Lower Basic",
+    "GL",
+    "Gambian public",
+    "Good",
+    "0.4 km"
+   ],
+   [
+    "Basse Senior Secondary",
+    "BA",
+    "Gambian public",
+    "Good",
+    "30 km"
+   ]
+  ]
+ },
+ {
+  "file": "ghana-town.html",
+  "area": "Ghana Town",
+  "lat": null,
+  "lng": null,
+  "lead": null,
+  "amen": null,
+  "schoolHead": null,
+  "schoolLead": null,
+  "schools": null
+ },
+ {
+  "file": "gunjur.html",
+  "area": "Gunjur",
+  "lat": 13.176,
+  "lng": -16.7599,
+  "lead": "Key amenities and services close to Gunjur.",
+  "amen": [
+   [
+    "12",
+    "Restaurants & bars"
+   ],
+   [
+    "8",
+    "Shops & markets"
+   ],
+   [
+    "1",
+    "Wildlife reserve"
+   ],
+   [
+    "3",
+    "Mosques"
+   ],
+   [
+    "2",
+    "Clinics"
+   ],
+   [
+    "1",
+    "Craft centre"
+   ]
+  ],
+  "schoolHead": "International schools",
+  "schoolLead": "English-language and international options serving the coast.",
+  "schools": [
+   [
+    "Tanji Lower Basic School",
+    "TJ",
+    "Gambian public",
+    "Good",
+    "0.5 km"
+   ],
+   [
+    "Marina International School",
+    "MI",
+    "British curriculum · Ages 3–18",
+    "Excellent",
+    "15.0 km"
+   ]
+  ]
+ },
+ {
+  "file": "jabang.html",
+  "area": "Jabang",
+  "lat": 13.3619,
+  "lng": -16.7023,
+  "lead": "Key amenities and services close to Jabang.",
+  "amen": [
+   [
+    "10",
+    "Shops & bitiks"
+   ],
+   [
+    "1",
+    "Fuel station"
+   ],
+   [
+    "1",
+    "Supermarket"
+   ],
+   [
+    "3",
+    "Mosques"
+   ],
+   [
+    "4",
+    "Schools"
+   ],
+   [
+    "2",
+    "Clinics & pharmacies"
+   ]
+  ],
+  "schoolHead": "Schools nearby",
+  "schoolLead": "Options within a short drive of Jabang.",
+  "schools": [
+   [
+    "Jabang Lower Basic School",
+    "JB",
+    "Gambian public",
+    "Good",
+    "1.0 km"
+   ],
+   [
+    "Charles Jow Memorial Academy",
+    "CJ",
+    "Private / Gambian",
+    "Very good",
+    "3.5 km"
+   ],
+   [
+    "SBEC International School",
+    "SB",
+    "British / Gambian",
+    "Very good",
+    "5.5 km"
+   ]
+  ]
+ },
+ {
+  "file": "jambanjelly.html",
+  "area": "Jambanjelly",
+  "lat": null,
+  "lng": null,
+  "lead": null,
+  "amen": null,
+  "schoolHead": null,
+  "schoolLead": null,
+  "schools": null
+ },
+ {
+  "file": "jambur.html",
+  "area": "Jambur",
+  "lat": null,
+  "lng": null,
+  "lead": null,
+  "amen": null,
+  "schoolHead": null,
+  "schoolLead": null,
+  "schools": null
+ },
+ {
+  "file": "janjanbureh.html",
+  "area": "Janjanbureh",
+  "lat": 13.5391,
+  "lng": -14.7612,
+  "lead": "Key amenities and services close to Janjanbureh.",
+  "amen": [
+   [
+    "12",
+    "Shops & bitiks"
+   ],
+   [
+    "1",
+    "Market"
+   ],
+   [
+    "1",
+    "Health centre"
+   ],
+   [
+    "4",
+    "Lodges & camps"
+   ],
+   [
+    "5",
+    "Schools"
+   ],
+   [
+    "2",
+    "Pharmacies"
+   ]
+  ],
+  "schoolHead": "Schools nearby",
+  "schoolLead": "Public schools serving the island and the nearby villages.",
+  "schools": [
+   [
+    "Armitage Senior Secondary",
+    "AR",
+    "Gambian public / boarding",
+    "Very good",
+    "1.5 km"
+   ],
+   [
+    "Janjanbureh Lower Basic",
+    "JA",
+    "Gambian public",
+    "Good",
+    "0.5 km"
+   ],
+   [
+    "Bansang Senior Secondary",
+    "BS",
+    "Gambian public",
+    "Good",
+    "25 km"
+   ]
+  ]
+ },
+ {
+  "file": "kartong.html",
+  "area": "Kartong",
+  "lat": 13.0913,
+  "lng": -16.7597,
+  "lead": "Key amenities and services close to Kartong.",
+  "amen": [
+   [
+    "4",
+    "Restaurants & bars"
+   ],
+   [
+    "2",
+    "Shops"
+   ],
+   [
+    "2",
+    "Eco-lodges"
+   ],
+   [
+    "1",
+    "Bird observatory"
+   ],
+   [
+    "1",
+    "Mosque"
+   ],
+   [
+    "1",
+    "Clinic"
+   ]
+  ],
+  "schoolHead": "International schools",
+  "schoolLead": "English-language and international options serving the coast.",
+  "schools": [
+   [
+    "Tanji Lower Basic School",
+    "TJ",
+    "Gambian public",
+    "Good",
+    "0.5 km"
+   ],
+   [
+    "Marina International School",
+    "MI",
+    "British curriculum · Ages 3–18",
+    "Excellent",
+    "15.0 km"
+   ]
+  ]
+ },
+ {
+  "file": "kerewan.html",
+  "area": "Kerewan",
+  "lat": 13.4936,
+  "lng": -16.0891,
+  "lead": "Key amenities and services close to Kerewan.",
+  "amen": [
+   [
+    "10",
+    "Shops & bitiks"
+   ],
+   [
+    "1",
+    "Market"
+   ],
+   [
+    "1",
+    "Hospital"
+   ],
+   [
+    "3",
+    "Mosques"
+   ],
+   [
+    "5",
+    "Schools"
+   ],
+   [
+    "2",
+    "Pharmacies"
+   ]
+  ],
+  "schoolHead": "Schools nearby",
+  "schoolLead": "Public schools serving Kerewan and the surrounding villages.",
+  "schools": [
+   [
+    "Kerewan Senior Secondary",
+    "KE",
+    "Gambian public",
+    "Good",
+    "0.6 km"
+   ],
+   [
+    "Kerewan Lower Basic School",
+    "KL",
+    "Gambian public",
+    "Good",
+    "0.4 km"
+   ],
+   [
+    "Illiassa Basic Cycle School",
+    "IL",
+    "Gambian public",
+    "Good",
+    "12 km"
+   ]
+  ]
+ },
+ {
+  "file": "kerr-serign.html",
+  "area": "Kerr Serign",
+  "lat": 13.4325,
+  "lng": -16.7203,
+  "lead": "Key amenities and services close to Kerr Serign.",
+  "amen": [
+   [
+    "12",
+    "Restaurants & cafés"
+   ],
+   [
+    "7",
+    "Shops & mini-marts"
+   ],
+   [
+    "2",
+    "Supermarkets"
+   ],
+   [
+    "1",
+    "Beach (Kotu, 10 min)"
+   ],
+   [
+    "5",
+    "Embassies & NGOs"
+   ],
+   [
+    "2",
+    "Health clinics"
+   ]
+  ],
+  "schoolHead": "International schools",
+  "schoolLead": "English-language and international options serving the coast.",
+  "schools": [
+   [
+    "Marina International School",
+    "MI",
+    "British curriculum · Ages 3–18",
+    "Excellent",
+    "3.5 km"
+   ],
+   [
+    "SBEC International School",
+    "SB",
+    "British / IGCSE",
+    "Very good",
+    "5.0 km"
+   ],
+   [
+    "Kerr Serign Lower Basic School",
+    "KS",
+    "Gambian public",
+    "Good",
+    "0.8 km"
+   ]
+  ]
+ },
+ {
+  "file": "kololi.html",
+  "area": "Kololi",
+  "lat": 13.4404,
+  "lng": -16.7156,
+  "lead": "Beaches, dining and essentials within a short stroll or drive.",
+  "amen": [
+   [
+    "40",
+    "Beach bars & restaurants"
+   ],
+   [
+    "12",
+    "Hotels & resorts"
+   ],
+   [
+    "6",
+    "Supermarkets"
+   ],
+   [
+    "3",
+    "Beaches nearby"
+   ],
+   [
+    "8",
+    "Gyms & spas"
+   ],
+   [
+    "4",
+    "Clinics & pharmacies"
+   ]
+  ],
+  "schoolHead": "International schools",
+  "schoolLead": "English-language and international options serving the coast.",
+  "schools": null
+ },
+ {
+  "file": "kotu.html",
+  "area": "Kotu",
+  "lat": 13.4553,
+  "lng": -16.7034,
+  "lead": "Key amenities and services close to Kotu.",
+  "amen": [
+   [
+    "20",
+    "Restaurants & bars"
+   ],
+   [
+    "5",
+    "Hotels & resorts"
+   ],
+   [
+    "4",
+    "Shops & mini-marts"
+   ],
+   [
+    "2",
+    "Supermarkets"
+   ],
+   [
+    "3",
+    "Gyms & spas"
+   ],
+   [
+    "2",
+    "Clinics"
+   ]
+  ],
+  "schoolHead": "International schools",
+  "schoolLead": "English-language and international options serving the coast.",
+  "schools": [
+   [
+    "Marina International School",
+    "MI",
+    "British curriculum · Ages 3–18",
+    "Excellent",
+    "7.0 km"
+   ],
+   [
+    "SBEC International School",
+    "SB",
+    "British / IGCSE",
+    "Very good",
+    "5.0 km"
+   ],
+   [
+    "Independence Drive Lower Basic",
+    "ID",
+    "Gambian public",
+    "Good",
+    "2.0 km"
+   ]
+  ]
+ },
+ {
+  "file": "kuntaur.html",
+  "area": "Kuntaur",
+  "lat": 13.6709,
+  "lng": -14.8898,
+  "lead": "Key amenities and services close to Kuntaur.",
+  "amen": [
+   [
+    "7",
+    "Shops & bitiks"
+   ],
+   [
+    "1",
+    "Weekly lumo"
+   ],
+   [
+    "1",
+    "Health post"
+   ],
+   [
+    "2",
+    "Mosques"
+   ],
+   [
+    "3",
+    "Schools"
+   ],
+   [
+    "1",
+    "Pharmacy"
+   ]
+  ],
+  "schoolHead": "Schools nearby",
+  "schoolLead": "Village schools serving Kuntaur and Wassu.",
+  "schools": [
+   [
+    "Kuntaur Lower Basic School",
+    "KU",
+    "Gambian public",
+    "Good",
+    "0.4 km"
+   ],
+   [
+    "Wassu Basic Cycle School",
+    "WA",
+    "Gambian public",
+    "Good",
+    "9.0 km"
+   ],
+   [
+    "Armitage Senior Secondary",
+    "AR",
+    "Gambian public / boarding",
+    "Very good",
+    "45 km"
+   ]
+  ]
+ },
+ {
+  "file": "lamin.html",
+  "area": "Lamin",
+  "lat": 13.3874,
+  "lng": -16.6439,
+  "lead": "Key amenities and services close to Lamin.",
+  "amen": [
+   [
+    "18",
+    "Shops & bitiks"
+   ],
+   [
+    "1",
+    "Daily market"
+   ],
+   [
+    "1",
+    "Supermarket"
+   ],
+   [
+    "5",
+    "Mosques & churches"
+   ],
+   [
+    "7",
+    "Schools"
+   ],
+   [
+    "3",
+    "Clinics & pharmacies"
+   ]
+  ],
+  "schoolHead": "Schools nearby",
+  "schoolLead": "Public and private options serving Lamin and the highway villages.",
+  "schools": [
+   [
+    "Lamin Lower Basic School",
+    "LL",
+    "Gambian public",
+    "Good",
+    "0.5 km"
+   ],
+   [
+    "St. Peter’s Technical High School",
+    "SP",
+    "Gambian / technical",
+    "Very good",
+    "3.0 km"
+   ],
+   [
+    "SBEC International School",
+    "SB",
+    "British / Gambian",
+    "Very good",
+    "8.0 km"
+   ]
+  ]
+ },
+ {
+  "file": "latriya.html",
+  "area": "Latriya",
+  "lat": null,
+  "lng": null,
+  "lead": null,
+  "amen": null,
+  "schoolHead": null,
+  "schoolLead": null,
+  "schools": null
+ },
+ {
+  "file": "madiana.html",
+  "area": "Madiana",
+  "lat": null,
+  "lng": null,
+  "lead": null,
+  "amen": null,
+  "schoolHead": null,
+  "schoolLead": null,
+  "schools": null
+ },
+ {
+  "file": "mamuda.html",
+  "area": "Mamuda",
+  "lat": null,
+  "lng": null,
+  "lead": null,
+  "amen": null,
+  "schoolHead": null,
+  "schoolLead": null,
+  "schools": null
+ },
+ {
+  "file": "manjai-kunda.html",
+  "area": "Manjai Kunda",
+  "lat": 13.4422,
+  "lng": -16.6981,
+  "lead": "Key amenities and services close to Manjai Kunda.",
+  "amen": [
+   [
+    "35+",
+    "Shops & bitiks"
+   ],
+   [
+    "1",
+    "Market"
+   ],
+   [
+    "3",
+    "Supermarkets"
+   ],
+   [
+    "7",
+    "Banks & ATMs"
+   ],
+   [
+    "8",
+    "Mosques & churches"
+   ],
+   [
+    "7",
+    "Clinics & pharmacies"
+   ]
+  ],
+  "schoolHead": "Schools nearby",
+  "schoolLead": "Public, private and international options within reach.",
+  "schools": [
+   [
+    "SBEC International School",
+    "SB",
+    "British / Gambian",
+    "Very good",
+    "2.5 km"
+   ],
+   [
+    "Nusrat Senior Secondary",
+    "NU",
+    "Gambian public",
+    "Very good",
+    "2.0 km"
+   ],
+   [
+    "Marina International School",
+    "MI",
+    "British curriculum",
+    "Excellent",
+    "5.0 km"
+   ]
+  ]
+ },
+ {
+  "file": "mansa-konko.html",
+  "area": "Mansa Konko",
+  "lat": 13.4585,
+  "lng": -15.534,
+  "lead": "Key amenities and services close to Mansa Konko.",
+  "amen": [
+   [
+    "8",
+    "Shops & bitiks"
+   ],
+   [
+    "1",
+    "Market (Soma)"
+   ],
+   [
+    "1",
+    "Health centre"
+   ],
+   [
+    "3",
+    "Mosques"
+   ],
+   [
+    "5",
+    "Schools"
+   ],
+   [
+    "2",
+    "Pharmacies"
+   ]
+  ],
+  "schoolHead": "Schools nearby",
+  "schoolLead": "Public schools serving Mansa Konko and Soma.",
+  "schools": [
+   [
+    "Mansa Konko Lower Basic",
+    "MK",
+    "Gambian public",
+    "Good",
+    "0.5 km"
+   ],
+   [
+    "Soma Senior Secondary",
+    "SO",
+    "Gambian public",
+    "Good",
+    "7.0 km"
+   ],
+   [
+    "Pakalinding Basic Cycle",
+    "PA",
+    "Gambian public",
+    "Good",
+    "9.0 km"
+   ]
+  ]
+ },
+ {
+  "file": "nema-kunku.html",
+  "area": "Nema Kunku",
+  "lat": 13.40461,
+  "lng": -16.68401,
+  "lead": "Key amenities and services close to Nema Kunku.",
+  "amen": [
+   [
+    "12",
+    "Shops & bitiks"
+   ],
+   [
+    "1",
+    "Weekly market"
+   ],
+   [
+    "1",
+    "Supermarket"
+   ],
+   [
+    "4",
+    "Mosques"
+   ],
+   [
+    "5",
+    "Schools"
+   ],
+   [
+    "2",
+    "Clinics & pharmacies"
+   ]
+  ],
+  "schoolHead": "Schools nearby",
+  "schoolLead": "Local and private options within reach of Nema Kunku.",
+  "schools": [
+   [
+    "Nema Kunku Lower Basic",
+    "NK",
+    "Gambian public",
+    "Good",
+    "0.7 km"
+   ],
+   [
+    "Charles Jow Memorial Academy",
+    "CJ",
+    "Private / Gambian",
+    "Very good",
+    "4.5 km"
+   ],
+   [
+    "SBEC International School",
+    "SB",
+    "British / Gambian",
+    "Very good",
+    "6.5 km"
+   ]
+  ]
+ },
+ {
+  "file": "old-yundum.html",
+  "area": "Old Yundum",
+  "lat": null,
+  "lng": null,
+  "lead": null,
+  "amen": null,
+  "schoolHead": null,
+  "schoolLead": null,
+  "schools": null
+ },
+ {
+  "file": "pipeline.html",
+  "area": "Pipeline",
+  "lat": 13.463,
+  "lng": -16.6841,
+  "lead": "Key amenities and services close to Pipeline.",
+  "amen": [
+   [
+    "22",
+    "Restaurants & cafés"
+   ],
+   [
+    "16",
+    "Shops"
+   ],
+   [
+    "3",
+    "Supermarkets"
+   ],
+   [
+    "6",
+    "Banks & ATMs"
+   ],
+   [
+    "5",
+    "Mosques & churches"
+   ],
+   [
+    "6",
+    "Clinics & pharmacies"
+   ]
+  ],
+  "schoolHead": "International schools",
+  "schoolLead": "English-language and international options serving the area.",
+  "schools": [
+   [
+    "Marina International School",
+    "MI",
+    "British curriculum",
+    "Excellent",
+    "3.5 km"
+   ],
+   [
+    "Banjul American Intl. School",
+    "BA",
+    "American curriculum",
+    "Very good",
+    "4.0 km"
+   ],
+   [
+    "SBEC International School",
+    "SB",
+    "British / Gambian",
+    "Very good",
+    "2.0 km"
+   ]
+  ]
+ },
+ {
+  "file": "salagi.html",
+  "area": "Salagi",
+  "lat": null,
+  "lng": null,
+  "lead": null,
+  "amen": null,
+  "schoolHead": null,
+  "schoolLead": null,
+  "schools": null
+ },
+ {
+  "file": "sanyang.html",
+  "area": "Sanyang",
+  "lat": 13.2676,
+  "lng": -16.7584,
+  "lead": "Key amenities and services close to Sanyang.",
+  "amen": [
+   [
+    "10",
+    "Beach bars & local restaurants"
+   ],
+   [
+    "5",
+    "Shops & stalls"
+   ],
+   [
+    "1",
+    "Fish market"
+   ],
+   [
+    "1",
+    "Beach (2 km stretch)"
+   ],
+   [
+    "1",
+    "Community clinic"
+   ],
+   [
+    "2",
+    "Mosques"
+   ]
+  ],
+  "schoolHead": "Schools nearby",
+  "schoolLead": "Schools serving Sanyang and the coast road.",
+  "schools": [
+   [
+    "Sanyang Lower Basic School",
+    "SN",
+    "Gambian public",
+    "Good",
+    "0.5 km"
+   ],
+   [
+    "Marina International School",
+    "MI",
+    "British curriculum (Kololi)",
+    "Excellent",
+    "22 km"
+   ],
+   [
+    "SBEC International School",
+    "SB",
+    "British / IGCSE",
+    "Very good",
+    "18 km"
+   ]
+  ]
+ },
+ {
+  "file": "senegambia.html",
+  "area": "Senegambia",
+  "lat": 13.4431,
+  "lng": -16.7198,
+  "lead": "Key amenities and services close to Senegambia.",
+  "amen": [
+   [
+    "60+",
+    "Restaurants & bars"
+   ],
+   [
+    "12",
+    "Hotels & lodges"
+   ],
+   [
+    "4",
+    "Supermarkets"
+   ],
+   [
+    "2",
+    "Casinos"
+   ],
+   [
+    "8",
+    "Banks & ATMs"
+   ],
+   [
+    "5",
+    "Clinics & pharmacies"
+   ]
+  ],
+  "schoolHead": "International schools",
+  "schoolLead": "English-language and international options serving the area.",
+  "schools": [
+   [
+    "Marina International School",
+    "MI",
+    "British curriculum",
+    "Excellent",
+    "4.5 km"
+   ],
+   [
+    "Banjul American Intl. School",
+    "BA",
+    "American curriculum",
+    "Very good",
+    "6.0 km"
+   ],
+   [
+    "SBEC International School",
+    "SB",
+    "British / Gambian",
+    "Very good",
+    "5.5 km"
+   ]
+  ]
+ },
+ {
+  "file": "serrekunda.html",
+  "area": "Serrekunda",
+  "lat": 13.4388,
+  "lng": -16.6748,
+  "lead": "Key amenities and services close to Serrekunda.",
+  "amen": [
+   [
+    "25+",
+    "Restaurants & street food"
+   ],
+   [
+    "6",
+    "Hotels & lodges"
+   ],
+   [
+    "10+",
+    "Supermarkets & shops"
+   ],
+   [
+    "4",
+    "Banks & ATMs"
+   ],
+   [
+    "5",
+    "Gyms & sports"
+   ],
+   [
+    "8",
+    "Clinics & pharmacies"
+   ]
+  ],
+  "schoolHead": "Schools nearby",
+  "schoolLead": "Schools serving Serrekunda and the Kanifing area.",
+  "schools": [
+   [
+    "Presentation Brothers College",
+    "PB",
+    "Catholic · Junior & senior secondary",
+    "Very good",
+    "1.5 km"
+   ],
+   [
+    "Nusrat Senior Secondary",
+    "NS",
+    "Government · Senior secondary",
+    "Good",
+    "2.0 km"
+   ],
+   [
+    "St. Joseph's Senior Secondary",
+    "SJ",
+    "Catholic · Senior secondary",
+    "Very good",
+    "3.2 km"
+   ]
+  ]
+ },
+ {
+  "file": "sinchu-alagie.html",
+  "area": "Sinchu Alagie",
+  "lat": 13.37808,
+  "lng": -16.68374,
+  "lead": "Key amenities and services close to Sinchu Alagie.",
+  "amen": [
+   [
+    "13",
+    "Shops & bitiks"
+   ],
+   [
+    "1",
+    "Market"
+   ],
+   [
+    "1",
+    "Supermarket"
+   ],
+   [
+    "4",
+    "Mosques"
+   ],
+   [
+    "5",
+    "Schools"
+   ],
+   [
+    "3",
+    "Clinics & pharmacies"
+   ]
+  ],
+  "schoolHead": "Schools nearby",
+  "schoolLead": "Local and private options serving the area.",
+  "schools": [
+   [
+    "Sinchu Alagie Lower Basic",
+    "SI",
+    "Gambian public",
+    "Good",
+    "0.7 km"
+   ],
+   [
+    "Charles Jow Memorial Academy",
+    "CJ",
+    "Private / Gambian",
+    "Very good",
+    "5.0 km"
+   ],
+   [
+    "SBEC International School",
+    "SB",
+    "British / Gambian",
+    "Very good",
+    "6.0 km"
+   ]
+  ]
+ },
+ {
+  "file": "soma.html",
+  "area": "Soma",
+  "lat": 13.4446,
+  "lng": -15.5355,
+  "lead": "Key amenities and services close to Soma.",
+  "amen": [
+   [
+    "8",
+    "Restaurants & dibitair stalls"
+   ],
+   [
+    "2",
+    "Guesthouses"
+   ],
+   [
+    "5",
+    "Markets & shops"
+   ],
+   [
+    "1",
+    "Hospital"
+   ],
+   [
+    "3",
+    "Pharmacies"
+   ],
+   [
+    "2",
+    "Petrol stations"
+   ]
+  ],
+  "schoolHead": "Schools nearby",
+  "schoolLead": "Schools serving Soma and the Lower River Region.",
+  "schools": [
+   [
+    "Soma Senior Secondary School",
+    "SS",
+    "Government · Senior secondary",
+    "Good",
+    "1.2 km"
+   ],
+   [
+    "Tahir Senior Secondary School",
+    "TS",
+    "Private · Senior secondary",
+    "Good",
+    "0.8 km"
+   ],
+   [
+    "Soma Lower Basic School",
+    "SL",
+    "Government · Lower basic",
+    "Adequate",
+    "0.5 km"
+   ]
+  ]
+ },
+ {
+  "file": "sukuta.html",
+  "area": "Sukuta",
+  "lat": 13.4148,
+  "lng": -16.7076,
+  "lead": "Key amenities and services close to Sukuta.",
+  "amen": [
+   [
+    "30+",
+    "Shops & bitiks"
+   ],
+   [
+    "1",
+    "Large market"
+   ],
+   [
+    "3",
+    "Supermarkets"
+   ],
+   [
+    "9",
+    "Mosques & churches"
+   ],
+   [
+    "12",
+    "Schools"
+   ],
+   [
+    "6",
+    "Clinics & pharmacies"
+   ]
+  ],
+  "schoolHead": "Schools nearby",
+  "schoolLead": "Public, private and international options serving Sukuta.",
+  "schools": [
+   [
+    "Sukuta Lower Basic School",
+    "SL",
+    "Gambian public",
+    "Good",
+    "0.6 km"
+   ],
+   [
+    "SBEC International School",
+    "SB",
+    "British / Gambian",
+    "Very good",
+    "4.0 km"
+   ],
+   [
+    "Marina International School",
+    "MI",
+    "British curriculum",
+    "Excellent",
+    "7.0 km"
+   ]
+  ]
+ },
+ {
+  "file": "tanji.html",
+  "area": "Tanji",
+  "lat": 13.3586,
+  "lng": -16.7975,
+  "lead": "Key amenities and services close to Tanji.",
+  "amen": [
+   [
+    "8",
+    "Restaurants & bars"
+   ],
+   [
+    "3",
+    "Shops & mini-marts"
+   ],
+   [
+    "1",
+    "Fish market (daily)"
+   ],
+   [
+    "1",
+    "Bird reserve"
+   ],
+   [
+    "2",
+    "Mosques"
+   ],
+   [
+    "1",
+    "Clinic"
+   ]
+  ],
+  "schoolHead": "International schools",
+  "schoolLead": "English-language and international options serving the coast.",
+  "schools": [
+   [
+    "Tanji Lower Basic School",
+    "TJ",
+    "Gambian public",
+    "Good",
+    "0.5 km"
+   ],
+   [
+    "Marina International School",
+    "MI",
+    "British curriculum · Ages 3–18",
+    "Excellent",
+    "15.0 km"
+   ]
+  ]
+ },
+ {
+  "file": "tintinto.html",
+  "area": "Tintinto",
+  "lat": null,
+  "lng": null,
+  "lead": null,
+  "amen": null,
+  "schoolHead": null,
+  "schoolLead": null,
+  "schools": null
+ },
+ {
+  "file": "tranquil.html",
+  "area": "Tranquil",
+  "lat": null,
+  "lng": null,
+  "lead": null,
+  "amen": null,
+  "schoolHead": null,
+  "schoolLead": null,
+  "schools": null
+ },
+ {
+  "file": "tujereng.html",
+  "area": "Tujereng",
+  "lat": 13.3179,
+  "lng": -16.7889,
+  "lead": "Key amenities and services close to Tujereng.",
+  "amen": [
+   [
+    "8",
+    "Shops & bitiks"
+   ],
+   [
+    "1",
+    "Village market"
+   ],
+   [
+    "3",
+    "Eco-lodges & camps"
+   ],
+   [
+    "2",
+    "Mosques"
+   ],
+   [
+    "3",
+    "Schools"
+   ],
+   [
+    "1",
+    "Clinic"
+   ]
+  ],
+  "schoolHead": "Schools nearby",
+  "schoolLead": "Village schools and the larger options along the coast road.",
+  "schools": [
+   [
+    "Tujereng Lower Basic School",
+    "TU",
+    "Gambian public",
+    "Good",
+    "0.6 km"
+   ],
+   [
+    "Sanyang Senior Secondary",
+    "SA",
+    "Gambian public",
+    "Good",
+    "7.0 km"
+   ],
+   [
+    "SBEC International School",
+    "SB",
+    "British / Gambian",
+    "Very good",
+    "18 km"
+   ]
+  ]
+ },
+ {
+  "file": "yundum.html",
+  "area": "Yundum",
+  "lat": 13.3422,
+  "lng": -16.6697,
+  "lead": "Key amenities and services close to Yundum.",
+  "amen": [
+   [
+    "14",
+    "Shops & bitiks"
+   ],
+   [
+    "1",
+    "Market"
+   ],
+   [
+    "1",
+    "Supermarket"
+   ],
+   [
+    "4",
+    "Mosques"
+   ],
+   [
+    "6",
+    "Schools"
+   ],
+   [
+    "2",
+    "Clinics & pharmacies"
+   ]
+  ],
+  "schoolHead": "Schools &amp; campus",
+  "schoolLead": "Local schools and the University of The Gambia campus.",
+  "schools": [
+   [
+    "University of The Gambia",
+    "UT",
+    "Degree programmes",
+    "Very good",
+    "2.0 km"
+   ],
+   [
+    "Yundum Lower Basic School",
+    "YU",
+    "Gambian public",
+    "Good",
+    "0.6 km"
+   ],
+   [
+    "St. Peter’s Technical High School",
+    "SP",
+    "Gambian / technical",
+    "Very good",
+    "5.0 km"
+   ]
+  ]
+ }
+]

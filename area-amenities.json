@@ -1,0 +1,2413 @@
+{
+ "about": "Voorzieningen per gebied voor het blok \"What’s nearby\". Gebouwd door build-area-amenities.mjs.",
+ "built": "2026-09-01",
+ "radius_km": 2,
+ "sources": {
+  "osm": "OpenStreetMap contributors (ODbL 1.0), Overpass API — opgehaald 2026-09-01",
+  "register": "Ministry of Health, Republic of The Gambia — regionale directoraten, uitgelezen 2026-09-01"
+ },
+ "areas": {
+  "bakau": {
+   "slug": "bakau",
+   "name": "Bakau",
+   "lat": 13.4775,
+   "lon": -16.6779,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "bank": 4,
+    "transport": 1,
+    "eat": 25,
+    "atm": 3,
+    "fuel": 3,
+    "health": 4,
+    "market": 1,
+    "mosque": 6,
+    "bar": 1,
+    "church": 2,
+    "police": 1,
+    "shop": 18,
+    "supermarket": 5,
+    "stay": 8,
+    "gov": 8
+   },
+   "tiles": [
+    {
+     "cat": "eat",
+     "n": 25,
+     "label": "Restaurants & cafés",
+     "evidence": "osm"
+    },
+    {
+     "cat": "shop",
+     "n": 18,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "stay",
+     "n": 8,
+     "label": "Hotels & guesthouses",
+     "evidence": "osm"
+    },
+    {
+     "cat": "gov",
+     "n": 8,
+     "label": "Government offices",
+     "evidence": "osm"
+    },
+    {
+     "cat": "mosque",
+     "n": 6,
+     "label": "Mosques",
+     "evidence": "osm"
+    },
+    {
+     "cat": "health",
+     "n": 4,
+     "label": "Clinics & hospitals",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "bakoteh": {
+   "slug": "bakoteh",
+   "name": "Bakoteh",
+   "lat": 13.4334,
+   "lon": -16.6985,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "transport": 5,
+    "fuel": 4,
+    "eat": 6,
+    "bar": 2,
+    "market": 3,
+    "mosque": 3,
+    "church": 3,
+    "bank": 2,
+    "health": 1,
+    "police": 1,
+    "money": 1,
+    "shop": 5,
+    "supermarket": 1,
+    "stay": 8
+   },
+   "tiles": [
+    {
+     "cat": "stay",
+     "n": 8,
+     "label": "Hotels & guesthouses",
+     "evidence": "osm"
+    },
+    {
+     "cat": "eat",
+     "n": 6,
+     "label": "Restaurants & cafés",
+     "evidence": "osm"
+    },
+    {
+     "cat": "shop",
+     "n": 5,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "transport",
+     "n": 5,
+     "label": "Bus & taxi ranks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "fuel",
+     "n": 4,
+     "label": "Fuel stations",
+     "evidence": "osm"
+    },
+    {
+     "cat": "health",
+     "n": 1,
+     "label": "Clinic or hospital",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "banjul": {
+   "slug": "banjul",
+   "name": "Banjul",
+   "lat": 13.4554,
+   "lon": -16.5757,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "eat": 10,
+    "ferry": 1,
+    "transport": 2,
+    "bank": 5,
+    "money": 1,
+    "worship": 1,
+    "bar": 1,
+    "fuel": 1,
+    "atm": 1,
+    "health": 2,
+    "gov": 11,
+    "mosque": 4,
+    "church": 3,
+    "post": 1,
+    "market": 3,
+    "library": 1,
+    "shop": 2,
+    "stay": 5,
+    "reserve": 1
+   },
+   "tiles": [
+    {
+     "cat": "gov",
+     "n": 11,
+     "label": "Government offices",
+     "evidence": "osm"
+    },
+    {
+     "cat": "eat",
+     "n": 10,
+     "label": "Restaurants & cafés",
+     "evidence": "osm"
+    },
+    {
+     "cat": "bank",
+     "n": 5,
+     "label": "Banks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "stay",
+     "n": 5,
+     "label": "Hotels & guesthouses",
+     "evidence": "osm"
+    },
+    {
+     "cat": "market",
+     "n": 3,
+     "label": "Markets",
+     "evidence": "osm"
+    },
+    {
+     "cat": "health",
+     "n": 2,
+     "label": "Clinics & hospitals",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "bansang": {
+   "slug": "bansang",
+   "name": "Bansang",
+   "lat": 13.4358,
+   "lon": -14.6588,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "ferry": 2,
+    "mosque": 1,
+    "transport": 1,
+    "money": 1,
+    "atm": 1,
+    "health": 1,
+    "market": 1,
+    "police": 1,
+    "gov": 2
+   },
+   "tiles": [
+    {
+     "cat": "ferry",
+     "n": 2,
+     "label": "Ferry terminals",
+     "evidence": "osm"
+    },
+    {
+     "cat": "gov",
+     "n": 2,
+     "label": "Government offices",
+     "evidence": "osm"
+    },
+    {
+     "cat": "health",
+     "n": 1,
+     "label": "Clinic or hospital",
+     "evidence": "osm"
+    },
+    {
+     "cat": "market",
+     "n": 1,
+     "label": "Market",
+     "evidence": "osm"
+    },
+    {
+     "cat": "atm",
+     "n": 1,
+     "label": "ATM",
+     "evidence": "osm"
+    },
+    {
+     "cat": "money",
+     "n": 1,
+     "label": "Money transfer",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "barra": {
+   "slug": "barra",
+   "name": "Barra",
+   "lat": 13.4855,
+   "lon": -16.543,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "ferry": 2,
+    "mosque": 4,
+    "police": 1,
+    "bank": 1,
+    "stay": 2
+   },
+   "tiles": [
+    {
+     "cat": "mosque",
+     "n": 4,
+     "label": "Mosques",
+     "evidence": "osm"
+    },
+    {
+     "cat": "ferry",
+     "n": 2,
+     "label": "Ferry terminals",
+     "evidence": "osm"
+    },
+    {
+     "cat": "stay",
+     "n": 2,
+     "label": "Hotels & guesthouses",
+     "evidence": "osm"
+    },
+    {
+     "cat": "bank",
+     "n": 1,
+     "label": "Bank",
+     "evidence": "osm"
+    },
+    {
+     "cat": "police",
+     "n": 1,
+     "label": "Police station",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "basse santa su": {
+   "slug": "basse",
+   "name": "Basse Santa Su",
+   "lat": 13.31,
+   "lon": -14.215,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "ferry": 3,
+    "bar": 5,
+    "eat": 5,
+    "bank": 7,
+    "fuel": 6,
+    "health": 5,
+    "church": 2,
+    "mosque": 5,
+    "atm": 2,
+    "shop": 19,
+    "stay": 4,
+    "gov": 13
+   },
+   "tiles": [
+    {
+     "cat": "shop",
+     "n": 19,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "gov",
+     "n": 13,
+     "label": "Government offices",
+     "evidence": "osm"
+    },
+    {
+     "cat": "bank",
+     "n": 7,
+     "label": "Banks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "fuel",
+     "n": 6,
+     "label": "Fuel stations",
+     "evidence": "osm"
+    },
+    {
+     "cat": "health",
+     "n": 5,
+     "label": "Clinics & hospitals",
+     "evidence": "osm"
+    },
+    {
+     "cat": "mosque",
+     "n": 5,
+     "label": "Mosques",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "batokunku": {
+   "slug": "batokunku",
+   "name": "Batokunku",
+   "lat": 13.3268,
+   "lon": -16.7991,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "health": 1,
+    "eat": 1,
+    "mosque": 1,
+    "stay": 1
+   },
+   "tiles": [
+    {
+     "cat": "health",
+     "n": 1,
+     "label": "Clinic or hospital",
+     "evidence": "osm"
+    },
+    {
+     "cat": "mosque",
+     "n": 1,
+     "label": "Mosque",
+     "evidence": "osm"
+    },
+    {
+     "cat": "eat",
+     "n": 1,
+     "label": "Restaurant or café",
+     "evidence": "osm"
+    },
+    {
+     "cat": "stay",
+     "n": 1,
+     "label": "Hotel or guesthouse",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "bijilo": {
+   "slug": "bijilo",
+   "name": "Bijilo",
+   "lat": 13.4219,
+   "lon": -16.7328,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "transport": 4,
+    "bank": 4,
+    "fuel": 5,
+    "health": 4,
+    "pharmacy": 5,
+    "eat": 11,
+    "bar": 3,
+    "police": 2,
+    "atm": 2,
+    "mosque": 3,
+    "money": 5,
+    "market": 5,
+    "shop": 45,
+    "supermarket": 3,
+    "stay": 12,
+    "reserve": 1
+   },
+   "tiles": [
+    {
+     "cat": "shop",
+     "n": 45,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "stay",
+     "n": 12,
+     "label": "Hotels & guesthouses",
+     "evidence": "osm"
+    },
+    {
+     "cat": "eat",
+     "n": 11,
+     "label": "Restaurants & cafés",
+     "evidence": "osm"
+    },
+    {
+     "cat": "pharmacy",
+     "n": 5,
+     "label": "Pharmacies",
+     "evidence": "osm"
+    },
+    {
+     "cat": "market",
+     "n": 5,
+     "label": "Markets",
+     "evidence": "osm"
+    },
+    {
+     "cat": "money",
+     "n": 5,
+     "label": "Money transfer",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "brikama": {
+   "slug": "brikama",
+   "name": "Brikama",
+   "lat": 13.2744,
+   "lon": -16.6454,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "fuel": 8,
+    "transport": 4,
+    "post": 1,
+    "eat": 2,
+    "pharmacy": 2,
+    "bank": 4,
+    "health": 2,
+    "worship": 1,
+    "police": 4,
+    "gov": 1,
+    "market": 2,
+    "mosque": 18,
+    "shop": 7,
+    "supermarket": 2
+   },
+   "tiles": [
+    {
+     "cat": "mosque",
+     "n": 18,
+     "label": "Mosques",
+     "evidence": "osm"
+    },
+    {
+     "cat": "fuel",
+     "n": 8,
+     "label": "Fuel stations",
+     "evidence": "osm"
+    },
+    {
+     "cat": "shop",
+     "n": 7,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "bank",
+     "n": 4,
+     "label": "Banks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "transport",
+     "n": 4,
+     "label": "Bus & taxi ranks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "health",
+     "n": 2,
+     "label": "Clinics & hospitals",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "brufut": {
+   "slug": "brufut",
+   "name": "Brufut",
+   "lat": 13.3813,
+   "lon": -16.7517,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "mosque": 4,
+    "eat": 2,
+    "health": 2,
+    "shop": 4,
+    "pharmacy": 2,
+    "stay": 1
+   },
+   "tiles": [
+    {
+     "cat": "shop",
+     "n": 4,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "mosque",
+     "n": 4,
+     "label": "Mosques",
+     "evidence": "osm"
+    },
+    {
+     "cat": "health",
+     "n": 2,
+     "label": "Clinics & hospitals",
+     "evidence": "osm"
+    },
+    {
+     "cat": "pharmacy",
+     "n": 2,
+     "label": "Pharmacies",
+     "evidence": "osm"
+    },
+    {
+     "cat": "eat",
+     "n": 2,
+     "label": "Restaurants & cafés",
+     "evidence": "osm"
+    },
+    {
+     "cat": "stay",
+     "n": 1,
+     "label": "Hotel or guesthouse",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "brusubi": {
+   "slug": "brusubi",
+   "name": "Brusubi",
+   "lat": 13.4073,
+   "lon": -16.7306,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "transport": 4,
+    "bank": 4,
+    "police": 3,
+    "fuel": 6,
+    "health": 5,
+    "pharmacy": 6,
+    "eat": 15,
+    "bar": 3,
+    "atm": 2,
+    "mosque": 5,
+    "money": 7,
+    "market": 6,
+    "shop": 59,
+    "supermarket": 4,
+    "stay": 14
+   },
+   "tiles": [
+    {
+     "cat": "shop",
+     "n": 59,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "eat",
+     "n": 15,
+     "label": "Restaurants & cafés",
+     "evidence": "osm"
+    },
+    {
+     "cat": "stay",
+     "n": 14,
+     "label": "Hotels & guesthouses",
+     "evidence": "osm"
+    },
+    {
+     "cat": "money",
+     "n": 7,
+     "label": "Money transfer",
+     "evidence": "osm"
+    },
+    {
+     "cat": "pharmacy",
+     "n": 6,
+     "label": "Pharmacies",
+     "evidence": "osm"
+    },
+    {
+     "cat": "market",
+     "n": 6,
+     "label": "Markets",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "busumbala": {
+   "slug": "busumbala",
+   "name": "Busumbala",
+   "lat": 13.3334,
+   "lon": -16.6667,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "bar": 1,
+    "fuel": 1,
+    "worship": 1,
+    "police": 1,
+    "transport": 1,
+    "market": 2,
+    "mosque": 1,
+    "shop": 1,
+    "stay": 3
+   },
+   "tiles": [
+    {
+     "cat": "stay",
+     "n": 3,
+     "label": "Hotels & guesthouses",
+     "evidence": "osm"
+    },
+    {
+     "cat": "market",
+     "n": 2,
+     "label": "Markets",
+     "evidence": "osm"
+    },
+    {
+     "cat": "shop",
+     "n": 1,
+     "label": "Shop",
+     "evidence": "osm"
+    },
+    {
+     "cat": "fuel",
+     "n": 1,
+     "label": "Fuel station",
+     "evidence": "osm"
+    },
+    {
+     "cat": "transport",
+     "n": 1,
+     "label": "Bus or taxi rank",
+     "evidence": "osm"
+    },
+    {
+     "cat": "mosque",
+     "n": 1,
+     "label": "Mosque",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "cape point": {
+   "slug": "cape-point",
+   "name": "Cape Point",
+   "lat": 13.4849,
+   "lon": -16.6661,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "bank": 1,
+    "atm": 1,
+    "eat": 7,
+    "fuel": 1,
+    "market": 1,
+    "mosque": 5,
+    "bar": 1,
+    "shop": 2,
+    "stay": 6
+   },
+   "tiles": [
+    {
+     "cat": "eat",
+     "n": 7,
+     "label": "Restaurants & cafés",
+     "evidence": "osm"
+    },
+    {
+     "cat": "stay",
+     "n": 6,
+     "label": "Hotels & guesthouses",
+     "evidence": "osm"
+    },
+    {
+     "cat": "mosque",
+     "n": 5,
+     "label": "Mosques",
+     "evidence": "osm"
+    },
+    {
+     "cat": "shop",
+     "n": 2,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "market",
+     "n": 1,
+     "label": "Market",
+     "evidence": "osm"
+    },
+    {
+     "cat": "bank",
+     "n": 1,
+     "label": "Bank",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "essau": {
+   "slug": "essau",
+   "name": "Essau",
+   "lat": 13.4858,
+   "lon": -16.5262,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "mosque": 3,
+    "stay": 3,
+    "health": 1
+   },
+   "tiles": [
+    {
+     "cat": "mosque",
+     "n": 3,
+     "label": "Mosques",
+     "evidence": "osm"
+    },
+    {
+     "cat": "stay",
+     "n": 3,
+     "label": "Hotels & guesthouses",
+     "evidence": "osm"
+    },
+    {
+     "cat": "health",
+     "n": 1,
+     "label": "District hospital",
+     "evidence": "register"
+    }
+   ],
+   "register": [
+    {
+     "name": "Essau District Hospital",
+     "type": "district_hospital",
+     "region": "NBW",
+     "source": "https://moh.gov.gm/regional-health-directorate-north-bank-west-region/"
+    }
+   ],
+   "evidence": "osm+register"
+  },
+  "fajara": {
+   "slug": "fajara",
+   "name": "Fajara",
+   "lat": 13.469,
+   "lon": -16.6914,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "bank": 9,
+    "transport": 1,
+    "fuel": 6,
+    "eat": 33,
+    "library": 1,
+    "pharmacy": 1,
+    "health": 2,
+    "money": 2,
+    "atm": 2,
+    "mosque": 4,
+    "church": 2,
+    "police": 1,
+    "shop": 30,
+    "supermarket": 6,
+    "stay": 11,
+    "gov": 8
+   },
+   "tiles": [
+    {
+     "cat": "eat",
+     "n": 33,
+     "label": "Restaurants & cafés",
+     "evidence": "osm"
+    },
+    {
+     "cat": "shop",
+     "n": 30,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "stay",
+     "n": 11,
+     "label": "Hotels & guesthouses",
+     "evidence": "osm"
+    },
+    {
+     "cat": "bank",
+     "n": 9,
+     "label": "Banks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "gov",
+     "n": 8,
+     "label": "Government offices",
+     "evidence": "osm"
+    },
+    {
+     "cat": "health",
+     "n": 2,
+     "label": "Clinics & hospitals",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "farafenni": {
+   "slug": "farafenni",
+   "name": "Farafenni",
+   "lat": 13.5721,
+   "lon": -15.598,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "fuel": 3,
+    "police": 1,
+    "eat": 4,
+    "mosque": 6,
+    "bank": 5,
+    "post": 1,
+    "pharmacy": 2,
+    "church": 1,
+    "market": 2,
+    "transport": 4,
+    "health": 1,
+    "shop": 7,
+    "supermarket": 4,
+    "stay": 1,
+    "gov": 6
+   },
+   "tiles": [
+    {
+     "cat": "shop",
+     "n": 7,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "mosque",
+     "n": 6,
+     "label": "Mosques",
+     "evidence": "osm"
+    },
+    {
+     "cat": "gov",
+     "n": 6,
+     "label": "Government offices",
+     "evidence": "osm"
+    },
+    {
+     "cat": "bank",
+     "n": 5,
+     "label": "Banks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "supermarket",
+     "n": 4,
+     "label": "Supermarkets",
+     "evidence": "osm"
+    },
+    {
+     "cat": "pharmacy",
+     "n": 2,
+     "label": "Pharmacies",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "fatoto": {
+   "slug": "fatoto",
+   "name": "Fatoto",
+   "lat": 13.3993,
+   "lon": -13.891,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "ferry": 2,
+    "health": 1
+   },
+   "tiles": [
+    {
+     "cat": "ferry",
+     "n": 2,
+     "label": "Ferry terminals",
+     "evidence": "osm"
+    },
+    {
+     "cat": "health",
+     "n": 1,
+     "label": "Health centre",
+     "evidence": "register"
+    }
+   ],
+   "register": [
+    {
+     "name": "Fatoto Health Centre",
+     "type": "health_centre",
+     "region": "URR",
+     "source": "https://moh.gov.gm/regional-health-directorate-upper-river-region/"
+    }
+   ],
+   "evidence": "osm+register"
+  },
+  "gambissara": {
+   "slug": "gambissara",
+   "name": "Gambissara",
+   "lat": 13.2383,
+   "lon": -14.3108,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "eat": 2,
+    "health": 1,
+    "money": 1,
+    "pharmacy": 1,
+    "bank": 1,
+    "mosque": 1,
+    "supermarket": 2,
+    "shop": 8,
+    "stay": 1
+   },
+   "tiles": [
+    {
+     "cat": "shop",
+     "n": 8,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "supermarket",
+     "n": 2,
+     "label": "Supermarkets",
+     "evidence": "osm"
+    },
+    {
+     "cat": "eat",
+     "n": 2,
+     "label": "Restaurants & cafés",
+     "evidence": "osm"
+    },
+    {
+     "cat": "health",
+     "n": 1,
+     "label": "Clinic or hospital",
+     "evidence": "osm"
+    },
+    {
+     "cat": "pharmacy",
+     "n": 1,
+     "label": "Pharmacy",
+     "evidence": "osm"
+    },
+    {
+     "cat": "bank",
+     "n": 1,
+     "label": "Bank",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "gunjur": {
+   "slug": "gunjur",
+   "name": "Gunjur",
+   "lat": 13.176,
+   "lon": -16.7599,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "bar": 1,
+    "police": 1,
+    "eat": 1,
+    "health": 1,
+    "mosque": 3,
+    "market": 1,
+    "shop": 3,
+    "supermarket": 1
+   },
+   "tiles": [
+    {
+     "cat": "shop",
+     "n": 3,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "mosque",
+     "n": 3,
+     "label": "Mosques",
+     "evidence": "osm"
+    },
+    {
+     "cat": "health",
+     "n": 1,
+     "label": "Clinic or hospital",
+     "evidence": "osm"
+    },
+    {
+     "cat": "market",
+     "n": 1,
+     "label": "Market",
+     "evidence": "osm"
+    },
+    {
+     "cat": "supermarket",
+     "n": 1,
+     "label": "Supermarket",
+     "evidence": "osm"
+    },
+    {
+     "cat": "eat",
+     "n": 1,
+     "label": "Restaurant or café",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "jabang": {
+   "slug": "jabang",
+   "name": "Jabang",
+   "lat": 13.3619,
+   "lon": -16.7023,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "mosque": 3,
+    "fuel": 2
+   },
+   "tiles": [
+    {
+     "cat": "mosque",
+     "n": 3,
+     "label": "Mosques",
+     "evidence": "osm"
+    },
+    {
+     "cat": "fuel",
+     "n": 2,
+     "label": "Fuel stations",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "janjanbureh": {
+   "slug": "janjanbureh",
+   "name": "Janjanbureh",
+   "lat": 13.5391,
+   "lon": -14.7612,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "ferry": 2,
+    "eat": 5,
+    "market": 1,
+    "post": 1,
+    "health": 1,
+    "police": 1,
+    "shop": 2,
+    "stay": 11,
+    "gov": 5
+   },
+   "tiles": [
+    {
+     "cat": "stay",
+     "n": 11,
+     "label": "Hotels & guesthouses",
+     "evidence": "osm"
+    },
+    {
+     "cat": "eat",
+     "n": 5,
+     "label": "Restaurants & cafés",
+     "evidence": "osm"
+    },
+    {
+     "cat": "gov",
+     "n": 5,
+     "label": "Government offices",
+     "evidence": "osm"
+    },
+    {
+     "cat": "shop",
+     "n": 2,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "ferry",
+     "n": 2,
+     "label": "Ferry terminals",
+     "evidence": "osm"
+    },
+    {
+     "cat": "health",
+     "n": 1,
+     "label": "Clinic or hospital",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "kartong": {
+   "slug": "kartong",
+   "name": "Kartong",
+   "lat": 13.0913,
+   "lon": -16.7597,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "mosque": 1,
+    "health": 2,
+    "church": 1,
+    "bar": 1,
+    "eat": 1,
+    "pharmacy": 1,
+    "market": 1,
+    "stay": 2
+   },
+   "tiles": [
+    {
+     "cat": "health",
+     "n": 2,
+     "label": "Clinics & hospitals",
+     "evidence": "osm"
+    },
+    {
+     "cat": "stay",
+     "n": 2,
+     "label": "Hotels & guesthouses",
+     "evidence": "osm"
+    },
+    {
+     "cat": "pharmacy",
+     "n": 1,
+     "label": "Pharmacy",
+     "evidence": "osm"
+    },
+    {
+     "cat": "market",
+     "n": 1,
+     "label": "Market",
+     "evidence": "osm"
+    },
+    {
+     "cat": "mosque",
+     "n": 1,
+     "label": "Mosque",
+     "evidence": "osm"
+    },
+    {
+     "cat": "church",
+     "n": 1,
+     "label": "Church",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "kerewan": {
+   "slug": "kerewan",
+   "name": "Kerewan",
+   "lat": 13.4936,
+   "lon": -16.0891,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "police": 1,
+    "health": 2,
+    "mosque": 1,
+    "eat": 1,
+    "pharmacy": 1,
+    "atm": 1,
+    "shop": 11,
+    "supermarket": 1,
+    "stay": 1,
+    "gov": 3
+   },
+   "tiles": [
+    {
+     "cat": "shop",
+     "n": 11,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "gov",
+     "n": 3,
+     "label": "Government offices",
+     "evidence": "osm"
+    },
+    {
+     "cat": "health",
+     "n": 2,
+     "label": "Clinics & hospitals",
+     "evidence": "osm"
+    },
+    {
+     "cat": "pharmacy",
+     "n": 1,
+     "label": "Pharmacy",
+     "evidence": "osm"
+    },
+    {
+     "cat": "supermarket",
+     "n": 1,
+     "label": "Supermarket",
+     "evidence": "osm"
+    },
+    {
+     "cat": "atm",
+     "n": 1,
+     "label": "ATM",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "kerr serign": {
+   "slug": "kerr-serign",
+   "name": "Kerr Serign",
+   "lat": 13.4325,
+   "lon": -16.7203,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "bank": 3,
+    "eat": 72,
+    "pharmacy": 1,
+    "transport": 4,
+    "health": 2,
+    "bar": 15,
+    "fuel": 1,
+    "atm": 4,
+    "money": 1,
+    "market": 3,
+    "mosque": 3,
+    "supermarket": 6,
+    "shop": 32,
+    "stay": 27,
+    "reserve": 1
+   },
+   "tiles": [
+    {
+     "cat": "eat",
+     "n": 72,
+     "label": "Restaurants & cafés",
+     "evidence": "osm"
+    },
+    {
+     "cat": "shop",
+     "n": 32,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "stay",
+     "n": 27,
+     "label": "Hotels & guesthouses",
+     "evidence": "osm"
+    },
+    {
+     "cat": "bar",
+     "n": 15,
+     "label": "Bars",
+     "evidence": "osm"
+    },
+    {
+     "cat": "supermarket",
+     "n": 6,
+     "label": "Supermarkets",
+     "evidence": "osm"
+    },
+    {
+     "cat": "health",
+     "n": 2,
+     "label": "Clinics & hospitals",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "kololi": {
+   "slug": "kololi",
+   "name": "Kololi",
+   "lat": 13.4404,
+   "lon": -16.7156,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "bank": 3,
+    "eat": 76,
+    "pharmacy": 1,
+    "transport": 5,
+    "health": 1,
+    "bar": 19,
+    "fuel": 3,
+    "atm": 4,
+    "police": 1,
+    "money": 1,
+    "market": 3,
+    "church": 1,
+    "mosque": 3,
+    "supermarket": 7,
+    "shop": 30,
+    "stay": 29,
+    "reserve": 1
+   },
+   "tiles": [
+    {
+     "cat": "eat",
+     "n": 76,
+     "label": "Restaurants & cafés",
+     "evidence": "osm"
+    },
+    {
+     "cat": "shop",
+     "n": 30,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "stay",
+     "n": 29,
+     "label": "Hotels & guesthouses",
+     "evidence": "osm"
+    },
+    {
+     "cat": "bar",
+     "n": 19,
+     "label": "Bars",
+     "evidence": "osm"
+    },
+    {
+     "cat": "supermarket",
+     "n": 7,
+     "label": "Supermarkets",
+     "evidence": "osm"
+    },
+    {
+     "cat": "health",
+     "n": 1,
+     "label": "Clinic or hospital",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "kotu": {
+   "slug": "kotu",
+   "name": "Kotu",
+   "lat": 13.4553,
+   "lon": -16.7034,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "transport": 2,
+    "fuel": 5,
+    "bank": 5,
+    "police": 3,
+    "eat": 49,
+    "pharmacy": 1,
+    "bar": 7,
+    "money": 3,
+    "atm": 3,
+    "mosque": 1,
+    "church": 1,
+    "shop": 33,
+    "supermarket": 9,
+    "stay": 20,
+    "gov": 1
+   },
+   "tiles": [
+    {
+     "cat": "eat",
+     "n": 49,
+     "label": "Restaurants & cafés",
+     "evidence": "osm"
+    },
+    {
+     "cat": "shop",
+     "n": 33,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "stay",
+     "n": 20,
+     "label": "Hotels & guesthouses",
+     "evidence": "osm"
+    },
+    {
+     "cat": "supermarket",
+     "n": 9,
+     "label": "Supermarkets",
+     "evidence": "osm"
+    },
+    {
+     "cat": "bar",
+     "n": 7,
+     "label": "Bars",
+     "evidence": "osm"
+    },
+    {
+     "cat": "pharmacy",
+     "n": 1,
+     "label": "Pharmacy",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "kuntaur": {
+   "slug": "kuntaur",
+   "name": "Kuntaur",
+   "lat": 13.6709,
+   "lon": -14.8898,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "ferry": 4,
+    "eat": 2,
+    "shop": 1,
+    "stay": 1,
+    "health": 1
+   },
+   "tiles": [
+    {
+     "cat": "ferry",
+     "n": 4,
+     "label": "Ferry terminals",
+     "evidence": "osm"
+    },
+    {
+     "cat": "eat",
+     "n": 2,
+     "label": "Restaurants & cafés",
+     "evidence": "osm"
+    },
+    {
+     "cat": "health",
+     "n": 1,
+     "label": "Health centre",
+     "evidence": "register"
+    },
+    {
+     "cat": "shop",
+     "n": 1,
+     "label": "Shop",
+     "evidence": "osm"
+    },
+    {
+     "cat": "stay",
+     "n": 1,
+     "label": "Hotel or guesthouse",
+     "evidence": "osm"
+    }
+   ],
+   "register": [
+    {
+     "name": "Kuntaur Major Health Centre",
+     "type": "health_centre",
+     "region": "CRR",
+     "source": "https://moh.gov.gm/regional-health-directorate-central-river-region/"
+    }
+   ],
+   "evidence": "osm+register"
+  },
+  "lamin": {
+   "slug": "lamin",
+   "name": "Lamin",
+   "lat": 13.3874,
+   "lon": -16.6439,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "fuel": 2,
+    "health": 1,
+    "police": 1,
+    "transport": 1,
+    "eat": 1,
+    "mosque": 1,
+    "shop": 2,
+    "stay": 1,
+    "reserve": 1,
+    "gov": 1
+   },
+   "tiles": [
+    {
+     "cat": "shop",
+     "n": 2,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "fuel",
+     "n": 2,
+     "label": "Fuel stations",
+     "evidence": "osm"
+    },
+    {
+     "cat": "health",
+     "n": 1,
+     "label": "Clinic or hospital",
+     "evidence": "osm"
+    },
+    {
+     "cat": "transport",
+     "n": 1,
+     "label": "Bus or taxi rank",
+     "evidence": "osm"
+    },
+    {
+     "cat": "mosque",
+     "n": 1,
+     "label": "Mosque",
+     "evidence": "osm"
+    },
+    {
+     "cat": "eat",
+     "n": 1,
+     "label": "Restaurant or café",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "manjai kunda": {
+   "slug": "manjai-kunda",
+   "name": "Manjai Kunda",
+   "lat": 13.4422,
+   "lon": -16.6981,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "fuel": 5,
+    "transport": 5,
+    "police": 2,
+    "eat": 7,
+    "bar": 3,
+    "market": 3,
+    "mosque": 3,
+    "church": 3,
+    "bank": 2,
+    "shop": 8,
+    "supermarket": 2,
+    "stay": 11
+   },
+   "tiles": [
+    {
+     "cat": "stay",
+     "n": 11,
+     "label": "Hotels & guesthouses",
+     "evidence": "osm"
+    },
+    {
+     "cat": "shop",
+     "n": 8,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "eat",
+     "n": 7,
+     "label": "Restaurants & cafés",
+     "evidence": "osm"
+    },
+    {
+     "cat": "fuel",
+     "n": 5,
+     "label": "Fuel stations",
+     "evidence": "osm"
+    },
+    {
+     "cat": "transport",
+     "n": 5,
+     "label": "Bus & taxi ranks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "market",
+     "n": 3,
+     "label": "Markets",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "mansa konko": {
+   "slug": "mansa-konko",
+   "name": "Mansa Konko",
+   "lat": 13.4585,
+   "lon": -15.534,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "church": 2,
+    "fuel": 3,
+    "pharmacy": 1,
+    "bank": 1,
+    "mosque": 2,
+    "worship": 2,
+    "gov": 4,
+    "police": 2,
+    "transport": 1,
+    "eat": 1,
+    "health": 1,
+    "shop": 1,
+    "stay": 3
+   },
+   "tiles": [
+    {
+     "cat": "gov",
+     "n": 4,
+     "label": "Government offices",
+     "evidence": "osm"
+    },
+    {
+     "cat": "fuel",
+     "n": 3,
+     "label": "Fuel stations",
+     "evidence": "osm"
+    },
+    {
+     "cat": "stay",
+     "n": 3,
+     "label": "Hotels & guesthouses",
+     "evidence": "osm"
+    },
+    {
+     "cat": "mosque",
+     "n": 2,
+     "label": "Mosques",
+     "evidence": "osm"
+    },
+    {
+     "cat": "health",
+     "n": 1,
+     "label": "Clinic or hospital",
+     "evidence": "osm"
+    },
+    {
+     "cat": "shop",
+     "n": 1,
+     "label": "Shop",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "nema kunku": {
+   "slug": "nema-kunku",
+   "name": "Nema Kunku",
+   "lat": 13.40461,
+   "lon": -16.68401,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "transport": 3,
+    "fuel": 5,
+    "health": 2,
+    "police": 2,
+    "mosque": 6,
+    "eat": 1,
+    "shop": 9,
+    "supermarket": 1
+   },
+   "tiles": [
+    {
+     "cat": "shop",
+     "n": 9,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "mosque",
+     "n": 6,
+     "label": "Mosques",
+     "evidence": "osm"
+    },
+    {
+     "cat": "fuel",
+     "n": 5,
+     "label": "Fuel stations",
+     "evidence": "osm"
+    },
+    {
+     "cat": "transport",
+     "n": 3,
+     "label": "Bus & taxi ranks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "health",
+     "n": 2,
+     "label": "Clinics & hospitals",
+     "evidence": "osm"
+    },
+    {
+     "cat": "police",
+     "n": 2,
+     "label": "Police stations",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "pipeline": {
+   "slug": "pipeline",
+   "name": "Pipeline",
+   "lat": 13.463,
+   "lon": -16.6841,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "bank": 9,
+    "transport": 3,
+    "eat": 33,
+    "library": 2,
+    "pharmacy": 1,
+    "fuel": 8,
+    "health": 6,
+    "money": 3,
+    "atm": 3,
+    "church": 3,
+    "mosque": 6,
+    "post": 1,
+    "police": 1,
+    "shop": 38,
+    "supermarket": 6,
+    "stay": 5,
+    "gov": 10
+   },
+   "tiles": [
+    {
+     "cat": "shop",
+     "n": 38,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "eat",
+     "n": 33,
+     "label": "Restaurants & cafés",
+     "evidence": "osm"
+    },
+    {
+     "cat": "gov",
+     "n": 10,
+     "label": "Government offices",
+     "evidence": "osm"
+    },
+    {
+     "cat": "bank",
+     "n": 9,
+     "label": "Banks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "fuel",
+     "n": 8,
+     "label": "Fuel stations",
+     "evidence": "osm"
+    },
+    {
+     "cat": "health",
+     "n": 6,
+     "label": "Clinics & hospitals",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "sanyang": {
+   "slug": "sanyang",
+   "name": "Sanyang",
+   "lat": 13.2676,
+   "lon": -16.7584,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "transport": 1,
+    "fuel": 2,
+    "eat": 1,
+    "mosque": 1,
+    "health": 1,
+    "shop": 1
+   },
+   "tiles": [
+    {
+     "cat": "fuel",
+     "n": 2,
+     "label": "Fuel stations",
+     "evidence": "osm"
+    },
+    {
+     "cat": "health",
+     "n": 1,
+     "label": "Clinic or hospital",
+     "evidence": "osm"
+    },
+    {
+     "cat": "shop",
+     "n": 1,
+     "label": "Shop",
+     "evidence": "osm"
+    },
+    {
+     "cat": "transport",
+     "n": 1,
+     "label": "Bus or taxi rank",
+     "evidence": "osm"
+    },
+    {
+     "cat": "mosque",
+     "n": 1,
+     "label": "Mosque",
+     "evidence": "osm"
+    },
+    {
+     "cat": "eat",
+     "n": 1,
+     "label": "Restaurant or café",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "senegambia": {
+   "slug": "senegambia",
+   "name": "Senegambia",
+   "lat": 13.4431,
+   "lon": -16.7198,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "bank": 3,
+    "eat": 75,
+    "pharmacy": 1,
+    "transport": 5,
+    "health": 1,
+    "bar": 18,
+    "fuel": 3,
+    "atm": 4,
+    "police": 1,
+    "money": 1,
+    "market": 3,
+    "church": 1,
+    "mosque": 3,
+    "supermarket": 7,
+    "shop": 29,
+    "stay": 29,
+    "reserve": 1
+   },
+   "tiles": [
+    {
+     "cat": "eat",
+     "n": 75,
+     "label": "Restaurants & cafés",
+     "evidence": "osm"
+    },
+    {
+     "cat": "shop",
+     "n": 29,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "stay",
+     "n": 29,
+     "label": "Hotels & guesthouses",
+     "evidence": "osm"
+    },
+    {
+     "cat": "bar",
+     "n": 18,
+     "label": "Bars",
+     "evidence": "osm"
+    },
+    {
+     "cat": "supermarket",
+     "n": 7,
+     "label": "Supermarkets",
+     "evidence": "osm"
+    },
+    {
+     "cat": "health",
+     "n": 1,
+     "label": "Clinic or hospital",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "serrekunda": {
+   "slug": "serrekunda",
+   "name": "Serrekunda",
+   "lat": 13.4388,
+   "lon": -16.6748,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "transport": 10,
+    "fuel": 7,
+    "eat": 5,
+    "market": 3,
+    "bank": 8,
+    "mosque": 6,
+    "pharmacy": 2,
+    "bar": 1,
+    "church": 4,
+    "post": 2,
+    "money": 1,
+    "atm": 3,
+    "gov": 2,
+    "health": 1,
+    "supermarket": 4,
+    "shop": 30,
+    "stay": 4
+   },
+   "tiles": [
+    {
+     "cat": "shop",
+     "n": 30,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "transport",
+     "n": 10,
+     "label": "Bus & taxi ranks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "bank",
+     "n": 8,
+     "label": "Banks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "fuel",
+     "n": 7,
+     "label": "Fuel stations",
+     "evidence": "osm"
+    },
+    {
+     "cat": "mosque",
+     "n": 6,
+     "label": "Mosques",
+     "evidence": "osm"
+    },
+    {
+     "cat": "pharmacy",
+     "n": 2,
+     "label": "Pharmacies",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "sinchu alagie": {
+   "slug": "sinchu-alagie",
+   "name": "Sinchu Alagie",
+   "lat": 13.37808,
+   "lon": -16.68374,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "health": 1,
+    "mosque": 5,
+    "bank": 1,
+    "market": 2,
+    "police": 2,
+    "fuel": 2,
+    "supermarket": 2,
+    "shop": 4
+   },
+   "tiles": [
+    {
+     "cat": "mosque",
+     "n": 5,
+     "label": "Mosques",
+     "evidence": "osm"
+    },
+    {
+     "cat": "shop",
+     "n": 4,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "market",
+     "n": 2,
+     "label": "Markets",
+     "evidence": "osm"
+    },
+    {
+     "cat": "supermarket",
+     "n": 2,
+     "label": "Supermarkets",
+     "evidence": "osm"
+    },
+    {
+     "cat": "fuel",
+     "n": 2,
+     "label": "Fuel stations",
+     "evidence": "osm"
+    },
+    {
+     "cat": "health",
+     "n": 1,
+     "label": "Clinic or hospital",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "soma": {
+   "slug": "soma",
+   "name": "Soma",
+   "lat": 13.4446,
+   "lon": -15.5355,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "church": 2,
+    "police": 3,
+    "fuel": 4,
+    "pharmacy": 1,
+    "bank": 2,
+    "mosque": 2,
+    "market": 2,
+    "worship": 2,
+    "gov": 4,
+    "eat": 2,
+    "transport": 1,
+    "health": 1,
+    "shop": 2,
+    "stay": 2
+   },
+   "tiles": [
+    {
+     "cat": "fuel",
+     "n": 4,
+     "label": "Fuel stations",
+     "evidence": "osm"
+    },
+    {
+     "cat": "gov",
+     "n": 4,
+     "label": "Government offices",
+     "evidence": "osm"
+    },
+    {
+     "cat": "police",
+     "n": 3,
+     "label": "Police stations",
+     "evidence": "osm"
+    },
+    {
+     "cat": "market",
+     "n": 2,
+     "label": "Markets",
+     "evidence": "osm"
+    },
+    {
+     "cat": "shop",
+     "n": 2,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "health",
+     "n": 1,
+     "label": "Clinic or hospital",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "sukuta": {
+   "slug": "sukuta",
+   "name": "Sukuta",
+   "lat": 13.4148,
+   "lon": -16.7076,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "eat": 4,
+    "mosque": 6,
+    "fuel": 1,
+    "health": 1,
+    "police": 1,
+    "money": 1,
+    "shop": 3,
+    "stay": 2
+   },
+   "tiles": [
+    {
+     "cat": "mosque",
+     "n": 6,
+     "label": "Mosques",
+     "evidence": "osm"
+    },
+    {
+     "cat": "eat",
+     "n": 4,
+     "label": "Restaurants & cafés",
+     "evidence": "osm"
+    },
+    {
+     "cat": "shop",
+     "n": 3,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "stay",
+     "n": 2,
+     "label": "Hotels & guesthouses",
+     "evidence": "osm"
+    },
+    {
+     "cat": "health",
+     "n": 1,
+     "label": "Clinic or hospital",
+     "evidence": "osm"
+    },
+    {
+     "cat": "money",
+     "n": 1,
+     "label": "Money transfer",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "tanji": {
+   "slug": "tanji",
+   "name": "Tanji",
+   "lat": 13.3586,
+   "lon": -16.7975,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "fuel": 3,
+    "health": 2,
+    "library": 1,
+    "transport": 2,
+    "mosque": 2,
+    "eat": 3,
+    "shop": 3,
+    "stay": 1
+   },
+   "tiles": [
+    {
+     "cat": "shop",
+     "n": 3,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "fuel",
+     "n": 3,
+     "label": "Fuel stations",
+     "evidence": "osm"
+    },
+    {
+     "cat": "eat",
+     "n": 3,
+     "label": "Restaurants & cafés",
+     "evidence": "osm"
+    },
+    {
+     "cat": "health",
+     "n": 2,
+     "label": "Clinics & hospitals",
+     "evidence": "osm"
+    },
+    {
+     "cat": "transport",
+     "n": 2,
+     "label": "Bus & taxi ranks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "mosque",
+     "n": 2,
+     "label": "Mosques",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "tujereng": {
+   "slug": "tujereng",
+   "name": "Tujereng",
+   "lat": 13.3179,
+   "lon": -16.7889,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "health": 1,
+    "eat": 1,
+    "mosque": 1,
+    "stay": 1
+   },
+   "tiles": [
+    {
+     "cat": "health",
+     "n": 1,
+     "label": "Clinic or hospital",
+     "evidence": "osm"
+    },
+    {
+     "cat": "mosque",
+     "n": 1,
+     "label": "Mosque",
+     "evidence": "osm"
+    },
+    {
+     "cat": "eat",
+     "n": 1,
+     "label": "Restaurant or café",
+     "evidence": "osm"
+    },
+    {
+     "cat": "stay",
+     "n": 1,
+     "label": "Hotel or guesthouse",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  },
+  "yundum": {
+   "slug": "yundum",
+   "name": "Yundum",
+   "lat": 13.3422,
+   "lon": -16.6697,
+   "radius_km": 2,
+   "measured_on": "2026-09-01",
+   "counts": {
+    "bar": 1,
+    "transport": 1,
+    "mosque": 2,
+    "worship": 1,
+    "police": 1,
+    "market": 2,
+    "fuel": 1,
+    "supermarket": 1,
+    "shop": 3,
+    "stay": 3
+   },
+   "tiles": [
+    {
+     "cat": "shop",
+     "n": 3,
+     "label": "Shops & bitiks",
+     "evidence": "osm"
+    },
+    {
+     "cat": "stay",
+     "n": 3,
+     "label": "Hotels & guesthouses",
+     "evidence": "osm"
+    },
+    {
+     "cat": "market",
+     "n": 2,
+     "label": "Markets",
+     "evidence": "osm"
+    },
+    {
+     "cat": "mosque",
+     "n": 2,
+     "label": "Mosques",
+     "evidence": "osm"
+    },
+    {
+     "cat": "supermarket",
+     "n": 1,
+     "label": "Supermarket",
+     "evidence": "osm"
+    },
+    {
+     "cat": "fuel",
+     "n": 1,
+     "label": "Fuel station",
+     "evidence": "osm"
+    }
+   ],
+   "register": [],
+   "evidence": "osm"
+  }
+ }
+}
