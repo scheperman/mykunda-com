@@ -205,6 +205,7 @@
         <h2>Schools nearby</h2>
         <p class="lead">Village schools and the larger options along the coast road.</p>
         <div id="schoolList"></div>
+        <!--mk-schoolsrc--><p class="src">Named from local knowledge; there is no public register of Gambian schools we can cite. A distance used to stand beside each name. Checked against the schools that OpenStreetMap has mapped, half of those distances were more than two kilometres out, so they are gone rather than quietly corrected.</p>
       </div>
       <div class="block">
         <h2>Nearby areas</h2>
@@ -325,8 +326,8 @@ var amenData=[["1","Clinic or hospital"],["1","Mosque"],["1","Restaurant or caf√
 var amenIc=["<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 9h3l2-4 4 8 2-4h7\"/></svg>","<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M18 4a8 8 0 1 0 0 16 7 7 0 0 1 0-16z\"/></svg>","<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 3v7a2 2 0 0 0 4 0V3M8 11v10M17 3c-1.5 0-3 1.5-3 5s1.5 4 3 4v9\"/></svg>","<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M2 18v-9M2 13h14a4 4 0 0 1 4 4v1M2 18h20M6 9h3\"/></svg>"];
 amenGrid.innerHTML = amenData.map(function(a,i){return '<div class="amen"><span class="ic">'+amenIc[i%amenIc.length]+'</span><div><div class="n">'+a[0]+'</div><div class="l">'+a[1]+"</div></div></div>";}).join("");
 
-var schools=[["Tujereng Lower Basic School","TU","Gambian public","0.6 km"],["Sanyang Senior Secondary","SA","Gambian public","7.0 km"],["SBEC International School","SB","British / Gambian","18 km"]];
-schoolList.innerHTML = schools.map(function(s){return '<div class="school"><div class="logo">'+s[1].slice(0,2)+'</div><div class="info"><div class="nm">'+s[0]+'</div><div class="meta">'+s[2]+'</div></div><div style="text-align:right"><div class="dist">'+s[3]+"</div></div></div>";}).join("");
+var schools=[["Tujereng Lower Basic School","TU","Gambian public"],["Sanyang Senior Secondary","SA","Gambian public"],["SBEC International School","SB","British / Gambian"]];
+schoolList.innerHTML = schools.map(function(s){return '<div class="school"><div class="logo">'+s[1].slice(0,2)+'</div><div class="info"><div class="nm">'+s[0]+'</div><div class="meta">'+s[2]+'</div></div></div>';}).join('');
 
 var areaLower = "tujereng";
 var areaName = "Tujereng";

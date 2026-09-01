@@ -997,6 +997,35 @@ Ferry", 4,9 km). De echte reden om geen tijd te tonen staat hieronder.
 `_scores-data.json` is daarmee grotendeels historisch; alleen de vijfde regel
 per gebied wordt nog gelezen. De kop van dat bestand zegt dat ook.
 
+### De schoollijsten: namen blijven, getallen niet
+
+Na het weghalen van de oordelen bleef er `[naam, initialen, type, afstand]` over,
+en die afstand was het laatste getal op de gebiedspagina's dat eruitzag als een
+meting zonder er een te zijn. Sinds 01-09-2026 staat er alleen nog
+`[naam, initialen, type]` (`_werk/patch-schoolafstanden.mjs`, vangrail
+`check-schoollijsten.mjs`).
+
+**Wat gemeten is voordat dit besloten werd.** Van de 121 genoemde scholen zijn
+er 75 met naam én niveau terug te vinden in OpenStreetMap. Bij die 75 wijkt de
+opgegeven afstand mediaan 1,8 km af van de gekarteerde positie, met een
+uitschieter van 19 km — Banjul zette "Methodist Academy 0,5 km" voor een school
+die tien kilometer verderop staat. De námen kloppen dus grotendeels; de
+afstanden niet.
+
+**Waarom niet gecorrigeerd maar verwijderd.** Twee routes zijn geprobeerd en
+allebei afgekeurd. Naamkoppeling vindt 46 van de 121 scholen niet en knoopt
+onderweg "Basse Senior Secondary" aan een WAEC-kantoor; het niveau moet mee in
+de vergelijking, want "Bansang Lower Basic" en "Bansang Upper Basic" zijn twee
+scholen, maar dan blijft het alsnog raden. En de lijst rechtstreeks uit
+OpenStreetMap halen levert per gebied vijf treffers op waar "Play Ground",
+"Kartong Youth Hall", "Scouts Skill Center" en een veeteeltonderzoekscentrum
+tussen staan — OSM's `amenity=school` is in Gambia te ruim getagd om
+ongefilterd te publiceren.
+
+**De drie renderregels zijn tot één teruggebracht.** Er waren string-concat met
+dubbele quotes, met enkele, en een template literal; het patchscript vervangt
+de hele opdracht in plaats van er een stuk uit te knippen.
+
 Bij dezelfde ronde zijn de kwaliteitsoordelen bij 121 met naam genoemde
 scholen verwijderd (`_werk/patch-schoolwaarderingen.mjs`, omkeerbaar met
 `--terug`): 56× "Good", 38× "Very good", 21× "Excellent", 5× "Adequate", 1×
@@ -1113,6 +1142,17 @@ bewijsregel van de gebiedspagina), en dan `node build.mjs`. Controleren met
 `check-areascores.mjs`, `check-areatravel.mjs`, `check-propertyareas.mjs`,
 `audit-areapaginas.mjs`, `valuation-selftest.mjs` en `_syntaxcheck.mjs`. De aantallen in de lopende tekst
 ("52 areas") zet `build-area-prices.mjs` zelf; typ ze nergens met de hand.
+
+**`_syntaxcheck.mjs` was tot 01-09-2026 een groene vink die niets betekende.**
+Het script controleerde alleen bestanden die je als argument meegaf; zonder
+argumenten liep het over een lege lijst en meldde het toch "Alle blokken
+parseren". Een hele dag patchwerk is daar langsgeglipt terwijl er op 41
+pagina's een string openstond, doordat een weggeknipt fragment het sluitende
+aanhalingsteken van de ene string en het openende van de volgende meenam. Nu
+betekent geen argumenten álle html in de map (307 blokken in 141 bestanden), en
+nul gecontroleerde blokken is een fout in plaats van een geslaagde run.
+Les die breder geldt: knip nooit een stuk uit een renderregel — vervang de hele
+opdracht, en compileer het blok meteen in het patchscript zelf.
 
 ## Pushen na elke sessie
 

@@ -352,6 +352,7 @@
         <h2>International schools</h2>
         <p class="lead">English-language and international options serving the coast.</p>
         <div id="schoolList"></div>
+        <!--mk-schoolsrc--><p class="src">Named from local knowledge; there is no public register of Gambian schools we can cite. A distance used to stand beside each name. Checked against the schools that OpenStreetMap has mapped, half of those distances were more than two kilometres out, so they are gone rather than quietly corrected.</p>
       </div>
       <div class="block">
         <h2>Nearby areas</h2>
@@ -487,8 +488,8 @@ const amen=[['76','Restaurants &amp; cafés',"<svg width=\"22\" height=\"22\" vi
 amenGrid.innerHTML = amen.map(a=>`<div class="amen"><span class="ic">${a[2]}</span><div><div class="n">${a[0]}</div><div class="l">${a[1]}</div></div></div>`).join('');
 
 // schools
-const schools=[["Marina International School","MI","British curriculum · Ages 3–18","4.5 km"],["SBEC International School","SB","British / IGCSE · Ages 4–18","6.0 km"],["Banjul American Intl. School","BA","American curriculum","9.0 km"],["The American Intl. School Gambia","AI","US / IB · K–12","7.2 km"]];
-schoolList.innerHTML = schools.map(s=>`<div class="school"><div class="logo">${s[1].slice(0,2)}</div><div class="info"><div class="nm">${s[0]}</div><div class="meta">${s[2]}</div></div><div style="text-align:right"><div class="dist">${s[3]}</div></div></div>`).join('');
+const schools=[["Marina International School","MI","British curriculum · Ages 3–18"],["SBEC International School","SB","British / IGCSE · Ages 4–18"],["Banjul American Intl. School","BA","American curriculum"],["The American Intl. School Gambia","AI","US / IB · K–12"]];
+schoolList.innerHTML = schools.map(function(s){return '<div class="school"><div class="logo">'+s[1].slice(0,2)+'</div><div class="info"><div class="nm">'+s[0]+'</div><div class="meta">'+s[2]+'</div></div></div>';}).join('');
 
 // mini listings — DB-first, falls back to demo data
 (async function(){

@@ -205,6 +205,7 @@
         <h2>International schools</h2>
         <p class="lead">English-language and international options serving the coast.</p>
         <div id="schoolList"></div>
+        <!--mk-schoolsrc--><p class="src">Named from local knowledge; there is no public register of Gambian schools we can cite. A distance used to stand beside each name. Checked against the schools that OpenStreetMap has mapped, half of those distances were more than two kilometres out, so they are gone rather than quietly corrected.</p>
       </div>
       <div class="block">
         <h2>Nearby areas</h2>
@@ -330,8 +331,8 @@ var amenIc=["<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\"
 amenGrid.innerHTML = amenData.map(function(a,i){return '<div class="amen"><span class="ic">'+amenIc[i%amenIc.length]+'</span><div><div class="n">'+a[0]+'</div><div class="l">'+a[1]+'</div></div></div>';}).join('');
 
 // schools
-var schools=[["Tanji Lower Basic School","TJ","Gambian public","0.5 km"],["Marina International School","MI","British curriculum · Ages 3–18","15.0 km"]];
-schoolList.innerHTML = schools.map(function(s){return '<div class="school"><div class="logo">'+s[1].slice(0,2)+'</div><div class="info"><div class="nm">'+s[0]+'</div><div class="meta">'+s[2]+'</div></div><div style="text-align:right"><div class="dist">'+s[3]+'</div></div></div>';}).join('');
+var schools=[["Tanji Lower Basic School","TJ","Gambian public"],["Marina International School","MI","British curriculum · Ages 3–18"]];
+schoolList.innerHTML = schools.map(function(s){return '<div class="school"><div class="logo">'+s[1].slice(0,2)+'</div><div class="info"><div class="nm">'+s[0]+'</div><div class="meta">'+s[2]+'</div></div></div>';}).join('');
 
 // mini listings
 var areaLower = 'tanji';
