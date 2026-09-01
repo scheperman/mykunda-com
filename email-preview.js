@@ -127,7 +127,7 @@
       desc: 'Het enige kanaal zonder e-mail. Wie ons via WhatsApp aanschrijft kreeg tot nu toe niets terug — en het team kreeg de melding evenmin, want de koppeling met de meldingsfunctie was verkeerd aangesloten.',
       items: function (T) {
         return [
-          { name: 'Automatisch antwoord op WhatsApp', to: 'de afzender', trigger: 'Binnenkomend WhatsApp-bericht op +220 228 2717', subject: 'Platte tekst — WhatsApp kent geen opmaak', badge: 'nieuw', wa: T.whatsappAutoReply('Fatou Njie') },
+          { name: 'Automatisch antwoord op WhatsApp', to: 'de afzender', trigger: 'Binnenkomend WhatsApp-bericht op +220 272 0268', subject: 'Platte tekst — WhatsApp kent geen opmaak', badge: 'nieuw', wa: T.whatsappAutoReply('Fatou Njie') },
           { name: 'WhatsApp-bericht — melding aan het team', to: 'info@mykunda.com', kind: 'team', trigger: 'Zelfde moment; het bericht wordt ook een lead', subject: '[MyKunda] New WhatsApp message — Fatou Njie', badge: 'hersteld', html: T.leadNotificationEmail({ source: 'whatsapp_inbound', name: 'Fatou Njie', phone: '+220 700 1234', message: 'Hello, is the plot in Sanyang still available?' }) }
         ];
       }

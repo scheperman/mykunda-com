@@ -2856,7 +2856,7 @@ function markCurrentArea(){
 }
 
 /* ---------- WhatsApp + Share (Google Plus Code aware) ---------- */
-const WA_NUMBER = '2202282717'; // MyKunda Gambia line: +220 228 2717
+const WA_NUMBER = '2202720268'; // MyKunda Gambia line: +220 272 0268
 function waLink(message){ return 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(message); }
 
 /* Build a rich share/WhatsApp message for a listing, including its Google Plus Code */
@@ -2934,7 +2934,7 @@ function injectWhatsApp(){
 
 /* ---------- Contact plumbing (shared by every form on the site) ---------- */
 const MYKUNDA_EMAIL='info@mykunda.com';
-const MYKUNDA_PHONE_DISPLAY='+220 228 2717';
+const MYKUNDA_PHONE_DISPLAY='+220 272 0268';
 
 /* Wait for the lazily-loaded Supabase client, then submit the lead. Throws when
    the backend is offline or in demo mode, so no form on the site can ever show a
