@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0uogzax--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:07zi6tb--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <noscript></noscript>
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=204474667113567">
+<link rel="stylesheet" href="styles.min.css?v=107047239871002">
 <style>
 body{background:var(--paper-2)}
 .dash{max-width:1180px;margin:0 auto;padding:36px 28px 70px}
@@ -313,7 +313,7 @@ body{background:var(--paper-2)}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=204474667113567"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=107047239871002"><!--/mk-css-->
 </head>
 <body>
 <div id="header"></div>
@@ -551,15 +551,15 @@ body{background:var(--paper-2)}
 
 <div id="footer"></div>
 
-<script src="app.min.js?v=204474667113567"></script>
-<script src="image-slot.js?v=204474667113567" defer></script>
+<script src="app.min.js?v=107047239871002"></script>
+<script src="image-slot.js?v=107047239871002" defer></script>
 <script>
 /* 4G: the Supabase client (~205 KB) is not needed to paint this page. It downloads
    in parallel and every backend call awaits window.__sbReady. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=204474667113567'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=107047239871002'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 </script>
@@ -2150,6 +2150,17 @@ async function handleAlertsParam(){
   }
 }
 
+/* De knop rechtsboven. Een particuliere aanbieder is niet per definitie iemand
+   met één object: wie een tweede huis of een tweede kavel heeft, hoort te lezen
+   dat er nóg een advertentie bij kan. Vandaar dat het label meetelt hoeveel er
+   al staan; hij wordt twee keer geverfd (bij het aanbrengen van de rol, en
+   opnieuw zodra de advertenties binnen zijn). */
+function paintHeadCta(n){
+  var ctaTxt=document.getElementById('headCtaTxt');
+  if(!ctaTxt || SHOW!=='seller') return;
+  ctaTxt.textContent = (n>0) ? 'Add another property' : 'Add your property';
+}
+
 /* ---------- rol toepassen ---------- */
 function applyRole(){
   var first=((P&&P.full_name) || (getUser()||{}).name || '').split(' ')[0];
@@ -2162,7 +2173,7 @@ function applyRole(){
   if(SHOW==='seller'){
     if(sub) sub.textContent = "Here's how your listings are performing.";
     if(cta){ cta.href='list.html'; }
-    if(ctaTxt) ctaTxt.textContent='Add your property';
+    paintHeadCta(PORTFOLIO.length);
   } else {
     if(sub) sub.textContent = 'Your searches, your favourites and everything you have going on.';
     if(cta){ cta.href='buy.html'; }
@@ -2191,6 +2202,7 @@ function applyRole(){
     try{
       var init = await initDashboard();
       if(init){ PORTFOLIO = init.listings || []; VIEWINGS = init.viewings || []; }
+      paintHeadCta(PORTFOLIO.length);
     }catch(e){ console.warn('initDashboard:', e && e.message); }
   }
 
