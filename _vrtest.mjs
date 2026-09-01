@@ -193,6 +193,30 @@ const boostFn = (() => {
 })();
 const mkIsBoosted = new Function(boostFn + '\nreturn mkIsBoosted;')();
 
+/* ---- Het maandequivalent -------------------------------------------------
+   Filteren en sorteren op huur gebeurt op één meetpunt, anders is een prijs
+   per nacht niet te vergelijken met een maandbudget. Weer letterlijk uit
+   app.js geknipt: de tabel én de functie. */
+const maandFn = (() => {
+  const a = appSrc.indexOf('const PRICE_PER_YEAR =');
+  const b = appSrc.indexOf('function priceInner(');
+  if(a < 0 || b < 0 || b < a) throw new Error('mkMonthlyPrice-blok niet gevonden in app.js');
+  return appSrc.slice(a, b);
+})();
+const mkMonthlyPrice = new Function(maandFn + '\nreturn mkMonthlyPrice;')();
+const rond = n => Math.round(n);
+check('koop blijft de prijs zelf', mkMonthlyPrice({ type:'sale', price:3500000 }) === 3500000);
+check('maandhuur blijft staan',   mkMonthlyPrice({ type:'rent', price:25000, price_period:'month' }) === 25000);
+check('zonder periode geldt maand', mkMonthlyPrice({ type:'rent', price:25000 }) === 25000);
+check('jaarhuur wordt door twaalf', rond(mkMonthlyPrice({ type:'rent', price:600000, price_period:'year' })) === 50000);
+check('weekhuur telt op naar de maand', rond(mkMonthlyPrice({ type:'rent', price:6000, price_period:'week' })) === 26000);
+check('nachtprijs telt op naar de maand', rond(mkMonthlyPrice({ type:'rent', price:2500, price_period:'night' })) === 76042);
+check('onbekende periode valt terug op maand', mkMonthlyPrice({ type:'rent', price:25000, price_period:'fortnight' }) === 25000);
+check('een jaarhuur valt binnen een maandbudget van 60k',
+  mkMonthlyPrice({ type:'rent', price:600000, price_period:'year' }) <= 60000);
+check('een vakantieflat per nacht valt er juist buiten',
+  mkMonthlyPrice({ type:'rent', price:2500, price_period:'night' }) > 60000);
+
 const searchSrc = readFileSync('search.html', 'utf8');
 const sortBlok = (() => {
   const a = searchSrc.indexOf("if(s==='featured') r=[...r].sort(");

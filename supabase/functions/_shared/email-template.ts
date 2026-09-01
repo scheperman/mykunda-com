@@ -998,6 +998,7 @@ export interface AlertListing {
   title?: string;
   area?: string;
   price?: number;
+  price_period?: string | null;  // night | week | month | year — hoort bij het bedrag
   kind?: string;            // 'sale' | 'rent'
   beds?: number; baths?: number; sqm?: number; plot?: number;
   cat?: string;
@@ -1016,8 +1017,15 @@ export interface SavedSearchAlertInput {
   total: number;
 }
 
+/* Het achtervoegsel volgt de periode van de advertentie, net als
+   priceSuffixFor() in app.js. Stond hier tot 01-09-2026 vast op /mo, wat bij
+   een vakantiewoning per nacht of bedrijfsruimte per jaar onwaar is — en een
+   mail met een verkeerd bedrag is erger dan geen mail. */
+const ALERT_SUFFIX: Record<string, string> = { night: ' /night', week: ' /wk', month: ' /mo', year: ' /yr' };
 const alertPrice = (l: AlertListing) =>
-  l.price ? `D ${nummer(l.price)}${l.kind === 'rent' ? ' /mo' : ''}` : 'Price on request';
+  l.price
+    ? `D ${nummer(l.price)}${l.kind === 'rent' ? (ALERT_SUFFIX[String(l.price_period ?? '')] ?? ' /mo') : ''}`
+    : 'Price on request';
 
 function alertSpecs(l: AlertListing): string {
   const bits: string[] = [];

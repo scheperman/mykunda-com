@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1xswspm--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0mrszzk--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preconnect" href="https://api.mapbox.com" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=81231947035353">
+<link rel="stylesheet" href="styles.min.css?v=119516672036788">
 <style>
 body{background:var(--paper-2);min-height:100vh}
 
@@ -264,7 +264,7 @@ body{background:var(--paper-2);min-height:100vh}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=81231947035353"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=119516672036788"><!--/mk-css-->
 </head>
 <body>
 <div class="wizbar">
@@ -665,6 +665,13 @@ body{background:var(--paper-2);min-height:100vh}
         <label style="display:block;font-size:13.5px;font-weight:700;color:var(--ink-2);margin-bottom:11px">How often does the tenant pay?</label>
         <div class="pill-row" id="periodRow">
           <button class="pill-opt sel" data-period="month">Per month</button>
+          <!-- Alleen op het commerciële spoor. Winkels, kantoren en loodsen
+               worden op de Gambiaanse portalen met een jaarhuur aangeboden;
+               bij een woning zou de knop alleen maar verwarren. Zoeken en
+               sorteren rekenen hem om naar het maandequivalent, zodat een
+               jaarhuur niet buiten elk budgetfilter valt — zie
+               mkMonthlyPrice() in app.js. -->
+          <button class="pill-opt" data-period="year" id="periodYear" style="display:none">Per year</button>
           <button class="pill-opt" data-period="week">Per week</button>
           <button class="pill-opt" data-period="night">Per night</button>
         </div>
@@ -858,18 +865,18 @@ body{background:var(--paper-2);min-height:100vh}
   </aside>
 </div>
 
-<script src="valuation-areas.js?v=81231947035353"></script>
-<script src="valuation.js?v=81231947035353"></script>
-<script src="app.min.js?v=81231947035353"></script>
-<script src="gambia-places.js?v=81231947035353" defer></script>
-<script src="image-slot.js?v=81231947035353" defer></script>
+<script src="valuation-areas.js?v=119516672036788"></script>
+<script src="valuation.js?v=119516672036788"></script>
+<script src="app.min.js?v=119516672036788"></script>
+<script src="gambia-places.js?v=119516672036788" defer></script>
+<script src="image-slot.js?v=119516672036788" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel, Leaflet (~145 KB) only when the
    seller reaches the location step. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=81231947035353'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=119516672036788'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -1332,7 +1339,10 @@ function track(){ return isComm() ? 'commercial' : (S.deal==='rent' ? 'rent' : '
 /* A rent of D 25,000 means nothing without its period, and "150,000" for a sale
    must not read as a monthly figure either. One table, used by every label, the
    summary, the preview and the fee maths. */
-const PERIODS={month:{unit:'month',suffix:'per month',per:12},week:{unit:'week',suffix:'per week',per:52},night:{unit:'night',suffix:'per night',per:365}};
+/* `per` is het aantal keren dat zo'n periode in een jaar voorkomt. Diezelfde
+   getallen staan als PRICE_PER_YEAR in app.js, waar ze een huur naar het
+   maandequivalent omrekenen voor de zoekfilters. Blijven gelijk houden. */
+const PERIODS={month:{unit:'month',suffix:'per month',per:12},year:{unit:'year',suffix:'per year',per:1},week:{unit:'week',suffix:'per week',per:52},night:{unit:'night',suffix:'per night',per:365}};
 function per(){ return PERIODS[S.period]||PERIODS.month; }
 function priceSuffix(){ return isRent()?per().suffix:'total'; }  // used for the field suffix and the hint
 function keys(){ return TRACK_STEPS[track()]; }
@@ -3039,6 +3049,13 @@ function mkPriceGuide(){
 }
 
 function updatePriceLabels(){
+  /* Per jaar bestaat alleen op het commerciële spoor. Stapt iemand van een
+     winkel terug naar een woning terwijl hij al "per year" had gekozen, dan
+     zou die keuze blijven staan zonder knop om hem te zien — dus die valt hier
+     terug op maand. */
+  if(S.period==='year' && !isComm()) S.period='month';
+  const yb=document.getElementById('periodYear');
+  if(yb) yb.style.display = (isRent() && isComm()) ? '' : 'none';
   const rent=isRent(), p=per();
   document.getElementById('priceH1').textContent = rent?'The rent, and the terms':'Set your price';
   document.getElementById('periodWrap').style.display = rent?'block':'none';
@@ -3047,10 +3064,12 @@ function updatePriceLabels(){
   document.getElementById('priceSuf').textContent = priceSuffix();
   mkPriceGuide();
   document.getElementById('priceHint').textContent = rent
-    ? ('Buyers see this as \u201cD \u2026 '+p.suffix+'\u201d. '+(S.period==='month'?'Most long lets are quoted per month.':'Short stays are usually quoted '+p.suffix+'.'))
+    ? ('Buyers see this as \u201cD \u2026 '+p.suffix+'\u201d. '+(S.period==='month'?'Most long lets are quoted per month.':S.period==='year'?'Searchers with a monthly budget still find it — we compare on the monthly equivalent.':'Short stays are usually quoted '+p.suffix+'.'))
     : 'The full price for the property \u2014 one payment, not a monthly amount.';
   const dh=document.getElementById('depositHint');
-  if(dh) dh.textContent = 'One or two '+p.unit+'s\u2019 rent is normal. Leave blank if you ask none.';
+  /* Bij een jaarhuur zou "one or two years rent" een eis zijn die we nergens
+     op kunnen baseren, dus zeggen we daar niet wat normaal is. */
+  if(dh) dh.textContent = S.period==='year' ? 'Whatever you ask up front. Leave blank if you ask none.' : 'One or two '+p.unit+'s\u2019 rent is normal. Leave blank if you ask none.';
   document.getElementById('negTxt').textContent = rent?'Rent is negotiable':'Open to offers / negotiable';
   document.getElementById('priceDesc').textContent = rent
     ? 'Everything a tenant needs before they call: the rent, the deposit, the term, and who pays which bill. Amounts in Gambian Dalasi (GMD).'

@@ -1251,6 +1251,27 @@ function ccyLabel(){ return getCurrency(); }
    blijft het maand — dat is wat de wizard invult als er niets gekozen is. */
 const PRICE_SUFFIX = { night:'/night', week:'/wk', month:'/mo', year:'/yr' };
 function priceSuffixFor(period){ return PRICE_SUFFIX[period] || PRICE_SUFFIX.month; }
+
+/* Elke huur naar hetzelfde meetpunt: het maandequivalent. Uitsluitend om te
+   FILTEREN en te SORTEREN — wat er op de kaart staat blijft altijd het bedrag
+   en de periode die de aanbieder zelf opgaf.
+
+   Zonder dit werd een vakantiewoning van D2.500 per nacht letterlijk
+   vergeleken met een maandbudget van D25.000 (en viel er dus altijd binnen),
+   en zou bedrijfsruimte per jaar — dat op de Gambiaanse portalen gewoon zo
+   wordt aangeboden — buiten élk budgetfilter vallen.
+
+   PRICE_PER_YEAR telt hoe vaak een periode in een jaar voorkomt; gedeeld door
+   twaalf geeft dat de maand. Dezelfde getallen staan in PERIODS in list.html.
+   LET OP: verandert dit, dan MOET matches() in de edge function
+   notify-saved-search mee — die moet exact hetzelfde zeggen als de zoekpagina,
+   anders belooft een alert iets wat de zoekpagina niet toont. */
+const PRICE_PER_YEAR = { night:365, week:52, month:12, year:1 };
+function mkMonthlyPrice(p){
+  const v = Number(p && p.price) || 0;
+  if(!p || p.type !== 'rent') return v;
+  return v * (PRICE_PER_YEAR[p.price_period] || 12) / 12;
+}
 function priceInner(p, type, period){
   const c=CURRENCIES[getCurrency()];
   const v=Math.round(convert(p));

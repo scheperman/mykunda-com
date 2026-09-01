@@ -129,9 +129,14 @@ function rowToCard(r: any) {
     .sort((a: any, b: any) => (a.sort ?? 0) - (b.sort ?? 0));
   const seg = r.segment || "residential";
   return {
-    id: r.id, cat: r.category, type: r.kind, segment: seg,
+    /* type is de naam die de matcher gebruikt (zoals op de zoekpagina); kind is
+       de naam die het e-mailsjabloon gebruikt (AlertListing). Dezelfde waarde
+       onder twee namen, want de kaart gaat ongewijzigd de mail in — zonder
+       kind bleef het achtervoegsel achter een huurprijs stilletjes weg. */
+    id: r.id, cat: r.category, type: r.kind, kind: r.kind, segment: seg,
     title: r.title || "", street: r.street || "", area: r.area || "",
     price: Number(r.price) || 0,
+    price_period: r.price_period || null,
     beds: r.beds || 0, baths: r.baths || 0, sqm: r.sqm || 0, plot: r.plot_sqm || 0,
     features: r.features || [], tag: (r.features && r.features[0]) || "",
     isNew: true,
@@ -153,6 +158,18 @@ function rowToCard(r: any) {
   };
 }
 
+/* Het maandequivalent, letterlijk mkMonthlyPrice() uit app.js. Een budget is
+   per maand ingevuld, dus wordt er per maand vergeleken; een huur per nacht,
+   week of jaar wordt daarvoor omgerekend. Verandert dit hier of daar, dan MOET
+   het allebei mee — een alert die iets belooft wat de zoekpagina niet toont is
+   erger dan geen alert. */
+const PRICE_PER_YEAR: Record<string, number> = { night: 365, week: 52, month: 12, year: 1 };
+function maandPrijs(p: any): number {
+  const v = Number(p && p.price) || 0;
+  if (!p || p.type !== "rent") return v;
+  return v * (PRICE_PER_YEAR[p.price_period] || 12) / 12;
+}
+
 /* De volgorde en de vergelijkingen zijn die van filtered() in search.html. */
 function isLandSearch(f: any): boolean {
   return Array.isArray(f.cats) && f.cats.length === 1 && f.cats[0] === "land";
@@ -164,8 +181,8 @@ function matches(p: any, f: any): boolean {
     const q = String(f.q).trim().toLowerCase();
     if (!((p.area + " " + p.street + " " + p.title).toLowerCase().includes(q))) return false;
   }
-  if (f.pMin && !(p.price >= +f.pMin)) return false;
-  if (f.pMax && !(p.price <= +f.pMax)) return false;
+  if (f.pMin && !(maandPrijs(p) >= +f.pMin)) return false;
+  if (f.pMax && !(maandPrijs(p) <= +f.pMax)) return false;
   if (f.beds && !(p.beds >= f.beds)) return false;
   if (f.furn === "unfurnished") {
     const t = ((p.tag || "") + " " + (p.features || []).join(" ")).toLowerCase();
@@ -283,7 +300,7 @@ serve(async (req) => {
     // ---- 2. het huidige aanbod, één keer ----
     const { data: rows, error: lErr } = await db
       .from("listings")
-      .select("id,title,area,street,price,kind,category,segment,beds,baths,sqm,plot_sqm,features,condition,furnished,security,land_beach,beach_m,water,power,electricity,land_water,road,fencing,flood_risk,doc_type,year_built,available_from,units,parking_spaces,current_use,fit_out,is_verified_title,created_at,listing_media(storage_path,is_document,sort)")
+      .select("id,title,area,street,price,price_period,kind,category,segment,beds,baths,sqm,plot_sqm,features,condition,furnished,security,land_beach,beach_m,water,power,electricity,land_water,road,fencing,flood_risk,doc_type,year_built,available_from,units,parking_spaces,current_use,fit_out,is_verified_title,created_at,listing_media(storage_path,is_document,sort)")
       .in("status", ["active", "under_offer"]);
     if (lErr) throw lErr;
     if (!rows || !rows.length) return json({ ok: true, searches: eligible.length, users: 0, sent: 0, note: "geen actief aanbod" });
