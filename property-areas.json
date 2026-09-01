@@ -1,0 +1,684 @@
+{
+ "about": "Het gebiedsblok op property.html. Gegenereerd; niet met de hand bijwerken.",
+ "built": "2026-09-01",
+ "sources": {
+  "prices": "area-prices.json",
+  "amenities": "OpenStreetMap contributors (ODbL 1.0), Overpass API — opgehaald 2026-09-01",
+  "scores": "area-scores.json"
+ },
+ "areas": {
+  "Bakau": {
+   "slug": "bakau",
+   "gmd_m2": 6460,
+   "price_src": "band rate — 32 listings across the band",
+   "eat": 26,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     14
+    ],
+    [
+     "Places to eat",
+     72
+    ]
+   ]
+  },
+  "Bakoteh": {
+   "slug": "bakoteh",
+   "gmd_m2": 2330,
+   "price_src": "band rate — 31 listings across the band",
+   "eat": 8,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     33
+    ],
+    [
+     "Places to eat",
+     48
+    ]
+   ]
+  },
+  "Banjul": {
+   "slug": "banjul",
+   "gmd_m2": 6460,
+   "price_src": "band rate — 32 listings across the band",
+   "eat": 11,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     14
+    ],
+    [
+     "Places to eat",
+     54
+    ]
+   ]
+  },
+  "Bansang": {
+   "slug": "bansang",
+   "gmd_m2": 141,
+   "price_src": "no local observations — regional rate",
+   "eat": 0,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     87
+    ]
+   ]
+  },
+  "Barra": {
+   "slug": "barra",
+   "gmd_m2": 330,
+   "price_src": "no local observations — regional rate",
+   "eat": 0,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     71
+    ]
+   ]
+  },
+  "Basse": {
+   "slug": "basse",
+   "gmd_m2": 189,
+   "price_src": "no local observations — regional rate",
+   "eat": 10,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     81
+    ],
+    [
+     "Places to eat",
+     53
+    ]
+   ]
+  },
+  "Batokunku": {
+   "slug": "batokunku",
+   "gmd_m2": 2280,
+   "price_src": "band rate — 16 listings across the band",
+   "eat": 1,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     34
+    ],
+    [
+     "Places to eat",
+     15
+    ]
+   ]
+  },
+  "Bijilo": {
+   "slug": "bijilo",
+   "gmd_m2": 6000,
+   "price_src": "13 local plot listings",
+   "eat": 14,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     15
+    ],
+    [
+     "Places to eat",
+     59
+    ]
+   ]
+  },
+  "Brikama": {
+   "slug": "brikama",
+   "gmd_m2": 1053,
+   "price_src": "7 local plot listings",
+   "eat": 2,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     48
+    ],
+    [
+     "Places to eat",
+     24
+    ]
+   ]
+  },
+  "Brufut": {
+   "slug": "brufut",
+   "gmd_m2": 2282,
+   "price_src": "7 local plot listings",
+   "eat": 2,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     34
+    ],
+    [
+     "Places to eat",
+     24
+    ]
+   ]
+  },
+  "Brusubi": {
+   "slug": "brusubi",
+   "gmd_m2": 6460,
+   "price_src": "band rate — 32 listings across the band",
+   "eat": 18,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     14
+    ],
+    [
+     "Places to eat",
+     65
+    ]
+   ]
+  },
+  "Busumbala": {
+   "slug": "busumbala",
+   "gmd_m2": 2330,
+   "price_src": "band rate — 31 listings across the band",
+   "eat": 1,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     33
+    ],
+    [
+     "Places to eat",
+     15
+    ]
+   ]
+  },
+  "Cape Point": {
+   "slug": "cape-point",
+   "gmd_m2": 6460,
+   "price_src": "band rate — 32 listings across the band",
+   "eat": 8,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     14
+    ],
+    [
+     "Places to eat",
+     48
+    ]
+   ]
+  },
+  "Essau": {
+   "slug": "essau",
+   "gmd_m2": 236,
+   "price_src": "no local observations — regional rate",
+   "eat": 0,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     77
+    ]
+   ]
+  },
+  "Fajara": {
+   "slug": "fajara",
+   "gmd_m2": 13333,
+   "price_src": "5 local plot listings",
+   "eat": 33,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     0
+    ],
+    [
+     "Places to eat",
+     77
+    ]
+   ]
+  },
+  "Farafenni": {
+   "slug": "farafenni",
+   "gmd_m2": 189,
+   "price_src": "1 listing only — regional rate",
+   "eat": 4,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     81
+    ],
+    [
+     "Places to eat",
+     35
+    ]
+   ]
+  },
+  "Fatoto": {
+   "slug": "fatoto",
+   "gmd_m2": 71,
+   "price_src": "no local observations — regional rate",
+   "eat": 0,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     100
+    ]
+   ]
+  },
+  "Gambissara": {
+   "slug": "gambissara",
+   "gmd_m2": 71,
+   "price_src": "no local observations — regional rate",
+   "eat": 2,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     100
+    ],
+    [
+     "Places to eat",
+     24
+    ]
+   ]
+  },
+  "Gunjur": {
+   "slug": "gunjur",
+   "gmd_m2": 682,
+   "price_src": "7 local plot listings",
+   "eat": 2,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     57
+    ],
+    [
+     "Places to eat",
+     24
+    ]
+   ]
+  },
+  "Jabang": {
+   "slug": "jabang",
+   "gmd_m2": 2894,
+   "price_src": "9 local plot listings",
+   "eat": 0,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     29
+    ]
+   ]
+  },
+  "Janjanbureh": {
+   "slug": "janjanbureh",
+   "gmd_m2": 236,
+   "price_src": "no local observations — regional rate",
+   "eat": 5,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     77
+    ],
+    [
+     "Places to eat",
+     39
+    ]
+   ]
+  },
+  "Kartong": {
+   "slug": "kartong",
+   "gmd_m2": 970,
+   "price_src": "band rate — 21 listings across the band",
+   "eat": 2,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     50
+    ],
+    [
+     "Places to eat",
+     24
+    ]
+   ]
+  },
+  "Kerewan": {
+   "slug": "kerewan",
+   "gmd_m2": 189,
+   "price_src": "no local observations — regional rate",
+   "eat": 1,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     81
+    ],
+    [
+     "Places to eat",
+     15
+    ]
+   ]
+  },
+  "Kerr Serign": {
+   "slug": "kerr-serign",
+   "gmd_m2": 6460,
+   "price_src": "band rate — 32 listings across the band",
+   "eat": 87,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     14
+    ],
+    [
+     "Places to eat",
+     98
+    ]
+   ]
+  },
+  "Kololi": {
+   "slug": "kololi",
+   "gmd_m2": 6460,
+   "price_src": "band rate — 32 listings across the band",
+   "eat": 95,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     14
+    ],
+    [
+     "Places to eat",
+     100
+    ]
+   ]
+  },
+  "Kotu": {
+   "slug": "kotu",
+   "gmd_m2": 6460,
+   "price_src": "band rate — 32 listings across the band",
+   "eat": 56,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     14
+    ],
+    [
+     "Places to eat",
+     89
+    ]
+   ]
+  },
+  "Kuntaur": {
+   "slug": "kuntaur",
+   "gmd_m2": 141,
+   "price_src": "no local observations — regional rate",
+   "eat": 2,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     87
+    ],
+    [
+     "Places to eat",
+     24
+    ]
+   ]
+  },
+  "Lamin": {
+   "slug": "lamin",
+   "gmd_m2": 1833,
+   "price_src": "9 local plot listings",
+   "eat": 1,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     38
+    ],
+    [
+     "Places to eat",
+     15
+    ]
+   ]
+  },
+  "Manjai Kunda": {
+   "slug": "manjai-kunda",
+   "gmd_m2": 2330,
+   "price_src": "band rate — 31 listings across the band",
+   "eat": 10,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     33
+    ],
+    [
+     "Places to eat",
+     53
+    ]
+   ]
+  },
+  "Mansa Konko": {
+   "slug": "mansa-konko",
+   "gmd_m2": 141,
+   "price_src": "no local observations — regional rate",
+   "eat": 1,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     87
+    ],
+    [
+     "Places to eat",
+     15
+    ]
+   ]
+  },
+  "Nema Kunku": {
+   "slug": "nema-kunku",
+   "gmd_m2": 2330,
+   "price_src": "band rate — 31 listings across the band",
+   "eat": 1,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     33
+    ],
+    [
+     "Places to eat",
+     15
+    ]
+   ]
+  },
+  "Pipeline": {
+   "slug": "pipeline",
+   "gmd_m2": 2330,
+   "price_src": "band rate — 31 listings across the band",
+   "eat": 33,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     33
+    ],
+    [
+     "Places to eat",
+     77
+    ]
+   ]
+  },
+  "Sanyang": {
+   "slug": "sanyang",
+   "gmd_m2": 972,
+   "price_src": "14 local plot listings",
+   "eat": 1,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     50
+    ],
+    [
+     "Places to eat",
+     15
+    ]
+   ]
+  },
+  "Senegambia": {
+   "slug": "senegambia",
+   "gmd_m2": 6460,
+   "price_src": "band rate — 32 listings across the band",
+   "eat": 93,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     14
+    ],
+    [
+     "Places to eat",
+     100
+    ]
+   ]
+  },
+  "Serrekunda": {
+   "slug": "serrekunda",
+   "gmd_m2": 2330,
+   "price_src": "band rate — 31 listings across the band",
+   "eat": 6,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     33
+    ],
+    [
+     "Places to eat",
+     43
+    ]
+   ]
+  },
+  "Sinchu Alagie": {
+   "slug": "sinchu-alagie",
+   "gmd_m2": 2330,
+   "price_src": "band rate — 31 listings across the band",
+   "eat": 0,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     33
+    ]
+   ]
+  },
+  "Soma": {
+   "slug": "soma",
+   "gmd_m2": 141,
+   "price_src": "no local observations — regional rate",
+   "eat": 2,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     87
+    ],
+    [
+     "Places to eat",
+     24
+    ]
+   ]
+  },
+  "Sukuta": {
+   "slug": "sukuta",
+   "gmd_m2": 2326,
+   "price_src": "8 local plot listings",
+   "eat": 4,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     33
+    ],
+    [
+     "Places to eat",
+     35
+    ]
+   ]
+  },
+  "Tanji": {
+   "slug": "tanji",
+   "gmd_m2": 2163,
+   "price_src": "5 local plot listings",
+   "eat": 3,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     35
+    ],
+    [
+     "Places to eat",
+     30
+    ]
+   ]
+  },
+  "Tujereng": {
+   "slug": "tujereng",
+   "gmd_m2": 2280,
+   "price_src": "11 local plot listings",
+   "eat": 1,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     34
+    ],
+    [
+     "Places to eat",
+     15
+    ]
+   ]
+  },
+  "Yundum": {
+   "slug": "yundum",
+   "gmd_m2": 1844,
+   "price_src": "5 local plot listings",
+   "eat": 1,
+   "radius_km": 2,
+   "scores": [
+    [
+     "Affordability",
+     38
+    ],
+    [
+     "Places to eat",
+     15
+    ]
+   ]
+  }
+ }
+}

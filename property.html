@@ -425,12 +425,13 @@
         <div class="feat-list" id="featList"></div>
       </div>
 
-      <div class="block">
+      <div class="block" id="hoodBlock">
         <h2>The neighborhood</h2>
         <p style="margin-bottom:18px" id="hoodIntro"></p>
         <div class="hood-stats" id="hoodStats"></div>
         <div class="scorebars" id="scorebars"></div>
-        <a class="link-arrow" href="kololi.html" style="margin-top:20px;display:inline-flex">Explore full neighborhood guide <span id="hoodArr"></span></a>
+        <a class="link-arrow" id="hoodLink" href="areas-in-the-gambia.html" style="margin-top:20px;display:inline-flex"><span id="hoodLinkTxt">Explore the area guide</span> <span id="hoodArr"></span></a>
+        <p class="src">Land rate and the evidence beside it come from the same measurement as the area pages. Places to eat are counted in OpenStreetMap within 2 km, on 1 September 2026. <a href="how-we-measure-prices.html">How we measure prices</a>.</p>
       </div>
 
       <div class="block" id="historyBlock" hidden>
@@ -1196,96 +1197,36 @@ if(FEATS.length){
   }
 })();
 
-// neighborhood — per-area profiles with realistic data
-const town = P.area.split('· ')[0].trim();
-const HOOD_DATA = {
-  'Kololi': {
-    intro: 'Kololi is the heart of The Gambia\'s tourism strip — home to the famous Senegambia junction with its restaurants, bars and nightlife. A 5–10 minute walk brings you to Kololi beach. Popular with expats, holiday-home investors and digital nomads for its walkable amenities and vibrant social scene.',
-    stats: [['Land, per m²', 6460,' '],['To the beach','5–10 min','on foot'],['To airport (BJL)','25–45 min','via Westfield'],['Intl. schools','3','within 8 km']],
-    scores: [['Safety',72],['Beach access',88],['Dining & nightlife',95],['Connectivity',90],['Investment demand',92]]
-  },
-  'Bijilo': {
-    intro: 'Bijilo is a quieter, upscale residential area just south of Kololi. Known for the Bijilo Forest Park (monkey park) and a long stretch of undeveloped beach. It attracts expat families and retirees who want peace and nature while staying close to Kololi\'s amenities — a 5-minute drive away.',
-    stats: [['Land, per m²', 6000,' '],['To the beach','10–15 min','on foot'],['To airport (BJL)','20–35 min','coastal road'],['Intl. schools','2','within 6 km']],
-    scores: [['Safety',82],['Beach access',78],['Dining & nightlife',55],['Connectivity',80],['Investment demand',80]]
-  },
-  'Brufut Heights': {
-    intro: 'Brufut Heights is a peaceful, family-friendly hillside area with spacious villas and stunning Atlantic views. Popular with expat families for its secure estates, large gardens and quiet streets. The beach is a 15-minute walk downhill, and Senegambia\'s restaurants are a short drive away.',
-    stats: [['Land, per m²', 2282,' '],['To the beach','15 min','on foot'],['To airport (BJL)','20–35 min','via highway'],['Intl. schools','2','within 10 km']],
-    scores: [['Safety',88],['Beach access',68],['Dining & nightlife',40],['Connectivity',72],['Investment demand',85]]
-  },
-  'Brufut': {
-    intro: 'Brufut is a traditional coastal town with wide golden beaches and a relaxed pace of life. The Brufut Forest Reserve offers great birdwatching. Development is accelerating — estates like Brufut Gardens bring modern infrastructure — making it one of The Gambia\'s fastest-growing property areas.',
-    stats: [['Land, per m²', 2282,' '],['To the beach','5–15 min','depends on location'],['To airport (BJL)','15–30 min','via highway'],['Intl. schools','1','within 10 km']],
-    scores: [['Safety',84],['Beach access',82],['Dining & nightlife',35],['Connectivity',68],['Investment demand',82]]
-  },
-  'Bakau': {
-    intro: 'Bakau is one of The Gambia\'s oldest coastal towns, with a strong local character and proximity to Banjul. Cape Point and the Kachikally Crocodile Pool are landmarks. The area has good beach access and established infrastructure, though it feels more authentically Gambian than the tourist strip.',
-    stats: [['Land, per m²', 6460,' '],['To the beach','5–10 min','on foot'],['To airport (BJL)','40–60 min','through Serrekunda'],['Intl. schools','2','within 5 km']],
-    scores: [['Safety',70],['Beach access',85],['Dining & nightlife',50],['Connectivity',75],['Investment demand',65]]
-  },
-  'Cape Point': {
-    intro: 'Cape Point is an established residential enclave within Bakau, popular with long-term expats and embassy staff. It offers quiet tree-lined streets, proximity to Fajara\'s amenities and direct beach access. Property here tends to hold its value well thanks to limited supply and consistent demand.',
-    stats: [['Land, per m²', 6460,' '],['To the beach','5 min','on foot'],['To airport (BJL)','45–65 min','through Serrekunda'],['Intl. schools','3','within 5 km']],
-    scores: [['Safety',80],['Beach access',90],['Dining & nightlife',55],['Connectivity',78],['Investment demand',72]]
-  },
-  'Fajara': {
-    intro: 'Fajara is The Gambia\'s most established expat neighbourhood. Home to international schools, embassies, clinics and quality restaurants. The area combines leafy residential streets with good beach access and reliable infrastructure — a top choice for families who want Western-level comfort.',
-    stats: [['Land, per m²', 13333,' '],['To the beach','8–12 min','on foot'],['To airport (BJL)','35–55 min','via Westfield'],['Intl. schools','4','within 5 km']],
-    scores: [['Safety',82],['Beach access',75],['Dining & nightlife',65],['Connectivity',85],['Investment demand',75]]
-  },
-  'Sanyang': {
-    intro: 'Sanyang is a fishing village about 35 km south of Banjul, known for Paradise Beach — 8 km of pristine white sand and one of West Africa\'s most beautiful coastlines. It\'s quiet, authentic and increasingly popular with investors seeking affordable beachside land before prices rise.',
-    stats: [['Land, per m²', 972,' '],['To the beach','5–20 min','depends on plot'],['To airport (BJL)','30–50 min','unpaved sections'],['Intl. schools','0','nearest 20 km']],
-    scores: [['Safety',78],['Beach access',90],['Dining & nightlife',20],['Connectivity',45],['Investment demand',75]]
-  },
-  'Kotu': {
-    intro: 'Kotu sits between Kololi and Fajara and is known for its wide beach, Kotu Stream (a birding hotspot) and cluster of tourist hotels. It\'s quieter than Kololi but close to its nightlife. A solid choice for holiday rental investment with good year-round occupancy rates.',
-    stats: [['Land, per m²', 6460,' '],['To the beach','5 min','on foot'],['To airport (BJL)','30–45 min','via Westfield'],['Intl. schools','2','within 7 km']],
-    scores: [['Safety',75],['Beach access',92],['Dining & nightlife',60],['Connectivity',82],['Investment demand',78]]
-  },
-  'Brusubi': {
-    intro: 'Brusubi is a fast-developing inland area about 10 minutes from Kololi. It offers more affordable, spacious plots and modern builds. While there\'s no beach within walking distance, the coastal highway provides quick access. Increasingly popular with young Gambian professionals and diaspora families.',
-    stats: [['Land, per m²', 6460,' '],['To the beach','15 min','by car'],['To airport (BJL)','15–25 min','highway access'],['Intl. schools','1','within 8 km']],
-    scores: [['Safety',80],['Beach access',30],['Dining & nightlife',35],['Connectivity',75],['Investment demand',70]]
-  },
-  'Sukuta': {
-    intro: 'Sukuta is a large, bustling town inland from the coast — one of The Gambia\'s most affordable areas for property. It has a lively local market, good transport links and a growing residential sector. Best for buyers seeking value and authentic community life over tourist-area polish.',
-    stats: [['Land, per m²', 2326,' '],['To the beach','20 min','by car'],['To airport (BJL)','20–35 min','via Brikama road'],['Intl. schools','1','within 10 km']],
-    scores: [['Safety',68],['Beach access',20],['Dining & nightlife',30],['Connectivity',72],['Investment demand',55]]
-  },
-  'Kerr Serign': {
-    intro: 'Kerr Serign is a quiet residential area near Kololi, offering more affordable property than its beachfront neighbours. It\'s within easy reach of the Senegambia strip and coastal amenities while maintaining a calmer, more local atmosphere. A good entry point for budget-conscious investors.',
-    stats: [['Land, per m²', 6460,' '],['To the beach','15 min','by car/on foot'],['To airport (BJL)','25–40 min','via Westfield'],['Intl. schools','2','within 8 km']],
-    scores: [['Safety',72],['Beach access',45],['Dining & nightlife',40],['Connectivity',70],['Investment demand',60]]
-  },
-  'Tanji': {
-    intro: 'Tanji is a colourful fishing village south of Brufut, famous for its busy fish market and the Tanji Bird Reserve. Property prices are among the lowest on the coast. It\'s an emerging area with limited infrastructure but genuine charm — ideal for adventurous investors with a longer time horizon.',
-    stats: [['Land, per m²', 2163,' '],['To the beach','5 min','on foot'],['To airport (BJL)','15–25 min','coastal road'],['Intl. schools','0','nearest 15 km']],
-    scores: [['Safety',72],['Beach access',88],['Dining & nightlife',15],['Connectivity',40],['Investment demand',55]]
-  }
-};
+// neighborhood — gegenereerd uit property-areas.json (build-property-areas.mjs).
+// Niet met de hand bijwerken: de prijs hieronder komt uit dezelfde bron als de
+// gebiedspagina, en twee kopieën van hetzelfde getal lopen altijd uit elkaar.
+  const town = P.area.split('· ')[0].trim();
+  const HOOD_DATA = {"Bakau":{"slug":"bakau","p":6460,"e":"band rate — 32 listings across the band","n":26,"r":2,"s":[["Affordability",14],["Places to eat",72]]},"Bakoteh":{"slug":"bakoteh","p":2330,"e":"band rate — 31 listings across the band","n":8,"r":2,"s":[["Affordability",33],["Places to eat",48]]},"Banjul":{"slug":"banjul","p":6460,"e":"band rate — 32 listings across the band","n":11,"r":2,"s":[["Affordability",14],["Places to eat",54]]},"Bansang":{"slug":"bansang","p":141,"e":"no local observations — regional rate","n":0,"r":2,"s":[["Affordability",87]]},"Barra":{"slug":"barra","p":330,"e":"no local observations — regional rate","n":0,"r":2,"s":[["Affordability",71]]},"Basse":{"slug":"basse","p":189,"e":"no local observations — regional rate","n":10,"r":2,"s":[["Affordability",81],["Places to eat",53]]},"Batokunku":{"slug":"batokunku","p":2280,"e":"band rate — 16 listings across the band","n":1,"r":2,"s":[["Affordability",34],["Places to eat",15]]},"Bijilo":{"slug":"bijilo","p":6000,"e":"13 local plot listings","n":14,"r":2,"s":[["Affordability",15],["Places to eat",59]]},"Brikama":{"slug":"brikama","p":1053,"e":"7 local plot listings","n":2,"r":2,"s":[["Affordability",48],["Places to eat",24]]},"Brufut":{"slug":"brufut","p":2282,"e":"7 local plot listings","n":2,"r":2,"s":[["Affordability",34],["Places to eat",24]]},"Brusubi":{"slug":"brusubi","p":6460,"e":"band rate — 32 listings across the band","n":18,"r":2,"s":[["Affordability",14],["Places to eat",65]]},"Busumbala":{"slug":"busumbala","p":2330,"e":"band rate — 31 listings across the band","n":1,"r":2,"s":[["Affordability",33],["Places to eat",15]]},"Cape Point":{"slug":"cape-point","p":6460,"e":"band rate — 32 listings across the band","n":8,"r":2,"s":[["Affordability",14],["Places to eat",48]]},"Essau":{"slug":"essau","p":236,"e":"no local observations — regional rate","n":0,"r":2,"s":[["Affordability",77]]},"Fajara":{"slug":"fajara","p":13333,"e":"5 local plot listings","n":33,"r":2,"s":[["Affordability",0],["Places to eat",77]]},"Farafenni":{"slug":"farafenni","p":189,"e":"1 listing only — regional rate","n":4,"r":2,"s":[["Affordability",81],["Places to eat",35]]},"Fatoto":{"slug":"fatoto","p":71,"e":"no local observations — regional rate","n":0,"r":2,"s":[["Affordability",100]]},"Gambissara":{"slug":"gambissara","p":71,"e":"no local observations — regional rate","n":2,"r":2,"s":[["Affordability",100],["Places to eat",24]]},"Gunjur":{"slug":"gunjur","p":682,"e":"7 local plot listings","n":2,"r":2,"s":[["Affordability",57],["Places to eat",24]]},"Jabang":{"slug":"jabang","p":2894,"e":"9 local plot listings","n":0,"r":2,"s":[["Affordability",29]]},"Janjanbureh":{"slug":"janjanbureh","p":236,"e":"no local observations — regional rate","n":5,"r":2,"s":[["Affordability",77],["Places to eat",39]]},"Kartong":{"slug":"kartong","p":970,"e":"band rate — 21 listings across the band","n":2,"r":2,"s":[["Affordability",50],["Places to eat",24]]},"Kerewan":{"slug":"kerewan","p":189,"e":"no local observations — regional rate","n":1,"r":2,"s":[["Affordability",81],["Places to eat",15]]},"Kerr Serign":{"slug":"kerr-serign","p":6460,"e":"band rate — 32 listings across the band","n":87,"r":2,"s":[["Affordability",14],["Places to eat",98]]},"Kololi":{"slug":"kololi","p":6460,"e":"band rate — 32 listings across the band","n":95,"r":2,"s":[["Affordability",14],["Places to eat",100]]},"Kotu":{"slug":"kotu","p":6460,"e":"band rate — 32 listings across the band","n":56,"r":2,"s":[["Affordability",14],["Places to eat",89]]},"Kuntaur":{"slug":"kuntaur","p":141,"e":"no local observations — regional rate","n":2,"r":2,"s":[["Affordability",87],["Places to eat",24]]},"Lamin":{"slug":"lamin","p":1833,"e":"9 local plot listings","n":1,"r":2,"s":[["Affordability",38],["Places to eat",15]]},"Manjai Kunda":{"slug":"manjai-kunda","p":2330,"e":"band rate — 31 listings across the band","n":10,"r":2,"s":[["Affordability",33],["Places to eat",53]]},"Mansa Konko":{"slug":"mansa-konko","p":141,"e":"no local observations — regional rate","n":1,"r":2,"s":[["Affordability",87],["Places to eat",15]]},"Nema Kunku":{"slug":"nema-kunku","p":2330,"e":"band rate — 31 listings across the band","n":1,"r":2,"s":[["Affordability",33],["Places to eat",15]]},"Pipeline":{"slug":"pipeline","p":2330,"e":"band rate — 31 listings across the band","n":33,"r":2,"s":[["Affordability",33],["Places to eat",77]]},"Sanyang":{"slug":"sanyang","p":972,"e":"14 local plot listings","n":1,"r":2,"s":[["Affordability",50],["Places to eat",15]]},"Senegambia":{"slug":"senegambia","p":6460,"e":"band rate — 32 listings across the band","n":93,"r":2,"s":[["Affordability",14],["Places to eat",100]]},"Serrekunda":{"slug":"serrekunda","p":2330,"e":"band rate — 31 listings across the band","n":6,"r":2,"s":[["Affordability",33],["Places to eat",43]]},"Sinchu Alagie":{"slug":"sinchu-alagie","p":2330,"e":"band rate — 31 listings across the band","n":0,"r":2,"s":[["Affordability",33]]},"Soma":{"slug":"soma","p":141,"e":"no local observations — regional rate","n":2,"r":2,"s":[["Affordability",87],["Places to eat",24]]},"Sukuta":{"slug":"sukuta","p":2326,"e":"8 local plot listings","n":4,"r":2,"s":[["Affordability",33],["Places to eat",35]]},"Tanji":{"slug":"tanji","p":2163,"e":"5 local plot listings","n":3,"r":2,"s":[["Affordability",35],["Places to eat",30]]},"Tujereng":{"slug":"tujereng","p":2280,"e":"11 local plot listings","n":1,"r":2,"s":[["Affordability",34],["Places to eat",15]]},"Yundum":{"slug":"yundum","p":1844,"e":"5 local plot listings","n":1,"r":2,"s":[["Affordability",38],["Places to eat",15]]}};
 
-// find matching hood data — try exact match, then partial match, then default
-let hood = HOOD_DATA[town];
-if(!hood){
-  const lc = town.toLowerCase();
-  for(const [k,v] of Object.entries(HOOD_DATA)){
-    if(lc.includes(k.toLowerCase()) || k.toLowerCase().includes(lc)){ hood=v; break; }
+// zoek het gebied van deze advertentie: eerst precies, anders een naam die
+  // met een sleutel begint ("Brufut Heights" hoort bij Brufut). Langste sleutel
+  // eerst, zodat een specifieker gebied wint zodra het er een krijgt.
+  var hoodKey = Object.keys(HOOD_DATA).find(function(k){ return k.toLowerCase() === town.toLowerCase(); });
+  if(!hoodKey){
+    var lc = town.toLowerCase();
+    hoodKey = Object.keys(HOOD_DATA).sort(function(a,b){ return b.length - a.length; })
+      .find(function(k){ return lc.indexOf(k.toLowerCase() + ' ') === 0; });
   }
-}
-if(!hood){
-  // sensible generic fallback for unknown areas
-  hood = {
-    intro: `${town} is a residential area in The Gambia's coastal region. Contact us for detailed neighbourhood insights and property guidance in this area.`,
-    stats: [['Land, per m²', 18.95,' '],['To the beach','varies','ask agent'],['To airport (BJL)','30–50 min','traffic dependent'],['Intl. schools','—','ask agent']],
-    scores: [['Safety',70],['Beach access',50],['Dining & nightlife',40],['Connectivity',60],['Investment demand',60]]
-  };
-}
+  var hood = hoodKey ? HOOD_DATA[hoodKey] : null;
 
-hoodIntro.textContent = hood.intro;
-hoodStats.innerHTML = hood.stats.map(h=>`<div class="hstat-card"><div class="lab">${h[0]}</div><div class="num">${h[0]==='Land, per m²'?fmtAreaPrice(h[1]):h[1]}</div><div class="meta">${h[2]}</div></div>`).join('');
-scorebars.innerHTML = hood.scores.map(s=>`<div class="scorebar"><span class="l">${s[0]}</span><div class="track"><div class="fill" style="width:${s[1]}%"></div></div><span class="sc">${(s[1]/10).toFixed(1)}</span></div>`).join('');
+  // Geen meting voor dit gebied? Dan geen blok. Hier stond tot 01-09-2026 een
+  // terugval die de grondprijs op 18,95 per m² zette en vijf scores verzon.
+  if(!hood){
+    if(typeof hoodBlock!=='undefined' && hoodBlock) hoodBlock.hidden = true;
+  } else {
+    hoodIntro.textContent = 'What we have measured for ' + hoodKey + ' is on the area page: prices with their evidence, what is mapped nearby, and the schools.';
+    var kaarten = '<div class="hstat-card"><div class="lab">Land, per m²</div><div class="num">' + fmtAreaPrice(hood.p) + '</div><div class="meta">' + hood.e + '</div></div>';
+    if(hood.n > 0) kaarten += '<div class="hstat-card"><div class="lab">Places to eat</div><div class="num">' + hood.n + '</div><div class="meta">mapped within ' + hood.r + ' km</div></div>';
+    hoodStats.innerHTML = kaarten;
+    scorebars.innerHTML = hood.s.map(function(s){ return '<div class="scorebar"><span class="l">' + s[0] + '</span><div class="track"><div class="fill" style="width:' + s[1] + '%"></div></div><span class="sc">' + (s[1]/10).toFixed(1) + '</span></div>'; }).join('');
+    if(typeof hoodLink!=='undefined' && hoodLink) hoodLink.href = hood.slug + '.html';
+    if(typeof hoodLinkTxt!=='undefined' && hoodLinkTxt) hoodLinkTxt.textContent = 'Explore the ' + hoodKey + ' area guide';
+  }
 
 /* ---- Kaart bij de woning ----
    Lagen, zoomgrenzen, attributie en de terugval bij een afgewezen sleutel

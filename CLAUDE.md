@@ -999,6 +999,43 @@ scholen verwijderd (`_werk/patch-schoolwaarderingen.mjs`, omkeerbaar met
 nog. Let op: de renderregel bestaat in drie vormen — string-concat met dubbele
 aanhalingstekens, met enkele, en een template literal in `kololi.html`.
 
+### Het gebiedsblok op property.html komt uit dezelfde bron
+
+De advertentiepagina droeg tot 01-09-2026 een eigen `HOOD_DATA` met dertien
+handgeschreven gebieden: 70 scores, 56 kerncijfers, dertien introteksten, geen
+bron. Twee dingen waren daar echt fout, en allebei waren ze live:
+
+1. **De prijs stond ingetypt** (`['Land, per m²', 6460]`) terwijl diezelfde
+   prijs op de gebiedspagina uit `area-prices.json` wordt gegenereerd. Bij de
+   eerstvolgende herijking spreken die twee elkaar tegen op het enige getal
+   waar het om gaat.
+2. **De terugval voor de 39 andere gebieden zette het tarief op 18,95 per m²**
+   — een getal dat nergens vandaan komt — plus vijf verzonnen scores
+   (Safety 70, Beach access 50, …), getoond met één decimaal alsof het
+   metingen waren.
+
+En één losse bug: de link "Explore full neighborhood guide" stond hard op
+`kololi.html`, dus élke advertentie in élk gebied stuurde de bezoeker naar
+Kololi.
+
+`build-property-areas.mjs` → `property-areas.json` → `_werk/patch-property-areas.mjs`,
+vangrail `check-propertyareas.mjs`. Nu 41 gebieden, met het tarief én de
+bewijsregel uit `area-prices.json`, de eetgelegenheden uit
+`area-amenities.json` en de twee doorgerekende scores uit `area-scores.json`.
+Een gebied dat we niet gemeten hebben krijgt géén blok meer.
+
+**De bewijsregel wordt letterlijk van de gebiedspagina gelezen** (`Evidence
+behind the land rate: <strong>…</strong>`), niet opnieuw geformuleerd. Anders
+staan er twee bewoordingen voor hetzelfde bewijs op de site. Draai daarom
+altijd eerst `build-area-prices.mjs`, dan pas `build-property-areas.mjs`.
+
+**Testen kan niet in de browser:** `LISTINGS` is leeg, en zonder database toont
+de pagina "This listing is no longer available" en gooit hij `#main` weg — het
+blok bestaat dan niet eens. `check-propertyareas.mjs` haalt daarom het
+renderblok letterlijk uit het bestand en voert het uit met neppe elementen,
+voor Kololi, "Brufut Heights" (moet bij Brufut uitkomen) en een onbekend
+gebied (moet het blok verbergen).
+
 **De helft van de tekst was standaardtekst.** Gemeten met
 `_werk/audit-areatekst.mjs`, dat elke alinea met die van alle andere pagina's
 vergelijkt met plaatsnamen en bedragen weggemaskeerd: 15.214 van 30.130 woorden
