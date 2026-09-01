@@ -556,6 +556,14 @@ body .leaflet-container{position:relative;z-index:0;isolation:isolate}
 .lsearch .lsd{width:1px;height:32px;background:var(--line);flex:none}
 .lsearch .lsgo{height:56px;padding:0 24px;border-radius:var(--r-md);background:var(--green-700);color:#fff;font-weight:700;font-size:15.5px;display:flex;align-items:center;justify-content:center;gap:9px;flex:none;transition:.15s;font-family:var(--sans)}
 .lsearch .lsgo:hover{background:var(--green-900)}
+
+/* De zoekbalk in de hero van Buy, Rent en Commercial is geen .lsearch meer maar
+   mkFinder, dat in een lege <div id="mkFinderMount"> wordt getekend. Die div
+   had geen eigen ruimte, dus de balk plakte tegen de introtekst aan (0px),
+   terwijl .lsearch hierboven daar altijd 32px voor nam. Dezelfde 32px, zodat
+   het ritme van de hero (14 - 18 - 32 - 46) weer klopt met de rest van de site. */
+.lhero #mkFinderMount{margin-top:32px}
+
 /* ---------- Hero-infoblok (buy / rent, 26-08-2026) ----------
    Vervangt de oude .lquick-pillenrij en de .lstats-flexrij. Twee redenen om ze
    te laten gaan: .lstats was een flex zonder vaste kolombreedtes, dus de drie
