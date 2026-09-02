@@ -999,7 +999,16 @@ Farafenni zou sturen. Dat was niet gemeten maar aangenomen, en het is onjuist:
 OSRM kent de veerboot en geeft hem als aparte stap terug ("Banjul - Barra
 Ferry", 4,9 km). De echte reden om geen tijd te tonen staat hieronder.
 
-### Terug naar vijf maten (02-09-2026) — de leidende beschrijving
+### Vier gemeten maten (02-09-2026) — de leidende beschrijving
+
+*Het zijn er die dag kort vijf geweest. Edwin heeft "Transport points" laten
+verwijderen omdat vijf ringen op zijn laptop niet op één regel uitkwamen; vier
+is nu de bovengrens van het blok. Dat was een keuze over het rooster, niet over
+de meting — die stond er even goed voor als de andere drie. `check-areascores.mjs`
+bewaakt zowel de lijst van toegestane maten als `MAX_RINGEN = 4`. Hieronder staat
+overal "vijf" waar het over die tussenversie gaat; lees dat als vier plus
+Transport points.*
+
 
 Met twee maten hielden zeven pagina's één ring over en zag het blok er leeg uit.
 De vraag was niet "zet de oude vijf terug" maar "welke vijf zijn te meten".
@@ -1015,8 +1024,10 @@ gebruiken dezelfde meting, straal en ontdubbeling als de tegels van "What's
 nearby", zodat ring en tegel niet uiteen kunnen lopen; `check-areascores.mjs`
 toetst dat getal voor getal tegen `area-amenities.json`.
 
-**Wat er per gebied uitkomt:** 5 ringen op 24 pagina's, 4 op elf, 3 op drie,
-2 op drie. Dat is de eerlijke bovengrens. Vul een ontbrekende ring niet op met
+**Wat er per gebied uitkomt, zonder Transport points:** 4 ringen op 29 pagina's,
+3 op acht, 2 op twee, 1 op twee (Barra en Jabang houden alleen Affordability
+over — OSM kent daar geen winkels, eetgelegenheden of zorg binnen 2 km).
+Dat is de eerlijke bovengrens. Vul een ontbrekende ring niet op met
 een nul: in Gambia betekent nul "niet gekarteerd" — Barra heeft zeker winkels,
 OSM kent ze niet.
 
@@ -1056,11 +1067,12 @@ En geef het commitbericht nooit door in een genest aanhalingsteken:
 `cmd /c "cd /d ... & upload.bat "Mijn bericht""` levert een commit met alleen
 het eerste woord op. Draai `upload.bat` in een eigen aanroep.
 
-**Twee dingen in de opmaak.** `.scores-grid` stond op `repeat(4,1fr)`, waardoor
-de vijfde ring alleen op een tweede rij viel; nu `repeat(auto-fit,minmax(150px,
-1fr))`. En `kololi.html` draagt een eigen kopie van `areas.css` ín de pagina —
-een wijziging in `areas.css` alleen laat Kololi achter. `_werk/patch-lifestyle-5.mjs`
-past beide aan.
+**Het rooster.** `.scores-grid` staat op `repeat(4,1fr)` en dat blijft zo: met
+`auto-fit` pasten vijf ringen op een breed scherm wél en op een laptop niet, en
+dan brak de rij. Vier kolommen houden alle pagina's dezelfde kaartbreedte, van
+1024 tot 1920 px op één regel. En let op: `kololi.html` draagt een eigen kopie
+van `areas.css` ín de pagina — een wijziging in `areas.css` alleen laat Kololi
+achter. `_werk/patch-lifestyle-5.mjs` past beide aan.
 
 
 `_scores-data.json` is daarmee grotendeels historisch; alleen de vijfde regel

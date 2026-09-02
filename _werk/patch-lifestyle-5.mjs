@@ -31,14 +31,14 @@ if (TERUG) {
 
 /* De bronregel onder het blok. Zij moet exact zeggen wat er gemeten is en
    waarom een pagina soms minder dan vijf ringen toont. */
-const BRONREGEL = 'Five measures, each one counted rather than judged. Affordability is the land asking price ' +
+const BRONREGEL = 'Four measures, each one counted rather than judged. Affordability is the land asking price ' +
   'per m² on a log scale, where the cheapest area we measure scores 100 and the priciest 0. Everyday shopping, ' +
-  'places to eat, healthcare and transport points count what OpenStreetMap has mapped within ' + scores.radius_km +
+  'places to eat and healthcare count what OpenStreetMap has mapped within ' + scores.radius_km +
   ' km of the pin — the same measurement and the same radius as the tiles under “What’s nearby”, except that a ring ' +
   'adds up categories the tiles list one by one; the healthcare count is topped up from the Ministry of Health ' +
   'register where OpenStreetMap has none. Where a count is zero there is no ring, because in The Gambia zero almost always means “not mapped” ' +
-  'rather than “not there” — that is why some areas show fewer than five. Scores for safety and transport-as-a-' +
-  'weighting used to sit here; nothing measurable stood behind either, so they are gone.';
+  'rather than “not there” — that is why some areas show fewer than four. Scores for safety and for transport used ' +
+  'to sit here; nothing measurable stood behind either, so they are gone.';
 
 const js = s => JSON.stringify(s);
 const regelScores = g => {
@@ -84,10 +84,11 @@ for (const g of gebieden) {
     .replace(mScores[0], regelScores(g))
     .replace(mBron[0], `<!--mk-scoresrc--><p class="src">${BRONREGEL}</p>`);
 
-  /* Kololi draagt een eigen kopie van areas.css in de pagina zelf. Een rooster
-     van vier kolommen laat daar de vijfde ring alleen op een tweede rij vallen. */
-  nieuw = nieuw.replace(/\.scores-grid\{display:grid;grid-template-columns:repeat\(4,1fr\);gap:16px\}/g,
-    '.scores-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px}');
+  /* Kololi draagt een eigen kopie van areas.css ín de pagina; een wijziging in
+     areas.css alleen laat Kololi achter. Het rooster staat weer op vier vaste
+     kolommen: vijf ringen pasten op een smaller scherm niet op één regel. */
+  nieuw = nieuw.replace(/\.scores-grid\{display:grid;grid-template-columns:repeat\(auto-fit,minmax\(150px,1fr\)\);gap:16px\}/g,
+    '.scores-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}');
 
   try { blokkenTotaal += compileerAlles(nieuw, bestand); }
   catch (e) { mislukt.push(`${bestand}: NIET GESCHREVEN — ${e.message}`); continue; }

@@ -3145,7 +3145,7 @@ function injectCookieConsent(){
   const el=document.createElement('div'); el.id='ccBanner';
   el.innerHTML=`
     <div class="cc-inner">
-      <p>We use essential cookies to make MyKunda work, and analytics cookies to understand how you use the site so we can improve it.
+      <p>We use essential cookies to make MyKunda work, and count page views without setting any cookies. Choose Accept all and we also load Meta's advertising cookies, which show us how our adverts on Facebook and Instagram perform.
         <a href="legal-cookies.html">Read our cookie policy</a>.</p>
       <div class="cc-btns">
         <button class="btn btn-primary btn-sm" id="ccAccept">Accept all</button>
@@ -3157,7 +3157,12 @@ function injectCookieConsent(){
   document.getElementById('ccEssential').addEventListener('click',()=>{ localStorage.setItem('mykunda_cc','essential'); el.remove(); });
 }
 
-/* ---------- Analytics — Meta Pixel, loaded only after consent ---------- */
+/* ---------- Meta Pixel — advertentiemeting, alleen na "Accept all" ----------
+   Let op de naamgeving: loadAnalytics() laadt de Meta-pixel, en die staat in
+   legal-cookies.html terecht onder Marketing, niet onder Analytics. De
+   paginatelling zelf komt van Cloudflare Web Analytics, die geen cookie zet en
+   niet door deze banner heen loopt (Cloudflare injecteert de beacon in het
+   antwoord, voordat dit script draait). Zie de toelichting in legal-cookies.html. */
 const META_PIXEL_ID='1712466110009723';
 function loadAnalytics(){
   if(window.fbq||document.getElementById('mkPixel')) return;

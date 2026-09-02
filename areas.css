@@ -32,7 +32,7 @@
 .chart-head .delta{font-size:14px;font-weight:700;color:var(--green-600);background:var(--green-50);padding:5px 12px;border-radius:var(--r-pill)}
 .chart-wrap{position:relative}
 .chart-x{display:flex;justify-content:space-between;margin-top:10px;font-size:12.5px;color:var(--muted);font-weight:600}
-.scores-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px}
+.scores-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 .score{background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-sm);padding:22px;text-align:center;display:flex;flex-direction:column}
 .ring{width:96px;height:96px;margin:0 auto 12px;position:relative}
 .ring svg{transform:rotate(-90deg)}

@@ -5,19 +5,22 @@
  *
  * Tot 01-09-2026 stonden hier vijf handgezette getallen per gebied, 205 in
  * totaal. Die zijn die dag teruggebracht tot twee doorgerekende maten, omdat
- * alleen die twee een bron hadden. Op 02-09-2026 zijn het er weer vijf — niet
- * door de oude terug te zetten, maar door drie maten toe te voegen die uit
+ * alleen die twee een bron hadden. Op 02-09-2026 zijn het er weer vier — niet
+ * door de oude terug te zetten, maar door twee maten toe te voegen die uit
  * dezelfde meting komen als de twee die er al stonden.
  *
- * DE VIJF MATEN
+ * DE VIER MATEN
  *   Affordability      area-prices.json: vraagprijs voor grond per m², logschaal
  *   Everyday shopping  OSM: shop + supermarket + market binnen 2 km
  *   Places to eat      OSM: restaurant/café/fastfood + bar binnen 2 km
  *   Healthcare         OSM: kliniek/ziekenhuis + apotheek binnen 2 km, aangevuld
  *                      uit het register van het ministerie waar OSM nul kent
- *   Transport points   OSM: tankstation + bus-/taxistandplaats + veerterminal
  *
- * Alle vier de tellingen gebruiken dezelfde straal (2 km), dezelfde meting en
+ * Er is er even een vijfde geweest, "Transport points". Die is op 02-09-2026 op
+ * verzoek weer weg: vijf ringen passen op een smaller scherm niet op één regel.
+ * Vier is de bovengrens van dit blok — zie de opmerking bij TELMATEN.
+ *
+ * Alle drie de tellingen gebruiken dezelfde straal (2 km), dezelfde meting en
  * dezelfde ontdubbeling als de tegels in "What's nearby", zodat het getal onder
  * de ring en het getal in de tegel niet uiteen kunnen lopen.
  *
@@ -25,8 +28,9 @@
  *   Geen ring waar de telling nul is. In Gambia betekent nul bijna altijd
  *   "niet in kaart gebracht", niet "niet aanwezig" — Barra heeft zeker winkels,
  *   OSM kent ze niet. Een ring van 0 zou een bewering zijn die we niet kunnen
- *   waarmaken. Daardoor toont niet elke pagina vijf ringen: 24 van de 41 wel,
- *   de rest minder. Dat is de eerlijke bovengrens van wat gemeten is.
+ *   waarmaken. Daardoor toont niet elke pagina vier ringen; de verdeling staat
+ *   onderaan in de uitvoer van dit script. Dat is de eerlijke bovengrens van
+ *   wat gemeten is.
  */
 
 /* AFGEWEZEN KANDIDATEN, met de meting die ze afwees (_werk/verken-maten*.mjs,
@@ -90,7 +94,7 @@ const prijsPerSlug = new Map(Object.values(prijzen.areas).filter(a => a && a.slu
 const geld = n => 'D' + Math.round(n).toLocaleString('en-GB');
 const tel = (g, ks) => ks.reduce((s, k) => s + (g.counts[k] || 0), 0);
 
-/* De vier tellingen. `keys` verwijst naar de categorieën van
+/* De drie tellingen. `keys` verwijst naar de categorieën van
    build-area-amenities.mjs, zodat ring en tegel niet uiteen kunnen lopen. */
 const TELMATEN = [
   { label: 'Everyday shopping', keys: ['shop', 'supermarket', 'market'],
@@ -99,9 +103,15 @@ const TELMATEN = [
     een: 'place to eat', meer: 'places to eat' },
   { label: 'Healthcare', keys: ['health', 'pharmacy'],
     een: 'clinic or pharmacy', meer: 'clinics & pharmacies' },
-  { label: 'Transport points', keys: ['fuel', 'transport', 'ferry'],
-    een: 'fuel station, rank or terminal', meer: 'fuel, ranks & terminals' },
 ];
+
+/* WEG OP VERZOEK VAN EDWIN, 02-09-2026: "Transport points" (fuel + transport +
+   ferry, 33/41). Niet omdat de meting niet deugde — die was even goed als de
+   andere drie — maar omdat vijf ringen op een smaller scherm niet op één regel
+   passen en het rooster dan breekt. Vier is de bovengrens van het blok.
+   Wie er ooit een vijfde bij wil: verhoog dan eerst het rooster, en haal
+   'Transport points' ook terug in TOEGESTAAN en TELKEYS van
+   check-areascores.mjs — die vangrail wijst hem nu af. */
 
 /* Logschaal, want de spreiding is dat ook: Senegambia heeft 93 eetgelegenheden
    en Bansang één. Lineair zou heel het land op 1 staan en Senegambia op 100. */
@@ -157,7 +167,8 @@ const uit = {
       `100 × ln(1+n) / ln(1+${maxima[m.label]}), met n = ${m.keys.join(' + ')} binnen ${amen.radius_km} km ` +
       'uit area-amenities.json. Geen ring waar n = 0: dat betekent niet gekarteerd.'])),
     removed: 'Safety en Transport-als-weging blijven weg. Schools, kust, afstand tot Banjul, logies, ' +
-      'banken en gebedshuizen zijn op 02-09-2026 gewogen en afgewezen; de reden staat per kandidaat in het script.',
+      'banken en gebedshuizen zijn op 02-09-2026 gewogen en afgewezen; de reden staat per kandidaat in het script. ' +
+      '"Transport points" was er kort wel en is op verzoek weer weg — een keuze over het rooster, niet over de meting.',
   },
   sources: { prices: 'area-prices.json', amenities: amen.sources.osm, register: amen.sources.register,
              local: '_scores-data.json (kwalitatief, geen meting)' },

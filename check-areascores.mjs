@@ -9,15 +9,17 @@
  */
 import { readFile, readdir } from 'node:fs/promises';
 
-/* De vijf maten die een methode hebben. Wie er een zesde bij zet zonder die in
-   build-area-scores.mjs uit te rekenen, loopt hier vast. */
-const TOEGESTAAN = new Set(['Affordability', 'Everyday shopping', 'Places to eat', 'Healthcare', 'Transport points']);
+/* De vier maten die een methode hebben én in het rooster passen. Wie er een
+   vijfde bij zet zonder die in build-area-scores.mjs uit te rekenen — of zonder
+   het rooster te verbreden — loopt hier vast. "Transport points" is op
+   02-09-2026 op verzoek verwijderd; hij staat er daarom bewust niet meer bij. */
+const TOEGESTAAN = new Set(['Affordability', 'Everyday shopping', 'Places to eat', 'Healthcare']);
+const MAX_RINGEN = 4;
 const TIJDWOORD = /\b(minutes?|mins?|hours?|hrs?)\b|\b(five|ten|fifteen|twenty|twenty-five|thirty|forty|forty-five|fifty)\s+minutes\b/i;
 const TELKEYS = {
   'Everyday shopping': ['shop', 'supermarket', 'market'],
   'Places to eat': ['eat', 'bar'],
   Healthcare: ['health', 'pharmacy'],
-  'Transport points': ['fuel', 'transport', 'ferry'],
 };
 const data = JSON.parse(await readFile('area-scores.json', 'utf8'));
 const perSlug = new Map(Object.values(data.areas).map(g => [g.slug, g]));
@@ -47,6 +49,7 @@ for (const f of files) {
 
   const verwacht = [...g.measures.map(m => [m.label, m.score, m.desc]), [g.local.label, null, g.local.desc]];
   if (rijen.length !== verwacht.length) meld(f, `${rijen.length} regels op de pagina, ${verwacht.length} in area-scores.json`);
+  if (rijen.length - 1 > MAX_RINGEN) meld(f, `${rijen.length - 1} ringen — het rooster houdt er ${MAX_RINGEN} op één regel`);
 
   rijen.forEach((r, i) => {
     const laatste = i === rijen.length - 1;

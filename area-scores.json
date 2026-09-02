@@ -8,8 +8,7 @@
    "Affordability": 14,
    "Everyday shopping": 87,
    "Places to eat": 100,
-   "Healthcare": 44,
-   "Transport points": 76
+   "Healthcare": 44
   }
  },
  "method": {
@@ -17,8 +16,7 @@
   "Everyday shopping": "100 × ln(1+n) / ln(1+69), met n = shop + supermarket + market binnen 2 km uit area-amenities.json. Geen ring waar n = 0: dat betekent niet gekarteerd.",
   "Places to eat": "100 × ln(1+n) / ln(1+95), met n = eat + bar binnen 2 km uit area-amenities.json. Geen ring waar n = 0: dat betekent niet gekarteerd.",
   "Healthcare": "100 × ln(1+n) / ln(1+11), met n = health + pharmacy binnen 2 km uit area-amenities.json. Geen ring waar n = 0: dat betekent niet gekarteerd.",
-  "Transport points": "100 × ln(1+n) / ln(1+17), met n = fuel + transport + ferry binnen 2 km uit area-amenities.json. Geen ring waar n = 0: dat betekent niet gekarteerd.",
-  "removed": "Safety en Transport-als-weging blijven weg. Schools, kust, afstand tot Banjul, logies, banken en gebedshuizen zijn op 02-09-2026 gewogen en afgewezen; de reden staat per kandidaat in het script."
+  "removed": "Safety en Transport-als-weging blijven weg. Schools, kust, afstand tot Banjul, logies, banken en gebedshuizen zijn op 02-09-2026 gewogen en afgewezen; de reden staat per kandidaat in het script. \"Transport points\" was er kort wel en is op verzoek weer weg — een keuze over het rooster, niet over de meting."
  },
  "sources": {
   "prices": "area-prices.json",
@@ -54,12 +52,6 @@
      "score": 65,
      "desc": "4 clinics & pharmacies within 2 km",
      "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 56,
-     "desc": "4 fuel, ranks & terminals within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
@@ -93,12 +85,6 @@
      "label": "Healthcare",
      "score": 28,
      "desc": "1 clinic or pharmacy within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 80,
-     "desc": "9 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -134,12 +120,6 @@
      "score": 44,
      "desc": "2 clinics & pharmacies within 2 km",
      "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 56,
-     "desc": "4 fuel, ranks & terminals within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
@@ -168,12 +148,6 @@
      "score": 28,
      "desc": "1 clinic or pharmacy within 2 km",
      "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 48,
-     "desc": "3 fuel, ranks & terminals within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
@@ -190,12 +164,6 @@
      "score": 71,
      "desc": "D330 per m² asking",
      "source": "area-prices.json"
-    },
-    {
-     "label": "Transport points",
-     "score": 38,
-     "desc": "2 fuel, ranks & terminals within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
@@ -229,12 +197,6 @@
      "label": "Healthcare",
      "score": 72,
      "desc": "5 clinics & pharmacies within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 80,
-     "desc": "9 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -298,12 +260,6 @@
      "score": 93,
      "desc": "9 clinics & pharmacies within 2 km",
      "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 80,
-     "desc": "9 fuel, ranks & terminals within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
@@ -337,12 +293,6 @@
      "label": "Healthcare",
      "score": 65,
      "desc": "4 clinics & pharmacies within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 89,
-     "desc": "12 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -412,12 +362,6 @@
      "score": 100,
      "desc": "11 clinics & pharmacies within 2 km",
      "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 83,
-     "desc": "10 fuel, ranks & terminals within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
@@ -446,12 +390,6 @@
      "score": 15,
      "desc": "1 place to eat within 2 km",
      "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 38,
-     "desc": "2 fuel, ranks & terminals within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
@@ -479,12 +417,6 @@
      "label": "Places to eat",
      "score": 48,
      "desc": "8 places to eat within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 24,
-     "desc": "1 fuel station, rank or terminal within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -542,12 +474,6 @@
      "score": 56,
      "desc": "3 clinics & pharmacies within 2 km",
      "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 72,
-     "desc": "7 fuel, ranks & terminals within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
@@ -582,12 +508,6 @@
      "score": 56,
      "desc": "3 clinics & pharmacies within 2 km",
      "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 72,
-     "desc": "7 fuel, ranks & terminals within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
@@ -610,12 +530,6 @@
      "score": 28,
      "desc": "1 clinic or pharmacy within 2 km",
      "source": "Ministry of Health register"
-    },
-    {
-     "label": "Transport points",
-     "score": 38,
-     "desc": "2 fuel, ranks & terminals within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
@@ -700,12 +614,6 @@
      "score": 29,
      "desc": "D2,894 per m² asking",
      "source": "area-prices.json"
-    },
-    {
-     "label": "Transport points",
-     "score": 38,
-     "desc": "2 fuel, ranks & terminals within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
@@ -739,12 +647,6 @@
      "label": "Healthcare",
      "score": 28,
      "desc": "1 clinic or pharmacy within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 38,
-     "desc": "2 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -848,12 +750,6 @@
      "score": 56,
      "desc": "3 clinics & pharmacies within 2 km",
      "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 62,
-     "desc": "5 fuel, ranks & terminals within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
@@ -887,12 +783,6 @@
      "label": "Healthcare",
      "score": 44,
      "desc": "2 clinics & pharmacies within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 76,
-     "desc": "8 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -928,12 +818,6 @@
      "score": 28,
      "desc": "1 clinic or pharmacy within 2 km",
      "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 72,
-     "desc": "7 fuel, ranks & terminals within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
@@ -968,12 +852,6 @@
      "score": 28,
      "desc": "1 clinic or pharmacy within 2 km",
      "source": "Ministry of Health register"
-    },
-    {
-     "label": "Transport points",
-     "score": 56,
-     "desc": "4 fuel, ranks & terminals within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
@@ -1008,12 +886,6 @@
      "score": 28,
      "desc": "1 clinic or pharmacy within 2 km",
      "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 48,
-     "desc": "3 fuel, ranks & terminals within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
@@ -1041,12 +913,6 @@
      "label": "Places to eat",
      "score": 53,
      "desc": "10 places to eat within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 83,
-     "desc": "10 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -1082,12 +948,6 @@
      "score": 44,
      "desc": "2 clinics & pharmacies within 2 km",
      "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 56,
-     "desc": "4 fuel, ranks & terminals within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
@@ -1121,12 +981,6 @@
      "label": "Healthcare",
      "score": 44,
      "desc": "2 clinics & pharmacies within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 76,
-     "desc": "8 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -1162,12 +1016,6 @@
      "score": 84,
      "desc": "7 clinics & pharmacies within 2 km",
      "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 86,
-     "desc": "11 fuel, ranks & terminals within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
@@ -1201,12 +1049,6 @@
      "label": "Healthcare",
      "score": 28,
      "desc": "1 clinic or pharmacy within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 48,
-     "desc": "3 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -1242,12 +1084,6 @@
      "score": 44,
      "desc": "2 clinics & pharmacies within 2 km",
      "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 76,
-     "desc": "8 fuel, ranks & terminals within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
@@ -1282,12 +1118,6 @@
      "score": 56,
      "desc": "3 clinics & pharmacies within 2 km",
      "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 100,
-     "desc": "17 fuel, ranks & terminals within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
@@ -1315,12 +1145,6 @@
      "label": "Healthcare",
      "score": 28,
      "desc": "1 clinic or pharmacy within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 38,
-     "desc": "2 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -1356,12 +1180,6 @@
      "score": 44,
      "desc": "2 clinics & pharmacies within 2 km",
      "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 62,
-     "desc": "5 fuel, ranks & terminals within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
@@ -1396,12 +1214,6 @@
      "score": 28,
      "desc": "1 clinic or pharmacy within 2 km",
      "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 24,
-     "desc": "1 fuel station, rank or terminal within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
@@ -1435,12 +1247,6 @@
      "label": "Healthcare",
      "score": 44,
      "desc": "2 clinics & pharmacies within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 62,
-     "desc": "5 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -1497,12 +1303,6 @@
      "label": "Places to eat",
      "score": 15,
      "desc": "1 place to eat within 2 km",
-     "source": "OpenStreetMap 2026-09-01"
-    },
-    {
-     "label": "Transport points",
-     "score": 38,
-     "desc": "2 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
