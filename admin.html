@@ -315,7 +315,7 @@ function visibleLeads(){
   });
 }
 
-let pending=[], leads=[], active=[], bankLines=[], bankError=null, orders=[], ordersError=null, agencies=[];
+let pending=[], leads=[], active=[], bankLines=[], bankError=null, orders=[], ordersError=null, agencies=[], refused24=null;
 
 /* De kantoren, apart opgehaald zodat een fout hier de advertenties en de leads
    niet meesleept — en zodat de dialogen hieronder na afloop opnieuw kunnen
@@ -356,6 +356,23 @@ async function load(){
       if(error) throw error;
       orders = pay||[]; ordersError = null;
     }catch(e){ orders = []; ordersError = e.message || String(e); }
+
+    /* Hoeveel mensen zijn er in het afgelopen etmaal weggestuurd bij het
+       aanvragen van een inlogcode? Sinds 02-09-2026 legt auth-email die
+       weigeringen vast; zonder dat cijfer is de IP-limiet van twintig
+       aanmeldingen per uur alleen op gevoel bij te stellen, en achter de CGNAT
+       van de Gambiaanse providers deelt een hele wijk één adres. Eigen
+       foutafhandeling: dit is een terzijde, geen reden om de console leeg te
+       laten als de query omvalt. */
+    try{
+      const sinds = new Date(Date.now() - 24*60*60*1000).toISOString();
+      const { count, error } = await sb.from('email_events')
+        .select('id', { count:'exact', head:true })
+        .eq('event_type','auth_code_refused')
+        .gte('created_at', sinds);
+      if(error) throw error;
+      refused24 = count || 0;
+    }catch(e){ refused24 = null; console.warn('weigeringen tellen:', e.message); }
   } else {
     pending = []; leads = []; active = []; orders = []; ordersError = null;
   }
@@ -532,6 +549,9 @@ function render(){
     ['New leads', newLeads, false],
     ['Waiting over 48h', overdue, overdue>0],
     ['Active listings', active.length, false],
+    /* Geen rode kleur: een enkele weigering is normaal (iemand drukt twee keer).
+       Het getal is er om een tendens te zien, niet om alarm te slaan. */
+    ['Sign-in codes refused (24h)', refused24===null ? '—' : refused24, false],
   ].map(s=>`<div class="stat"><div class="num"${s[2]?' style="color:#B91C1C"':''}>${s[1]}</div><div class="lab">${s[0]}</div></div>`).join('');
 
   // pending
