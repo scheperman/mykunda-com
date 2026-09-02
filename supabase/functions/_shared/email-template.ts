@@ -886,7 +886,7 @@ export interface SignupInfo {
   id: string;
   name?: string;
   email: string;
-  /** 'google' for OAuth sign-ups, 'email' for the 6-digit code path. */
+  /** 'google' or 'facebook' for OAuth sign-ups, 'email' for the 6-digit code path. */
   provider: string;
   consentContact: boolean;
   consentAt?: string;
@@ -895,12 +895,23 @@ export interface SignupInfo {
   /** profiles.role op het moment van versturen: 'buyer' | 'seller' | 'agent'.
    *  Sinds 30-08-2026 kiest de bezoeker zijn rol bij het aanmelden, dus de
    *  welkomstmail hoeft niet meer alle vier de dingen tegelijk aan te prijzen.
-   *  Let op bij Google: de rol wordt daar pas ná het aanmaken van het account
-   *  gezet (set-role), en de databasetrigger stuurt deze mail al bij het
-   *  aanmaken. Een Google-aanmelding krijgt daardoor meestal de zoekersversie.
-   *  Dat is bewust: liever een iets te algemene mail dan geen mail. */
+   *  Bij een aanbieder (Google, Facebook) wordt de rol pas ná het aanmaken van
+   *  het account gezet. Tot 02-09-2026 stuurde de databasetrigger deze mail al
+   *  bij het aanmaken, waardoor een kantoor de zoekersversie kreeg; sindsdien
+   *  vuurt de trigger alleen nog op het bevestigen van een e-mailadres en roept
+   *  de browser deze functie zelf aan (finishOAuth), pas als de rol en de
+   *  toestemming echt in profiles staan. De rol hieronder klopt dus. */
   role?: string;
 }
+
+/** Hoe elke aanmeldweg heet als je hem opschrijft. Eén tabel, twee mails: de
+ *  voettekst van de welkomstmail en de regel "Via" in de teammail. Komt er een
+ *  derde aanbieder bij, dan is dit de enige plek die hem hoeft te kennen.
+ *  De sleutels zijn de namen die Supabase in app_metadata.provider zet. */
+const PROVIDER_LABEL: Record<string, string> = {
+  google: 'Google',
+  facebook: 'Facebook',
+};
 
 /** One row of the "what your account unlocks" list. */
 function featureRow(icon: string, title: string, text: string, url: string): string {
@@ -969,7 +980,7 @@ export function welcomeEmail(u: SignupInfo): string {
       </div>`,
     cta: 'Go to My MyKunda',
     ctaUrl: `${S}/dashboard.html`,
-    footer: `You received this because an account was created on mykunda.com with this address${u.provider === 'google' ? ' via Google sign-in' : ''}. Not you? Reply to this email and we will remove it.`,
+    footer: `You received this because an account was created on mykunda.com with this address${PROVIDER_LABEL[u.provider] ? ` via ${PROVIDER_LABEL[u.provider]} sign-in` : ''}. Not you? Reply to this email and we will remove it.`,
     unsubscribeUrl: marketing ? `${S}/dashboard.html?alerts=off` : undefined,
   });
 }
@@ -985,7 +996,7 @@ const ROLE_WORDS: Record<string, string> = {
 
 /** To the team: a new account, with the consent state spelled out. */
 export function signupBackofficeEmail(u: SignupInfo): string {
-  const via = u.provider === 'google' ? 'Google' : 'Email code';
+  const via = PROVIDER_LABEL[u.provider] || 'Email code';
   const fmt = (v: string) => new Date(v).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Africa/Banjul' });
   const when = u.createdAt ? fmt(u.createdAt) + ' (Banjul)' : undefined;
   const consent = u.consentContact

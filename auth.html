@@ -190,6 +190,7 @@ body{min-height:100vh;display:flex}
 
         <div class="social">
           <button class="social-btn" id="googleBtn"><span id="gIc"></span> <span class="lbl">Continue with Google</span></button>
+          <button class="social-btn" id="facebookBtn"><span id="fIc"></span> <span class="lbl">Continue with Facebook</span></button>
         </div>
 
         <div class="terms" id="termsLine" style="display:none">Questions? <a href="contact.html">Contact us</a>.</div>
@@ -212,9 +213,10 @@ body{min-height:100vh;display:flex}
         <div class="otp-demo" id="otpDemo" style="display:none"></div>
       </div>
 
-      <!-- STEP 3: de toestemmingspoort na een Google-aanmelding.
+      <!-- STEP 3: de toestemmingspoort na een aanmelding via een aanbieder
+           (Google of Facebook).
            signInWithOAuth kent geen shouldCreateUser: wie op de tab "Sign in"
-           op Continue with Google drukt met een adres dat nog geen account
+           op zo'n knop drukt met een adres dat nog geen account
            heeft, krijgt er toch een. Tot 02-09-2026 ontstond zo'n account met
            consent_contact=false en consent_at leeg — de voorwaarden waren dan
            nooit aanvaard en de teammail meldde alleen achteraf "Not recorded".
@@ -237,7 +239,8 @@ body{min-height:100vh;display:flex}
       </div>
 
       <!-- 27-08-2026: de stap "Choose a new password" is hier weggehaald.
-           Inloggen gaat uitsluitend met een e-mailcode of Google; nergens in de
+           Inloggen gaat uitsluitend met een e-mailcode, Google of Facebook;
+           nergens in de
            site wordt signInWithPassword of sendPasswordReset aangeroepen. Wie
            hier een wachtwoord instelde kreeg iets wat nergens werkte en dat hij
            ook niet kon resetten. Een recovery-link logt nu gewoon in en gaat
@@ -265,6 +268,7 @@ bp1.innerHTML='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" strok
 bp2.innerHTML='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>';
 bp3.innerHTML='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
 gIc.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.5 12.2c0-.7-.1-1.4-.2-2H12v4h5.9a5 5 0 0 1-2.2 3.3v2.7h3.6c2.1-1.9 3.2-4.7 3.2-8Z"/><path fill="#34A853" d="M12 23c2.9 0 5.4-1 7.2-2.6l-3.6-2.7c-1 .7-2.3 1.1-3.6 1.1-2.8 0-5.1-1.9-6-4.4H2.3v2.8A11 11 0 0 0 12 23Z"/><path fill="#FBBC05" d="M6 14.4a6.6 6.6 0 0 1 0-4.2V7.4H2.3a11 11 0 0 0 0 9.8L6 14.4Z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3 .5 4.1 1.6l3.1-3.1A11 11 0 0 0 12 1a11 11 0 0 0-9.7 6l3.7 2.8c.9-2.5 3.2-4.4 6-4.4Z"/></svg>';
+fIc.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24"><path fill="#1877F2" d="M24 12.07A12 12 0 1 0 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.96h-1.51c-1.49 0-1.96.93-1.96 1.89v2.26h3.33l-.53 3.49h-2.8V24A12 12 0 0 0 24 12.07Z"/></svg>';
 otpBackIc.innerHTML='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>';
 
 /* Waar de bezoeker na het inloggen heen gaat. `next` komt uit de URL en die
@@ -285,6 +289,15 @@ function safeNext(v){
   return s.replace(/^\//,'');
 }
 const nextUrl = safeNext(qs('next'));
+
+/* Hoe elke aanbieder heet, op ÉÉN plek. Vier schermteksten en twee mails
+   noemden tot 02-09-2026 "Google" waar ze "de aanbieder waarmee je binnenkwam"
+   bedoelden; met een tweede knop erbij zou elk van die zes een leugentje
+   worden. De sleutel is de naam die Supabase gebruikt (app_metadata.provider),
+   zodat de waarde die terugkomt uit de sessie hier meteen op past. */
+const PROVIDER_NAME = { google:'Google', facebook:'Facebook' };
+function providerName(v){ return PROVIDER_NAME[String(v||'').toLowerCase()] || ''; }
+
 let mode='signin';      // signin | signup
 let pendingUser=null;
 let otpVerifyType='email';
@@ -372,7 +385,8 @@ function applyMode(){
   document.getElementById('termsLine').style.display = signup ? 'block' : 'none';
   document.getElementById('consentBlock').style.display = signup ? 'flex' : 'none';
   document.getElementById('consentBlock').classList.remove('warn');
-  document.querySelector('#googleBtn .lbl').textContent = signup ? 'Sign up with Google' : 'Continue with Google';
+  document.querySelector('#googleBtn .lbl').textContent   = (signup ? 'Sign up with ' : 'Continue with ') + PROVIDER_NAME.google;
+  document.querySelector('#facebookBtn .lbl').textContent = (signup ? 'Sign up with ' : 'Continue with ') + PROVIDER_NAME.facebook;
   document.getElementById('authSwitchLine').innerHTML = signup
     ? `Already have an account? <a href="#" id="goSignin">Sign in</a>`
     : `New to MyKunda? <a href="#" id="goSignup">Create an account</a>`;
@@ -551,31 +565,40 @@ async function oauth(provider){
   }
   authErr('Sign-in is temporarily unavailable. Please try again in a moment.');
 }
-document.getElementById('googleBtn').addEventListener('click',()=>{
-  if(mode==='signup'){
-    if(roleMissing()) return;
-    const consent = document.getElementById('consentIn').checked;
-    if(!consent){
-      document.getElementById('consentBlock').classList.add('warn');
-      authErr('Please accept the Terms and Privacy Policy to create an account.');
-      return;
+/* Eén handler voor elke aanbiederknop. Bij een tweede knop is kopiëren de
+   makkelijke weg en precies de fout die je een half jaar later betaalt: de
+   rolcontrole, de vinkjes en de opslag van de keuze zouden dan op twee plaatsen
+   staan en langzaam uit elkaar lopen. De provider is het enige verschil, dus is
+   hij het enige argument. (02-09-2026) */
+function socialSignIn(provider){
+  return function(){
+    if(mode==='signup'){
+      if(roleMissing()) return;
+      const consent = document.getElementById('consentIn').checked;
+      if(!consent){
+        document.getElementById('consentBlock').classList.add('warn');
+        authErr('Please accept the Terms and Privacy Policy to create an account.');
+        return;
+      }
+      document.getElementById('consentBlock').classList.remove('warn');
+      // Kept for the moment we come back from the provider, where the checkbox no longer exists.
+      try{
+        localStorage.setItem('mk_pending_consent', JSON.stringify({
+          consent: true,
+          marketing: document.getElementById('consentMktIn').checked,
+          name: document.getElementById('nameIn').value.trim(),
+          role: role,
+          ts: Date.now()
+        }));
+      }catch(e){}
     }
-    document.getElementById('consentBlock').classList.remove('warn');
-    // Kept for the moment we come back from Google, where the checkbox no longer exists.
-    try{
-      localStorage.setItem('mk_pending_consent', JSON.stringify({
-        consent: true,
-        marketing: document.getElementById('consentMktIn').checked,
-        name: document.getElementById('nameIn').value.trim(),
-        role: role,
-        ts: Date.now()
-      }));
-    }catch(e){}
-  }
-  oauth('google');
-});
+    oauth(provider);
+  };
+}
+document.getElementById('googleBtn').addEventListener('click', socialSignIn('google'));
+document.getElementById('facebookBtn').addEventListener('click', socialSignIn('facebook'));
 
-/* ---- Terugkeer van Google ----
+/* ---- Terugkeer van de aanbieder (Google of Facebook) ----
    De laatste stap van de aanmelding, en tot 02-09-2026 ook het gat erin: er
    werd alleen consent weggeschreven als de browser hem nog in localStorage
    had staan. Wie op de tab "Sign in" op Continue with Google drukte, of in een
@@ -701,13 +724,18 @@ document.getElementById('consentGoBtn').addEventListener('click', async function
   finishOAuth(u, pendingSession.name);
 });
 
-/* Afhaken mag. Google heeft het account op dat moment al aangemaakt — daar is
-   client-side niets aan te doen — dus we zeggen dat eerlijk in plaats van te
-   beweren dat er niets gebeurd is. */
+/* Afhaken mag. De aanbieder heeft het account op dat moment al aangemaakt —
+   daar is client-side niets aan te doen — dus we zeggen dat eerlijk in plaats
+   van te beweren dat er niets gebeurd is. Welke aanbieder dat was staat in de
+   sessie zelf (app_metadata.provider) en moet dus vóór het uitloggen worden
+   afgelezen; hij reist mee in ?via= zodat de melding op de volgende pagina de
+   juiste naam noemt in plaats van altijd "Google". */
 document.getElementById('consentCancel').addEventListener('click', async function(e){
   e.preventDefault();
+  let prov='';
+  try{ prov = String((pendingSession && pendingSession.user && pendingSession.user.app_metadata && pendingSession.user.app_metadata.provider) || ''); }catch(err){}
   try{ if(typeof signOut==='function') await signOut(); }catch(err){}
-  location.replace('auth.html?left=1');
+  location.replace('auth.html?left=1' + (prov ? '&via=' + encodeURIComponent(prov) : ''));
 });
 
 // return from an OAuth redirect (?oauth=1, plus ?google=1 for links already in flight)
@@ -718,6 +746,24 @@ document.getElementById('consentCancel').addEventListener('click', async functio
     const { data } = await sb.auth.getSession();
     if(!data.session) return;
     const u=data.session.user;
+
+    /* GEEN E-MAILADRES TERUG. Facebook geeft er niet altijd één: een account
+       dat op een telefoonnummer loopt heeft er geen, en de gebruiker mag het
+       vinkje in het toestemmingsscherm van Facebook gewoon uitzetten. Supabase
+       maakt dan tóch een gebruiker aan — auth.users.email mag leeg zijn en de
+       CHECK op profiles.email laat NULL door — en dat zou hier een account
+       opleveren dat we nooit kunnen bereiken: geen inlogcode, geen bevestiging
+       van een bezichtiging, geen bericht dat er een reactie op zijn advertentie
+       staat, en geen enkele manier om zelf weer binnen te komen. Het hele huis
+       staat op het adres. Dus: weigeren, uitloggen en eerlijk zeggen waarom.
+       (02-09-2026) */
+    if(!u.email){
+      const prov = String(u.app_metadata?.provider || '');
+      try{ if(typeof signOut==='function') await signOut(); }catch(err){}
+      location.replace('auth.html?noemail=1' + (prov ? '&via=' + encodeURIComponent(prov) : ''));
+      return;
+    }
+
     const name = u.user_metadata?.full_name || u.user_metadata?.name || (u.email?u.email.split('@')[0]:'MyKunda User');
 
     /* Wat de bezoeker vóór de doorverwijzing koos, uit twee bronnen in deze
@@ -899,10 +945,63 @@ else if(qs('mode')!=='signin' && !hasSeenBefore()) mode='signup';
 applyMode();
 
 /* Teruggekomen van de toestemmingspoort met "Cancel and sign out". Eerlijk
-   blijven: het Google-account bestaat op dat moment, alleen ongebruikt. */
+   blijven: het account bestaat op dat moment, alleen ongebruikt. */
 if(qs('left')==='1'){
-  authErr('You are signed out. Google created a MyKunda account when you signed in — email admin@mykunda.com if you would like it removed.');
+  const p = providerName(qs('via'));
+  authErr('You are signed out. ' + (p ? p + ' created' : 'Signing in created')
+    + ' a MyKunda account when you signed in — email admin@mykunda.com if you would like it removed.');
 }
+
+/* De aanbieder gaf geen e-mailadres terug; handleOAuthReturn() heeft de
+   aanmelding geweigerd en uitgelogd. Zeg wát er misging en wat er wél werkt —
+   "sign-in failed" zou hier de bezoeker laten denken dat het aan Facebook ligt
+   en hem het opnieuw laten proberen met precies dezelfde uitkomst. */
+if(qs('noemail')==='1'){
+  const p = providerName(qs('via'));
+  authErr((p ? p + ' did not share an email address with us' : 'That sign-in did not give us an email address')
+    + ', so we could not finish. Enter your email address above for a sign-in code instead — MyKunda needs an address for your code, your enquiries and your alerts.');
+}
+
+/* Een afgebroken of geweigerde aanmelding bij de aanbieder. Supabase werkt hier
+   met de implicit flow (de client wordt zonder flowType aangemaakt, en dan is
+   'implicit' de standaard), en die zet zo'n fout in het HASH-fragment:
+   #error=access_denied&error_code=…&error_description=…. Dat fragment wordt
+   opgeruimd zodra supabase-js de URL verwerkt, maar dat script laadt async en
+   draait dus ná dit blok — hier lezen is veilig. De query wordt ook nagekeken,
+   want niet elke fout komt langs dezelfde weg terug.
+   Tot vandaag kwam wie bij Google op "Annuleren" drukte zwijgend terug op een
+   leeg formulier en wist niet of er nu wel of niet iets gebeurd was. (T11) */
+(function(){
+  function pick(s){
+    if(!s || s.length < 2) return null;
+    try{
+      const p = new URLSearchParams(s.replace(/^[#?]/,''));
+      if(!p.get('error') && !p.get('error_code')) return null;
+      return {
+        error: String(p.get('error')||''),
+        code:  String(p.get('error_code')||''),
+        desc:  String(p.get('error_description')||'')
+      };
+    }catch(e){ return null; }
+  }
+  const e = pick(location.hash) || pick(location.search);
+  if(!e) return;
+  /* Let op: een verlopen mail-link komt hier met dezelfde error=access_denied
+     terug als een afgebroken aanmelding. Het onderscheid zit in error_code, dus
+     die wordt eerst getoetst — anders krijgt iemand met een oude link te horen
+     dat hij zelf geannuleerd heeft. */
+  let msg;
+  if(/expired|otp_expired|invalid/i.test(e.code)){
+    msg = 'That link has expired or was already used. Sign in with an email code instead.';
+  }else if(/access_denied|cancel|consent_required/i.test(e.error + ' ' + e.code + ' ' + e.desc)){
+    msg = 'Sign-in was cancelled, so nothing happened. You can try again, or enter your email address above for a sign-in code.';
+  }else{
+    msg = 'That sign-in did not go through. You can try again, or enter your email address above for a sign-in code.';
+  }
+  authErr(msg);
+  // De rommel uit de adresbalk, zodat een herlaadbeurt de melding niet herhaalt.
+  try{ history.replaceState(null, '', location.pathname + location.search); }catch(err){}
+})();
 
 function showAuthStep(id){
   document.querySelectorAll('.form-card > .step').forEach(s=>s.classList.remove('on'));

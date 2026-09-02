@@ -18,8 +18,9 @@
 //  De verdeling is nu:
 //    e-mailcode → de trigger, op het moment van bevestigen (rol en toestemming
 //                 staan er dan al in, ze reisden mee in de signup-metadata);
-//    Google     → de browser, in finishOAuth(), zodra alles echt in profiles
-//                 staat;
+//    aanbieder  → de browser, in finishOAuth(), zodra alles echt in profiles
+//                 staat. Geldt voor elke aanbieder gelijk: Google sinds 27-08,
+//                 Facebook sinds 02-09-2026;
 //    de rest    → public.run_welcome_backlog(), elke vijf minuten. Dat is ook
 //                 de herkansing die er tot vandaag niet was: het vrijgeven van
 //                 welcomed_at hieronder had geen enkel effect, want pg_net doet
@@ -130,10 +131,11 @@ serve(async (req) => {
       createdAt: user.created_at,
       /* De rol die de bezoeker bij het aanmelden koos. Bij de e-mailcode-route
          staat hij hier al goed: handle_new_user() schrijft hem uit de
-         signup-metadata. Bij Google zet set-role hem pas ná het aanmaken, en
-         deze functie vuurt al vanuit de databasetrigger — die krijgt dan
-         'buyer' te zien. Bewuste keuze: liever een iets algemenere mail dan
-         een mail die niet komt. */
+         signup-metadata. Bij een aanbieder (Google, Facebook) zet set-role hem
+         pas ná het aanmaken; daarom roept de browser deze functie daar zelf
+         aan, pas als de rol er staat (finishOAuth). Sinds 02-09-2026 vuurt de
+         trigger niet meer op INSERT, dus de zoekersversie-bij-een-kantoor kan
+         niet meer voorkomen. */
       role: (claimed.role as string) ?? undefined,
     };
 
