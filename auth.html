@@ -229,7 +229,7 @@ body{min-height:100vh;display:flex}
         <div id="consentSlot"></div>
         <div id="consentErr" style="display:none;color:#C2533A;font-size:13.5px;font-weight:600;margin:0 0 14px;text-align:center;line-height:1.5"></div>
         <button class="btn btn-primary btn-block" id="consentGoBtn" style="height:52px;font-size:16px">Finish and continue</button>
-        <div class="terms" style="display:block">Changed your mind? <a href="#" id="consentCancel">Cancel and sign out</a>.</div>
+        <div class="terms" id="consentCancelLine" style="display:block">Changed your mind? <a href="#" id="consentCancel">Cancel and sign out</a>.</div>
       </div>
 
       <!-- 27-08-2026: de stap "Choose a new password" is hier weggehaald.
@@ -308,6 +308,13 @@ const ROLE_BY_INTENT = { search:'buyer', list:'', sell:'', pro:'agent', agency:'
    overschrijving voor losse knoppen die het beter weten. */
 const ROLE_BY_NEXT = { 'list.html':'', 'sell.html':'', 'agent.html':'agent' };
 let role = (function(){
+  /* ?role= gaat vóór alles. Die zetten we zelf op de terugkeer-URL van Google
+     (zie oauth() hieronder), zodat de keuze een privévenster en een opgeruimde
+     localStorage overleeft. Het is en blijft een wens van de browser, geen
+     bewijs: set-role toetst hem serverzijdig op dezelfde witte lijst en gaat
+     nooit omlaag of naar admin. (02-09-2026) */
+  const r = (qs('role')||'').toLowerCase();
+  if(r==='buyer' || r==='seller' || r==='agent') return r;
   const i = (qs('intent')||'').toLowerCase();
   if(Object.prototype.hasOwnProperty.call(ROLE_BY_INTENT, i)) return ROLE_BY_INTENT[i];
   const n = String(qs('next')||'').split('?')[0].split('/').pop().toLowerCase();
@@ -494,9 +501,19 @@ function showOtpStep(){
 async function oauth(provider){
   if(await liveReady()){
     try{
+      /* De rolkeuze reist mee in de terugkeer-URL, niet alleen in localStorage.
+         Tot 02-09-2026 stond hij alléén in de opslag van de browser: een
+         privévenster, geblokkeerde opslag of een terugkeer na een half uur
+         liet de keuze stil verdwijnen en dan werd een kantoor gewoon zoeker.
+         Dat ?oauth=1 aantoonbaar terugkomt (deze hele terugkeerroute hangt
+         eraan) bewijst dat query-parameters op redirectTo bewaard blijven,
+         dus ?role= komt net zo goed terug. */
+      const back = location.origin + '/auth.html?oauth=1'
+        + (qs('next') ? '&next=' + encodeURIComponent(qs('next')) : '')
+        + (mode === 'signup' && role ? '&role=' + encodeURIComponent(role) : '');
       const { error } = await sb.auth.signInWithOAuth({
         provider,
-        options:{ redirectTo: location.origin + '/auth.html?oauth=1' + (qs('next') ? '&next='+encodeURIComponent(qs('next')) : '') }
+        options:{ redirectTo: back }
       });
       if(error) throw error;
       return; // page unloads into the provider
@@ -552,68 +569,101 @@ function finishOAuth(u, name){
   location.href = nextUrl;
 }
 
-/* isNew bepaalt of de rolkaarten meekomen. Een bestaand account waarvan de
-   toestemming ontbreekt hoort alleen de vinkjes te zien: zijn rol staat al
+/* Eén poort, twee mogelijke vragen. Welke ervan er staan hangt af van wat er
+   in de DATABASE ontbreekt, niet van wat dit scherm toevallig weet: de rol,
+   de toestemming, of allebei. Een bestaand account waarvan alleen de
+   toestemming ontbreekt krijgt geen rolkaarten te zien — zijn rol staat al
    vast en die hoort niet in een terloops schermpje te verspringen. */
-function openConsentGate(u, name, isNew){
-  pendingSession = { user:u, name:name };
+function openGate(u, name, need){
+  pendingSession = { user:u, name:name, need:need };
   const slot = document.getElementById('consentSlot');
-  if(isNew){
+  if(need.role){
     const rb = document.getElementById('roleBlock');
     slot.appendChild(rb); rb.style.display='block';
+    /* Alleen voorselecteren wat de bezoeker ook echt gekozen heeft. Kennen we
+       zijn keuze (hij kwam mee in ?role= maar het zetten mislukte), dan staat
+       hij klaar en is één druk op Continue genoeg. Kennen we hem niet — hij
+       kwam via de tab "Sign in" bij Google binnen — dan blijft alles leeg: een
+       voorgeselecteerde kaart zou hier een antwoord tonen dat hij nooit heeft
+       gegeven, en dat is precies de stille "iedereen wordt zoeker" die deze
+       poort moet uitsluiten. */
+    role = need.wanted || '';
+    paintRole();
+    /* Bij de rol-alleen-poort stelt de kop de vraag al; het labeltje eronder
+       zou hem woordelijk herhalen. */
+    const q = rb.querySelector('.role-q');
+    if(q) q.style.display = need.consent ? '' : 'none';
   }
-  const cb = document.getElementById('consentBlock');
-  slot.appendChild(cb); cb.style.display='flex';
-  document.getElementById('consentTitle').textContent = isNew ? 'One more step' : 'Please accept our Terms';
-  document.getElementById('consentSub').textContent = isNew
-    ? 'Tell us how you’ll use MyKunda and accept the Terms. Then your account is ready.'
-    : 'We have no record that you accepted our Terms and Privacy Policy. Accept them to carry on.';
+  if(need.consent){
+    const cb = document.getElementById('consentBlock');
+    slot.appendChild(cb); cb.style.display='flex';
+  }
+  const t = document.getElementById('consentTitle');
+  const s = document.getElementById('consentSub');
+  if(need.consent && need.role){
+    t.textContent = 'One more step';
+    s.textContent = 'Tell us how you’ll use MyKunda and accept the Terms. Then your account is ready.';
+  }else if(need.consent){
+    t.textContent = 'Please accept our Terms';
+    s.textContent = 'We have no record that you accepted our Terms and Privacy Policy. Accept them to carry on.';
+  }else{
+    t.textContent = 'How will you use MyKunda?';
+    s.textContent = 'Your account is ready. This only decides what your dashboard leads with, and you can change it later.';
+  }
+  document.getElementById('consentGoBtn').textContent = need.consent ? 'Finish and continue' : 'Continue';
+  /* Afhaken hoort alleen bij de toestemming. Is die er al, dan is het account
+     gewoon geldig en valt er niets te annuleren — dan zijn dit drie kaarten
+     waarvan er altijd één past. */
+  document.getElementById('consentCancelLine').style.display = need.consent ? 'block' : 'none';
   showAuthStep('stepConsent');
 }
 
 document.getElementById('consentGoBtn').addEventListener('click', async function(){
   if(!pendingSession) return;
-  const slot = document.getElementById('consentSlot');
-  const withRole = slot.contains(document.getElementById('roleBlock'));
+  const need = pendingSession.need;
   const err = document.getElementById('consentErr');
   const say = function(m){ err.textContent = m||''; err.style.display = m?'block':'none'; };
-  if(withRole && !role){
+  if(need.role && !role){
     document.getElementById('roleCards').classList.add('warn');
     say('Tell us how you’ll use MyKunda so we can set your account up right.');
     return;
   }
-  if(!document.getElementById('consentIn').checked){
+  if(need.consent && !document.getElementById('consentIn').checked){
     document.getElementById('consentBlock').classList.add('warn');
     say('Please agree to the Terms and Privacy Policy to continue.');
     return;
   }
   document.getElementById('consentBlock').classList.remove('warn');
   say('');
-  const btn=this; btn.textContent='Saving…'; btn.style.opacity='.75';
+  const btn=this; const label=btn.textContent;
+  btn.textContent='Saving…'; btn.style.opacity='.75';
   const u = pendingSession.user;
   try{
-    const { error } = await sb.from('profiles').update({
-      consent_contact: true,
-      consent_marketing: document.getElementById('consentMktIn').checked,
-      consent_at: new Date().toISOString()
-    }).eq('id', u.id);
-    if(error) throw error;
-    /* De rol kan niet in diezelfde update mee: authenticated heeft geen
-       UPDATE-recht op profiles.role, en dat moet zo blijven. Bij Google komt
-       de rol ook niet in de signup-metadata terecht — die vult Google zelf —
-       dus handle_new_user() maakt er 'buyer' van en zet set-role hem hier
-       alsnog goed, serverzijdig, met het token van deze sessie. Mislukt dat,
-       dan werkt het account gewoon als zoeker; geen reden om de aanmelding te
-       laten stranden. */
-    if(withRole && (role==='seller' || role==='agent') && typeof setMyRole==='function'){
-      try{ await setMyRole(role); }
-      catch(e){ console.warn('set-role:', e && e.message); }
+    if(need.consent){
+      const { error } = await sb.from('profiles').update({
+        consent_contact: true,
+        consent_marketing: document.getElementById('consentMktIn').checked,
+        consent_at: new Date().toISOString()
+      }).eq('id', u.id);
+      if(error) throw error;
     }
   }catch(e){
-    btn.textContent='Finish and continue'; btn.style.opacity='';
+    /* De toestemming is de enige die tegenhoudt: zonder die regel in de
+       database hoort niemand door te lopen. */
+    btn.textContent=label; btn.style.opacity='';
     say('We could not save that. Please try again.');
     console.warn('consent gate:', e && e.message);
     return;
+  }
+  /* De rol kan niet in diezelfde update mee: authenticated heeft geen
+     UPDATE-recht op profiles.role, en dat moet zo blijven. set-role zet hem
+     serverzijdig met het token van deze sessie, alleen omhoog.
+     Mislukt dat, dan blijft het account werken als zoeker en kan hij vanuit
+     Account → "I want to offer a property" alsnog omhoog. Daarop stranden zou
+     erger zijn dan het gemis. */
+  if(need.role && (role==='seller' || role==='agent') && typeof setMyRole==='function'){
+    try{ await setMyRole(role); }
+    catch(e){ console.warn('set-role:', e && e.message); }
   }
   finishOAuth(u, pendingSession.name);
 });
@@ -636,40 +686,69 @@ document.getElementById('consentCancel').addEventListener('click', async functio
     if(!data.session) return;
     const u=data.session.user;
     const name = u.user_metadata?.full_name || u.user_metadata?.name || (u.email?u.email.split('@')[0]:'MyKunda User');
-    // Store the consent given on the Create-account tab before the Google redirect.
+
+    /* Wat de bezoeker vóór de doorverwijzing koos, uit twee bronnen in deze
+       volgorde: de opslag van de browser (die draagt ook de toestemming, en
+       die hoort niet in een URL) en anders ?role= uit de terugkeer-URL, die
+       een privévenster en een opgeruimde opslag wél overleeft. */
+    let wanted = '';
     let consentSaved = false;
     try{
       const pend = JSON.parse(localStorage.getItem('mk_pending_consent')||'null');
       localStorage.removeItem('mk_pending_consent');
       if(pend && pend.consent && Date.now()-(pend.ts||0) < 30*60*1000){
+        wanted = String(pend.role || '');
         const patch = { consent_contact:true, consent_marketing:!!pend.marketing, consent_at:new Date().toISOString() };
         if(pend.name) patch.full_name = pend.name;
         const { error } = await sb.from('profiles').update(patch).eq('id', u.id);
         if(!error) consentSaved = true;
-        if((pend.role==='seller' || pend.role==='agent') && typeof setMyRole==='function'){
-          try{ await setMyRole(pend.role); }
-          catch(e){ console.warn('set-role:', e && e.message); }
-        }
       }
     }catch(e){ console.warn('post-OAuth consent:', e.message); }
-
-    if(!consentSaved){
-      try{
-        const { data: prof, error } = await sb.from('profiles')
-          .select('consent_contact, created_at').eq('id', u.id).maybeSingle();
-        if(error) throw error;
-        if(prof && prof.consent_contact !== true){
-          const born = Date.parse(prof.created_at || u.created_at || '') || 0;
-          openConsentGate(u, name, Date.now() - born < 15*60*1000);
-          return;   // niet doorlaten voordat de poort door is
-        }
-      }catch(e){
-        /* Kan het profiel niet gelezen worden, dan is doorlaten beter dan een
-           bezoeker buitensluiten op een leesfout. Het gaatje dat dat laat is
-           kleiner dan een aanmelding die op een hapering stukloopt. */
-        console.warn('consent check:', e && e.message);
-      }
+    if(!wanted){
+      const r = (qs('role')||'').toLowerCase();
+      if(r==='buyer' || r==='seller' || r==='agent') wanted = r;
     }
+
+    /* Vanaf hier beslist de database, niet de browser. */
+    let prof = null;
+    try{
+      const { data: p, error } = await sb.from('profiles')
+        .select('consent_contact, role, created_at').eq('id', u.id).maybeSingle();
+      if(error) throw error;
+      prof = p;
+    }catch(e){
+      /* Kan het profiel niet gelezen worden, dan is doorlaten beter dan een
+         bezoeker buitensluiten op een leesfout. Het gaatje dat dat laat is
+         kleiner dan een aanmelding die op een hapering stukloopt. */
+      console.warn('profile check:', e && e.message);
+    }
+    if(!prof){ finishOAuth(u, name); return; }
+
+    /* De rol zetten, en daarna TERUGLEZEN wat set-role ervan gemaakt heeft.
+       Zonder die terugleescontrole verdween een mislukte aanroep in een
+       console.warn en bleef een kantoor ongemerkt zoeker — precies de stille
+       uitkomst die deze hele route moet uitsluiten. Lukt het niet, dan vraagt
+       de poort hieronder het gewoon nog een keer. */
+    let currentRole = String(prof.role || 'buyer');
+    if((wanted==='seller' || wanted==='agent') && currentRole==='buyer' && typeof setMyRole==='function'){
+      try{
+        const res = await setMyRole(wanted);
+        if(res && res.role) currentRole = String(res.role);
+      }catch(e){ console.warn('set-role:', e && e.message); }
+    }
+
+    const born = Date.parse(prof.created_at || u.created_at || '') || 0;
+    const isNew = Date.now() - born < 15*60*1000;
+    const need = {
+      consent: !consentSaved && prof.consent_contact !== true,
+      /* Alleen vragen als het antwoord er écht niet is: een vers account dat
+         nog zoeker is terwijl niemand dat gekozen heeft — omdat er geen keuze
+         meekwam (de tab "Sign in"), of omdat hij onderweg is gesneuveld. Een
+         bestaand account laten we met rust. */
+      role: isNew && currentRole==='buyer' && wanted!=='buyer',
+      wanted: wanted
+    };
+    if(need.consent || need.role){ openGate(u, name, need); return; }
     finishOAuth(u, name);
   }catch(e){ console.warn('OAuth return handling:', e.message); }
 })();
