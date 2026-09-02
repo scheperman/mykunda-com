@@ -513,22 +513,17 @@ await patch('areas-in-the-gambia.html', src => {
    en FAQ bijwerkte is daarmee vervallen. De kavelcijfers staan in
    gambia-property-prices.html, dat hierboven wel wordt bijgewerkt. */
 
-/* objectpagina: het buurtblok onder de listing */
-await patch('property.html', src => {
-  let n = 0;
-  src = src.replace(/stats: \[\['Avg\. price\/m²',\s*([\d.]+),/g, (m, v) => {
-    n++; return `stats: [['Land, per m²', ${DB.extra._default.gmd_m2},`;
-  });
-  src = src.replace(/'([^']+)': \{\n(\s*)intro:([\s\S]*?)stats: \[\['Land, per m²',\s*([\d.]+),/g,
-    (m, label, ind, intro, val) => {
-      const r = byLabel[label] || (DB.extra && DB.extra[label]) || (DB.extra && DB.extra._default);
-      if (!r) return m;
-      n++;
-      return `'${label}': {\n${ind}intro:${intro}stats: [['Land, per m²', ${r.gmd_m2},`;
-    });
-  src = src.replace(/h\[0\]==='Avg\. price\/m²'/g, "h[0]==='Land, per m²'");
-  return n ? src : null;
-});
+/* objectpagina: het buurtblok onder de listing.
+   Het patch-blok dat hier stond, zocht naar `stats: [['Avg. price/m²', …]]`.
+   Die constructie is bij de herbouw van property.html op 01-09-2026 verdwenen:
+   het buurtblok komt nu uit HOOD_DATA, dat build-property-areas.mjs uit
+   property-areas.json genereert — en dat bestand komt op zijn beurt uit
+   area-prices.json, dus de prijs op de objectpagina heeft nog steeds één bron.
+
+   Het blok vond daardoor niets meer en liet patch() elke draai "niets herkend"
+   melden, waarna de run afsloot met "overgeslagen: 1 — los de melding op en
+   draai opnieuw". Een vals alarm dat elke draai afsluit, leert je het echte
+   alarm negeren. Verwijderd 02-09-2026. */
 
 /* ---------- wijktegels op de voorpagina en op /buy ----------
    Dit waren de laatste bedragen op de site die met de hand in een pagina
