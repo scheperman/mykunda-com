@@ -452,6 +452,30 @@ De actuele bron van alle 21 edge functions staat in
 bijgehouden in git. De CLI staat in `C:\Users\User\bin\supabase.exe` (niet op
 PATH, roep hem met het volledige pad aan).
 
+**Sinds 02-09-2026 is de CLI ingelogd.** Er staat een *beperkt* persoonlijk
+token in de instellingen van de CLI: alleen dit project, en alleen het recht
+Edge Functions lezen en schrijven. Daarmee kan er niets aan de database, de
+sleutels, de opslag of de rechten gebeuren — dat blijft mensenwerk in de
+Supabase-console. Controleren of het nog werkt:
+
+```
+C:\Users\User\bin\supabase.exe functions list --project-ref jejaerpqltqryqzjvbjp
+```
+
+`projects list` geeft met opzet niets terug: dat recht zit niet in het token.
+Is het token verlopen, dan maak je een nieuw aan op
+https://supabase.com/dashboard/account/tokens (zelfde beperking) en log je
+opnieuw in met `supabase login --token …` — in je eigen venster, niet in een
+chat.
+
+Waarom dit uitmaakt: tot 02-09-2026 moest een uitrol met de hand via de
+Supabase-MCP, en dan moeten álle bestanden van de bundel mee — `index.ts` plus
+alles wat hij importeert uit `_shared/`. Dat is bij `notify-*` al gauw ruim
+1700 regels overtypen, met een stille fout in een productiemailpad als risico.
+De CLI verzamelt die bestanden zelf; je ziet ze in de uitvoer voorbijkomen als
+`Uploading asset (…)`. De melding `WARNING: Docker is not running` is normaal
+en niet erg: het bundelen gebeurt aan de serverkant.
+
 Ophalen en uitrollen:
 
 ```
@@ -468,11 +492,15 @@ de checkout, zonder duidelijke melding — de betaalflow breekt dan stil.
 De enige uitzondering is `swift-responder`: die hoort juist wél op
 `verify_jwt: true` en moet dus **zonder** die vlag worden uitgerold.
 
-De bankgegevens voor bankoverschrijvingen staan hardgecodeerd in **twee**
-functies: `create-payment` (naar het scherm van de klant) en
-`send-payment-instructions` (de mail met het rekeningnummer). Wijzigt de
-rekening, pas ze op beide plekken aan, plus de provider-waarde die bij een
-bankoverschrijving in `payments` wordt weggeschreven.
+De bankgegevens voor bankoverschrijvingen staan sinds 30-08-2026 op **één**
+plek: `supabase/functions/_shared/bank.ts`. Daarvoor stonden ze hardgecodeerd
+in `create-payment` (het scherm van de klant) én `send-payment-instructions`
+(de mail met het rekeningnummer), met in beide de afspraak ze samen bij te
+werken — precies het soort afspraak dat een keer misgaat, en dat is in augustus
+ook bijna gebeurd. Wijzigt de rekening, dan wijzig je alleen `bank.ts` en rol
+je die twee functies opnieuw uit; de CLI neemt het gedeelde bestand vanzelf
+mee. Los daarvan staat de provider-waarde die bij een bankoverschrijving in
+`payments` wordt weggeschreven.
 
 De map `edge-functions/` is een verouderde momentopname; zie de LEESMIJ daar.
 

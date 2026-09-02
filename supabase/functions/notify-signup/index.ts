@@ -18,16 +18,11 @@
 //  Secrets: reuses RESEND_API_KEY / FROM_EMAIL
 //  Requires: backend/notify-signup.sql (welcomed_at column + trigger)
 //
-//  LET OP (02-09-2026): DE LIVE VERSIE LOOPT ACHTER OP DEZE BRON.
-//  _shared/email-template.ts kreeg vandaag de welkomsttekst voor rol 'agent'
-//  die naar het bedrijfsprofiel wijst (dashboard.html#company). Die wijziging
-//  is NIET uitgerold: een uitrol vervangt de hele bundel, dus index.ts,
-//  _shared/email-template.ts, _shared/email-listing.ts en _shared/bank.ts
-//  moeten alle vier mee, en zonder Supabase CLI op deze pc is dat met de hand
-//  overtypen — precies het soort werk waar een stille fout in sluipt.
-//  De live mail zegt daardoor nog "The agency profile ... is the next thing we
-//  set up with you", terwijl een kantoor dat nu zelf doet.
-//  Weghalen zodra er wél is uitgerold.
+//  02-09-2026: de welkomsttekst voor rol 'agent' wijst naar het bedrijfsprofiel
+//  (dashboard.html#company). Uitgerold met de Supabase CLI, die sinds vandaag
+//  op de pc staat en de vier bestanden zelf meeneemt — index.ts plus de drie
+//  in _shared/. Nagemeten met een echte proefaanmelding: de mail bevat de rij
+//  "Set up your company profile" bovenaan.
 // ============================================================
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
