@@ -155,6 +155,11 @@ table.btab{min-width:900px}
 .bfield input:focus,.bfield textarea:focus{outline:none;border-color:var(--green-600)}
 .bfield input{text-transform:uppercase;letter-spacing:.04em;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 .bfield textarea{min-height:74px;resize:vertical}
+/* Een keuzelijst en een datum horen niet in kapitalen en niet in een
+   monospace-letter: die opmaak is er voor bankreferenties. (02-09-2026) */
+.bfield select{width:100%;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:9px 11px;font-family:inherit;font-size:14px;color:var(--ink);background:var(--white)}
+.bfield select:focus{outline:none;border-color:var(--green-600)}
+.bfield input[type="date"]{text-transform:none;letter-spacing:normal;font-family:inherit}
 .bcheck{display:flex;gap:9px;align-items:flex-start;font-size:13.5px;font-weight:600;color:var(--ink-2);margin:0 0 16px;cursor:pointer;line-height:1.45}
 .bcheck input{width:17px;height:17px;flex:none;margin-top:1px;accent-color:var(--green-700)}
 .bdlg-err{background:#FEF2F2;border:1px solid #FECACA;color:#B91C1C;border-radius:var(--r-md);padding:10px 13px;font-size:13.5px;font-weight:600;line-height:1.45;margin:0 0 14px;display:none}
@@ -253,6 +258,7 @@ table.btab{min-width:900px}
     <button class="vbtn" role="tab" aria-selected="false" data-view="active">Active listings <span class="badge-count" id="cActive">0</span></button>
     <button class="vbtn" role="tab" aria-selected="false" data-view="bank">Bank transfers <span class="badge-count" id="cBank">0</span></button>
     <button class="vbtn" role="tab" aria-selected="false" data-view="orders">Orders <span class="badge-count" id="cOrders">0</span></button>
+    <button class="vbtn" role="tab" aria-selected="false" data-view="agencies">Businesses <span class="badge-count" id="cAgencies">0</span></button>
   </div>
 
   <div class="view on" data-view="pending"><div class="panel" id="pendingPanel"></div></div>
@@ -260,6 +266,7 @@ table.btab{min-width:900px}
   <div class="view" data-view="active"><div class="panel" id="activePanel"></div></div>
   <div class="view" data-view="bank"><div class="panel" id="bankPanel"></div></div>
   <div class="view" data-view="orders"><div class="panel" id="ordersPanel"></div></div>
+  <div class="view" data-view="agencies"><div class="panel" id="agenciesPanel"></div></div>
 </div>
 
 <div id="footer"></div>
@@ -308,7 +315,21 @@ function visibleLeads(){
   });
 }
 
-let pending=[], leads=[], active=[], bankLines=[], bankError=null, orders=[], ordersError=null;
+let pending=[], leads=[], active=[], bankLines=[], bankError=null, orders=[], ordersError=null, agencies=[];
+
+/* De kantoren, apart opgehaald zodat een fout hier de advertenties en de leads
+   niet meesleept — en zodat de dialogen hieronder na afloop opnieuw kunnen
+   lezen wat er werkelijk staat in plaats van de rij lokaal bij te werken. */
+async function loadAgencies(){
+  if(!LIVE){ agencies = []; return; }
+  try{
+    const { data, error } = await sb.from('agencies')
+      .select('id,name,slug,logo_path,website,about,phone,email,licence_no,licence_body,licence_expires_on,verified_at,created_at')
+      .order('created_at',{ascending:false});
+    if(error) throw error;
+    agencies = data||[];
+  }catch(e){ console.warn('agencies laden:', e.message); }
+}
 
 async function load(){
   if(LIVE){
@@ -338,6 +359,7 @@ async function load(){
   } else {
     pending = []; leads = []; active = []; orders = []; ordersError = null;
   }
+  await loadAgencies();
   await loadBank();
   render();
   openDeepLink();
@@ -366,7 +388,128 @@ function agencyLine(l){
   bits.push(a.verified_at ? 'gecontroleerd' : 'niet gecontroleerd');
   return '<div class="agline">'
     + (logo ? '<img src="'+esc(logo)+'" alt="" onerror="this.style.display=\'none\'">' : '<span class="nologo">geen logo</span>')
-    + '<span><b>'+esc(a.name)+'</b> · '+bits.join(' · ')+'</span></div>';
+    + '<span><b>'+esc(a.name)+'</b> · '+bits.join(' · ')
+    + (a.verified_at ? '' : ' <button class="btn-mark" onclick="goAgencies()">Licentie controleren</button>')
+    + '</span></div>';
+}
+/* Naar het tabblad waar de controle wél vastgelegd kan worden. Eén regel, zodat
+   het niet uitmaakt vanaf welke rij je erop stuit. */
+function goAgencies(){
+  const t = document.querySelector('.vbtn[data-view="agencies"]');
+  if(t){ t.click(); t.scrollIntoView({block:'nearest'}); }
+}
+
+/* ============================================================
+   Bedrijven — de licentiecontrole van een professionele aanbieder.
+
+   Wie zich als bedrijf aanmeldt kiest dat zelf, en zijn logo staat meteen op
+   elke advertentie. Wat er ontbrak was de andere kant: agencies.verified_at
+   was overal te ZIEN — in de beoordelingsrij, op de advertentiepagina, in het
+   dashboard van het kantoor — maar nergens te ZETTEN, terwijl de teammail bij
+   een nieuw bedrijfsaccount wel "licence still to be checked" belooft.
+
+   Wat er op de openbare pagina van afhangt, en dus wat je hier vastlegt:
+   property.html zet de regel onder de kantoornaam op "Checked by MyKunda" in
+   plaats van "Not yet checked by MyKunda", en laat het punt "The agency's
+   licence" uit "What we have not checked" weg. (02-09-2026)
+   ============================================================ */
+const LIC_BODY = { giepa:'GIEPA', registrar:'Registrar of Companies', council:'Local council', other:'other authority' };
+const licDate = v => v ? new Date(v).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) : '';
+
+function agencyCard(a){
+  const logo = a.logo_path && typeof agencyLogoUrl==='function' ? agencyLogoUrl(a.logo_path,80) : '';
+  const lic = a.licence_no
+    ? 'Licence '+esc(a.licence_no)
+      + (a.licence_body ? ' · '+esc(LIC_BODY[a.licence_body]||a.licence_body) : '')
+      + (a.licence_expires_on ? ' · valid until '+esc(a.licence_expires_on) : '')
+    : 'No licence number on file';
+  return `<div class="rev">
+      ${logo?`<img class="thumb" src="${esc(logo)}" alt="" onerror="this.style.display='none'">`:'<div class="thumb"></div>'}
+      <div class="info">
+        <h3>${esc(a.name||'—')}</h3>
+        <div class="meta">${lic}</div>
+        <div class="pc">${a.website?esc(a.website):'no website given'}</div>
+        <div class="tags">${a.verified_at
+          ? `<span class="docpill">✓ Licence checked ${esc(licDate(a.verified_at))}</span>`
+          : `<span class="docpill" style="background:#FBEEEA;color:#C2533A">Licence not checked</span>`}</div>
+      </div>
+      <div class="acts">
+        <button class="btn btn-primary btn-sm" onclick="agencyCheck('${a.id}')">${a.verified_at?'Update the check':'Record licence check'}</button>
+        ${a.verified_at?`<button class="btn btn-ghost btn-sm" onclick="agencyUncheck('${a.id}')">Withdraw</button>`:''}
+      </div>
+    </div>`;
+}
+
+function agencyCheck(id){
+  const a = agencies.find(x=>x.id===id) || {};
+  bankDialog({
+    title: a.verified_at ? 'Update this licence check?' : 'Record a licence check?',
+    intro: 'Only once you have seen the licence yourself and confirmed it with the body that issued it. What you write here is what a buyer reads as checked.',
+    facts: [
+      ['Business', esc(a.name||'—')],
+      ['Website', esc(a.website||'not given')],
+      ['On file', a.licence_no ? esc(a.licence_no) : 'no licence number yet']
+    ],
+    warn: 'Every listing from this office starts saying “Checked by MyKunda”, and the line about their unchecked licence disappears from What we have not checked.',
+    fields:
+        '<div class="bfield"><label>Licence number</label>'
+      +   '<input type="text" class="lic-no" maxlength="60" value="'+esc(a.licence_no||'')+'" placeholder="as it appears on the licence"></div>'
+      + '<div class="bfield"><label>Issued by</label><select class="lic-body">'
+      +   ['','giepa','registrar','council','other'].map(k=>'<option value="'+k+'"'+((a.licence_body||'')===k?' selected':'')+'>'+(k?LIC_BODY[k]:'— pick one —')+'</option>').join('')
+      + '</select></div>'
+      + '<div class="bfield"><label>Valid until (optional)</label>'
+      +   '<input type="date" class="lic-exp" value="'+esc(a.licence_expires_on||'')+'"></div>',
+    action: a.verified_at ? 'Save the check' : 'Record the check',
+    ready: ov => ov.querySelector('.lic-no').focus(),
+    read: (ov, err) => {
+      const no   = ov.querySelector('.lic-no').value.trim();
+      const body = ov.querySelector('.lic-body').value;
+      const exp  = ov.querySelector('.lic-exp').value || null;
+      if(no.length < 3){ err('Write down the licence number you checked — without it the badge says nothing.'); return false; }
+      if(!body){ err('Say which body issued it.'); return false; }
+      return { no, body, exp };
+    },
+    run: async v => {
+      if(!LIVE) return;
+      /* verified_by uit de sessie, niet uit het scherm. De trigger
+         agencies_guard_verification() draait deze vijf velden voor iedere
+         niet-beheerder meteen terug, dus dit is alleen te schrijven vanaf een
+         admin-account — en dat is precies de bedoeling. */
+      const { data: who } = await sb.auth.getUser();
+      const { error } = await sb.from('agencies').update({
+        licence_no: v.no,
+        licence_body: v.body,
+        licence_expires_on: v.exp,
+        verified_at: new Date().toISOString(),
+        verified_by: who && who.user ? who.user.id : null
+      }).eq('id', id);
+      if(error) throw new Error(error.message);
+    },
+    after: loadAgencies
+  });
+}
+
+function agencyUncheck(id){
+  const a = agencies.find(x=>x.id===id) || {};
+  bankDialog({
+    title: 'Withdraw this licence check?',
+    intro: 'For when the licence has expired, has been withdrawn, or turns out not to hold.',
+    facts: [
+      ['Business', esc(a.name||'—')],
+      ['Checked', esc(licDate(a.verified_at)) || '—'],
+      ['Licence', a.licence_no ? esc(a.licence_no) : 'none on file']
+    ],
+    warn: 'Their listings go back to “Not yet checked by MyKunda” straight away. The licence number stays on file, so you can see what was checked before.',
+    action: 'Withdraw the check',
+    read: () => ({}),
+    run: async () => {
+      if(!LIVE) return;
+      const { error } = await sb.from('agencies')
+        .update({ verified_at: null, verified_by: null }).eq('id', id);
+      if(error) throw new Error(error.message);
+    },
+    after: loadAgencies
+  });
 }
 
 function plusOf(l){ const raw = l.plus_code || (typeof plusCode==='function' && typeof l.lat==='number' ? plusCode(l.lat,l.lng,10) : ''); return (raw && raw.indexOf('+')===8) ? raw.slice(4) : raw; }
@@ -376,7 +519,11 @@ function render(){
   document.getElementById('cLeads').textContent   = leads.length;
   document.getElementById('cActive').textContent  = active.length;
   document.getElementById('cBank').textContent     = bankLines.length;
-  adminNavCount('review', pending.length + leads.filter(l=>l.stage==='new').length + bankLines.length + orders.filter(needsWork).length);
+  /* De teller op dit tabblad telt wat er nog moet gebeuren, niet hoeveel
+     kantoren er zijn — anders blijft er een getal staan als alles klaar is. */
+  const agWait = agencies.filter(a=>!a.verified_at).length;
+  document.getElementById('cAgencies').textContent = agWait;
+  adminNavCount('review', pending.length + leads.filter(l=>l.stage==='new').length + bankLines.length + orders.filter(needsWork).length + agWait);
 
   const newLeads = leads.filter(l=>l.stage==='new').length;
   const overdue  = leads.filter(isOverdue).length;
@@ -440,6 +587,15 @@ function render(){
       <div class="info"><h3>${l.title}</h3><div class="meta">${money(l.price)} · ${l.area}</div>${plusOf(l)?`<div class="pc">▣ ${plusOf(l)}</div>`:''}</div>
       <div class="acts"><a class="btn btn-ghost btn-sm" href="property.html?id=${l.id}">View live</a></div>
     </div>`).join('') : emptyState('No active listings yet','Approved listings show here.');
+
+  // businesses — ongecontroleerd eerst, want dat is de stapel die werk is
+  const agSorted = agencies.slice().sort((a,b)=>(a.verified_at?1:0)-(b.verified_at?1:0));
+  document.getElementById('agenciesPanel').innerHTML = agencies.length
+    ? `<div class="leadbar"><span class="leadhint${agWait?' late':''}">${agWait
+        ? agWait + ' business' + (agWait===1?'' : 'es') + ' waiting for a licence check'
+        : 'Every business profile has had its licence checked'}</span></div>`
+      + agSorted.map(agencyCard).join('')
+    : emptyState('No business profiles yet','A profile appears here as soon as an agency or developer fills one in under My MyKunda.');
 
   renderBank();
   renderOrders();

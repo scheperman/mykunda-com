@@ -84,6 +84,7 @@ body{min-height:100vh;display:flex}
 .role-card .rc-t{display:block;font-size:14.5px;font-weight:700;color:var(--ink);line-height:1.3}
 .role-card .rc-s{display:block;font-size:12.5px;color:var(--muted);line-height:1.45;margin-top:2px}
 .role-cards.warn .role-card{box-shadow:inset 0 0 0 1.5px #C2533A}
+.role-note{font-size:12.5px;color:var(--muted);line-height:1.5;margin:-12px 0 20px}
 
 .terms{font-size:12px;color:var(--muted-2);text-align:center;margin-top:20px;line-height:1.5}
 .consent{display:flex;flex-direction:column;gap:10px;margin:2px 0 18px}
@@ -162,6 +163,7 @@ body{min-height:100vh;display:flex}
               <span><span class="rc-t">We're a business</span><span class="rc-s">An agency, developer or manager listing as a business</span></span>
             </button>
           </div>
+          <p class="role-note" id="roleNote" hidden></p>
         </div>
 
         <!-- name (signup only) -->
@@ -321,12 +323,25 @@ let role = (function(){
   if(Object.prototype.hasOwnProperty.call(ROLE_BY_NEXT, n)) return ROLE_BY_NEXT[n];
   return 'buyer';
 })();
+/* Wat er bij een keuze hoort te staan. Alleen het bedrijf heeft zo'n regel:
+   dat is de enige rol waarbij MyKunda zelf iets moet doen voordat de aanbieder
+   krijgt wat hem onderscheidt. Sinds 02-09-2026 kan die controle ook echt
+   vastgelegd worden in het beheerderspaneel — daarvóór was dit een belofte
+   zonder knop erachter en stond hij er dus niet. */
+const ROLE_NOTE = {
+  agent: 'Free to start. We check your licence with the body that issued it before any of your listings says “Checked by MyKunda”.'
+};
 function paintRole(){
   document.querySelectorAll('#roleCards .role-card').forEach(function(b){
     const on = b.dataset.role === role;
     b.classList.toggle('on', on);
     b.setAttribute('aria-pressed', on ? 'true' : 'false');
   });
+  const note = document.getElementById('roleNote');
+  if(note){
+    note.textContent = ROLE_NOTE[role] || '';
+    note.hidden = !ROLE_NOTE[role];
+  }
 }
 document.querySelectorAll('#roleCards .role-card').forEach(function(b){
   b.addEventListener('click', function(){
