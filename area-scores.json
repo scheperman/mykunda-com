@@ -1,21 +1,29 @@
 {
- "about": "Lifestyle scores per gebied. Alleen wat uit te rekenen is; zie build-area-scores.mjs voor wat er weg is en waarom.",
- "built": "2026-09-01",
+ "about": "Lifestyle scores per gebied. Alleen wat uit te rekenen is; zie build-area-scores.mjs voor de afgewezen kandidaten en waarom.",
+ "built": "2026-09-02",
+ "radius_km": 2,
  "benchmark": {
   "area": "Senegambia",
   "scores": {
    "Affordability": 14,
-   "Places to eat": 100
+   "Everyday shopping": 87,
+   "Places to eat": 100,
+   "Healthcare": 44,
+   "Transport points": 76
   }
  },
  "method": {
   "Affordability": "100 × (ln(13333) − ln(prijs)) / (ln(13333) − ln(71)), met de vraagprijs voor grond per m² uit area-prices.json. Goedkoopste gemeten gebied 100, duurste 0.",
-  "Places to eat": "100 × ln(1+n) / ln(1+95), met n = restaurants, cafés en bars binnen 2 km uit area-amenities.json. Geen ring waar n = 0: dat betekent niet gekarteerd.",
-  "removed": "Safety en Transport zijn verwijderd — geen bron, en elke score zou een eigen verzinsel zijn."
+  "Everyday shopping": "100 × ln(1+n) / ln(1+69), met n = shop + supermarket + market binnen 2 km uit area-amenities.json. Geen ring waar n = 0: dat betekent niet gekarteerd.",
+  "Places to eat": "100 × ln(1+n) / ln(1+95), met n = eat + bar binnen 2 km uit area-amenities.json. Geen ring waar n = 0: dat betekent niet gekarteerd.",
+  "Healthcare": "100 × ln(1+n) / ln(1+11), met n = health + pharmacy binnen 2 km uit area-amenities.json. Geen ring waar n = 0: dat betekent niet gekarteerd.",
+  "Transport points": "100 × ln(1+n) / ln(1+17), met n = fuel + transport + ferry binnen 2 km uit area-amenities.json. Geen ring waar n = 0: dat betekent niet gekarteerd.",
+  "removed": "Safety en Transport-als-weging blijven weg. Schools, kust, afstand tot Banjul, logies, banken en gebedshuizen zijn op 02-09-2026 gewogen en afgewezen; de reden staat per kandidaat in het script."
  },
  "sources": {
   "prices": "area-prices.json",
   "amenities": "OpenStreetMap contributors (ODbL 1.0), Overpass API — opgehaald 2026-09-01",
+  "register": "Ministry of Health, Republic of The Gambia — regionale directoraten, uitgelezen 2026-09-01",
   "local": "_scores-data.json (kwalitatief, geen meting)"
  },
  "areas": {
@@ -30,9 +38,27 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 76,
+     "desc": "24 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 72,
-     "desc": "26 mapped within 2 km",
+     "desc": "26 places to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 65,
+     "desc": "4 clinics & pharmacies within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 56,
+     "desc": "4 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -52,9 +78,27 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 54,
+     "desc": "9 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 48,
-     "desc": "8 mapped within 2 km",
+     "desc": "8 places to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 28,
+     "desc": "1 clinic or pharmacy within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 80,
+     "desc": "9 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -74,9 +118,27 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 42,
+     "desc": "5 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 54,
-     "desc": "11 mapped within 2 km",
+     "desc": "11 places to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 44,
+     "desc": "2 clinics & pharmacies within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 56,
+     "desc": "4 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -94,6 +156,24 @@
      "score": 87,
      "desc": "D141 per m² asking",
      "source": "area-prices.json"
+    },
+    {
+     "label": "Everyday shopping",
+     "score": 16,
+     "desc": "1 shop or market within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 28,
+     "desc": "1 clinic or pharmacy within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 48,
+     "desc": "3 fuel, ranks & terminals within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
@@ -110,6 +190,12 @@
      "score": 71,
      "desc": "D330 per m² asking",
      "source": "area-prices.json"
+    },
+    {
+     "label": "Transport points",
+     "score": 38,
+     "desc": "2 fuel, ranks & terminals within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
@@ -128,9 +214,27 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 71,
+     "desc": "19 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 53,
-     "desc": "10 mapped within 2 km",
+     "desc": "10 places to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 72,
+     "desc": "5 clinics & pharmacies within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 80,
+     "desc": "9 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -152,7 +256,13 @@
     {
      "label": "Places to eat",
      "score": 15,
-     "desc": "1 mapped within 2 km",
+     "desc": "1 place to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 28,
+     "desc": "1 clinic or pharmacy within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -172,9 +282,27 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 94,
+     "desc": "53 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 59,
-     "desc": "14 mapped within 2 km",
+     "desc": "14 places to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 93,
+     "desc": "9 clinics & pharmacies within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 80,
+     "desc": "9 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -194,9 +322,27 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 58,
+     "desc": "11 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 24,
-     "desc": "2 mapped within 2 km",
+     "desc": "2 places to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 65,
+     "desc": "4 clinics & pharmacies within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 89,
+     "desc": "12 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -216,9 +362,21 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 38,
+     "desc": "4 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 24,
-     "desc": "2 mapped within 2 km",
+     "desc": "2 places to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 65,
+     "desc": "4 clinics & pharmacies within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -238,9 +396,27 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 100,
+     "desc": "69 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 65,
-     "desc": "18 mapped within 2 km",
+     "desc": "18 places to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 100,
+     "desc": "11 clinics & pharmacies within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 83,
+     "desc": "10 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -260,9 +436,21 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 33,
+     "desc": "3 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 15,
-     "desc": "1 mapped within 2 km",
+     "desc": "1 place to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 38,
+     "desc": "2 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -282,9 +470,21 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 33,
+     "desc": "3 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 48,
-     "desc": "8 mapped within 2 km",
+     "desc": "8 places to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 24,
+     "desc": "1 fuel station, rank or terminal within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -302,11 +502,17 @@
      "score": 77,
      "desc": "D236 per m² asking",
      "source": "area-prices.json"
+    },
+    {
+     "label": "Healthcare",
+     "score": 28,
+     "desc": "1 clinic or pharmacy within 2 km",
+     "source": "Ministry of Health register"
     }
    ],
    "local": {
     "label": "Senegal road",
-    "desc": "Border twenty-five minutes"
+    "desc": "Main road north to the Senegal border"
    }
   },
   "fajara": {
@@ -320,9 +526,27 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 85,
+     "desc": "36 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 77,
-     "desc": "33 mapped within 2 km",
+     "desc": "33 places to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 56,
+     "desc": "3 clinics & pharmacies within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 72,
+     "desc": "7 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -342,9 +566,27 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 62,
+     "desc": "13 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 35,
-     "desc": "4 mapped within 2 km",
+     "desc": "4 places to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 56,
+     "desc": "3 clinics & pharmacies within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 72,
+     "desc": "7 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -362,6 +604,18 @@
      "score": 100,
      "desc": "D71 per m² asking",
      "source": "area-prices.json"
+    },
+    {
+     "label": "Healthcare",
+     "score": 28,
+     "desc": "1 clinic or pharmacy within 2 km",
+     "source": "Ministry of Health register"
+    },
+    {
+     "label": "Transport points",
+     "score": 38,
+     "desc": "2 fuel, ranks & terminals within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
@@ -380,9 +634,21 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 56,
+     "desc": "10 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 24,
-     "desc": "2 mapped within 2 km",
+     "desc": "2 places to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 44,
+     "desc": "2 clinics & pharmacies within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -402,9 +668,21 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 42,
+     "desc": "5 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 24,
-     "desc": "2 mapped within 2 km",
+     "desc": "2 places to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 28,
+     "desc": "1 clinic or pharmacy within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -422,6 +700,12 @@
      "score": 29,
      "desc": "D2,894 per m² asking",
      "source": "area-prices.json"
+    },
+    {
+     "label": "Transport points",
+     "score": 38,
+     "desc": "2 fuel, ranks & terminals within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
@@ -440,9 +724,27 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 33,
+     "desc": "3 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 39,
-     "desc": "5 mapped within 2 km",
+     "desc": "5 places to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 28,
+     "desc": "1 clinic or pharmacy within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 38,
+     "desc": "2 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -462,9 +764,21 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 16,
+     "desc": "1 shop or market within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 24,
-     "desc": "2 mapped within 2 km",
+     "desc": "2 places to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 56,
+     "desc": "3 clinics & pharmacies within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -484,9 +798,21 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 60,
+     "desc": "12 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 15,
-     "desc": "1 mapped within 2 km",
+     "desc": "1 place to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 56,
+     "desc": "3 clinics & pharmacies within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -506,9 +832,27 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 88,
+     "desc": "41 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 98,
-     "desc": "87 mapped within 2 km",
+     "desc": "87 places to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 56,
+     "desc": "3 clinics & pharmacies within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 62,
+     "desc": "5 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -528,15 +872,33 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 87,
+     "desc": "40 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 100,
-     "desc": "95 mapped within 2 km",
+     "desc": "95 places to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 44,
+     "desc": "2 clinics & pharmacies within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 76,
+     "desc": "8 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
     "label": "Beach access",
-    "desc": "Five minutes on foot"
+    "desc": "1.1 km to the shore, as the crow flies"
    }
   },
   "kotu": {
@@ -550,9 +912,27 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 89,
+     "desc": "42 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 89,
-     "desc": "56 mapped within 2 km",
+     "desc": "56 places to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 28,
+     "desc": "1 clinic or pharmacy within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 72,
+     "desc": "7 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -572,9 +952,27 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 16,
+     "desc": "1 shop or market within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 24,
-     "desc": "2 mapped within 2 km",
+     "desc": "2 places to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 28,
+     "desc": "1 clinic or pharmacy within 2 km",
+     "source": "Ministry of Health register"
+    },
+    {
+     "label": "Transport points",
+     "score": 56,
+     "desc": "4 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -594,9 +992,27 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 26,
+     "desc": "2 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 15,
-     "desc": "1 mapped within 2 km",
+     "desc": "1 place to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 28,
+     "desc": "1 clinic or pharmacy within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 48,
+     "desc": "3 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -616,9 +1032,21 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 62,
+     "desc": "13 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 53,
-     "desc": "10 mapped within 2 km",
+     "desc": "10 places to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 83,
+     "desc": "10 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -638,9 +1066,27 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 16,
+     "desc": "1 shop or market within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 15,
-     "desc": "1 mapped within 2 km",
+     "desc": "1 place to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 44,
+     "desc": "2 clinics & pharmacies within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 56,
+     "desc": "4 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -660,9 +1106,27 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 56,
+     "desc": "10 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 15,
-     "desc": "1 mapped within 2 km",
+     "desc": "1 place to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 44,
+     "desc": "2 clinics & pharmacies within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 76,
+     "desc": "8 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -682,9 +1146,27 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 90,
+     "desc": "44 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 77,
-     "desc": "33 mapped within 2 km",
+     "desc": "33 places to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 84,
+     "desc": "7 clinics & pharmacies within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 86,
+     "desc": "11 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -704,9 +1186,27 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 16,
+     "desc": "1 shop or market within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 15,
-     "desc": "1 mapped within 2 km",
+     "desc": "1 place to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 28,
+     "desc": "1 clinic or pharmacy within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 48,
+     "desc": "3 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -726,9 +1226,27 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 87,
+     "desc": "39 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 100,
-     "desc": "93 mapped within 2 km",
+     "desc": "93 places to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 44,
+     "desc": "2 clinics & pharmacies within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 76,
+     "desc": "8 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -748,9 +1266,27 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 86,
+     "desc": "37 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 43,
-     "desc": "6 mapped within 2 km",
+     "desc": "6 places to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 56,
+     "desc": "3 clinics & pharmacies within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 100,
+     "desc": "17 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -768,6 +1304,24 @@
      "score": 33,
      "desc": "D2,330 per m² asking",
      "source": "area-prices.json"
+    },
+    {
+     "label": "Everyday shopping",
+     "score": 52,
+     "desc": "8 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 28,
+     "desc": "1 clinic or pharmacy within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 38,
+     "desc": "2 fuel, ranks & terminals within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
@@ -786,9 +1340,27 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 38,
+     "desc": "4 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 24,
-     "desc": "2 mapped within 2 km",
+     "desc": "2 places to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 44,
+     "desc": "2 clinics & pharmacies within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 62,
+     "desc": "5 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -808,9 +1380,27 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 33,
+     "desc": "3 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 35,
-     "desc": "4 mapped within 2 km",
+     "desc": "4 places to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 28,
+     "desc": "1 clinic or pharmacy within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 24,
+     "desc": "1 fuel station, rank or terminal within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -830,9 +1420,27 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 33,
+     "desc": "3 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 30,
-     "desc": "3 mapped within 2 km",
+     "desc": "3 places to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 44,
+     "desc": "2 clinics & pharmacies within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 62,
+     "desc": "5 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -854,7 +1462,13 @@
     {
      "label": "Places to eat",
      "score": 15,
-     "desc": "1 mapped within 2 km",
+     "desc": "1 place to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Healthcare",
+     "score": 28,
+     "desc": "1 clinic or pharmacy within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
@@ -874,15 +1488,27 @@
      "source": "area-prices.json"
     },
     {
+     "label": "Everyday shopping",
+     "score": 46,
+     "desc": "6 shops & markets within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
      "label": "Places to eat",
      "score": 15,
-     "desc": "1 mapped within 2 km",
+     "desc": "1 place to eat within 2 km",
+     "source": "OpenStreetMap 2026-09-01"
+    },
+    {
+     "label": "Transport points",
+     "score": 38,
+     "desc": "2 fuel, ranks & terminals within 2 km",
      "source": "OpenStreetMap 2026-09-01"
     }
    ],
    "local": {
     "label": "Airport access",
-    "desc": "Five minutes to the runway"
+    "desc": "2.6 km to the airport by road"
    }
   }
  }

@@ -1,0 +1,12 @@
+import { readFile } from 'node:fs/promises';
+const j = async p => JSON.parse(await readFile(p, 'utf8'));
+const amen = await j('area-amenities.json'), feat = await j('area-features.json'), reis = await j('area-travel.json');
+const g = Object.values(amen.areas).find(a => a.slug === 'senegambia');
+console.log('Senegambia counts:', JSON.stringify(g.counts));
+console.log('Kololi kust/rivier:', JSON.stringify(Object.values(feat.areas).find(a => a.slug === 'kololi')));
+const y = Object.values(reis.areas).find(a => a.slug === 'yundum');
+console.log('Yundum reisrijen:', JSON.stringify(y.rows));
+const k = Object.values(reis.areas).find(a => a.slug === 'kololi');
+console.log('Kololi reisrijen:', JSON.stringify(k.rows));
+const e = Object.values(reis.areas).find(a => a.slug === 'essau');
+console.log('Essau reisrijen:', JSON.stringify(e.rows));

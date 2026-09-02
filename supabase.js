@@ -365,10 +365,18 @@ async function uploadListingMedia(listingId, file, kind){
   if(error) throw error;
   return data;
 }
-function mediaUrl(path, isDoc){
+/* Public URL for a listing photo.
+   Pass a width and the URL goes through Supabase's image transformation
+   endpoint: it resizes on the fly and serves WebP to browsers that accept
+   it, so a search card fetches a card-sized image instead of the full
+   stored original. That endpoint is billed per origin image per month
+   (Pro: 100 included, then $5 per 1,000), so callers opt in per surface —
+   omit the width and the behaviour is exactly as before. */
+function mediaUrl(path, isDoc, width){
   if(!sb) return path;
   if(isDoc){ return null; }                     // private — fetch a signed URL when needed
-  return sb.storage.from('listing-photos').getPublicUrl(path).data.publicUrl;
+  const opts = width ? { transform:{ width:width, resize:'contain', quality:75 } } : undefined;
+  return sb.storage.from('listing-photos').getPublicUrl(path, opts).data.publicUrl;
 }
 
 /* ---------------- Viewings ----------------

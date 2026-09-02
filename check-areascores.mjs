@@ -9,9 +9,20 @@
  */
 import { readFile, readdir } from 'node:fs/promises';
 
-const TOEGESTAAN = new Set(['Affordability', 'Places to eat']);
+/* De vijf maten die een methode hebben. Wie er een zesde bij zet zonder die in
+   build-area-scores.mjs uit te rekenen, loopt hier vast. */
+const TOEGESTAAN = new Set(['Affordability', 'Everyday shopping', 'Places to eat', 'Healthcare', 'Transport points']);
+const TIJDWOORD = /\b(minutes?|mins?|hours?|hrs?)\b|\b(five|ten|fifteen|twenty|twenty-five|thirty|forty|forty-five|fifty)\s+minutes\b/i;
+const TELKEYS = {
+  'Everyday shopping': ['shop', 'supermarket', 'market'],
+  'Places to eat': ['eat', 'bar'],
+  Healthcare: ['health', 'pharmacy'],
+  'Transport points': ['fuel', 'transport', 'ferry'],
+};
 const data = JSON.parse(await readFile('area-scores.json', 'utf8'));
 const perSlug = new Map(Object.values(data.areas).map(g => [g.slug, g]));
+const amen = JSON.parse(await readFile('area-amenities.json', 'utf8'));
+const amenPerSlug = new Map(Object.values(amen.areas).map(g => [g.slug, g]));
 const prijzen = JSON.parse(await readFile('area-prices.json', 'utf8'));
 const gebiedSlugs = new Set(Object.values(prijzen.areas).filter(v => v && v.slug).map(v => v.slug));
 const files = (await readdir('.')).filter(f => f.endsWith('.html'));
@@ -41,6 +52,7 @@ for (const f of files) {
     const laatste = i === rijen.length - 1;
     if (laatste) {
       if (r[1] !== null) meld(f, `de local strength "${r[0]}" heeft nog een getal (${r[1]}) — die hoort weg`);
+      if (TIJDWOORD.test(r[2] || '')) meld(f, `de local strength "${r[0]}" belooft nog een reistijd: "${r[2]}"`);
       return;
     }
     if (!TOEGESTAAN.has(r[0])) meld(f, `maat "${r[0]}" heeft geen methode en hoort hier niet`);
@@ -58,6 +70,17 @@ for (const f of files) {
       if (sg[k] !== v) meld(f, `benchmark ${k} is ${sg[k]} maar hoort ${v} te zijn`);
     for (const k of Object.keys(sg))
       if (!TOEGESTAAN.has(k)) meld(f, `benchmark bevat nog "${k}", een maat die niet meer bestaat`);
+  }
+
+  /* het getal onder de ring moet hetzelfde zijn als de telling in
+     area-amenities.json, anders lopen ring en tegel uiteen */
+  const gA = amenPerSlug.get(slug);
+  if (gA) for (const r of rijen) {
+    const keys = TELKEYS[r[0]];
+    if (!keys) continue;
+    const n = keys.reduce((s, k) => s + (gA.counts[k] || 0), 0);
+    const opPagina = +(String(r[2]).match(/^(\d+)/) || [])[1];
+    if (opPagina !== n) meld(f, `"${r[0]}" toont ${opPagina} maar area-amenities.json telt ${n}`);
   }
 
   if (/ring\(loc\[1\],0\)/.test(src)) meld(f, 'de local strength wordt nog als ring getekend');

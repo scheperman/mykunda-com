@@ -262,19 +262,43 @@
   // ── Image downscale ─────────────────────────────────────────────────────
   // Encode through a canvas so the sidecar carries resized bytes, not the
   // raw upload. Longest side is capped at 2× the slot's rendered width
-  // (retina) and at MAX_DIM. WebP keeps alpha and is ~10× smaller than PNG
-  // for photos, so there's no need for per-image format picking.
-  async function toDataUrl(file, targetW) {
+  // (retina) and at MAX_DIM — unless the slot carries data-store-dim, which
+  // pins the stored longest side to a fixed number regardless of how small
+  // the slot happens to be rendered. Use that wherever the stored bytes
+  // outlive the widget: an uploaded listing photo is shown far larger
+  // elsewhere than in the thumbnail cell it was dropped on, and sizing it
+  // to that cell throws away the picture for good.
+  //
+  // Format: WebP keeps alpha and is ~10× smaller than PNG for photos, but
+  // Safari cannot encode WebP from a canvas (no version to date) and the
+  // HTML spec makes an unsupported type fall back to image/png — which for
+  // a photo is several times LARGER than the JPEG it should have been. So
+  // probe once, and fall back to JPEG, never to PNG.
+  let _canWebp = null;
+  function canEncodeWebp() {
+    if (_canWebp === null) {
+      try {
+        const probe = document.createElement('canvas');
+        probe.width = probe.height = 1;
+        _canWebp = probe.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+      } catch (e) { _canWebp = false; }
+    }
+    return _canWebp;
+  }
+  async function toDataUrl(file, targetW, storeDim) {
     const bitmap = await createImageBitmap(file);
     try {
-      const cap = Math.min(MAX_DIM, Math.max(1, Math.round(targetW * 2)) || MAX_DIM);
+      const fixed = storeDim > 0 ? storeDim : 0;
+      const cap = fixed || Math.min(MAX_DIM, Math.max(1, Math.round(targetW * 2)) || MAX_DIM);
       const scale = Math.min(1, cap / Math.max(bitmap.width, bitmap.height));
       const w = Math.max(1, Math.round(bitmap.width * scale));
       const h = Math.max(1, Math.round(bitmap.height * scale));
       const canvas = document.createElement('canvas');
       canvas.width = w; canvas.height = h;
       canvas.getContext('2d').drawImage(bitmap, 0, 0, w, h);
-      return canvas.toDataURL('image/webp', 0.85);
+      return canEncodeWebp()
+        ? canvas.toDataURL('image/webp', 0.85)
+        : canvas.toDataURL('image/jpeg', 0.85);
     } finally {
       bitmap.close && bitmap.close();
     }
@@ -908,7 +932,8 @@
       }
       try {
         const w = this.clientWidth || this.offsetWidth || MAX_DIM;
-        const url = await toDataUrl(file, w);
+        const storeDim = parseInt(this.getAttribute('data-store-dim'), 10) || 0;
+        const url = await toDataUrl(file, w, storeDim);
         if (gen !== this._gen) return;
         // Only exit reframe once the new image is in hand — a rejected type
         // or decode failure leaves the in-progress crop untouched.

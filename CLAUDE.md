@@ -955,7 +955,12 @@ kreeg zodra de volgorde veranderde.
 rij. Elk script dat het blok aanraakt moet beide kennen en achteraf op 41
 pagina's uitkomen — bij de audit sloeg de eerste telling Kololi stil over.
 
-### Lifestyle scores: van vijf handgezette getallen naar twee gemeten
+### Lifestyle scores: van vijf handgezette getallen naar vijf gemeten
+
+*Deze paragraaf beschrijft de tussenstand van 01-09-2026 (twee maten). Op
+02-09-2026 zijn het er weer vijf geworden; zie "Terug naar vijf maten" hieronder,
+dat de leidende beschrijving is.*
+
 
 Tot 01-09-2026 stonden hier vijf getallen per gebied, 205 in totaal, getoond
 als ringen met een benchmark en een verschil ("▼ 54") — wat leest als een
@@ -993,6 +998,62 @@ deugt.
 Farafenni zou sturen. Dat was niet gemeten maar aangenomen, en het is onjuist:
 OSRM kent de veerboot en geeft hem als aparte stap terug ("Banjul - Barra
 Ferry", 4,9 km). De echte reden om geen tijd te tonen staat hieronder.
+
+### Terug naar vijf maten (02-09-2026) — de leidende beschrijving
+
+Met twee maten hielden zeven pagina's één ring over en zag het blok er leeg uit.
+De vraag was niet "zet de oude vijf terug" maar "welke vijf zijn te meten".
+Alles hieronder is doorgerekend in `_werk/verken-maten*.mjs` en
+`_werk/verken-scholenlijst.mjs`; de rangcorrelaties zijn Spearman over de 41
+gemeten gebieden.
+
+**De vijf.** Affordability (prijs, 41/41), Everyday shopping (shop +
+supermarket + market, 35/41), Places to eat (eat + bar, 35/41), Healthcare
+(health + pharmacy, 35/41, aangevuld uit het register van het ministerie),
+Transport points (fuel + transport + ferry, 33/41). Alle vier de tellingen
+gebruiken dezelfde meting, straal en ontdubbeling als de tegels van "What's
+nearby", zodat ring en tegel niet uiteen kunnen lopen; `check-areascores.mjs`
+toetst dat getal voor getal tegen `area-amenities.json`.
+
+**Wat er per gebied uitkomt:** 5 ringen op 24 pagina's, 4 op elf, 3 op drie,
+2 op drie. Dat is de eerlijke bovengrens. Vul een ontbrekende ring niet op met
+een nul: in Gambia betekent nul "niet gekarteerd" — Barra heeft zeker winkels,
+OSM kent ze niet.
+
+**Afgewezen kandidaten, met de meting die ze afwees.** Deze lijst staat ook in
+`build-area-scores.mjs`; wijzig hem alleen met nieuwe metingen ernaast.
+
+- **Schools** (39/41, de sterkste kandidaat op dekking) — op **14 van de 41**
+  pagina's noemt de lijst eronder MEER scholen bij naam dan OSM binnen 2 km
+  kent (Essau noemt er drie, OSM kent er één). Twee getallen over hetzelfde
+  onderwerp die elkaar op één pagina tegenspreken: precies waarom de tegel
+  "Schools" er eerder al uit ging.
+- **Beach proximity** (41/41, betrouwbaar gemeten) — `natural=coastline` loopt
+  door tot in de monding, dus Banjul en Barra krijgen een "kust" van 0,35 km
+  die de rivier is. Waar het estuarium ophoudt is een grens die ík zou trekken.
+- **Afstand tot Banjul** (−0,81 met de prijs) en **kust als score** (−0,72):
+  dezelfde ring twee keer, gespiegeld.
+- **Hotels & logies** (0,82 met Places to eat), **banken & geld** (0,79 met
+  Everyday shopping): voegen niets toe.
+- **Gebedshuizen** (38/41, het meest zelfstandig van alle tellingen) — een ring
+  zegt "meer is beter"; over gebedshuizen is dat een oordeel, geen meting.
+- **Safety** en **Transport als weging** blijven weg om de redenen hierboven.
+  "Transport points" is iets anders: het telt gekarteerde punten en weegt niets.
+
+**Drie lokale sterktes droegen nog een looptijd** die de ronde van 01-09-2026
+ontsnapte omdat ze in `scores[]` stonden en niet in de kopstrook: Essau ("Border
+twenty-five minutes"), Kololi ("Five minutes on foot"), Yundum ("Five minutes to
+the runway"). Ze staan nu in `LOKAAL_HERSCHREVEN` in `build-area-scores.mjs` en
+lezen de gemeten afstand uit `area-features.json` en `area-travel.json`, of
+noemen geen maat waar niets te meten valt. `check-areascores.mjs` slaat sindsdien
+alarm op een tijdwoord in die regel.
+
+**Twee dingen in de opmaak.** `.scores-grid` stond op `repeat(4,1fr)`, waardoor
+de vijfde ring alleen op een tweede rij viel; nu `repeat(auto-fit,minmax(150px,
+1fr))`. En `kololi.html` draagt een eigen kopie van `areas.css` ín de pagina —
+een wijziging in `areas.css` alleen laat Kololi achter. `_werk/patch-lifestyle-5.mjs`
+past beide aan.
+
 
 `_scores-data.json` is daarmee grotendeels historisch; alleen de vijfde regel
 per gebied wordt nog gelezen. De kop van dat bestand zegt dat ook.

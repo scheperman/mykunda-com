@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1s3j1oi--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0yh3kdo--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preconnect" href="https://api.mapbox.com" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=278122953869103">
+<link rel="stylesheet" href="styles.min.css?v=117275387458033">
 <style>
 body{background:var(--paper-2);min-height:100vh}
 
@@ -264,7 +264,7 @@ body{background:var(--paper-2);min-height:100vh}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=278122953869103"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=117275387458033"><!--/mk-css-->
 </head>
 <body>
 <div class="wizbar">
@@ -865,18 +865,18 @@ body{background:var(--paper-2);min-height:100vh}
   </aside>
 </div>
 
-<script src="valuation-areas.js?v=278122953869103"></script>
-<script src="valuation.js?v=278122953869103"></script>
-<script src="app.min.js?v=278122953869103"></script>
-<script src="gambia-places.js?v=278122953869103" defer></script>
-<script src="image-slot.js?v=278122953869103" defer></script>
+<script src="valuation-areas.js?v=117275387458033"></script>
+<script src="valuation.js?v=117275387458033"></script>
+<script src="app.min.js?v=117275387458033"></script>
+<script src="gambia-places.js?v=117275387458033" defer></script>
+<script src="image-slot.js?v=117275387458033" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel, Leaflet (~145 KB) only when the
    seller reaches the location step. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=278122953869103'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=117275387458033'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -1404,7 +1404,11 @@ const payChecks=document.getElementById('payChecks');
 if(payChecks) payChecks.innerHTML = PAY_TERMS.map(([k,l])=>`<label class="chk-opt" data-pay="${k}"><span class="box">${checkSm}</span> ${l}</label>`).join('');
 
 // photos
-photoGrid.innerHTML = Array.from({length:10}).map((_,i)=>`<div class="photo-cell ${i===0?'cover':''}" data-i="${i}">${i===0?'<span class="cover-tag">Cover</span>':''}<image-slot id="list-photo-${i}" placeholder="${i===0?'Cover photo':'Photo '+(i+1)}" radius="0" style="position:absolute;inset:0;width:100%;height:100%;display:block"></image-slot></div>`).join('');
+/* data-store-dim: the slot's default is 2× its own rendered width, which in
+   this 4-column grid is ~145px — it would archive every listing photo at
+   ~290px. These bytes are what the property page and the search cards show,
+   so pin the stored longest side at 1600px instead. */
+photoGrid.innerHTML = Array.from({length:10}).map((_,i)=>`<div class="photo-cell ${i===0?'cover':''}" data-i="${i}">${i===0?'<span class="cover-tag">Cover</span>':''}<image-slot id="list-photo-${i}" data-store-dim="1600" placeholder="${i===0?'Cover photo':'Photo '+(i+1)}" radius="0" style="position:absolute;inset:0;width:100%;height:100%;display:block"></image-slot></div>`).join('');
 
 // plan picker
 const PLANS=[
