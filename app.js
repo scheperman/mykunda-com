@@ -1923,7 +1923,7 @@ function footerHTML(){
     <div class="wrap footer-bottom">
       <span>© 2026 MyKunda.com</span>
       <span class="spacer"></span>
-      <a href="legal-privacy.html">Privacy</a><a href="legal-terms.html">Terms</a><a href="legal-cookies.html">Cookies</a><a href="photo-credits.html">Photo credits</a>
+      <a href="legal-privacy.html">Privacy</a><a href="legal-terms.html">Terms</a><a href="legal-cookies.html">Cookies</a><a href="#" data-cc-settings>Cookie settings</a><a href="photo-credits.html">Photo credits</a>
     </div>
     </div>
   </footer>`;
@@ -3154,8 +3154,58 @@ function injectCookieConsent(){
     </div>`;
   document.body.appendChild(el);
   document.getElementById('ccAccept').addEventListener('click',()=>{ localStorage.setItem('mykunda_cc','all'); el.remove(); loadAnalytics(); });
-  document.getElementById('ccEssential').addEventListener('click',()=>{ localStorage.setItem('mykunda_cc','essential'); el.remove(); });
+  document.getElementById('ccEssential').addEventListener('click',()=>{
+    localStorage.setItem('mykunda_cc','essential');
+    mkDropMetaCookies();
+    el.remove();
+    /* fbevents.js kan in deze pagina al geladen zijn; fbq blijft dan in het
+       geheugen staan, ook nadat de cookie weg is. Alleen herladen sluit dat
+       echt af. Bij een eerste bezoek is fbq er niet en gebeurt er niets. */
+    if(window.fbq) location.reload();
+  });
 }
+
+/* ---------- Toestemming intrekken ----------
+   Tot 02-09-2026 was 'mykunda_cc' eenrichtingsverkeer: injectCookieConsent()
+   stopt zodra de sleutel bestaat, en niets zette hem ooit terug. Wie een keer
+   op "Accept all" klikte, kreeg de Meta-pixel bij elk volgend bezoek en kon
+   zich op de site niet meer bedenken. Elk element met data-cc-settings opent
+   de keuze opnieuw — de link in de voettekst en de knop op legal-cookies.html
+   gebruiken dat. */
+function mkClearCookie(name){
+  /* Een script kan het domein van een cookie niet uitlezen, dus schrijven we de
+     vervaldatum weg op elke variant waarop hij gezet kan zijn. */
+  const host = location.hostname;
+  const varianten = ['', '; domain=' + host, '; domain=.' + host];
+  const kaal = host.replace(/^www\./,'');
+  if(kaal !== host) varianten.push('; domain=' + kaal, '; domain=.' + kaal);
+  varianten.forEach(function(d){
+    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/' + d;
+  });
+}
+/* _fbp en _fbc zet Meta als first-party cookies op mykunda.com. Ze zijn niet
+   HttpOnly, dus wij kunnen ze zelf weghalen. Dit wist de identificatie in deze
+   browser — niet wat Meta bij eerdere bezoeken al heeft ontvangen. Dat verschil
+   staat ook zo in legal-cookies.html; beloof hier niet meer dan de knop doet. */
+function mkDropMetaCookies(){ mkClearCookie('_fbp'); mkClearCookie('_fbc'); }
+
+function mkResetCookieChoice(){
+  try{ localStorage.removeItem('mykunda_cc'); }catch(e){}
+  mkDropMetaCookies();
+  /* Was de pixel al geladen, dan zit fbq nog in het geheugen: herladen. Daarna
+     is er geen opgeslagen keuze meer, dus de banner komt vanzelf terug en de
+     pixel blijft weg tot er opnieuw "Accept all" wordt gekozen. */
+  if(window.fbq){ location.reload(); return; }
+  injectCookieConsent();
+}
+/* Gedelegeerd, want de voettekst staat op de meeste pagina's statisch in de
+   HTML en wordt daar niet door dit script opgebouwd. */
+document.addEventListener('click', function(e){
+  const t = e.target && e.target.closest && e.target.closest('[data-cc-settings]');
+  if(!t) return;
+  e.preventDefault();
+  mkResetCookieChoice();
+});
 
 /* ---------- Meta Pixel — advertentiemeting, alleen na "Accept all" ----------
    Let op de naamgeving: loadAnalytics() laadt de Meta-pixel, en die staat in
