@@ -1072,6 +1072,62 @@ bestemming ("Barra ferry terminal") blijft staan — dat is een plek.
 Routeringen staan in `_werk/osrm-cache.json`; een nieuwe run vraagt de publieke
 OSRM-server alleen wat hij nog niet kent, met een seconde ertussen.
 
+### De laatste reistijden, en de kust en de rivier als maat
+
+Het reisblok toonde sinds 01-09-2026 afstand, maar daarbuiten stonden nog 56
+tijdclaims: 47 tegels in de kopstrook ("Beach 5 min on foot"), 5 chips onder de
+vibe en 4 zinnen in de lopende tekst. Een pagina die bovenaan "Banjul 35 min"
+belooft en driehonderd pixels lager zegt dat we geen tijden publiceren omdat we
+ze niet kunnen verdedigen, spreekt zichzelf tegen.
+
+`build-area-features.mjs` → `area-features.json` →
+`_werk/patch-tijdclaims.mjs`, vangrail `check-tijdclaims.mjs` (die op álle 52
+pagina's zoekt naar een minuut of een uur en de bronregel als enige uitzondering
+kent). Uitkomst: 38 tegels gemeten, 9 vervallen, 5 chips ontdaan van hun getal,
+4 zinnen met de hand herschreven met een gemeten getal erin.
+
+**Kust en rivier zijn wél te meten.** `natural=coastline` en `waterway=river`
+uit OpenStreetMap, hemelsbreed vanaf het punt in de JSON-LD. Tanji ligt 0,16 km
+van de kust, Cape Point 0,22, Kololi 1,09; Kuntaur 0,28 km van de rivier,
+Janjanbureh 0,53. Hemelsbreed en niet over de weg, want er is geen route naar
+"de kust" — dat staat als "as the crow flies" bij de tegel.
+
+**De estuariumval.** OSM laat `natural=coastline` doorlopen tot ver in de
+monding, dus Banjul krijgt een "kust" van 0,35 km die gewoon de rivier is. Het
+ópschrift van de tegel bepaalt daarom welke maat wordt gebruikt, nooit de
+kleinste van de twee.
+
+**Wat is vervallen en waarom:** "Crocodile Pool", "Bijilo Forest", "Highway",
+"University", "Senegal border", "To the ferry" — geen punt dat we hebben. En
+"To Brufut beach" en "To Kololi beach": de kustlijn geeft het dichtstbijzijnde
+punt, niet het strand ván een andere plaats.
+
+### Tranquil en Old Yundum krijgen géén What's-nearby-blok
+
+Ik heb dat op 01-09-2026 eerst wél voorgesteld — er staan 18 gevulde
+categorieën binnen 2 km van Tranquil en 9 van Old Yundum — en die suggestie
+daarna ingetrokken. De pagina's zeggen zelf waarom, en dat is beter dan de
+telling.
+
+**Tranquil** noemt onder "what we do not know": *"School, health post, water
+supply and electricity specifically at Tranquil — nothing we could source
+separately from Brusubi"* en *"Where Tranquil ends. It has no mapped boundary,
+and 'Brusubi Tranquil' is used loosely for an area covering several named
+places."* Die 65 winkels binnen 2 km zijn dus Brusubi's winkels. Een blok daar
+zou Brusubi's voorzieningen op Tranquils naam zetten — precies wat de pagina
+weigert. De pin heeft bovendien een halve kilometer onzekerheid, met een
+gedocumenteerd verschil tussen GeoNames en een OSM-node die in 2025 door één
+mapper is hernoemd.
+
+**Old Yundum** waarschuwt: *"Old Yundum and New Yundum are two separate
+settlements of almost the same size, and the airport is at New Yundum."* De pin
+is nauwkeurig tot ongeveer 600 meter. Een cirkel van 2 km daaromheen mengt de
+twee dorpen, en het scheiden van die twee is nu juist het punt van de pagina.
+
+Regel die hieruit volgt: een blok krijgt een gebied pas als de pin nauwkeuriger
+is dan de straal en het gebied een begrensbare plaats is. Tel niet wat er binnen
+een cirkel valt zonder te kijken wiens cirkel het is.
+
 ### Het gebiedsblok op property.html komt uit dezelfde bron
 
 De advertentiepagina droeg tot 01-09-2026 een eigen `HOOD_DATA` met dertien

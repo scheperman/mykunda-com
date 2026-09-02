@@ -1,0 +1,254 @@
+{
+ "about": "Afstand tot de Atlantische kust en tot de Gambia-rivier, hemelsbreed. Voor de tegels in de kopstrook.",
+ "built": "2026-09-01",
+ "method": "Kortste afstand tot een punt op natural=coastline respectievelijk waterway=river in OpenStreetMap, hemelsbreed vanaf het punt in de JSON-LD van de pagina.",
+ "source": "OpenStreetMap contributors (ODbL 1.0), Overpass API — opgehaald 2026-09-01",
+ "areas": {
+  "bakau": {
+   "slug": "bakau",
+   "name": "Bakau",
+   "coast_km": 0.48,
+   "river_km": 2.49
+  },
+  "bakoteh": {
+   "slug": "bakoteh",
+   "name": "Bakoteh",
+   "coast_km": 3.1,
+   "river_km": 0.85
+  },
+  "banjul": {
+   "slug": "banjul",
+   "name": "Banjul",
+   "coast_km": 0.35,
+   "river_km": 1.09
+  },
+  "bansang": {
+   "slug": "bansang",
+   "name": "Bansang",
+   "coast_km": 202.27,
+   "river_km": 0.56
+  },
+  "barra": {
+   "slug": "barra",
+   "name": "Barra",
+   "coast_km": 0.44,
+   "river_km": 0.41
+  },
+  "basse santa su": {
+   "slug": "basse",
+   "name": "Basse Santa Su",
+   "coast_km": 251.26,
+   "river_km": 0.65
+  },
+  "batokunku": {
+   "slug": "batokunku",
+   "name": "Batokunku",
+   "coast_km": 0.72,
+   "river_km": 1.39
+  },
+  "bijilo": {
+   "slug": "bijilo",
+   "name": "Bijilo",
+   "coast_km": 0.35,
+   "river_km": 0.52
+  },
+  "brikama": {
+   "slug": "brikama",
+   "name": "Brikama",
+   "coast_km": 15.49,
+   "river_km": 5.99
+  },
+  "brufut": {
+   "slug": "brufut",
+   "name": "Brufut",
+   "coast_km": 1.68,
+   "river_km": 1.92
+  },
+  "brusubi": {
+   "slug": "brusubi",
+   "name": "Brusubi",
+   "coast_km": 1.4,
+   "river_km": 1.43
+  },
+  "busumbala": {
+   "slug": "busumbala",
+   "name": "Busumbala",
+   "coast_km": 11.89,
+   "river_km": 7.23
+  },
+  "cape point": {
+   "slug": "cape-point",
+   "name": "Cape Point",
+   "coast_km": 0.22,
+   "river_km": 3.48
+  },
+  "essau": {
+   "slug": "essau",
+   "name": "Essau",
+   "coast_km": 1.97,
+   "river_km": 1.01
+  },
+  "fajara": {
+   "slug": "fajara",
+   "name": "Fajara",
+   "coast_km": 0.72,
+   "river_km": 0.9
+  },
+  "farafenni": {
+   "slug": "farafenni",
+   "name": "Farafenni",
+   "coast_km": 100.47,
+   "river_km": 6.89
+  },
+  "fatoto": {
+   "slug": "fatoto",
+   "name": "Fatoto",
+   "coast_km": 285.42,
+   "river_km": 0.91
+  },
+  "gambissara": {
+   "slug": "gambissara",
+   "name": "Gambissara",
+   "coast_km": 241.92,
+   "river_km": 0.35
+  },
+  "gunjur": {
+   "slug": "gunjur",
+   "name": "Gunjur",
+   "coast_km": 2.61,
+   "river_km": 1.91
+  },
+  "jabang": {
+   "slug": "jabang",
+   "name": "Jabang",
+   "coast_km": 6.91,
+   "river_km": 5
+  },
+  "janjanbureh": {
+   "slug": "janjanbureh",
+   "name": "Janjanbureh",
+   "coast_km": 190.77,
+   "river_km": 0.53
+  },
+  "kartong": {
+   "slug": "kartong",
+   "name": "Kartong",
+   "coast_km": 1.13,
+   "river_km": 1.82
+  },
+  "kerewan": {
+   "slug": "kerewan",
+   "name": "Kerewan",
+   "coast_km": 47.52,
+   "river_km": 1.41
+  },
+  "kerr serign": {
+   "slug": "kerr-serign",
+   "name": "Kerr Serign",
+   "coast_km": 0.95,
+   "river_km": 2.31
+  },
+  "kololi": {
+   "slug": "kololi",
+   "name": "Kololi",
+   "coast_km": 1.09,
+   "river_km": 2.44
+  },
+  "kotu": {
+   "slug": "kotu",
+   "name": "Kotu",
+   "coast_km": 0.9,
+   "river_km": 0.7
+  },
+  "kuntaur": {
+   "slug": "kuntaur",
+   "name": "Kuntaur",
+   "coast_km": 174.33,
+   "river_km": 0.28
+  },
+  "lamin": {
+   "slug": "lamin",
+   "name": "Lamin",
+   "coast_km": 9.27,
+   "river_km": 1.76
+  },
+  "manjai kunda": {
+   "slug": "manjai-kunda",
+   "name": "Manjai Kunda",
+   "coast_km": 2.45,
+   "river_km": 0.86
+  },
+  "mansa konko": {
+   "slug": "mansa-konko",
+   "name": "Mansa Konko",
+   "coast_km": 107.66,
+   "river_km": 3.96
+  },
+  "nema kunku": {
+   "slug": "nema-kunku",
+   "name": "Nema Kunku",
+   "coast_km": 5.87,
+   "river_km": 1.69
+  },
+  "pipeline": {
+   "slug": "pipeline",
+   "name": "Pipeline",
+   "coast_km": 1.65,
+   "river_km": 0.76
+  },
+  "sanyang": {
+   "slug": "sanyang",
+   "name": "Sanyang",
+   "coast_km": 3.43,
+   "river_km": 6.36
+  },
+  "senegambia": {
+   "slug": "senegambia",
+   "name": "Senegambia",
+   "coast_km": 0.56,
+   "river_km": 2.38
+  },
+  "serrekunda": {
+   "slug": "serrekunda",
+   "name": "Serrekunda",
+   "coast_km": 4.31,
+   "river_km": 1.6
+  },
+  "sinchu alagie": {
+   "slug": "sinchu-alagie",
+   "name": "Sinchu Alagie",
+   "coast_km": 7.41,
+   "river_km": 4.57
+  },
+  "soma": {
+   "slug": "soma",
+   "name": "Soma",
+   "coast_km": 107.63,
+   "river_km": 4.71
+  },
+  "sukuta": {
+   "slug": "sukuta",
+   "name": "Sukuta",
+   "coast_km": 3.1,
+   "river_km": 1.99
+  },
+  "tanji": {
+   "slug": "tanji",
+   "name": "Tanji",
+   "coast_km": 0.16,
+   "river_km": 0.19
+  },
+  "tujereng": {
+   "slug": "tujereng",
+   "name": "Tujereng",
+   "coast_km": 1.58,
+   "river_km": 0.86
+  },
+  "yundum": {
+   "slug": "yundum",
+   "name": "Yundum",
+   "coast_km": 11.01,
+   "river_km": 6.89
+  }
+ }
+}
