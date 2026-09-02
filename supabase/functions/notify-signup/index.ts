@@ -7,12 +7,24 @@
 //  and any later call for the same user is a no-op. That makes it
 //  safe to call from BOTH the database trigger and the browser.
 //
-//  27-08-2026: de trigger on_auth_user_signup_notify vuurt nu ook op INSERT
-//  wanneer email_confirmed_at al gevuld is. Daarmee dekt de database ook de
+//  27-08-2026: de trigger on_auth_user_signup_notify vuurt ook op INSERT
+//  wanneer email_confirmed_at al gevuld is. Daarmee dekte de database ook de
 //  Google-aanmeldingen; die kwamen al bevestigd binnen, dus de oude AFTER
-//  UPDATE-trigger sloeg ze over en de browser was de enige verzender. De
-//  aanroep vanuit auth.html blijft staan als vangnet (en om consent eerst weg
-//  te schrijven) — welcomed_at zorgt dat er hoe dan ook één mail uitgaat.
+//  UPDATE-trigger sloeg ze over en de browser was de enige verzender.
+//
+//  02-09-2026: die INSERT-tak is er weer uit (migratie 20260902_04). Hij was
+//  te snel: bij Google vertrok de welkomstmail vóórdat de browser de rol en de
+//  toestemming had weggeschreven, en dan kreeg een kantoor de zoekersversie.
+//  De verdeling is nu:
+//    e-mailcode → de trigger, op het moment van bevestigen (rol en toestemming
+//                 staan er dan al in, ze reisden mee in de signup-metadata);
+//    Google     → de browser, in finishOAuth(), zodra alles echt in profiles
+//                 staat;
+//    de rest    → public.run_welcome_backlog(), elke vijf minuten. Dat is ook
+//                 de herkansing die er tot vandaag niet was: het vrijgeven van
+//                 welcomed_at hieronder had geen enkel effect, want pg_net doet
+//                 geen retry en niemand pakte de draad op.
+//  welcomed_at blijft de garantie dat er hoe dan ook maar één mail uitgaat.
 //
 //  Deploy:  supabase functions deploy notify-signup --no-verify-jwt
 //  Secrets: reuses RESEND_API_KEY / FROM_EMAIL
@@ -102,7 +114,7 @@ serve(async (req) => {
       .update({ welcomed_at: new Date().toISOString() })
       .eq("id", user_id)
       .is("welcomed_at", null)
-      .select("id, full_name, email, role, consent_contact, consent_marketing, consent_at, created_at")
+      .select("id, full_name, email, role, consent_contact, consent_marketing, consent_at, created_at, welcome_attempts")
       .maybeSingle();
     if (claimErr) throw claimErr;
     if (!claimed) return json({ ok: true, skipped: "already_welcomed" });
@@ -158,7 +170,16 @@ serve(async (req) => {
        misloopt; hij komt bovendien in email_events te staan, dus een dubbele
        teammelding bij een herkansing is zichtbaar en onschadelijk. */
     if (!welcomeSent) {
-      await db.from("profiles").update({ welcomed_at: null }).eq("id", user_id);
+      /* 02-09-2026: de teller erbij. Het vrijgeven van de claim was tot vandaag
+         een dood gebaar — pg_net doet geen retry en niemand keek er ooit naar
+         om. run_welcome_backlog() biedt het geval nu elke vijf minuten opnieuw
+         aan, en deze teller zorgt dat een adres dat het structureel niet doet
+         na vijf pogingen uit de wachtrij valt in plaats van er eindeloos in te
+         blijven rondgaan. */
+      await db.from("profiles").update({
+        welcomed_at: null,
+        welcome_attempts: (Number(claimed.welcome_attempts) || 0) + 1,
+      }).eq("id", user_id);
     }
     return json({ ok: errors.length === 0, errors }, errors.length ? 502 : 200);
   } catch (err) {
