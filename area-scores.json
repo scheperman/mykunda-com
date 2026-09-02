@@ -3,12 +3,20 @@
  "built": "2026-09-02",
  "radius_km": 2,
  "benchmark": {
-  "area": "Senegambia",
+  "basis": "median",
+  "about": "Mediaan per maat over de gebieden die die maat hebben. Tot 02-09-2026 stond hier de score van Senegambia; dat was geen midden maar een uiterste — zie de kop van build-area-scores.mjs.",
+  "label_en": "the median of every area we measure",
   "scores": {
-   "Affordability": 14,
-   "Everyday shopping": 87,
-   "Places to eat": 100,
+   "Affordability": 34,
+   "Everyday shopping": 54,
+   "Places to eat": 35,
    "Healthcare": 44
+  },
+  "n": {
+   "Affordability": 41,
+   "Everyday shopping": 35,
+   "Places to eat": 35,
+   "Healthcare": 35
   }
  },
  "method": {

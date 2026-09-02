@@ -37,8 +37,17 @@ const BRONREGEL = 'Four measures, each one counted rather than judged. Affordabi
   ' km of the pin — the same measurement and the same radius as the tiles under “What’s nearby”, except that a ring ' +
   'adds up categories the tiles list one by one; the healthcare count is topped up from the Ministry of Health ' +
   'register where OpenStreetMap has none. Where a count is zero there is no ring, because in The Gambia zero almost always means “not mapped” ' +
-  'rather than “not there” — that is why some areas show fewer than four. Scores for safety and for transport used ' +
-  'to sit here; nothing measurable stood behind either, so they are gone.';
+  'rather than “not there” — that is why some areas show fewer than four. The outer arc is the median of the areas ' +
+  'that have that measure, so half of them sit above it and half below; it used to be Senegambia, which is not a ' +
+  'middle but an extreme — no area could ever beat its score for places to eat, and almost all of them beat it on ' +
+  'price. Scores for safety and for transport used to sit here; nothing measurable stood behind either, so they are gone.';
+
+/* De lead boven het blok en het bijschrift onder het rooster. Beide noemden
+   Senegambia als ijkpunt; dat is sinds 02-09-2026 de mediaan. */
+const LEAD = naam => `What we can measure for ${naam}, set against the median of every area we measure ` +
+  '&mdash; half of them score higher, half lower.';
+const BENCHKEY = '<div class="bench-key"><i></i> Outer arc = the median of the areas we measure. ' +
+  'The figure under each ring is the gap to it.</div>';
 
 const js = s => JSON.stringify(s);
 const regelScores = g => {
@@ -47,6 +56,24 @@ const regelScores = g => {
   return `var scores=[${rij.join(',')}];`;
 };
 const regelSG = () => 'var SG=' + JSON.stringify(scores.benchmark.scores) + ';';
+
+/* Het renderblok. Veertig pagina's dragen één en dezelfde versie; senegambia.html
+   had een eigen versie zonder buitenboog en met "The benchmark" in plaats van een
+   verschil, omdat het zelf het ijkpunt was. Met een mediaan is Senegambia een
+   gebied als alle andere, dus krijgt het hetzelfde blok. Het sjabloon wordt uit
+   een bestaande pagina gelezen in plaats van hier overgetypt. */
+const SJABLOONBRON = 'pipeline.html';
+const RENDERBLOK = /\(function\(\)\{\s*function ring\([\s\S]*?\}\)\(\);/;
+const sjabloonSrc = await readFile(SJABLOONBRON, 'utf8');
+const sjabloon = (sjabloonSrc.match(RENDERBLOK) || [null])[0];
+for (const eis of ['function ring(', 'scoresGrid.innerHTML', 'scores.slice(0,-1)', 'bench-key']) {
+  if (!sjabloon || !sjabloon.includes(eis)) {
+    console.log(`FOUT: het renderblok in ${SJABLOONBRON} mist "${eis}" — niets geschreven.`);
+    process.exit(1);
+  }
+}
+const RENDER = sjabloon.replace(/<div class="bench-key">[\s\S]*?<\/div>/, BENCHKEY);
+if (RENDER.includes('Senegambia')) { console.log('FOUT: het sjabloon noemt Senegambia nog.'); process.exit(1); }
 
 /* compileert elk <script>-blok van de pagina; gooit bij een fout */
 function compileerAlles(bron, bestand) {
@@ -74,15 +101,22 @@ for (const g of gebieden) {
   const mScores = bron.match(/(?:var|const)\s+scores\s*=\s*\[.*?\];/s);
   const mSG = bron.match(/(?:var|const)\s+SG\s*=\s*\{.*?\};/s);
   const mBron = bron.match(/<!--mk-scoresrc--><p class="src">[\s\S]*?<\/p>/);
-  if (!mScores || !mSG || !mBron) {
-    mislukt.push(`${bestand}: ${!mScores ? 'geen scores[] ' : ''}${!mSG ? 'geen SG{} ' : ''}${!mBron ? 'geen bronregel' : ''}`);
+  const mRender = bron.match(RENDERBLOK);
+  const mLead = bron.match(/(<h2>Lifestyle scores<\/h2>\s*<p class="lead">)([^<]*)(<\/p>)/);
+  if (!mScores || !mBron || !mRender || !mLead) {
+    mislukt.push(`${bestand}: ${!mScores ? 'geen scores[] ' : ''}${!mBron ? 'geen bronregel ' : ''}` +
+      `${!mRender ? 'geen renderblok ' : ''}${!mLead ? 'geen lead' : ''}`);
     continue;
   }
 
-  let nieuw = bron
-    .replace(mSG[0], regelSG())
-    .replace(mScores[0], regelScores(g))
-    .replace(mBron[0], `<!--mk-scoresrc--><p class="src">${BRONREGEL}</p>`);
+  /* vervangen met een functie, zodat $-tekens in de nieuwe tekst niet als
+     $&-verwijzing worden gelezen */
+  const zet = (tekst, oud, nieuwStuk) => tekst.replace(oud, () => nieuwStuk);
+  let nieuw = zet(bron, mScores[0], (mSG ? '' : regelSG() + '\n') + regelScores(g));
+  nieuw = zet(nieuw, mRender[0], RENDER);
+  nieuw = zet(nieuw, mLead[0], mLead[1] + LEAD(g.name) + mLead[3]);
+  nieuw = zet(nieuw, mBron[0], `<!--mk-scoresrc--><p class="src">${BRONREGEL}</p>`);
+  if (mSG) nieuw = zet(nieuw, mSG[0], regelSG());
 
   /* Kololi draagt een eigen kopie van areas.css ín de pagina; een wijziging in
      areas.css alleen laat Kololi achter. Het rooster staat weer op vier vaste

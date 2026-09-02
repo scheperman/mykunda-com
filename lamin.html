@@ -179,9 +179,9 @@
 
       <div class="block">
         <h2>Lifestyle scores</h2>
-        <p class="lead">What we can measure for Lamin, scored against Senegambia &mdash; the best-connected, busiest and best-served area on the coast.</p>
+        <p class="lead">What we can measure for Lamin, set against the median of every area we measure &mdash; half of them score higher, half lower.</p>
         <div class="scores-grid" id="scoresGrid"></div>
-        <!--mk-scoresrc--><p class="src">Four measures, each one counted rather than judged. Affordability is the land asking price per m² on a log scale, where the cheapest area we measure scores 100 and the priciest 0. Everyday shopping, places to eat and healthcare count what OpenStreetMap has mapped within 2 km of the pin — the same measurement and the same radius as the tiles under “What’s nearby”, except that a ring adds up categories the tiles list one by one; the healthcare count is topped up from the Ministry of Health register where OpenStreetMap has none. Where a count is zero there is no ring, because in The Gambia zero almost always means “not mapped” rather than “not there” — that is why some areas show fewer than four. Scores for safety and for transport used to sit here; nothing measurable stood behind either, so they are gone.</p>
+        <!--mk-scoresrc--><p class="src">Four measures, each one counted rather than judged. Affordability is the land asking price per m² on a log scale, where the cheapest area we measure scores 100 and the priciest 0. Everyday shopping, places to eat and healthcare count what OpenStreetMap has mapped within 2 km of the pin — the same measurement and the same radius as the tiles under “What’s nearby”, except that a ring adds up categories the tiles list one by one; the healthcare count is topped up from the Ministry of Health register where OpenStreetMap has none. Where a count is zero there is no ring, because in The Gambia zero almost always means “not mapped” rather than “not there” — that is why some areas show fewer than four. The outer arc is the median of the areas that have that measure, so half of them sit above it and half below; it used to be Senegambia, which is not a middle but an extreme — no area could ever beat its score for places to eat, and almost all of them beat it on price. Scores for safety and for transport used to sit here; nothing measurable stood behind either, so they are gone.</p>
       </div>
 
       <div class="block">
@@ -300,7 +300,7 @@ var tags=["Lamin Lodge","Mangrove creek","Highway access","Rice fields","Quiet t
 vibeTags.innerHTML = tags.map(function(t){return '<span class="tag">'+ICON.check+" "+t+"</span>";}).join("");
 
 
-var SG={"Affordability":14,"Everyday shopping":87,"Places to eat":100,"Healthcare":44};
+var SG={"Affordability":34,"Everyday shopping":54,"Places to eat":35,"Healthcare":44};
 var scores=[["Affordability",38,"D1,833 per m² asking"],["Everyday shopping",26,"2 shops & markets within 2 km"],["Places to eat",15,"1 place to eat within 2 km"],["Healthcare",28,"1 clinic or pharmacy within 2 km"],["Creek setting",null,"Mangroves and oyster beds"]];
 (function(){
   function ring(v,b){
@@ -315,7 +315,7 @@ var scores=[["Affordability",38,"D1,833 per m² asking"],["Everyday shopping",26
     var txt=d>3?'\u25B2 '+d:(d<-3?'\u25BC '+(-d):'level');
     return '<div class="score">'+ring(s[1],b)+'<div class="lab">'+s[0]+'</div><div class="desc">'+s[2]+'</div><div class="delta '+cls+'">'+txt+'</div></div>';
   }).join("");
-  scoresGrid.insertAdjacentHTML('afterend','<div class="score-local"><div class="sl-txt"><div class="sl-k">Local strength</div><div class="lab">'+loc[0]+'</div><div class="desc">'+loc[2]+'</div></div></div><div class="bench-key"><i></i> Outer arc = Senegambia. The figure under each ring is the gap to it.</div>');
+  scoresGrid.insertAdjacentHTML('afterend','<div class="score-local"><div class="sl-txt"><div class="sl-k">Local strength</div><div class="lab">'+loc[0]+'</div><div class="desc">'+loc[2]+'</div></div></div><div class="bench-key"><i></i> Outer arc = the median of the areas we measure. The figure under each ring is the gap to it.</div>');
 })();
 
 var commutes=[["Lamin Lodge","Car","2.8 km"],["Brikama","Car","15 km"],["Banjul Int. Airport","Car","8.6 km"],["Westfield","Car","8.7 km"],["Banjul","Car","21 km"]];

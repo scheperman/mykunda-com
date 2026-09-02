@@ -1067,6 +1067,34 @@ En geef het commitbericht nooit door in een genest aanhalingsteken:
 `cmd /c "cd /d ... & upload.bat "Mijn bericht""` levert een commit met alleen
 het eerste woord op. Draai `upload.bat` in een eigen aanroep.
 
+**Het ijkpunt is de mediaan, niet Senegambia** (02-09-2026). De buitenboog om
+elke ring was de score van Senegambia. Dat gaf geen vergelijking maar een
+eenrichtingsmeting, want Senegambia is geen midden maar een uiterste. Gemeten
+(`_werk/verken-benchmark.mjs`), aantal gebieden boven/onder het ijkpunt:
+
+| maat | boven Senegambia | onder | boven mediaan | onder |
+|---|---|---|---|---|
+| Affordability | 31 | 1 | 18 | 11 |
+| Everyday shopping | 2 | 26 | 15 | 16 |
+| Places to eat | 0 | 32 | 16 | 17 |
+| Healthcare | 13 | 14 | 13 | 14 |
+
+Senegambia scoort 100 op "Places to eat" — de hoogste van het land — dus geen
+enkel gebied kon daar ooit boven uitkomen; bij Affordability precies andersom.
+Alleen Healthcare was in balans, en dat was toeval: 44 is daar óók de mediaan.
+Het **gemiddelde is gemeten en afgewezen**: bij Affordability geeft dat 15 boven
+tegen 25 onder omdat die verdeling scheef is, en zes gebieden komen dan op elke
+maat onder het ijkpunt uit — met de mediaan nul. De mediaan gaat per maat over de
+gebieden die die maat hébben (41 respectievelijk 35), niet over 41 met nullen.
+
+Twee dingen die daarbij vielen: `senegambia.html` had een eigen renderblok zonder
+buitenboog en met "The benchmark" in plaats van een verschil, en zijn eigen lead
+zei "scored against Senegambia" — circulair. Alle 41 pagina's dragen nu hetzelfde
+blok; `_werk/patch-lifestyle-5.mjs` leest dat sjabloon uit `pipeline.html` in
+plaats van het over te typen. `check-areascores.mjs` rekent het ijkpunt na uit
+`area-scores.json` en slaat alarm op elke pagina die Senegambia nog als maatstaf
+noemt.
+
 **Het rooster.** `.scores-grid` staat op `repeat(4,1fr)` en dat blijft zo: met
 `auto-fit` pasten vijf ringen op een breed scherm wél en op een laptop niet, en
 dan brak de rij. Vier kolommen houden alle pagina's dezelfde kaartbreedte, van

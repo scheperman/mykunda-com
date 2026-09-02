@@ -66,7 +66,34 @@
 import { readFile, writeFile } from 'node:fs/promises';
 
 const WRITE = process.argv.includes('--write');
-const BENCH = 'senegambia';
+
+/* HET IJKPUNT: DE MEDIAAN, NIET SENEGAMBIA (02-09-2026)
+ *
+ * De buitenste boog om elke ring was tot vandaag de score van Senegambia. Dat
+ * gaf geen vergelijking maar een eenrichtingsmeting, want Senegambia is geen
+ * midden maar een uiterste. Gemeten over de 41 gebieden (_werk/verken-benchmark.mjs):
+ *
+ *                       boven Senegambia   gelijk   onder        boven mediaan  gelijk  onder
+ *   Affordability              31             9        1              18          12      11
+ *   Everyday shopping           2             7       26              15           4      16
+ *   Places to eat               0             3       32              16           2      17
+ *   Healthcare                 13             8       14              13           8      14
+ *
+ * "Places to eat" was het duidelijkst: Senegambia scoort daar 100, de hoogste
+ * van het land, dus geen enkel gebied kon er ooit boven uitkomen. Bij
+ * Affordability precies andersom — Senegambia is bijna het duurste, dus stond
+ * 31 van de 41 er automatisch boven. Alleen Healthcare was toevallig in balans,
+ * omdat Senegambia daar toevallig óók de mediaan is (44).
+ *
+ * Het gemiddelde is afgewezen, ook gemeten: bij Affordability geeft het 15 boven
+ * tegen 25 onder omdat die verdeling scheef is, en zes gebieden komen dan op elke
+ * gemeten maat onder het ijkpunt uit. Met de mediaan is dat er nul.
+ *
+ * De mediaan wordt per maat genomen over de gebieden die die maat hebben (41
+ * voor Affordability, 35 voor de tellingen) — niet over 41 met nullen erbij,
+ * want een ontbrekende telling betekent "niet gekarteerd", geen nul. Bij een
+ * even aantal is het het gemiddelde van de twee middelste, afgerond.
+ */
 
 const prijzen = JSON.parse(await readFile('area-prices.json', 'utf8'));
 const amen = JSON.parse(await readFile('area-amenities.json', 'utf8'));
@@ -151,15 +178,30 @@ for (const g of gebieden) {
   rijen[g.name.toLowerCase()] = { slug: g.slug, name: g.name, measures: maten, local: lokaal };
 }
 
-const b = rijen[Object.keys(rijen).find(k => rijen[k].slug === BENCH)];
-const benchmark = {};
-for (const m of b.measures) benchmark[m.label] = m.score;
+/* ijkpunt: de mediaan per maat, over de gebieden die die maat hebben */
+const mediaan = a => { const s = [...a].sort((x, y) => x - y), n = s.length;
+  return n % 2 ? s[(n - 1) / 2] : Math.round((s[n / 2 - 1] + s[n / 2]) / 2); };
+const benchmark = {}, benchN = {};
+for (const label of ['Affordability', ...TELMATEN.map(m => m.label)]) {
+  const v = Object.values(rijen).map(g => g.measures.find(m => m.label === label)?.score)
+                                .filter(x => x != null);
+  if (!v.length) continue;
+  benchmark[label] = mediaan(v);
+  benchN[label] = v.length;
+}
 
 const uit = {
   about: 'Lifestyle scores per gebied. Alleen wat uit te rekenen is; zie build-area-scores.mjs voor de afgewezen kandidaten en waarom.',
   built: new Date().toISOString().slice(0, 10),
   radius_km: amen.radius_km,
-  benchmark: { area: b.name, scores: benchmark },
+  benchmark: {
+    basis: 'median',
+    about: 'Mediaan per maat over de gebieden die die maat hebben. Tot 02-09-2026 stond hier de score ' +
+      'van Senegambia; dat was geen midden maar een uiterste — zie de kop van build-area-scores.mjs.',
+    label_en: 'the median of every area we measure',
+    scores: benchmark,
+    n: benchN,
+  },
   method: {
     Affordability: `100 × (ln(${Math.round(pMax)}) − ln(prijs)) / (ln(${Math.round(pMax)}) − ln(${Math.round(pMin)})), ` +
       'met de vraagprijs voor grond per m² uit area-prices.json. Goedkoopste gemeten gebied 100, duurste 0.',
@@ -177,7 +219,8 @@ const uit = {
 
 console.log(`prijsbereik ${geld(pMin)} – ${geld(pMax)} per m²; maxima: ` +
   TELMATEN.map(m => `${m.label} ${maxima[m.label]}`).join(', '));
-console.log(`benchmark ${b.name}: ` + Object.entries(benchmark).map(([k, v]) => `${k} ${v}`).join(', ') + '\n');
+console.log('ijkpunt (mediaan): ' +
+  Object.entries(benchmark).map(([k, v]) => `${k} ${v} (n=${benchN[k]})`).join(', ') + '\n');
 for (const g of Object.values(rijen)) {
   console.log(`  ${g.name.padEnd(18)} ${g.measures.length} ringen: ` +
     g.measures.map(m => `${m.label} ${m.score}`).join(', '));

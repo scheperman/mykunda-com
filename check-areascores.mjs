@@ -88,10 +88,28 @@ for (const f of files) {
 
   if (/ring\(loc\[1\],0\)/.test(src)) meld(f, 'de local strength wordt nog als ring getekend');
   if (/scores\.slice\(0,4\)/.test(src)) meld(f, 'het rooster tekent nog vast vier ringen');
+  /* het ijkpunt is sinds 02-09-2026 de mediaan; geen pagina mag Senegambia nog
+     als maatstaf noemen, en geen pagina mag zichzelf "the benchmark" noemen */
+  if (/Outer arc = Senegambia/.test(src)) meld(f, 'het bijschrift noemt Senegambia nog als ijkpunt');
+  if (/scored against Senegambia/.test(src)) meld(f, 'de lead noemt Senegambia nog als ijkpunt');
+  if (/delta bench">The benchmark/.test(src)) meld(f, 'de pagina noemt zichzelf nog "the benchmark"');
   if (!src.includes('<!--mk-scoresrc-->')) meld(f, 'geen bronregel onder het blok');
   const lead = src.match(/<h2>Lifestyle scores<\/h2>\s*<p class="lead">([^<]*)<\/p>/);
   if (!lead) meld(f, 'lead niet gevonden');
   else if (/four measures/i.test(lead[1])) meld(f, 'de lead belooft nog vier maten');
+}
+
+/* het ijkpunt narekenen uit area-scores.json zelf: is het echt de mediaan? */
+const mediaan = a => { const s = [...a].sort((x, y) => x - y), n = s.length;
+  return n % 2 ? s[(n - 1) / 2] : Math.round((s[n / 2 - 1] + s[n / 2]) / 2); };
+for (const [label, waarde] of Object.entries(data.benchmark.scores)) {
+  const v = Object.values(data.areas).map(g => g.measures.find(m => m.label === label)?.score)
+                                     .filter(x => x != null);
+  const m = mediaan(v);
+  if (m !== waarde) { console.log(`  FOUT ijkpunt ${label}: staat op ${waarde}, mediaan van ${v.length} gebieden is ${m}`); fout++; }
+  const boven = v.filter(x => x - waarde > 3).length, onder = v.filter(x => x - waarde < -3).length;
+  console.log(`  ijkpunt ${label.padEnd(18)} ${String(waarde).padStart(3)} (n=${v.length})  ` +
+    `boven ${String(boven).padStart(2)}  onder ${String(onder).padStart(2)}`);
 }
 
 console.log(`\ngecontroleerd: ${gecontroleerd} gebiedspagina's met scoreblok, ${zonderBlok} bewust zonder ` +
