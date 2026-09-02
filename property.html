@@ -700,6 +700,11 @@ function renderGallery(photos){
 
 // Try to load real photos from Supabase
 (async function(){
+  /* supabase.js wordt asynchroon geladen (zie __sbReady hierboven). Zonder dit
+     wachten draait dit blok al bij het parsen, is getListingPhotos nog niet
+     gedefinieerd en valt de galerij stil terug op de coverfoto — precies wat er
+     tot nu toe gebeurde. De andere backendblokken in deze pagina wachten wel. */
+  try{ await window.__sbReady; }catch(e){}
   if(typeof getListingPhotos==='function'){
     try{
       const realPhotos = await getListingPhotos(P.id);
