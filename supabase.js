@@ -379,6 +379,30 @@ function mediaUrl(path, isDoc, width){
   return sb.storage.from('listing-photos').getPublicUrl(path, opts).data.publicUrl;
 }
 
+/* Alle foto's van één advertentie, in de volgorde waarin de aanbieder ze heeft
+   neergezet (sort komt uit uploadFile). property.html riep dit al aan voor de
+   galerij, maar de functie bestond nergens: de galerij viel daardoor altijd
+   terug op de coverfoto, hoeveel foto's er ook waren geüpload.
+
+   Documenten blijven eruit — niet alleen omdat de galerij ze niet wil, maar
+   omdat ze in de private bucket staan en geen publieke URL hebben. Het
+   RLS-beleid "media select" laat foto's van een actieve advertentie aan
+   iedereen zien en de rest alleen aan de eigenaar of een beheerder; een
+   bezoeker die niets mag zien krijgt hier dus gewoon een lege lijst. */
+async function getListingPhotos(listingId, width){
+  if(!sb || !listingId) return [];
+  const { data, error } = await sb.from('listing_media')
+    .select('storage_path, sort, is_document, created_at')
+    .eq('listing_id', listingId)
+    .order('sort', { ascending:true })
+    .order('created_at', { ascending:true });
+  if(error || !data) return [];
+  return data
+    .filter(function(m){ return !m.is_document && m.storage_path; })
+    .map(function(m){ return mediaUrl(m.storage_path, false, width || 1200); })
+    .filter(Boolean);
+}
+
 /* ---------------- Viewings ----------------
    Sinds 30-08-2026 loopt alles over public.viewings; viewings_legacy_v0 is
    afgedankt en heeft geen schrijfregels meer. Schrijven gaat uitsluitend via de
@@ -659,7 +683,11 @@ function dbListingToCard(r){
     price: Number(r.price)||0, title: r.title, street: r.street||'', area: r.area||'',
     beds: r.beds||0, baths: r.baths||0, sqm: r.sqm||0, plot: r.plot_sqm||0,
     tag: (r.features&&r.features[0])||'', photos: (r.listing_media||[]).filter(m=>!m.is_document).length||1,
-    img: photo ? mediaUrl(photo.storage_path,false) : '',
+    /* 1000px via de transformatie-URL. Dit ene veld voedt zowel de zoekkaart
+       als de hero van property.html, dus het is de bovenkant van wat een kaart
+       nodig heeft en de onderkant van wat de hero wil. Zodra de kaarten een
+       eigen veld krijgen kan dit omlaag naar 600 en de hero naar 1600. */
+    img: photo ? mediaUrl(photo.storage_path,false,1000) : '',
     lat: r.lat, lng: r.lng, plus: r.plus_code || '',
     boundary: r.boundary || null,
     beach_m: typeof r.beach_m==='number' ? r.beach_m : null,

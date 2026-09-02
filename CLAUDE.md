@@ -1048,6 +1048,14 @@ lezen de gemeten afstand uit `area-features.json` en `area-travel.json`, of
 noemen geen maat waar niets te meten valt. `check-areascores.mjs` slaat sindsdien
 alarm op een tijdwoord in die regel.
 
+**Twee dingen die niets met de maten te maken hebben, maar wel tijd kostten.**
+De server liet twee keer een SFTP-listing time-outen ("Time-out wachten op
+server om te reageren", `%TEMP%\winscp-mykunda.log`); `upload.bat` stopt dan
+netjes vóór stap 3 en de site blijft ongemoeid — gewoon opnieuw draaien.
+En geef het commitbericht nooit door in een genest aanhalingsteken:
+`cmd /c "cd /d ... & upload.bat "Mijn bericht""` levert een commit met alleen
+het eerste woord op. Draai `upload.bat` in een eigen aanroep.
+
 **Twee dingen in de opmaak.** `.scores-grid` stond op `repeat(4,1fr)`, waardoor
 de vijfde ring alleen op een tweede rij viel; nu `repeat(auto-fit,minmax(150px,
 1fr))`. En `kololi.html` draagt een eigen kopie van `areas.css` ín de pagina —
