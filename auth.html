@@ -119,7 +119,7 @@ body{min-height:100vh;display:flex}
     <a class="logo" id="brandLogo" href="/"></a>
     <div class="brand-quote">
       <h2>The Gambia's home for property.</h2>
-      <p>Join thousands of buyers, renters and sellers across the Smiling Coast and the diaspora.</p>
+      <p>New, and built here &mdash; for buyers, renters and sellers on the Smiling Coast and in the diaspora.</p>
     </div>
     <div class="brand-points">
       <div class="bp"><span class="ic" id="bp1"></span> Save your favourite homes &amp; searches</div>
@@ -206,6 +206,30 @@ body{min-height:100vh;display:flex}
         <button class="btn btn-primary btn-block" id="verifyBtn" style="height:52px;font-size:16px">Verify &amp; continue</button>
         <div class="otp-resend">Didn't get it? <button id="resendBtn">Resend code</button><br>Check your spam folder too.</div>
         <div class="otp-demo" id="otpDemo" style="display:none"></div>
+      </div>
+
+      <!-- STEP 3: de toestemmingspoort na een Google-aanmelding.
+           signInWithOAuth kent geen shouldCreateUser: wie op de tab "Sign in"
+           op Continue with Google drukt met een adres dat nog geen account
+           heeft, krijgt er toch een. Tot 02-09-2026 ontstond zo'n account met
+           consent_contact=false en consent_at leeg — de voorwaarden waren dan
+           nooit aanvaard en de teammail meldde alleen achteraf "Not recorded".
+           De opslag in localStorage dekt dat niet: een privévenster of een
+           andere browser bij terugkeer laat de keuze stil verdwijnen. Deze
+           poort kijkt naar wat er wérkelijk in profiles staat en laat pas door
+           als het er staat.
+           De rolkaarten en de vinkjes worden hierheen VERPLAATST, niet
+           gekopieerd: één set knoppen, één set handlers, geen ids die twee
+           keer bestaan. -->
+      <div class="step" id="stepConsent">
+        <div class="top">
+          <h1 id="consentTitle">One more step</h1>
+          <p id="consentSub"></p>
+        </div>
+        <div id="consentSlot"></div>
+        <div id="consentErr" style="display:none;color:#C2533A;font-size:13.5px;font-weight:600;margin:0 0 14px;text-align:center;line-height:1.5"></div>
+        <button class="btn btn-primary btn-block" id="consentGoBtn" style="height:52px;font-size:16px">Finish and continue</button>
+        <div class="terms" style="display:block">Changed your mind? <a href="#" id="consentCancel">Cancel and sign out</a>.</div>
       </div>
 
       <!-- 27-08-2026: de stap "Choose a new password" is hier weggehaald.
@@ -507,44 +531,146 @@ document.getElementById('googleBtn').addEventListener('click',()=>{
   oauth('google');
 });
 
+/* ---- Terugkeer van Google ----
+   De laatste stap van de aanmelding, en tot 02-09-2026 ook het gat erin: er
+   werd alleen consent weggeschreven als de browser hem nog in localStorage
+   had staan. Wie op de tab "Sign in" op Continue with Google drukte, of in een
+   privévenster terugkwam, kreeg een werkend account waarvan de voorwaarden
+   nooit aanvaard waren. Nu beslist wat er in profiles staat, en niet wat de
+   browser dacht: staat de toestemming er niet, dan gaat de bezoeker naar
+   #stepConsent en niet naar het dashboard. */
+let pendingSession = null;
+
+/* Alles wat er ná een geslaagde aanmelding hoort te gebeuren, op één plek —
+   zowel voor wie meteen door mag als voor wie eerst door de poort moest. */
+function finishOAuth(u, name){
+  fetch(MYKUNDA_SUPABASE_URL.replace(/\/+$/,'') + '/functions/v1/notify-signup', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ user_id: u.id }), keepalive:true
+  }).catch(function(){});
+  setUser({ name, email: u.email||'', phone: u.phone||'', via: u.app_metadata?.provider||'oauth' });
+  location.href = nextUrl;
+}
+
+/* isNew bepaalt of de rolkaarten meekomen. Een bestaand account waarvan de
+   toestemming ontbreekt hoort alleen de vinkjes te zien: zijn rol staat al
+   vast en die hoort niet in een terloops schermpje te verspringen. */
+function openConsentGate(u, name, isNew){
+  pendingSession = { user:u, name:name };
+  const slot = document.getElementById('consentSlot');
+  if(isNew){
+    const rb = document.getElementById('roleBlock');
+    slot.appendChild(rb); rb.style.display='block';
+  }
+  const cb = document.getElementById('consentBlock');
+  slot.appendChild(cb); cb.style.display='flex';
+  document.getElementById('consentTitle').textContent = isNew ? 'One more step' : 'Please accept our Terms';
+  document.getElementById('consentSub').textContent = isNew
+    ? 'Tell us how you’ll use MyKunda and accept the Terms. Then your account is ready.'
+    : 'We have no record that you accepted our Terms and Privacy Policy. Accept them to carry on.';
+  showAuthStep('stepConsent');
+}
+
+document.getElementById('consentGoBtn').addEventListener('click', async function(){
+  if(!pendingSession) return;
+  const slot = document.getElementById('consentSlot');
+  const withRole = slot.contains(document.getElementById('roleBlock'));
+  const err = document.getElementById('consentErr');
+  const say = function(m){ err.textContent = m||''; err.style.display = m?'block':'none'; };
+  if(withRole && !role){
+    document.getElementById('roleCards').classList.add('warn');
+    say('Tell us how you’ll use MyKunda so we can set your account up right.');
+    return;
+  }
+  if(!document.getElementById('consentIn').checked){
+    document.getElementById('consentBlock').classList.add('warn');
+    say('Please agree to the Terms and Privacy Policy to continue.');
+    return;
+  }
+  document.getElementById('consentBlock').classList.remove('warn');
+  say('');
+  const btn=this; btn.textContent='Saving…'; btn.style.opacity='.75';
+  const u = pendingSession.user;
+  try{
+    const { error } = await sb.from('profiles').update({
+      consent_contact: true,
+      consent_marketing: document.getElementById('consentMktIn').checked,
+      consent_at: new Date().toISOString()
+    }).eq('id', u.id);
+    if(error) throw error;
+    /* De rol kan niet in diezelfde update mee: authenticated heeft geen
+       UPDATE-recht op profiles.role, en dat moet zo blijven. Bij Google komt
+       de rol ook niet in de signup-metadata terecht — die vult Google zelf —
+       dus handle_new_user() maakt er 'buyer' van en zet set-role hem hier
+       alsnog goed, serverzijdig, met het token van deze sessie. Mislukt dat,
+       dan werkt het account gewoon als zoeker; geen reden om de aanmelding te
+       laten stranden. */
+    if(withRole && (role==='seller' || role==='agent') && typeof setMyRole==='function'){
+      try{ await setMyRole(role); }
+      catch(e){ console.warn('set-role:', e && e.message); }
+    }
+  }catch(e){
+    btn.textContent='Finish and continue'; btn.style.opacity='';
+    say('We could not save that. Please try again.');
+    console.warn('consent gate:', e && e.message);
+    return;
+  }
+  finishOAuth(u, pendingSession.name);
+});
+
+/* Afhaken mag. Google heeft het account op dat moment al aangemaakt — daar is
+   client-side niets aan te doen — dus we zeggen dat eerlijk in plaats van te
+   beweren dat er niets gebeurd is. */
+document.getElementById('consentCancel').addEventListener('click', async function(e){
+  e.preventDefault();
+  try{ if(typeof signOut==='function') await signOut(); }catch(err){}
+  location.replace('auth.html?left=1');
+});
+
 // return from an OAuth redirect (?oauth=1, plus ?google=1 for links already in flight)
 (async function handleOAuthReturn(){
   if(qs('oauth')!=='1' && qs('google')!=='1') return;
   if(!(await liveReady())) return;
   try{
     const { data } = await sb.auth.getSession();
-    if(data.session){
-      const u=data.session.user;
-      const name = u.user_metadata?.full_name || u.user_metadata?.name || (u.email?u.email.split('@')[0]:'MyKunda User');
-      // Store the consent given on the Create-account tab before the Google redirect,
-      // then let the backend send the welcome + team emails (idempotent, once per user).
-      try{
-        const pend = JSON.parse(localStorage.getItem('mk_pending_consent')||'null');
-        localStorage.removeItem('mk_pending_consent');
-        if(pend && pend.consent && Date.now()-(pend.ts||0) < 30*60*1000){
-          const patch = { consent_contact:true, consent_marketing:!!pend.marketing, consent_at:new Date().toISOString() };
-          if(pend.name) patch.full_name = pend.name;
-          await sb.from('profiles').update(patch).eq('id', u.id);
-          /* De rol kan niet in diezelfde update mee: authenticated heeft geen
-             UPDATE-recht op profiles.role, en dat moet zo blijven. Bij Google
-             komt de rol ook niet in de signup-metadata terecht — die vult
-             Google zelf — dus handle_new_user() maakte er 'buyer' van en zet
-             set-role hem hier alsnog goed, serverzijdig, met het token van
-             deze sessie. Mislukt dat, dan blijft het account gewoon werken als
-             zoeker; het is geen reden om de aanmelding te laten stranden. */
-          if((pend.role==='seller' || pend.role==='agent') && typeof setMyRole==='function'){
-            try{ await setMyRole(pend.role); }
-            catch(e){ console.warn('set-role:', e && e.message); }
-          }
+    if(!data.session) return;
+    const u=data.session.user;
+    const name = u.user_metadata?.full_name || u.user_metadata?.name || (u.email?u.email.split('@')[0]:'MyKunda User');
+    // Store the consent given on the Create-account tab before the Google redirect.
+    let consentSaved = false;
+    try{
+      const pend = JSON.parse(localStorage.getItem('mk_pending_consent')||'null');
+      localStorage.removeItem('mk_pending_consent');
+      if(pend && pend.consent && Date.now()-(pend.ts||0) < 30*60*1000){
+        const patch = { consent_contact:true, consent_marketing:!!pend.marketing, consent_at:new Date().toISOString() };
+        if(pend.name) patch.full_name = pend.name;
+        const { error } = await sb.from('profiles').update(patch).eq('id', u.id);
+        if(!error) consentSaved = true;
+        if((pend.role==='seller' || pend.role==='agent') && typeof setMyRole==='function'){
+          try{ await setMyRole(pend.role); }
+          catch(e){ console.warn('set-role:', e && e.message); }
         }
-        fetch(MYKUNDA_SUPABASE_URL.replace(/\/+$/,'') + '/functions/v1/notify-signup', {
-          method:'POST', headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({ user_id: u.id }), keepalive:true
-        }).catch(function(){});
-      }catch(e){ console.warn('post-OAuth consent/notify:', e.message); }
-      setUser({ name, email: u.email||'', phone: u.phone||'', via: u.app_metadata?.provider||'oauth' });
-      location.href = nextUrl;
+      }
+    }catch(e){ console.warn('post-OAuth consent:', e.message); }
+
+    if(!consentSaved){
+      try{
+        const { data: prof, error } = await sb.from('profiles')
+          .select('consent_contact, created_at').eq('id', u.id).maybeSingle();
+        if(error) throw error;
+        if(prof && prof.consent_contact !== true){
+          const born = Date.parse(prof.created_at || u.created_at || '') || 0;
+          openConsentGate(u, name, Date.now() - born < 15*60*1000);
+          return;   // niet doorlaten voordat de poort door is
+        }
+      }catch(e){
+        /* Kan het profiel niet gelezen worden, dan is doorlaten beter dan een
+           bezoeker buitensluiten op een leesfout. Het gaatje dat dat laat is
+           kleiner dan een aanmelding die op een hapering stukloopt. */
+        console.warn('consent check:', e && e.message);
+      }
     }
+    finishOAuth(u, name);
   }catch(e){ console.warn('OAuth return handling:', e.message); }
 })();
 
@@ -642,6 +768,12 @@ document.getElementById('resendBtn').addEventListener('click',async function(){
 // start on signup if requested
 if(qs('mode')==='signup') mode='signup';
 applyMode();
+
+/* Teruggekomen van de toestemmingspoort met "Cancel and sign out". Eerlijk
+   blijven: het Google-account bestaat op dat moment, alleen ongebruikt. */
+if(qs('left')==='1'){
+  authErr('You are signed out. Google created a MyKunda account when you signed in — email admin@mykunda.com if you would like it removed.');
+}
 
 function showAuthStep(id){
   document.querySelectorAll('.form-card > .step').forEach(s=>s.classList.remove('on'));
