@@ -68,6 +68,7 @@ body{min-height:100vh;display:flex}
 .otp-sent{text-align:center;color:var(--muted);font-size:14.5px;margin-bottom:6px;line-height:1.6}
 .otp-sent b{color:var(--ink)}
 .otp-via{font-size:13px;font-weight:600;color:var(--muted-2)}
+.otp-life{text-align:center;font-size:13px;color:var(--muted-2);margin:-10px 0 0}
 .otp-resend{text-align:center;font-size:13.5px;color:var(--muted);margin-top:18px;line-height:1.7}
 .otp-resend button{font-weight:700;color:var(--green-700)}
 .otp-demo{text-align:center;font-size:12px;color:var(--amber-600);background:var(--amber-50);border:1px solid var(--amber-100);border-radius:var(--r-pill);padding:7px 14px;margin-top:16px;font-weight:600}
@@ -206,6 +207,7 @@ body{min-height:100vh;display:flex}
           <input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric">
         </div>
         <button class="btn btn-primary btn-block" id="verifyBtn" style="height:52px;font-size:16px">Verify &amp; continue</button>
+        <p class="otp-life" id="otpLife">The code works only once.</p>
         <div class="otp-resend">Didn't get it? <button id="resendBtn">Resend code</button><br>Check your spam folder too.</div>
         <div class="otp-demo" id="otpDemo" style="display:none"></div>
       </div>
@@ -486,6 +488,16 @@ async function sendCode(isResend){
       }
       otpVerifyType = (r && r.verify_type) || 'email';
       if(r && r.code_length) setOtpLength(r.code_length);
+      /* De geldigheidsduur komt van de server en alleen als die hem kent (het
+         secret AUTH_OTP_MINUTES). Weet niemand hem, dan noemt het scherm hem
+         niet — net als de mail. Een verzonnen termijn is erger dan geen. */
+      const life = document.getElementById('otpLife');
+      if(life){
+        const m = r && Number(r.code_minutes);
+        life.textContent = (m > 0)
+          ? 'The code expires in ' + m + ' minutes and works only once.'
+          : 'The code works only once.';
+      }
       document.getElementById('otpDemo').style.display='none';
     }catch(e){
       // auth-email unreachable: do NOT fall back to Supabase's own mailer — that would
@@ -575,7 +587,13 @@ let pendingSession = null;
 
 /* Alles wat er ná een geslaagde aanmelding hoort te gebeuren, op één plek —
    zowel voor wie meteen door mag als voor wie eerst door de poort moest. */
+/* Deze browser heeft een sessie gehad. Overleeft signOut() met opzet: het zegt
+   niets over wie er nu is ingelogd, alleen dat hier ooit iemand een account
+   had — en dat bepaalt op welke tab het scherm opent. */
+function markSeen(){ try{ localStorage.setItem('mk_seen','1'); }catch(e){} }
+
 function finishOAuth(u, name){
+  markSeen();
   fetch(MYKUNDA_SUPABASE_URL.replace(/\/+$/,'') + '/functions/v1/notify-signup', {
     method:'POST', headers:{'Content-Type':'application/json'},
     body: JSON.stringify({ user_id: u.id }), keepalive:true
@@ -823,6 +841,7 @@ document.getElementById('verifyBtn').addEventListener('click',async ()=>{
       const vu = (res.data && res.data.user) || res.user || null;
       const vmeta = (vu && vu.user_metadata) || {};
       const realName = String(vmeta.full_name || vmeta.name || '').trim();
+      markSeen();
       setUser(Object.assign({}, pendingUser, realName ? { name: realName } : {}));
       location.href=nextUrl; return;
     }catch(e){
@@ -859,8 +878,24 @@ document.getElementById('resendBtn').addEventListener('click',async function(){
   b.textContent='Code sent \u2713';
   setTimeout(()=>b.textContent='Resend code',2200);
 });
-// start on signup if requested
+/* Waar het scherm op opent. Tot 02-09-2026 was dat altijd "Sign in", ook voor
+   iemand die nog nooit een account had: die typte zijn adres, kreeg "No account
+   on that email yet" en mocht opnieuw beginnen — één ronde te veel op precies
+   het moment dat iemand voor het eerst iets van je wil. Nu opent het scherm op
+   de aanmeldtab zolang deze browser nog nooit een sessie heeft gehad.
+   `mk_seen` en niet `mykunda_user`, want dat laatste wist signOut() en dan zou
+   iemand die netjes uitlogt de volgende keer op Create account landen. Wie nu
+   al is ingelogd telt ook als bekend, zodat bestaande gebruikers de wissel niet
+   één keer verkeerd zien. */
+function hasSeenBefore(){
+  try{
+    if(localStorage.getItem('mk_seen')==='1') return true;
+    if(localStorage.getItem('mykunda_user')) return true;
+  }catch(e){ return true; }   // geen opslag? dan niets aannemen en gewoon inloggen tonen
+  return false;
+}
 if(qs('mode')==='signup') mode='signup';
+else if(qs('mode')!=='signin' && !hasSeenBefore()) mode='signup';
 applyMode();
 
 /* Teruggekomen van de toestemmingspoort met "Cancel and sign out". Eerlijk
@@ -883,7 +918,10 @@ function showAuthStep(id){
       const { data, error } = await sb.auth.verifyOtp({ token_hash: tokenHash, type: linkType });
       if(error) throw error;
       const u = data.user;
-      if(u) setUser({ name: u.user_metadata?.full_name || u.user_metadata?.name || (u.email?u.email.split('@')[0]:'MyKunda User'), email: u.email||'' });
+      if(u){
+        markSeen();
+        setUser({ name: u.user_metadata?.full_name || u.user_metadata?.name || (u.email?u.email.split('@')[0]:'MyKunda User'), email: u.email||'' });
+      }
       location.href = nextUrl;
     }catch(e){
       showAuthStep('stepCreds');

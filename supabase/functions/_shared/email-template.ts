@@ -804,13 +804,22 @@ export function authLinkEmail(opts: { type: 'recovery' | 'magiclink' | 'signup';
 /** The 6-digit sign-in code — what auth.html's OTP screen asks for. */
 export function authCodeEmail(opts: { code: string; minutes?: number }): string {
   const code = esc(opts.code);
-  const mins = opts.minutes ?? 60;
+  /* `minutes` stond hier tot 02-09-2026 op een standaardwaarde van 60, en
+     auth-email gaf hem nooit mee. De mail beweerde dus altijd "the code expires
+     in 60 minutes" zonder dat dat ooit tegen de instelling van het project was
+     gehouden — en juist deze mail moet kloppen. Nu geldt: weten we het niet,
+     dan zeggen we het niet. Zet het secret AUTH_OTP_MINUTES op de waarde uit
+     Supabase (Authentication → Providers → Email → Email OTP Expiration,
+     gedeeld door 60) en de termijn staat er weer, in de mail én op het scherm. */
+  const mins = opts.minutes;
   return emailWrap({
     heading: 'Your sign-in code',
     preheader: `${code} — your MyKunda sign-in code.`,
     body: `<p style="margin:0 0 18px">Enter this code on the MyKunda sign-in screen to continue. No password needed.</p>
       <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 6px"><tr><td style="background:${BRAND.green50};border:1px solid ${BRAND.line};border-radius:12px;padding:18px 26px;font-family:'Courier New',Courier,monospace;font-size:34px;font-weight:700;letter-spacing:.22em;color:${BRAND.ink};text-align:center">${code}</td></tr></table>
-      <p style="font-size:13px;color:${BRAND.muted2};margin:18px 0 0">The code expires in ${mins} minutes and works only once. Didn’t ask for it? You can safely ignore this email.</p>`,
+      <p style="font-size:13px;color:${BRAND.muted2};margin:18px 0 0">${mins
+        ? `The code expires in ${mins} minutes and works only once.`
+        : 'The code works only once. If it no longer works, ask for a new one on the sign-in screen.'} Didn’t ask for it? You can safely ignore this email.</p>`,
     footer: 'You received this because this address was used to sign in at mykunda.com. We never ask for your password by email.',
   });
 }
@@ -916,8 +925,15 @@ export function welcomeEmail(u: SignupInfo): string {
   const role = u.role === 'seller' || u.role === 'agent' ? u.role : 'buyer';
   const opener = {
     buyer: 'Your account is ready. From here you can save the properties and searches you care about, message sellers directly, and ask us to check a title before any money moves.',
-    seller: 'Your account is ready. You can publish your first listing in a few minutes — it is free to start — and every enquiry, viewing request and message lands in My MyKunda.',
-    agent: 'Your account is ready. You can publish listings straight away, and set up your company profile — your logo, a line about the firm and a link to your own site — so buyers know who they are dealing with before they write.',
+    /* 02-09-2026: "publish your first listing in a few minutes" klopte niet.
+       Invullen duurt een paar minuten, live staan niet: elke advertentie wordt
+       eerst door een mens gelezen, en dat is de tijdsbelofte van 1–2 werkdagen
+       die overal op de site staat. Dit is de eerste mail die een nieuwe
+       aanbieder krijgt, dus de plek om die controle te brengen als het
+       kwaliteitskenmerk dat het is — in plaats van als vertraging die hij
+       later zelf ontdekt. */
+    seller: 'Your account is ready. You can put your first listing together in a few minutes, and it is free to start. A person at MyKunda reads every listing before it goes live — usually within 1–2 working days — and from then on every enquiry, viewing request and message lands in My MyKunda.',
+    agent: 'Your account is ready. You can prepare listings straight away; each one is read by a person before it goes live, usually within 1–2 working days. Set up your company profile too — your logo, a line about the firm and a link to your own site — so buyers know who they are dealing with before they write.',
   }[role];
   const rowSave = featureRow('♥', 'Save homes and searches', 'Keep favourites and saved searches in one place in My MyKunda, and pick a search back up in one tap.', `${S}/dashboard.html#saved`);
   /* "Managed" stond hier tot 31-08-2026 in. Dat plan is geparkeerd tot er een
@@ -925,7 +941,7 @@ export function welcomeEmail(u: SignupInfo): string {
      checkout.html en is nergens te koop. Een welkomstmail die een dienst noemt
      die niemand kan bestellen, kost precies het vertrouwen dat de rest van deze
      mail probeert op te bouwen. Terugzetten zodra Managed echt bestaat. */
-  const rowList = featureRow('⌂', 'List a property or plot — free', 'Publish a listing in a few minutes; add Boost or Verified later for more views and a title check.', `${S}/list.html`);
+  const rowList = featureRow('⌂', 'List a property or plot — free', 'Put a listing together in a few minutes. A person checks it before it goes live, usually within 1–2 working days; add Boost or Verified later for more views and a title check.', `${S}/list.html`);
   const rowCheck = featureRow('✓', 'Check ownership before you pay', 'Ask us to review title documents so you know what you are buying.', `${S}/verify.html`);
   const rowMarket = featureRow('%', 'Follow the market', 'Area guides, live prices and the MyKunda market index for the coast and upcountry.', `${S}/market.html`);
   /* Alleen voor een kantoor, sinds 02-09-2026: het bedrijfsprofiel is het

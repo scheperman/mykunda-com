@@ -46,6 +46,17 @@ const FROM_EMAIL     = Deno.env.get("FROM_EMAIL") ?? "MyKunda <noreply@mykunda.c
 const SUPABASE_URL   = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY    = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const SITE_URL       = "https://mykunda.com";
+/* De geldigheidsduur van de inlogcode staat in de instellingen van Supabase
+   (Authentication → Providers → Email → Email OTP Expiration) en nergens waar
+   deze functie bij kan. Tot 02-09-2026 zei de mail daarom "60 minutes" op basis
+   van een standaardwaarde in het sjabloon die nooit tegen die instelling was
+   gehouden. Nu: staat dit secret gezet, dan noemen de mail én het codescherm de
+   termijn; staat hij niet, dan zeggen ze er niets over. Liever geen getal dan
+   een getal dat kan liegen. */
+const OTP_MINUTES: number | undefined =
+  Number(Deno.env.get("AUTH_OTP_MINUTES") ?? "") > 0
+    ? Number(Deno.env.get("AUTH_OTP_MINUTES"))
+    : undefined;
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
@@ -393,7 +404,7 @@ serve(async (req) => {
       if (res.error) throw res.error;
       const code = res.data?.properties?.email_otp;
       if (!code) throw new Error("no email_otp returned from generateLink");
-      const sent = await sendEmail(email, SUBJECT.email_code, authCodeEmail({ code }));
+      const sent = await sendEmail(email, SUBJECT.email_code, authCodeEmail({ code, minutes: OTP_MINUTES }));
       await logAuthEmail(admin, {
         event_type: "auth_code",
         recipient: email,
@@ -414,7 +425,14 @@ serve(async (req) => {
           error: "We can't use that email address. Please try another one.",
         });
       }
-      return json({ ok: true, verify_type: verifyType, code_length: String(code).length });
+      /* code_minutes gaat mee zodat het codescherm dezelfde termijn noemt als
+         de mail — en er net zo goed over zwijgt als hij niet bekend is. */
+      return json({
+        ok: true,
+        verify_type: verifyType,
+        code_length: String(code).length,
+        code_minutes: OTP_MINUTES ?? null,
+      });
     }
 
     /* Gecorrigeerd 30-08-2026. Hier stond okNoop: bij een volle emmer kwam er
