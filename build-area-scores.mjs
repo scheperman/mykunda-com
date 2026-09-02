@@ -175,7 +175,13 @@ for (const g of gebieden) {
   const lokaal = oudeRij && oudeRij[4]
     ? { label: oudeRij[4][0], desc: LOKAAL_HERSCHREVEN[g.slug] ?? oudeRij[4][2] }
     : null;
-  rijen[g.name.toLowerCase()] = { slug: g.slug, name: g.name, measures: maten, local: lokaal };
+  /* Welke maten deze pagina niet toont, zodat de bronregel het bij naam kan
+     noemen. Zonder dat ziet een bezoeker op Barra één ring en leest hij nergens
+     dat de andere drie ontbreken omdat er niets gekarteerd is. */
+  const getoond = new Set(maten.map(m => m.label));
+  const ontbreekt = ['Affordability', ...TELMATEN.map(m => m.label)].filter(l => !getoond.has(l));
+
+  rijen[g.name.toLowerCase()] = { slug: g.slug, name: g.name, measures: maten, local: lokaal, missing: ontbreekt };
 }
 
 /* ijkpunt: de mediaan per maat, over de gebieden die die maat hebben */

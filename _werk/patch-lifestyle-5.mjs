@@ -42,6 +42,22 @@ const BRONREGEL = 'Four measures, each one counted rather than judged. Affordabi
   'middle but an extreme — no area could ever beat its score for places to eat, and almost all of them beat it on ' +
   'price. Scores for safety and for transport used to sit here; nothing measurable stood behind either, so they are gone.';
 
+/* Twaalf pagina's tonen minder dan vier ringen omdat OpenStreetMap in die
+   categorie niets binnen 2 km kent. Dat stond alleen in het algemeen in de
+   bronregel; nu noemt elke pagina haar eigen gat bij naam. */
+const KLEIN = { 'Affordability': 'affordability', 'Everyday shopping': 'everyday shopping',
+                'Places to eat': 'places to eat', 'Healthcare': 'healthcare' };
+const opsomming = a => a.length === 1 ? a[0] : a.slice(0, -1).join(', ') + ' or ' + a[a.length - 1];
+const GATZIN = g => {
+  if (!g.missing || !g.missing.length) return '';
+  const namen = g.missing.map(l => KLEIN[l] ?? l.toLowerCase());
+  return g.missing.length === 1
+    ? ` There is no ring for ${namen[0]} on this page: OpenStreetMap has nothing mapped in that category within ` +
+      `${scores.radius_km} km of the pin.`
+    : ` There are no rings for ${opsomming(namen)} on this page: OpenStreetMap has nothing mapped in those ` +
+      `categories within ${scores.radius_km} km of the pin.`;
+};
+
 /* De lead boven het blok en het bijschrift onder het rooster. Beide noemden
    Senegambia als ijkpunt; dat is sinds 02-09-2026 de mediaan. */
 const LEAD = naam => `What we can measure for ${naam}, set against the median of every area we measure ` +
@@ -115,7 +131,7 @@ for (const g of gebieden) {
   let nieuw = zet(bron, mScores[0], (mSG ? '' : regelSG() + '\n') + regelScores(g));
   nieuw = zet(nieuw, mRender[0], RENDER);
   nieuw = zet(nieuw, mLead[0], mLead[1] + LEAD(g.name) + mLead[3]);
-  nieuw = zet(nieuw, mBron[0], `<!--mk-scoresrc--><p class="src">${BRONREGEL}</p>`);
+  nieuw = zet(nieuw, mBron[0], `<!--mk-scoresrc--><p class="src">${BRONREGEL}${GATZIN(g)}</p>`);
   if (mSG) nieuw = zet(nieuw, mSG[0], regelSG());
 
   /* Kololi draagt een eigen kopie van areas.css ín de pagina; een wijziging in
@@ -129,7 +145,7 @@ for (const g of gebieden) {
 
   const oudAantal = (mScores[0].match(/\],\[/g) || []).length + 1 - (g.local ? 1 : 0);
   console.log(`  ${g.name.padEnd(18)} ${oudAantal} → ${g.measures.length} ringen` +
-    (g.local ? `   lokaal: ${g.local.desc}` : ''));
+    (g.missing?.length ? `   gatzin: mist ${g.missing.join(', ')}` : ''));
   ringenTotaal += g.measures.length;
 
   if (WRITE) { await copyFile(bestand, `${BACKUP}/${bestand}`); await writeFile(bestand, nieuw); }

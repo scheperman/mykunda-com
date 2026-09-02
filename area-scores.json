@@ -65,7 +65,8 @@
    "local": {
     "label": "Heritage",
     "desc": "Kachikally and the old town"
-   }
+   },
+   "missing": []
   },
   "bakoteh": {
    "slug": "bakoteh",
@@ -99,7 +100,8 @@
    "local": {
     "label": "Rental demand",
     "desc": "Never dips, room by room"
-   }
+   },
+   "missing": []
   },
   "banjul": {
    "slug": "banjul",
@@ -133,7 +135,8 @@
    "local": {
     "label": "Government & port",
     "desc": "Every ministry and the port"
-   }
+   },
+   "missing": []
   },
   "bansang": {
    "slug": "bansang",
@@ -161,7 +164,10 @@
    "local": {
     "label": "Hospital",
     "desc": "Main referral centre"
-   }
+   },
+   "missing": [
+    "Places to eat"
+   ]
   },
   "barra": {
    "slug": "barra",
@@ -177,7 +183,12 @@
    "local": {
     "label": "Ferry gateway",
     "desc": "Direct crossing to Banjul"
-   }
+   },
+   "missing": [
+    "Everyday shopping",
+    "Places to eat",
+    "Healthcare"
+   ]
   },
   "basse santa su": {
    "slug": "basse",
@@ -211,7 +222,8 @@
    "local": {
     "label": "Regional market",
     "desc": "Biggest lumo in the east"
-   }
+   },
+   "missing": []
   },
   "batokunku": {
    "slug": "batokunku",
@@ -239,7 +251,10 @@
    "local": {
     "label": "Tranquillity",
     "desc": "Almost no development"
-   }
+   },
+   "missing": [
+    "Everyday shopping"
+   ]
   },
   "bijilo": {
    "slug": "bijilo",
@@ -273,7 +288,8 @@
    "local": {
     "label": "Green space",
     "desc": "Forest park on the doorstep"
-   }
+   },
+   "missing": []
   },
   "brikama": {
    "slug": "brikama",
@@ -307,7 +323,8 @@
    "local": {
     "label": "Craft heritage",
     "desc": "Carvers, kora and djembe"
-   }
+   },
+   "missing": []
   },
   "brufut": {
    "slug": "brufut",
@@ -341,7 +358,8 @@
    "local": {
     "label": "Growth",
     "desc": "Fastest-moving coastal market"
-   }
+   },
+   "missing": []
   },
   "brusubi": {
    "slug": "brusubi",
@@ -375,7 +393,8 @@
    "local": {
     "label": "New build quality",
     "desc": "Modern estates, real roads"
-   }
+   },
+   "missing": []
   },
   "busumbala": {
    "slug": "busumbala",
@@ -403,7 +422,10 @@
    "local": {
     "label": "Plot size",
     "desc": "Most ground for the money"
-   }
+   },
+   "missing": [
+    "Healthcare"
+   ]
   },
   "cape point": {
    "slug": "cape-point",
@@ -431,7 +453,10 @@
    "local": {
     "label": "Privacy",
     "desc": "Low-density cliffside"
-   }
+   },
+   "missing": [
+    "Healthcare"
+   ]
   },
   "essau": {
    "slug": "essau",
@@ -453,7 +478,11 @@
    "local": {
     "label": "Senegal road",
     "desc": "Main road north to the Senegal border"
-   }
+   },
+   "missing": [
+    "Everyday shopping",
+    "Places to eat"
+   ]
   },
   "fajara": {
    "slug": "fajara",
@@ -487,7 +516,8 @@
    "local": {
     "label": "Schools & clinics",
     "desc": "Four intl. schools nearby"
-   }
+   },
+   "missing": []
   },
   "farafenni": {
    "slug": "farafenni",
@@ -521,7 +551,8 @@
    "local": {
     "label": "Cross-border trade",
     "desc": "The lumo and the highway"
-   }
+   },
+   "missing": []
   },
   "fatoto": {
    "slug": "fatoto",
@@ -543,7 +574,11 @@
    "local": {
     "label": "Farmland",
     "desc": "Cheapest ground anywhere"
-   }
+   },
+   "missing": [
+    "Everyday shopping",
+    "Places to eat"
+   ]
   },
   "gambissara": {
    "slug": "gambissara",
@@ -577,7 +612,8 @@
    "local": {
     "label": "Build standard",
     "desc": "Remittance-built two-storeys"
-   }
+   },
+   "missing": []
   },
   "gunjur": {
    "slug": "gunjur",
@@ -611,7 +647,8 @@
    "local": {
     "label": "Nature reserve",
     "desc": "Bolong Fenyo and mangroves"
-   }
+   },
+   "missing": []
   },
   "jabang": {
    "slug": "jabang",
@@ -627,7 +664,12 @@
    "local": {
     "label": "Growth",
     "desc": "Fastest price rise in Kombo"
-   }
+   },
+   "missing": [
+    "Everyday shopping",
+    "Places to eat",
+    "Healthcare"
+   ]
   },
   "janjanbureh": {
    "slug": "janjanbureh",
@@ -661,7 +703,8 @@
    "local": {
     "label": "Heritage",
     "desc": "Six sites on the island"
-   }
+   },
+   "missing": []
   },
   "kartong": {
    "slug": "kartong",
@@ -695,7 +738,8 @@
    "local": {
     "label": "Eco-tourism",
     "desc": "River, birds and lodges"
-   }
+   },
+   "missing": []
   },
   "kerewan": {
    "slug": "kerewan",
@@ -729,7 +773,8 @@
    "local": {
     "label": "Administration",
     "desc": "North Bank regional HQ"
-   }
+   },
+   "missing": []
   },
   "kerr serign": {
    "slug": "kerr-serign",
@@ -763,7 +808,8 @@
    "local": {
     "label": "Quiet",
     "desc": "Low-density, leafy streets"
-   }
+   },
+   "missing": []
   },
   "kololi": {
    "slug": "kololi",
@@ -797,7 +843,8 @@
    "local": {
     "label": "Beach access",
     "desc": "1.1 km to the shore, as the crow flies"
-   }
+   },
+   "missing": []
   },
   "kotu": {
    "slug": "kotu",
@@ -831,7 +878,8 @@
    "local": {
     "label": "Birdlife",
     "desc": "Kotu Stream, top birding"
-   }
+   },
+   "missing": []
   },
   "kuntaur": {
    "slug": "kuntaur",
@@ -865,7 +913,8 @@
    "local": {
     "label": "Wildlife",
     "desc": "Wassu circles, chimp islands"
-   }
+   },
+   "missing": []
   },
   "lamin": {
    "slug": "lamin",
@@ -899,7 +948,8 @@
    "local": {
     "label": "Creek setting",
     "desc": "Mangroves and oyster beds"
-   }
+   },
+   "missing": []
   },
   "manjai kunda": {
    "slug": "manjai-kunda",
@@ -927,7 +977,10 @@
    "local": {
     "label": "Walkability",
     "desc": "Westfield on foot"
-   }
+   },
+   "missing": [
+    "Healthcare"
+   ]
   },
   "mansa konko": {
    "slug": "mansa-konko",
@@ -961,7 +1014,8 @@
    "local": {
     "label": "Administration",
     "desc": "Lower River regional HQ"
-   }
+   },
+   "missing": []
   },
   "nema kunku": {
    "slug": "nema-kunku",
@@ -995,7 +1049,8 @@
    "local": {
     "label": "Plot turnover",
     "desc": "Heart of the diaspora market"
-   }
+   },
+   "missing": []
   },
   "pipeline": {
    "slug": "pipeline",
@@ -1029,7 +1084,8 @@
    "local": {
     "label": "Rental demand",
     "desc": "Steady all year, not seasonal"
-   }
+   },
+   "missing": []
   },
   "sanyang": {
    "slug": "sanyang",
@@ -1063,7 +1119,8 @@
    "local": {
     "label": "Beach",
     "desc": "Paradise Beach, wide and wild"
-   }
+   },
+   "missing": []
   },
   "senegambia": {
    "slug": "senegambia",
@@ -1097,7 +1154,8 @@
    "local": {
     "label": "Nightlife",
     "desc": "Best in the country"
-   }
+   },
+   "missing": []
   },
   "serrekunda": {
    "slug": "serrekunda",
@@ -1131,7 +1189,8 @@
    "local": {
     "label": "Market & commerce",
     "desc": "West Africa's great bazaar"
-   }
+   },
+   "missing": []
   },
   "sinchu alagie": {
    "slug": "sinchu-alagie",
@@ -1159,7 +1218,10 @@
    "local": {
     "label": "Build standard",
     "desc": "Permanent family homes"
-   }
+   },
+   "missing": [
+    "Places to eat"
+   ]
   },
   "soma": {
    "slug": "soma",
@@ -1193,7 +1255,8 @@
    "local": {
     "label": "Crossroads",
     "desc": "The country's road junction"
-   }
+   },
+   "missing": []
   },
   "sukuta": {
    "slug": "sukuta",
@@ -1227,7 +1290,8 @@
    "local": {
     "label": "Plot supply",
     "desc": "Land still available"
-   }
+   },
+   "missing": []
   },
   "tanji": {
    "slug": "tanji",
@@ -1261,7 +1325,8 @@
    "local": {
     "label": "Fish market",
     "desc": "Daily landings on the beach"
-   }
+   },
+   "missing": []
   },
   "tujereng": {
    "slug": "tujereng",
@@ -1289,7 +1354,10 @@
    "local": {
     "label": "Tranquillity",
     "desc": "Empty beach, no pressure"
-   }
+   },
+   "missing": [
+    "Everyday shopping"
+   ]
   },
   "yundum": {
    "slug": "yundum",
@@ -1317,7 +1385,10 @@
    "local": {
     "label": "Airport access",
     "desc": "2.6 km to the airport by road"
-   }
+   },
+   "missing": [
+    "Healthcare"
+   ]
   }
  }
 }

@@ -1095,6 +1095,37 @@ plaats van het over te typen. `check-areascores.mjs` rekent het ijkpunt na uit
 `area-scores.json` en slaat alarm op elke pagina die Senegambia nog als maatstaf
 noemt.
 
+**Waarom niet elke pagina vier ringen heeft, en waarom dat zo blijft**
+(nagelopen 02-09-2026, `_werk/verken-gaten.mjs` en `_werk/verken-elf.mjs`).
+
+Elf van de 52 gebieden hebben helemáál geen scoreblok: de vijf van augustus en
+de zes van 31-08. Dat is bewust en die pagina's zeggen het zelf, met een eigen
+lijst "here is what we do not know". De meting bevestigt het: negen van de elf
+hebben binnen 2 km 0–6 winkels, 0–4 eetgelegenheden en 0–1 zorgobject — dat
+levert één ring op, geen blok. De twee uitzonderingen blijven ook zonder blok:
+Tranquil telt 72 winkels, 18 eetgelegenheden en 12 zorgobjecten, maar dat is
+Brusubi's cirkel (Brusubi zelf telt er 69) om een pin die op een halve kilometer
+nauwkeurig is; Old Yundum telt 6 winkels om een pin van ±600 m die van New
+Yundum gescheiden moet blijven. Beide getallen zouden kloppen als som en liegen
+als beschrijving.
+
+Twaalf pagina's mét blok tonen minder dan vier ringen, altijd omdat OSM in die
+categorie nul kent binnen 2 km: Barra en Jabang houden alleen Affordability
+over, Essau en Fatoto twee, acht andere drie. **Eén spoor is nagetrokken en
+liep dood:** het register van het ministerie zou Healthcare kunnen aanvullen,
+maar de NBW-pagina noemt Barra alleen als geografische grens ("from Barra in the
+Lower Nuimi District to the Kerewan Bridge") en geen enkele voorziening ligt daar
+— nagekeken op 02-09-2026. Voor Busumbala, Cape Point, Manjai Kunda, Jabang en
+Yundum bestaat helemaal geen register: Western Region publiceert geen lijst. Voor
+winkels en eetgelegenheden bestaat sowieso geen register. Straal verruimen is
+afgewezen: dan lopen ring en tegel uiteen.
+
+Wat er wél is gebeurd: elke pagina met minder dan vier ringen noemt haar eigen
+gat nu bij naam in de bronregel ("There are no rings for everyday shopping,
+places to eat or healthcare on this page: OpenStreetMap has nothing mapped in
+those categories within 2 km of the pin"). Dat komt uit `missing` in
+`area-scores.json`, dus het kan niet verouderen zonder dat de build meegaat.
+
 **Het rooster.** `.scores-grid` staat op `repeat(4,1fr)` en dat blijft zo: met
 `auto-fit` pasten vijf ringen op een breed scherm wél en op een laptop niet, en
 dan brak de rij. Vier kolommen houden alle pagina's dezelfde kaartbreedte, van
