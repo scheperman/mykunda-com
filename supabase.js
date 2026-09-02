@@ -795,6 +795,42 @@ async function fetchMyProfile(){
   return data;
 }
 
+/* Naam en telefoonnummer van de ingelogde gebruiker bijwerken (02-09-2026).
+   Alleen deze twee: 'authenticated' mag van profiles precies acht kolommen
+   schrijven, en van de drie die over de persoon zelf gaan heeft `locale`
+   nergens een scherm. Het e-mailadres staat in auth.users en hoort daar — dat
+   verhuist alleen op verzoek, via admin@.
+
+   Tot vandaag stond hier niets en toonde het dashboard "Phone — Not added yet"
+   zonder ergens een veld: wie zijn naam verkeerd typte bij het aanmelden droeg
+   die naam voorgoed, in elke mail en elk gesprek.
+
+   De naam gaat óók naar de metadata van de sessie. Niet omdat de site hem daar
+   leest — profiles is de bron — maar omdat syncCachedUserName() bij het laden
+   de naamcache uit die metadata heelt; zonder deze tweede schrijfactie zou de
+   koptekst bij de volgende paginaweergave terugspringen naar de oude naam.
+   Mislukt hij, dan is dat geen reden om de wijziging te laten stranden. */
+async function saveMyDetails(patch){
+  if(!sb) throw new Error('backend-offline');
+  const u = await currentUser(); if(!u) throw new Error('not-signed-in');
+  const has = function(k){ return Object.prototype.hasOwnProperty.call(patch||{}, k); };
+  const clean = {};
+  if(has('full_name')) clean.full_name = String(patch.full_name||'').trim().slice(0,80);
+  if(has('phone')){
+    const p = String(patch.phone||'').trim().slice(0,24);
+    clean.phone = p || null;      // leeg is een geldige keuze: het nummer weghalen
+  }
+  if(!Object.keys(clean).length) return null;
+  const { data, error } = await sb.from('profiles').update(clean)
+    .eq('id', u.id).select('full_name, phone').maybeSingle();
+  if(error) throw error;
+  if(has('full_name') && clean.full_name){
+    try{ await sb.auth.updateUser({ data: { full_name: clean.full_name } }); }
+    catch(e){ console.warn('updateUser(full_name):', e && e.message); }
+  }
+  return data;
+}
+
 /* ---------------- DB → demo card shape ---------------- */
 /* Maps a Supabase listing row to the object shape the site's cards/map expect. */
 function dbListingToCard(r){

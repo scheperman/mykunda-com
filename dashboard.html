@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0luu12q--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:021xn8e--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <noscript></noscript>
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=279673439788937">
+<link rel="stylesheet" href="styles.min.css?v=137992134626557">
 <style>
 body{background:var(--paper-2)}
 .dash{max-width:1180px;margin:0 auto;padding:36px 28px 70px}
@@ -346,7 +346,7 @@ body{background:var(--paper-2)}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=279673439788937"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=137992134626557"><!--/mk-css-->
 </head>
 <body>
 <div id="header"></div>
@@ -615,15 +615,15 @@ body{background:var(--paper-2)}
 
 <div id="footer"></div>
 
-<script src="app.min.js?v=279673439788937"></script>
-<script src="image-slot.js?v=279673439788937" defer></script>
+<script src="app.min.js?v=137992134626557"></script>
+<script src="image-slot.js?v=137992134626557" defer></script>
 <script>
 /* 4G: the Supabase client (~205 KB) is not needed to paint this page. It downloads
    in parallel and every backend call awaits window.__sbReady. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=279673439788937'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=137992134626557'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 </script>
@@ -1607,18 +1607,55 @@ function renderBuyerStats(el){
     return '<div class="stat"><div class="num">'+c[1]+'</div><div class="lab">'+esc(c[0])+'</div></div>';
   }).join('');
 }
+/* Eén regel van "Your details". Naam en telefoon zijn bewerkbaar: de
+   kolomrechten stonden dat al toe, er was alleen nooit een veld. Het adres en
+   de aanmelddatum blijven staan zoals ze zijn — het eerste verhuist alleen op
+   verzoek, het tweede is geen mening. (02-09-2026) */
+function acctRow(field, label, value, hint){
+  return '<div class="notif-row" style="padding:12px 22px" data-acct="'+field+'">'
+    + '<div><div class="nd">'+esc(label)+'</div>'
+    + '<div class="nl" data-acctval>'+acctValue(value)+'</div>'
+    + '<div class="nd" style="margin-top:4px">'+hint+'</div>'
+    + '<div class="nd" data-accterr style="display:none;margin-top:4px;color:#C2533A;font-weight:600"></div></div>'
+    + '<button class="mini" data-acctedit="'+field+'">'+(value ? 'Edit' : 'Add')+'</button></div>';
+}
+function acctValue(v){
+  return v ? esc(v) : '<span style="color:var(--muted)">Not added yet</span>';
+}
+/* De koptekst en de gebruikerschip zijn al getekend toen de naam veranderde.
+   Dezelfde correctie-in-plaats als syncCachedUserName() in supabase.js doet. */
+function refreshHeaderName(v){
+  try{
+    var c = JSON.parse(localStorage.getItem('mykunda_user')||'null') || {};
+    c.name = v; localStorage.setItem('mykunda_user', JSON.stringify(c));
+  }catch(e){}
+  var first = String(v||'').split(/\s+/)[0];
+  document.querySelectorAll('.user-chip').forEach(function(chip){
+    chip.title = v;
+    var nm = chip.querySelector('.user-name'); if(nm) nm.textContent = first;
+    var av = chip.querySelector('.user-av');
+    if(av) av.textContent = (typeof initials==='function') ? initials(v) : first.charAt(0).toUpperCase();
+  });
+  var wn = document.getElementById('welcomeName');
+  if(wn) wn.textContent = 'Welcome back, ' + first;
+}
+
 function renderAccount(){
   var d=document.getElementById('acctDetails');
   if(d){
-    var rows=[
-      ['Name', (P&&P.full_name) || (getUser()||{}).name || '—'],
-      ['Email', (P&&P.email) || (getUser()||{}).email || '—'],
-      ['Phone', (P&&P.phone) || 'Not added yet'],
-      ['Member since', P&&P.created_at ? new Date(P.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) : '—']
-    ];
-    d.innerHTML = rows.map(function(r){
-      return '<div class="notif-row" style="padding:12px 22px"><div><div class="nd">'+esc(r[0])+'</div><div class="nl">'+esc(r[1])+'</div></div></div>';
-    }).join('');
+    var mail = (P&&P.email) || (getUser()||{}).email || '';
+    var since = P&&P.created_at ? new Date(P.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) : '—';
+    d.innerHTML =
+      acctRow('full_name', 'Name', (P&&P.full_name) || (getUser()||{}).name || '',
+        'How we address you in emails, and the name a buyer or seller sees in a conversation.')
+      + '<div class="notif-row" style="padding:12px 22px"><div><div class="nd">Email</div>'
+        + '<div class="nl">'+acctValue(mail)+'</div>'
+        + '<div class="nd" style="margin-top:4px">This is how you sign in. To move your account to another address, write to '
+        + '<a href="mailto:admin@mykunda.com" style="color:var(--green-700);font-weight:600">admin@mykunda.com</a>.</div></div></div>'
+      + acctRow('phone', 'Phone', (P&&P.phone) || '',
+        'Only so we can reach you about a listing, a viewing or an order. It is never shown on the site.')
+      + '<div class="notif-row" style="padding:12px 22px"><div><div class="nd">Member since</div>'
+        + '<div class="nl">'+esc(since)+'</div></div></div>';
   }
   var r=document.getElementById('acctRole');
   if(r){
@@ -1635,6 +1672,74 @@ function renderAccount(){
           : '');
   }
 }
+
+/* Naam en telefoon wijzigen. Zelfde patroon als het hernoemen van een bewaarde
+   zoekopdracht: een invoerveld in plaats van de waarde, Enter of wegklikken
+   bewaart, Escape laat het zoals het was. Eén luisteraar op document, want
+   renderAccount() vervangt de regels telkens.
+   Mislukt het bewaren, dan komt de oude waarde terug — het scherm hoort nooit
+   iets te tonen wat niet in de database staat. (02-09-2026) */
+document.addEventListener('click', function(e){
+  var btn = e.target && e.target.closest ? e.target.closest('[data-acctedit]') : null;
+  if(!btn || btn.disabled) return;
+  var field = btn.dataset.acctedit;
+  var row   = btn.closest('[data-acct]');
+  var valEl = row && row.querySelector('[data-acctval]');
+  var errEl = row && row.querySelector('[data-accterr]');
+  if(!valEl || valEl.querySelector('input')) return;
+
+  var current = String((field==='phone' ? (P&&P.phone) : (P&&P.full_name)) || '');
+  var say = function(m){
+    if(!errEl) return;
+    errEl.textContent = m||''; errEl.style.display = m ? 'block' : 'none';
+    if(m) setTimeout(function(){ if(errEl){ errEl.textContent=''; errEl.style.display='none'; } }, 6000);
+  };
+  say('');
+  valEl.innerHTML = '<input type="'+(field==='phone'?'tel':'text')+'" maxlength="'+(field==='phone'?24:80)+'"'
+    + ' value="'+esc(current)+'" placeholder="'+(field==='phone'?'+220 7XX XXXX':'Your name')+'"'
+    + ' style="width:100%;max-width:340px;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:7px 10px;font-family:var(--sans);font-size:14.5px">';
+  var input = valEl.querySelector('input');
+  input.focus(); input.select();
+  btn.disabled = true;
+
+  var paint = function(v){
+    valEl.innerHTML = acctValue(v);
+    btn.disabled = false;
+    btn.textContent = v ? 'Edit' : 'Add';
+  };
+  var busy = false;
+  var done = async function(save){
+    if(busy) return; busy = true;
+    var val = input.value.trim();
+    if(!save || val === current){ paint(current); busy = false; return; }
+    /* Een leeg telefoonnummer is een keuze; een lege naam niet — die staat in
+       elke mail en boven elk gesprek. */
+    if(field === 'full_name' && val.length < 2){
+      paint(current); say('Please enter your name.'); busy = false; return;
+    }
+    if(field === 'phone' && val && val.replace(/\D/g,'').length < 7){
+      paint(current); say('That does not look like a phone number. Include the country code, for example +220 7XX XXXX.'); busy = false; return;
+    }
+    valEl.textContent = 'Saving…';
+    try{
+      var patch = {}; patch[field] = val;
+      await saveMyDetails(patch);
+      if(P) P[field] = val || null;
+      paint(val);
+      if(field === 'full_name') refreshHeaderName(val);
+    }catch(err){
+      paint(current);
+      say('We could not save that. Please try again.');
+      console.warn('saveMyDetails:', err && err.message);
+    }
+    busy = false;
+  };
+  input.addEventListener('keydown', function(ev){
+    if(ev.key === 'Enter'){ ev.preventDefault(); done(true); }
+    if(ev.key === 'Escape'){ ev.preventDefault(); done(false); }
+  });
+  input.addEventListener('blur', function(){ done(true); });
+});
 
 /* ============================================================
    FASE 5 — de professionele weergaven
