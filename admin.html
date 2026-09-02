@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:13ba8b8--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1c1jjbv--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -11,7 +11,7 @@
 <title>Admin — MyKunda</title>
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=177835907043089">
+<link rel="stylesheet" href="styles.min.css?v=279673439788937">
 <style>
 body{background:var(--paper-2)}
 .admin{max-width:1180px;margin:0 auto;padding:34px 28px 70px}
@@ -38,6 +38,14 @@ body{background:var(--paper-2)}
 .rev .info .meta{font-size:13.5px;color:var(--muted)}
 .rev .info .tags{display:flex;gap:7px;margin-top:8px;flex-wrap:wrap}
 .rev .info .pc{font-size:12.5px;font-weight:700;color:var(--green-700);font-variant-numeric:tabular-nums;margin-top:6px}
+/* Het bedrijfsprofiel in de beoordelingsrij: het logo en de eigen website
+   van een professionele aanbieder gaan mee de openbare pagina op, dus je
+   ziet ze hier vóór Approve. */
+.rev .agline{display:flex;align-items:center;gap:9px;margin-top:8px;font-size:12.5px;color:var(--ink-2);
+    line-height:1.45;overflow-wrap:anywhere}
+.rev .agline img{width:34px;height:34px;border-radius:7px;object-fit:contain;background:#fff;border:1px solid var(--line);flex:none}
+.rev .agline .nologo{font-size:11px;font-weight:700;color:var(--muted-2);border:1px dashed var(--line);
+    border-radius:7px;padding:4px 6px;flex:none}
 .rev .acts{display:flex;flex-direction:column;gap:8px;min-width:130px}
 .docpill{display:inline-flex;align-items:center;gap:6px;height:25px;padding:0 10px;border-radius:99px;background:var(--amber-50);color:var(--amber-600);font-size:11.5px;font-weight:700}
 
@@ -219,7 +227,7 @@ table.btab{min-width:900px}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=177835907043089"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=279673439788937"><!--/mk-css-->
 </head>
 <body>
 <div id="header"></div>
@@ -257,10 +265,10 @@ table.btab{min-width:900px}
 <div id="footer"></div>
 
 <script src="vendor/supabase-js-2.umd.js"></script>
-<script src="supabase.js?v=177835907043089"></script>
-<script src="app.min.js?v=177835907043089"></script>
-<script src="admin-nav.js?v=177835907043089"></script>
-<script src="admin-guard.js?v=177835907043089"></script>
+<script src="supabase.js?v=279673439788937"></script>
+<script src="app.min.js?v=279673439788937"></script>
+<script src="admin-nav.js?v=279673439788937"></script>
+<script src="admin-guard.js?v=279673439788937"></script>
 <script>
 document.getElementById('header').innerHTML = headerHTML('', false);
 document.getElementById('footer').innerHTML = footerHTML();
@@ -305,7 +313,11 @@ let pending=[], leads=[], active=[], bankLines=[], bankError=null, orders=[], or
 async function load(){
   if(LIVE){
     try{
-      const { data: pend } = await sb.from('listings').select('*, listing_media(*)').eq('status','pending_review').order('created_at',{ascending:false});
+      /* agencies komt sinds 02-09-2026 mee: het logo, de introductie en de
+         eigen website van een professionele aanbieder gaan mee de openbare
+         advertentiepagina op. Dit is het moment waarop een mens ze ziet
+         voordat dat gebeurt. */
+      const { data: pend } = await sb.from('listings').select('*, listing_media(*), agencies(id,name,logo_path,website,verified_at)').eq('status','pending_review').order('created_at',{ascending:false});
       const { data: act }  = await sb.from('listings').select('*').in('status',['active','under_offer']).order('created_at',{ascending:false});
       const { data: lds }  = await sb.from('leads').select('*').order('created_at',{ascending:false}).limit(100);
       pending = (pend||[]).map(normListing);
@@ -335,7 +347,26 @@ function normListing(r){
   return { id:r.id, title:r.title, area:r.area, kind:r.kind, category:r.category, price:r.price,
            beds:r.beds, baths:r.baths, sqm:r.sqm, lat:r.lat, lng:r.lng, plus_code:r.plus_code,
            hasDoc:(r.listing_media||[]).some(m=>m.is_document),
+           agency: r.agencies || null,
            img: photo ? (typeof mediaUrl==='function'?mediaUrl(photo.storage_path,false,200):'') : (r.img||'') };  // duimnagel in de rij
+}
+
+/* Wat een professionele aanbieder zelf over zichzelf zegt en wat mee de
+   openbare pagina op gaat: het logo of de foto, en de link naar zijn eigen
+   site. Dit staat in de beoordelingsrij zodat je het ziet vóórdat je op
+   Approve drukt — niet erna. De link opent nergens heen vanuit dit paneel:
+   hij staat er als tekst, want een beheerderspaneel is niet de plek om een
+   ingetypte URL aan te klikken. */
+function agencyLine(l){
+  const a = l.agency;
+  if(!a || !a.name) return '';
+  const logo = a.logo_path && typeof agencyLogoUrl==='function' ? agencyLogoUrl(a.logo_path,80) : '';
+  const bits = [];
+  bits.push(a.website ? 'site: '+esc(a.website) : 'geen website opgegeven');
+  bits.push(a.verified_at ? 'gecontroleerd' : 'niet gecontroleerd');
+  return '<div class="agline">'
+    + (logo ? '<img src="'+esc(logo)+'" alt="" onerror="this.style.display=\'none\'">' : '<span class="nologo">geen logo</span>')
+    + '<span><b>'+esc(a.name)+'</b> · '+bits.join(' · ')+'</span></div>';
 }
 
 function plusOf(l){ const raw = l.plus_code || (typeof plusCode==='function' && typeof l.lat==='number' ? plusCode(l.lat,l.lng,10) : ''); return (raw && raw.indexOf('+')===8) ? raw.slice(4) : raw; }
@@ -364,6 +395,7 @@ function render(){
         <h3>${l.title}</h3>
         <div class="meta">${money(l.price)} · ${l.area} · ${l.beds||0} bd · ${l.sqm||0} m²</div>
         ${plusOf(l)?`<div class="pc">▣ ${plusOf(l)}</div>`:''}
+        ${agencyLine(l)}
         <div class="tags">
           <span class="badge ${l.kind==='sale'?'badge-sale':'badge-rent'}">${l.kind==='sale'?'For sale':'For rent'}</span>
           ${l.hasDoc?'<span class="docpill">📄 Title document attached</span>':'<span class="docpill" style="background:#FBEEEA;color:#C2533A">No document</span>'}

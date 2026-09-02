@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" id="mkRobots" content="noindex, follow, noai, noimageai"><!--mk:1lfpufk--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" id="mkRobots" content="noindex, follow, noai, noimageai"><!--mk:1y6hkhb--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -32,7 +32,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preconnect" href="https://api.mapbox.com" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=177835907043089">
+<link rel="stylesheet" href="styles.min.css?v=279673439788937">
 <style>
 .crumb{padding:18px 0 6px;font-size:14px;color:var(--muted);display:flex;align-items:center;gap:8px}
 .crumb a{font-weight:600}.crumb a:hover{color:var(--green-700)}
@@ -143,7 +143,13 @@
 .agent-top{display:flex;align-items:center;gap:14px;padding-bottom:18px;border-bottom:1px solid var(--line-2);transition:opacity .15s}
 .agent-top:hover{opacity:.78}
 .agent-top .n:hover{color:var(--green-700)}
-.agent-top img{width:58px;height:58px;border-radius:50%;object-fit:cover;background:var(--paper-2)}
+.agent-top img{width:58px;height:58px;border-radius:50%;object-fit:cover;background:var(--paper-2);flex:none}
+/* Een bedrijf krijgt geen rondje. Een pasfoto is rond, een logo niet — en
+   binnen een cirkel bijgesneden verliest het merk zijn vorm. */
+.agent-top.biz img{border-radius:var(--r-md);object-fit:contain;background:var(--white);border:1px solid var(--line)}
+.agent-top .ini{width:58px;height:58px;border-radius:var(--r-md);background:var(--paper-2);border:1px solid var(--line);
+    display:grid;place-items:center;font-family:var(--serif);font-weight:800;font-size:20px;color:var(--green-700);flex:none}
+.agent-site{display:inline-flex;align-items:center;gap:5px;margin-top:5px;font-size:13px;font-weight:700;color:var(--green-700)}
 .agent-top .n{font-family:var(--serif);font-size:18px;font-weight:600}
 .agent-top .ag{font-size:13.5px;color:var(--muted)}
 .agent-rating{display:flex;align-items:center;gap:5px;color:var(--amber-500);font-size:13px;font-weight:700;margin-top:3px}
@@ -191,9 +197,35 @@
 .ub.off{background:var(--paper-2);color:var(--muted-2);border-color:var(--line);font-weight:600}
 .agency-head{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .agency-head .logo{width:56px;height:56px;border-radius:var(--r-md);background:var(--paper-2);border:1px solid var(--line);
-    display:grid;place-items:center;font-family:var(--serif);font-weight:800;font-size:20px;color:var(--green-700);flex:none}
+    display:grid;place-items:center;font-family:var(--serif);font-weight:800;font-size:20px;color:var(--green-700);flex:none;overflow:hidden}
+/* contain en niet cover: een kantoorlogo is zelden vierkant, en bijsnijden
+   hakt de helft van de naam eraf. Wit eromheen is het minste kwaad. */
+.agency-head .logo img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+.agency-head .logo.has{background:var(--white)}
+/* Zonder min-width:0 duwt de langste losse regel ("Not yet checked by
+   MyKunda") de tekstkolom onder het logo zodra het scherm smal wordt. Gemeten
+   op 375px: naam en logo stonden onder elkaar in plaats van naast elkaar. */
+.agency-head>div{min-width:0;flex:1}
 .agency-head .n{font-family:var(--serif);font-size:19px;font-weight:700}
 .agency-head .m{font-size:13.5px;color:var(--muted);margin-top:3px}
+.agency-about{font-size:14.5px;color:var(--ink-2);line-height:1.65;margin-top:16px;max-width:62ch}
+.agency-web{display:inline-flex;align-items:center;gap:7px;margin-top:16px;font-size:14px;font-weight:700;
+    color:var(--green-700);border:1.5px solid var(--line);border-radius:var(--r-pill);padding:8px 15px;transition:.13s}
+.agency-web:hover{border-color:var(--green-500);background:var(--green-50)}
+.agency-more{margin-top:24px;padding-top:20px;border-top:1px solid var(--line-2)}
+.agency-more h3{font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:14px}
+/* 150 en niet 190: op 375px gaf 190 één kaart per regel over de volle breedte,
+   en dan is een blok van drie een halve pagina scrollen voor een kennismaking.
+   Met 150 staan er twee naast elkaar op mobiel en vier op de brede kolom. */
+.agency-more .row{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.agency-more a{display:block;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;background:var(--white);transition:.13s}
+.agency-more a:hover{border-color:var(--green-500)}
+.agency-more .ph{aspect-ratio:4/3;background:linear-gradient(135deg,#DCEAE3,#F6E6D4);display:block}
+.agency-more .ph img{width:100%;height:100%;object-fit:cover;display:block}
+.agency-more .tx{display:block;padding:10px 12px}
+.agency-more .t{display:block;font-size:13.5px;font-weight:700;line-height:1.35;color:var(--ink)}
+.agency-more .p{display:block;font-size:13px;font-weight:700;color:var(--green-700);margin-top:4px}
+.agency-more .a{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
 .block.honesty{background:var(--paper-2);border-radius:var(--r-lg);padding:24px 26px}
 .block.honesty ul{margin:0;padding-left:20px;font-size:14.5px;color:var(--ink-2);line-height:1.7}
 .block.report{border-top:1px solid var(--line);padding-top:22px}
@@ -257,7 +289,7 @@
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=177835907043089"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=279673439788937"><!--/mk-css-->
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -565,15 +597,15 @@
     </div>
   </footer><!--/mk-ftr--></div>
 
-<script src="app.min.js?v=177835907043089"></script>
-<script src="image-slot.js?v=177835907043089" defer></script>
+<script src="app.min.js?v=279673439788937"></script>
+<script src="image-slot.js?v=279673439788937" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel instead of blocking the page, and
    Leaflet (~145 KB) is only fetched when the visitor opens the Map tab. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=177835907043089'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=279673439788937'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -1035,6 +1067,38 @@ if(FEATS.length){
   })();
 
   /* ---- 5. The office behind the listing ------------------------------ */
+  /* Sinds 02-09-2026 staat hier het echte logo of de foto van het kantoor, een
+     korte introductie en een link naar hun eigen site — allemaal ingevuld door
+     de aanbieder zelf in dashboard.html#company.
+
+     Drie dingen aan die link zijn met opzet zo:
+       * rel="nofollow ugc noopener" — het is een adres dat een gebruiker heeft
+         ingetypt, dus geen SEO-stem van ons en geen toegang tot window.opener;
+       * alleen het domein als linktekst — een koper hoort te zien waar hij
+         heen gaat, en een lange URL met parameters zegt hem niets;
+       * de URL wordt hier nog eens door new URL() gehaald. De database heeft
+         er al een check op staan, maar deze pagina is de plek waar het fout
+         zou uitpakken. */
+  function agencyUrl(a){
+    const raw = a && a.website ? String(a.website).trim() : '';
+    if(!/^https?:\/\//i.test(raw)) return '';
+    try{
+      const u=new URL(raw);
+      if(u.protocol!=='http:' && u.protocol!=='https:') return '';
+      /* Een echte hostnaam met minstens één punt. Zonder deze eis zou
+         "https://javascript" hier een link opleveren. */
+      if(!/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/i.test(u.hostname)) return '';
+      return u.href;
+    }catch(e){ return ''; }
+  }
+  function agencyHostOf(a){
+    const h=agencyUrl(a); if(!h) return '';
+    try{ return new URL(h).hostname.replace(/^www\./,''); }catch(e){ return ''; }
+  }
+  function agencyLogoOf(a, w){
+    if(!a || !a.logo_path || typeof agencyLogoUrl!=='function') return '';
+    return agencyLogoUrl(a.logo_path, w||160);
+  }
   (function(){
     const a=P.agency;
     if(!a || !a.name) return;
@@ -1045,10 +1109,47 @@ if(FEATS.length){
     bits.push(a.verified_at ? 'Checked by MyKunda' : 'Not yet checked by MyKunda');
     const MAND={exclusive:'Sole mandate for this property',non_exclusive:'Non-exclusive mandate — it may also be listed elsewhere',owner:'The office owns this property'};
     if(P.mandate_type && MAND[P.mandate_type]) bits.push(MAND[P.mandate_type]);
+    const logo=agencyLogoOf(a,160);
     document.getElementById('agencyHead').innerHTML =
-      '<div class="logo">'+esc(initials||'··')+'</div><div><div class="n">'+esc(a.name)+'</div><div class="m">'+bits.join(' · ')+'</div></div>';
+      '<div class="logo'+(logo?' has':'')+'">'
+      + (logo ? '<img src="'+esc(logo)+'" alt="'+esc(a.name)+'" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false">'
+                + '<span hidden>'+esc(initials||'··')+'</span>'
+              : esc(initials||'··'))
+      + '</div><div><div class="n">'+esc(a.name)+'</div><div class="m">'+bits.join(' · ')+'</div></div>';
+
+    const extra=document.getElementById('agencyOther');
+    const site=agencyUrl(a), host=agencyHostOf(a);
+    let intro='';
+    if(a.about) intro += '<p class="agency-about">'+esc(a.about)+'</p>';
+    if(site) intro += '<a class="agency-web" href="'+esc(site)+'" target="_blank" rel="nofollow ugc noopener external">'
+                    + esc(host)+' <span aria-hidden="true">↗</span></a>';
+    if(extra) extra.innerHTML = intro;
+
     document.getElementById('agencyH2').textContent = isRent ? 'The office managing this property' : 'The office behind this listing';
     show('agencyBlock', true);
+
+    /* Het overige aanbod van hetzelfde kantoor. Apart en asynchroon: het blok
+       staat er al, en levert deze query niets op, dan verandert er niets. Zo
+       wacht de pagina er niet op. */
+    if(extra && a.id && typeof fetchAgencyListings==='function'){
+      fetchAgencyListings(a.id, P.id, 3).then(function(rows){
+        if(!rows || !rows.length) return;
+        extra.insertAdjacentHTML('beforeend',
+          '<div class="agency-more"><h3>More from this office</h3><div class="row">'
+          + rows.map(function(r){
+              return '<a href="property.html?id='+encodeURIComponent(r.id)+'">'
+                + '<span class="ph">'+(r.img?'<img src="'+esc(r.img)+'" alt="" loading="lazy">':'')+'</span>'
+                + '<span class="tx"><span class="t">'+esc(r.title||'Property')+'</span>'
+                + '<span class="p">'+(typeof fmtPrice==='function' ? fmtPrice(r.price, r.kind, r.price_period) : '')+'</span>'
+                + (r.area?'<span class="a">'+esc(r.area)+'</span>':'')
+                + '</span></a>';
+            }).join('')
+          + '</div></div>');
+        /* De prijzen zijn zojuist getekend; als de koersen al binnen waren
+           moeten ze meteen in de gekozen munt staan. */
+        if(typeof onRatesUpdated==='function') onRatesUpdated();
+      }).catch(function(){});
+    }
   })();
 
   /* ---- 6. This listing over time ------------------------------------- */
@@ -1169,6 +1270,34 @@ if(FEATS.length){
     if(P.seller_type==='business' && P.agency && P.agency.name){
       n.textContent=P.agency.name;
       r.textContent = isRent ? 'Managing agent · enquiries and viewings' : 'Estate agent · enquiries and viewings';
+      /* Het logo bovenaan de contactkaart. Dit is de eerste plek waar een
+         koper het bedrijf ziet: hij staat naast het formulier waarin hij
+         besluit of hij gaat schrijven.
+
+         De kaart wees tot vandaag naar agent.html — dat is de wervingspagina
+         voor makelaars, niet iets wat een koper wil. Hij wijst nu naar het
+         kantoorblok verderop op deze pagina, of, als het kantoor een eigen
+         site heeft opgegeven, daarheen. */
+      const top=document.querySelector('.agent-top');
+      const a=P.agency, logo=agencyLogoOf(a,140), site=agencyUrl(a), host=agencyHostOf(a);
+      const slot=top && top.querySelector('image-slot');
+      if(top && slot){
+        const initials=String(a.name).split(/\s+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase() || '··';
+        const box=document.createElement(logo?'img':'span');
+        if(logo){ box.src=logo; box.alt=a.name; box.loading='lazy';
+                  box.onerror=function(){ const s=document.createElement('span'); s.className='ini'; s.textContent=initials; box.replaceWith(s); }; }
+        else { box.className='ini'; box.textContent=initials; }
+        slot.replaceWith(box);
+        top.classList.add('biz');
+      }
+      if(top){
+        if(site){ top.href=site; top.target='_blank'; top.rel='nofollow ugc noopener external';
+                  if(!top.querySelector('.agent-site')){
+                    const s=document.createElement('span'); s.className='agent-site';
+                    s.textContent=host+' ↗'; r.after(s);
+                  } }
+        else { top.href='#agencyBlock'; top.removeAttribute('target'); top.removeAttribute('rel'); }
+      }
     }else if(P.seller_type==='owner'){
       n.textContent='The owner';
       r.textContent = isRent ? 'Lets this home directly — no agency fee' : 'Sells this property directly — no agency fee';

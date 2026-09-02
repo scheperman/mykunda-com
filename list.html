@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0rdb6jv--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1yl2apo--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preconnect" href="https://api.mapbox.com" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=177835907043089">
+<link rel="stylesheet" href="styles.min.css?v=279673439788937">
 <style>
 body{background:var(--paper-2);min-height:100vh}
 
@@ -267,7 +267,7 @@ body{background:var(--paper-2);min-height:100vh}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=177835907043089"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=279673439788937"><!--/mk-css-->
 </head>
 <body>
 <div class="wizbar">
@@ -868,18 +868,18 @@ body{background:var(--paper-2);min-height:100vh}
   </aside>
 </div>
 
-<script src="valuation-areas.js?v=177835907043089"></script>
-<script src="valuation.js?v=177835907043089"></script>
-<script src="app.min.js?v=177835907043089"></script>
-<script src="gambia-places.js?v=177835907043089" defer></script>
-<script src="image-slot.js?v=177835907043089" defer></script>
+<script src="valuation-areas.js?v=279673439788937"></script>
+<script src="valuation.js?v=279673439788937"></script>
+<script src="app.min.js?v=279673439788937"></script>
+<script src="gambia-places.js?v=279673439788937" defer></script>
+<script src="image-slot.js?v=279673439788937" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel, Leaflet (~145 KB) only when the
    seller reaches the location step. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=177835907043089'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=279673439788937'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -3356,31 +3356,35 @@ function flash(el,msg){
 }
 
 /* ---- The agency behind a professional listing ----
-   One row per company, matched on a slug of the name, so a second listing from
-   the same office joins the first instead of creating a twin. Nothing here sets
-   verified_at or the licence fields on an existing row: the database trigger
+   Eén rij per bedrijf. Tot 02-09-2026 werd die rij opgezocht op een slug van
+   de GETYPTE naam: wie de naam van een bestaand kantoor intypte, hing zijn
+   advertentie aan dat kantoor. Dat was latent zolang geen enkele pagina het
+   kantoor toonde. Met een logo en een website op de advertentiepagina is dat
+   voorbij — het zou het merk van een ander onder je eigen advertentie zetten.
+   Daarom: je krijgt je EIGEN kantoor, of er wordt er een aangemaakt met een
+   slug die niet botst (freeAgencySlug in supabase.js). De naam van een ander
+   intypen levert dus een eigen rij op, niet die van hem.
+
+   Nothing here sets verified_at on an existing row: the database trigger
    refuses that for anyone but an admin, which is the point. */
-function slugify(s){
-  return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-    .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60);
-}
 async function ensureAgency(){
   if(typeof sb==='undefined' || !sb) return null;
   const name=(S.company||'').trim(); if(!name) return null;
-  const slug=slugify(name); if(!slug) return null;
-  const found=await sb.from('agencies').select('id').eq('slug',slug).maybeSingle();
-  if(found && found.data && found.data.id) return found.data.id;
-  let uid=null;
-  try{ const u=await sb.auth.getUser(); uid=u && u.data && u.data.user ? u.data.user.id : null; }catch(e){}
-  const row={ name:name, slug:slug, created_by:uid,
+  /* Heeft deze aanbieder al een kantoor, dan is dat het. De naam kan hij in de
+     back-office wijzigen; een tweede advertentie mag geen tweede rij maken. */
+  if(typeof fetchMyAgency==='function'){
+    const mine=await fetchMyAgency();
+    if(mine && mine.id) return mine.id;
+  }
+  if(typeof createMyAgency!=='function') return null;
+  const made=await createMyAgency({
+    name:name,
     licence_no:(S.regNo||'').trim()||null,
     licence_body:S.licBody||null,
     phone:(S.contactPhone||'').trim()||null,
     whatsapp:(S.contactPhone||'').trim()||null,
-    email:(S.contactEmail||'').trim()||null };
-  const ins=await sb.from('agencies').insert(row).select('id').single();
-  if(ins && ins.error) throw new Error(ins.error.message);
-  return ins && ins.data ? ins.data.id : null;
+    email:(S.contactEmail||'').trim()||null });
+  return made && made.id ? made.id : null;
 }
 
 /* ---- WhatsApp number confirmation ----

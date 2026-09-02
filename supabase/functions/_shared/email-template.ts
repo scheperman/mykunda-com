@@ -917,7 +917,7 @@ export function welcomeEmail(u: SignupInfo): string {
   const opener = {
     buyer: 'Your account is ready. From here you can save the properties and searches you care about, message sellers directly, and ask us to check a title before any money moves.',
     seller: 'Your account is ready. You can publish your first listing in a few minutes — it is free to start — and every enquiry, viewing request and message lands in My MyKunda.',
-    agent: 'Your account is ready. You can publish listings straight away. The agency profile, with your licence details and your name on every listing, is the next thing we set up with you.',
+    agent: 'Your account is ready. You can publish listings straight away, and set up your company profile — your logo, a line about the firm and a link to your own site — so buyers know who they are dealing with before they write.',
   }[role];
   const rowSave = featureRow('♥', 'Save homes and searches', 'Keep favourites and saved searches in one place in My MyKunda, and pick a search back up in one tap.', `${S}/dashboard.html#saved`);
   /* "Managed" stond hier tot 31-08-2026 in. Dat plan is geparkeerd tot er een
@@ -928,9 +928,16 @@ export function welcomeEmail(u: SignupInfo): string {
   const rowList = featureRow('⌂', 'List a property or plot — free', 'Publish a listing in a few minutes; add Boost or Verified later for more views and a title check.', `${S}/list.html`);
   const rowCheck = featureRow('✓', 'Check ownership before you pay', 'Ask us to review title documents so you know what you are buying.', `${S}/verify.html`);
   const rowMarket = featureRow('%', 'Follow the market', 'Area guides, live prices and the MyKunda market index for the coast and upcountry.', `${S}/market.html`);
+  /* Alleen voor een kantoor, sinds 02-09-2026: het bedrijfsprofiel is het
+     enige dat een professionele aanbieder heeft en de andere twee rollen niet.
+     Bovenaan, want het is het eerste dat hij hoort in te vullen — zonder logo
+     staan zijn advertenties met initialen op de kaart. */
+  const rowCompany = featureRow('▣', 'Set up your company profile', 'Your logo or a photo, a line about the firm and a link to your own site — shown on every listing you place.', `${S}/dashboard.html#company`);
   const rows = role === 'buyer'
     ? rowSave + rowCheck + rowMarket + rowList
-    : rowList + rowCheck + rowMarket + rowSave;
+    : role === 'agent'
+      ? rowCompany + rowList + rowCheck + rowMarket + rowSave
+      : rowList + rowCheck + rowMarket + rowSave;
 
   return emailWrap({
     heading: fname ? `Welcome to MyKunda, ${fname}` : 'Welcome to MyKunda',

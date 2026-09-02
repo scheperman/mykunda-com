@@ -403,6 +403,138 @@ async function getListingPhotos(listingId, width){
     .filter(Boolean);
 }
 
+/* ---------------- Het kantoor achter een professionele aanbieder ----------
+   Eén rij per bedrijf in `agencies`, met een logo of foto in de publieke
+   bucket agency-logos en een eigen website. De rij is publiek leesbaar (de
+   advertentiepagina toont hem), maar alleen te schrijven door wie hem heeft
+   aangemaakt — zie de policy "agencies update" in migratie 20260902_01.
+
+   Waarom created_by en niet profiles.agency_id: die kolom mag een gebruiker
+   niet zelf zetten, en dat moet zo blijven, anders hangt iedereen zich aan
+   het kantoor van een ander. Zodra er teams zijn (fase 4) wordt agency_id de
+   tweede weg; de policies kennen hem al.
+   -------------------------------------------------------------------------- */
+
+/* Het kantoor van de ingelogde gebruiker, of null. Eerst de koppeling op het
+   profiel, want die wint zodra er een team is; anders de rij die hij zelf
+   heeft aangemaakt. */
+async function fetchMyAgency(){
+  if(!sb) return null;
+  const u = await currentUser(); if(!u) return null;
+  try{
+    const prof = await sb.from('profiles').select('agency_id').eq('id', u.id).maybeSingle();
+    const aid = prof && prof.data && prof.data.agency_id;
+    if(aid){
+      const one = await sb.from('agencies').select('*').eq('id', aid).maybeSingle();
+      if(one && one.data) return one.data;
+    }
+  }catch(e){}
+  const { data, error } = await sb.from('agencies').select('*')
+    .eq('created_by', u.id).order('created_at',{ascending:true}).limit(1);
+  if(error){ console.warn('fetchMyAgency:', error.message); return null; }
+  return (data && data[0]) || null;
+}
+
+/* Een slug die niet botst. De naam van een ander kantoor overnemen mag niet
+   stil dezelfde rij opleveren — dat was precies het gat in ensureAgency(). */
+function agencySlugify(s){
+  return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60);
+}
+async function freeAgencySlug(base){
+  if(!sb) return base;
+  let slug = base || 'agency';
+  for(let i=0;i<25;i++){
+    const hit = await sb.from('agencies').select('id').eq('slug', slug).maybeSingle();
+    if(!hit || !hit.data) return slug;
+    slug = (base || 'agency').slice(0,54) + '-' + (i+2);
+  }
+  return (base||'agency').slice(0,50) + '-' + Date.now().toString(36);
+}
+
+/* Maakt het kantoor van deze gebruiker aan als het er nog niet is. */
+async function createMyAgency(fields){
+  if(!sb) throw new Error('backend-offline');
+  const u = await currentUser(); if(!u) throw new Error('not-signed-in');
+  const mine = await fetchMyAgency();
+  if(mine) return mine;
+  const name = String((fields && fields.name) || '').trim();
+  if(!name) throw new Error('no-name');
+  const row = Object.assign({}, fields, {
+    name: name,
+    slug: await freeAgencySlug(agencySlugify(name)),
+    created_by: u.id
+  });
+  const { data, error } = await sb.from('agencies').insert(row).select('*').single();
+  if(error) throw error;
+  return data;
+}
+
+/* Alleen de velden die een kantoor over zichzelf mag zeggen. De database
+   houdt dezelfde lijst aan met kolomrechten; deze lijst is er zodat een
+   typefout in het formulier niet stil een 403 wordt. */
+const AGENCY_EDITABLE = ['name','about','phone','whatsapp','email','website','logo_path','areas'];
+async function saveMyAgency(agencyId, patch){
+  if(!sb) throw new Error('backend-offline');
+  const clean = {};
+  AGENCY_EDITABLE.forEach(function(k){ if(k in (patch||{})) clean[k] = patch[k]; });
+  if(!Object.keys(clean).length) return null;
+  const { data, error } = await sb.from('agencies').update(clean).eq('id', agencyId).select('*').single();
+  if(error) throw error;
+  return data;
+}
+
+/* Logo of foto. Één bestand per kantoor: de naam is vast, zodat een tweede
+   upload de eerste vervangt en er geen wees achterblijft. upsert mag, want
+   de schrijfregel op de bucket kijkt naar de map en die is de agency-id. */
+async function uploadAgencyLogo(agencyId, file){
+  if(!sb) throw new Error('backend-offline');
+  if(!agencyId) throw new Error('no-agency');
+  const type = (file && file.type) || '';
+  const ext = type.includes('png') ? 'png' : type.includes('webp') ? 'webp'
+            : type.includes('avif') ? 'avif' : 'jpg';
+  const path = agencyId + '/logo.' + ext;
+  const up = await sb.storage.from('agency-logos').upload(path, file, { upsert:true, contentType:type||'image/jpeg' });
+  if(up.error) throw up.error;
+  return path;
+}
+async function deleteAgencyLogo(path){
+  if(!sb || !path) return;
+  try{ await sb.storage.from('agency-logos').remove([path]); }catch(e){ console.warn('logo remove:', e.message); }
+}
+/* Publieke URL. Zelfde transformatietruc als mediaUrl(): geef een breedte mee
+   en de opslag schaalt zelf, zodat een 2 MB logo geen 2 MB over de lijn is. */
+function agencyLogoUrl(path, width){
+  if(!sb || !path) return '';
+  const opts = width ? { transform:{ width:width, resize:'contain', quality:82 } } : undefined;
+  return sb.storage.from('agency-logos').getPublicUrl(path, opts).data.publicUrl;
+}
+
+/* Het overige aanbod van hetzelfde kantoor, voor het blok "More from this
+   office" op de advertentiepagina. Alleen wat live staat — de leesregel op
+   listings laat een concept toch niet zien, maar dit scheelt een rondje. */
+async function fetchAgencyListings(agencyId, excludeId, limit){
+  if(!sb || !agencyId) return [];
+  const { data, error } = await sb.from('listings')
+    .select('id,title,area,price,kind,price_period,category,listing_media(storage_path,is_document,sort)')
+    .eq('agency_id', agencyId)
+    .in('status', ['active','under_offer'])
+    .order('created_at', { ascending:false })
+    .limit((limit || 3) + 1);
+  if(error){ console.warn('fetchAgencyListings:', error.message); return []; }
+  return (data||[])
+    .filter(function(r){ return String(r.id) !== String(excludeId||''); })
+    .slice(0, limit || 3)
+    .map(function(r){
+      const ph = (r.listing_media||[])
+        .filter(function(m){ return !m.is_document && m.storage_path; })
+        .sort(function(a,b){ return (a.sort||0)-(b.sort||0); })[0];
+      return { id:r.id, title:r.title, area:r.area||'', price:Number(r.price)||0,
+               kind:r.kind, price_period:r.price_period||null, category:r.category,
+               img: ph ? mediaUrl(ph.storage_path, false, 400) : '' };
+    });
+}
+
 /* ---------------- Viewings ----------------
    Sinds 30-08-2026 loopt alles over public.viewings; viewings_legacy_v0 is
    afgedankt en heeft geen schrijfregels meer. Schrijven gaat uitsluitend via de

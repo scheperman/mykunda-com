@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:159mf89--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0luu12q--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <noscript></noscript>
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=177835907043089">
+<link rel="stylesheet" href="styles.min.css?v=279673439788937">
 <style>
 body{background:var(--paper-2)}
 .dash{max-width:1180px;margin:0 auto;padding:36px 28px 70px}
@@ -310,10 +310,43 @@ body{background:var(--paper-2)}
   .listing-main{grid-template-columns:90px minmax(0,1fr);gap:14px}
   .listing-thumb{width:90px;height:70px}
 }
+
+/* ---------- bedrijfsprofiel (02-09-2026) ----------
+   Het logo of de foto staat in een kader met object-fit:contain, niet cover.
+   Een kantoorlogo is zelden vierkant; bijsnijden hakt de helft van de naam
+   eraf. Liever witruimte naast een breed logo dan een halve letter. */
+.cofld{margin-bottom:18px}
+.cofld:last-child{margin-bottom:0}
+.cofld label{display:block;font-size:13px;font-weight:700;color:var(--ink-2);margin-bottom:6px}
+.cofld input,.cofld textarea{width:100%;border:1.5px solid var(--line);border-radius:var(--r-sm);
+  padding:10px 12px;font-size:14px;font-family:var(--sans);color:var(--ink);background:var(--white);outline:none}
+.cofld input:focus,.cofld textarea:focus{border-color:var(--green-500)}
+.cofld textarea{min-height:92px;resize:vertical;line-height:1.55}
+.cofld .hint{font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.5}
+.cofld .hint.bad{color:#C2533A;font-weight:600}
+.corow{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.co-logo{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.co-box{width:84px;height:84px;border-radius:var(--r-md);border:1px solid var(--line);background:var(--paper-2);
+  display:grid;place-items:center;overflow:hidden;flex:none}
+.co-box img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+.co-box .ini{font-family:var(--serif);font-weight:800;font-size:26px;color:var(--green-700)}
+.co-msg{font-size:13.5px;font-weight:600;margin-top:12px;line-height:1.5}
+.co-msg.ok{color:var(--green-700)}
+.co-msg.bad{color:#C2533A}
+.co-card{display:flex;align-items:center;gap:14px}
+.co-card .lg{width:56px;height:56px;border-radius:var(--r-md);border:1px solid var(--line);background:var(--white);
+  display:grid;place-items:center;overflow:hidden;flex:none}
+.co-card .lg img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+.co-card .lg .ini{font-family:var(--serif);font-weight:800;font-size:20px;color:var(--green-700)}
+.co-card .n{font-family:var(--serif);font-size:18px;font-weight:700;line-height:1.25}
+.co-card .m{font-size:13px;color:var(--muted);margin-top:3px;line-height:1.45}
+.co-about{font-size:13.5px;color:var(--ink-2);line-height:1.6;margin-top:14px}
+.co-web{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:700;color:var(--green-700);margin-top:12px}
+@media(max-width:700px){ .corow{grid-template-columns:1fr} }
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=177835907043089"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=279673439788937"><!--/mk-css-->
 </head>
 <body>
 <div id="header"></div>
@@ -513,6 +546,31 @@ body{background:var(--paper-2)}
     </div>
   </section>
 
+  <!-- ============ COMPANY PROFILE (02-09-2026) ============ -->
+  <!-- Alleen voor rol agent/admin. Wat hier staat, staat op elke advertentie
+       die dit kantoor plaatst — vandaar het voorbeeld ernaast: dat is
+       letterlijk de kaart die een koper op de advertentiepagina ziet. -->
+  <section class="dview" data-view="company">
+    <div class="vhead">
+      <h2>Company profile</h2>
+      <p>Your logo, a line about who you are and a link to your own site. This is what a buyer sees on every property you list, before they write to you.</p>
+    </div>
+    <div class="dash-grid">
+      <div>
+        <div class="panel">
+          <div class="panel-head"><h2>Your company</h2></div>
+          <div id="coForm" style="padding:22px"></div>
+        </div>
+      </div>
+      <aside class="side">
+        <div class="panel">
+          <div class="panel-head"><h2>How buyers see you</h2></div>
+          <div id="coPreview" style="padding:20px 22px"></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
   <!-- ============ ACCOUNT ============ -->
   <section class="dview" data-view="account">
     <div class="vhead">
@@ -557,15 +615,15 @@ body{background:var(--paper-2)}
 
 <div id="footer"></div>
 
-<script src="app.min.js?v=177835907043089"></script>
-<script src="image-slot.js?v=177835907043089" defer></script>
+<script src="app.min.js?v=279673439788937"></script>
+<script src="image-slot.js?v=279673439788937" defer></script>
 <script>
 /* 4G: the Supabase client (~205 KB) is not needed to paint this page. It downloads
    in parallel and every backend call awaits window.__sbReady. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=177835907043089'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=279673439788937'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 </script>
@@ -1409,6 +1467,10 @@ function navHTML(){
     out += tab('leads','Leads',openLeads);
     out += tab('agenda','Viewings',teDoen);
     out += tab('stats','Statistics');
+    /* Het bedrijfsprofiel staat onderaan het professionele blok: je richt het
+       één keer in en komt er daarna zelden terug. De stip erachter is er
+       alleen zolang er geen logo staat — dat is het enige dat een koper mist. */
+    out += tab('company','Company profile', (AGENCY && AGENCY.logo_path) ? 0 : '•');
     out += '<div class="sep"></div>';
   }
   out += tab('saved','Saved searches',SAVED.length);
@@ -1563,7 +1625,7 @@ function renderAccount(){
     var txt={
       buyer:'You are set up to search, save and message sellers. Everything on MyKunda is open to you except the listing tools.',
       seller:'You are set up to offer your own property. You keep everything a searcher has — favourites, saved searches and messages.',
-      agent:'This account is set up as a business. You keep everything a searcher has; the agency tools are being built.',
+      agent:'This account is set up as a business. You keep everything a searcher has, and you have the portfolio, leads, viewings, statistics and company profile on the left.',
       admin:'This is an admin account. The console is in the top right.'
     }[ROLE] || '';
     r.innerHTML = '<p style="font-size:14.5px;color:var(--ink-2);line-height:1.55;margin-bottom:14px">'+esc(txt)+'</p>'
@@ -1918,8 +1980,242 @@ function renderBilling(){
     + '</tbody></table>';
 }
 
+/* ============================================================
+   BEDRIJFSPROFIEL — 02-09-2026
+   Het logo of de foto, de eigen website en een korte introductie van een
+   professionele aanbieder. Wat hier staat, staat op elke advertentie van dit
+   kantoor: op de contactkaart en in het blok "The office behind this listing".
+
+   Twee dingen die de database bepaalt en dit scherm alleen laat zien:
+   de licentiegegevens en het vinkje "Checked by MyKunda". De trigger
+   agencies_guard_verification draait die voor iedere niet-beheerder meteen
+   terug naar de oude waarde, dus ze staan hier bewust als tekst en niet als
+   veld — een invulveld dat stil niets doet is erger dan geen veld.
+   ============================================================ */
+var AGENCY = null;          // de rij uit agencies, of null als er nog geen is
+var LOGO_FILE = null;       // gekozen bestand, nog niet geüpload
+var LOGO_PREVIEW = '';      // data-URL van dat bestand, voor het voorbeeld
+var LOGO_DROP = false;      // "Remove" aangeklikt maar nog niet opgeslagen
+
+var LIC_BODY = { giepa:'GIEPA', registrar:'Registrar of Companies',
+                 council:'Local council', other:'another authority' };
+
+function coInitials(name){
+  return String(name||'').trim().split(/\s+/).slice(0,2)
+    .map(function(w){ return w[0]||''; }).join('').toUpperCase() || '··';
+}
+/* De bron voor het logo, in volgorde: net gekozen bestand, dan wat er is
+   opgeslagen, tenzij de aanbieder net op Remove heeft gedrukt. */
+function coLogoSrc(width){
+  if(LOGO_PREVIEW) return LOGO_PREVIEW;
+  if(LOGO_DROP) return '';
+  if(AGENCY && AGENCY.logo_path && typeof agencyLogoUrl==='function') return agencyLogoUrl(AGENCY.logo_path, width||220);
+  return '';
+}
+function coVal(id, fallback){
+  var el=document.getElementById(id);
+  return el ? el.value : (fallback||'');
+}
+/* Wat de aanbieder nú op het scherm heeft staan, dus het voorbeeld loopt mee
+   terwijl hij typt. */
+function coDraft(){
+  var a=AGENCY||{};
+  return { name: coVal('coName', a.name||'').trim(),
+           website: coVal('coWeb', a.website||'').trim(),
+           about: coVal('coAbout', a.about||'').trim(),
+           phone: coVal('coPhone', a.phone||'').trim(),
+           email: coVal('coEmail', a.email||'').trim() };
+}
+/* Een adres zonder schema is wat mensen typen: "kombocoast.gm". Daar komt
+   https:// voor, en daarna gaat het één keer door new URL() zodat wat we
+   opslaan dezelfde vorm heeft als waar de database-check op rekent. Verder
+   verzinnen we niets — het moet echt een adres zijn, anders weigert de
+   database de rij in zijn geheel en verliest de aanbieder ook zijn logo. */
+function coNormWeb(v){
+  v = String(v||'').trim();
+  if(!v) return '';
+  if(!/^https?:\/\//i.test(v)) v = 'https://' + v;
+  /* new URL() maakt er de vorm van die de database en de advertentiepagina
+     allebei verwachten: kleine letters, punycode voor een naam met accenten,
+     en een afsluitende schuine streep. */
+  try{ return new URL(v).href; }catch(e){ return v; }
+}
+/* Waarom niet één regex: "javascript:alert(1)" krijgt hierboven https:// voor
+   zich geplakt en glipt dan door elke patroontoets heen die alleen naar het
+   begin kijkt. Dit eist een echte hostnaam met minstens één punt erin. */
+function coWebOk(v){
+  if(!v) return true;
+  try{
+    var u = new URL(v);
+    if(u.protocol!=='http:' && u.protocol!=='https:') return false;
+    return /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/i.test(u.hostname);
+  }catch(e){ return false; }
+}
+/* Alleen het domein tonen. Een koper die op een link klikt hoort te zien
+   waar hij heen gaat, en een lange URL met parameters zegt hem niets. */
+function coHost(v){
+  try{ return new URL(coNormWeb(v)).hostname.replace(/^www\./,''); }catch(e){ return ''; }
+}
+
+function renderCompany(){
+  var f=document.getElementById('coForm'); if(!f) return;
+  var a=AGENCY||{};
+  var lic = a.licence_no
+    ? 'Licence ' + esc(a.licence_no) + (a.licence_body ? ' · ' + esc(LIC_BODY[a.licence_body]||a.licence_body) : '')
+    : 'No licence number on file';
+  var chk = a.verified_at ? 'Checked by MyKunda' : 'Not yet checked by MyKunda';
+  f.innerHTML =
+      '<div class="cofld"><label>Logo or photo</label>'
+    +   '<div class="co-logo">'
+    +     '<div class="co-box" id="coBox"></div>'
+    +     '<div style="min-width:200px;flex:1">'
+    +       '<input type="file" id="coFile" accept="image/png,image/jpeg,image/webp,image/avif" style="border:none;padding:0;font-size:13px">'
+    +       '<div class="hint">PNG, JPG, WebP or AVIF, up to 2 MB. Shown whole, never cropped, so a wide logo stays readable.</div>'
+    +       '<button type="button" class="mini warn" id="coDrop" style="margin-top:10px" hidden>Remove</button>'
+    +     '</div>'
+    +   '</div></div>'
+    + '<div class="cofld"><label for="coName">Company name</label>'
+    +   '<input type="text" id="coName" maxlength="80" value="'+esc(a.name||'')+'" placeholder="e.g. Kombo Coast Properties"></div>'
+    + '<div class="cofld"><label for="coWeb">Your own website</label>'
+    +   '<input type="url" id="coWeb" maxlength="200" value="'+esc(a.website||'')+'" placeholder="https://…">'
+    +   '<div class="hint" id="coWebHint">Buyers can click through from every listing you place. Leave it empty if you have none.</div></div>'
+    + '<div class="cofld"><label for="coAbout">A line or two about the company</label>'
+    +   '<textarea id="coAbout" maxlength="280" placeholder="Who you are, where you work, how long you have been at it.">'+esc(a.about||'')+'</textarea>'
+    +   '<div class="hint"><span id="coCount">'+String((a.about||'').length)+'</span>/280 — it sits under your name on every listing.</div></div>'
+    + '<div class="corow">'
+    +   '<div class="cofld"><label for="coPhone">Public phone</label>'
+    +     '<input type="tel" id="coPhone" maxlength="40" value="'+esc(a.phone||'')+'" placeholder="+220 …"></div>'
+    +   '<div class="cofld"><label for="coEmail">Public email</label>'
+    +     '<input type="email" id="coEmail" maxlength="120" value="'+esc(a.email||'')+'" placeholder="office@…"></div>'
+    + '</div>'
+    + '<div class="cofld"><label>Licence and checks</label>'
+    +   '<div class="hint">'+lic+' · '+chk+'.<br>These two are set by MyKunda, not here. Send us the paperwork and we change them for you.</div></div>'
+    + '<button class="act primary" id="coSave" style="height:40px">'+(AGENCY ? 'Save profile' : 'Create profile')+'</button>'
+    + '<div class="co-msg" id="coMsg" hidden></div>';
+
+  paintLogoBox();
+  renderCoPreview();
+
+  ['coName','coWeb','coAbout','coPhone','coEmail'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) el.addEventListener('input', function(){
+      if(id==='coAbout'){ var c=document.getElementById('coCount'); if(c) c.textContent=String(el.value.length); }
+      if(id==='coWeb'){
+        var h=document.getElementById('coWebHint');
+        var bad = el.value.trim() && !coWebOk(coNormWeb(el.value));
+        if(h){ h.classList.toggle('bad', !!bad);
+               h.textContent = bad ? 'That does not look like a web address. Something like kombocoast.gm or https://kombocoast.gm.'
+                                   : 'Buyers can click through from every listing you place. Leave it empty if you have none.'; }
+      }
+      renderCoPreview();
+    });
+  });
+  var file=document.getElementById('coFile');
+  if(file) file.addEventListener('change', function(){
+    var f2=file.files && file.files[0];
+    if(!f2) return;
+    if(f2.size > 2*1024*1024){ coSay('That file is larger than 2 MB. Save it smaller and try again.', false); file.value=''; return; }
+    var rd=new FileReader();
+    rd.onload=function(){ LOGO_FILE=f2; LOGO_PREVIEW=String(rd.result||''); LOGO_DROP=false; paintLogoBox(); renderCoPreview(); coSay('', null); };
+    rd.readAsDataURL(f2);
+  });
+  var drop=document.getElementById('coDrop');
+  if(drop) drop.addEventListener('click', function(){
+    LOGO_FILE=null; LOGO_PREVIEW=''; LOGO_DROP=true;
+    var fi=document.getElementById('coFile'); if(fi) fi.value='';
+    paintLogoBox(); renderCoPreview();
+  });
+  var save=document.getElementById('coSave');
+  if(save) save.addEventListener('click', saveCompany);
+}
+
+function paintLogoBox(){
+  var box=document.getElementById('coBox');
+  var src=coLogoSrc(220);
+  if(box) box.innerHTML = src
+    ? '<img src="'+esc(src)+'" alt="">'
+    : '<span class="ini">'+esc(coInitials(coDraft().name))+'</span>';
+  var drop=document.getElementById('coDrop');
+  if(drop) drop.hidden = !src;
+}
+function coSay(txt, ok){
+  var m=document.getElementById('coMsg'); if(!m) return;
+  if(!txt){ m.hidden=true; m.textContent=''; return; }
+  m.hidden=false; m.textContent=txt;
+  m.classList.toggle('ok', ok===true);
+  m.classList.toggle('bad', ok===false);
+}
+
+/* Het voorbeeld is letterlijk de kaart van property.html, niet een indruk
+   ervan: dezelfde volgorde, dezelfde regel eronder, dezelfde linktekst. */
+function renderCoPreview(){
+  var p=document.getElementById('coPreview'); if(!p) return;
+  var d=coDraft(), a=AGENCY||{};
+  var src=coLogoSrc(160);
+  var bits=[];
+  bits.push(a.licence_no ? 'Licence '+esc(a.licence_no) : 'No licence number on file');
+  bits.push(a.verified_at ? 'Checked by MyKunda' : 'Not yet checked by MyKunda');
+  var host=coHost(d.website);
+  p.innerHTML =
+      '<div class="co-card">'
+    +   '<div class="lg">'+(src ? '<img src="'+esc(src)+'" alt="">' : '<span class="ini">'+esc(coInitials(d.name))+'</span>')+'</div>'
+    +   '<div><div class="n">'+esc(d.name || 'Your company')+'</div>'
+    +   '<div class="m">'+bits.join(' · ')+'</div></div>'
+    + '</div>'
+    + (d.about ? '<div class="co-about">'+esc(d.about)+'</div>' : '')
+    + (host ? '<div class="co-web">'+esc(host)+' ↗</div>' : '')
+    + '<p style="font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:16px">'
+    +   'This appears on the property page of every listing you place, and beside the enquiry form.</p>';
+}
+
+async function saveCompany(){
+  var btn=document.getElementById('coSave');
+  var d=coDraft();
+  if(!d.name){ coSay('A company name is the one thing we cannot leave empty.', false); return; }
+  var web=coNormWeb(d.website);
+  if(!coWebOk(web)){ coSay('That web address is not one the database will accept. Something like https://kombocoast.gm.', false); return; }
+  if(btn){ btn.disabled=true; btn.textContent='Saving…'; }
+  coSay('', null);
+  try{
+    if(!AGENCY){
+      AGENCY = await createMyAgency({ name:d.name, about:d.about||null, phone:d.phone||null,
+                                      email:d.email||null, website:web||null });
+    }
+    /* Het logo gaat pas naar de opslag als het kantoor bestaat: het pad is
+       <agency_id>/logo.<ext> en de schrijfregel op de bucket kijkt naar die
+       map. Vandaar deze volgorde en niet andersom. */
+    var logoPath = AGENCY.logo_path || null;
+    if(LOGO_FILE){
+      logoPath = await uploadAgencyLogo(AGENCY.id, LOGO_FILE);
+    } else if(LOGO_DROP && AGENCY.logo_path){
+      await deleteAgencyLogo(AGENCY.logo_path);
+      logoPath = null;
+    }
+    var saved = await saveMyAgency(AGENCY.id, {
+      name:d.name, about:d.about||null, phone:d.phone||null, whatsapp:d.phone||null,
+      email:d.email||null, website:web||null, logo_path:logoPath });
+    if(saved) AGENCY = saved;
+    LOGO_FILE=null; LOGO_PREVIEW=''; LOGO_DROP=false;
+    /* De stip achter "Company profile" betekent: er staat nog geen logo. Zonder
+       deze hertekening bleef hij staan terwijl het logo er net op was gezet.
+       show() tekent het formulier meteen mee, dus daarna pas de melding. */
+    var nv=document.getElementById('dnav');
+    if(nv) nv.innerHTML = navHTML();
+    show('company');
+    coSay('Saved. It is live on your listings now.', true);
+  }catch(e){
+    console.warn('saveCompany:', (e && e.message) || e);
+    var msg=(e && e.message) || '';
+    coSay(/row-level security|permission|policy/i.test(msg)
+      ? 'The database would not let that through. If this keeps happening, tell us — it is on our side, not yours.'
+      : ('Could not save that: ' + (msg || 'unknown error')), false);
+  }finally{
+    if(btn){ btn.disabled=false; btn.textContent = AGENCY ? 'Save profile' : 'Create profile'; }
+  }
+}
+
 /* ---------- routering ---------- */
-var PRO_VIEWS = ['portfolio','leads','agenda','stats'];
+var PRO_VIEWS = ['portfolio','leads','agenda','stats','company'];
 function show(view){
   var allowed = ['overview','saved','favourites','account'].concat(PRO ? PRO_VIEWS : []);
   if(allowed.indexOf(view)===-1) view='overview';
@@ -1932,6 +2228,7 @@ function show(view){
   if(view==='leads'){ renderLeadStats(document.getElementById('leadStats')); renderLeadPipe(document.getElementById('leadPipe')); }
   if(view==='agenda') renderAgenda();
   if(view==='stats') renderStats();
+  if(view==='company') renderCompany();
 }
 function route(){ show((location.hash||'').replace('#','') || 'overview'); }
 
@@ -2323,7 +2620,7 @@ function applyRole(){
       try{ PAYMENTS = await fetchMyPayments(50) || []; }catch(e){ PAYMENTS = []; }
     }
 
-    /* De professionele weergaven. Twee queries, alleen voor wie ze te zien
+    /* De professionele weergaven. Drie queries, alleen voor wie ze te zien
        krijgt, en de dagtotalen alleen als er advertenties zijn om ze aan op te
        hangen. Een zoeker haalt hier niets extra's op. */
     if(PRO){
@@ -2332,9 +2629,13 @@ function applyRole(){
         (PORTFOLIO.length && typeof fetchViewDays==='function')
           ? fetchViewDays(PORTFOLIO.map(function(l){ return l.id; }),
                           new Date(Date.now()-30*86400e3).toISOString())
-          : null
+          : null,
+        /* Het bedrijfsprofiel. Eén rij, en het menu heeft hem nodig voor de
+           stip achter "Company profile", dus hij hoort hier en niet pas bij
+           het openen van de weergave. */
+        (typeof fetchMyAgency==='function') ? fetchMyAgency() : null
       ].map(function(p){ return Promise.resolve(p).catch(function(){ return null; }); }));
-      LEADS = pro[0]||[]; VIEWDAYS = pro[1]||[];
+      LEADS = pro[0]||[]; VIEWDAYS = pro[1]||[]; AGENCY = pro[2]||null;
       /* Het aantal reacties per advertentie komt nu uit de volledige pijplijn
          in plaats van uit de tien nieuwste; anders klopt de kolom "Enquiries"
          in de portefeuille niet zodra er meer dan tien zijn. */

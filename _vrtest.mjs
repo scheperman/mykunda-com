@@ -347,5 +347,83 @@ check('op je eigen advertentie',        /on your listing/.test(pro.agendaRow(A))
 check('zonder tijd geen verzonnen tijd',
   /No time yet/.test(pro.agendaRow(Object.assign({}, A, { _when:null }))));
 
+
+/* ============================================================
+   19. Het bedrijfsprofiel — 02-09-2026
+   Dezelfde aanpak als hierboven: de functies worden letterlijk uit de
+   gebouwde bestanden geknipt, niet nagetypt. Wat hier draait staat ook
+   op de pagina.
+   ============================================================ */
+function grabIn(text, name){
+  const start = text.indexOf('function ' + name + '(');
+  if(start < 0) throw new Error('niet gevonden: ' + name);
+  let depth = 0, i = text.indexOf('{', start);
+  for(; i < text.length; i++){
+    if(text[i] === '{') depth++;
+    else if(text[i] === '}'){ depth--; if(depth === 0) break; }
+  }
+  return text.slice(start, i + 1);
+}
+const propSrc  = readFileSync('deploy/property.html', 'utf8');
+const adminSrc = readFileSync('deploy/admin.html', 'utf8');
+
+/* --- 19a. het webadres zoals het dashboard het opschoont --- */
+const web = new Function(
+  grabIn(src, 'coNormWeb') + '\n' + grabIn(src, 'coWebOk') + '\n' + grabIn(src, 'coHost')
+  + '\nreturn { coNormWeb, coWebOk, coHost };')();
+
+check('leeg blijft leeg',              web.coNormWeb('') === '');
+check('zonder schema komt https ervoor', web.coNormWeb('kombocoast.gm') === 'https://kombocoast.gm/');
+check('http blijft http',              web.coNormWeb('http://kombocoast.gm') === 'http://kombocoast.gm/');
+check('het pad blijft staan',          web.coNormWeb('https://kombocoast.gm/kantoor') === 'https://kombocoast.gm/kantoor');
+check('leeg is geldig',                web.coWebOk('') === true);
+check('een normaal adres is geldig',   web.coWebOk('https://kombocoast.gm') === true);
+/* Dit was de vondst van 02-09-2026: "javascript:alert(1)" krijgt in
+   coNormWeb https:// voor zich geplakt en kwam daarmee door een patroontoets
+   die alleen naar het begin van de tekst keek. Nu moet er een echte hostnaam
+   met een punt staan. */
+check('javascript: komt er niet door', web.coWebOk(web.coNormWeb('javascript:alert(1)')) === false);
+check('een naam zonder punt is geen host', web.coWebOk('https://javascript') === false);
+check('losse tekst komt er niet door', web.coWebOk(web.coNormWeb('bel me maar')) === false);
+check('alleen het domein in beeld',    web.coHost('https://www.kombocoast.gm/aanbod?p=1') === 'kombocoast.gm');
+check('www valt weg',                  web.coHost('kombocoast.gm') === 'kombocoast.gm');
+check('onzin geeft geen domein',       web.coHost('bel me maar') === '');
+
+/* --- 19b. dezelfde beoordeling op de advertentiepagina --- */
+const pub = new Function(
+  grabIn(propSrc, 'agencyUrl') + '\n' + grabIn(propSrc, 'agencyHostOf')
+  + '\nreturn { agencyUrl, agencyHostOf };')();
+
+check('zonder website geen link',      pub.agencyUrl({}) === '');
+check('zonder schema geen link',       pub.agencyUrl({ website:'kombocoast.gm' }) === '');
+check('javascript: geeft geen link',   pub.agencyUrl({ website:'javascript:alert(1)' }) === '');
+check('data: geeft geen link',         pub.agencyUrl({ website:'data:text/html,<script>' }) === '');
+check('een https-adres geeft een link',
+  pub.agencyUrl({ website:'https://kombocoast.gm/' }) === 'https://kombocoast.gm/');
+check('de linktekst is het domein',
+  pub.agencyHostOf({ website:'https://www.kombocoast.gm/aanbod' }) === 'kombocoast.gm');
+
+/* --- 19c. de regel in het beheerderspaneel --- */
+/* agencyLogoUrl komt uit supabase.js en praat met de opslag; hier een stand-in
+   die alleen het pad teruggeeft, want wat getest wordt is de regel zelf. */
+const adm = new Function('esc', 'agencyLogoUrl',
+  grabIn(adminSrc, 'agencyLine') + '\nreturn agencyLine;')(esc, p => 'https://opslag/' + p);
+
+check('een particuliere advertentie krijgt geen regel', adm({ agency:null }) === '');
+check('zonder logo staat er dat er geen logo is',
+  /geen logo/.test(adm({ agency:{ name:'Kombo Coast', website:'https://kombocoast.gm' } })));
+check('de website staat er letterlijk bij',
+  /kombocoast\.gm/.test(adm({ agency:{ name:'Kombo Coast', website:'https://kombocoast.gm' } })));
+check('zonder website zegt hij dat ook',
+  /geen website opgegeven/.test(adm({ agency:{ name:'Kombo Coast' } })));
+check('een niet-gecontroleerd kantoor staat er als niet-gecontroleerd',
+  /niet gecontroleerd/.test(adm({ agency:{ name:'Kombo Coast' } })));
+check('met logo staat er een afbeelding',
+  /<img src="https:\/\/opslag\/abc\/logo\.png"/.test(adm({ agency:{ name:'Kombo Coast', logo_path:'abc/logo.png' } })));
+/* Een naam met aanhalingstekens mag het attribuut niet openbreken. */
+check('de naam wordt ontsmet',
+  !/<b>Kombo "<\/b>/.test(adm({ agency:{ name:'Kombo "Coast' } })) &&
+  /&quot;/.test(adm({ agency:{ name:'Kombo "Coast' } })));
+
 console.log(fails ? '\n' + fails + ' test(s) mislukt.' : '\nAlle tests geslaagd.');
 process.exit(fails ? 1 : 0);
