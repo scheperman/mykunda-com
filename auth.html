@@ -68,10 +68,29 @@ body{min-height:100vh;display:flex}
 .otp-sent{text-align:center;color:var(--muted);font-size:14.5px;margin-bottom:6px;line-height:1.6}
 .otp-sent b{color:var(--ink)}
 .otp-via{font-size:13px;font-weight:600;color:var(--muted-2)}
-.otp-life{text-align:center;font-size:13px;color:var(--muted-2);margin:-10px 0 0}
+/* 03-09-2026: stond op margin -10px en schoof daarmee ONDER de knop — .btn is
+   inline-flex zonder ondermarge, dus er viel niets te compenseren. Gezien op
+   het codescherm bij het testen van T10. */
+.otp-life{text-align:center;font-size:13px;color:var(--muted-2);margin:12px 0 0}
 .otp-resend{text-align:center;font-size:13.5px;color:var(--muted);margin-top:18px;line-height:1.7}
 .otp-resend button{font-weight:700;color:var(--green-700)}
-.otp-demo{text-align:center;font-size:12px;color:var(--amber-600);background:var(--amber-50);border:1px solid var(--amber-100);border-radius:var(--r-pill);padding:7px 14px;margin-top:16px;font-weight:600}
+/* Foutmeldingen: één stijl, één gedrag. (03-09-2026, T10)
+   De regio's staan vanaf het laden in de pagina, leeg, met role="alert"; het
+   script zet alleen tekst. Geen display-wissel: een live region die pas bij
+   de fout in de DOM komt, of van display:none naar block springt, wordt door
+   schermlezers niet betrouwbaar voorgelezen. Leeg betekent geen hoogte, en
+   zonder marge/rand/opvulling, zodat er ook geen gat valt.
+   Tot vandaag landde de fout op het codescherm in een amberkleurig
+   "demo"-chipje: dezelfde ernst als op stap 1, een andere kleur. Nu rood,
+   net als elke andere fout op deze pagina. */
+.form-err{color:#C2533A;font-size:13.5px;font-weight:600;text-align:center;line-height:1.5;margin-top:12px}
+.form-err.above{margin:0 0 14px}
+.form-err:empty{margin:0}
+.otp-err{text-align:center;font-size:13px;color:#C2533A;background:#FBF0EE;border:1px solid #EFCFC8;border-radius:var(--r-md);padding:9px 14px;margin-top:16px;font-weight:600;line-height:1.5}
+.otp-err:empty{margin:0;padding:0;border:0}
+/* De kop van de poort krijgt programmatisch de focus (zie openGate); een
+   focusrand om een kop is voor een ziende bezoeker alleen maar ruis. */
+#consentTitle:focus{outline:none}
 
 /* role picker — sign-up only. Drie kaarten in plaats van een dropdown: de
    keuze bepaalt de hele back-office, dus hij hoort zichtbaar te zijn. */
@@ -143,14 +162,16 @@ body{min-height:100vh;display:flex}
         </div>
 
         <div class="auth-tabs">
-          <button class="on" data-tab="signin">Sign in</button>
-          <button data-tab="signup">Create account</button>
+          <button type="button" class="on" data-tab="signin" aria-pressed="true">Sign in</button>
+          <button type="button" data-tab="signup" aria-pressed="false">Create account</button>
         </div>
 
-        <!-- role choice (signup only) -->
+        <!-- role choice (signup only). De vraag is geen <label>: er hangt geen
+             invoerveld aan. Het is de naam van de groep kaarten eronder, en zo
+             leest een schermlezer hem ook voor. (03-09-2026) -->
         <div id="roleBlock" style="display:none">
-          <label class="role-q">How will you use MyKunda?</label>
-          <div class="role-cards" id="roleCards">
+          <span class="role-q" id="roleQ">How will you use MyKunda?</span>
+          <div class="role-cards" id="roleCards" role="group" aria-label="How will you use MyKunda?">
             <button type="button" class="role-card" data-role="buyer" aria-pressed="false">
               <span class="rc-ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span>
               <span><span class="rc-t">I'm looking</span><span class="rc-s">Search, save and compare homes, land or commercial space</span></span>
@@ -169,14 +190,14 @@ body{min-height:100vh;display:flex}
 
         <!-- name (signup only) -->
         <div class="fld" id="nameFld" style="display:none">
-          <label>Full name</label>
-          <input type="text" id="nameIn" placeholder="Your name">
+          <label for="nameIn">Full name</label>
+          <input type="text" id="nameIn" placeholder="Your name" autocomplete="name">
         </div>
 
         <div class="fld">
-          <label>Email address</label>
-          <input type="email" id="emailIn" placeholder="you@email.com" autocomplete="email">
-          <p class="fld-hint">We'll email you a sign-in code. No password to remember.</p>
+          <label for="emailIn">Email address</label>
+          <input type="email" id="emailIn" placeholder="you@email.com" autocomplete="email" aria-describedby="emailHint">
+          <p class="fld-hint" id="emailHint">We'll email you a sign-in code. No password to remember.</p>
         </div>
 
         <div class="consent" id="consentBlock" style="display:none">
@@ -185,6 +206,7 @@ body{min-height:100vh;display:flex}
         </div>
 
         <button class="btn btn-primary btn-block" id="continueBtn" style="height:52px;font-size:16px">Send my code</button>
+        <div class="form-err" id="authErr" role="alert"></div>
 
         <div class="divider">or</div>
 
@@ -198,19 +220,24 @@ body{min-height:100vh;display:flex}
 
       <!-- STEP 2: OTP -->
       <div class="step" id="stepOtp">
-        <a class="otp-back" id="otpBack"><span id="otpBackIc"></span> Back</a>
+        <!-- href erbij: een <a> zonder href staat niet in de tabvolgorde, dus
+             wie met het toetsenbord werkt kon niet terug. (03-09-2026) -->
+        <a class="otp-back" id="otpBack" href="#"><span id="otpBackIc"></span> Back</a>
         <div class="top">
           <h1>Enter the code</h1>
         </div>
         <p class="otp-sent">We sent a <span id="otpLenTxt">6</span>-digit code to<br><b id="otpDest">you@email.com</b><br><span class="otp-via">by email</span></p>
-        <div class="otp-inputs" id="otpInputs">
-          <input maxlength="1" inputmode="numeric" autocomplete="one-time-code"><input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric">
-          <input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric">
+        <!-- Zes losse vakjes lezen voor als "edit, edit, edit". De groep krijgt
+             een naam en elk vakje zijn plaats: "Sign-in code, digit 1 of 6".
+             setOtpLength() doet hetzelfde als het aantal wisselt. -->
+        <div class="otp-inputs" id="otpInputs" role="group" aria-label="Sign-in code">
+          <input maxlength="1" inputmode="numeric" autocomplete="one-time-code" aria-label="Digit 1 of 6"><input maxlength="1" inputmode="numeric" aria-label="Digit 2 of 6"><input maxlength="1" inputmode="numeric" aria-label="Digit 3 of 6">
+          <input maxlength="1" inputmode="numeric" aria-label="Digit 4 of 6"><input maxlength="1" inputmode="numeric" aria-label="Digit 5 of 6"><input maxlength="1" inputmode="numeric" aria-label="Digit 6 of 6">
         </div>
         <button class="btn btn-primary btn-block" id="verifyBtn" style="height:52px;font-size:16px">Verify &amp; continue</button>
         <p class="otp-life" id="otpLife">The code works only once.</p>
-        <div class="otp-resend">Didn't get it? <button id="resendBtn">Resend code</button><br>Check your spam folder too.</div>
-        <div class="otp-demo" id="otpDemo" style="display:none"></div>
+        <div class="otp-err" id="otpDemo" role="alert"></div>
+        <div class="otp-resend">Didn't get it? <button type="button" id="resendBtn">Resend code</button><br>Check your spam folder too.</div>
       </div>
 
       <!-- STEP 3: de toestemmingspoort na een aanmelding via een aanbieder
@@ -233,7 +260,7 @@ body{min-height:100vh;display:flex}
           <p id="consentSub"></p>
         </div>
         <div id="consentSlot"></div>
-        <div id="consentErr" style="display:none;color:#C2533A;font-size:13.5px;font-weight:600;margin:0 0 14px;text-align:center;line-height:1.5"></div>
+        <div class="form-err above" id="consentErr" role="alert"></div>
         <button class="btn btn-primary btn-block" id="consentGoBtn" style="height:52px;font-size:16px">Finish and continue</button>
         <div class="terms" id="consentCancelLine" style="display:block">Changed your mind? <a href="#" id="consentCancel">Cancel and sign out</a>.</div>
       </div>
@@ -378,6 +405,7 @@ function roleMissing(){
 
 function applyMode(){
   const signup = mode==='signup';
+  authErr('');   // een melding over het ene tabblad hoort niet op het andere te blijven staan
   document.getElementById('authTitle').textContent = signup ? 'Create your account' : 'Welcome back';
   document.getElementById('roleBlock').style.display = signup ? 'block' : 'none';
   document.getElementById('roleCards').classList.remove('warn');
@@ -390,7 +418,11 @@ function applyMode(){
   document.getElementById('authSwitchLine').innerHTML = signup
     ? `Already have an account? <a href="#" id="goSignin">Sign in</a>`
     : `New to MyKunda? <a href="#" id="goSignup">Create an account</a>`;
-  document.querySelectorAll('.auth-tabs button').forEach(b=>b.classList.toggle('on', b.dataset.tab===mode));
+  document.querySelectorAll('.auth-tabs button').forEach(b=>{
+    const on = b.dataset.tab===mode;
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
   wireSwitchLinks();
 }
 function wireSwitchLinks(){
@@ -401,22 +433,31 @@ function wireSwitchLinks(){
 document.querySelectorAll('.auth-tabs button').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.tab;applyMode();}));
 
 function flash(el){el.style.borderColor='#C2533A';el.focus();setTimeout(()=>el.style.borderColor='',1500);}
+/* ---- Foutmeldingen (03-09-2026, T10) ----
+   Eén schrijver voor elke melding. De drie regio's (#authErr, #otpDemo,
+   #consentErr) staan in de HTML met role="alert"; hier wordt alleen tekst
+   gezet, nooit display gewisseld — zie het commentaar bij .form-err.
+   Twee dingen die je pas merkt met een schermlezer:
+   - Dezelfde tekst twee keer achter elkaar (nog eens op de knop drukken met
+     hetzelfde verkeerde adres) wordt niet opnieuw voorgelezen: de inhoud is
+     niet veranderd. Daarom eerst leegmaken en pas in het volgende frame de
+     tekst zetten. De lopende frame-aanvraag wordt geannuleerd, anders wint een
+     oude melding het van een nieuwere lege.
+   - Op het codescherm hangt #authErr onder de knop van stap 1, buiten beeld.
+     Dan gaat de tekst alléén naar #otpDemo: twee live regions met dezelfde
+     tekst worden twee keer voorgelezen. */
+function say(el, msg){
+  if(!el) return;
+  if(el._raf) cancelAnimationFrame(el._raf);
+  el.textContent='';
+  el._raf = msg ? requestAnimationFrame(function(){ el._raf=0; el.textContent=msg; }) : 0;
+}
+function otpErr(msg){ say(document.getElementById('otpDemo'), msg); }
 function authErr(msg){
-  let err=document.getElementById('authErr');
-  if(!err){
-    err=document.createElement('div'); err.id='authErr';
-    err.style.cssText='color:#C2533A;font-size:13.5px;font-weight:600;margin-top:12px;text-align:center;line-height:1.5';
-    document.getElementById('continueBtn').after(err);
-  }
-  err.textContent=msg||''; err.style.display=msg?'block':'none';
-  // Op het codescherm hangt #authErr onder de knop van de vórige stap en staat
-  // dus buiten beeld. Spiegel de melding naar het vakje dat daar wél zichtbaar
-  // is, anders verdwijnt bijvoorbeeld "wacht nog even" spoorloos.
   const otpStep=document.getElementById('stepOtp');
-  if(otpStep && otpStep.classList.contains('on')){
-    const d=document.getElementById('otpDemo');
-    if(d){ d.textContent=msg||''; d.style.display=msg?'block':'none'; }
-  }
+  const onOtp = !!(otpStep && otpStep.classList.contains('on'));
+  say(document.getElementById('authErr'), onOtp ? '' : msg);
+  if(onOtp) otpErr(msg);
 }
 function friendly(e){
   const m=(e&&e.message)||'';
@@ -434,9 +475,13 @@ function friendly(e){
 async function sendCode(isResend){
   const name = document.getElementById('nameIn').value.trim();
   const email = document.getElementById('emailIn').value.trim();
-  if(mode==='signup' && !name && !isResend){ flash(document.getElementById('nameIn')); return false; }
-  if(!/.+@.+\..+/.test(email)){ flash(document.getElementById('emailIn')); return false; }
+  /* Tot 03-09-2026 kleurde alleen het veld even rood en sprong de cursor
+     erheen. Zonder woorden hoort een schermlezer daar niets van; met woorden
+     weet ook een ziende bezoeker wát er mis is. (T10) */
+  if(mode==='signup' && !name && !isResend){ authErr('Please enter your name.'); flash(document.getElementById('nameIn')); return false; }
+  if(!/.+@.+\..+/.test(email)){ authErr('Please enter a valid email address.'); flash(document.getElementById('emailIn')); return false; }
   if(roleMissing()) return false;
+  authErr('');
   const consent = document.getElementById('consentIn').checked;
   const consentMarketing = document.getElementById('consentMktIn').checked;
   if(mode==='signup' && !consent){
@@ -512,7 +557,7 @@ async function sendCode(isResend){
           ? 'The code expires in ' + m + ' minutes and works only once.'
           : 'The code works only once.';
       }
-      document.getElementById('otpDemo').style.display='none';
+      otpErr('');
     }catch(e){
       // auth-email unreachable: do NOT fall back to Supabase's own mailer — that would
       // create accounts on the Sign-in tab and mail from a supabase.co sender.
@@ -672,25 +717,29 @@ function openGate(u, name, need){
      waarvan er altijd één past. */
   document.getElementById('consentCancelLine').style.display = need.consent ? 'block' : 'none';
   showAuthStep('stepConsent');
+  /* De poort verschijnt zonder dat er iets is aangeklikt. Zet de focus op de
+     kop, anders blijft een schermlezer staan waar hij was — op een scherm dat
+     er niet meer is — en hoort hij niet dat er een vraag ligt. (03-09-2026) */
+  const h = document.getElementById('consentTitle');
+  if(h){ h.setAttribute('tabindex','-1'); h.focus(); }
 }
 
 document.getElementById('consentGoBtn').addEventListener('click', async function(){
   if(!pendingSession) return;
   const need = pendingSession.need;
   const err = document.getElementById('consentErr');
-  const say = function(m){ err.textContent = m||''; err.style.display = m?'block':'none'; };
   if(need.role && !role){
     document.getElementById('roleCards').classList.add('warn');
-    say('Tell us how you’ll use MyKunda so we can set your account up right.');
+    say(err, 'Tell us how you’ll use MyKunda so we can set your account up right.');
     return;
   }
   if(need.consent && !document.getElementById('consentIn').checked){
     document.getElementById('consentBlock').classList.add('warn');
-    say('Please agree to the Terms and Privacy Policy to continue.');
+    say(err, 'Please agree to the Terms and Privacy Policy to continue.');
     return;
   }
   document.getElementById('consentBlock').classList.remove('warn');
-  say('');
+  say(err, '');
   const btn=this; const label=btn.textContent;
   btn.textContent='Saving…'; btn.style.opacity='.75';
   const u = pendingSession.user;
@@ -707,7 +756,7 @@ document.getElementById('consentGoBtn').addEventListener('click', async function
     /* De toestemming is de enige die tegenhoudt: zonder die regel in de
        database hoort niemand door te lopen. */
     btn.textContent=label; btn.style.opacity='';
-    say('We could not save that. Please try again.');
+    say(err, 'We could not save that. Please try again.');
     console.warn('consent gate:', e && e.message);
     return;
   }
@@ -862,6 +911,7 @@ function setOtpLength(n){
   for(let i=0;i<n;i++){
     const inp=document.createElement('input');
     inp.maxLength=1; inp.inputMode='numeric';
+    inp.setAttribute('aria-label', 'Digit ' + (i+1) + ' of ' + n);
     if(i===0) inp.autocomplete='one-time-code';
     box.appendChild(inp);
   }
@@ -875,7 +925,13 @@ function otpValue(){ return otpEls.map(e=>e.value).join(''); }
 function checkOtp(){ if(otpValue().length===otpLen) document.getElementById('verifyBtn').focus(); }
 
 document.getElementById('verifyBtn').addEventListener('click',async ()=>{
-  if(otpValue().length<otpLen){ otpEls.find(e=>!e.value).focus(); return; }
+  if(otpValue().length<otpLen){
+    /* Tot 03-09-2026 sprong alleen de cursor naar het lege vakje. Wie het
+       scherm niet ziet, hoorde daar niets van. */
+    otpErr('Enter all ' + otpLen + ' digits of the code.');
+    otpEls.find(e=>!e.value).focus();
+    return;
+  }
   const btn=document.getElementById('verifyBtn');
   btn.textContent='Verifying\u2026'; btn.style.opacity='.75';
   if(await liveReady()){
@@ -892,8 +948,7 @@ document.getElementById('verifyBtn').addEventListener('click',async ()=>{
       location.href=nextUrl; return;
     }catch(e){
       btn.textContent='Verify & continue'; btn.style.opacity='';
-      const d=document.getElementById('otpDemo');
-      d.style.display='block'; d.textContent='That code didn\u2019t match, or it has expired. Ask for a fresh code below.';
+      otpErr('That code didn\u2019t match, or it has expired. Ask for a fresh code below.');
       /* Supabase geeft voor een verkeerd getypte code en voor een verlopen code
          exact dezelfde melding ("Token has expired or is invalid"), dus die twee
          zijn hier niet uit elkaar te houden. Dan is het eerlijker ze allebei te
@@ -906,13 +961,14 @@ document.getElementById('verifyBtn').addEventListener('click',async ()=>{
     }
   }
   btn.textContent='Verify & continue'; btn.style.opacity='';
-  const dd=document.getElementById('otpDemo');
-  dd.style.display='block'; dd.textContent='Sign-in is temporarily unavailable. Please try again in a moment.';
+  otpErr('Sign-in is temporarily unavailable. Please try again in a moment.');
 });
 
-document.getElementById('otpBack').addEventListener('click',()=>{
+document.getElementById('otpBack').addEventListener('click',(e)=>{
+  e.preventDefault();   // href="#" is er voor het toetsenbord, niet om te springen
   document.getElementById('stepOtp').classList.remove('on');
   document.getElementById('stepCreds').classList.add('on');
+  document.getElementById('emailIn').focus();
 });
 document.getElementById('resendBtn').addEventListener('click',async function(){
   const b=this; b.textContent='Sending\u2026';
