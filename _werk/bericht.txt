@@ -1,0 +1,6 @@
+Professionele aanbieder: dashboard 3x sneller (sessie i.p.v. /auth/user, parallelle queries), aandachtstrook, leadfilter, wizard vooringevuld uit profiel en kantoor
+
+- supabase.js: currentUser() leest de sessie (getSession) i.p.v. veertien keer /auth/v1/user; currentProfile() memo 15 s; fetchMyLeads() een query met inner join
+- dashboard.html: initDashboard() drie queries tegelijk, een Promise.all voor het menu; renderAttention() boven de statistieken; Leads met filter per advertentie, zoekwoord en fase-chips, onder 760px een lijst; tabelkolommen .hide-m onder 600px
+- list.html: prefillFromAccount() zet rol, bedrijfsgegevens en contact voor uit profiles/agencies
+- _vrtest.mjs: 149 tests (blok 21 leadfilter + aandachtstrook); sw.js mk-v128; CLAUDE.md

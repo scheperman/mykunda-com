@@ -74,7 +74,7 @@ async function verifyEmailOtp(email, token, type){
   }
   return last;
 }
-async function signOut(){ 
+async function signOut(){ _profileMemo = null; 
   if(sb) try{ await sb.auth.signOut(); }catch(e){ console.warn('signOut:',e); }
   try{ localStorage.removeItem('mykunda_admin'); }catch(e){}
   try{ localStorage.removeItem('mykunda_user'); }catch(e){}
@@ -83,16 +83,42 @@ async function signOut(){
   try{ localStorage.removeItem('mykunda_favs'); localStorage.removeItem('mykunda_favs_db'); }catch(e){}
   if(typeof clearUser==='function') clearUser();
 }
+/* Wie is er ingelogd? Uit de SESSIE, niet van de server (03-09-2026).
+   sb.auth.getUser() is een netwerkverzoek naar /auth/v1/user, en deze functie
+   staat vóór vrijwel elke query. Gemeten op het dashboard van een kantoor:
+   veertien keer /auth/v1/user in één paginalading, 150 tot 1.800 ms per stuk,
+   en het menu stond pas na 6,3 seconden — de helft van die tijd was alleen
+   maar vragen wie we zijn. getSession() leest de opgeslagen sessie en
+   ververst het token zelf als het verlopen is, zonder extra rondje.
+   Veiligheid verandert hier niet: de id wordt alleen gebruikt om queries te
+   filteren, en de RLS-regels kijken naar het JWT dat meegaat, nooit naar dit
+   veld. getUser() blijft de terugval als er lokaal niets staat. */
 async function currentUser(){
   if(!sb) return null;
+  try{
+    const { data } = await sb.auth.getSession();
+    if(data && data.session && data.session.user) return data.session.user;
+  }catch(e){}
   const { data } = await sb.auth.getUser();
   return data ? data.user : null;
 }
+/* Eén profielrij per paginalading (03-09-2026). checkAdmin() wordt door de
+   header én door de pagina zelf aangeroepen, en dat waren twee identieke
+   selects binnen dezelfde seconde. Vijftien seconden is lang genoeg om een
+   lading te dekken en kort genoeg om een rolwijziging niet te missen. */
+let _profileMemo = null, _profileAt = 0;
 async function currentProfile(){
   if(!sb) return null;
-  const u = await currentUser();
-  if(!u) return null;
-  const { data } = await sb.from('profiles').select('*').eq('id', u.id).single();
+  if(_profileMemo && (Date.now() - _profileAt) < 15000) return _profileMemo;
+  _profileAt = Date.now();
+  _profileMemo = (async function(){
+    const u = await currentUser();
+    if(!u) return null;
+    const { data } = await sb.from('profiles').select('*').eq('id', u.id).single();
+    return data || null;
+  })();
+  const data = await _profileMemo;
+  if(!data){ _profileMemo = null; return null; }
   // cache admin status for header rendering
   if(data && data.role === 'admin'){
     try{ localStorage.setItem('mykunda_admin','1'); }catch(e){}
@@ -1566,13 +1592,12 @@ async function fetchMyLeads(limit){
   if(!sb) return null;
   const u = await currentUser();
   if(!u) return null;
-  // First get the user's listing IDs
-  const { data: listings, error: le } = await sb.from('listings')
-    .select('id').eq('owner_id', u.id);
-  if(le || !listings || !listings.length) return [];
-  const ids = listings.map(l=>l.id);
-  let q = sb.from('leads').select('*')
-    .in('listing_id', ids)
+  /* Eén query in plaats van twee (03-09-2026): de eigen advertenties als
+     inner join, niet eerst de id's ophalen en dan de leads. Scheelt een
+     rondreis op elke dashboardlading; de leesregel op leads scoopt al op
+     eigenaar, de join houdt een beheerder bij zijn eigen advertenties. */
+  let q = sb.from('leads').select('*, listings!inner(owner_id)')
+    .eq('listings.owner_id', u.id)
     .order('created_at', { ascending: false });
   if(limit) q = q.limit(limit);
   const { data, error } = await q;

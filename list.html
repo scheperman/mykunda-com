@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:096lrpq--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1en33dw--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preconnect" href="https://api.mapbox.com" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=202866185935742">
+<link rel="stylesheet" href="styles.min.css?v=9100661837355">
 <style>
 body{background:var(--paper-2);min-height:100vh}
 
@@ -290,7 +290,7 @@ body{background:var(--paper-2);min-height:100vh}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=202866185935742"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=9100661837355"><!--/mk-css-->
 </head>
 <body>
 <div class="wizbar">
@@ -903,18 +903,18 @@ body{background:var(--paper-2);min-height:100vh}
   </aside>
 </div>
 
-<script src="valuation-areas.js?v=202866185935742"></script>
-<script src="valuation.js?v=202866185935742"></script>
-<script src="app.min.js?v=202866185935742"></script>
-<script src="gambia-places.js?v=202866185935742" defer></script>
-<script src="image-slot.js?v=202866185935742" defer></script>
+<script src="valuation-areas.js?v=9100661837355"></script>
+<script src="valuation.js?v=9100661837355"></script>
+<script src="app.min.js?v=9100661837355"></script>
+<script src="gambia-places.js?v=9100661837355" defer></script>
+<script src="image-slot.js?v=9100661837355" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel, Leaflet (~145 KB) only when the
    seller reaches the location step. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=202866185935742'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=9100661837355'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -4059,6 +4059,45 @@ async function initResume(){
   }catch(e){}
 }
 initResume();
+
+/* ---- Wat het account al weet, niet nog eens vragen (03-09-2026) ----
+   Een kantoor met twintig advertenties typte tot vandaag bij elke advertentie
+   opnieuw zijn bedrijfsnaam, licentienummer, instantie, naam, nummer en
+   e-mailadres — terwijl dat allemaal in profiles en agencies staat. Nu:
+   rol agent met een bedrijfsprofiel → "An agent or company" staat voor,
+   bedrijfsgegevens en contact zijn ingevuld; rol seller → "The owner" staat
+   voor, naam/nummer/e-mail ingevuld. Alles blijft te wijzigen, en de twee
+   vinkjes (eigendom / mandaat) blijven per advertentie — dat is een
+   verklaring, geen gegeven. Alleen bij een verse wizard: een concept dat
+   hervat wordt heeft zijn eigen waarden. */
+async function prefillFromAccount(){
+  if(draftId) return;
+  if(S.who || S.contactEmail || S.company) return;
+  try{ await window.__sbReady; }catch(e){}
+  if(typeof backendReady!=='function' || !backendReady() || typeof fetchMyProfile!=='function') return;
+  let prof=null, ag=null;
+  try{ prof = await fetchMyProfile(); }catch(e){}
+  if(!prof) return;
+  if(prof.role==='agent' && typeof fetchMyAgency==='function'){ try{ ag = await fetchMyAgency(); }catch(e){} }
+  /* Niet overschrijven wat de gebruiker intussen al typte. */
+  const setIf=(id,key,v)=>{ if(!v || S[key]) return; const el=document.getElementById(id); if(el && !el.value){ el.value=v; S[key]=v; } };
+  setIf('nameIn','contactName', prof.full_name);
+  setIf('phoneIn','contactPhone', prof.phone || (ag && (ag.whatsapp||ag.phone)) || '');
+  setIf('emailIn','contactEmail', prof.email || (ag && ag.email) || '');
+  if(!S.who && (prof.role==='agent' || prof.role==='seller')){
+    S.who = prof.role==='agent' ? 'business' : 'owner';
+    if(S.who==='owner'){ S.feeType='none'; S.feeVal=''; }
+    else if(S.feeType==='none'){ S.feeType=isRent()?'month':'pct'; }
+  }
+  if(ag && S.who==='business'){
+    setIf('companyIn','company', ag.name);
+    setIf('regIn','regNo', ag.licence_no);
+    if(ag.licence_body && !S.licBody){ S.licBody=ag.licence_body; const lb=document.getElementById('licBodyIn'); if(lb) lb.value=ag.licence_body; }
+  }
+  if(window.__trackReady) applyDealUI();
+  updateSummary();
+}
+prefillFromAccount();
 
 // shake keyframe
 const st=document.createElement('style');st.textContent='@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}';document.head.appendChild(st);

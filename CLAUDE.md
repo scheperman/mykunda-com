@@ -2675,3 +2675,35 @@ De vierde controle (accounts met `profiles.email_bounced_at`) heeft geen
 tijdvenster. Eén geblokkeerd account laat het alarm dus elke dag afgaan tot iemand
 die kolom leegmaakt. Dat is met opzet, maar weet het voordat je je afvraagt waarom
 de mail blijft komen.
+
+## Wie ben ik? Dat vraag je niet aan de server — 03-09-2026
+
+`currentUser()` in `supabase.js` leest sinds vandaag de sessie met
+`sb.auth.getSession()` en valt alleen terug op `sb.auth.getUser()` als er
+lokaal niets staat. `getUser()` is een netwerkverzoek naar `/auth/v1/user`, en
+`currentUser()` staat vóór vrijwel elke query. Gemeten op het dashboard van
+een kantoor: **veertien** keer `/auth/v1/user` in één paginalading, 150 tot
+1.800 ms per stuk, menu na 6,3 s. Na de wijziging plus twee andere ingrepen
+(de drie queries in `initDashboard()` tegelijk, en één `Promise.all` voor
+alles wat het menu nodig heeft in plaats van drie wachtmomenten achter
+elkaar) staat het menu na 2,3 s — gemeten in dezelfde omgeving, dus de
+verhouding telt, niet het absolute getal. `currentProfile()` onthoudt zijn
+rij bovendien vijftien seconden, omdat de header en de pagina hem allebei
+opvragen.
+
+Regels die hieruit volgen: schrijf op een pagina nooit `await` achter
+`await` voor queries die elkaar niet nodig hebben — op 4G is elk wachtmoment
+een rondreis van 300 ms of meer. En roep `sb.auth.getUser()` alleen aan als
+je de server echt nodig hebt (bijvoorbeeld om te controleren of een account
+nog bestaat); voor "wie is dit" volstaat de sessie, want de RLS-regels kijken
+toch naar het JWT dat meegaat.
+
+Wat de professionele aanbieder er verder bij kreeg (zelfde dag): een
+aandachtstrook boven de statistieken op het overzicht (`renderAttention()`,
+alleen zichtbaar als er iets te doen is), een filterbalk op Leads (per
+advertentie, zoekwoord, fase-chips; onder 760px één lijst in plaats van zeven
+kolommen), verborgen tabelkolommen onder 600px (`.hide-m`), en in
+`list.html` `prefillFromAccount()`: rol, bedrijfsgegevens en contact komen
+uit `profiles` en `agencies` in plaats van bij elke advertentie opnieuw
+getypt te worden. De twee vinkjes (eigendom / mandaat) blijven per
+advertentie.

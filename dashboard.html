@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0aho958--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1utqmzm--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <noscript></noscript>
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=202866185935742">
+<link rel="stylesheet" href="styles.min.css?v=9100661837355">
 <style>
 body{background:var(--paper-2)}
 .dash{max-width:1180px;margin:0 auto;padding:36px 28px 70px}
@@ -299,6 +299,38 @@ body{background:var(--paper-2)}
 .upgrade h3{color:#fff;font-size:19px;margin-bottom:8px}
 .upgrade p{color:rgba(255,255,255,.84);font-size:14px;line-height:1.55;margin-bottom:16px}
 
+/* De aandachtstrook op het aanbiedersoverzicht (03-09-2026). */
+.attn{background:var(--white);border:1px solid var(--line);border-left:4px solid var(--amber-600);border-radius:var(--r-md);padding:6px 0;margin-bottom:18px}
+.attn a,.attn button{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:10px 16px;border:0;background:none;
+  font-family:var(--sans);font-size:14px;color:var(--ink);text-decoration:none;cursor:pointer;border-bottom:1px solid var(--line-2)}
+.attn a:last-child,.attn button:last-child{border-bottom:0}
+.attn .k{font-family:var(--serif);font-weight:800;font-size:20px;min-width:30px;color:var(--green-800);text-align:center}
+.attn .t{flex:1;line-height:1.4}
+.attn .t small{display:block;color:var(--muted);font-size:12.5px}
+.attn .go{color:var(--green-700);font-weight:800;font-size:16px}
+/* Leads: filterbalk en de lijstweergave op een telefoon (03-09-2026). */
+.lchips{display:flex;gap:6px;flex-wrap:wrap;width:100%}
+.lchips button{height:30px;padding:0 11px;border-radius:99px;border:1.5px solid var(--line);background:var(--white);
+  font-size:12.5px;font-weight:700;color:var(--ink-2);cursor:pointer;font-family:var(--sans);display:inline-flex;align-items:center;gap:6px}
+.lchips button .n{font-size:11px;color:var(--muted)}
+.lchips button.on{background:var(--green-700);border-color:var(--green-700);color:#fff}
+.lchips button.on .n{color:rgba(255,255,255,.8)}
+.ptools input[type=search]{height:36px;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:0 10px;font-size:13.5px;
+  font-family:var(--sans);color:var(--ink);background:var(--white);outline:none;min-width:0;flex:1 1 140px}
+.ptools input[type=search]:focus{border-color:var(--green-500)}
+.ptools select{max-width:100%}
+@media(max-width:760px){
+  .pipe{display:block;padding:12px 14px 16px}
+  .pipe-col{flex:none;width:auto;margin-bottom:12px}
+  .pipe-col.simple{max-width:none}
+  /* Onder 600px zijn Views en Viewings te missen: ze staan ook op de rij op
+     het overzicht. Zo past de tabel zonder zijwaarts scrollen op 375px. */
+}
+@media(max-width:600px){
+  .ptable{min-width:0}
+  .ptable th.hide-m,.ptable td.hide-m{display:none}
+  .ptable th,.ptable td{padding:10px 8px}
+}
 @media(max-width:480px){
   .dash{padding:24px 16px 50px}
   .dash-stats{grid-template-columns:1fr 1fr}
@@ -354,7 +386,7 @@ body{background:var(--paper-2)}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=202866185935742"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=9100661837355"><!--/mk-css-->
 </head>
 <body>
 <div id="header"></div>
@@ -415,6 +447,11 @@ body{background:var(--paper-2)}
 
   <!-- aanbieder (particulier of professioneel) -->
   <div id="ovSeller" hidden>
+  <!-- Wat er nú van je gevraagd wordt (03-09-2026). Op een telefoon stond het
+       eerste onbeantwoorde bericht op 4.000px diepte, onder alle
+       advertentierijen. Deze strook staat alleen als er iets is en verdwijnt
+       zodra alles gedaan is — geen lege kaart die "alles in orde" zegt. -->
+  <div id="attn" hidden></div>
   <div class="stat-row" id="statRow"></div>
 
   <div class="dash-grid">
@@ -518,7 +555,16 @@ body{background:var(--paper-2)}
       <p>Every enquiry on your listings, in the seven stages the database already knew about. Moving a card writes to the lead itself — this is the record, not a note to yourself.</p>
     </div>
     <div class="stat-row" id="leadStats"></div>
-    <div class="panel" style="margin-top:22px"><div class="pipe" id="leadPipe"></div></div>
+    <div class="panel" style="margin-top:22px">
+      <!-- Vinden vóór verwerken (03-09-2026). Een kantoor met twintig
+           advertenties en driehonderd leads heeft geen zeven kolommen nodig
+           maar een filter: per advertentie, op naam of nummer, en op een
+           telefoon per fase in plaats van naast elkaar. De chips staan op
+           elk scherm; onder 760px wordt de pijplijn één lijst van de
+           gekozen fase. -->
+      <div class="ptools" id="leadTools"></div>
+      <div class="pipe" id="leadPipe"></div>
+    </div>
   </section>
 
   <!-- ============ VIEWINGS (fase 5) ============ -->
@@ -623,15 +669,15 @@ body{background:var(--paper-2)}
 
 <div id="footer"></div>
 
-<script src="app.min.js?v=202866185935742"></script>
-<script src="image-slot.js?v=202866185935742" defer></script>
+<script src="app.min.js?v=9100661837355"></script>
+<script src="image-slot.js?v=9100661837355" defer></script>
 <script>
 /* 4G: the Supabase client (~205 KB) is not needed to paint this page. It downloads
    in parallel and every backend call awaits window.__sbReady. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=202866185935742'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=9100661837355'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 </script>
@@ -915,7 +961,14 @@ async function initDashboard(){
 
   if(isLive && typeof fetchMyListings==='function'){
     try{
-      const dbRows = await fetchMyListings();
+      /* Drie onafhankelijke queries tegelijk (03-09-2026); ze stonden achter
+         elkaar en kostten zo drie rondreizen in plaats van één. */
+      const trio = await Promise.all([
+        fetchMyListings(),
+        fetchMyLeads(10).catch(function(){ return null; }),
+        fetchMyViewings(20).catch(function(){ return null; })
+      ]);
+      const dbRows = trio[0];
       if(dbRows && dbRows.length){
         listings = dbRows.map(r=>{
           const photo = (typeof mkPhotoRows==='function') ? mkPhotoRows(r)[0] : (r.listing_media||[]).find(m=>!m.is_document);
@@ -956,11 +1009,10 @@ async function initDashboard(){
           };
         });
       }
-      // Fetch real leads
-      dbLeads = await fetchMyLeads(10);
-      // Fetch real viewings — beide kanten in één lijst, dus ruimer dan de vier
-      // die het overzicht toont, anders verdringt de koperskant de verkoperskant.
-      dbViewings = await fetchMyViewings(20);
+      // Leads en bezichtigingen — beide kanten in één lijst, dus ruimer dan de
+      // vier die het overzicht toont, anders verdringt de koperskant de verkoperskant.
+      dbLeads = trio[1];
+      dbViewings = trio[2];
     }catch(e){ console.warn('dashboard DB load:', e); }
   }
 
@@ -1898,8 +1950,69 @@ function leadCard(l){
     + '</div>';
 }
 
+/* ---- leads: vinden ---- */
+var LF = { listing:'', q:'', stage:'' };
+function leadMatches(l){
+  if(LF.listing && String(l.listing_id||'')!==LF.listing) return false;
+  if(LF.q){
+    var hay = [l.name, l.email, l.phone, l.message, l._listing_title, l.note].filter(Boolean).join(' ').toLowerCase();
+    if(hay.indexOf(LF.q)===-1) return false;
+  }
+  return true;
+}
+function leadRows(){ return LEADS.filter(leadMatches); }
+function narrowLeads(){ return window.matchMedia && window.matchMedia('(max-width:760px)').matches; }
+function renderLeadTools(){
+  var el = document.getElementById('leadTools');
+  if(!el) return;
+  if(!LEADS.length){ el.innerHTML=''; el.style.display='none'; return; }
+  el.style.display='';
+  /* Alleen advertenties waar een lead op zit; een lege optie helpt niemand. */
+  var per = {}; LEADS.forEach(function(l){ if(l.listing_id){ per[l.listing_id] = per[l.listing_id] || { t:l._listing_title, n:0 }; per[l.listing_id].n++; } });
+  var ids = Object.keys(per).sort(function(a,b){ return per[b].n-per[a].n; });
+  var sel = '<select id="lfListing" aria-label="Filter by listing"><option value="">All listings</option>'
+    + ids.map(function(id){ return '<option value="'+esc(id)+'"'+(LF.listing===id?' selected':'')+'>'+esc(per[id].t)+' ('+per[id].n+')</option>'; }).join('')
+    + '</select>';
+  var inp = '<input type="search" id="lfQ" placeholder="Name, number or word" value="'+esc(LF.q)+'" aria-label="Search leads">';
+  var rows = leadRows();
+  var stages = PRO ? LEAD_STAGES : ['new','contacted','lost'];
+  var chips = '<div class="lchips">'
+    + '<button type="button" data-lf-stage=""'+(LF.stage===''?' class="on"':'')+'>All <span class="n">'+rows.length+'</span></button>'
+    + stages.map(function(st){
+        var n = rows.filter(function(l){ return (l.stage||'new')===st; }).length;
+        return '<button type="button" data-lf-stage="'+st+'"'+(LF.stage===st?' class="on"':'')+'>'+esc(PRO ? STAGE_LABEL[st] : ({new:'Waiting',contacted:'Replied',lost:'Closed'})[st])+' <span class="n">'+n+'</span></button>';
+      }).join('')
+    + '</div>';
+  el.innerHTML = sel + inp + chips;
+  var s1 = document.getElementById('lfListing'); if(s1) s1.addEventListener('change', function(){ LF.listing = s1.value; renderLeadTools(); renderLeadPipe(document.getElementById('leadPipe')); });
+  var q1 = document.getElementById('lfQ'); if(q1) q1.addEventListener('input', function(){ LF.q = q1.value.trim().toLowerCase(); renderLeadPipe(document.getElementById('leadPipe')); paintChipCounts(); });
+  el.querySelectorAll('[data-lf-stage]').forEach(function(b){ b.addEventListener('click', function(){ LF.stage = b.dataset.lfStage; renderLeadTools(); renderLeadPipe(document.getElementById('leadPipe')); }); });
+}
+function paintChipCounts(){
+  var rows = leadRows();
+  document.querySelectorAll('#leadTools [data-lf-stage]').forEach(function(b){
+    var st = b.dataset.lfStage, n = st ? rows.filter(function(l){ return (l.stage||'new')===st; }).length : rows.length;
+    var sp = b.querySelector('.n'); if(sp) sp.textContent = n;
+  });
+}
 function renderLeadPipe(el){
   if(!el) return;
+  var rows = leadRows();
+  if(LEADS.length && !rows.length){
+    el.innerHTML = '<div class="empty" style="padding:34px 22px;color:var(--muted);font-size:14px">No lead matches this filter.</div>';
+    return;
+  }
+  /* Eén fase gekozen, of een telefoon: één lijst, nieuwste bovenaan. Op een
+     breed scherm zonder fasekeuze blijven de kolommen staan. */
+  if(LF.stage || (narrowLeads() && PRO)){
+    var stage = LF.stage;
+    var lijst = stage ? rows.filter(function(l){ return (l.stage||'new')===stage; }) : rows;
+    lijst = lijst.slice().sort(function(a,b){ return new Date(b.created_at||0) - new Date(a.created_at||0); });
+    var kop = stage ? (PRO ? STAGE_LABEL[stage] : ({new:'Waiting for a reply',contacted:'Replied',lost:'Closed'})[stage]) : 'All leads';
+    el.innerHTML = '<div class="pipe-col simple" data-stage="'+esc(stage||'all')+'"><h4><span>'+esc(kop)+'</span><span class="n">'+lijst.length+'</span></h4>'
+      + (lijst.length ? lijst.map(leadCard).join('') : '<div class="none">Nothing here</div>') + '</div>';
+    return;
+  }
   if(!LEADS.length){
     el.innerHTML = '<div style="padding:18px 0">'+emptyBox('No enquiries yet',
       'Every enquiry on one of your listings lands here, and stays here until you have closed it off. Nothing is deleted.',
@@ -1907,15 +2020,15 @@ function renderLeadPipe(el){
     return;
   }
   if(!PRO){
-    var open = LEADS.filter(function(l){ return l.stage!=='won' && l.stage!=='lost'; });
-    var closed = LEADS.filter(function(l){ return l.stage==='won' || l.stage==='lost'; });
+    var open = rows.filter(function(l){ return l.stage!=='won' && l.stage!=='lost'; });
+    var closed = rows.filter(function(l){ return l.stage==='won' || l.stage==='lost'; });
     el.innerHTML = '<div class="pipe-col simple" data-stage="open"><h4><span>Open</span><span class="n">'+open.length+'</span></h4>'
       + (open.length ? open.map(leadCard).join('') : '<div class="none">Nothing waiting for you</div>') + '</div>'
       + (closed.length ? '<div class="pipe-col simple" data-stage="closed"><h4><span>Closed</span><span class="n">'+closed.length+'</span></h4>'+closed.map(leadCard).join('')+'</div>' : '');
     return;
   }
   el.innerHTML = LEAD_STAGES.map(function(st){
-    var inCol = LEADS.filter(function(l){ return (l.stage||'new')===st; });
+    var inCol = rows.filter(function(l){ return (l.stage||'new')===st; });
     return '<div class="pipe-col" data-stage="'+st+'">'
       + '<h4><span>'+esc(STAGE_LABEL[st])+'</span><span class="n">'+inCol.length+'</span></h4>'
       + (inCol.length ? inCol.map(leadCard).join('') : '<div class="none">Nothing here</div>')
@@ -1950,8 +2063,8 @@ function renderPortfolio(){
   }
   var head = '<thead><tr>'
     + '<th class="pick"><input type="checkbox" id="pfAll" aria-label="Select all"></th>'
-    + '<th>Listing</th><th>Status</th><th class="num">Price</th>'
-    + '<th class="num">Views</th><th class="num">Enquiries</th><th class="num">Viewings</th>'
+    + '<th>Listing</th><th>Status</th><th class="num hide-m">Price</th>'
+    + '<th class="num hide-m">Views</th><th class="num">Enquiries</th><th class="num hide-m">Viewings</th>'
     + '</tr></thead>';
   var body = rows.map(function(l){
     var st = statusFromDb(l.dbStatus||'');
@@ -1960,10 +2073,10 @@ function renderPortfolio(){
       + '<td><div class="ti"><a href="property.html?id='+esc(l.id)+'" style="color:var(--ink);text-decoration:none">'+esc(l.title)+'</a></div>'
       +   '<div class="sub">'+esc(l.area||'')+' · '+(l.type==='rent'?'For rent':'For sale')+'</div></td>'
       + '<td><span class="status '+statusClass(st)+'"><span class="dot"></span> '+esc(st)+'</span></td>'
-      + '<td class="num">'+money(l.price)+'</td>'
-      + '<td class="num">'+(l.views||0).toLocaleString('en-US')+'</td>'
+      + '<td class="num hide-m">'+money(l.price)+'</td>'
+      + '<td class="num hide-m">'+(l.views||0).toLocaleString('en-US')+'</td>'
       + '<td class="num">'+(l._enq||0)+'</td>'
-      + '<td class="num">'+(l._vr||0)+'</td>'
+      + '<td class="num hide-m">'+(l._vr||0)+'</td>'
       + '</tr>';
   }).join('');
   tbl.innerHTML = '<table class="ptable">'+head+'<tbody>'+body+'</tbody></table>';
@@ -2112,14 +2225,14 @@ function renderStats(){
     VIEWDAYS.forEach(function(r){ vd30[r.listing_id] = (vd30[r.listing_id]||0) + (r.views||0); });
     var rijen = PORTFOLIO.slice().sort(function(a,b){ return (b.views||0)-(a.views||0); });
     per.innerHTML = '<table class="ptable"><thead><tr><th>Listing</th>'
-      + '<th class="num">Views, 30 d</th><th class="num">Views, all time</th>'
-      + '<th class="num">Enquiries</th><th class="num">Viewings</th></tr></thead><tbody>'
+      + '<th class="num">Views, 30 d</th><th class="num hide-m">Views, all time</th>'
+      + '<th class="num">Enquiries</th><th class="num hide-m">Viewings</th></tr></thead><tbody>'
       + rijen.map(function(l){
           return '<tr><td><div class="ti">'+esc(l.title)+'</div><div class="sub">'+esc(statusFromDb(l.dbStatus||''))+'</div></td>'
             + '<td class="num">'+(vd30[l.id]||0).toLocaleString('en-US')+'</td>'
-            + '<td class="num">'+(l.views||0).toLocaleString('en-US')+'</td>'
+            + '<td class="num hide-m">'+(l.views||0).toLocaleString('en-US')+'</td>'
             + '<td class="num">'+(leadsPer[l.id]||0)+'</td>'
-            + '<td class="num">'+(vrPer[l.id]||0)+'</td></tr>';
+            + '<td class="num hide-m">'+(vrPer[l.id]||0)+'</td></tr>';
         }).join('')
       + '</tbody></table>';
   }
@@ -2417,7 +2530,7 @@ function show(view){
   if(view==='leads'){
     var lh = document.querySelector('.dview[data-view="leads"] .vhead');
     if(lh && !PRO) lh.innerHTML = '<h2>Enquiries</h2><p>Everyone who asked about one of your listings — with their number and address, so you can answer on WhatsApp, by phone or by email. Press “I have replied” once you have, so you can see what is still waiting.</p>';
-    renderLeadStats(document.getElementById('leadStats')); renderLeadPipe(document.getElementById('leadPipe'));
+    renderLeadStats(document.getElementById('leadStats')); renderLeadTools(); renderLeadPipe(document.getElementById('leadPipe'));
   }
   if(view==='agenda') renderAgenda();
   if(view==='stats') renderStats();
@@ -2433,6 +2546,14 @@ document.addEventListener('click', async function(ev){
   var ssEl = btn.closest('[data-ss]'), favEl = btn.closest('[data-fav]');
   var leadEl = btn.closest('[data-lead]');
 
+  if(act==='attn'){
+    var to = btn.dataset.to;
+    if(to==='leads-new'){ LF.stage='new'; LF.listing=''; LF.q=''; location.hash='#leads'; show('leads'); }
+    else if(to==='agenda'){ location.hash='#agenda'; }
+    else if(to==='viewreq'){ var vq=document.getElementById('viewReqList'); if(vq) vq.scrollIntoView({behavior:'smooth',block:'start'}); }
+    else if(to==='rows'){ var ll=document.getElementById('listingList'); if(ll) ll.scrollIntoView({behavior:'smooth',block:'start'}); }
+    return;
+  }
   /* ---- eigen advertentie: delen en status ---- */
   if(act==='listing-copy'){
     var u = btn.dataset.url || '';
@@ -2490,9 +2611,11 @@ document.addEventListener('click', async function(ev){
       Object.assign(lead, patch);
       lead._reply_hours = (lead.contacted_at && lead.created_at)
         ? Math.max(0, (new Date(lead.contacted_at) - new Date(lead.created_at))/3600000) : null;
+      renderLeadTools();
       renderLeadPipe(document.getElementById('leadPipe'));
       renderLeadStats(document.getElementById('leadStats'));
       document.getElementById('dnav').innerHTML = navHTML();
+      renderAttention();
       show('leads');
     }catch(e){
       console.warn('updateLead:', (e && e.message) || e);
@@ -2745,6 +2868,35 @@ async function handleAlertsParam(){
    dat er nóg een advertentie bij kan. Vandaar dat het label meetelt hoeveel er
    al staan; hij wordt twee keer geverfd (bij het aanbrengen van de rol, en
    opnieuw zodra de advertenties binnen zijn). */
+/* ---------- wat vraagt nu om aandacht ----------
+   Geteld uit wat al opgehaald is; geen extra query. Elke regel is één tik
+   naar de plek waar je het afhandelt. */
+function renderAttention(){
+  var el = document.getElementById('attn');
+  if(!el) return;
+  var rows = [];
+  var wachtend = LEADS.filter(function(l){ return (l.stage||'new')==='new'; }).length;
+  if(wachtend) rows.push({ n:wachtend, t: wachtend===1 ? 'enquiry waiting for your reply' : 'enquiries waiting for your reply', s: PRO ? 'Answer on WhatsApp, by phone or by email, then move the lead to Contacted.' : 'Answer on WhatsApp, by phone or by email, then press “I have replied”.', act:'leads-new' });
+  var vr = VIEWINGS.filter(function(v){ return v._mustRespond && v._side==='seller'; }).length;
+  if(vr) rows.push({ n:vr, t: vr===1 ? 'viewing request to answer' : 'viewing requests to answer', s:'Accept a time or propose another.', act: PRO ? 'agenda' : 'viewreq' });
+  var unread = CONVOS.reduce(function(n,c){ return n+(c._unread||0); },0);
+  if(unread) rows.push({ n:unread, t: unread===1 ? 'unread message' : 'unread messages', s:'From people who wrote to you through MyKunda.', href:'messages.html' });
+  var afgekeurd = PORTFOLIO.filter(function(l){ return l.dbStatus==='rejected'; }).length;
+  if(afgekeurd) rows.push({ n:afgekeurd, t: afgekeurd===1 ? 'listing sent back to you' : 'listings sent back to you', s:'The reason is under the listing. Fix it and send it in again.', act:'rows' });
+  var concept = PORTFOLIO.filter(function(l){ return l.dbStatus==='draft'; }).length;
+  if(concept) rows.push({ n:concept, t: concept===1 ? 'draft not sent in yet' : 'drafts not sent in yet', s:'A draft is not visible to anyone.', act:'rows' });
+  if(PRO){
+    var mand = PORTFOLIO.filter(function(l){ if(!l.mandateEnds) return false; var d=(new Date(l.mandateEnds).getTime()-Date.now())/86400000; return d<=30; }).length;
+    if(mand) rows.push({ n:mand, t: mand===1 ? 'mandate ends within 30 days' : 'mandates end within 30 days', s:'Renew it with the owner, or take the listing down in time.', href:'#portfolio' });
+  }
+  if(!rows.length){ el.hidden = true; el.innerHTML=''; return; }
+  el.hidden = false;
+  el.className = 'attn';
+  el.innerHTML = rows.map(function(r){
+    var inner = '<span class="k">'+r.n+'</span><span class="t">'+esc(r.t)+'<small>'+esc(r.s)+'</small></span><span class="go">›</span>';
+    return r.href ? '<a href="'+r.href+'">'+inner+'</a>' : '<button type="button" data-act="attn" data-to="'+r.act+'">'+inner+'</button>';
+  }).join('');
+}
 function paintHeadCta(n){
   var ctaTxt=document.getElementById('headCtaTxt');
   if(!ctaTxt || SHOW!=='seller') return;
@@ -2818,6 +2970,15 @@ function applyRole(){
   }
 
   if(LIVE){
+    /* Alles wat de rest van de pagina nodig heeft in ÉÉN rondje (03-09-2026).
+       Tot vandaag stonden hier drie wachtmomenten achter elkaar: eerst de
+       zoekerslijstjes, dan de bonnen, dan de professionele queries. Op een
+       4G-verbinding met 300 ms per rondreis is elk wachtmoment een derde van
+       een seconde extra voordat het menu er staat. De leads voor élke
+       aanbieder (niet alleen een kantoor); het bedrijfsprofiel en de
+       dagtotalen alleen voor PRO, en de dagtotalen alleen als er advertenties
+       zijn om ze aan op te hangen. Een zoeker haalt hier niets extra's op. */
+    var wantLeads = isSupplier(ROLE) && typeof fetchLeadPipeline==='function';
     var res = await Promise.all([
       (typeof fetchSavedSearches==='function') ? fetchSavedSearches() : null,
       (typeof fetchFavorites==='function') ? fetchFavorites() : null,
@@ -2825,11 +2986,34 @@ function applyRole(){
       /* De bezichtigingen komen bij een aanbieder al uit initDashboard; alleen
          een zoeker heeft ze hier nog nodig. */
       (VIEWINGS.length || SHOW==='seller') ? null
-        : ((typeof fetchMyViewings==='function') ? fetchMyViewings(50) : null)
+        : ((typeof fetchMyViewings==='function') ? fetchMyViewings(50) : null),
+      /* Bonnen en facturen horen bij IEDEREEN, niet alleen bij een kantoor.
+         De leesregel op payments scoopt op user_id, dus dit zijn altijd
+         alleen de eigen aankopen. */
+      (typeof fetchMyPayments==='function') ? fetchMyPayments(50) : null,
+      wantLeads ? fetchLeadPipeline(300) : null,
+      (PRO && PORTFOLIO.length && typeof fetchViewDays==='function')
+        ? fetchViewDays(PORTFOLIO.map(function(l){ return l.id; }),
+                        new Date(Date.now()-30*86400e3).toISOString())
+        : null,
+      /* Het bedrijfsprofiel. Eén rij, en het menu heeft hem nodig voor de
+         stip achter "Company profile", dus hij hoort hier en niet pas bij
+         het openen van de weergave. */
+      (PRO && typeof fetchMyAgency==='function') ? fetchMyAgency() : null
     ].map(function(p){ return Promise.resolve(p).catch(function(){ return null; }); }));
     SAVED = res[0]||[]; FAVS = res[1]||[]; CONVOS = res[2]||[];
     if(res[3]) VIEWINGS = res[3];
+    PAYMENTS = res[4]||[];
+    LEADS = res[5]||[]; VIEWDAYS = res[6]||[]; AGENCY = res[7]||null;
     BOOKINGS = VIEWINGS.filter(function(v){ return v._side==='buyer'; });
+    /* Het aantal reacties per advertentie komt uit de volledige pijplijn in
+       plaats van uit de tien nieuwste; anders klopt de kolom "Enquiries" in
+       de portefeuille niet zodra er meer dan tien zijn. */
+    if(wantLeads){
+      var perListing = {};
+      LEADS.forEach(function(l){ if(l.listing_id) perListing[l.listing_id] = (perListing[l.listing_id]||0)+1; });
+      PORTFOLIO.forEach(function(l){ l._enq = perListing[l.id]||0; });
+    }
     /* Alleen ophalen als er iets te tellen valt. primeListings() is de duurste
        query van de site, maar hij is gedeeld en vijf minuten geldig. */
     if(SAVED.length && typeof primeListings==='function'){
@@ -2841,53 +3025,10 @@ function applyRole(){
     if(favIds.length && typeof fetchPriceDrops==='function'){
       try{ DROPS = await fetchPriceDrops(favIds) || {}; }catch(e){}
     }
-
-    /* Bonnen en facturen horen bij IEDEREEN, niet alleen bij een kantoor.
-       Tot 31-08-2026 stond deze query in het PRO-blok hieronder, dus werd hij
-       alleen gedraaid voor rol agent en admin. Gevolg: wie een Document Check
-       of een Ownership Check kocht (dat is per definitie een zoeker) of een
-       particuliere aanbieder die een Boost afrekende, zag onder Account nooit
-       een bestelling staan — terwijl de bon in de mail wél zegt "Go to My
-       MyKunda". De leesregel op payments scoopt op user_id, dus dit zijn altijd
-       alleen de eigen aankopen. */
-    if(typeof fetchMyPayments==='function'){
-      try{ PAYMENTS = await fetchMyPayments(50) || []; }catch(e){ PAYMENTS = []; }
-    }
-
-    /* De professionele weergaven. Drie queries, alleen voor wie ze te zien
-       krijgt, en de dagtotalen alleen als er advertenties zijn om ze aan op te
-       hangen. Een zoeker haalt hier niets extra's op. */
-    /* De leads voor élke aanbieder (03-09-2026), niet alleen voor een kantoor;
-       de rest van het professionele blok blijft voor PRO. */
-    if(!PRO && isSupplier(ROLE) && typeof fetchLeadPipeline==='function'){
-      try{ LEADS = (await fetchLeadPipeline(300)) || []; }catch(e){ LEADS = []; }
-      var perL = {};
-      LEADS.forEach(function(l){ if(l.listing_id) perL[l.listing_id] = (perL[l.listing_id]||0)+1; });
-      PORTFOLIO.forEach(function(l){ l._enq = perL[l.id]||0; });
-    }
-    if(PRO){
-      var pro = await Promise.all([
-        (typeof fetchLeadPipeline==='function') ? fetchLeadPipeline(300) : null,
-        (PORTFOLIO.length && typeof fetchViewDays==='function')
-          ? fetchViewDays(PORTFOLIO.map(function(l){ return l.id; }),
-                          new Date(Date.now()-30*86400e3).toISOString())
-          : null,
-        /* Het bedrijfsprofiel. Eén rij, en het menu heeft hem nodig voor de
-           stip achter "Company profile", dus hij hoort hier en niet pas bij
-           het openen van de weergave. */
-        (typeof fetchMyAgency==='function') ? fetchMyAgency() : null
-      ].map(function(p){ return Promise.resolve(p).catch(function(){ return null; }); }));
-      LEADS = pro[0]||[]; VIEWDAYS = pro[1]||[]; AGENCY = pro[2]||null;
-      /* Het aantal reacties per advertentie komt nu uit de volledige pijplijn
-         in plaats van uit de tien nieuwste; anders klopt de kolom "Enquiries"
-         in de portefeuille niet zodra er meer dan tien zijn. */
-      var perListing = {};
-      LEADS.forEach(function(l){ if(l.listing_id) perListing[l.listing_id] = (perListing[l.listing_id]||0)+1; });
-      PORTFOLIO.forEach(function(l){ l._enq = perListing[l.id]||0; });
-    }
   }
 
   document.getElementById('dnav').innerHTML = navHTML();
+  if(SHOW==='seller') renderAttention();
   renderBuyerStats(document.getElementById('buyerStats'));
   renderSaved(document.getElementById('ovSaved'),3);
   renderFavs(document.getElementById('ovFavs'),4);

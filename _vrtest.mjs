@@ -472,5 +472,51 @@ check('concept: geen knoppen',        tools({ _db:true, id:'abc', dbStatus:'draf
 check('in beoordeling: geen knoppen', tools({ _db:true, id:'abc', dbStatus:'pending_review', type:'sale' }) === '');
 check('lokale terugval: geen knoppen', tools({ id:'abc', dbStatus:'active', type:'sale' }) === '');
 
+/* ---- 21. leadfilter en aandachtstrook (03-09-2026) ---- */
+{
+  const lfSrc = grab('leadMatches') + '\n' + grab('leadRows') + '\n' + grab('renderAttention');
+  const leadsA = [
+    { id:'a', listing_id:'L1', _listing_title:'Villa Bijilo', name:'Fatou Ceesay', phone:'+2207111111', stage:'new', created_at:t(-3) },
+    { id:'b', listing_id:'L2', _listing_title:'Flat Kololi', name:'Sarah Mitchell', email:'s@x.uk', stage:'contacted', created_at:t(-30) },
+    { id:'c', listing_id:'L1', _listing_title:'Villa Bijilo', name:'Awa Njie', stage:'lost', created_at:t(-200), note:'wanted pets' }
+  ];
+  const mk = (LF, LEADS, VIEWINGS, CONVOS, PORTFOLIO, PRO) => {
+    const el = { hidden:true, innerHTML:'', className:'' };
+    const doc = { getElementById: id => id==='attn' ? el : null };
+    const api = new Function('LF','LEADS','VIEWINGS','CONVOS','PORTFOLIO','PRO','esc','document',
+      lfSrc + '\nreturn { leadRows, renderAttention };')(LF, LEADS, VIEWINGS, CONVOS, PORTFOLIO, PRO, esc, doc);
+    return { api, el };
+  };
+  let r = mk({ listing:'', q:'', stage:'' }, leadsA, [], [], [], true);
+  check('leadfilter: leeg filter geeft alles', r.api.leadRows().length === 3);
+  r = mk({ listing:'L1', q:'', stage:'' }, leadsA, [], [], [], true);
+  check('leadfilter: per advertentie', r.api.leadRows().map(l=>l.id).join() === 'a,c');
+  r = mk({ listing:'', q:'sarah', stage:'' }, leadsA, [], [], [], true);
+  check('leadfilter: zoeken op naam', r.api.leadRows().map(l=>l.id).join() === 'b');
+  r = mk({ listing:'', q:'7111', stage:'' }, leadsA, [], [], [], true);
+  check('leadfilter: zoeken op nummer', r.api.leadRows().map(l=>l.id).join() === 'a');
+  r = mk({ listing:'', q:'pets', stage:'' }, leadsA, [], [], [], true);
+  check('leadfilter: zoeken in de notitie', r.api.leadRows().map(l=>l.id).join() === 'c');
+  r = mk({ listing:'L1', q:'sarah', stage:'' }, leadsA, [], [], [], true);
+  check('leadfilter: advertentie én zoekwoord samen', r.api.leadRows().length === 0);
+
+  r = mk({}, leadsA, [{ _mustRespond:true, _side:'seller' }, { _mustRespond:true, _side:'buyer' }], [{ _unread:2 }],
+         [{ dbStatus:'rejected' }, { dbStatus:'draft' }, { dbStatus:'active', mandateEnds: new Date(Date.now()+10*86400e3).toISOString() }], true);
+  r.api.renderAttention();
+  check('aandacht: strook zichtbaar', r.el.hidden === false && r.el.className === 'attn');
+  check('aandacht: 1 wachtende lead', /<span class="k">1<\/span><span class="t">enquiry waiting/.test(r.el.innerHTML));
+  check('aandacht: alleen bezichtigingen aan de verkoperskant', /<span class="k">1<\/span><span class="t">viewing request to answer/.test(r.el.innerHTML));
+  check('aandacht: ongelezen berichten naar messages.html', /href="messages.html"><span class="k">2<\/span>/.test(r.el.innerHTML));
+  check('aandacht: afgekeurd en concept', /listing sent back to you/.test(r.el.innerHTML) && /draft not sent in yet/.test(r.el.innerHTML));
+  check('aandacht: mandaat binnen 30 dagen (PRO)', /mandate ends within 30 days/.test(r.el.innerHTML) && /href="#portfolio"/.test(r.el.innerHTML));
+  check('aandacht: PRO-tekst zegt Contacted', /move the lead to Contacted/.test(r.el.innerHTML));
+  r = mk({}, leadsA, [], [], [{ dbStatus:'active', mandateEnds: new Date(Date.now()+10*86400e3).toISOString() }], false);
+  r.api.renderAttention();
+  check('aandacht: particulier ziet geen mandaat en wel "I have replied"', !/mandate/.test(r.el.innerHTML) && /I have replied/.test(r.el.innerHTML));
+  r = mk({}, [{ stage:'contacted' }], [], [], [{ dbStatus:'active' }], true);
+  r.api.renderAttention();
+  check('aandacht: niets te doen → strook verborgen en leeg', r.el.hidden === true && r.el.innerHTML === '');
+}
+
 console.log(fails ? '\n' + fails + ' test(s) mislukt.' : '\nAlle tests geslaagd.');
 process.exit(fails ? 1 : 0);
