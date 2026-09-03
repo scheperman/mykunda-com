@@ -1479,7 +1479,9 @@ shareBtn.addEventListener('click',()=>{
   if(wl){
     if(providerLink){
       wl.href = providerLink;
-      wl.innerHTML = '<span id="waIc">'+WA_SVG+'</span> WhatsApp '+esc(biz ? 'the agent' : who);
+      /* esc() leeft in een andere scope op deze pagina; hier een eigen, kleine. */
+      const escT = s => String(s==null?'':s).replace(/[&<>"']/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+      wl.innerHTML = '<span id="waIc">'+WA_SVG+'</span> WhatsApp '+escT(biz ? 'the agent' : who);
       wl.title = 'Opens WhatsApp with '+who+(P.phone_verified_at ? ' — number confirmed on WhatsApp' : '');
       if(P.phone_verified_at){
         const n=document.createElement('div');
