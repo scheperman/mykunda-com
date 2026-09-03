@@ -1,0 +1,350 @@
+{
+ "index.html": {
+  "hash": "3f9e3da0167a97af",
+  "lastmod": "2026-09-03"
+ },
+ "search.html": {
+  "hash": "4cb2a4d9ff6f7830",
+  "lastmod": "2026-09-03"
+ },
+ "buy.html": {
+  "hash": "06c460842a5f00e9",
+  "lastmod": "2026-09-03"
+ },
+ "rent.html": {
+  "hash": "5669bb42c4175937",
+  "lastmod": "2026-09-03"
+ },
+ "commercial.html": {
+  "hash": "a2facd6db7bf49f1",
+  "lastmod": "2026-09-03"
+ },
+ "sell.html": {
+  "hash": "c5adec27800d340e",
+  "lastmod": "2026-09-03"
+ },
+ "safe.html": {
+  "hash": "b6c59e5ccc4797f0",
+  "lastmod": "2026-09-03"
+ },
+ "verify.html": {
+  "hash": "d613b64b16feaa42",
+  "lastmod": "2026-09-03"
+ },
+ "about.html": {
+  "hash": "8f1ee8dbd6a918d6",
+  "lastmod": "2026-09-03"
+ },
+ "agent.html": {
+  "hash": "18b8b449e5ec0bc1",
+  "lastmod": "2026-09-03"
+ },
+ "contact.html": {
+  "hash": "858492b69f050976",
+  "lastmod": "2026-09-03"
+ },
+ "faq.html": {
+  "hash": "0294a67b9e2ce2d0",
+  "lastmod": "2026-09-03"
+ },
+ "legal.html": {
+  "hash": "8f030bfc98e48c52",
+  "lastmod": "2026-09-03"
+ },
+ "legal-terms.html": {
+  "hash": "0a068f858ea4ef27",
+  "lastmod": "2026-09-03"
+ },
+ "legal-privacy.html": {
+  "hash": "2ae39393f4cea9f0",
+  "lastmod": "2026-09-02"
+ },
+ "legal-cookies.html": {
+  "hash": "ec0471dca5a9191c",
+  "lastmod": "2026-09-02"
+ },
+ "photo-credits.html": {
+  "hash": "d95a5ea46cdb4a09",
+  "lastmod": "2026-08-29"
+ },
+ "gambia-property-prices.html": {
+  "hash": "bd8a15229c8be798",
+  "lastmod": "2026-09-03"
+ },
+ "areas-in-the-gambia.html": {
+  "hash": "de309a0476e100f7",
+  "lastmod": "2026-08-31"
+ },
+ "how-we-measure-prices.html": {
+  "hash": "494e23f011a5765b",
+  "lastmod": "2026-08-31"
+ },
+ "guides.html": {
+  "hash": "7975d612c959f75d",
+  "lastmod": "2026-09-03"
+ },
+ "guide-buying-property-in-the-gambia-as-a-foreigner.html": {
+  "hash": "707c57efa9b62257",
+  "lastmod": "2026-09-03"
+ },
+ "guide-freehold-leasehold-customary-land-explained.html": {
+  "hash": "6ced6d5469a6394f",
+  "lastmod": "2026-09-03"
+ },
+ "guide-cost-of-buying-property-in-the-gambia.html": {
+  "hash": "42a285377fbdbd30",
+  "lastmod": "2026-09-03"
+ },
+ "guide-best-areas-to-buy-on-the-gambian-coast.html": {
+  "hash": "7b41605994835394",
+  "lastmod": "2026-09-03"
+ },
+ "guide-bank-mortgages-in-the-gambia.html": {
+  "hash": "b38eba75aabc9518",
+  "lastmod": "2026-09-03"
+ },
+ "guide-developer-financing-in-the-gambia.html": {
+  "hash": "8c5f1528f4b01580",
+  "lastmod": "2026-09-03"
+ },
+ "guide-how-to-verify-land-title-in-the-gambia.html": {
+  "hash": "5d5254921dd39825",
+  "lastmod": "2026-09-03"
+ },
+ "guide-building-a-house-in-the-gambia.html": {
+  "hash": "4e33fd0d9f80ade1",
+  "lastmod": "2026-09-03"
+ },
+ "guide-renting-out-property-in-the-gambia.html": {
+  "hash": "7449d12de55c3eaa",
+  "lastmod": "2026-09-03"
+ },
+ "guide-sending-money-to-the-gambia.html": {
+  "hash": "6415b585a58a25ce",
+  "lastmod": "2026-09-03"
+ },
+ "guide-residency-and-retiring-in-the-gambia.html": {
+  "hash": "c3d68a2881af0570",
+  "lastmod": "2026-09-03"
+ },
+ "guide-inheritance-and-wills-for-gambian-property.html": {
+  "hash": "cddedabbb6ab604d",
+  "lastmod": "2026-09-03"
+ },
+ "guide-estate-agent-regulation-in-the-gambia.html": {
+  "hash": "6df36d0b4c14b17d",
+  "lastmod": "2026-08-31"
+ },
+ "kololi.html": {
+  "hash": "370a5e301b39af54",
+  "lastmod": "2026-09-03"
+ },
+ "bakau.html": {
+  "hash": "e9a24483bf8ded39",
+  "lastmod": "2026-09-03"
+ },
+ "banjul.html": {
+  "hash": "81ced526847432c2",
+  "lastmod": "2026-09-03"
+ },
+ "barra.html": {
+  "hash": "283c7b83de0e1964",
+  "lastmod": "2026-09-03"
+ },
+ "basse.html": {
+  "hash": "92f69df34bd8539a",
+  "lastmod": "2026-09-03"
+ },
+ "batokunku.html": {
+  "hash": "dea802dd28cb41b5",
+  "lastmod": "2026-09-03"
+ },
+ "bijilo.html": {
+  "hash": "52720a01db2c3dfb",
+  "lastmod": "2026-09-03"
+ },
+ "brikama.html": {
+  "hash": "a39e06eb4010e887",
+  "lastmod": "2026-09-03"
+ },
+ "brufut.html": {
+  "hash": "5fa6098cfe03d8e8",
+  "lastmod": "2026-09-03"
+ },
+ "brusubi.html": {
+  "hash": "8abdbaf81e3a3fc7",
+  "lastmod": "2026-09-03"
+ },
+ "cape-point.html": {
+  "hash": "a5a437b1b3475f18",
+  "lastmod": "2026-09-03"
+ },
+ "fajara.html": {
+  "hash": "3f6a7473e45add90",
+  "lastmod": "2026-09-03"
+ },
+ "farafenni.html": {
+  "hash": "94dd73d589ebd4d9",
+  "lastmod": "2026-09-03"
+ },
+ "gunjur.html": {
+  "hash": "99e97c8be1db6b37",
+  "lastmod": "2026-09-03"
+ },
+ "kartong.html": {
+  "hash": "38e39ad0f4012d82",
+  "lastmod": "2026-09-03"
+ },
+ "kotu.html": {
+  "hash": "d0a66af279183313",
+  "lastmod": "2026-09-03"
+ },
+ "sanyang.html": {
+  "hash": "889eeca0ef0ee4ab",
+  "lastmod": "2026-09-03"
+ },
+ "serrekunda.html": {
+  "hash": "614c67d88f22a14d",
+  "lastmod": "2026-09-03"
+ },
+ "soma.html": {
+  "hash": "cc0e692723b9460c",
+  "lastmod": "2026-09-03"
+ },
+ "tanji.html": {
+  "hash": "82fe5b2d5dd78659",
+  "lastmod": "2026-09-03"
+ },
+ "kerr-serign.html": {
+  "hash": "fe44e7ebe7d4fbab",
+  "lastmod": "2026-09-03"
+ },
+ "senegambia.html": {
+  "hash": "1b62b608fe222f33",
+  "lastmod": "2026-09-03"
+ },
+ "sukuta.html": {
+  "hash": "f73a1245ad041a80",
+  "lastmod": "2026-09-03"
+ },
+ "nema-kunku.html": {
+  "hash": "7e684832d77df8c5",
+  "lastmod": "2026-09-03"
+ },
+ "lamin.html": {
+  "hash": "410a1a5f5b87ac18",
+  "lastmod": "2026-09-03"
+ },
+ "jabang.html": {
+  "hash": "4cb031a5189af725",
+  "lastmod": "2026-09-03"
+ },
+ "busumbala.html": {
+  "hash": "193318c1131e8713",
+  "lastmod": "2026-09-03"
+ },
+ "yundum.html": {
+  "hash": "dd19e91c9d744170",
+  "lastmod": "2026-09-03"
+ },
+ "pipeline.html": {
+  "hash": "9e57b8f73fafbcff",
+  "lastmod": "2026-09-03"
+ },
+ "manjai-kunda.html": {
+  "hash": "769fc6917e9bd6ae",
+  "lastmod": "2026-09-03"
+ },
+ "bakoteh.html": {
+  "hash": "be83a58f9dbde6ff",
+  "lastmod": "2026-09-03"
+ },
+ "tujereng.html": {
+  "hash": "aa4e0e88596f8212",
+  "lastmod": "2026-09-03"
+ },
+ "sinchu-alagie.html": {
+  "hash": "5132f9496280afd8",
+  "lastmod": "2026-09-03"
+ },
+ "essau.html": {
+  "hash": "b8e7ce7e6940b21c",
+  "lastmod": "2026-09-03"
+ },
+ "kerewan.html": {
+  "hash": "985b143aec8e1d0e",
+  "lastmod": "2026-09-03"
+ },
+ "mansa-konko.html": {
+  "hash": "24c2f0ffde3f8e3e",
+  "lastmod": "2026-09-03"
+ },
+ "janjanbureh.html": {
+  "hash": "441d0a7c59d3d9f5",
+  "lastmod": "2026-09-03"
+ },
+ "bansang.html": {
+  "hash": "0fdaffee0ca411bf",
+  "lastmod": "2026-09-03"
+ },
+ "kuntaur.html": {
+  "hash": "5c254644fcef3f80",
+  "lastmod": "2026-09-03"
+ },
+ "gambissara.html": {
+  "hash": "95189320faf200ef",
+  "lastmod": "2026-09-03"
+ },
+ "fatoto.html": {
+  "hash": "c12d3117f72cc08f",
+  "lastmod": "2026-09-03"
+ },
+ "salagi.html": {
+  "hash": "581927f01bf4cdad",
+  "lastmod": "2026-09-03"
+ },
+ "farato.html": {
+  "hash": "e9446ceaa1b2e618",
+  "lastmod": "2026-09-03"
+ },
+ "mamuda.html": {
+  "hash": "b89cd3b92e6ab4c3",
+  "lastmod": "2026-09-03"
+ },
+ "madiana.html": {
+  "hash": "7992cbc76d47220e",
+  "lastmod": "2026-09-03"
+ },
+ "jambur.html": {
+  "hash": "8982248313ecfd91",
+  "lastmod": "2026-09-03"
+ },
+ "ghana-town.html": {
+  "hash": "a309336f0f9409a8",
+  "lastmod": "2026-09-03"
+ },
+ "tintinto.html": {
+  "hash": "0cd14fee7cf7079a",
+  "lastmod": "2026-09-03"
+ },
+ "tranquil.html": {
+  "hash": "998c40af7811a5f9",
+  "lastmod": "2026-09-03"
+ },
+ "old-yundum.html": {
+  "hash": "28268d7ff62e7ca5",
+  "lastmod": "2026-09-03"
+ },
+ "latriya.html": {
+  "hash": "ae4dcde786fc3bd3",
+  "lastmod": "2026-09-03"
+ },
+ "jambanjelly.html": {
+  "hash": "474992b8c65fec88",
+  "lastmod": "2026-09-03"
+ },
+ "diaspora-land-buying-checklist.html": {
+  "hash": "46da6763eba7be85",
+  "lastmod": "2026-09-03"
+ }
+}

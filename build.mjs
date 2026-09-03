@@ -16,6 +16,7 @@
  * Node 18+. No dependencies.
  */
 import { readFile, writeFile, readdir, mkdir, copyFile, stat, rm } from 'node:fs/promises';
+import { readFileSync } from 'node:fs';
 import { join, extname } from 'node:path';
 import { buildSearchIndex } from './build-search-index.mjs';
 import { createHash } from 'node:crypto';
@@ -66,7 +67,7 @@ const NOT_UPLOADED = new Set([
 ]);
 
 /* Internal documents: never uploaded, never stamped. */
-const INTERNAL = /^(.*-handleiding|.*-controle|.*-analyse|.*-optimalisatie|.*-herstelplan|.*-verbeteringen|Performance-audit|MyKunda Prospectus|backend-architecture|phase-\d|prompt-|werkplan|photo-brief|logo-|email-preview|email-previews|email-valuation|email-eindcontrole|google-workspace|whatsapp-setup|contact-en-email|Technische-controle|Aanmelden-analyse|SEO-|Supabase-|4G-|deploy-|harvest-|inloggen-)/;
+const INTERNAL = /^(voorstel-|instructie-|Instructie-|bouwplan|.*-handleiding|.*-controle|.*-analyse|.*-optimalisatie|.*-herstelplan|.*-verbeteringen|Performance-audit|MyKunda Prospectus|backend-architecture|phase-\d|prompt-|werkplan|photo-brief|logo-|email-preview|email-previews|email-valuation|email-eindcontrole|google-workspace|whatsapp-setup|contact-en-email|Technische-controle|Aanmelden-analyse|SEO-|Supabase-|4G-|deploy-|harvest-|inloggen-)/;
 
 /* ---------------- minifiers ---------------- */
 
@@ -332,7 +333,10 @@ const MARK_START = '<!--mk-mark-->', MARK_END = '<!--/mk-mark-->';
  * robots.txt blokkeert de app-pagina's bewust niet; deze metatag doet dat werk. */
 const NOINDEX_PAGES = new Set(['valuation-selftest.html', 'admin.html', 'dashboard.html', 'messages.html', 'list.html',
   'auth.html', 'checkout.html', 'checkout v2.html', 'checkout v3.html', 'sources.html',
-  'rates.html', 'title-verification.html', 'market.html']);
+  'rates.html', 'title-verification.html', 'market.html',
+  /* 03-09-2026: sales.html is back-office (admin-guard.js) en betaling-status.html is
+     de landingspagina na een betaling - allebei stonden ze live op index,follow. */
+  'sales.html', 'betaling-status.html']);
 const AI = 'noai, noimageai';
 function robotsFor(name) {
   if (NOINDEX_PAGES.has(name)) return 'noindex, nofollow, ' + AI;
@@ -502,6 +506,67 @@ if (shell) console.log('shell     header + footer statisch in ' + prerendered + 
 const sw = await readFile('sw.js', 'utf8');
 await writeIfChanged('sw.js', sw.replace(/const STAMP = '\d+'/, `const STAMP = '${STAMP}'`));
 console.log(`stamped   ${stamped} pages + sw.js at v=${STAMP}`);
+
+/* ---------------- sitemap: lastmod uit de inhoud (03-09-2026) ----------------
+ *
+ * Tot 03-09-2026 stond lastmod met de hand in sitemap-pages.xml en liep hij achter:
+ * 87 van 87 URL's droegen een datum ouder dan hun laatste inhoudswijziging. Git-datums
+ * helpen niet, want elke stempelwissel raakt alle pagina's. Daarom een grootboek,
+ * sitemap-lastmod.json (in de root, niet op de server): per pagina een hash van de
+ * INHOUD zonder stempel, zonder mk-mark en zonder de statische header/footer.
+ * Verandert die hash, dan wordt lastmod vandaag; anders blijft hij staan. De eerste
+ * run neemt de bestaande datum over, zodat niet alles ineens "vandaag" wordt.
+ * sitemap.xml (de index) krijgt de jongste datum uit de lijst. */
+const LEDGER = 'sitemap-lastmod.json';
+function contentHash(html) {
+  const bare = html
+    .replace(/\?v=\d+/g, '')
+    .replace(new RegExp(MARK_START + '[\\s\\S]*?' + MARK_END + '\\n?'), '')
+    .replace(/<!--mk-hdr-->[\s\S]*?<!--\/mk-hdr-->/, '')
+    .replace(/<!--mk-ftr-->[\s\S]*?<!--\/mk-ftr-->/, '')
+    .replace(/<!--mk-css-->[\s\S]*?<!--\/mk-css-->/, '');
+  return createHash('sha256').update(bare).digest('hex').slice(0, 16);
+}
+{
+  const today = new Date().toISOString().slice(0, 10);
+  let ledger = {};
+  try { ledger = JSON.parse(await readFile(LEDGER, 'utf8')); } catch {}
+  const sm = await readFile('sitemap-pages.xml', 'utf8');
+  const inSitemap = new Set();
+  let newest = '0000-00-00', changed = 0;
+  const out = sm.replace(/<url><loc>https:\/\/mykunda\.com\/([^<]*)<\/loc><lastmod>(\d{4}-\d{2}-\d{2})<\/lastmod>/g, (m, path, lastmod) => {
+    const file = path === '' ? 'index.html' : path;
+    inSitemap.add(file);
+    let html; try { html = readFileSyncSafe(file); } catch { html = null; }
+    if (html === null) { console.log(`LET OP: sitemap noemt ${file}, maar dat bestand staat niet in de root`); return m; }
+    if (NOINDEX_PAGES.has(file) || NOT_UPLOADED.has(file)) console.log(`LET OP: ${file} staat in de sitemap maar is noindex of wordt niet geupload`);
+    const h = contentHash(html);
+    const prev = ledger[file];
+    let date = lastmod;
+    if (!prev) ledger[file] = { hash: h, lastmod };                 /* eerste keer: datum overnemen */
+    else if (prev.hash !== h) { date = today; ledger[file] = { hash: h, lastmod: today }; changed++; }
+    else date = prev.lastmod;
+    if (date > newest) newest = date;
+    return `<url><loc>https://mykunda.com/${path}</loc><lastmod>${date}</lastmod>`;
+  });
+  for (const k of Object.keys(ledger)) if (!inSitemap.has(k)) delete ledger[k];
+  await writeIfChanged('sitemap-pages.xml', out);
+  await writeIfChanged(LEDGER, JSON.stringify(ledger, null, 1) + '\n');
+  const idx = await readFile('sitemap.xml', 'utf8');
+  await writeIfChanged('sitemap.xml', idx.replace(/(sitemap-pages\.xml<\/loc><lastmod>)\d{4}-\d{2}-\d{2}/, `$1${newest}`));
+  console.log(`sitemap   ${inSitemap.size} URL's, ${changed} lastmod bijgewerkt, jongste ${newest}`);
+  /* Vangrails: elke indexeerbare, geuploade pagina hoort in de sitemap; en een pagina
+     die admin-guard.js laadt is back-office en hoort in NOINDEX_PAGES. */
+  for (const f of pages) {
+    if (NOT_UPLOADED.has(f) || NOINDEX_PAGES.has(f) || JS_ROBOTS.has(f) || f === '404.html') continue;
+    if (!inSitemap.has(f)) console.log(`LET OP: ${f} is indexeerbaar maar staat niet in sitemap-pages.xml`);
+  }
+  for (const f of pages) {
+    if (NOINDEX_PAGES.has(f)) continue;
+    if (/admin-guard\.js/.test(readFileSyncSafe(f))) console.log(`LET OP: ${f} laadt admin-guard.js maar staat niet in NOINDEX_PAGES`);
+  }
+}
+function readFileSyncSafe(f) { return readFileSync(f, 'utf8'); }
 
 /* Mirror into deploy/ */
 await mkdir('deploy', { recursive: true });

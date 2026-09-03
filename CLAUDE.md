@@ -424,6 +424,35 @@ Moet de sitemap ooit tóch samengevoegd worden, dan is de volgorde: eerst het pl
 `sitemap.xml` live zetten, pas daarna `sitemap-pages.xml` van de server halen. Andersom
 staat de site tijdelijk zonder sitemap.
 
+### lastmod komt uit de inhoud, niet uit de hand (03-09-2026)
+
+`build.mjs` herschrijft bij elke bouw de `<lastmod>` van elke URL in `sitemap-pages.xml`
+aan de hand van `sitemap-lastmod.json` (root, niet op de server): per pagina een hash
+van de inhoud zónder `?v=`-stempel, mk-mark, header/footer en css-blok. Verandert die
+hash, dan wordt lastmod de datum van vandaag; anders blijft hij staan. `sitemap.xml`
+(de index) krijgt de jongste datum. Zet dus nooit meer met de hand een datum in de
+sitemap — de volgende bouw overschrijft hem. Een nieuwe pagina toevoegen blijft één
+regel in `sitemap-pages.xml`; de datum die je erbij zet wordt bij de eerste bouw als
+startdatum overgenomen.
+
+Waarom niet git: elke stempelwissel raakt alle pagina's, dus de commitdatum zegt niets
+over de inhoud. Nulmeting op 03-09-2026 met `_werk/seed-sitemap-lastmod.mjs` (loopt de
+git-geschiedenis terug met dezelfde hash): 87 van 87 datums liepen achter.
+
+Dezelfde bouwstap meldt `LET OP:` als een indexeerbare, geüploade pagina niet in de
+sitemap staat, als een sitemap-URL noindex is of niet bestaat, en als een pagina
+`admin-guard.js` laadt zonder in `NOINDEX_PAGES` te staan. Dat laatste was op
+03-09-2026 het geval voor `sales.html` — die stond live op `index, follow`, net als
+`betaling-status.html`. `voorstel-`, `instructie-` en `bouwplan` vallen sindsdien onder
+`INTERNAL` (zoals `.htaccess` ze al op 404 zette).
+
+`_werk/seo-audit.mjs` meet deploy/ na (title, description, canonical, robots, H1, OG,
+JSON-LD, kapotte interne links, wezen, sitemapdekking) en schrijft `_werk/seo-audit.json`.
+Draai hem na een bouw; op 03-09-2026 ging hij van 136 naar 23 bevindingen, en die 23
+zijn bewust gelaten (18 descriptions langer dan 165 tekens — inhoudelijk juist, Google
+kapt ze alleen af in de snippet; 3 korte titels op legal-pagina's; de checklistpagina
+zonder JSON-LD).
+
 ## Gevolgen voor Claude
 
 - Werk in de root van deze map. Er is geen tweede kopie meer die bijgewerkt moet worden.
