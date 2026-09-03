@@ -331,7 +331,9 @@ const OPTIONAL_COLUMNS = ['boundary','beach_m',
   'segment','units','parking_spaces','current_use','fit_out',
   'service_charge','min_term_months','plot_width_m',
   /* Prijshistorie, 30-08-2026. */
-  'show_price_history'];
+  'show_price_history',
+  /* WhatsApp naar de aanbieder, 03-09-2026. */
+  'show_whatsapp'];
 function missingOptionalColumn(error){
   return OPTIONAL_COLUMNS.find(c => isMissingColumn(error, c)) || null;
 }
@@ -964,6 +966,12 @@ function dbListingToCard(r){
     management_terms: r.management_terms||null, emergency_phone: r.emergency_phone||null,
     evidence_level: (typeof r.evidence_level==='number') ? r.evidence_level : null,
     phone_verified_at: r.phone_verified_at||null,
+    /* Contact voor de WhatsApp-knop (03-09-2026). Het nummer zelf staat al in
+       de rij die iedereen mag lezen; de keuze show_whatsapp bepaalt of de
+       objectpagina er een knop van maakt. Een kantoor gaat vóór de persoon. */
+    show_whatsapp: r.show_whatsapp !== false,
+    contact_name: r.contact_name||null,
+    contact_phone: r.contact_phone||null,
     agency: r.agencies || null
   };
 }

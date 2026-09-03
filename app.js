@@ -2882,12 +2882,33 @@ function markCurrentArea(){
 /* ---------- WhatsApp + Share (Google Plus Code aware) ---------- */
 const WA_NUMBER = '2202720268'; // MyKunda Gambia line: +220 272 0268
 function waLink(message){ return 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(message); }
+/* Een opgegeven nummer naar de vorm die wa.me verwacht: alleen cijfers, met
+   landcode. Gambiaanse nummers zijn zeven cijfers; die krijgen 220. Wat niet
+   op een bruikbaar nummer lijkt geeft null, en dan komt er geen knop. */
+function mkWaNumber(raw){
+  var d = String(raw||'').replace(/[^0-9]/g,'');
+  if(d.indexOf('00')===0) d = d.slice(2);
+  if(d.length===7) d = '220' + d;
+  if(d.length===8 && d.charAt(0)==='0') d = '220' + d.slice(1);
+  if(d.length<10 || d.length>15) return null;
+  return d;
+}
+function waLinkTo(number, message){
+  var n = mkWaNumber(number); if(!n) return null;
+  return 'https://wa.me/' + n + (message ? '?text=' + encodeURIComponent(message) : '');
+}
 
 /* Build a rich share/WhatsApp message for a listing, including its Google Plus Code */
 function listingShareText(p, opts){
   opts = opts || {};
   const loc = p.area ? p.area.split('·')[0].trim() : '';
-  const price = p.type==='rent' ? '€'+p.price.toLocaleString()+'/mo' : '€'+p.price.toLocaleString();
+  /* Tot 03-09-2026 stond hier '€' vóór het dalasibedrag ("€2,500,000" voor
+     D2,500,000) — de opslageenheid is dalasi sinds 27-08. Nu dezelfde
+     omrekening en hetzelfde achtervoegsel als op de pagina, in platte tekst. */
+  const cur = (typeof CURRENCIES!=='undefined' && typeof getCurrency==='function') ? CURRENCIES[getCurrency()] : null;
+  const amt = (cur && typeof convert==='function') ? cur.symbol + Math.round(convert(Number(p.price)||0)).toLocaleString('en-US')
+                                                    : 'D' + (Number(p.price)||0).toLocaleString('en-US');
+  const price = p.type==='rent' ? amt + (typeof priceSuffixFor==='function' ? priceSuffixFor(p.price_period) : '/mo') : amt;
   const base = (location.origin && location.origin!=='null') ? location.origin + location.pathname.replace(/[^/]*$/, '') : '';
   const url = base + 'property.html?id=' + p.id;
   const lines = [];

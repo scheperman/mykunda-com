@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0cezwix--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1mcwo1y--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preconnect" href="https://api.mapbox.com" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=128350273008347">
+<link rel="stylesheet" href="styles.min.css?v=117189065458621">
 <style>
 body{background:var(--paper-2);min-height:100vh}
 
@@ -267,7 +267,7 @@ body{background:var(--paper-2);min-height:100vh}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=128350273008347"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=117189065458621"><!--/mk-css-->
 </head>
 <body>
 <div class="wizbar">
@@ -804,8 +804,17 @@ body{background:var(--paper-2);min-height:100vh}
           <div id="otpWrap" style="display:none;margin-top:9px">
             <button type="button" id="otpStart" style="padding:9px 15px;border:1.5px solid var(--green-700);border-radius:var(--r-sm);background:var(--white);font-size:13.5px;font-weight:700;color:var(--green-700);cursor:pointer;font-family:var(--sans)">Confirm this number on WhatsApp</button>
             <a id="otpLink" target="_blank" rel="noopener" style="display:none;align-items:center;gap:8px;padding:11px 18px;border-radius:var(--r-sm);background:#25D366;color:#fff;font-size:14.5px;font-weight:800;text-decoration:none;font-family:var(--sans)">Open WhatsApp and send the code</a>
-            <div class="hint" id="otpHint">A confirmed number tells buyers the listing is real. We never show it until you reply to someone.</div>
+            <div class="hint" id="otpHint">A confirmed number tells buyers the listing is real, and the listing says so.</div>
           </div>
+          <!-- WhatsApp naar de aanbieder (03-09-2026). De knop op de objectpagina
+               opent een gesprek met dít nummer; de aanbieder kan dat per
+               advertentie uitzetten en houdt dan alleen het gesprek in My MyKunda. -->
+          <label class="chk-opt sel" id="showWaToggle" style="display:flex;margin-top:10px">
+            <span class="box" id="showWaCk"></span>
+            <span>Let buyers message me on WhatsApp
+              <span style="display:block;font-weight:500;color:var(--muted);font-size:12.5px;line-height:1.45;margin-top:3px">The listing gets a WhatsApp button that opens a chat with this number. Switch it off and buyers reach you through My MyKunda messages only.</span>
+            </span>
+          </label>
         </div>
       </div>
       <div class="frow one">
@@ -868,18 +877,18 @@ body{background:var(--paper-2);min-height:100vh}
   </aside>
 </div>
 
-<script src="valuation-areas.js?v=128350273008347"></script>
-<script src="valuation.js?v=128350273008347"></script>
-<script src="app.min.js?v=128350273008347"></script>
-<script src="gambia-places.js?v=128350273008347" defer></script>
-<script src="image-slot.js?v=128350273008347" defer></script>
+<script src="valuation-areas.js?v=117189065458621"></script>
+<script src="valuation.js?v=117189065458621"></script>
+<script src="app.min.js?v=117189065458621"></script>
+<script src="gambia-places.js?v=117189065458621" defer></script>
+<script src="image-slot.js?v=117189065458621" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel, Leaflet (~145 KB) only when the
    seller reaches the location step. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=128350273008347'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=117189065458621'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -1074,7 +1083,9 @@ function listingFields(){
          de prijsstap; standaard aan. De database heeft er nog een
          hoofdschakelaar boven (app_settings.price_history_public), dus dit veld
          zet niets aan wat het platform uit heeft staan. */
-      show_price_history: S.priceHist !== false
+      show_price_history: S.priceHist !== false,
+      /* WhatsApp-knop op de objectpagina naar dit nummer; standaard aan. */
+      show_whatsapp: S.showWa !== false
     });
   }
   return f;
@@ -1126,6 +1137,8 @@ async function loadDraft(id){
        van de knoppen draaien. */
     S.priceHist = (data.show_price_history !== false);
     try{ var _ph=document.getElementById('priceHistToggle'); if(_ph) _ph.classList.toggle('sel', S.priceHist); }catch(e){}
+    S.showWa = (data.show_whatsapp !== false);
+    try{ var _sw=document.getElementById('showWaToggle'); if(_sw) _sw.classList.toggle('sel', S.showWa); }catch(e){}
     S.beds = data.beds ? String(data.beds) : '';
     S.baths = data.baths ? String(data.baths) : '';
     S.sqm = data.sqm ? String(data.sqm) : '';
@@ -2142,6 +2155,15 @@ priceHistToggle.classList.toggle('sel', S.priceHist !== false);
 priceHistToggle.addEventListener('click',()=>{
   S.priceHist = (S.priceHist === false);
   priceHistToggle.classList.toggle('sel', S.priceHist);
+  if(typeof autoSaveDraft==='function') autoSaveDraft();
+});
+/* WhatsApp-knop naar dit nummer: zelfde patroon, standaard aan. */
+if(S.showWa === undefined) S.showWa = true;
+showWaCk.innerHTML=checkSm;
+showWaToggle.classList.toggle('sel', S.showWa !== false);
+showWaToggle.addEventListener('click',()=>{
+  S.showWa = (S.showWa === false);
+  showWaToggle.classList.toggle('sel', S.showWa);
   if(typeof autoSaveDraft==='function') autoSaveDraft();
 });
 

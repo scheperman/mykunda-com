@@ -8,7 +8,7 @@
    First visit   : network with a 6 s guard, then whatever is in cache. A stalled
                    4G socket no longer leaves the visitor on a blank page.
    Map tiles     : never cached here (external, volume too large). */
-const V = 'mk-v124';
+const V = 'mk-v125';
 const STATIC = V + '-static';
 const PAGES  = V + '-pages';
 const MAX_PAGES = 60;
@@ -20,7 +20,7 @@ const MAX_PAGES = 60;
    the browser treat the precached file as a different URL and the whole precache
    becomes dead weight. Do not edit STAMP by hand: run `node build.mjs` and it
    rewrites this line and every page from one source. */
-const STAMP = '128350273008347';
+const STAMP = '117189065458621';
 const PRECACHE = [
   'styles.min.css?v=' + STAMP,
   'redesign.min.css?v=' + STAMP,
