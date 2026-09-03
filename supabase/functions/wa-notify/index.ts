@@ -2,10 +2,11 @@
 // Deploy: supabase functions deploy wa-notify --no-verify-jwt
 //
 // Sends a WhatsApp message via the Meta Cloud API (WhatsApp Business Platform).
-// De enige aanroeper is op dit moment wa-inbound: de auto-reply op een
-// binnenkomend bericht en de twee meldingen rond nummerverificatie. De oude
-// kopregel noemde notify-lead en notify-viewing op basis van
-// notification_prefs.channel — die code bestaat niet (meer) in beide functies.
+// Aanroepers: wa-inbound (auto-reply op een binnenkomend bericht, de twee
+// meldingen rond nummerverificatie, en sinds 03-09-2026 de uitleg aan een
+// aanbieder die op een melding antwoordt) en notify-lead (sinds 03-09-2026 de
+// template `lead_owner` aan de aanbieder bij een nieuwe aanvraag, achter
+// profiles.notify_whatsapp).
 //
 // *** POORT — 30-08-2026 ***
 // Deze functie controleerde niets. verify_jwt staat uit (nodig voor de

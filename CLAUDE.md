@@ -2714,3 +2714,39 @@ aanbieden / vragen wat ze zoeken / niet meer beschikbaar) in een keuzelijst
 op de leadkaart. De keuze herschrijft alleen de WhatsApp- en e-maillink van
 die kaart; er gaat niets vanzelf weg. Bewust geen prijs of beschikbaarheid
 uit de database in de zin — die kan intussen veranderd zijn.
+
+## WhatsApp-meldingen aan de aanbieder — 03-09-2026
+
+Edwin heeft het "laat WhatsApp liggen" van 30-08 ingetrokken. Wat er nu in
+de code staat, en wat er nog van hem moet komen:
+
+- **`notify-lead`** stuurt na de eigenaarsmail óók een WhatsApp via
+  `wa-notify`, met de Meta-template **`lead_owner`** (categorie UTILITY, taal
+  `en`, drie parameters: wie, welke advertentie, hoe te bereiken). Nummer:
+  `listings.contact_phone` van de advertentie, anders `profiles.phone`;
+  schakelaar `profiles.notify_whatsapp` (migratie `20260903_04`, standaard
+  aan, te bedienen onder Account in My MyKunda). Zolang `WA_PHONE_NUMBER_ID`
+  en `WA_ACCESS_TOKEN` niet gezet zijn doet dit blok **stil niets**; daarna
+  schrijft elke poging een regel in `email_events` (`lead_owner_wa`), zodat
+  `notify-health` een Meta-storing ziet. Een mislukte WhatsApp is nooit een
+  502 — de mail is dan al weg.
+- **`wa-inbound`** herkent een antwoord van een aanbieder
+  (`public.supplier_by_phone(digits)`, vergelijkt op cijfers met
+  `profiles.phone` en `listings.contact_phone`) en maakt daar géén lead van;
+  hij stuurt één korte uitleg terug. Let op: die tekst zegt dat het nummer
+  "niet door een mens gelezen wordt". Kiest Edwin ervoor om het bestaande,
+  door mensen bediende nummer +220 272 0268 naar de Cloud API te verhuizen,
+  dan moet die zin mee.
+- **Het nummer is de beslissing die openstaat.** Een nummer dat rechtstreeks
+  in WhatsApp Manager wordt geregistreerd verdwijnt uit de WhatsApp Business
+  app; "coexistence" (app én API op één nummer) bestaat bij Meta alleen via
+  Embedded Signup van een Tech Provider/Solution Partner, niet voor een
+  bedrijf dat zelf in Business Manager onboardt. Advies: een tweede nummer
+  voor de API en +220 272 0268 laten zoals het is.
+- De template-tekst die bij Meta ingediend moet worden staat als commentaar
+  bovenin het WhatsApp-blok van `notify-lead/index.ts`. Wijzig je hem daar,
+  dan moet hij bij Meta opnieuw ter goedkeuring.
+- `whatsapp-setup-guide.html` (juni 2026) noemt nog `notification_prefs` en
+  een kanaalkeuze op het dashboard; die bestaan niet meer. De stappen bij
+  Meta (Business-verificatie, System User, token, Phone Number ID, webhook)
+  kloppen wel.

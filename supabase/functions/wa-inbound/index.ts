@@ -209,6 +209,33 @@ async function handleMessage(
     return { verification: fresh ? "confirmed" : repeat ? "already" : "stale" };
   }
 
+  // ---- Een antwoord van een aanbieder (03-09-2026) ----------------------
+  // Sinds notify-lead een WhatsApp-melding aan de aanbieder stuurt, komt zijn
+  // "dank je" of "ok" hier binnen. Dat is geen lead: geen leadrij, geen
+  // teammail en vooral niet de auto-reply "our team will reply within 1-2
+  // working days". supplier_by_phone() vergelijkt op cijfers met
+  // profiles.phone en listings.contact_phone. Eén korte uitleg terug, binnen
+  // het 24-uursvenster dus zonder template.
+  try {
+    const { data: supplierId } = await sb.rpc("supplier_by_phone", { p_digits: from });
+    if (supplierId) {
+      console.log("wa-inbound: antwoord van aanbieder", supplierId, "— geen lead");
+      try {
+        await waNotify(supabaseUrl, phoneFormatted,
+          "Thanks — this MyKunda number only sends alerts and is not read by a person. " +
+          "To answer the person who enquired, use the contact details in the alert or open mykunda.com/dashboard.html#leads. " +
+          "To reach the MyKunda team, use mykunda.com/contact.html.");
+      } catch (e) {
+        console.warn("wa-inbound: uitleg aan aanbieder niet verstuurd:", (e as Error).message);
+      }
+      return { supplier_reply: true, user_id: supplierId };
+    }
+  } catch (e) {
+    // De functie ontbreekt (migratie 20260903_04 niet gedraaid) of faalt:
+    // dan gewoon het oude pad, liever een lead te veel dan een bericht kwijt.
+    console.warn("wa-inbound: supplier_by_phone niet beschikbaar:", (e as Error).message);
+  }
+
   const payload = {
     wa_message_id: message.id,
     wa_from: from,

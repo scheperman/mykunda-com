@@ -1,4 +1,7 @@
-Leads: antwoordsjablonen op de leadkaart (vier openingszinnen voor WhatsApp en e-mail)
+WhatsApp-meldingen aan de aanbieder: schakelaar, notify-lead via template lead_owner, wa-inbound herkent antwoorden van aanbieders
 
-- dashboard.html: LEAD_TPL + keuzelijst per kaart; de keuze herschrijft alleen de WhatsApp- en e-maillink, er gaat niets vanzelf weg
-- _vrtest.mjs: 154 tests; sw.js mk-v129; CLAUDE.md
+- migraties 20260903_04/_05: profiles.notify_whatsapp (+kolomrecht), supplier_by_phone()
+- notify-lead: WhatsApp na de eigenaarsmail, stil zolang WA_PHONE_NUMBER_ID/WA_ACCESS_TOKEN ontbreken; log in email_events (lead_owner_wa)
+- wa-inbound: antwoord van een aanbieder wordt geen lead; korte uitleg terug
+- dashboard.html + supabase.js: "WhatsApp me about new enquiries" onder Account (alleen aanbieders)
+- sw.js mk-v130; CLAUDE.md

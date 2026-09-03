@@ -140,6 +140,35 @@ async function logEmail(
   }
 }
 
+/* ---- WhatsApp aan de aanbieder (03-09-2026) ----------------------------
+   Via wa-notify met de goedgekeurde Meta-template `lead_owner`:
+     "New enquiry on MyKunda from {{1}} about {{2}}. You can reach them on
+      {{3}}. Details and reply tools: mykunda.com/dashboard.html#leads —
+      turn these alerts off under Account."
+   Een template is verplicht: MyKunda begint het gesprek. Zolang de Cloud API
+   niet ingericht is (WA_PHONE_NUMBER_ID / WA_ACCESS_TOKEN ontbreken) doet
+   deze functie stil niets — geen fout in de keten, geen regel in het log.
+   De uitkomst gaat wél in email_events (event_type lead_owner_wa) zodra er
+   echt verzonden is, zodat notify-health een stille Meta-storing ziet. */
+const WA_READY = !!(Deno.env.get("WA_PHONE_NUMBER_ID") && Deno.env.get("WA_ACCESS_TOKEN"));
+const NOTIFY_SHARED_KEY = Deno.env.get("NOTIFY_SHARED_KEY") ?? "";
+function waDigits(v: unknown): string {
+  let d = String(v ?? "").replace(/\D/g, "");
+  if (d.startsWith("00")) d = d.slice(2);
+  if (d.length === 7) d = "220" + d;          // Gambiaans nummer zonder landcode
+  return d.length >= 9 ? d : "";
+}
+async function sendWhatsApp(to: string, template: string, params: string[]) {
+  const r = await fetch(`${SUPABASE_URL}/functions/v1/wa-notify`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "x-notify-key": NOTIFY_SHARED_KEY },
+    body: JSON.stringify({ to: "+" + to, template, params }),
+  });
+  const txt = await r.text();
+  if (!r.ok) throw new Error(`wa-notify ${r.status}: ${txt.slice(0, 300)}`);
+  try { return JSON.parse(txt); } catch { return {}; }
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
 
@@ -274,15 +303,16 @@ serve(async (req) => {
     if (lead.listing_id && ["viewing", "listing_enquiry", "agent_message"].includes(String(lead.source))) {
       try {
         const { data: listing } = await db.from("listings")
-          .select("id, title, area, owner_id").eq("id", lead.listing_id).single();
+          .select("id, title, area, owner_id, contact_phone").eq("id", lead.listing_id).single();
         if (listing?.owner_id) {
-          type P = { id: string; full_name: string | null; email: string | null; notify_messages: boolean | null; unsubscribe_token: string | null; email_bounced_at: string | null };
+          type P = { id: string; full_name: string | null; email: string | null; notify_messages: boolean | null; unsubscribe_token: string | null; email_bounced_at: string | null; phone?: string | null; notify_whatsapp?: boolean | null };
           let owner = (await db.from("profiles")
-            .select("id, full_name, email, notify_messages, unsubscribe_token, email_bounced_at")
+            .select("id, full_name, email, phone, notify_messages, notify_whatsapp, unsubscribe_token, email_bounced_at")
             .eq("id", listing.owner_id).maybeSingle()).data as P | null;
+          const ownerProfile = owner;
           if (!owner?.email) {
             const { data: au } = await db.auth.admin.getUserById(listing.owner_id);
-            if (au?.user?.email) owner = { id: listing.owner_id, full_name: owner?.full_name ?? (au.user.user_metadata?.full_name ?? null), email: au.user.email, notify_messages: owner?.notify_messages ?? true, unsubscribe_token: owner?.unsubscribe_token ?? null, email_bounced_at: owner?.email_bounced_at ?? null };
+            if (au?.user?.email) owner = { id: listing.owner_id, full_name: owner?.full_name ?? (au.user.user_metadata?.full_name ?? null), email: au.user.email, notify_messages: owner?.notify_messages ?? true, unsubscribe_token: owner?.unsubscribe_token ?? null, email_bounced_at: owner?.email_bounced_at ?? null, phone: owner?.phone ?? null, notify_whatsapp: owner?.notify_whatsapp ?? true };
           }
           if (!owner?.email) {
             errors.push("owner: no email address");
@@ -325,6 +355,34 @@ serve(async (req) => {
               });
             }
           }
+
+          // 2c) Dezelfde aanvraag als WhatsApp-bericht, naast de mail. Het
+          //     nummer van de advertentie gaat voor: dat is wat de aanbieder
+          //     opgaf als "where buyers reach you"; anders het profielnummer.
+          const waTo = waDigits(listing.contact_phone) || waDigits(ownerProfile?.phone);
+          const waOn = (ownerProfile?.notify_whatsapp ?? true) !== false;
+          const isBackoffice = !!owner?.email && owner.email.toLowerCase() === LEAD_EMAIL;
+          if (WA_READY && waTo && waOn && !isBackoffice) {
+            const contactLine = info.phone ? String(info.phone) : (info.email ? String(info.email) : "the details in your dashboard");
+            const params = [String(who).slice(0, 60), String(listing.title ?? "your listing").slice(0, 60), contactLine.slice(0, 60)];
+            try {
+              const r = await sendWhatsApp(waTo, "lead_owner", params);
+              await logEmail(db, {
+                event_type: "lead_owner_wa", recipient: "+" + waTo, subject: "WhatsApp: " + params.join(" · "),
+                resend_email_id: (r as { message_id?: string })?.message_id ?? null,
+                ok: true, lead_id: lead.id, source: lead.source,
+              });
+            } catch (e) {
+              errors.push(`owner-whatsapp: ${(e as Error).message}`);
+              console.error("notify-lead owner WhatsApp failed:", e);
+              await logEmail(db, {
+                event_type: "lead_owner_wa", recipient: "+" + waTo, subject: "WhatsApp: " + params.join(" · "),
+                ok: false, reason: (e as Error).message, lead_id: lead.id, source: lead.source,
+              });
+            }
+          } else if (WA_READY && !waTo) {
+            console.info("notify-lead: geen WhatsApp-nummer voor de eigenaar van", listing.id);
+          }
         }
       } catch (e) {
         errors.push(`owner: ${(e as Error).message}`);
@@ -343,7 +401,7 @@ serve(async (req) => {
 
     /* Alleen een echte verzendfout is een 502. Een lead zonder adres en een
        lead die door de rem is gestopt zijn genoteerd, geen storing. */
-    const hardFail = errors.some((e) => !e.startsWith("auto-reply: lead has no email") && !e.startsWith("auto-reply: rate limited") && !e.startsWith("owner: no email") && !e.startsWith("owner: address bounced"));
+    const hardFail = errors.some((e) => !e.startsWith("auto-reply: lead has no email") && !e.startsWith("auto-reply: rate limited") && !e.startsWith("owner: no email") && !e.startsWith("owner: address bounced") && !e.startsWith("owner-whatsapp:"));
     return json({ ok: !errors.length, sent, errors }, hardFail ? 502 : 200);
   } catch (err) {
     console.error("notify-lead error:", err);

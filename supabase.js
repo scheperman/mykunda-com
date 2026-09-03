@@ -1191,6 +1191,24 @@ async function updateMessageEmailPref(on){
   if(error) throw error;
 }
 
+/* "WhatsApp me about new enquiries" — profiles.notify_whatsapp (03-09-2026),
+   gelezen door notify-lead vóór het Meta-bericht aan de aanbieder. */
+async function fetchWhatsAppPref(){
+  if(!sb) return null;
+  const u = await currentUser();
+  if(!u) return null;
+  const { data, error } = await sb.from('profiles').select('notify_whatsapp').eq('id', u.id).single();
+  if(error){ console.warn('fetchWhatsAppPref:', error.message); return null; }
+  return data;
+}
+async function updateWhatsAppPref(on){
+  if(!sb) throw new Error('backend-offline');
+  const u = await currentUser();
+  if(!u) throw new Error('not-signed-in');
+  const { error } = await sb.from('profiles').update({ notify_whatsapp: !!on }).eq('id', u.id);
+  if(error) throw error;
+}
+
 /* WhatsApp vanuit de browser: weggehaald op 30-08-2026.
    sendWhatsAppNotification() en sendWhatsAppText() stonden hier maar werden
    nergens aangeroepen (gecontroleerd over alle pagina's). Ze riepen wa-notify

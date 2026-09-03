@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1utqmzm--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0iaksls--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <noscript></noscript>
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=9100661837355">
+<link rel="stylesheet" href="styles.min.css?v=34102009972104">
 <style>
 body{background:var(--paper-2)}
 .dash{max-width:1180px;margin:0 auto;padding:36px 28px 70px}
@@ -387,7 +387,7 @@ select.mini.tpl{height:28px;padding:0 8px;border:1.5px solid var(--line);border-
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=9100661837355"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=34102009972104"><!--/mk-css-->
 </head>
 <body>
 <div id="header"></div>
@@ -656,6 +656,10 @@ select.mini.tpl{height:28px;padding:0 8px;border:1.5px solid var(--line);border-
           <p class="sub">What we send you, and what you can turn off.</p>
           <div style="margin-top:6px">
             <div class="notif-row"><div><div class="nl">Email me about new messages</div><div class="nd">Get an email when a buyer or seller sends you a message. Your conversations keep working either way — new messages are always waiting in Messages.</div></div><button class="notif-toggle on" id="msgEmailToggle"></button></div>
+            <!-- WhatsApp-melding bij een aanvraag (03-09-2026). Alleen voor
+                 aanbieders; verborgen tot de rol bekend is (applyRole). Het
+                 nummer is dat van de advertentie, anders dat van het profiel. -->
+            <div class="notif-row" id="waRow" hidden><div><div class="nl">WhatsApp me about new enquiries</div><div class="nd">A short WhatsApp message the moment someone asks about one of your listings, with their number so you can answer straight away. Sent to the number on the listing.</div></div><button class="notif-toggle on" id="waToggle"></button></div>
             <div class="notif-row"><div><div class="nl">New listings and area alerts</div><div class="nd" id="alertsNd">A handful a month at most, based on the searches you saved. This is the master switch: it turns the alert on — or off — for every saved search at once. You can still silence one search on its own under Saved searches.</div></div><button class="notif-toggle" id="alertsToggle"></button></div>
           </div>
           <p class="sub" style="margin-top:14px">Emails about your viewings, your listings and your payments always come through. They are part of the deal itself, so there is no switch for them.</p>
@@ -670,15 +674,15 @@ select.mini.tpl{height:28px;padding:0 8px;border:1.5px solid var(--line);border-
 
 <div id="footer"></div>
 
-<script src="app.min.js?v=9100661837355"></script>
-<script src="image-slot.js?v=9100661837355" defer></script>
+<script src="app.min.js?v=34102009972104"></script>
+<script src="image-slot.js?v=34102009972104" defer></script>
 <script>
 /* 4G: the Supabase client (~205 KB) is not needed to paint this page. It downloads
    in parallel and every backend call awaits window.__sbReady. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=9100661837355'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=34102009972104'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 </script>
@@ -1414,6 +1418,21 @@ window.sendVR=async function(i){
       if(!isLive || typeof updateMessageEmailPref!=='function') return;
       try{ await updateMessageEmailPref(msgT.classList.contains('on')); }
       catch(e){ console.warn('notify_messages save:', e.message); msgT.classList.toggle('on'); }
+    });
+  }
+  // "WhatsApp me about new enquiries" — profiles.notify_whatsapp, gelezen door
+  // notify-lead. Zelfde patroon: één kolom, los opgeslagen.
+  const waT = document.getElementById('waToggle');
+  if(waT){
+    if(isLive && typeof fetchWhatsAppPref==='function'){
+      try{ const p = await fetchWhatsAppPref(); if(p) waT.classList.toggle('on', p.notify_whatsapp!==false); }
+      catch(e){ console.warn('notify_whatsapp load:', e.message); }
+    }
+    waT.addEventListener('click', async ()=>{
+      waT.classList.toggle('on');
+      if(!isLive || typeof updateWhatsAppPref!=='function') return;
+      try{ await updateWhatsAppPref(waT.classList.contains('on')); }
+      catch(e){ console.warn('notify_whatsapp save:', e.message); waT.classList.toggle('on'); }
     });
   }
 })();
@@ -2976,6 +2995,8 @@ function applyRole(){
   var cta=document.getElementById('headCta'), ctaTxt=document.getElementById('headCtaTxt');
   document.getElementById('ovBuyer').hidden = (SHOW!=='buyer');
   document.getElementById('ovSeller').hidden = (SHOW!=='seller');
+  var waRow=document.getElementById('waRow'); if(waRow) waRow.hidden = !(LIVE && isSupplier(ROLE));
+  var nh=document.querySelector('#notifCard h3'); if(nh) nh.textContent = (LIVE && isSupplier(ROLE)) ? 'Email and WhatsApp notifications' : 'Email notifications';
   if(SHOW==='seller'){
     if(sub) sub.textContent = "Here's how your listings are performing.";
     if(cta){ cta.href='list.html'; }
