@@ -2707,3 +2707,10 @@ kolommen), verborgen tabelkolommen onder 600px (`.hide-m`), en in
 uit `profiles` en `agencies` in plaats van bij elke advertentie opnieuw
 getypt te worden. De twee vinkjes (eigendom / mandaat) blijven per
 advertentie.
+
+Later die middag kwamen de **antwoordsjablonen** erbij: `LEAD_TPL` in
+`dashboard.html`, vier openingszinnen (nog beschikbaar / bezichtiging
+aanbieden / vragen wat ze zoeken / niet meer beschikbaar) in een keuzelijst
+op de leadkaart. De keuze herschrijft alleen de WhatsApp- en e-maillink van
+die kaart; er gaat niets vanzelf weg. Bewust geen prijs of beschikbaarheid
+uit de database in de zin — die kan intussen veranderd zijn.

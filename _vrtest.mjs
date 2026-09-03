@@ -449,6 +449,14 @@ check('lokaal nummer krijgt 220',        pro.leadWa('7001234') === 'https://wa.m
 check('00-prefix wordt gestript',        pro.leadWa('00220 700 1234','hi') === 'https://wa.me/2207001234?text=hi');
 check('te kort nummer geeft niets',      pro.leadWa('12') === '');
 
+/* ---- antwoordsjablonen (03-09-2026) ---- */
+check('sjabloon: standaard "still available" in WhatsApp-tekst', /It%20is%20still%20available/.test(k));
+check('sjabloon: keuzelijst met vier sjablonen op de kaart', (k.match(/<option value=/g)||[]).length === 4 && /data-act="lead-tpl"/.test(k));
+check('sjabloon: e-mail krijgt onderwerp én body', /mailto:f@x\.gm\?subject=.*&body=Hello/.test(k));
+check('sjabloon: zonder nummer en zonder e-mail geen keuzelijst', !/lead-tpl/.test(pro.leadCard(Object.assign({}, L1, { email:null, phone:null }))));
+check('sjabloon: naam en advertentie in de zin', /Hello Fatou, thanks for your enquiry about Villa Bijilo on MyKunda/.test(
+  decodeURIComponent(pro.leadCard(Object.assign({}, L2, { name:'Fatou', _listing_title:'Villa Bijilo' })).match(/wa\.me\/\d+\?text=([^"]+)/)[1])));
+
 const part = makePro({}, false);
 k = part.leadCard(L2);
 check('particulier: "I have replied" in plaats van trechter', /I have replied/.test(k) && !/→ Contacted/.test(k));

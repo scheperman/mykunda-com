@@ -309,6 +309,7 @@ body{background:var(--paper-2)}
 .attn .t small{display:block;color:var(--muted);font-size:12.5px}
 .attn .go{color:var(--green-700);font-weight:800;font-size:16px}
 /* Leads: filterbalk en de lijstweergave op een telefoon (03-09-2026). */
+select.mini.tpl{height:28px;padding:0 8px;border:1.5px solid var(--line);border-radius:99px;background:var(--white);font-size:12px;font-weight:700;color:var(--ink-2);font-family:var(--sans);max-width:100%}
 .lchips{display:flex;gap:6px;flex-wrap:wrap;width:100%}
 .lchips button{height:30px;padding:0 11px;border-radius:99px;border:1.5px solid var(--line);background:var(--white);
   font-size:12.5px;font-weight:700;color:var(--ink-2);cursor:pointer;font-family:var(--sans);display:inline-flex;align-items:center;gap:6px}
@@ -1902,6 +1903,30 @@ function renderLeadStats(el){
   }).join('');
 }
 
+/* ---- antwoordsjablonen (03-09-2026) ----
+   Vier openingszinnen die een aanbieder anders elke keer opnieuw typt. Het
+   sjabloon vult alleen de WhatsApp- en e-mailknop; er gaat niets vanzelf
+   weg, en de aanbieder maakt de zin in WhatsApp of zijn mailprogramma af.
+   Geen prijs of beschikbaarheid uit de database erin: die kan intussen
+   veranderd zijn, en een verkeerde belofte in een eerste bericht is erger
+   dan een korte. */
+var LEAD_TPL = [
+  { k:'thanks',  label:'Thanks, still available',
+    text:function(l,t){ return 'Hello'+(l.name?' '+l.name:'')+', thanks for your enquiry about '+t+' on MyKunda. It is still available — happy to answer any question or arrange a viewing. '; } },
+  { k:'viewing', label:'Offer a viewing',
+    text:function(l,t){ return 'Hello'+(l.name?' '+l.name:'')+', thanks for your interest in '+t+' on MyKunda. Would you like to view it? Let me know a day and time that suits you and I will confirm. '; } },
+  { k:'details', label:'Ask what they need',
+    text:function(l,t){ return 'Hello'+(l.name?' '+l.name:'')+', thanks for your enquiry about '+t+' on MyKunda. So I can help you best: when are you looking to move, and what is your budget? '; } },
+  { k:'gone',    label:'No longer available',
+    text:function(l,t){ return 'Hello'+(l.name?' '+l.name:'')+', thanks for your enquiry about '+t+' on MyKunda. Unfortunately it is no longer available. Tell me what you are looking for and I will let you know when something similar comes up. '; } }
+];
+function leadTplText(l, key){
+  var t = LEAD_TPL.filter(function(x){ return x.k===key; })[0] || LEAD_TPL[0];
+  return t.text(l, l._listing_title || 'my property');
+}
+function leadMailto(l, text){
+  return 'mailto:'+encodeURI(l.email)+'?subject='+encodeURIComponent('Re: '+(l._listing_title||'your enquiry')+' — MyKunda')+'&body='+encodeURIComponent(text);
+}
 function leadCard(l){
   var msg = (l.message||'').trim();
   /* Elk stukje in een eigen span: .met is een flexrij en losse tekstknopen
@@ -1919,10 +1944,17 @@ function leadCard(l){
   /* Contact eerst: dat is waar de aanbieder voor komt. WhatsApp bovenaan,
      want dat is in Gambia het kanaal; het bericht begint met de advertentie
      zodat de aanvrager meteen weet waarover het gaat. */
-  var wa = leadWa(l.phone, 'Hello'+(l.name?' '+l.name:'')+', thanks for your enquiry about '+(l._listing_title||'my property')+' on MyKunda. ');
-  if(wa) acts.push('<a class="mini go" href="'+wa+'" target="_blank" rel="noopener">WhatsApp</a>');
+  var tpl = leadTplText(l, 'thanks');
+  var wa = leadWa(l.phone, tpl);
+  if(wa) acts.push('<a class="mini go" data-ch="wa" href="'+wa+'" target="_blank" rel="noopener">WhatsApp</a>');
   if(l.phone) acts.push('<a class="mini" href="tel:'+encodeURI(l.phone)+'">Call</a>');
-  if(l.email) acts.push('<a class="mini" href="mailto:'+encodeURI(l.email)+'?subject='+encodeURIComponent('Re: '+(l._listing_title||'your enquiry')+' — MyKunda')+'">Email</a>');
+  if(l.email) acts.push('<a class="mini" data-ch="mail" href="'+leadMailto(l, tpl)+'">Email</a>');
+  /* De sjabloonkeuze alleen als er een kanaal is om hem in te zetten. */
+  if(wa || l.email){
+    acts.push('<select class="mini tpl" data-act="lead-tpl" aria-label="Opening line">'
+      + LEAD_TPL.map(function(x){ return '<option value="'+x.k+'">'+esc(x.label)+'</option>'; }).join('')
+      + '</select>');
+  }
   if(PRO){
     var nxt = STAGE_NEXT[l.stage];
     if(nxt) acts.push('<button class="mini go" data-act="lead-stage" data-stage="'+nxt+'">→ '+esc(STAGE_LABEL[nxt])+'</button>');
@@ -2537,6 +2569,18 @@ function show(view){
   if(view==='company') renderCompany();
 }
 function route(){ show((location.hash||'').replace('#','') || 'overview'); }
+
+/* Sjabloon gewisseld: alleen de twee links in die kaart herschrijven. */
+document.addEventListener('change', function(ev){
+  var sel = ev.target;
+  if(!sel || !sel.matches || !sel.matches('select[data-act="lead-tpl"]')) return;
+  var card = sel.closest('[data-lead]'); if(!card) return;
+  var lead = LEADS.filter(function(l){ return String(l.id)===String(card.dataset.lead); })[0];
+  if(!lead) return;
+  var text = leadTplText(lead, sel.value);
+  var wa = card.querySelector('a[data-ch="wa"]'); if(wa) wa.href = leadWa(lead.phone, text);
+  var ml = card.querySelector('a[data-ch="mail"]'); if(ml) ml.href = leadMailto(lead, text);
+});
 
 /* ---------- acties ---------- */
 document.addEventListener('click', async function(ev){
