@@ -660,12 +660,24 @@ let pendingSession = null;
    had — en dat bepaalt op welke tab het scherm opent. */
 function markSeen(){ try{ localStorage.setItem('mk_seen','1'); }catch(e){} }
 
-function finishOAuth(u, name){
+async function finishOAuth(u, name){
   markSeen();
-  fetch(MYKUNDA_SUPABASE_URL.replace(/\/+$/,'') + '/functions/v1/notify-signup', {
-    method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ user_id: u.id }), keepalive:true
-  }).catch(function(){});
+  /* De welkomstmail aanvragen met het eigen sessietoken. Sinds 03-09-2026 (T9)
+     laat notify-signup zonder sleutel of token niemand meer binnen, en het
+     token mag alleen over zichzelf gaan. Geen token te vinden? Dan geen
+     aanroep — run_welcome_backlog() haalt de mail binnen vijf minuten op. Er
+     valt hier dus niets te laten mislukken dat de bezoeker zou ophouden. */
+  try{
+    const { data } = await sb.auth.getSession();
+    const token = data && data.session && data.session.access_token;
+    if(token){
+      fetch(MYKUNDA_SUPABASE_URL.replace(/\/+$/,'') + '/functions/v1/notify-signup', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer ' + token },
+        body: JSON.stringify({ user_id: u.id }), keepalive:true
+      }).catch(function(){});
+    }
+  }catch(e){}
   setUser({ name, email: u.email||'', phone: u.phone||'', via: u.app_metadata?.provider||'oauth' });
   location.href = nextUrl;
 }

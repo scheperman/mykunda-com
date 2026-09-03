@@ -30,7 +30,16 @@ const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY")!;
 const FROM_EMAIL = Deno.env.get("FROM_EMAIL") ?? "MyKunda <noreply@mykunda.com>";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+const SHARED_KEY = Deno.env.get("NOTIFY_SHARED_KEY") ?? "";
 const SITE = "https://mykunda.com";
+
+/* Constant-tijd vergelijking, zoals in notify-payment en notify-listing. */
+function sameKey(a: string, b: string): boolean {
+  if (!a || !b || a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
 const FUNCTIONS_BASE = "https://jejaerpqltqryqzjvbjp.functions.supabase.co";
 
 const BRAND = {
@@ -54,7 +63,7 @@ const cors = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
   "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+    "authorization, x-client-info, apikey, content-type, x-notify-key",
 };
 
 function json(body: unknown, status = 200) {
@@ -248,6 +257,19 @@ async function sendEmail(opts: { to: string; subject: string; html: string; unsu
 
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
+
+  /* ÉÉN DEUR (03-09-2026). Deze functie heeft maar één aanroeper: de trigger
+     messages_after_insert(), die sinds vandaag de sleutel uit de kluis
+     meestuurt, zoals de triggers voor betalingen en advertenties al deden.
+     Er is geen browserpad, dus ook geen tweede deur. Tot vandaag kon wie de
+     URL en een message_id kende de mail "je hebt een bericht" opnieuw laten
+     uitgaan; de rem van 15 minuten in de trigger hielp daar niet tegen, want
+     die zit vóór de aanroep, niet erin. Ontbreekt de sleutel in de omgeving,
+     dan is de deur dicht — liever een mail die niet vertrekt en opvalt dan
+     een poort die stil openstaat. */
+  if (!SHARED_KEY || !sameKey(req.headers.get("x-notify-key") ?? "", SHARED_KEY)) {
+    return json({ ok: false, error: "unauthorized" }, 401);
+  }
 
   const db = createClient(SUPABASE_URL, SERVICE_KEY);
   let claimedConversation: string | null = null;

@@ -28,7 +28,8 @@
 //  welcomed_at blijft de garantie dat er hoe dan ook maar één mail uitgaat.
 //
 //  Deploy:  supabase functions deploy notify-signup --no-verify-jwt
-//  Secrets: reuses RESEND_API_KEY / FROM_EMAIL
+//  Secrets: RESEND_API_KEY, FROM_EMAIL, NOTIFY_SHARED_KEY (sinds 03-09-2026:
+//           interne aanroepers sturen x-notify-key, de browser zijn sessietoken)
 //  Requires: backend/notify-signup.sql (welcomed_at column + trigger)
 //
 //  02-09-2026: de welkomsttekst voor rol 'agent' wijst naar het bedrijfsprofiel
@@ -46,11 +47,20 @@ const FROM_EMAIL     = Deno.env.get("FROM_EMAIL") ?? "MyKunda <noreply@mykunda.c
 const TEAM_EMAIL     = "admin@mykunda.com";   // same override as notify-lead (info@ bounces via Cloud86)
 const SUPABASE_URL   = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY    = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+const SHARED_KEY     = Deno.env.get("NOTIFY_SHARED_KEY") ?? "";
+
+/* Constant-tijd vergelijking, zoals in notify-payment en notify-listing. */
+function sameKey(a: string, b: string): boolean {
+  if (!a || !b || a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-notify-key",
 };
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { ...cors, "Content-Type": "application/json" } });
@@ -102,6 +112,35 @@ serve(async (req) => {
     if (!user_id || typeof user_id !== "string") return json({ ok: false, error: "missing user_id" }, 400);
 
     const db = createClient(SUPABASE_URL, SERVICE_KEY);
+
+    /* TWEE DEUREN (03-09-2026, T9). Tot vandaag stond deze functie open:
+       verify_jwt uit (nodig voor de preflight), geen sleutel, en wie de URL
+       kende kon hem eindeloos aanroepen — elke keer een opzoeking bij Auth en
+       in de database. De schade bleef klein (idempotent, mailt alleen naar het
+       eigen adres van de gebruiker, een user_id is niet te raden), maar het
+       was de enige aanmeldfunctie zonder poort.
+       Dezelfde twee deuren als notify-listing sinds 30-08:
+         · x-notify-key            → interne aanroeper: de trigger bij het
+                                     bevestigen en run_welcome_backlog(), die
+                                     de sleutel uit de kluis meesturen
+         · Authorization: Bearer   → de browser in finishOAuth(), met zijn eigen
+                                     sessietoken; dat mag alleen over zichzelf
+                                     gaan (token.sub == user_id)
+       Ontbreekt de sleutel in de omgeving, dan is de eerste deur dicht en
+       blijft alleen het sessietoken over; de trigger krijgt dan 401 en de
+       veger vangt het op zodra de sleutel er wél staat. Liever dat dan een
+       poort die "open" betekent zodra iemand een secret vergeet. */
+    const internal = !!SHARED_KEY && sameKey(req.headers.get("x-notify-key") ?? "", SHARED_KEY);
+    if (!internal) {
+      const token = (req.headers.get("Authorization") ?? "").replace(/^Bearer\s+/i, "");
+      if (!token) return json({ ok: false, error: "unauthorized" }, 401);
+      const { data: who } = await db.auth.getUser(token);
+      const uid = who?.user?.id;
+      /* De anon-sleutel is openbaar en levert hier geen gebruiker op — precies
+         de bedoeling: alleen een echte sessie komt langs deze regel. */
+      if (!uid) return json({ ok: false, error: "unauthorized" }, 401);
+      if (uid !== user_id) return json({ ok: false, error: "not_you" }, 403);
+    }
 
     // Only ever act on a confirmed auth user — never on a half-finished sign-up.
     const { data: au, error: auErr } = await db.auth.admin.getUserById(user_id);

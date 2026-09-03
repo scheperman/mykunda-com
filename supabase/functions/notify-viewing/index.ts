@@ -35,11 +35,20 @@ const FROM_EMAIL     = Deno.env.get("FROM_EMAIL") ?? "MyKunda <noreply@mykunda.c
 const LEAD_EMAIL     = "admin@mykunda.com";
 const SUPABASE_URL   = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY    = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+const SHARED_KEY     = Deno.env.get("NOTIFY_SHARED_KEY") ?? "";
+
+/* Constant-tijd vergelijking, zoals in notify-payment en notify-listing. */
+function sameKey(a: string, b: string): boolean {
+  if (!a || !b || a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-notify-key",
 };
 
 function json(body: unknown, status = 200) {
@@ -79,11 +88,41 @@ serve(async (req) => {
     const { viewing_id } = await req.json().catch(() => ({}));
     if (!viewing_id) return json({ ok: false, error: "missing viewing_id" }, 400);
     const db = createClient(SUPABASE_URL, SERVICE_KEY);
+
+    /* TWEE DEUREN (03-09-2026). Tot vandaag stond deze functie open: wie de
+       URL en een viewing_id kende kon de mails voor die bezichtiging opnieuw
+       laten uitgaan, zo vaak hij wilde — naar beide partijen én de backoffice.
+       Dezelfde deuren als notify-listing sinds 30-08 en notify-signup vandaag:
+         · x-notify-key            → interne aanroeper (vandaag: geen — deze
+                                     functie wordt alleen vanuit de browser
+                                     aangeroepen, maar de deur staat klaar)
+         · Authorization: Bearer   → het sessietoken van de aanvrager of de
+                                     tegenpartij van déze bezichtiging; iemand
+                                     anders krijgt 403
+       sb.functions.invoke() stuurt dat token al mee, dus de site hoefde niet
+       aangepast te worden. Wie helemaal geen sessie heeft wordt geweigerd
+       vóórdat er iets wordt opgezocht: zo verraadt "bestaat niet" niets aan
+       een onbekende. */
+    const internal = !!SHARED_KEY && sameKey(req.headers.get("x-notify-key") ?? "", SHARED_KEY);
+    let uid: string | undefined;
+    if (!internal) {
+      const token = (req.headers.get("Authorization") ?? "").replace(/^Bearer\s+/i, "");
+      if (!token) return json({ ok: false, error: "unauthorized" }, 401);
+      const { data: who } = await db.auth.getUser(token);
+      uid = who?.user?.id;
+      /* De anon-sleutel is openbaar en levert hier geen gebruiker op — precies
+         de bedoeling: alleen een echte sessie komt langs deze regel. */
+      if (!uid) return json({ ok: false, error: "unauthorized" }, 401);
+    }
+
     const { data: v, error } = await db
       .from("viewings")
       .select("id, conversation_id, listing_id, proposer_id, invitee_id, status, slots, chosen_slot, note, cancelled_by, cancel_reason")
       .eq("id", viewing_id).single();
     if (error || !v) return json({ ok: false, error: "viewing not found" }, 404);
+    if (!internal && uid !== v.proposer_id && uid !== v.invitee_id) {
+      return json({ ok: false, error: "not_your_viewing" }, 403);
+    }
 
     const { data: listing } = await db
       .from("listings").select("title, area").eq("id", v.listing_id).single();
