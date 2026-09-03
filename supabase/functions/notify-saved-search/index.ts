@@ -29,6 +29,13 @@
 //  serverzijdige alert; de alternatieven (de zoekpagina headless draaien, of
 //  het filter in SQL herbouwen) zijn allebei erger.
 //
+//  Sinds 03-09-2026 bedient dezelfde run ook de AREA ALERTS: de anonieme
+//  inschrijvingen "Notify me" op de 52 gebiedspagina's (leads met source
+//  'area_alert'). Die belofde de site al sinds de start, maar niets stuurde
+//  ze. Ze lopen hier mee als stap 5, met dezelfde aanbodlijst en dezelfde
+//  waterlijn-logica (leads.last_alert_at), en één mail per adres ook als
+//  iemand drie gebieden volgt. Afmelden: unsubscribe?k=area&t=<token>.
+//
 //  Deploy:  supabase functions deploy notify-saved-search --no-verify-jwt
 //  Cron:    0 8 * * *  →  select public.run_saved_search_alerts()
 //  Secrets: RESEND_API_KEY, FROM_EMAIL, NOTIFY_SHARED_KEY
@@ -242,7 +249,7 @@ function searchUrl(row: any): string {
 /* ============================================================
    Versturen en loggen
    ============================================================ */
-async function sendEmail(o: { to: string; subject: string; html: string }) {
+async function sendEmail(o: { to: string; subject: string; html: string; unsubscribeUrl?: string }) {
   if (isReservedTestAddress(o.to)) throw new Error(`reserved test domain, not sent: ${o.to}`);
   const r = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -253,7 +260,7 @@ async function sendEmail(o: { to: string; subject: string; html: string }) {
          hij hoort een afmeldkop te hebben. De link is dezelfde als onderaan de
          mail en zet zowel de toestemming als elke losse zoekopdracht uit. */
       headers: {
-        "List-Unsubscribe": `<${SITE}/dashboard.html?alerts=off>`,
+        "List-Unsubscribe": `<${o.unsubscribeUrl ?? SITE + "/dashboard.html?alerts=off"}>`,
         "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
       },
     }),
@@ -262,10 +269,10 @@ async function sendEmail(o: { to: string; subject: string; html: string }) {
   return await r.json();
 }
 
-async function logAlert(db: any, o: { recipient: string; subject: string; id: string | null; payload: Record<string, unknown> }) {
+async function logAlert(db: any, o: { recipient: string; subject: string; id: string | null; payload: Record<string, unknown>; eventType?: string }) {
   try {
     await db.from("email_events").insert({
-      resend_email_id: o.id, event_type: "saved_search_alert",
+      resend_email_id: o.id, event_type: o.eventType ?? "saved_search_alert",
       recipient: o.recipient, subject: o.subject, payload: o.payload,
     });
   } catch (e) {
@@ -295,7 +302,26 @@ serve(async (req) => {
       const p = s.profiles;
       return p && p.email && p.consent_marketing === true && !p.email_bounced_at && !isReservedTestAddress(p.email);
     });
-    if (!eligible.length) return json({ ok: true, searches: 0, users: 0, sent: 0 });
+
+    // ---- 1b. area alerts die een mail mogen krijgen ----
+    /* Anoniem, dus geen profiel: het adres, het gebied en de schakelaar staan
+       op de lead zelf. Een gebiedsloze rij (de oude nieuwsbriefknop op
+       guides.html) heeft niets om op te matchen en blijft liggen. */
+    const { data: alertRows, error: aErr } = await db
+      .from("leads")
+      .select("id, email, name, area, created_at, last_alert_at, unsubscribe_token")
+      .eq("source", "area_alert")
+      .eq("alert_active", true)
+      .is("email_bounced_at", null)
+      .not("area", "is", null)
+      .not("email", "is", null);
+    /* Faalt deze query (bijv. omdat de migratie 20260903_06 nog niet is
+       gedraaid en de kolommen ontbreken), dan mogen de saved searches daar
+       niet onder lijden: loggen en zonder area alerts verder. */
+    if (aErr) console.error("notify-saved-search: area alerts niet te lezen (migratie 20260903_06 gedraaid?):", aErr.message);
+    const alerts = (aErr ? [] : (alertRows ?? [])).filter((a: any) => a.email && String(a.area).trim() && !isReservedTestAddress(a.email));
+
+    if (!eligible.length && !alerts.length) return json({ ok: true, searches: 0, users: 0, alerts: 0, sent: 0 });
 
     // ---- 2. het huidige aanbod, één keer ----
     const { data: rows, error: lErr } = await db
@@ -303,7 +329,7 @@ serve(async (req) => {
       .select("id,title,area,street,price,price_period,kind,category,segment,beds,baths,sqm,plot_sqm,features,condition,furnished,security,land_beach,beach_m,water,power,electricity,land_water,road,fencing,flood_risk,doc_type,year_built,available_from,units,parking_spaces,current_use,fit_out,is_verified_title,created_at,listing_media(storage_path,is_document,sort)")
       .in("status", ["active", "under_offer"]);
     if (lErr) throw lErr;
-    if (!rows || !rows.length) return json({ ok: true, searches: eligible.length, users: 0, sent: 0, note: "geen actief aanbod" });
+    if (!rows || !rows.length) return json({ ok: true, searches: eligible.length, alerts: alerts.length, users: 0, sent: 0, note: "geen actief aanbod" });
 
     /* Wanneer ging een advertentie live? De trigger listings_price_event()
        schrijft daar een 'listed'-rij voor. Ontbreekt die (oudere rij), dan is
@@ -358,12 +384,70 @@ serve(async (req) => {
     }
 
     const users = [...perUser.entries()].filter(([, u]) => u.groups.length).slice(0, MAX_USERS_PER_RUN);
+
+    // ---- 5. area alerts: per adres, per gebied, wat is er nieuw? ----
+    /* Eén adres kan hetzelfde gebied twee keer hebben ingestuurd (er is met
+       opzet geen unieke index — zie de migratie). Daarom groeperen op
+       lower(email) + lower(area), en geldt de OUDSTE waterlijn van die groep:
+       wie zich gisteren opnieuw inschreef mag daardoor niets missen. Alle
+       rijen van de groep worden na verzending gestempeld. De match is
+       matches(card, {q: area}) — letterlijk wat de knop "View listings in
+       <Area>" (search.html?q=<Area>) op dezelfde pagina toont. */
+    type AlertBucket = {
+      email: string; name: string; token: string; leadIds: string[];
+      groups: { label: string; url: string; listings: any[]; more: number }[];
+      total: number;
+    };
+    const perAddress = new Map<string, AlertBucket>();
+    const byArea = new Map<string, any[]>();
+    for (const a of alerts) {
+      const k = String(a.email).trim().toLowerCase() + "\u0000" + String(a.area).trim().toLowerCase();
+      const arr = byArea.get(k) ?? [];
+      arr.push(a);
+      byArea.set(k, arr);
+    }
+    for (const group of byArea.values()) {
+      const since = group.map((a) => a.last_alert_at || a.created_at).sort()[0];
+      const area = String(group[0].area).trim();
+      const hits = cards
+        .filter((c) => c.live > since && matches(c.card, { q: area }))
+        .sort((a, b) => (a.live < b.live ? 1 : -1));
+      if (!hits.length) continue;
+      const emailKey = String(group[0].email).trim().toLowerCase();
+      const b: AlertBucket = perAddress.get(emailKey) ?? {
+        email: String(group[0].email).trim(),
+        name: group.find((a) => a.name)?.name || "",
+        token: group[0].unsubscribe_token,
+        leadIds: [], groups: [], total: 0,
+      };
+      if (b.groups.length < MAX_SEARCHES) {
+        b.groups.push({
+          label: "New in " + area,
+          url: SITE + "/search.html?q=" + encodeURIComponent(area),
+          listings: hits.slice(0, MAX_PER_SEARCH).map((h) => h.card),
+          more: Math.max(0, hits.length - MAX_PER_SEARCH),
+        });
+        b.leadIds.push(...group.map((a) => a.id));
+        b.total += hits.length;
+      }
+      perAddress.set(emailKey, b);
+    }
+    /* Iemand die zowel een account met zoekopdrachten heeft als een anonieme
+       area alert op hetzelfde adres krijgt vandaag twee mails. Dat is zeldzaam
+       en eerlijk (twee verschillende dingen die hij aanzette), en samenvoegen
+       zou de afmeldlink dubbelzinnig maken. */
+    const addresses = [...perAddress.values()].slice(0, Math.max(0, MAX_USERS_PER_RUN - users.length));
+
     if (dryRun) {
       return json({
-        ok: true, dry_run: true, searches: eligible.length, users: users.length,
+        ok: true, dry_run: true, searches: eligible.length, alerts: alerts.length, users: users.length, addresses: addresses.length,
         preview: users.map(([id, u]) => ({
           user_id: id, email: u.email, total: u.total,
           groups: u.groups.map((g) => ({ label: g.label, listings: g.listings.map((l: any) => l.title), more: g.more })),
+        })),
+        preview_area_alerts: addresses.map((b) => ({
+          email: b.email, total: b.total, leads: b.leadIds.length,
+          groups: b.groups.map((g) => ({ label: g.label, listings: g.listings.map((l: any) => l.title), more: g.more })),
         })),
       });
     }
@@ -398,7 +482,40 @@ serve(async (req) => {
       }
     }
 
-    return json({ ok: errors.length === 0, searches: eligible.length, users: users.length, sent, errors },
+    // ---- 6. area alerts versturen ----
+    for (const b of addresses) {
+      const subject = b.total === 1
+        ? `A new listing in ${b.groups[0].label.replace(/^New in /, "")} — MyKunda`
+        : `${b.total} new listings in ${b.groups.map((g) => g.label.replace(/^New in /, "")).join(", ")} — MyKunda`;
+      const unsubscribeUrl = `${SUPABASE_URL.replace(/\/+$/, "")}/functions/v1/unsubscribe?t=${encodeURIComponent(b.token)}&k=area`;
+      try {
+        const res = await sendEmail({
+          to: b.email, subject, unsubscribeUrl,
+          html: savedSearchAlertEmail({
+            name: b.name, groups: b.groups, total: b.total,
+            footer: "You get this because you asked for area alerts on mykunda.com. One email at a time, never more than one a day, and only when something new is listed.",
+            unsubscribeUrl,
+            ctaLabel: "Browse all listings",
+            ctaUrl: `${SITE}/search.html`,
+          }),
+        });
+        sent++;
+        await db.from("leads")
+          .update({ last_alert_at: new Date().toISOString() })
+          .in("id", b.leadIds);
+        await logAlert(db, {
+          recipient: b.email, subject, id: res?.id ? String(res.id) : null,
+          payload: { area_alert: true, leads: b.leadIds.length, listings: b.total },
+          eventType: "area_alert",
+        });
+      } catch (e) {
+        const msg = String((e as Error)?.message ?? e);
+        errors.push(`${b.email}: ${msg}`);
+        console.error("notify-saved-search (area alert):", msg);
+      }
+    }
+
+    return json({ ok: errors.length === 0, searches: eligible.length, alerts: alerts.length, users: users.length, addresses: addresses.length, sent, errors },
                  errors.length ? 502 : 200);
   } catch (err) {
     console.error("notify-saved-search error:", err);

@@ -199,7 +199,7 @@ function emailWrap(o: { heading: string; body: string; cta: string; ctaUrl: stri
           <a href="${SITE}/legal-terms.html" style="color:${BRAND.muted2};text-decoration:underline">Terms</a> ·
           <a href="${SITE}/legal-cookies.html" style="color:${BRAND.muted2};text-decoration:underline">Cookies</a>
         </p>
-        <p style="font-size:11.5px;color:${BRAND.muted2};margin:14px 0 0">MyKunda · property platform for The Gambia · Kololi, Serrekunda</p>
+        <p style="font-size:11.5px;color:${BRAND.muted2};margin:14px 0 0">MyKunda · property platform for The Gambia · mykunda.com</p>
       </td></tr>
     </table>
   </td></tr>

@@ -203,6 +203,8 @@ serve(async (req) => {
       area: lead.area ?? undefined,
       message: lead.message ?? undefined,
       payload: lead.payload ?? {},
+      /* Voor de afmeldlink in de area-alert-bevestiging (unsubscribe?k=area). */
+      unsubscribe_token: lead.unsubscribe_token ?? null,
     };
     const label = TEAM_LABEL[lead.source] ?? "enquiry";
     const who = lead.name || lead.email || lead.phone || "a visitor";

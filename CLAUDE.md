@@ -2750,3 +2750,65 @@ de code staat, en wat er nog van hem moet komen:
   een kanaalkeuze op het dashboard; die bestaan niet meer. De stappen bij
   Meta (Business-verificatie, System User, token, Phone Number ID, webhook)
   kloppen wel.
+
+## Area alerts versturen — 03-09-2026
+
+Tot 03-09-2026 schreven de 52 gebiedspagina's `area_alert`-leads weg en zei
+de auto-reply "you will hear from us first", maar niets las die leads daarna
+nog (zie "Twee dingen die nog niets versturen" hierboven — dat punt is nu
+gesloten). Sinds 03-09-2026:
+
+- **Migratie `20260903_06_area_alert_send.sql`**: `leads.last_alert_at`,
+  `leads.alert_active` (default true) en `leads.unsubscribe_token` (uuid,
+  uniek). De classifier van de Claude-omgeving blokkeerde `apply_migration`
+  twee keer; Edwin draait hem zelf in de SQL-editor. Tot die tijd logt
+  `notify-saved-search` een fout over de kolommen en doet hij alleen de saved
+  searches — de area alerts mogen de saved searches nooit meetrekken.
+- **`notify-saved-search` stap 5/6**: dezelfde run om 08:00
+  (`run_saved_search_alerts()`), dezelfde aanbodlijst en dezelfde
+  waterlijn-logica. Match = `matches(card, {q: area})`, letterlijk wat de knop
+  "View listings in <Area>" (`search.html?q=<Area>`) op die pagina toont.
+  Groepering op `lower(email)`+`lower(area)`; oudste waterlijn van de groep
+  geldt; alle rijen van de groep worden na verzending gestempeld. Eén mail per
+  adres, ook bij meerdere gebieden. `dry_run` toont `preview_area_alerts`.
+  Logt in `email_events` als `area_alert`.
+- **`unsubscribe?k=area&t=<leads.unsubscribe_token>`**: zet `alert_active`
+  uit (en met `&on=1` weer aan) voor ALLE area_alert-leads van dat adres. De
+  auto-reply van notify-lead draagt die link; notify-lead geeft daarvoor
+  `lead.unsubscribe_token` mee aan `leadAutoReplyEmail`.
+- Er is bewust GEEN unieke index op (email, area): een tweede inschrijving
+  moet op de pagina "Subscribed" blijven zeggen, niet "That didn't save".
+- De nieuwsbriefknop op `guides.html` (area leeg, "Newsletter signup") is weg:
+  er bestaat geen nieuwsbrief. Het blok verwijst nu naar de gebiedspagina's.
+- Beloftetekst overal gelijk: "at most one email a day, only when something
+  new is listed". Schrijf nergens "a handful a month" of "hear from us first".
+
+## Teksten: geen kantoor, geen telefoon — 03-09-2026
+
+MyKunda is een eenmanszaak zonder kantoor, zonder personeel en zonder
+telefoonlijn; contact loopt uitsluitend via WhatsApp (+220 272 0268) en
+e-mail. Op 03-09-2026 zijn ~110 zinnen op de site en in de mails daarop
+gelijkgetrokken (verify, buy, index, contact, about, rent, safe, sell,
+legal-terms, 404, 13 gidsen, property-terugvalteksten, e-mailsjablonen).
+Regels die daaruit volgen:
+
+- Nooit "call", "office hours", "our office", "our team on the ground",
+  "partner agents arrange…", "we record walkthrough videos", "eyes on the
+  ground". Wél: "independent specialists engaged per check", "the seller or
+  their agent arranges viewings", "WhatsApp or email".
+- Geen verzonnen terugvalbeschrijving op `property.html`: bij een lege
+  omschrijving alleen de feiten en "the seller has not written a description
+  yet". De oude regel verzon een "verified title deed".
+- Juridische antwoorden op `buy.html`/`commercial.html` volgen `faq.html`
+  (geen nieuw freehold; assignment van een state lease met ministeriële
+  consent; stamp duty 2% koper; de "5% transfer tax" is de CGT van de
+  verkoper). Wijzigt de FAQ, wijzig die drie FAQ-antwoorden mee.
+- Fotolimiet is 10 voor elk plan (`list.html` heeft tien slots). "Up to 20
+  photos" mag nergens meer staan.
+- `title-verification.html` is een React-prototype met demogegevens; de
+  submit-toast zegt dat nu. Het bestand staat nog op de server (upload.bat
+  wist niets) — weghalen is een handmatige actie.
+- Open, niet gewijzigd: `check-propertyareas.mjs` meldt 39 fouten omdat
+  `property-areas.json` nog de twee ringen van 01-09 draagt terwijl de
+  gebiedspagina's er vier hebben — `node build-property-areas.mjs` +
+  `_werk/patch-property-areas.mjs` lost dat op (los van deze ronde).

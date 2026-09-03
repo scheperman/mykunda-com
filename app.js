@@ -3155,7 +3155,9 @@ async function subscribeAreaAlert(form, area){
     if(btn){ btn.textContent = 'Subscribed \u2713'; btn.style.opacity = '.75'; }
     if(input) input.value = '';
     note.style.color = 'rgba(255,255,255,.86)';
-    note.textContent = "Confirmed \u2014 we'll email " + email + '.';
+    note.textContent = area
+      ? 'Done \u2014 when a new listing in ' + area + ' goes live, we email ' + email + '. One email a day at most, only when there is something new.'
+      : 'Done \u2014 we email ' + email + ' when something new is listed.';
   }catch(e){
     if(btn){ btn.disabled = false; btn.textContent = label || 'Notify me'; }
     note.style.color = 'var(--amber-400)';

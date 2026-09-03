@@ -47,7 +47,7 @@ function whatsappAutoReply(name?: string): string {
   const fname = name ? String(name).trim().split(" ")[0] : "";
   return `Hello${fname ? " " + fname : ""}, thanks for messaging MyKunda.
 
-We have your message and a member of our team will reply here within 1–2 working days. Office hours are 9:00–18:00, Monday to Saturday.
+We have your message and will reply here within 1–2 working days.
 
 In the meantime you can browse every property and plot we list at mykunda.com.
 

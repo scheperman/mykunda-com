@@ -9,6 +9,10 @@
 //  Sinds 30-08-2026 hangt er een tweede soort aan dezelfde link:
 //    &k=messages  (of niets)  → profiles.notify_messages
 //    &k=plans                 → profiles.notify_plan_expiry
+//    &k=area  (03-09-2026)    → leads.alert_active, voor de anonieme area
+//                               alerts van de gebiedspagina's; het token is
+//                               dan leads.unsubscribe_token en de schakelaar
+//                               geldt voor ALLE gebieden op dat adres.
 //  Zonder k blijft alles precies als het was, dus oude links in verstuurde
 //  mails blijven werken. Twee soorten en niet één schakelaar, want "geen
 //  aanbiedingen meer" mag nooit stilletjes ook de berichten over je eigen
@@ -45,7 +49,10 @@ function esc(v: unknown): string {
    Er was tot 30-08-2026 geen weg terug via deze link — alleen inloggen op het
    dashboard. Voor iemand die zich uitschreef juist omdát hij niet kon inloggen,
    was dat een doodlopende weg. */
-function page(title: string, body: string, showForm: string | null = null, status = 200, backOn: string | null = null) {
+function page(title: string, body: string, showForm: string | null = null, status = 200, backOn: string | null = null, area = false) {
+  /* Een area alert hangt niet aan een account, dus de regel over My MyKunda
+     zou daar liegen. */
+  const isArea = area || /k=area/.test(String(showForm ?? "") + String(backOn ?? ""));
   const html = `<!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="UTF-8">
@@ -65,7 +72,7 @@ function page(title: string, body: string, showForm: string | null = null, statu
 ${body}
 ${showForm ? `<form method="POST" action="?t=${showForm}"><button type="submit">Turn off these emails</button></form>` : ""}
 ${backOn ? `<form method="POST" action="?t=${backOn}&amp;on=1"><button type="submit" style="background:#fff;color:#15463A;border:1px solid #15463A">Turn them back on</button></form>` : ""}
-<p class="muted" style="margin-top:18px">You can change this any time in <a class="link" href="${SITE}/dashboard.html">My MyKunda</a>.</p>
+${isArea ? "" : `<p class="muted" style="margin-top:18px">You can change this any time in <a class="link" href="${SITE}/dashboard.html">My MyKunda</a>.</p>`}
 </div></body></html>`;
   return new Response(html, {
     status,
@@ -129,6 +136,60 @@ serve(async (req) => {
   }
 
   const db = createClient(SUPABASE_URL, SERVICE_KEY);
+
+  /* ---- area alerts: geen profiel, maar een lead ---- */
+  if ((url.searchParams.get("k") ?? "").trim() === "area") {
+    try {
+      const { data: lead } = await db
+        .from("leads")
+        .select("id, name, email, area, alert_active")
+        .eq("unsubscribe_token", token)
+        .eq("source", "area_alert")
+        .maybeSingle();
+      if (!lead || !lead.email) {
+        return page("Link not valid", `<p>We could not match this link to an area alert. If you keep receiving these emails, reply to one of them and we will remove you by hand.</p>`, null, 404);
+      }
+      const name = lead.name ? esc(String(lead.name).trim().split(" ")[0]) : "";
+      const email = String(lead.email).trim().toLowerCase();
+      /* Alle gebieden van dit adres in één keer: wie op "turn off" klikt wil
+         geen mail meer, niet "geen mail meer over Kololi maar wel over Bakau". */
+      const { data: rows } = await db
+        .from("leads")
+        .select("id, area, alert_active")
+        .eq("source", "area_alert")
+        .ilike("email", email);
+      const all = rows ?? [];
+      const areas = [...new Set(all.map((r: any) => String(r.area ?? "").trim()).filter(Boolean))].map(esc);
+      const areaText = areas.length ? areas.join(", ") : "your areas";
+      const aanNu = all.some((r: any) => r.alert_active !== false);
+      const qk = "&amp;k=area";
+
+      if (req.method === "POST") {
+        const weerAan = url.searchParams.get("on") === "1";
+        const { error } = await db
+          .from("leads")
+          .update({ alert_active: weerAan })
+          .eq("source", "area_alert")
+          .ilike("email", email);
+        if (error) throw new Error(error.message);
+        if (weerAan) return page(name ? `Back on, ${name}` : "Back on",
+          `<p>You will get an email again when a new listing appears in ${areaText}.</p>`, null, 200, null, true);
+        return page(name ? `Done, ${name}` : "Done",
+          `<p>You will no longer get area alerts for ${areaText}. Nothing else changes.</p>
+           <p>Changed your mind? You can turn them back on below, or subscribe again on any area page.</p>`,
+          null, 200, token + qk);
+      }
+      if (!aanNu) {
+        return page("Already turned off", `<p>Area alerts for ${areaText} are already off for this address. Changed your mind?</p>`, null, 200, token + qk);
+      }
+      return page(name ? `${name}, turn off area alerts?` : "Turn off area alerts?",
+        `<p>You are about to stop receiving an email when a new listing appears in ${areaText}. That is the only email this address gets from MyKunda.</p>`,
+        token + qk);
+    } catch (err) {
+      console.error("unsubscribe (area) error:", err);
+      return page("Something went wrong", `<p>We could not process this just now. Please try again later, or reply to the email and we will remove you by hand.</p>`, null, 500);
+    }
+  }
 
   try {
     const { data: profile } = await db

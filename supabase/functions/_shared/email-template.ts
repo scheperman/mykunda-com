@@ -47,6 +47,9 @@ export const BRAND = {
   email: 'info@mykunda.com',
   waNumber: '+220 272 0268',
   waLink: 'https://wa.me/2202720268',
+  /* Basis van de edge-functie-URL's (afmeldlinks). Uit de omgeving, zodat een
+     testproject niet naar productie linkt; de terugval is het productieproject. */
+  functionsBase: ((typeof Deno !== 'undefined' && Deno.env.get('SUPABASE_URL')) || 'https://jejaerpqltqryqzjvbjp.supabase.co').replace(/\/+$/, '') + '/functions/v1',
   green: '#15463A',
   greenDeep: '#0E2E25',
   green50: '#EAF2ED',
@@ -299,8 +302,8 @@ export function leadNotificationEmail(lead: {
     extra = detailTable([
       ['Property type', escOpt(p.type)],
       ['Size', p.sqm ? `${esc(p.sqm)} m²` : undefined],
-      ['Estimated range', p.estimate_low && p.estimate_high
-        ? `$${nummer(p.estimate_low)} – $${nummer(p.estimate_high)}` : undefined],
+      ['Estimated range', (p.estimate_low ?? p.result?.low) && (p.estimate_high ?? p.result?.high)
+        ? `D ${nummer(p.estimate_low ?? p.result.low)} – D ${nummer(p.estimate_high ?? p.result.high)}` : undefined],
       ['Location input', escOpt(p.raw_location)],
     ], 'amber');
   }
@@ -381,7 +384,7 @@ export function leadOwnerEmail(o: {
    LEAD — auto-reply to the visitor
    ============================================================ */
 
-export function leadAutoReplyEmail(lead: { source: string; name?: string; payload?: any }): string {
+export function leadAutoReplyEmail(lead: { source: string; name?: string; payload?: any; area?: string; message?: string; unsubscribe_token?: string | null }): string {
   const fname = lead.name ? esc(String(lead.name).trim().split(' ')[0]) : '';
   let intro: string;
   let extraBlock = '';
@@ -392,14 +395,27 @@ export function leadAutoReplyEmail(lead: { source: string; name?: string; payloa
 
   switch (lead.source) {
     case 'valuation':
-      intro = 'Thanks for requesting a property valuation. A valuer we work with will review your property and confirm the exact figure with you within <strong>1–2 working days</strong>.';
-      preheader = 'Your valuation request is in — a valuer confirms the figure within 1–2 working days.';
-      if (lead.payload?.estimate_low && lead.payload?.estimate_high) {
-        extraBlock = `<div style="background:${BRAND.paper};border-radius:10px;padding:20px 22px;margin:18px 0 6px;border-left:4px solid ${BRAND.amber}">
-            <p style="font-size:12px;color:${BRAND.muted};font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin:0 0 6px">Automated estimate</p>
-            <p style="font-size:22px;font-weight:800;color:${BRAND.ink};margin:0">$${nummer(lead.payload.estimate_low)} – $${nummer(lead.payload.estimate_high)}</p>
-            <p style="font-size:13px;color:${BRAND.muted2};margin:6px 0 0">Based on recent sales data · subject to in-person review</p>
+      intro = 'Thanks for asking for the written estimate. The figures below are what our calculator produced from current asking prices in your area — a calculation, not a valuation. Someone at MyKunda reads every request and comes back to you within <strong>1–2 working days</strong> if anything looks off or you asked a question.';
+      preheader = 'Your written estimate — a calculation from asking prices, not a valuation.';
+      {
+        /* De tool op sell.html schrijft payload.result.{low,mid,high,land,build}
+           in DALASI; oudere inzendingen hadden estimate_low/high. Beide lezen,
+           en het bedrag in D tonen — niet in dollars. */
+        const rs = lead.payload?.result ?? {};
+        const lo = Number(lead.payload?.estimate_low ?? rs.low) || 0;
+        const hi = Number(lead.payload?.estimate_high ?? rs.high) || 0;
+        const mid = Number(rs.mid) || 0;
+        if (lo && hi) {
+          const parts: string[] = [];
+          if (rs.land) parts.push(`land D ${nummer(rs.land)}`);
+          if (rs.build) parts.push(`building D ${nummer(rs.build)}`);
+          extraBlock = `<div style="background:${BRAND.paper};border-radius:10px;padding:20px 22px;margin:18px 0 6px;border-left:4px solid ${BRAND.amber}">
+            <p style="font-size:12px;color:${BRAND.muted};font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin:0 0 6px">Your estimate${lead.area ? ' — ' + esc(String(lead.area)) : ''}</p>
+            <p style="font-size:22px;font-weight:800;color:${BRAND.ink};margin:0">D ${nummer(lo)} – D ${nummer(hi)}</p>
+            ${mid ? `<p style="font-size:13.5px;color:${BRAND.ink2};margin:6px 0 0">Middle of the range: D ${nummer(mid)}${parts.length ? ' (' + parts.join(', ') + ')' : ''}</p>` : ''}
+            <p style="font-size:13px;color:${BRAND.muted2};margin:6px 0 0">A calculation from asking prices of what is for sale in your area — not a valuation. For a bank, a court or the tax office you need a valuer who has stood on the ground.</p>
           </div>`;
+        }
       }
       ctaLabel = 'Explore similar properties';
       break;
@@ -415,16 +431,26 @@ export function leadAutoReplyEmail(lead: { source: string; name?: string; payloa
       }
       break;
     case 'listing_enquiry':
-      intro = 'Thanks for your enquiry about this property. The listing agent has been notified and will respond within <strong>1–2 working days</strong>.';
+      intro = 'Thanks for your enquiry about this property. The seller has been notified. Most reply within <strong>1–2 working days</strong>; you can follow up in Messages on mykunda.com.';
       preheader = 'Your enquiry is with the listing agent.';
       ctaLabel = 'View more properties';
       break;
-    case 'area_alert':
-      intro = 'Your area alert is set up. As soon as a property matching your criteria comes online, you will hear from us first — no more than a handful of emails a month.';
-      preheader = 'Your area alert is live — new matches land in your inbox first.';
-      ctaLabel = 'Browse current listings';
-      unsubscribeUrl = `${BRAND.site}/contact.html?unsubscribe=1`;
+    case 'area_alert': {
+      /* Sinds 03-09-2026 wordt deze alert echt verstuurd (notify-saved-search,
+         stap 5, dagelijks om 08:00) en is de afmeldlink een echte schakelaar.
+         De tekst zegt precies dat — niet meer "you will hear from us first". */
+      const area = lead.area ? esc(String(lead.area).trim()) : '';
+      intro = area
+        ? `Your area alert for <strong>${area}</strong> is set up. When a new listing in ${area} goes live on MyKunda, we email it to you — at most one email a day, and only when there is something new. There is nothing to confirm; this email is the confirmation.`
+        : 'Your alert is set up. When a new listing goes live on MyKunda, we email it to you — at most one email a day, and only when there is something new.';
+      preheader = area ? `Your ${area} alert is set up — one email a day at most, only when something new is listed.` : 'Your alert is set up.';
+      ctaLabel = area ? `See what is listed in ${area}` : 'Browse current listings';
+      if (area) ctaUrl = `${BRAND.site}/search.html?q=${encodeURIComponent(String(lead.area).trim())}`;
+      unsubscribeUrl = lead.unsubscribe_token
+        ? `${BRAND.functionsBase}/unsubscribe?t=${encodeURIComponent(String(lead.unsubscribe_token))}&k=area`
+        : `${BRAND.site}/contact.html?unsubscribe=1`;
       break;
+    }
     case 'viewing':
       intro = 'Your viewing request has been received. We are checking it with the owner and will come back with times that work — usually within 1–2 working days.';
       preheader = 'Viewing request received — we are lining up times with the owner.';
@@ -432,13 +458,19 @@ export function leadAutoReplyEmail(lead: { source: string; name?: string; payloa
       ctaUrl = `${BRAND.site}/dashboard.html`;
       break;
     case 'agent_message':
-      intro = 'Your message has been delivered to the agent. They will get back to you as soon as they can, usually within <strong>a few hours</strong>.';
+      intro = 'Your message has been delivered to the agent. Most reply within <strong>1–2 working days</strong>; you can follow the conversation in Messages on mykunda.com.';
       preheader = 'Your message is with the agent.';
       break;
     case 'consultation':
-      intro = 'Your free consultation is booked. An advisor will email you within 1–2 working days with a time slot and a calendar invite. The call takes 20 minutes and there is no obligation.';
-      preheader = 'Your free consultation is booked — we will confirm a time within 1–2 working days.';
+      intro = 'Your free advice chat is booked. We email you within <strong>1–2 working days</strong> to agree a time. The chat itself happens on WhatsApp — it is a written conversation, not a phone call — and there is no obligation.';
+      preheader = 'Your free WhatsApp advice chat is booked — we confirm a time within 1–2 working days.';
       ctaLabel = 'Browse properties while you wait';
+      break;
+    case 'agent_partner':
+      intro = 'Thanks for registering your interest in partnering with MyKunda. We read every registration ourselves and come back to you within <strong>1–2 working days</strong> — by email or WhatsApp — with what we would need to see before your listings can carry “Checked by MyKunda”.';
+      preheader = 'Your agency registration reached us — we reply within 1–2 working days.';
+      ctaLabel = 'How partnering works';
+      ctaUrl = `${BRAND.site}/agent.html`;
       break;
     case 'whatsapp_inbound':
       intro = 'Thanks for messaging us on WhatsApp. Our team has your message and will reply there.';
@@ -525,7 +557,7 @@ export function viewingConfirmationEmail(v: {
         ['Property', `${esc(v.title)}${v.area ? ' · ' + esc(v.area) : ''}`],
         ['Your preferred time', v.requested_slot ? esc(fmtSlot(v.requested_slot)) : 'Flexible'],
       ])}
-      ${callout(`<p style="font-size:14px;color:${BRAND.ink};margin:0"><strong>Before you travel to a viewing:</strong> never hand over money to see a property, and ask to see the title documents. Our team can check them for you.</p>`)}
+      ${callout(`<p style="font-size:14px;color:${BRAND.ink};margin:0"><strong>Before you travel to a viewing:</strong> never hand over money to see a property, and ask to see the title documents. You can order an independent ownership check on this property.</p>`)}
       <p style="margin:16px 0 0;font-size:14px;color:${BRAND.muted}">Need to change the time? Reply to this email or WhatsApp <a href="${BRAND.waLink}" style="color:${BRAND.green};font-weight:600">${BRAND.waNumber}</a>.</p>`,
     cta: 'View your dashboard',
     ctaUrl: `${BRAND.site}/dashboard.html`,
@@ -547,8 +579,8 @@ export function viewingConfirmedEmail(v: {
         ['Property', `${esc(v.title)}${v.area ? ' · ' + esc(v.area) : ''}`],
         ['When', v.slot ? esc(fmtSlot(v.slot)) : 'To be agreed'],
       ])}
-      ${callout(`<p style="font-size:14px;color:${BRAND.ink};margin:0"><strong>Before you travel:</strong> never hand over money to see a property, and ask to see the title documents. Our team can check them for you.</p>`)}
-      <p style="margin:16px 0 0;font-size:14px;color:${BRAND.muted}">Can't make it after all? Reply to this email or WhatsApp <a href="${BRAND.waLink}" style="color:${BRAND.green};font-weight:600">${BRAND.waNumber}</a> and we move it.</p>`,
+      ${callout(`<p style="font-size:14px;color:${BRAND.ink};margin:0"><strong>Before you travel:</strong> never hand over money to see a property, and ask to see the title documents. You can order an independent ownership check on this property.</p>`)}
+      <p style="margin:16px 0 0;font-size:14px;color:${BRAND.muted}">Can't make it after all? Propose a new time in the conversation on mykunda.com, or reply to this email.</p>`,
     cta: 'Message us on WhatsApp',
     ctaUrl: BRAND.waLink,
     footer: 'You received this because you are part of a viewing arranged on mykunda.com.',
@@ -912,7 +944,7 @@ export function whatsappAutoReply(name?: string): string {
   const fname = name ? String(name).trim().split(' ')[0] : '';
   return `Hello${fname ? ' ' + fname : ''}, thanks for messaging MyKunda.
 
-We have your message and a member of our team will reply here within 1–2 working days. Office hours are 9:00–18:00, Monday to Saturday.
+We have your message and will reply here within 1–2 working days.
 
 In the meantime you can browse every property and plot we list at mykunda.com.
 
@@ -997,7 +1029,7 @@ export function welcomeEmail(u: SignupInfo): string {
      mail probeert op te bouwen. Terugzetten zodra Managed echt bestaat. */
   const rowList = featureRow('⌂', 'List a property or plot — free', 'Put a listing together in a few minutes. A person checks it before it goes live, usually within 1–2 working days; add Boost or Verified later for more views and a title check.', `${S}/list.html`);
   const rowCheck = featureRow('✓', 'Check ownership before you pay', 'Ask us to review title documents so you know what you are buying.', `${S}/verify.html`);
-  const rowMarket = featureRow('%', 'Follow the market', 'Area guides, live prices and the MyKunda market index for the coast and upcountry.', `${S}/market.html`);
+  const rowMarket = featureRow('%', 'Follow the market', 'Area guides and the measured asking price per m² for every area, coast to Upper River.', `${S}/gambia-property-prices.html`);
   /* Alleen voor een kantoor, sinds 02-09-2026: het bedrijfsprofiel is het
      enige dat een professionele aanbieder heeft en de andere twee rollen niet.
      Bovenaan, want het is het eerste dat hij hoort in te vullen — zonder logo
@@ -1092,6 +1124,14 @@ export interface SavedSearchAlertInput {
   name?: string;
   groups: AlertGroup[];
   total: number;
+  /* Sinds 03-09-2026 ook gebruikt voor de anonieme area alerts: die hebben
+     geen dashboard en geen account, dus een eigen voetregel, een eigen
+     afmeldlink (unsubscribe?k=area) en een knop die niet naar My MyKunda
+     wijst. Weggelaten = de saved-search-variant van voor die datum. */
+  footer?: string;
+  unsubscribeUrl?: string;
+  ctaLabel?: string;
+  ctaUrl?: string;
 }
 
 /* Het achtervoegsel volgt de periode van de advertentie, net als
@@ -1151,19 +1191,19 @@ export function savedSearchAlertEmail(a: SavedSearchAlertInput): string {
       </table>
       ${g.more > 0
         ? `<p style="margin:10px 0 0;font-size:13.5px"><a href="${safeUrl(g.url)}" style="color:${BRAND.green};font-weight:700;text-decoration:none">See ${g.more} more like this →</a></p>`
-        : `<p style="margin:10px 0 0;font-size:13.5px"><a href="${safeUrl(g.url)}" style="color:${BRAND.green};font-weight:700;text-decoration:none">Open this search →</a></p>`}
+        : `<p style="margin:10px 0 0;font-size:13.5px"><a href="${safeUrl(g.url)}" style="color:${BRAND.green};font-weight:700;text-decoration:none">${a.ctaLabel ? 'See all listings here →' : 'Open this search →'}</a></p>`}
     </div>`).join('');
 
   return emailWrap({
     heading: fname ? `${fname}, ${what} for you` : `${what.charAt(0).toUpperCase()}${what.slice(1)} for you`,
     preheader: `New on MyKunda since we last wrote: ${what} matching your saved ${a.groups.length === 1 ? 'search' : 'searches'}.`,
-    body: `<p style="margin:0 0 4px">These came online since our last email and match what you asked us to watch.</p>
+    body: `<p style="margin:0 0 4px">${a.footer ? 'These came online since our last email, in the area you asked us to watch.' : 'These came online since our last email and match what you asked us to watch.'}</p>
       ${blocks}
       ${callout(`<p style="font-size:14px;color:${BRAND.ink};margin:0"><strong>Before you pay anything:</strong> ask for the title documents and have them checked. We never collect deposits or purchase money — that goes to your lawyer or notary. <a href="${S}/verify.html" style="color:${BRAND.green};font-weight:600">How an ownership check works</a></p>`, 'green')}`,
-    cta: 'Open My MyKunda',
-    ctaUrl: `${S}/dashboard.html#saved`,
-    footer: 'You get this because you saved a search on mykunda.com and asked for alerts. One email at a time, never more than one a day.',
-    unsubscribeUrl: `${S}/dashboard.html?alerts=off`,
+    cta: a.ctaLabel ?? 'Open My MyKunda',
+    ctaUrl: a.ctaUrl ?? `${S}/dashboard.html#saved`,
+    footer: a.footer ?? 'You get this because you saved a search on mykunda.com and asked for alerts. One email at a time, never more than one a day.',
+    unsubscribeUrl: a.unsubscribeUrl ?? `${S}/dashboard.html?alerts=off`,
   });
 }
 

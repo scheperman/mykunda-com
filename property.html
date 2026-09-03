@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" id="mkRobots" content="noindex, follow, noai, noimageai"><!--mk:03ygry7--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" id="mkRobots" content="noindex, follow, noai, noimageai"><!--mk:0dpv3ps--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -32,7 +32,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preconnect" href="https://api.mapbox.com" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=34102009972104">
+<link rel="stylesheet" href="styles.min.css?v=59124216617544">
 <style>
 .crumb{padding:18px 0 6px;font-size:14px;color:var(--muted);display:flex;align-items:center;gap:8px}
 .crumb a{font-weight:600}.crumb a:hover{color:var(--green-700)}
@@ -301,7 +301,7 @@
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=34102009972104"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=59124216617544"><!--/mk-css-->
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -515,7 +515,7 @@
           <image-slot id="ph-agent-awa" shape="circle" placeholder="Photo" style="width:58px;height:58px;flex:none"></image-slot>
           <div>
             <div class="n" id="agentName">MyKunda</div>
-            <div class="ag" id="agentRole">Viewings &amp; enquiries desk · Kombo</div>
+            <div class="ag" id="agentRole">Private seller · enquiries and viewings</div>
           </div>
         </a>
         <div id="emergencyLine"></div>
@@ -617,15 +617,15 @@
     </div>
   </footer><!--/mk-ftr--></div>
 
-<script src="app.min.js?v=34102009972104"></script>
-<script src="image-slot.js?v=34102009972104" defer></script>
+<script src="app.min.js?v=59124216617544"></script>
+<script src="image-slot.js?v=59124216617544" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel instead of blocking the page, and
    Leaflet (~145 KB) is only fetched when the visitor opens the Map tab. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=34102009972104'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=59124216617544'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -892,10 +892,14 @@ if(P.desc || P.description){
     USE_LABEL[P.current_use]?(USE_LABEL[P.current_use]+'.'):'',
     'Ask the lister for the terms, the service charge and the date it comes free.'].filter(Boolean).join(' ');
 } else if(P.cat==='land'){
-  dDesc.textContent = `A rare ${(P.plot||0).toLocaleString()} m² building plot in ${P.area.replace('· ',', ')}, just a short walk from the Atlantic. The land has a verified title deed, road access and is ready to build — ideal for a private villa, a small development or a holiday-let investment. A partner agency can manage the entire build for you remotely, from architect to handover, while you follow progress from abroad.`;
+  /* Geen verkooppraatje meer als de verkoper geen omschrijving invulde: tot
+     03-09-2026 verzon deze regel een "verified title deed", "a short walk from
+     the Atlantic" en een partneragency die de bouw zou begeleiden. Alleen wat
+     de velden zeggen, plus wat de lezer moet doen. */
+  dDesc.textContent = `Building plot of ${(P.plot||0).toLocaleString()} m² in ${P.area.replace('· ',', ')}. The seller has not written a description yet. Title type, road access and services are as stated by the seller in the facts above — ask the seller for the documents before you commit, or order an independent ownership check.`;
 } else {
-  const sqmTxt=P.sqm?P.sqm+' m²':'spacious'; const bedsTxt=P.beds?(P.beds+' generous bedroom'+(P.beds>1?'s':'')):'generous living space'; const bathsTxt=P.baths?(P.beds+' bathroom'+(P.baths>1?'s':'')):'modern facilities';
-  dDesc.textContent = `This beautifully presented ${pTypeLabel(P).toLowerCase()}${P.sqm?' of '+P.sqm+' m²':''} sits in one of ${P.area.replace('· ',', ')}'s most sought-after coastal pockets. Bright, open living spaces flow to a shaded terrace, with quality finishes throughout and ${P.tag.toLowerCase()} among its highlights. ${bedsTxt} and ${bathsTxt} make it equally suited to family life, a coastal second home, or a strong holiday-rental investment — minutes from the beach, restaurants and the Senegambia strip.`;
+  const bedsTxt=P.beds?(P.beds+' bedroom'+(P.beds>1?'s':'')):'the number of bedrooms as stated'; const bathsTxt=P.baths?(P.baths+' bathroom'+(P.baths>1?'s':'')):'bathrooms as stated';
+  dDesc.textContent = `${pTypeLabel(P)}${P.sqm?' of '+P.sqm+' m²':''} in ${P.area.replace('· ',', ')}, with ${bedsTxt} and ${bathsTxt}. The seller has not written a description yet; the facts above are as stated by the seller. Ask the seller any question through Messages before you arrange a viewing.`;
 }
 
 // features — build from real listing data, fall back to defaults
@@ -1085,7 +1089,7 @@ if(FEATS.length){
         ' looks after this property. Included: '+esc(P.included_services.join(', '))+'.'+
         (P.management_terms?'<br>'+esc(P.management_terms):'')+
         (P.tenant_criteria?'<br><b>Tenant criteria:</b> '+esc(P.tenant_criteria):'')+
-        (P.emergency_phone?'<br><b>24/7 emergency line:</b> '+esc(P.emergency_phone):'')+'</div>';
+        (P.emergency_phone?'<br><b>Emergency number (given by the manager):</b> '+esc(P.emergency_phone):'')+'</div>';
     }
     show('rentBlock', true);
   })();
@@ -1342,7 +1346,7 @@ if(FEATS.length){
     if(managed && P.emergency_phone){
       document.getElementById('emergencyLine').innerHTML =
         '<div style="margin-top:12px;padding:10px 13px;background:var(--paper-2);border-radius:var(--r-sm);font-size:13px;color:var(--ink-2);line-height:1.5">'+
-        '<b>24/7 emergency line</b><br><a href="tel:'+esc(String(P.emergency_phone).replace(/\s+/g,''))+'">'+esc(P.emergency_phone)+'</a></div>';
+        '<b>Emergency number (given by the manager)</b><br><a href="tel:'+esc(String(P.emergency_phone).replace(/\s+/g,''))+'">'+esc(P.emergency_phone)+'</a></div>';
     }
   })();
 

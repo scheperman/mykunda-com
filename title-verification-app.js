@@ -498,7 +498,7 @@ function SellerView({
     };
     setVerifications(prev => [newVerif, ...prev]);
     setSubView('list');
-    showToast("Verification submitted \u2014 we'll review your documents within 1–2 working days");
+    showToast("Demo only \u2014 nothing is sent from this page. Order a real check at mykunda.com/verify.html");
   }
   if (subView === 'submit' && selectedListing) {
     return React.createElement(SellerSubmitView, {
