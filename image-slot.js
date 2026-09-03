@@ -533,7 +533,11 @@
       root.innerHTML =
         '<style>' + stylesheet + '</style>' +
         '<div class="frame" part="frame">' +
-        '  <img part="image" alt="" draggable="false" style="display:none">' +
+        // loading="lazy" sinds 03-09-2026: een zoekpagina met twintig kaarten
+        // haalde alle twintig foto's tegelijk op, ook die ver onder de vouw —
+        // op 4G is dat de helft van de laadtijd. Een slot met het attribuut
+        // `eager` (de eerste galerijfoto, de hero) laadt wel meteen.
+        '  <img part="image" alt="" draggable="false" decoding="async" style="display:none">' +
         '  <div class="empty" part="empty">' + icon +
         '    <div class="cap"></div>' +
         '    <div class="sub">or <u>browse files</u></div></div>' +
@@ -562,6 +566,7 @@
       this._frame = root.querySelector('.frame');
       this._ring = root.querySelector('.ring');
       this._img = root.querySelector('.frame img');
+      if (!this.hasAttribute('eager')) this._img.loading = 'lazy';
       this._empty = root.querySelector('.empty');
       this._cap = root.querySelector('.cap');
       this._sub = root.querySelector('.sub');
@@ -957,6 +962,25 @@
         this._setError('Could not read that image.');
         console.warn('<image-slot> ingest failed:', err);
       }
+    }
+
+    // Public: leeg dit vak. Toegevoegd 03-09-2026 voor de fotostap van
+    // list.html — op een telefoon is er geen drag-and-drop en de Replace/Edit-
+    // knoppen bestaan alleen in de ontwerpomgeving, dus een neergezette foto
+    // was daar niet meer weg te halen. Een lopende encode wordt afgebroken
+    // (gen-bump), de opgeslagen waarde en het src-attribuut gaan weg, en de
+    // gewone lege staat wordt getekend.
+    clear() {
+      this._gen++;
+      this._swapGen = 0;
+      this._loadPending = false;
+      this._exitReframe(false);
+      this.removeAttribute('data-swapping');
+      this._setError(null);
+      setSlot(this.id || '', null);
+      this._local = null;
+      if (this.hasAttribute('src')) this.removeAttribute('src');
+      else this._render();
     }
 
     _setError(msg) {

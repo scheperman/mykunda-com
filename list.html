@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1mcwo1y--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:096lrpq--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preconnect" href="https://api.mapbox.com" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=117189065458621">
+<link rel="stylesheet" href="styles.min.css?v=202866185935742">
 <style>
 body{background:var(--paper-2);min-height:100vh}
 
@@ -170,6 +170,29 @@ body{background:var(--paper-2);min-height:100vh}
 .photo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:620px}
 .photo-cell{aspect-ratio:4/3;border-radius:var(--r-md);overflow:hidden;border:1.5px dashed var(--line);position:relative;background:var(--white)}
 .photo-cell.cover{border-style:solid;border-color:var(--green-200)}
+/* Knoppen op een gevuld vak (03-09-2026). Op een telefoon is er geen
+   drag-and-drop en de eigen Replace/Edit-knoppen van <image-slot> bestaan
+   alleen in de ontwerpomgeving — een neergezette foto was daar dus niet meer
+   te vervangen of weg te halen. De klasse .filled zet de fotowachter. */
+.photo-cell .pc-acts{display:none;position:absolute;left:6px;right:6px;bottom:6px;gap:6px;z-index:3;justify-content:flex-end}
+.photo-cell.filled .pc-acts{display:flex}
+.photo-cell .pc-acts button{appearance:none;border:0;border-radius:6px;padding:6px 9px;cursor:pointer;background:rgba(14,46,37,.72);color:#fff;font:600 11.5px/1 var(--sans);backdrop-filter:blur(4px)}
+.photo-cell .pc-acts button:hover{background:rgba(14,46,37,.9)}
+.photo-cell .pc-acts button.danger{background:rgba(160,40,30,.8)}
+/* Uploadstand per vak: een dun balkje bovenin. */
+.photo-cell .pc-state{position:absolute;left:0;right:0;top:0;height:4px;z-index:3;display:none}
+.photo-cell.uploading .pc-state{display:block;background:linear-gradient(90deg,var(--green-200),var(--green-600),var(--green-200));background-size:200% 100%;animation:pcbar 1.2s linear infinite}
+.photo-cell.failed .pc-state{display:block;background:#C2533A}
+.photo-cell.saved .pc-state{display:block;background:var(--green-600)}
+@keyframes pcbar{from{background-position:0 0}to{background-position:200% 0}}
+.photo-cell .cover-tag{z-index:3}
+#photoSync{font-size:13px;margin-top:8px;max-width:620px;min-height:18px}
+#photoSync.bad{color:#C2533A}
+#photoSync.ok{color:var(--green-700)}
+#photoSync button{appearance:none;border:1px solid var(--line);background:var(--white);border-radius:6px;padding:4px 9px;font:600 12px var(--sans);cursor:pointer;margin-left:6px}
+.video-ok{font-size:13px;color:var(--green-700);margin-top:8px;display:flex;align-items:center;gap:10px}
+.video-ok img{width:96px;aspect-ratio:16/9;object-fit:cover;border-radius:6px;background:var(--paper-2)}
+.video-bad{font-size:13px;color:#C2533A;margin-top:8px}
 .cover-tag{position:absolute;top:8px;left:8px;z-index:3;background:var(--green-700);color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:var(--r-pill);text-transform:uppercase;letter-spacing:.03em}
 
 /* doc upload */
@@ -267,7 +290,7 @@ body{background:var(--paper-2);min-height:100vh}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=117189065458621"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=202866185935742"><!--/mk-css-->
 </head>
 <body>
 <div class="wizbar">
@@ -618,13 +641,16 @@ body{background:var(--paper-2);min-height:100vh}
     <section class="step" data-key="photos">
       <div class="eyebrow">Photos</div>
       <h1 id="photoH1">Show off your property</h1>
-      <p class="desc" id="photoDesc">Drag photos onto each slot. The first one is your cover — make it count. More photos = more enquiries.</p>
+      <p class="desc" id="photoDesc">Tap a slot to add a photo (or drag one onto it on a computer). The first one is your cover — make it count. Each photo is saved as soon as you add it.</p>
       <div class="photo-grid" id="photoGrid"></div>
       <div id="photoReq" class="hint" style="margin-top:12px;max-width:620px">Four photos is the minimum, and one of them should show the property from the outside. That one photo is what tells a buyer the listing is real. <b id="photoReqN"></b></div>
+      <div id="photoSync" aria-live="polite"></div>
+      <input type="file" id="pcReplaceInput" accept="image/png,image/jpeg,image/webp,image/avif" style="display:none">
       <div style="margin-top:22px;max-width:620px">
-        <label style="display:block;font-size:13.5px;font-weight:700;color:var(--ink-2);margin-bottom:7px">🎥 Video link <span style="font-weight:500;color:var(--muted-2)">— optional</span></label>
-        <input type="text" id="videoIn" placeholder="Paste a YouTube or Vimeo link" style="width:100%;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:12px 14px;font-size:15px;font-family:var(--sans)">
-        <div class="hint">A walkthrough video can double your enquiries. Record with your phone and upload to YouTube, then paste the link here.</div>
+        <label for="videoIn" style="display:block;font-size:13.5px;font-weight:700;color:var(--ink-2);margin-bottom:7px">🎥 Video tour <span style="font-weight:500;color:var(--muted-2)">— optional</span></label>
+        <input type="url" id="videoIn" inputmode="url" autocomplete="off" placeholder="Paste a YouTube or Vimeo link" style="width:100%;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:12px 14px;font-size:15px;font-family:var(--sans)">
+        <div id="videoState"></div>
+        <div class="hint">Walk through the property with your phone camera (one to two minutes is plenty), upload it to YouTube as <b>Unlisted</b> so only people with the link can see it, then paste that link here. The video streams from YouTube, so it plays smoothly on 4G and costs the viewer nothing to load until they press play.</div>
       </div>
     </section>
 
@@ -877,18 +903,18 @@ body{background:var(--paper-2);min-height:100vh}
   </aside>
 </div>
 
-<script src="valuation-areas.js?v=117189065458621"></script>
-<script src="valuation.js?v=117189065458621"></script>
-<script src="app.min.js?v=117189065458621"></script>
-<script src="gambia-places.js?v=117189065458621" defer></script>
-<script src="image-slot.js?v=117189065458621" defer></script>
+<script src="valuation-areas.js?v=202866185935742"></script>
+<script src="valuation.js?v=202866185935742"></script>
+<script src="app.min.js?v=202866185935742"></script>
+<script src="gambia-places.js?v=202866185935742" defer></script>
+<script src="image-slot.js?v=202866185935742" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel, Leaflet (~145 KB) only when the
    seller reaches the location step. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=117189065458621'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=202866185935742'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -912,6 +938,23 @@ saveNote.innerHTML = ICON.check + ' Kept on this device';
    price 0 that nobody ever finishes. */
 let draftId = qs('draft') || null;  // resume a draft via ?draft=UUID
 let _saving = false;
+/* Eén plek die een concept AANMAAKT. Tot 03-09-2026 deed autoSaveDraft() dat
+   pas als er een gebied én een prijs stond, dus na de fotostap. Nu maakt ook
+   de eerste foto een concept aan (syncMedia hieronder); zonder deze sluis
+   zouden een stapwissel en een foto-upload allebei een rij kunnen inserten. */
+let _draftCreating = null;
+async function ensureDraft(){
+  if(draftId) return draftId;
+  if(_draftCreating) return _draftCreating;
+  _draftCreating = (async function(){
+    try{ await window.__sbReady; }catch(e){}
+    if(typeof backendReady!=='function' || !backendReady()) return null;
+    const saved = await saveDraft(listingFields(), null);
+    if(saved && saved.id) draftId = saved.id;
+    return draftId;
+  })().finally(function(){ _draftCreating = null; });
+  return _draftCreating;
+}
 const saveIndicator = document.getElementById('saveNote');
 const LOCAL_DRAFT = 'mykunda_wizard_draft';
 const SPIN_IC = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10" stroke-dasharray="31.4" stroke-dashoffset="10"><animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="0.8s" repeatCount="indefinite"/></circle></svg>';
@@ -1006,7 +1049,10 @@ function listingFields(){
     custom_features: (S.customFeats||'').trim()||null,
     year_built: parseInt(S.yearBuilt)||null,
     available_from: S.availDate||null,
-    video_url: (S.videoLink||'').trim()||null,
+    /* Genormaliseerd (youtu.be, /shorts/, /embed/ → één vorm) als de link
+       herkend is; anders het ruwe veld, zodat een aanbieder zijn tekst niet
+       kwijtraakt terwijl het scherm zegt dat hij niet klopt. */
+    video_url: (function(){ const raw=(S.videoLink||'').trim(); if(!raw) return null; const v=(typeof mkVideoInfo==='function')?mkVideoInfo(raw):null; return v ? v.watch : raw; })(),
     doc_type: S.docType||null,
     contact_name: nm&&nm.value.trim()||null,
     contact_phone: ph&&ph.value.trim()||null,
@@ -1100,8 +1146,12 @@ async function autoSaveDraft(){
   _saving = true;
   setSaveNote('saving');
   try{
-    const saved = await saveDraft(listingFields(), draftId);
-    if(saved && saved.id) draftId = saved.id;
+    if(!draftId){
+      await ensureDraft();
+      if(!draftId) throw new Error('draft not created');
+    } else {
+      await saveDraft(listingFields(), draftId);
+    }
     setSaveNote('saved');
   }catch(e){
     /* Unknown column: drop the newer keys and save the rest right away. */
@@ -1177,7 +1227,29 @@ async function loadDraft(id){
     S.bills = Array.isArray(data.bills_included)?data.bills_included.slice():[];
     S.dealPicked=true;
     applyStateToUI();
+    await loadDraftMedia(id);
   }catch(e){ console.warn('loadDraft:', e); }
+}
+
+/* De foto's die al bij deze advertentie horen, terug in de vakken. Tot
+   03-09-2026 gebeurde dit niet: wie op Edit drukte zag tien lege vakken, moest
+   opnieuw minstens vier foto's kiezen, en de oude bleven in de opslag en op de
+   objectpagina staan — dubbel. Elke rij wordt in MEDIA.bySlot vastgelegd zodat
+   syncMedia() weet wat er al staat en niets opnieuw uploadt. */
+async function loadDraftMedia(id){
+  if(typeof fetchListingMedia!=='function') return;
+  let rows=[];
+  try{ rows = await fetchListingMedia(id); }catch(e){ console.warn('loadDraftMedia:', e && e.message); return; }
+  let slot=0;
+  for(const m of rows){
+    while(slot<10){ const el=document.querySelector('#list-photo-'+slot); if(el && !slotIsFilled(el)) break; slot++; }
+    if(slot>=10) break;
+    const el=document.querySelector('#list-photo-'+slot);
+    el.setAttribute('src', m.url);
+    MEDIA.bySlot[slot] = { key:m.url, id:m.id, storage_path:m.storage_path, sort:m.sort };
+    slot++;
+  }
+  updatePhotoReq();
 }
 
 /* Put S on screen. Shared by draft resume (database or device) and URL prefill. */
@@ -1227,6 +1299,7 @@ function applyStateToUI(){
   applyGambiaUI();
   setSel('highlightsIn',S.highlights); setSel('customFeatsIn',S.customFeats); setSel('yearIn',S.yearBuilt);
   setSel('availIn',S.availDate); setSel('videoIn',S.videoLink); setSel('docType',S.docType);
+  paintVideoState();
   setSel('nameIn',S.contactName); setSel('phoneIn',S.contactPhone); setSel('emailIn',S.contactEmail);
   if(window.__trackReady){
     if(S.feeVal) feeValIn.value = S.feeType==='fixed' ? parseInt(S.feeVal).toLocaleString('en-US') : S.feeVal;
@@ -1424,7 +1497,30 @@ if(payChecks) payChecks.innerHTML = PAY_TERMS.map(([k,l])=>`<label class="chk-op
    this 4-column grid is ~145px — it would archive every listing photo at
    ~290px. These bytes are what the property page and the search cards show,
    so pin the stored longest side at 1600px instead. */
-photoGrid.innerHTML = Array.from({length:10}).map((_,i)=>`<div class="photo-cell ${i===0?'cover':''}" data-i="${i}">${i===0?'<span class="cover-tag">Cover</span>':''}<image-slot id="list-photo-${i}" data-store-dim="1600" placeholder="${i===0?'Cover photo':'Photo '+(i+1)}" radius="0" style="position:absolute;inset:0;width:100%;height:100%;display:block"></image-slot></div>`).join('');
+photoGrid.innerHTML = Array.from({length:10}).map((_,i)=>`<div class="photo-cell ${i===0?'cover':''}" data-i="${i}">${i===0?'<span class="cover-tag">Cover</span>':''}<image-slot id="list-photo-${i}" data-store-dim="1600" placeholder="${i===0?'Cover photo':'Photo '+(i+1)}" radius="0" style="position:absolute;inset:0;width:100%;height:100%;display:block"></image-slot><span class="pc-state"></span><div class="pc-acts"><button type="button" data-pc="replace" data-i="${i}" title="Choose another photo for this spot">Replace</button><button type="button" class="danger" data-pc="remove" data-i="${i}" title="Remove this photo">Remove</button></div></div>`).join('');
+
+/* Vervangen en weghalen, ook zonder muis. Replace opent de bestandskiezer en
+   geeft het bestand aan het vak zoals een drop dat zou doen; Remove leegt het
+   vak, waarna syncMedia() de rij en het bestand in de opslag opruimt. */
+let _pcReplaceTarget=-1;
+photoGrid.addEventListener('click',e=>{
+  const b=e.target.closest('[data-pc]'); if(!b) return;
+  e.preventDefault(); e.stopPropagation();
+  const i=parseInt(b.dataset.i,10);
+  const slot=document.querySelector('#list-photo-'+i); if(!slot) return;
+  if(b.dataset.pc==='remove'){
+    if(typeof slot.clear==='function') slot.clear();
+    if(i===snapshotSlot) snapshotSlot=-1;
+    updatePhotoReq(); return;
+  }
+  _pcReplaceTarget=i;
+  const inp=document.getElementById('pcReplaceInput'); if(inp) inp.click();
+});
+document.getElementById('pcReplaceInput').addEventListener('change',e=>{
+  const f=e.target.files&&e.target.files[0]; e.target.value='';
+  const slot=document.querySelector('#list-photo-'+_pcReplaceTarget); _pcReplaceTarget=-1;
+  if(f && slot && typeof slot._ingest==='function') slot._ingest(f);
+});
 
 // plan picker
 const PLANS=[
@@ -1733,10 +1829,22 @@ function readRationals(tiff,off,count,r32){
   }
   return vals;
 }
+/* Videolink: herkennen, normaliseren en tonen wat er herkend is. De kolom
+   video_url bestond al en werd tot 03-09-2026 nergens getoond; nu leest
+   property.html hem, dus een link die geen YouTube of Vimeo is hoort hier al
+   tegengehouden te worden. mkVideoInfo staat in app.js. */
+function paintVideoState(){
+  const el=document.getElementById('videoState'); if(!el) return;
+  const raw=(S.videoLink||'').trim();
+  if(!raw){ el.innerHTML=''; return; }
+  const v=(typeof mkVideoInfo==='function') ? mkVideoInfo(raw) : null;
+  if(!v){ el.innerHTML='<div class="video-bad">That does not look like a YouTube or Vimeo link. Copy the link from the Share button in the YouTube or Vimeo app.</div>'; return; }
+  el.innerHTML='<div class="video-ok">'+(v.thumb?'<img src="'+v.thumb+'" alt="" loading="lazy">':'')+'<span>'+ICON.check+' '+(v.provider==='youtube'?'YouTube':'Vimeo')+' video recognised — it will show on your listing page.</span></div>';
+}
 ['bedsIn','bathsIn','sqmIn','plotIn','landSqmIn','descIn','highlightsIn','customFeatsIn','customTitle','videoIn','unitsIn','parkingIn'].forEach(id=>{
   const el=document.getElementById(id); if(!el) return;
   const key={bedsIn:'beds',bathsIn:'baths',sqmIn:'sqm',plotIn:'plot',landSqmIn:'landSqm',descIn:'desc',highlightsIn:'highlights',customFeatsIn:'customFeats',customTitle:'customTitle',videoIn:'videoLink',unitsIn:'units',parkingIn:'parking'}[id];
-  el.addEventListener('input',e=>{ S[key]=e.target.value; updateSummary(); });
+  el.addEventListener('input',e=>{ S[key]=e.target.value; updateSummary(); if(key==='videoLink') paintVideoState(); });
 });
 /* Commerciële keuzelijsten: opleverniveau en huidig gebruik. */
 [['fitOutIn','fitOut'],['curUseIn','curUse']].forEach(([id,key])=>{
@@ -1835,8 +1943,8 @@ function applyDealUI(){
     : (rent?'Describe the home':'Describe your property');
   document.getElementById('photoH1').textContent = rent?'Show renters the home':'Show off your property';
   document.getElementById('photoDesc').textContent = rent
-    ? 'Drag photos onto each slot. Renters skip listings with no kitchen and no bathroom photo \u2014 add those two first.'
-    : 'Drag photos onto each slot. The first one is your cover \u2014 make it count. More photos = more enquiries.';
+    ? 'Tap a slot to add a photo (or drag one onto it on a computer). Renters skip listings with no kitchen and no bathroom photo \u2014 add those two first.'
+    : 'Tap a slot to add a photo (or drag one onto it on a computer). The first one is your cover \u2014 make it count. Each photo is saved as soon as you add it.';
   document.getElementById('contactH1').textContent = rent?'Where should renters reach you?':'Where should buyers reach you?';
   document.getElementById('nameLab').textContent = biz?'Contact person':'Your name';
   document.getElementById('previewDesc').textContent = rent
@@ -2586,7 +2694,7 @@ function renderPreview(){
       ${S.desc?`<div style="margin-top:16px"><b style="font-size:14px;color:var(--ink)">Description</b><p style="color:var(--muted);font-size:14.5px;line-height:1.6;margin-top:6px">${S.desc}</p></div>`:''}
       ${featsAll.length?`<div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:8px">${featsAll.map(f=>'<span style="padding:6px 14px;border-radius:99px;font-size:13px;font-weight:600;background:var(--paper);color:var(--ink-2)">'+f+'</span>').join('')}</div>`:''}
       ${nearbyHtml?`<div style="margin-top:18px"><b style="font-size:14px;color:var(--ink)">📍 Nearby</b><div style="margin-top:8px">${nearbyHtml}</div></div>`:''}
-      ${S.videoLink?`<div style="margin-top:16px"><b style="font-size:14px;color:var(--ink)">🎥 Video</b><p style="color:var(--green-700);font-size:14px;margin-top:4px">${S.videoLink}</p></div>`:''}
+      ${S.videoLink?`<div style="margin-top:16px"><b style="font-size:14px;color:var(--ink)">🎥 Video tour</b><p style="color:var(--green-700);font-size:14px;margin-top:4px">${(typeof mkVideoInfo==='function'&&mkVideoInfo(S.videoLink))?((mkVideoInfo(S.videoLink).provider==='youtube'?'YouTube':'Vimeo')+' video — shown on the listing page'):'Link not recognised — only YouTube and Vimeo links are shown'}</p></div>`:''}
     </div>`;
 }
 
@@ -3289,14 +3397,143 @@ function filledPhotos(){
   return n;
 }
 function updatePhotoReq(){
+  for(let i=0;i<10;i++){
+    const cell=photoGrid.querySelector('.photo-cell[data-i="'+i+'"]');
+    if(cell) cell.classList.toggle('filled', !!slotSrc(i));
+  }
   const el=document.getElementById('photoReqN'); if(!el) return;
   const n=filledPhotos();
   el.textContent=n+' of '+MIN_PHOTOS+' added';
   el.style.color = n>=MIN_PHOTOS ? 'var(--green-700)' : 'var(--muted-2)';
+  paintMediaStatus();
 }
 let _photoWatch=null;
 function startPhotoWatch(){ if(_photoWatch) return; updatePhotoReq(); _photoWatch=setInterval(updatePhotoReq,700); }
 function stopPhotoWatch(){ if(_photoWatch){ clearInterval(_photoWatch); _photoWatch=null; } }
+
+/* ---- Foto's gaan meteen omhoog (03-09-2026) ---------------------------------
+   Tot vandaag bleef elke foto als data-URL in het geheugen van de pagina staan
+   en ging alles pas bij "Publish listing" in één keer naar de opslag. Op een
+   telefoon op 4G is dat twee keer mis: een weggeveegd tabblad of een verloren
+   verbinding halverwege gooide alle foto's weg terwijl de rest van het concept
+   wél bewaard was, en bij het publiceren stond de aanbieder te wachten op tien
+   uploads achter elkaar — en een mislukte upload verdween in console.warn.
+
+   Nu kijkt syncMedia() elke anderhalve seconde naar de tien vakken:
+   - een nieuwe data-URL zonder rij → uploaden (eerst een concept aanmaken als
+     dat er nog niet is), met een balkje in het vak en "Saving photo…" eronder;
+   - een leeg vak met een rij → rij en bestand weg;
+   - een vervangen foto → nieuwe uploaden, daarna de oude weg.
+   Mislukt een upload, dan probeert hij het drie keer met een wachttijd en
+   staat er daarna een knop "Try again". Bij het publiceren wacht publish()
+   op wat nog loopt (mediaFlush) en zet de sort-kolom op de vakvolgorde. */
+const MEDIA = { bySlot:{}, busy:{}, failed:{}, tries:{}, timer:null, running:false, paused:false };
+function slotSrc(i){
+  const c=document.querySelector('#list-photo-'+i);
+  const im=c&&c.shadowRoot&&c.shadowRoot.querySelector('img');
+  const src=(im&&im.src)||'';
+  return src.startsWith('data:image/svg') ? '' : src;
+}
+function mediaBackendOk(){ return typeof backendReady==='function' && backendReady() && typeof uploadFile==='function'; }
+function setCellState(i, st){
+  const cell=photoGrid.querySelector('.photo-cell[data-i="'+i+'"]'); if(!cell) return;
+  cell.classList.toggle('uploading', st==='uploading');
+  cell.classList.toggle('failed', st==='failed');
+  cell.classList.toggle('saved', st==='saved');
+  if(st==='saved') setTimeout(()=>cell.classList.remove('saved'), 1800);
+}
+function paintMediaStatus(){
+  const el=document.getElementById('photoSync'); if(!el) return;
+  const busy=Object.keys(MEDIA.busy).filter(k=>MEDIA.busy[k]).length;
+  const failed=Object.keys(MEDIA.failed).filter(k=>MEDIA.failed[k]).length;
+  if(busy){ el.className=''; el.innerHTML=SPIN_IC+' Saving '+(busy===1?'photo':busy+' photos')+'…'; return; }
+  if(failed){ el.className='bad'; el.innerHTML='&#9888; '+(failed===1?'One photo':failed+' photos')+' could not be saved — check your connection. <button type="button" id="photoRetry">Try again</button>'; return; }
+  if(!mediaBackendOk()){ el.className=''; el.textContent=''; return; }
+  const n=Object.keys(MEDIA.bySlot).length;
+  el.className = n ? 'ok' : '';
+  el.innerHTML = n ? ICON.check+' '+(n===1?'Photo saved':n+' photos saved')+' — they stay with this listing even if you close the page.' : '';
+}
+document.addEventListener('click',e=>{
+  if(e.target && e.target.id==='photoRetry'){ MEDIA.failed={}; MEDIA.tries={}; paintMediaStatus(); syncMedia(); }
+});
+async function uploadSlot(i, src){
+  const rec=MEDIA.bySlot[i];
+  MEDIA.busy[i]=true; setCellState(i,'uploading'); paintMediaStatus();
+  try{
+    const id=await ensureDraft();
+    if(!id) throw new Error('no draft');
+    if(slotSrc(i)!==src) return;                       // veranderd tijdens het wachten
+    const blob=dataUrlToBlob(src);
+    const ext=(blob.type||'').includes('webp')?'webp':((blob.type||'').includes('png')?'png':'jpg');
+    const file=new File([blob],'photo'+i+'.'+ext,{type:blob.type||'image/jpeg'});
+    const m=await uploadFile(id, file, 'photo', i);
+    if(slotSrc(i)!==src){                                // intussen weer vervangen: deze is al oud
+      try{ await deleteMedia(m.id, m.storage_path, false); }catch(e){}
+      return;
+    }
+    MEDIA.bySlot[i]={ key:src, id:m.id, storage_path:m.storage_path, sort:i };
+    MEDIA.failed[i]=false; MEDIA.tries[i]=0;
+    if(rec && rec.id!==m.id){ try{ await deleteMedia(rec.id, rec.storage_path, false); }catch(e){} }
+    setCellState(i,'saved');
+  }catch(e){
+    console.warn('photo upload slot '+i+':', e && e.message);
+    MEDIA.tries[i]=(MEDIA.tries[i]||0)+1;
+    if(MEDIA.tries[i]>=3) MEDIA.failed[i]=true;
+    setCellState(i,'failed');
+  }finally{
+    MEDIA.busy[i]=false; paintMediaStatus();
+  }
+}
+async function removeSlotMedia(i){
+  const rec=MEDIA.bySlot[i]; if(!rec) return;
+  delete MEDIA.bySlot[i];
+  try{ await deleteMedia(rec.id, rec.storage_path, false); }catch(e){ console.warn('deleteMedia:', e && e.message); }
+  paintMediaStatus();
+}
+async function syncMedia(){
+  if(MEDIA.running || MEDIA.paused) return;
+  if(!mediaBackendOk()) return;
+  if(typeof getUser==='function' && !getUser()) return;
+  MEDIA.running=true;
+  try{
+    const jobs=[];
+    for(let i=0;i<10;i++){
+      if(MEDIA.busy[i]) continue;
+      const src=slotSrc(i), rec=MEDIA.bySlot[i];
+      if(src.startsWith('data:')){
+        if((!rec || rec.key!==src) && !MEDIA.failed[i]) jobs.push(uploadSlot(i, src));
+      } else if(!src && rec){
+        jobs.push(removeSlotMedia(i));
+      }
+      if(jobs.length>=2) break;                       // twee tegelijk, niet tien
+    }
+    if(jobs.length) await Promise.all(jobs);
+  }finally{ MEDIA.running=false; }
+}
+function startMediaSync(){ if(MEDIA.timer) return; MEDIA.timer=setInterval(syncMedia,1500); }
+/* Alles wat nog loopt of nog niet omhoog is, afwachten. Geeft de vakken terug
+   die het ook nu niet gehaald hebben. */
+async function mediaFlush(){
+  MEDIA.failed={}; MEDIA.tries={};
+  for(let round=0; round<40; round++){
+    await syncMedia();
+    const busy=Object.keys(MEDIA.busy).some(k=>MEDIA.busy[k]);
+    let todo=false;
+    for(let i=0;i<10;i++){ const src=slotSrc(i), rec=MEDIA.bySlot[i]; if(src.startsWith('data:') && (!rec||rec.key!==src) && !MEDIA.failed[i]) todo=true; if(!src && rec) todo=true; }
+    if(!busy && !todo) break;
+    await new Promise(r=>setTimeout(r, 500));
+  }
+  return Object.keys(MEDIA.failed).filter(k=>MEDIA.failed[k]).map(Number);
+}
+/* De sort-kolom volgt de vakvolgorde; alleen schrijven wat afwijkt. */
+async function mediaCommitOrder(){
+  const items=[];
+  let sort=0;
+  for(let i=0;i<10;i++){ const rec=MEDIA.bySlot[i]; if(!rec) continue; if(rec.sort!==sort) items.push({ id:rec.id, sort:sort }); rec.sort=sort; sort++; }
+  if(items.length && typeof updateMediaSort==='function'){ try{ await updateMediaSort(items); }catch(e){ console.warn('updateMediaSort:', e && e.message); } }
+  return sort;
+}
+(async function(){ try{ await window.__sbReady; }catch(e){} startMediaSync(); })();
 /* A step is a group of sections, so validating a step is validating each of
    them in the order they appear. The first one that objects wins. */
 function validate(n){
@@ -3662,20 +3899,17 @@ async function publish(){
     }
     listingDbId = (rec && rec.id) || draftId;
     if(!listingDbId) throw new Error('no listing id after save');
-    // Upload photos to storage, in slot order (slot 0 = cover)
-    let sortIdx=0;
-    for(let i=0;i<10;i++){
-      const c=document.querySelector('#list-photo-'+i);
-      const im=c && c.shadowRoot && c.shadowRoot.querySelector('img');
-      if(im && im.src && im.src.startsWith('data:') && !im.src.startsWith('data:image/svg')){
-        try{
-          const blob=dataUrlToBlob(im.src);
-          const ext = (blob.type||'').includes('webp') ? 'webp' : ((blob.type||'').includes('png') ? 'png' : 'jpg');
-          const file=new File([blob],'photo'+i+'.'+ext,{type:blob.type||'image/jpeg'});
-          await uploadFile(listingDbId, file, 'photo', sortIdx++);
-        }catch(e){ console.warn('photo upload',e.message); }
-      }
+    /* Foto's: sinds 03-09-2026 staan ze al in de opslag (syncMedia). Hier
+       alleen afwachten wat nog loopt, één keer opnieuw proberen wat mislukte,
+       en de volgorde vastleggen. Wat het ook nu niet haalt wordt gemeld in
+       plaats van stil weggelaten. */
+    const failedSlots = await mediaFlush();
+    const savedPhotos = await mediaCommitOrder();
+    if(failedSlots.length){
+      const msgEl=document.getElementById('successMsg');
+      if(msgEl) msgEl.textContent += ' ' + (failedSlots.length===1 ? 'One photo' : failedSlots.length+' photos') + ' could not be uploaded on this connection — open the listing under Edit to add ' + (failedSlots.length===1?'it':'them') + ' again.';
     }
+    MEDIA.paused = true;   // de wizard is klaar; niet meer meekijken
     // Upload documents if present, and record each one as a piece of evidence
     if(deedFile){
       try{

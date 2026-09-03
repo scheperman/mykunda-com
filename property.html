@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" id="mkRobots" content="noindex, follow, noai, noimageai"><!--mk:1cuhksx--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" id="mkRobots" content="noindex, follow, noai, noimageai"><!--mk:13ecyw9--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -32,7 +32,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preconnect" href="https://api.mapbox.com" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=117189065458621">
+<link rel="stylesheet" href="styles.min.css?v=202866185935742">
 <style>
 .crumb{padding:18px 0 6px;font-size:14px;color:var(--muted);display:flex;align-items:center;gap:8px}
 .crumb a{font-weight:600}.crumb a:hover{color:var(--green-700)}
@@ -64,6 +64,18 @@
 .lb-counter{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.7);font-size:14px;font-weight:700;z-index:2}
 .media-pane{display:none}
 .media-pane.active{display:block}
+.vtour{position:relative;aspect-ratio:16/9;max-height:480px;border-radius:var(--r-lg);overflow:hidden;background:var(--green-900)}
+.vtour img,.vtour iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vtour img{object-fit:cover;opacity:.85}
+.vtour .vplay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#fff;background:linear-gradient(180deg,rgba(14,46,37,.15),rgba(14,46,37,.55));cursor:pointer;border:0;width:100%;font:inherit}
+.vtour .vplay .ring{width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.92);color:var(--green-800);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 30px rgba(0,0,0,.35);transition:transform .15s}
+.vtour .vplay:hover .ring{transform:scale(1.06)}
+.vtour .vplay .ring svg{width:30px;height:30px;margin-left:4px}
+.vtour .vplay .vl{font-weight:700;font-size:15px;text-shadow:0 1px 8px rgba(0,0,0,.5)}
+.vtour .vplay .vs{font-size:12.5px;opacity:.9;text-shadow:0 1px 8px rgba(0,0,0,.5)}
+.vtour .vlink{position:absolute;right:10px;bottom:10px;font-size:12px;color:#fff;background:rgba(14,46,37,.7);padding:5px 9px;border-radius:6px;text-decoration:none}
+.gallery .gvid{position:absolute;left:10px;top:10px;z-index:2;display:inline-flex;align-items:center;gap:6px;background:rgba(14,46,37,.78);color:#fff;font-weight:700;font-size:12.5px;padding:6px 10px;border-radius:var(--r-pill);border:0;cursor:pointer;font-family:inherit}
+.gallery .gvid svg{width:12px;height:12px;fill:currentColor}
 
 /* floorplan */
 .floorplan{background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-sm);padding:30px;height:480px;display:flex;align-items:center;justify-content:center}
@@ -289,7 +301,7 @@
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=117189065458621"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=202866185935742"><!--/mk-css-->
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -365,12 +377,20 @@
   <div class="media">
     <div class="media-tabs">
       <button class="mtab active" data-pane="photos"><span id="t1"></span> Photos</button>
+      <button class="mtab" data-pane="video" id="tabVideo" hidden><span id="t3"></span> Video</button>
       <button class="mtab" data-pane="floor" id="tabFloor" hidden><span id="t2"></span> Floor plan</button>
       <button class="mtab" data-pane="map"><span id="t4"></span> Map</button>
     </div>
 
     <div class="media-pane active" data-pane="photos">
       <div class="gallery" id="gallery"></div>
+    </div>
+
+    <!-- Video tour (03-09-2026). Een gevel: omslag + afspeelknop, en pas bij
+         een tik de YouTube- of Vimeo-speler (iframe). Zo kost een advertentie
+         met video op 4G geen byte extra tot iemand er echt op drukt. -->
+    <div class="media-pane" data-pane="video">
+      <div class="vtour" id="vtour"></div>
     </div>
 
     <div class="media-pane" data-pane="floor">
@@ -597,15 +617,15 @@
     </div>
   </footer><!--/mk-ftr--></div>
 
-<script src="app.min.js?v=117189065458621"></script>
-<script src="image-slot.js?v=117189065458621" defer></script>
+<script src="app.min.js?v=202866185935742"></script>
+<script src="image-slot.js?v=202866185935742" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel instead of blocking the page, and
    Leaflet (~145 KB) is only fetched when the visitor opens the Map tab. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=117189065458621'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=202866185935742'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -712,19 +732,29 @@ msgIc.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" s
 msgAgentBtn.href = 'messages.html?id='+P.id;
 
 // gallery — only this listing's own photos
+/* photos: [{thumb, full}] of losse URL's (oude aanroepers). De galerijcellen
+   zijn op een telefoon 140–220px hoog en op een laptop ~235px; die krijgen
+   sinds 03-09-2026 de 640px-variant, de lightbox de 1200px-variant. Vijf
+   cellen à 1200px waren op 4G ruim een megabyte vóór de eerste tik. De cover
+   laadt eager (hij is het grootste zichtbare element), de rest lazy. */
 function renderGallery(photos){
-  const GAL = photos.length ? photos.slice(0,5) : (P.img ? [P.img] : []);
+  const items = (photos||[]).map(function(p){ return (typeof p==='string') ? { thumb:p, full:p } : p; });
+  const GAL = items.length ? items.slice(0,5) : (P.img ? [{ thumb:P.img, full:P.img }] : []);
   if(!GAL.length){
     gallery.innerHTML = '<div class="g" style="grid-column:1/-1;grid-row:1/3;display:flex;align-items:center;justify-content:center;color:var(--muted);font-weight:600;font-size:15px;cursor:default">No photos yet</div>';
     window.__galImages = [];
     return;
   }
-  const total = photos.length || P.photos || GAL.length;
-  gallery.innerHTML = GAL.map((src,i)=>`<div class="g" data-lb="${i}">
-    ${slotImg(i===0?('ph-'+P.id):('ph-'+P.id+'-g'+i), src, 'Drop Gambia photo '+(i+1)+' of '+P.title)}
+  const total = items.length || P.photos || GAL.length;
+  const vid = (typeof mkVideoInfo==='function' && P.video) ? mkVideoInfo(P.video) : null;
+  gallery.innerHTML = GAL.map((it,i)=>`<div class="g" data-lb="${i}">
+    ${slotImg(i===0?('ph-'+P.id):('ph-'+P.id+'-g'+i), it.thumb, 'Drop Gambia photo '+(i+1)+' of '+P.title, i===0?'eager':'')}
+    ${i===0 && vid ? `<button type="button" class="gvid" id="galVideoBtn" aria-label="Watch the video tour">${VIDEO_ICON} Video tour</button>` : ''}
     ${i===GAL.length-1 && total>GAL.length?`<div class="more">${ICON.camera} +${total-GAL.length} photos</div>`:''}</div>`).join('');
+  const vb=document.getElementById('galVideoBtn');
+  if(vb) vb.addEventListener('click',e=>{ e.stopPropagation(); const t=document.getElementById('tabVideo'); if(t) t.click(); });
   // re-wire lightbox
-  window.__galImages = photos.length ? photos : GAL;
+  window.__galImages = (items.length ? items : GAL).map(function(it){ return it.full; });
   document.querySelectorAll('.gallery .g').forEach(g=>g.addEventListener('click',()=>{
     if(typeof openLb==='function') openLb(+g.dataset.lb||0);
   }));
@@ -737,6 +767,13 @@ function renderGallery(photos){
      gedefinieerd en valt de galerij stil terug op de coverfoto — precies wat er
      tot nu toe gebeurde. De andere backendblokken in deze pagina wachten wel. */
   try{ await window.__sbReady; }catch(e){}
+  /* De paden zitten sinds 03-09-2026 al op P (dbListingToCard.photo_paths):
+     geen tweede query naar listing_media meer. De oude weg blijft voor rijen
+     zonder dat veld. */
+  if(Array.isArray(P.photo_paths) && P.photo_paths.length && typeof mediaUrl==='function'){
+    renderGallery(P.photo_paths.map(function(path){ return { thumb: mediaUrl(path,false,640), full: mediaUrl(path,false,1200) }; }));
+    return;
+  }
   if(typeof getListingPhotos==='function'){
     try{
       const realPhotos = await getListingPhotos(P.id);
@@ -1383,6 +1420,34 @@ function initPropMap(){
   const loc = P.area.split('·')[0].trim();
   mk.bindPopup(`<div style="font-family:var(--sans);min-width:170px"><div style="font-weight:700;color:#18201D;margin-bottom:3px">${P.street}</div><div style="color:#5C6B64;font-size:12.5px;margin-bottom:8px">${P.area.replace('· ',', ')}</div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#15463A">Google Plus Code</div><div style="font-weight:800;color:#15463A">${plusCodeShort(P.lat,P.lng,loc)}</div></div>`);
 }
+
+/* Video tour: alleen als er een herkende YouTube- of Vimeo-link op de
+   advertentie staat. De speler komt pas na een tik: tot dan is het één
+   omslagfoto (de eigen cover van de advertentie, of de YouTube-thumbnail) en
+   een knop. */
+(function(){
+  const tab = document.getElementById('tabVideo');
+  const pane = document.querySelector('.media-pane[data-pane="video"]');
+  const v = (typeof mkVideoInfo==='function' && P.video) ? mkVideoInfo(P.video) : null;
+  if(!v){ if(tab) tab.remove(); if(pane) pane.remove(); return; }
+  const t3 = document.getElementById('t3'); if(t3) t3.innerHTML = VIDEO_ICON;
+  const box = document.getElementById('vtour');
+  const poster = P.img || v.thumb || '';
+  const title = String(P.title||'this property').replace(/[<>&"]/g,'');
+  box.innerHTML = (poster ? '<img src="'+poster.replace(/"/g,'&quot;')+'" alt="" loading="lazy">' : '')
+    + '<button type="button" class="vplay" id="vplay"><span class="ring"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>'
+    + '<span class="vl">Watch the video tour</span><span class="vs">Streams from '+(v.provider==='youtube'?'YouTube':'Vimeo')+' — loads only when you press play</span></button>'
+    + '<a class="vlink" href="'+v.watch+'" target="_blank" rel="noopener">Open on '+(v.provider==='youtube'?'YouTube':'Vimeo')+'</a>';
+  document.getElementById('vplay').addEventListener('click', function(){
+    const f = document.createElement('iframe');
+    f.src = v.embed; f.title = 'Video tour of '+title;
+    f.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen';
+    f.setAttribute('allowfullscreen','');
+    f.referrerPolicy = 'strict-origin-when-cross-origin';
+    box.innerHTML = ''; box.appendChild(f);
+  });
+  tab.hidden = false;
+})();
 
 /* Floor plan: only when the seller actually uploaded one. The tab used to draw
    a generated plan with fixed room sizes on every listing — a measurement a

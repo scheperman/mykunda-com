@@ -335,6 +335,49 @@ export function leadNotificationEmail(lead: {
 }
 
 /* ============================================================
+   LEAD — de eigenaar van de advertentie (03-09-2026)
+   Een bezichtigingsaanvraag of vraag van een bezoeker ZONDER account ging
+   tot vandaag alleen naar admin@ en de bezoeker kreeg een auto-reply; de
+   aanbieder zag de lead pas als hij zelf zijn dashboard opende. Deze mail
+   geeft hem nummer en adres van de aanvrager, en de WhatsApp-link erbij.
+   Reply-to is de aanvrager, dus antwoorden is één klik.
+   ============================================================ */
+
+export function leadOwnerEmail(o: {
+  source: string; name?: string; email?: string; phone?: string;
+  message?: string; payload?: any;
+  listingTitle: string; listingId: string; ownerName?: string;
+  unsubscribeUrl?: string;
+}): string {
+  const first = o.ownerName ? esc(String(o.ownerName).trim().split(' ')[0]) : '';
+  const who = escOpt(o.name) || escOpt(o.email) || 'Someone';
+  const kind = o.source === 'viewing' ? 'wants to view' : 'asked about';
+  const digits = String(o.phone ?? '').replace(/[^\d+]/g, '');
+  const wa = digits ? 'https://wa.me/' + (digits.startsWith('+') ? digits.slice(1) : (digits.length === 7 ? '220' + digits : digits))
+    + '?text=' + encodeURIComponent(`Hello${o.name ? ' ' + o.name : ''}, thanks for your enquiry about ${o.listingTitle} on MyKunda. `) : '';
+  const p = o.payload ?? {};
+  const rows: [string, unknown][] = [
+    ['Name', escOpt(o.name)],
+    ['Phone', o.phone ? `<a href="tel:${esc(digits)}" style="color:${BRAND.green};font-weight:600">${esc(o.phone)}</a>` : undefined],
+    ['WhatsApp', wa ? `<a href="${wa}" style="color:${BRAND.green};font-weight:600">Open a WhatsApp chat</a>` : undefined],
+    ['Email', o.email ? `<a href="mailto:${esc(o.email)}" style="color:${BRAND.green};font-weight:600">${esc(o.email)}</a>` : undefined],
+    ['Preferred time', o.source === 'viewing' && (p.date || p.slot) ? esc([p.date, p.slot].filter(Boolean).join(' at ')) : undefined],
+    ['Message', o.message ? escLines(o.message) : undefined],
+  ];
+  return emailWrap({
+    heading: `${who} ${kind} ${esc(o.listingTitle)}`,
+    preheader: `${who} ${kind} your listing — their number and email are in this message.`,
+    body: `<p style="margin:0 0 14px">${first ? `Hi ${first}, ` : ''}a visitor ${kind} your listing <strong>${esc(o.listingTitle)}</strong> on MyKunda. Their details are below — WhatsApp or a call usually gets the quickest answer. Replying to this email reaches them directly.</p>
+      ${detailTable(rows)}
+      <p style="margin:14px 0 0;font-size:14px;color:${BRAND.muted}">Every enquiry also stays under <strong>Enquiries</strong> in My MyKunda, so you can find the number back later.</p>`,
+    cta: 'Open your enquiries',
+    ctaUrl: `${BRAND.site}/dashboard.html#leads`,
+    footer: 'You get this email because someone contacted you about a listing you placed on mykunda.com.',
+    unsubscribeUrl: o.unsubscribeUrl,
+  });
+}
+
+/* ============================================================
    LEAD — auto-reply to the visitor
    ============================================================ */
 

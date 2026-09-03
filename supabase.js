@@ -905,8 +905,18 @@ async function saveMyDetails(patch){
 
 /* ---------------- DB → demo card shape ---------------- */
 /* Maps a Supabase listing row to the object shape the site's cards/map expect. */
+/* De foto's van een rij in de volgorde van de aanbieder. Een embed
+   `listing_media(*)` komt ongesorteerd terug, en tot 03-09-2026 nam elke kaart
+   gewoon de EERSTE rij als omslag — dat was dus niet per se de foto die de
+   aanbieder als cover had neergezet. Sorteren op sort, dan op created_at. */
+function mkPhotoRows(r){
+  return (r.listing_media||[])
+    .filter(function(m){ return !m.is_document && m.storage_path; })
+    .sort(function(a,b){ return (a.sort||0)-(b.sort||0) || String(a.created_at||'').localeCompare(String(b.created_at||'')); });
+}
 function dbListingToCard(r){
-  const photo = (r.listing_media||[]).find(m=>!m.is_document);
+  const photoRows = mkPhotoRows(r);
+  const photo = photoRows[0];
   /* Woningmarkt of bedrijfsmarkt. De kolom is de bron zodra migratie 02 gedraaid
      is; staat hij er nog niet, dan leidt de categorie het af. Zo blijven Buy en
      Rent hun aanbod tonen ongeacht de volgorde van upload en migratie. */
@@ -922,12 +932,20 @@ function dbListingToCard(r){
     boosted_until: r.boosted_until || null,
     price: Number(r.price)||0, title: r.title, street: r.street||'', area: r.area||'',
     beds: r.beds||0, baths: r.baths||0, sqm: r.sqm||0, plot: r.plot_sqm||0,
-    tag: (r.features&&r.features[0])||'', photos: (r.listing_media||[]).filter(m=>!m.is_document).length||1,
-    /* 1000px via de transformatie-URL. Dit ene veld voedt zowel de zoekkaart
-       als de hero van property.html, dus het is de bovenkant van wat een kaart
-       nodig heeft en de onderkant van wat de hero wil. Zodra de kaarten een
-       eigen veld krijgen kan dit omlaag naar 600 en de hero naar 1600. */
-    img: photo ? mediaUrl(photo.storage_path,false,1000) : '',
+    tag: (r.features&&r.features[0])||'', photos: photoRows.length||1,
+    /* 640px via de transformatie-URL: dit veld voedt de zoekkaarten en de
+       dashboardrij. Een kaart is op een telefoon 360px breed en op een
+       laptop ~400px; 640 dekt beide op een gewoon scherm. De objectpagina
+       bouwt haar galerij uit photo_paths hieronder en vraagt daar zelf de
+       grotere maten (03-09-2026, was 1000 voor alles). */
+    img: photo ? mediaUrl(photo.storage_path,false,640) : '',
+    /* De opslagpaden in volgorde, zodat property.html de galerij kan tekenen
+       zonder een tweede query naar listing_media — die rijen zitten al in
+       fetchListing(). */
+    photo_paths: photoRows.map(function(m){ return m.storage_path; }),
+    /* Videolink (YouTube of Vimeo). Werd al sinds de wizard geschreven en tot
+       03-09-2026 nergens gelezen. */
+    video: r.video_url || '',
     lat: r.lat, lng: r.lng, plus: r.plus_code || '',
     boundary: r.boundary || null,
     beach_m: typeof r.beach_m==='number' ? r.beach_m : null,
@@ -1620,6 +1638,46 @@ async function deleteMedia(mediaId, storagePath, isDoc){
   const bucket = isDoc ? 'listing-docs' : 'listing-photos';
   try{ await sb.storage.from(bucket).remove([storagePath]); }catch(e){}
   await sb.from('listing_media').delete().eq('id', mediaId);
+}
+
+/* De foto's van één eigen advertentie voor de wizard: rij én publieke URL, in
+   de volgorde van de aanbieder. Tot 03-09-2026 laadde list.html?draft=id de
+   foto's niet terug — wie een bestaande advertentie bewerkte zag lege vakken,
+   moest opnieuw vier foto's kiezen, en de oude bleven in de opslag staan. */
+async function fetchListingMedia(listingId){
+  if(!sb || !listingId) return [];
+  const { data, error } = await sb.from('listing_media')
+    .select('id, storage_path, sort, is_document, created_at')
+    .eq('listing_id', listingId)
+    .order('sort', { ascending:true })
+    .order('created_at', { ascending:true });
+  if(error){ console.warn('fetchListingMedia:', error.message); return []; }
+  return (data||[]).filter(function(m){ return !m.is_document && m.storage_path; })
+    .map(function(m){ return { id:m.id, storage_path:m.storage_path, sort:m.sort||0, url: mediaUrl(m.storage_path,false,800) }; });
+}
+
+/* Volgorde van de foto's bijwerken: [{id, sort}]. Alleen rijen waarvan de
+   volgorde echt anders is worden geschreven. */
+async function updateMediaSort(items){
+  if(!sb) return;
+  for(const it of (items||[])){
+    if(!it || !it.id) continue;
+    const { error } = await sb.from('listing_media').update({ sort: it.sort }).eq('id', it.id);
+    if(error) console.warn('updateMediaSort:', error.message);
+  }
+}
+
+/* De eigenaar zet zelf een stand op zijn advertentie: sold, let, under_offer,
+   archived, of terug naar active. Wat mag, bewaakt de database
+   (guard_owner_listing_status, migratie 20260903_03) — een verboden overgang
+   komt hier als fout terug en verandert niets. */
+async function setMyListingStatus(listingId, status){
+  if(!sb) throw new Error('backend-offline');
+  const { data, error } = await sb.from('listings')
+    .update({ status: status })
+    .eq('id', listingId).select('id,status').single();
+  if(error) throw error;
+  return data;
 }
 
 /* Count listings in an area (for area pages sidebar) */

@@ -18,7 +18,7 @@
 // ============================================================
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { leadNotificationEmail, leadAutoReplyEmail, toText, isReservedTestAddress } from "../_shared/email-template.ts";
+import { leadNotificationEmail, leadAutoReplyEmail, leadOwnerEmail, toText, isReservedTestAddress } from "../_shared/email-template.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY")!;
 const FROM_EMAIL = Deno.env.get("FROM_EMAIL") ?? "MyKunda <noreply@mykunda.com>";
@@ -178,7 +178,7 @@ serve(async (req) => {
     const label = TEAM_LABEL[lead.source] ?? "enquiry";
     const who = lead.name || lead.email || lead.phone || "a visitor";
     const errors: string[] = [];
-    const sent = { team: false, reply: false };
+    const sent = { team: false, reply: false, owner: false };
 
     // 1) Team notification — reply-to the visitor so answering is one click.
     const teamSubject = safeSubject(`[MyKunda] New ${label} — ${who}`);
@@ -264,6 +264,74 @@ serve(async (req) => {
       errors.push("auto-reply: lead has no email address");
     }
 
+    // 2b) De eigenaar van de advertentie (03-09-2026). Tot vandaag kreeg alleen
+    //     admin@ de teammail en zag de aanbieder de aanvraag pas in zijn
+    //     dashboard — terwijl property.html de bezoeker belooft dat de eigenaar
+    //     hem ziet en contact opneemt. Alleen voor leads met een advertentie en
+    //     een bron waar een aanbieder iets mee moet; achter dezelfde schakelaar
+    //     als de berichtmails (profiles.notify_messages) en dezelfde
+    //     afmeldlink. Nooit fataal voor de rest van de keten.
+    if (lead.listing_id && ["viewing", "listing_enquiry", "agent_message"].includes(String(lead.source))) {
+      try {
+        const { data: listing } = await db.from("listings")
+          .select("id, title, area, owner_id").eq("id", lead.listing_id).single();
+        if (listing?.owner_id) {
+          type P = { id: string; full_name: string | null; email: string | null; notify_messages: boolean | null; unsubscribe_token: string | null; email_bounced_at: string | null };
+          let owner = (await db.from("profiles")
+            .select("id, full_name, email, notify_messages, unsubscribe_token, email_bounced_at")
+            .eq("id", listing.owner_id).maybeSingle()).data as P | null;
+          if (!owner?.email) {
+            const { data: au } = await db.auth.admin.getUserById(listing.owner_id);
+            if (au?.user?.email) owner = { id: listing.owner_id, full_name: owner?.full_name ?? (au.user.user_metadata?.full_name ?? null), email: au.user.email, notify_messages: owner?.notify_messages ?? true, unsubscribe_token: owner?.unsubscribe_token ?? null, email_bounced_at: owner?.email_bounced_at ?? null };
+          }
+          if (!owner?.email) {
+            errors.push("owner: no email address");
+          } else if (owner.notify_messages === false) {
+            console.info("notify-lead: eigenaar heeft berichtmails uit, lead", lead.id);
+          } else if (owner.email_bounced_at) {
+            errors.push("owner: address bounced earlier, not sent");
+          } else if (owner.email.toLowerCase() === LEAD_EMAIL) {
+            // Eigen testadvertenties van de backoffice: de teammail volstaat.
+            console.info("notify-lead: eigenaar is de backoffice zelf, geen tweede mail");
+          } else {
+            const ownerSubject = safeSubject(`${who} ${lead.source === "viewing" ? "wants to view" : "asked about"} ${listing.title ?? "your listing"} — MyKunda`);
+            const unsubscribeUrl = owner.unsubscribe_token
+              ? `${SUPABASE_URL}/functions/v1/unsubscribe?t=${encodeURIComponent(owner.unsubscribe_token)}`
+              : undefined;
+            try {
+              const res = await sendEmail({
+                to: owner.email,
+                subject: ownerSubject,
+                html: leadOwnerEmail({
+                  source: String(lead.source), name: info.name, email: info.email, phone: info.phone,
+                  message: info.message, payload: info.payload,
+                  listingTitle: listing.title ?? "your listing", listingId: listing.id,
+                  ownerName: owner.full_name ?? undefined, unsubscribeUrl,
+                }),
+                replyTo: lead.email || undefined,
+              });
+              sent.owner = true;
+              await logEmail(db, {
+                event_type: "lead_owner", recipient: owner.email, subject: ownerSubject,
+                resend_email_id: (res as { id?: string })?.id ?? null,
+                ok: true, lead_id: lead.id, source: lead.source,
+              });
+            } catch (e) {
+              errors.push(`owner: ${(e as Error).message}`);
+              console.error("notify-lead owner email failed:", e);
+              await logEmail(db, {
+                event_type: "lead_owner", recipient: owner.email, subject: ownerSubject,
+                ok: false, reason: (e as Error).message, lead_id: lead.id, source: lead.source,
+              });
+            }
+          }
+        }
+      } catch (e) {
+        errors.push(`owner: ${(e as Error).message}`);
+        console.warn("notify-lead: eigenaarsmail overgeslagen:", (e as Error).message);
+      }
+    }
+
     // 3) Audit trail on the lead row. Silently skipped when
     //    backend/lead-notify-status.sql hasn't been run yet.
     try {
@@ -275,7 +343,7 @@ serve(async (req) => {
 
     /* Alleen een echte verzendfout is een 502. Een lead zonder adres en een
        lead die door de rem is gestopt zijn genoteerd, geen storing. */
-    const hardFail = errors.some((e) => !e.startsWith("auto-reply: lead has no email") && !e.startsWith("auto-reply: rate limited"));
+    const hardFail = errors.some((e) => !e.startsWith("auto-reply: lead has no email") && !e.startsWith("auto-reply: rate limited") && !e.startsWith("owner: no email") && !e.startsWith("owner: address bounced"));
     return json({ ok: !errors.length, sent, errors }, hardFail ? 502 : 200);
   } catch (err) {
     console.error("notify-lead error:", err);

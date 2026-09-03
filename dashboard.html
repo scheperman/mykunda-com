@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0mcad2w--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0aho958--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <noscript></noscript>
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=117189065458621">
+<link rel="stylesheet" href="styles.min.css?v=202866185935742">
 <style>
 body{background:var(--paper-2)}
 .dash{max-width:1180px;margin:0 auto;padding:36px 28px 70px}
@@ -95,6 +95,10 @@ body{background:var(--paper-2)}
 .lnext .lab{font-weight:800;color:var(--muted-2);text-transform:uppercase;letter-spacing:.05em;font-size:11px;flex:none}
 .lnext.ok{color:var(--green-700)}
 .lnext .act{height:30px;padding:0 12px;font-size:12.5px}
+.listing-tools{grid-column:1/-1;padding:10px 0 2px;border-top:1px dashed var(--line-2);margin-top:10px}
+.listing-tools .ltools-note{font-size:12.5px;color:var(--muted);margin-top:8px}
+.listing-tools .ltools-note.bad{color:#C2533A}
+.mini[data-confirm]{box-shadow:inset 0 0 0 1.5px #C2533A;color:#C2533A;background:#FBEEEA}
 .lnote{display:flex;gap:10px;padding:12px 14px;border-radius:var(--r-sm);background:var(--amber-50);color:var(--amber-700);font-size:13.5px;line-height:1.55}
 .lnote svg{flex:none;margin-top:2px}
 .lnote b{font-weight:800}
@@ -115,6 +119,10 @@ body{background:var(--paper-2)}
 .pipe-col h4{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);display:flex;justify-content:space-between;gap:8px;margin-bottom:10px}
 .pipe-col h4 .n{color:var(--ink-2)}
 .pipe-col .none{font-size:12.5px;color:var(--muted-2);padding:6px 2px}
+/* De eenvoudige lijst van een particulier: één brede kolom in plaats van
+   zeven smalle. */
+.pipe-col.simple{flex:1 1 320px;max-width:640px}
+.mini{display:inline-flex;align-items:center;text-decoration:none}
 .lead-card{background:var(--white);border-radius:var(--r-sm);box-shadow:var(--sh-sm);padding:11px 12px;margin-bottom:9px}
 .lead-card:last-child{margin-bottom:0}
 .lead-card .nm{font-weight:700;font-size:14px;line-height:1.35}
@@ -346,7 +354,7 @@ body{background:var(--paper-2)}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=117189065458621"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=202866185935742"><!--/mk-css-->
 </head>
 <body>
 <div id="header"></div>
@@ -420,7 +428,7 @@ body{background:var(--paper-2)}
 
     <aside class="side">
       <div class="panel">
-        <div class="panel-head"><h2>Recent enquiries</h2><a class="count" href="messages.html" style="color:var(--green-700);text-decoration:none">View all</a></div>
+        <div class="panel-head"><h2>Recent enquiries</h2><a class="count" href="#leads" style="color:var(--green-700);text-decoration:none">View all</a></div>
         <div id="enquiryList"></div>
       </div>
       <div class="panel">
@@ -615,15 +623,15 @@ body{background:var(--paper-2)}
 
 <div id="footer"></div>
 
-<script src="app.min.js?v=117189065458621"></script>
-<script src="image-slot.js?v=117189065458621" defer></script>
+<script src="app.min.js?v=202866185935742"></script>
+<script src="image-slot.js?v=202866185935742" defer></script>
 <script>
 /* 4G: the Supabase client (~205 KB) is not needed to paint this page. It downloads
    in parallel and every backend call awaits window.__sbReady. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=117189065458621'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=202866185935742'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 </script>
@@ -661,6 +669,11 @@ const cal='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="c
 
 // ---- Status helpers ----
 function eyeNone(){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>';}
+/* wa.me-link naar de aanvrager. mkWaNumber/waLinkTo staan in app.js (het
+   nummer van MyKunda zelf heet daar waLink — niet overschrijven). */
+function leadWa(phone, text){
+  return (typeof waLinkTo==='function' ? waLinkTo(phone, text) : null) || '';
+}
 function statusFromDb(s){ return {active:'Active',under_offer:'Under offer',pending_review:'In review',draft:'Draft',sold:'Sold',let:'Let',rejected:'Rejected',archived:'Archived'}[s]||s; }
 function statusClass(s){ return (s==='Active'||s==='active')?'active':((s==='In review'||s==='pending_review')?'review':'closed'); }
 
@@ -827,7 +840,7 @@ function listingRow(l){
   const det = l.cat==='land' ? `${(l.plot||0).toLocaleString()} m² plot` : `${l.beds} bed · ${l.baths} bath · ${l.sqm} m²`;
   const thumb = l.img ? `<img src="${l.img}" alt="" onerror="this.style.display='none'">` : `<div class="ph">${ICON.camera}</div>`;
   const statusLabel = l.status||'Active';
-  return `<div class="listing">
+  return `<div class="listing" data-lid="${l.id}">
     <div class="listing-main">
     <div class="listing-thumb">${thumb}</div>
     <div class="listing-info">
@@ -849,8 +862,42 @@ function listingRow(l){
         <a class="act primary" href="property.html?id=${l.id}">View</a>
       </div>
     </div>
+    ${listingTools(l)}
     ${listingFoot(l)}
   </div>`;
+}
+
+/* Wat de aanbieder zelf met een live advertentie doet (03-09-2026): delen,
+   verkocht/verhuurd melden, van de markt halen, en terug op de markt zetten.
+   Tot vandaag kon hij alleen Edit en View — "verkocht" was nergens te zetten
+   en de statusbaan eindigde dus nooit. Welke overgang mag, bewaakt de
+   database (guard_owner_listing_status); de knoppen tonen alleen wat daar
+   door mag. Twee tikken voor alles wat de advertentie uit de zoekresultaten
+   haalt. */
+function listingTools(l){
+  if(!l._db) return '';
+  var s = dbStatusOf(l);
+  var acts = [];
+  var url = 'https://mykunda.com/property.html?id=' + encodeURIComponent(l.id);
+  if(s==='active' || s==='under_offer'){
+    var txt = (l.title||'My property') + ' — ' + fmtPriceText(l) + '. ' + url;
+    acts.push('<a class="mini go" href="https://wa.me/?text='+encodeURIComponent(txt)+'" target="_blank" rel="noopener">Share on WhatsApp</a>');
+    acts.push('<button class="mini" data-act="listing-copy" data-url="'+vrEsc(url)+'">Copy link</button>');
+    var closeLabel = (l.type==='rent') ? 'Mark as let' : 'Mark as sold';
+    var closeTo = (l.type==='rent') ? 'let' : 'sold';
+    acts.push('<button class="mini" data-act="listing-status" data-to="'+closeTo+'" data-label="'+closeLabel+'">'+closeLabel+'</button>');
+    if(s==='active') acts.push('<button class="mini" data-act="listing-status" data-to="under_offer" data-label="Under offer">Under offer</button>');
+    else acts.push('<button class="mini" data-act="listing-status" data-to="active" data-label="Offer fell through">Offer fell through</button>');
+    acts.push('<button class="mini warn" data-act="listing-status" data-to="archived" data-label="Take off the market">Take off the market</button>');
+  } else if(s==='sold' || s==='let' || s==='archived'){
+    acts.push('<button class="mini go" data-act="listing-status" data-to="active" data-label="Put it back on the market">Back on the market</button>');
+  } else {
+    return '';
+  }
+  return '<div class="listing-tools"><div class="lead-acts" style="margin-top:0">'+acts.join('')+'</div><div class="ltools-note" hidden></div></div>';
+}
+function fmtPriceText(l){
+  try{ var tmp=document.createElement('div'); tmp.innerHTML=fmtPrice(l.price,l.type,l.price_period); return tmp.textContent.trim(); }catch(e){ return ''; }
 }
 
 
@@ -871,7 +918,7 @@ async function initDashboard(){
       const dbRows = await fetchMyListings();
       if(dbRows && dbRows.length){
         listings = dbRows.map(r=>{
-          const photo = (r.listing_media||[]).find(m=>!m.is_document);
+          const photo = (typeof mkPhotoRows==='function') ? mkPhotoRows(r)[0] : (r.listing_media||[]).find(m=>!m.is_document);
           return {
             id: r.id, cat: r.category, type: r.kind,
             title: r.title||'Untitled', street: r.street||'',
@@ -968,7 +1015,13 @@ async function initDashboard(){
       const msg = lead.message || ('Enquiry via '+lead.source);
       const listingTitle = listings.find(l=>l.id===lead.listing_id);
       const forTxt = listingTitle ? listingTitle.title : 'General enquiry';
-      return `<a class="enquiry" href="messages.html" style="cursor:pointer"><div class="av">${nm[0].toUpperCase()}</div><div style="flex:1"><div class="e-top"><span class="nm">${nm}</span><span class="time">${timeAgo(lead.created_at)}</span></div><div class="msg">${msg.length>80?msg.slice(0,80)+'…':msg}</div><div class="for">Re: ${forTxt}</div></div></a>`;
+      const wa = leadWa(lead.phone, 'Hello'+(lead.name?' '+lead.name:'')+', thanks for your enquiry about '+forTxt+' on MyKunda. ');
+      const acts = [
+        wa ? `<a class="mini go" href="${wa}" target="_blank" rel="noopener">WhatsApp</a>` : '',
+        lead.phone ? `<a class="mini" href="tel:${encodeURI(lead.phone)}">Call</a>` : '',
+        lead.email ? `<a class="mini" href="mailto:${encodeURI(lead.email)}">Email</a>` : ''
+      ].join('');
+      return `<div class="enquiry"><div class="av">${vrEsc(nm[0].toUpperCase())}</div><div style="flex:1;min-width:0"><div class="e-top"><span class="nm">${vrEsc(nm)}</span><span class="time">${timeAgo(lead.created_at)}</span></div><div class="msg">${vrEsc(msg.length>80?msg.slice(0,80)+'…':msg)}</div><div class="for">Re: ${vrEsc(forTxt)}</div><div class="lead-acts" style="margin-top:8px">${acts}<a class="mini" href="#leads">Details</a></div></div></div>`;
     }).join('');
   } else {
     enquiryEl.innerHTML = '<div class="empty" style="padding:22px;color:var(--muted);font-size:14px">No enquiries yet. Buyers who message you about a listing appear here.</div>';
@@ -1473,6 +1526,15 @@ function navHTML(){
     out += tab('company','Company profile', (AGENCY && AGENCY.logo_path) ? 0 : '•');
     out += '<div class="sep"></div>';
   }
+  /* Een particuliere aanbieder krijgt sinds 03-09-2026 dezelfde leadlijst
+     als een kantoor, maar als gewone lijst en onder de naam die hij herkent.
+     Tot dan wees "Recent enquiries" naar messages.html, waar een aanvraag van
+     een bezoeker zonder account niet staat — er was geen plek waar hij het
+     telefoonnummer van de aanvrager kon vinden. */
+  if(!PRO && LIVE && isSupplier(ROLE)){
+    var openEnq = LEADS.filter(function(l){ return l.stage==='new'; }).length;
+    out += tab('leads','Enquiries',openEnq);
+  }
   out += tab('saved','Saved searches',SAVED.length);
   out += tab('favourites','Favourites',FAVS.length);
   out += '<a href="messages.html">Messages'+(unread?'<span class="cnt">'+unread+'</span>':'')+'</a>';
@@ -1802,17 +1864,31 @@ function leadCard(l){
     bits.push('<span class="'+(l._reply_hours>24?'slow':'')+'">answered in '+hoursTxt(l._reply_hours)+'</span>');
   }
   var acts = [];
-  var nxt = STAGE_NEXT[l.stage];
-  if(nxt) acts.push('<button class="mini go" data-act="lead-stage" data-stage="'+nxt+'">→ '+esc(STAGE_LABEL[nxt])+'</button>');
-  if(l.stage!=='lost' && l.stage!=='won') acts.push('<button class="mini warn" data-act="lead-stage" data-stage="lost">Lost</button>');
-  if(l.stage==='lost' || l.stage==='won') acts.push('<button class="mini" data-act="lead-stage" data-stage="new">Reopen</button>');
-  acts.push('<button class="mini" data-act="lead-note">'+(l.note?'Edit note':'Note')+'</button>');
-  if(l.email) acts.push('<a class="mini" href="mailto:'+encodeURI(l.email)+'">Email</a>');
+  /* Contact eerst: dat is waar de aanbieder voor komt. WhatsApp bovenaan,
+     want dat is in Gambia het kanaal; het bericht begint met de advertentie
+     zodat de aanvrager meteen weet waarover het gaat. */
+  var wa = leadWa(l.phone, 'Hello'+(l.name?' '+l.name:'')+', thanks for your enquiry about '+(l._listing_title||'my property')+' on MyKunda. ');
+  if(wa) acts.push('<a class="mini go" href="'+wa+'" target="_blank" rel="noopener">WhatsApp</a>');
   if(l.phone) acts.push('<a class="mini" href="tel:'+encodeURI(l.phone)+'">Call</a>');
+  if(l.email) acts.push('<a class="mini" href="mailto:'+encodeURI(l.email)+'?subject='+encodeURIComponent('Re: '+(l._listing_title||'your enquiry')+' — MyKunda')+'">Email</a>');
+  if(PRO){
+    var nxt = STAGE_NEXT[l.stage];
+    if(nxt) acts.push('<button class="mini go" data-act="lead-stage" data-stage="'+nxt+'">→ '+esc(STAGE_LABEL[nxt])+'</button>');
+    if(l.stage!=='lost' && l.stage!=='won') acts.push('<button class="mini warn" data-act="lead-stage" data-stage="lost">Lost</button>');
+    if(l.stage==='lost' || l.stage==='won') acts.push('<button class="mini" data-act="lead-stage" data-stage="new">Reopen</button>');
+  } else {
+    /* Een particulier hoeft geen trechter bij te houden: beantwoord of niet,
+       en daarna dicht. Dezelfde kolom (stage), minder knoppen. */
+    if(l.stage==='new') acts.push('<button class="mini" data-act="lead-stage" data-stage="contacted">I have replied</button>');
+    if(l.stage!=='lost' && l.stage!=='won') acts.push('<button class="mini warn" data-act="lead-stage" data-stage="lost">Close</button>');
+    if(l.stage==='lost' || l.stage==='won') acts.push('<button class="mini" data-act="lead-stage" data-stage="new">Reopen</button>');
+  }
+  acts.push('<button class="mini" data-act="lead-note">'+(l.note?'Edit note':'Note')+'</button>');
 
   return '<div class="lead-card" data-lead="'+esc(l.id)+'">'
     + '<div class="nm">'+esc(l.name || l.email || 'Anonymous')+'</div>'
     + '<div class="for">'+esc(l._listing_title)+(l._listing_area?' · '+esc(l._listing_area):'')+'</div>'
+    + ((l.phone||l.email) ? '<div class="for">'+[l.phone,l.email].filter(Boolean).map(esc).join(' · ')+'</div>' : '')
     + (msg ? '<div class="msg">'+esc(msg.length>140 ? msg.slice(0,140)+'…' : msg)+'</div>' : '')
     + (bits.length ? '<div class="met">'+bits.join('')+'</div>' : '')
     + (l.note ? '<div class="note">'+esc(l.note)+'</div>' : '')
@@ -1828,6 +1904,14 @@ function renderLeadPipe(el){
     el.innerHTML = '<div style="padding:18px 0">'+emptyBox('No enquiries yet',
       'Every enquiry on one of your listings lands here, and stays here until you have closed it off. Nothing is deleted.',
       'See your listings','#portfolio')+'</div>';
+    return;
+  }
+  if(!PRO){
+    var open = LEADS.filter(function(l){ return l.stage!=='won' && l.stage!=='lost'; });
+    var closed = LEADS.filter(function(l){ return l.stage==='won' || l.stage==='lost'; });
+    el.innerHTML = '<div class="pipe-col simple" data-stage="open"><h4><span>Open</span><span class="n">'+open.length+'</span></h4>'
+      + (open.length ? open.map(leadCard).join('') : '<div class="none">Nothing waiting for you</div>') + '</div>'
+      + (closed.length ? '<div class="pipe-col simple" data-stage="closed"><h4><span>Closed</span><span class="n">'+closed.length+'</span></h4>'+closed.map(leadCard).join('')+'</div>' : '');
     return;
   }
   el.innerHTML = LEAD_STAGES.map(function(st){
@@ -2322,7 +2406,7 @@ async function saveCompany(){
 /* ---------- routering ---------- */
 var PRO_VIEWS = ['portfolio','leads','agenda','stats','company'];
 function show(view){
-  var allowed = ['overview','saved','favourites','account'].concat(PRO ? PRO_VIEWS : []);
+  var allowed = ['overview','saved','favourites','account'].concat(PRO ? PRO_VIEWS : (LIVE && isSupplier(ROLE) ? ['leads'] : []));
   if(allowed.indexOf(view)===-1) view='overview';
   document.querySelectorAll('.dview').forEach(function(s){ s.classList.toggle('on', s.dataset.view===view); });
   document.querySelectorAll('#dnav a[data-nav]').forEach(function(a){ a.classList.toggle('on', a.dataset.nav===view); });
@@ -2330,7 +2414,11 @@ function show(view){
   if(view==='favourites') renderFavs(document.getElementById('favList'));
   if(view==='account'){ renderAccount(); renderBilling(); }
   if(view==='portfolio'){ renderPortfolio(); renderMandates(document.getElementById('pfMandates')); }
-  if(view==='leads'){ renderLeadStats(document.getElementById('leadStats')); renderLeadPipe(document.getElementById('leadPipe')); }
+  if(view==='leads'){
+    var lh = document.querySelector('.dview[data-view="leads"] .vhead');
+    if(lh && !PRO) lh.innerHTML = '<h2>Enquiries</h2><p>Everyone who asked about one of your listings — with their number and address, so you can answer on WhatsApp, by phone or by email. Press “I have replied” once you have, so you can see what is still waiting.</p>';
+    renderLeadStats(document.getElementById('leadStats')); renderLeadPipe(document.getElementById('leadPipe'));
+  }
   if(view==='agenda') renderAgenda();
   if(view==='stats') renderStats();
   if(view==='company') renderCompany();
@@ -2344,6 +2432,45 @@ document.addEventListener('click', async function(ev){
   var act = btn.dataset.act;
   var ssEl = btn.closest('[data-ss]'), favEl = btn.closest('[data-fav]');
   var leadEl = btn.closest('[data-lead]');
+
+  /* ---- eigen advertentie: delen en status ---- */
+  if(act==='listing-copy'){
+    var u = btn.dataset.url || '';
+    try{ await navigator.clipboard.writeText(u); btn.textContent='Copied'; }
+    catch(e){ window.prompt('Copy this link', u); }
+    setTimeout(function(){ btn.textContent='Copy link'; }, 1800);
+    return;
+  }
+  if(act==='listing-status'){
+    var row = btn.closest('.listing'); if(!row) return;
+    var lid = row.dataset.lid, to = btn.dataset.to, label = btn.dataset.label || to;
+    var note = row.querySelector('.ltools-note');
+    var offMarket = (to==='sold' || to==='let' || to==='archived');
+    if(offMarket && !btn.hasAttribute('data-confirm')){
+      btn.setAttribute('data-confirm','1'); btn.textContent = 'Sure? ' + label;
+      setTimeout(function(){ if(btn.isConnected){ btn.removeAttribute('data-confirm'); btn.textContent = label; } }, 4000);
+      return;
+    }
+    row.querySelectorAll('.listing-tools button').forEach(function(b){ b.disabled=true; });
+    try{
+      if(typeof setMyListingStatus!=='function') throw new Error('backend-offline');
+      var res = await setMyListingStatus(lid, to);
+      var item = PORTFOLIO.filter(function(x){ return String(x.id)===String(lid); })[0];
+      if(item){ item.dbStatus = res.status; item.status = statusFromDb(res.status); }
+      if(item){
+        var tmp=document.createElement('div'); tmp.innerHTML = listingRow(item);
+        row.replaceWith(tmp.firstElementChild);
+        var n2 = document.querySelector('.listing[data-lid="'+lid+'"] .ltools-note');
+        if(n2){ n2.hidden=false; n2.textContent = ({sold:'Marked as sold. It is out of the search results; buyers who saved it see it as sold.', let:'Marked as let. It is out of the search results.', archived:'Off the market. Nobody sees it until you put it back.', active:'Back on the market — it is in the search results again.', under_offer:'Marked as under offer. It stays visible with that label.'})[res.status] || ''; }
+        applyUpgradeCard(PORTFOLIO);
+      }
+    }catch(e){
+      console.warn('setMyListingStatus:', (e && e.message) || e);
+      row.querySelectorAll('.listing-tools button').forEach(function(b){ b.disabled=false; b.removeAttribute('data-confirm'); });
+      if(note){ note.hidden=false; note.className='ltools-note bad'; note.textContent = /status_change_not_allowed/.test((e&&e.message)||'') ? 'That change is not allowed from the current status.' : 'Could not save that — check your connection and try again.'; }
+    }
+    return;
+  }
 
   /* ---- leadpijplijn ---- */
   if(act==='lead-stage' && leadEl){
@@ -2730,6 +2857,14 @@ function applyRole(){
     /* De professionele weergaven. Drie queries, alleen voor wie ze te zien
        krijgt, en de dagtotalen alleen als er advertenties zijn om ze aan op te
        hangen. Een zoeker haalt hier niets extra's op. */
+    /* De leads voor élke aanbieder (03-09-2026), niet alleen voor een kantoor;
+       de rest van het professionele blok blijft voor PRO. */
+    if(!PRO && isSupplier(ROLE) && typeof fetchLeadPipeline==='function'){
+      try{ LEADS = (await fetchLeadPipeline(300)) || []; }catch(e){ LEADS = []; }
+      var perL = {};
+      LEADS.forEach(function(l){ if(l.listing_id) perL[l.listing_id] = (perL[l.listing_id]||0)+1; });
+      PORTFOLIO.forEach(function(l){ l._enq = perL[l.id]||0; });
+    }
     if(PRO){
       var pro = await Promise.all([
         (typeof fetchLeadPipeline==='function') ? fetchLeadPipeline(300) : null,

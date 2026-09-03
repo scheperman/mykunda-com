@@ -192,6 +192,13 @@ const boostFn = (() => {
   return appSrc.slice(a, i + 1);
 })();
 const mkIsBoosted = new Function(boostFn + '\nreturn mkIsBoosted;')();
+/* Eén functie uit app.js knippen (mkWaNumber en waLinkTo, 03-09-2026). waLinkTo
+   leunt op mkWaNumber, dus die gaat mee. */
+function appFn(name){
+  const cut = n => { const a = appSrc.indexOf('function ' + n + '('); if(a < 0) throw new Error(n + ' niet gevonden in app.js');
+    let depth = 0, i = appSrc.indexOf('{', a); for(; i < appSrc.length; i++){ if(appSrc[i] === '{') depth++; else if(appSrc[i] === '}'){ depth--; if(depth === 0) break; } } return appSrc.slice(a, i + 1); };
+  return new Function(cut('mkWaNumber') + '\n' + cut('waLinkTo') + '\nreturn ' + name + ';')();
+}
 
 /* ---- Het maandequivalent -------------------------------------------------
    Filteren en sorteren op huur gebeurt op één meetpunt, anders is een prijs
@@ -261,12 +268,15 @@ const proSrc = (() => {
   return src.slice(a, b);
 })();
 
-function makePro(state){
+/* waLink() staat bij esc(), buiten het fase 5-blok; leadCard leunt erop
+   sinds 03-09-2026. PRO bepaalt sindsdien welke knoppen de kaart krijgt. */
+function makePro(state, PRO){
   const st = Object.assign({ LEADS:[], PORTFOLIO:[], VIEWINGS:[], VIEWDAYS:[], PAYMENTS:[],
     PF:{ status:'', kind:'', sel:{} } }, state||{});
   const fn = new Function('esc','ago','money','shortDate','statusFromDb','statusClass','emptyBox',
-    'LEADS','PORTFOLIO','VIEWINGS','VIEWDAYS','PAYMENTS','PF','document',
-    proSrc + '\nreturn { hoursTxt, median, leadCard, pfRows, viewsPerDay, agendaRow };');
+    'LEADS','PORTFOLIO','VIEWINGS','VIEWDAYS','PAYMENTS','PF','document','PRO',
+    'mkWaNumber','waLinkTo',
+    grab('leadWa') + '\n' + proSrc + '\nreturn { hoursTxt, median, leadCard, pfRows, viewsPerDay, agendaRow, leadWa };');
   return fn(esc,
     d => 'x ago',
     g => 'D' + Math.round(+g||0).toLocaleString('en-US'),
@@ -275,7 +285,8 @@ function makePro(state){
     s => s==='Active' ? 'active' : 'closed',
     () => '<div class="empty"></div>',
     st.LEADS, st.PORTFOLIO, st.VIEWINGS, st.VIEWDAYS, st.PAYMENTS, st.PF,
-    { getElementById: () => null, querySelectorAll: () => [] });
+    { getElementById: () => null, querySelectorAll: () => [] }, PRO!==false,
+    appFn('mkWaNumber'), appFn('waLinkTo'));
 }
 
 const pro = makePro();
@@ -424,6 +435,42 @@ check('met logo staat er een afbeelding',
 check('de naam wordt ontsmet',
   !/<b>Kombo "<\/b>/.test(adm({ agency:{ name:'Kombo "Coast' } })) &&
   /&quot;/.test(adm({ agency:{ name:'Kombo "Coast' } })));
+
+/* ---- 03-09-2026: contact op de leadkaart, de particuliere variant, en de
+   knoppen onder een eigen advertentie ---- */
+const L2 = Object.assign({}, L1, { phone:'+220 700 1234' });
+k = pro.leadCard(L2);
+check('WhatsApp-knop met landcode',      /https:\/\/wa\.me\/2207001234\?text=/.test(k), k);
+check('Bel-knop',                        /href="tel:/.test(k));
+check('E-mailknop met onderwerp',        /mailto:f@x\.gm\?subject=/.test(k));
+check('nummer staat leesbaar op de kaart', /\+220 700 1234/.test(k));
+check('zonder nummer geen WhatsApp',     !/wa\.me/.test(pro.leadCard(L1)));
+check('lokaal nummer krijgt 220',        pro.leadWa('7001234') === 'https://wa.me/2207001234');
+check('00-prefix wordt gestript',        pro.leadWa('00220 700 1234','hi') === 'https://wa.me/2207001234?text=hi');
+check('te kort nummer geeft niets',      pro.leadWa('12') === '');
+
+const part = makePro({}, false);
+k = part.leadCard(L2);
+check('particulier: "I have replied" in plaats van trechter', /I have replied/.test(k) && !/→ Contacted/.test(k));
+check('particulier: Close in plaats van Lost',              /data-stage="lost">Close</.test(k));
+check('particulier: gesloten lead kan heropend',            /Reopen/.test(part.leadCard(Object.assign({}, L2, { stage:'lost' }))));
+
+const toolsSrc = grab('listingTools') + '\n' + grab('fmtPriceText');
+const tools = new Function('vrEsc','dbStatusOf','fmtPrice','document',
+  toolsSrc + '\nreturn listingTools;')(esc, l => l.dbStatus, () => '<b>D1,000</b>',
+  { createElement: () => { const o = { innerHTML:'' }; Object.defineProperty(o,'textContent',{ get(){ return o.innerHTML.replace(/<[^>]+>/g,''); } }); return o; } });
+let tt = tools({ _db:true, id:'abc', dbStatus:'active', type:'sale', title:'Villa', price:1000 });
+check('live verkoop: delen, verkocht, onder bod, van de markt', /wa\.me\/\?text=/.test(tt) && /data-to="sold"/.test(tt) && /data-to="under_offer"/.test(tt) && /data-to="archived"/.test(tt));
+check('deeltekst bevat titel, prijs en link', /Villa%20%E2%80%94%20D1%2C000/.test(tt) && /property\.html%3Fid%3Dabc/.test(tt), tt);
+tt = tools({ _db:true, id:'abc', dbStatus:'active', type:'rent', title:'Flat', price:1000 });
+check('live verhuur: "Mark as let"', /data-to="let"/.test(tt) && !/data-to="sold"/.test(tt));
+tt = tools({ _db:true, id:'abc', dbStatus:'under_offer', type:'sale', title:'Villa', price:1000 });
+check('onder bod: bod vervallen in plaats van onder bod', /Offer fell through/.test(tt) && !/data-to="under_offer"/.test(tt));
+tt = tools({ _db:true, id:'abc', dbStatus:'sold', type:'sale', title:'Villa', price:1000 });
+check('verkocht: alleen terug op de markt', /data-to="active"/.test(tt) && !/wa\.me/.test(tt));
+check('concept: geen knoppen',        tools({ _db:true, id:'abc', dbStatus:'draft', type:'sale' }) === '');
+check('in beoordeling: geen knoppen', tools({ _db:true, id:'abc', dbStatus:'pending_review', type:'sale' }) === '');
+check('lokale terugval: geen knoppen', tools({ id:'abc', dbStatus:'active', type:'sale' }) === '');
 
 console.log(fails ? '\n' + fails + ' test(s) mislukt.' : '\nAlle tests geslaagd.');
 process.exit(fails ? 1 : 0);

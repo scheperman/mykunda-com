@@ -1619,6 +1619,39 @@ const GUIDES = [
 ];
 
 /* ---------- User-fillable image (drop real Gambia photos over the fallback) ---------- */
+/* ---------- Video tour (03-09-2026) ----------
+   Eén parser voor de hele site: de wizard (herkennen + voorbeeld), de kaart
+   (badge) en de objectpagina (speler). Alleen YouTube en Vimeo — die
+   streamen adaptief, dus een bezoeker op 4G krijgt de bitrate die zijn
+   verbinding aankan, en het kost MyKunda geen opslag of verkeer. Geen andere
+   hosts: de speler is een iframe en de CSP (frame-src) laat alleen deze twee
+   toe. Geeft null terug als de link niet herkend wordt. */
+function mkVideoInfo(raw){
+  const u = String(raw||'').trim();
+  if(!u) return null;
+  let m;
+  /* YouTube: watch?v=, youtu.be/, shorts/, embed/, live/ — id is 11 tekens. */
+  m = u.match(/^(?:https?:\/\/)?(?:www\.|m\.)?(?:youtube\.com\/(?:watch\?(?:[^#]*&)?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11})(?:[?&#][^\s]*)?$/);
+  if(m){
+    const id = m[1];
+    return { provider:'youtube', id:id,
+      watch:'https://www.youtube.com/watch?v='+id,
+      embed:'https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0&playsinline=1&modestbranding=1',
+      thumb:'https://i.ytimg.com/vi/'+id+'/hqdefault.jpg' };
+  }
+  /* Vimeo: vimeo.com/123456789 of player.vimeo.com/video/123456789. */
+  m = u.match(/^(?:https?:\/\/)?(?:www\.|player\.)?vimeo\.com\/(?:video\/)?(\d{6,12})(?:[/?#][^\s]*)?$/);
+  if(m){
+    const id = m[1];
+    return { provider:'vimeo', id:id,
+      watch:'https://vimeo.com/'+id,
+      embed:'https://player.vimeo.com/video/'+id+'?autoplay=1&dnt=1&playsinline=1',
+      thumb:'' };
+  }
+  return null;
+}
+const VIDEO_ICON = '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+
 function slotImg(id, src, ph, extra){
   return `<image-slot id="${id}" src="${src}" placeholder="${ph}" radius="0" style="position:absolute;inset:0;width:100%;height:100%;display:block" ${extra||''}></image-slot>`;
 }
@@ -1673,7 +1706,7 @@ function cardHTML(p){
       ${slotImg('ph-'+p.id, p.img, 'Drop a real photo of '+p.title+', '+(p.area.split('· ')[0].trim()))}
       <div class="badges">${badges.join('')}</div>
       <button class="fav ${isFav(p.id)?'on':''}" aria-label="Save" onclick="event.preventDefault();event.stopPropagation();const on=toggleFav('${p.id}');this.classList.toggle('on',on);this.innerHTML=on?ICON.heartFill:ICON.heart;">${isFav(p.id)?ICON.heartFill:ICON.heart}</button>
-      <div class="count">${ICON.camera} ${p.photos}</div>
+      <div class="count">${ICON.camera} ${p.photos}${(p.video && mkVideoInfo(p.video)) ? ' &nbsp;'+VIDEO_ICON+' Video' : ''}</div>
     </div>
     <div class="card-body">
       <div class="card-price">${fmtPrice(p.price, p.type, p.price_period)}</div>
