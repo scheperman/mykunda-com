@@ -78,6 +78,9 @@ async function signOut(){
   if(sb) try{ await sb.auth.signOut(); }catch(e){ console.warn('signOut:',e); }
   try{ localStorage.removeItem('mykunda_admin'); }catch(e){}
   try{ localStorage.removeItem('mykunda_user'); }catch(e){}
+  /* De lokale favorieten spiegelen sinds 03-09-2026 het account; ze blijven
+     niet achter voor wie hierna op hetzelfde toestel inlogt. */
+  try{ localStorage.removeItem('mykunda_favs'); localStorage.removeItem('mykunda_favs_db'); }catch(e){}
   if(typeof clearUser==='function') clearUser();
 }
 async function currentUser(){
@@ -617,6 +620,73 @@ async function dbToggleFavorite(listingId){
   if(existing){ await sb.from('favorites').delete().eq('user_id', u.id).eq('listing_id', listingId); return false; }
   await sb.from('favorites').insert({ user_id: u.id, listing_id: listingId }); return true;
 }
+/* ---- Favorieten horen bij het account (03-09-2026) ----
+   Het hartje op search.html en property.html schreef tot vandaag alleen naar
+   localStorage (toggleFav in app.js); dbToggleFavorite() bestond maar niets
+   riep het aan. Het dashboard leest daarentegen uit de tabel `favorites` —
+   dus wie ingelogd een hartje zette, zag op zijn dashboard "No favourites
+   yet", en de prijsdaling-melding op favorieten kon nooit afgaan.
+
+   Nu: setFavorite() schrijft één favoriet expliciet aan of uit (geen toggle,
+   zodat een dubbele klik nooit de verkeerde kant op valt), en syncFavorites()
+   brengt bij het laden van elke pagina de lokale lijst en het account bij
+   elkaar. De eerste keer worden de lokale hartjes van vóór het inloggen naar
+   het account gebracht; daarna is het account de bron en volgt localStorage,
+   zodat een favoriet die op een andere telefoon is verwijderd hier niet
+   terugkomt. De vlag mykunda_favs_db zegt "lokaal spiegelt het account". */
+async function setFavorite(listingId, on){
+  if(!sb) return null;
+  const u = await currentUser(); if(!u) return null;
+  if(on){
+    const { error } = await sb.from('favorites')
+      .upsert({ user_id: u.id, listing_id: listingId }, { onConflict: 'user_id,listing_id', ignoreDuplicates: true });
+    if(error) throw error;
+  }else{
+    const { error } = await sb.from('favorites').delete().eq('user_id', u.id).eq('listing_id', listingId);
+    if(error) throw error;
+  }
+  return !!on;
+}
+async function syncFavorites(){
+  if(!sb) return null;
+  let cached=null; try{ cached = JSON.parse(localStorage.getItem('mykunda_user')||'null'); }catch(e){}
+  if(!cached) return null; /* geen sessie in de cache → niets ophalen voor een anonieme bezoeker */
+  const u = await currentUser(); if(!u) return null;
+  const local = (typeof getFavs==='function') ? getFavs() : [];
+  const { data, error } = await sb.from('favorites').select('listing_id').eq('user_id', u.id);
+  if(error){ console.warn('syncFavorites:', error.message); return null; }
+  const remote = (data||[]).map(function(r){ return r.listing_id; });
+  let mirrored = false;
+  try{ mirrored = localStorage.getItem('mykunda_favs_db') === '1'; }catch(e){}
+  let merged = remote.slice();
+  if(!mirrored){
+    /* Eerste keer na inloggen: lokale hartjes meenemen. Alleen echte
+       listing-id's (uuid); een rij kan nog steeds falen op de FK als de
+       advertentie inmiddels weg is, daarom per stuk en zonder de rest te
+       laten vallen. */
+    const push = local.filter(function(id){ return remote.indexOf(id)<0 && /^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(String(id)); });
+    for(const id of push){
+      const { error: e1 } = await sb.from('favorites')
+        .upsert({ user_id: u.id, listing_id: id }, { onConflict: 'user_id,listing_id', ignoreDuplicates: true });
+      if(!e1) merged.push(id);
+    }
+    merged = Array.from(new Set(merged));
+  }
+  try{
+    localStorage.setItem('mykunda_favs', JSON.stringify(merged));
+    localStorage.setItem('mykunda_favs_db', '1');
+  }catch(e){}
+  if(typeof paintFavs==='function') paintFavs();
+  return merged;
+}
+/* Meteen na de naamcorrectie, zelfde tik: één query voor wie ingelogd is,
+   niets voor wie dat niet is. */
+(function(){
+  var run = function(){ setTimeout(function(){ syncFavorites().catch(function(e){ console.warn('syncFavorites:', e && e.message); }); }, 0); };
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+  else run();
+})();
+
 async function saveSearch(filters, area, channel){
   if(!sb) throw new Error('backend-offline');
   const u = await currentUser(); if(!u) throw new Error('not-signed-in');
@@ -1170,11 +1240,27 @@ async function fetchConversations(){
 async function fetchMessages(conversationId){
   if(!sb) return null;
   const { data, error } = await sb.from('messages')
-    .select('id, sender_id, body, created_at, read_at')
+    .select('id, sender_id, body, created_at, read_at, viewing_id')
     .eq('conversation_id', conversationId)
     .order('created_at', { ascending: true });
   if(error){ console.warn('fetchMessages:', error.message); return null; }
   return data;
+}
+
+/* De bezichtigingen van één gesprek (03-09-2026). propose_viewing() schrijft
+   naast de rij in `viewings` een gewoon bericht met viewing_id; tot vandaag
+   las messages.html dat als platte tekst, zonder knoppen, terwijl het
+   dashboard de koper juist naar "your messages" stuurde om een tijd te kiezen.
+   Met deze lijst tekent de chat de kaart uit de databaserij: de tijden, wie
+   mag kiezen, en de uitkomst. De leesregel op viewings scoopt op deelnemer. */
+async function fetchConversationViewings(conversationId){
+  if(!sb) return null;
+  const { data, error } = await sb.from('viewings')
+    .select('id, conversation_id, proposer_id, invitee_id, status, slots, chosen_slot, note, message_id, cancel_reason, created_at')
+    .eq('conversation_id', conversationId)
+    .order('created_at', { ascending: true });
+  if(error){ console.warn('fetchConversationViewings:', error.message); return null; }
+  return data || [];
 }
 
 /* Send a message. sender_id must be the signed-in user or RLS refuses.

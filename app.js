@@ -1509,11 +1509,35 @@ function _domCopyFallback(text){
 /* ---------- Favorites (localStorage) ---------- */
 function getFavs(){ try{ return JSON.parse(localStorage.getItem('mykunda_favs')||'[]'); }catch(e){ return []; } }
 function isFav(id){ return getFavs().includes(id); }
+/* Het hartje schrijft lokaal én — voor wie ingelogd is — naar het account
+   (setFavorite in supabase.js, 03-09-2026). Lokaal eerst, zodat het hartje
+   meteen reageert; de schrijfactie naar het account loopt erachteraan en
+   wacht op supabase.js als die pagina hem asynchroon laadt (__sbReady). */
 function toggleFav(id){
   let f = getFavs();
-  f = f.includes(id) ? f.filter(x=>x!==id) : [...f, id];
+  const on = !f.includes(id);
+  f = on ? [...f, id] : f.filter(x=>x!==id);
   localStorage.setItem('mykunda_favs', JSON.stringify(f));
-  return f.includes(id);
+  if(getUser()){
+    const go = function(){
+      if(typeof setFavorite!=='function') return;
+      setFavorite(id, on).catch(function(e){ console.warn('favorite:', e && e.message); });
+    };
+    if(window.__sbReady && typeof window.__sbReady.then==='function') window.__sbReady.then(go, go); else go();
+  }
+  return on;
+}
+/* Hartjes op de pagina bijwerken nadat het account is uitgelezen: de kaarten
+   waren al getekend met de lokale lijst van vóór de synchronisatie. */
+function paintFavs(){
+  const f = getFavs();
+  document.querySelectorAll('.card[data-id] .fav').forEach(function(b){
+    const card = b.closest('.card'); if(!card) return;
+    const on = f.includes(card.dataset.id);
+    b.classList.toggle('on', on);
+    b.innerHTML = on ? ICON.heartFill : ICON.heart;
+  });
+  try{ document.dispatchEvent(new CustomEvent('mk:favs-synced', { detail: f })); }catch(e){}
 }
 
 /* ---------- User listings (published via the wizard) ----------

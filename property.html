@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" id="mkRobots" content="noindex, follow, noai, noimageai"><!--mk:02sp1ev--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" id="mkRobots" content="noindex, follow, noai, noimageai"><!--mk:1mqynv2--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -32,7 +32,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preconnect" href="https://api.mapbox.com" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=137992134626557">
+<link rel="stylesheet" href="styles.min.css?v=128350273008347">
 <style>
 .crumb{padding:18px 0 6px;font-size:14px;color:var(--muted);display:flex;align-items:center;gap:8px}
 .crumb a{font-weight:600}.crumb a:hover{color:var(--green-700)}
@@ -289,7 +289,7 @@
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=137992134626557"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=128350273008347"><!--/mk-css-->
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -597,15 +597,15 @@
     </div>
   </footer><!--/mk-ftr--></div>
 
-<script src="app.min.js?v=137992134626557"></script>
-<script src="image-slot.js?v=137992134626557" defer></script>
+<script src="app.min.js?v=128350273008347"></script>
+<script src="image-slot.js?v=128350273008347" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel instead of blocking the page, and
    Leaflet (~145 KB) is only fetched when the visitor opens the Map tab. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=137992134626557'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=128350273008347'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -1418,6 +1418,29 @@ document.querySelectorAll('.mtab').forEach(t=>t.addEventListener('click',()=>{
 }));
 // fav + share
 favBtn.addEventListener('click',()=>{const on=toggleFav(P.id);favBtn.innerHTML=on?ICON.heartFill:ICON.heart;favBtn.style.color=on?'var(--amber-500)':'';});
+/* Het hartje volgt het account zodra dat is uitgelezen (syncFavorites in
+   supabase.js): op een andere telefoon bewaard = hier ook gevuld. */
+document.addEventListener('mk:favs-synced',()=>{const on=isFav(P.id);favBtn.innerHTML=on?ICON.heartFill:ICON.heart;favBtn.style.color=on?'var(--amber-500)':'';});
+
+/* Ingelogd? Dan staan naam en adres al in de sessie en het nummer in het
+   profiel — een zoeker met account hoeft ze niet opnieuw in te typen om een
+   bezichtiging te vragen. Lege velden worden gevuld, ingevulde niet overschreven. */
+(async function(){
+  const form=document.querySelector('.vform'); if(!form) return;
+  const u=(typeof getUser==='function')?getUser():null; if(!u) return;
+  const nameEl=form.querySelector('input[type=text]'), emailEl=form.querySelector('input[type=email]'), phoneEl=form.querySelector('input[type=tel]');
+  if(nameEl && !nameEl.value && u.name) nameEl.value=u.name;
+  if(emailEl && !emailEl.value && u.email) emailEl.value=u.email;
+  try{ await window.__sbReady; }catch(e){}
+  try{
+    const p=(typeof fetchMyProfile==='function')?await fetchMyProfile():null;
+    if(p){
+      if(nameEl && !nameEl.value && p.full_name) nameEl.value=p.full_name;
+      if(emailEl && !emailEl.value && p.email) emailEl.value=p.email;
+      if(phoneEl && !phoneEl.value && p.phone) phoneEl.value=p.phone;
+    }
+  }catch(e){}
+})();
 shareBtn.addEventListener('click',()=>{
   const loc=P.area.split('·')[0].trim();
   const url=(location.origin&&location.origin!=='null'?location.origin+location.pathname.replace(/[^/]*$/,''):'')+'property.html?id='+P.id;
@@ -1540,6 +1563,7 @@ window.bookViewing = async function(form) {
   const label = btn ? btn.textContent : 'Request viewing';
   if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
   let viaKetenVoorScherm = false;   // buiten de try, want de slottekst leest hem
+  let viaConvId = null;             // het gesprek waarin de tijd nu staat
   try {
     const listingId = (typeof P !== 'undefined' && P && P.id) || null;
 
@@ -1569,11 +1593,21 @@ window.bookViewing = async function(form) {
     if(listingId){
       const dt = new Date(d + 'T' + ((slot || '10:00').trim() || '10:00'));
       slotIso = isNaN(dt) ? null : dt.toISOString();
+      /* propose_viewing weigert een tijd binnen het komende halfuur. Voor een
+         ingelogde zoeker die "vandaag 10:00" kiest terwijl het al middag is,
+         valt de aanvraag dan stil terug op een lead — met de belofte van
+         1–2 werkdagen. Beter is het meteen te zeggen. */
+      if(slotIso && new Date(slotIso).getTime() < Date.now() + 30*60000 && typeof getUser==='function' && getUser()){
+        err.textContent = 'That time is too soon — pick a later slot or another day.';
+        if (btn) { btn.disabled = false; btn.textContent = label; }
+        return;
+      }
       if(slotIso && typeof requestViewingAsUser === 'function'){
         try{
-          await requestViewingAsUser(listingId, slotIso, note || null);
+          const r = await requestViewingAsUser(listingId, slotIso, note || null);
           viaKeten = true;
           viaKetenVoorScherm = true;
+          if(r && r.conversation_id) viaConvId = r.conversation_id;
         }catch(vErr){
           const m = String((vErr && vErr.message) || vErr);
           // 'not-signed-in' is de normale gang van zaken voor een bezoeker
@@ -1609,7 +1643,7 @@ window.bookViewing = async function(form) {
   const naTekst = viaKetenVoorScherm
     ? `Your time is with the seller — you will get an email as soon as it is confirmed, and you can follow it in your messages.`
     : `A confirmation is on its way to ${email.replace(/[<>&"]/g,'')}. We come back to you with the time — usually within 1–2 working days.`;
-  form.innerHTML = `<div style="text-align:center;padding:14px 6px"><div style="width:54px;height:54px;border-radius:50%;background:var(--green-50);color:var(--green-700);display:flex;align-items:center;justify-content:center;margin:0 auto 14px">${ICON.check}</div><div style="font-family:var(--serif);font-size:19px;font-weight:600;margin-bottom:6px">Viewing requested</div><p style="font-size:14px;color:var(--muted)">${naTekst}</p>${viaKetenVoorScherm ? `<a class="btn btn-ghost btn-sm" style="margin-top:14px" href="messages.html">Open your messages</a>` : ``}</div>`;
+  form.innerHTML = `<div style="text-align:center;padding:14px 6px"><div style="width:54px;height:54px;border-radius:50%;background:var(--green-50);color:var(--green-700);display:flex;align-items:center;justify-content:center;margin:0 auto 14px">${ICON.check}</div><div style="font-family:var(--serif);font-size:19px;font-weight:600;margin-bottom:6px">Viewing requested</div><p style="font-size:14px;color:var(--muted)">${naTekst}</p>${viaKetenVoorScherm ? `<a class="btn btn-ghost btn-sm" style="margin-top:14px" href="messages.html${viaConvId ? '?c='+encodeURIComponent(viaConvId) : ''}">Open the conversation</a>` : ``}</div>`;
 };
 
 } // end renderProperty

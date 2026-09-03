@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-no-wa>
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1rwvkqg--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0enn131--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <noscript></noscript>
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=137992134626557">
+<link rel="stylesheet" href="styles.min.css?v=128350273008347">
 <style>
 body{background:var(--paper-2);height:100vh;overflow:hidden;display:flex;flex-direction:column}
 .msg-shell{flex:1;max-width:1180px;width:100%;margin:0 auto;padding:22px 28px 28px;display:flex;flex-direction:column;min-height:0}
@@ -86,6 +86,8 @@ body{background:var(--paper-2);height:100vh;overflow:hidden;display:flex;flex-di
 .pc-h{font-weight:700;font-size:14px;color:var(--green-800);margin-bottom:11px;line-height:1.3}
 .pc-h .pc-sub{display:block;font-weight:600;font-size:12.5px;color:var(--muted);margin-top:2px}
 .pc-slots{display:flex;flex-direction:column;gap:8px}
+.pc-note{font-size:13px;color:var(--ink-2);line-height:1.45;margin:-4px 0 10px;white-space:pre-wrap}
+.pc-slot:disabled,.pc-decline:disabled{opacity:.55;cursor:wait}
 .pc-slot{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;height:46px;padding:0 8px 0 15px;border-radius:var(--r-md);box-shadow:inset 0 0 0 1.5px var(--line);background:var(--paper);transition:.14s;text-align:left}
 .pc-slot:hover{box-shadow:inset 0 0 0 1.5px var(--green-500);background:var(--green-50)}
 .pc-slot.read{cursor:default;background:var(--paper)}
@@ -149,7 +151,7 @@ body{background:var(--paper-2);height:100vh;overflow:hidden;display:flex;flex-di
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=137992134626557"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=128350273008347"><!--/mk-css-->
 </head>
 <body>
 <div id="header"></div>
@@ -188,7 +190,7 @@ body{background:var(--paper-2);height:100vh;overflow:hidden;display:flex;flex-di
       <div class="safe-note" id="safeNote"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.4 7.8 8 9 4.6-1.2 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg><span>Keep it here. MyKunda never asks for payment in chat — never send money or copies of your ID to see a property, and ask for the title documents. <a href="verify.html">Order an independent check</a></span></div>
       <div class="vw-panel" id="vwPanel">
         <h4>Propose viewing times</h4>
-        <div class="hint">Give one to three options. The other party picks one and both of you see the confirmation in this thread.</div>
+        <div class="hint">Give one to three options, at least half an hour from now. The other party picks one; both of you get an email and see the confirmation in this thread.</div>
         <div class="vw-row"><input type="date" class="vwD" aria-label="Date option 1"><input type="time" class="vwT" value="10:00" aria-label="Time option 1"></div>
         <div class="vw-row"><input type="date" class="vwD" aria-label="Date option 2"><input type="time" class="vwT" value="14:00" aria-label="Time option 2"></div>
         <div class="vw-row"><input type="date" class="vwD" aria-label="Date option 3"><input type="time" class="vwT" value="16:00" aria-label="Time option 3"></div>
@@ -204,15 +206,15 @@ body{background:var(--paper-2);height:100vh;overflow:hidden;display:flex;flex-di
   </div>
 </div>
 
-<script src="app.min.js?v=137992134626557"></script>
-<script src="image-slot.js?v=137992134626557" defer></script>
+<script src="app.min.js?v=128350273008347"></script>
+<script src="image-slot.js?v=128350273008347" defer></script>
 <script>
 /* 4G: the Supabase client (~205 KB) is not needed to paint this page. It downloads
    in parallel and every backend call awaits window.__sbReady. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=137992134626557'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=128350273008347'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 </script>
@@ -272,13 +274,22 @@ function resolveProposals(msgs){
 // ----- viewing-time proposal card (the other party picks; the sender sees read-only) -----
 function proposeCardHTML(m, mi){
   // m.mine is set for database threads; demo threads fall back to the role toggle
-  const canPick = m.mine===undefined ? role==='buyer' : !m.mine;
+  const canPick = m._db ? !!m.canPick : (m.mine===undefined ? role==='buyer' : !m.mine);
   if(m.status==='accepted'){
     return `<div class="propose-card done">${ICON.check}<div><b>Viewing confirmed</b><span>${esc(slotLabel(m.chosen))}</span></div></div>`;
   }
   if(m.status==='declined'){
-    return `<div class="propose-card done declined">✕<div><b>None of these worked</b><span>${canPick?'You asked for other times':'Other times were requested'}</span></div></div>`;
+    const who = m._db ? !m.mine : canPick;
+    return `<div class="propose-card done declined">✕<div><b>None of these worked</b><span>${who?'You asked for other times':'Other times were requested'}</span></div></div>`;
   }
+  if(m.status==='superseded'){
+    return `<div class="propose-card done declined">↻<div><b>Replaced by newer times</b><span>See the later proposal in this thread</span></div></div>`;
+  }
+  if(m.status==='cancelled' || m.status==='completed'){
+    const lbl = m.status==='completed' ? 'Viewing took place' : 'Viewing cancelled';
+    return `<div class="propose-card done${m.status==='cancelled'?' declined':''}">${m.status==='completed'?ICON.check:'✕'}<div><b>${lbl}</b><span>${esc((m.slots||[]).map(slotLabel).join(' · '))}</span></div></div>`;
+  }
+  const note = m.note ? `<div class="pc-note">${esc(m.note)}</div>` : '';
   const head = canPick
     ? `<div class="pc-h">Proposed viewing times <span class="pc-sub">Pick one that suits you</span></div>`
     : `<div class="pc-h">You proposed these times <span class="pc-sub">Waiting for a choice…</span></div>`;
@@ -290,12 +301,45 @@ function proposeCardHTML(m, mi){
   const footer = canPick
     ? `<button class="pc-decline" onclick="declineSlots(${mi})">None of these work — suggest others</button>`
     : '';
-  return `<div class="propose-card">${head}<div class="pc-slots">${slots}</div>${footer}<span class="pc-t">${esc(m.tm||'')}</span></div>`;
+  return `<div class="propose-card">${head}${note}<div class="pc-slots">${slots}</div>${footer}<span class="pc-t">${esc(m.tm||'')}</span></div>`;
+}
+
+/* Eén tijd kiezen of alles afwijzen op een rij uit `viewings`: de database
+   controleert dat ik de uitgenodigde ben en dat de tijd echt is aangeboden
+   (respond_viewing), en schrijft zelf het antwoord in het gesprek. Daarna
+   wordt het gesprek opnieuw ingelezen — de uitkomst staat in de rij. */
+function viewingBusy(mi, on){
+  const c=convos.find(x=>x.id===activeId); if(!c) return;
+  c.msgs[mi]._busy = on;
+  document.querySelectorAll('.pc-slot, .pc-decline').forEach(b=>{ b.disabled = !!on; });
+}
+function viewingError(e){
+  const m = String((e && e.message) || e);
+  if(/already-resolved/.test(m)) return 'This proposal has already been answered.';
+  if(/slot-in-past/.test(m)) return 'That time has already passed — ask for new times.';
+  if(/not-the-invitee/.test(m)) return 'Only the person who was invited can answer this.';
+  return 'Couldn\'t send that — please try again.';
+}
+async function respondDbViewing(mi, slotIso){
+  const c=convos.find(x=>x.id===activeId);
+  const m=c.msgs[mi];
+  viewingBusy(mi, true);
+  try{
+    if(slotIso){ await confirmViewing(m._vid, slotIso); }
+    else { await declineViewing(m._vid); }
+    await reloadConvo(c);
+  }catch(e){
+    console.warn('respond viewing:', e && e.message);
+    c.msgs.push({f:'sys',t:viewingError(e)});
+    viewingBusy(mi, false);
+    renderThread();
+  }
 }
 
 window.pickSlot=function(mi,si){
   const c=convos.find(x=>x.id===activeId);
   const m=c.msgs[mi];
+  if(m._db){ respondDbViewing(mi, m.slots[si].iso); return; }
   const label=slotLabel(m.slots[si]);
   m.status='accepted'; m.chosen=label;
   if(c._isDb){
@@ -315,6 +359,7 @@ window.pickSlot=function(mi,si){
 window.declineSlots=function(mi){
   const c=convos.find(x=>x.id===activeId);
   const m=c.msgs[mi];
+  if(m._db){ respondDbViewing(mi, null); return; }
   m.status='declined';
   if(c._isDb){
     renderThread(); renderConvos();
@@ -523,9 +568,43 @@ function dbConvoToUi(c){
 
 /* One place where a database row becomes a thread item — used by the initial
    load and by realtime, so viewing cards behave identically in both paths. */
-function mapDbMsg(m){
+function fmtSlot(iso){
+  const d = new Date(iso);
+  if(isNaN(d)) return String(iso||'');
+  return d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})+' · '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+}
+/* Bezichtigingen uit de tabel `viewings` (03-09-2026). propose_viewing() zet
+   een gewoon bericht in het gesprek met viewing_id; de rij zelf draagt de
+   tijden, de status en wie mag kiezen. Tot vandaag kwam dat bericht hier als
+   platte tekst binnen — de koper die vanaf de objectpagina een tijd vroeg, en
+   de verkoper die op het dashboard "choose one in your messages" las, vonden
+   hier geen enkele knop. De kalenderknop van de chat zelf schreef bovendien
+   een eigen, getagd bericht dat nooit in `viewings` kwam: geen mail, geen
+   herinnering, geen kaart op het dashboard. Nu is de databaserij de bron;
+   de oude tag-vorm wordt alleen nog gelezen voor wat er al stond. */
+function mapDbMsg(m, byViewing){
   const mine = m.sender_id===_myUserId;
   const base = { tm: fmtTm(m.created_at), _at: m.created_at, _id: m.id, _read: !!m.read_at };
+  const v = m.viewing_id && byViewing ? byViewing[m.viewing_id] : null;
+  if(v && v.message_id===m.id){
+    const st = v.status==='proposed' ? 'pending'
+             : v.status==='confirmed' ? 'accepted'
+             : v.status==='declined' ? 'declined'
+             : v.status==='cancelled' ? (v.cancel_reason==='superseded' ? 'superseded' : 'cancelled')
+             : v.status;
+    return Object.assign(base,{ f:'propose', mine: v.proposer_id===_myUserId, _vid: v.id, _db: true,
+      canPick: v.invitee_id===_myUserId && v.status==='proposed',
+      slots: (v.slots||[]).map(function(s){ return { iso:s, label:fmtSlot(s) }; }),
+      status: st, chosen: v.chosen_slot ? fmtSlot(v.chosen_slot) : undefined, note: v.note||'' });
+  }
+  if(m.viewing_id){
+    /* Het antwoord (bevestigd / geen van deze / afgezegd) is een gewoon bericht
+       met viewing_id; de kaart hierboven draagt de uitkomst al, dus dit wordt
+       een systeemregel in plaats van een tweede bubbel. */
+    const b = String(m.body||'');
+    const t = /^None of those/i.test(b) ? (mine ? 'You asked for other times' : 'Other times were requested') : b;
+    return Object.assign(base,{ f:'sys', t });
+  }
   const tag = vwParse(m.body);
   if(tag && tag.k==='vprop') return Object.assign(base,{ f:'propose', mine, slots: tag.slots||[], status:'pending' });
   if(tag && tag.k==='vaccept') return Object.assign(base,{ f:'sys', _t:'vaccept', slot: tag.slot, t:(mine?'You confirmed the viewing: ':'Viewing confirmed: ')+(tag.slot||'') });
@@ -535,12 +614,25 @@ function mapDbMsg(m){
 
 async function loadConvoMsgs(rc){
   if(!rc || rc._loaded || !rc._isDb) return;
-  const dbMsgs = typeof fetchMessages==='function' ? await fetchMessages(rc.dbId) : null;
+  const [dbMsgs, vws] = await Promise.all([
+    typeof fetchMessages==='function' ? fetchMessages(rc.dbId) : null,
+    typeof fetchConversationViewings==='function' ? fetchConversationViewings(rc.dbId) : null
+  ]);
   if(dbMsgs){
-    rc.msgs = dbMsgs.map(mapDbMsg);
+    rc._byViewing = {};
+    (vws||[]).forEach(function(v){ rc._byViewing[v.id] = v; });
+    rc.msgs = dbMsgs.map(function(m){ return mapDbMsg(m, rc._byViewing); });
     resolveProposals(rc.msgs);
     rc._loaded = true;
   }
+}
+/* Opnieuw inlezen na een bezichtigingsactie: de uitkomst staat in de
+   databaserij, niet in het bericht, dus de kaart wordt uit de bron hertekend. */
+async function reloadConvo(rc){
+  if(!rc || !rc._isDb) return;
+  rc._loaded = false;
+  await loadConvoMsgs(rc);
+  renderThread(); renderConvos();
 }
 
 async function openActiveConvo(){
@@ -565,13 +657,23 @@ function subscribeToActive(){
       if(mine && mine._read !== !!msg.read_at){ mine._read = !!msg.read_at; renderThread(); }
       return;
     }
+    /* Een bericht met viewing_id hoort bij een rij in `viewings` die hier nog
+       niet bekend is (nieuw voorstel, antwoord of afzegging). De kaart komt
+       uit die rij, dus het gesprek wordt opnieuw ingelezen in plaats van het
+       bericht los erbij te zetten. Geldt ook voor de eigen echo: het antwoord
+       op een voorstel wordt door de database geschreven, niet door deze pagina. */
+    if(msg.viewing_id){
+      if(ac.msgs.some(x=>x._id===msg.id)) return;
+      reloadConvo(ac).then(()=>{ if(msg.sender_id!==_myUserId) markConversationRead(ac.dbId); });
+      return;
+    }
     if(msg.sender_id === _myUserId){
       const optimistic = ac.msgs.slice().reverse().find(x=>(x.f==='me'||x.f==='propose'||x.f==='sys') && !x._id);
       if(optimistic){ optimistic._id = msg.id; renderThread(); }
       return;
     }
     if(ac.msgs.some(x=>x._id===msg.id)) return;
-    ac.msgs.push(mapDbMsg(msg));
+    ac.msgs.push(mapDbMsg(msg, ac._byViewing));
     resolveProposals(ac.msgs);
     ac.lastAt = msg.created_at; ac.time = timeAgoShort(msg.created_at);
     renderThread(); renderConvos();
@@ -601,7 +703,7 @@ function enterDemoMode(){
   if(typeof backendReady!=='function' || !backendReady()){ enterDemoMode(); return; }
   const u = typeof currentUser==='function' ? await currentUser() : null;
   if(!u){
-    document.getElementById('msgs').innerHTML='<div style="padding:60px 26px;text-align:center;color:var(--muted);font-size:14.5px;line-height:1.7">You need an account to send and read messages.<br>Your conversations are private between you and the other user.<br><a class="btn btn-primary btn-sm" href="auth.html" style="margin-top:16px">Sign in or create an account</a></div>';
+    document.getElementById('msgs').innerHTML='<div style="padding:60px 26px;text-align:center;color:var(--muted);font-size:14.5px;line-height:1.7">You need an account to send and read messages.<br>Your conversations are private between you and the other user.<br><a class="btn btn-primary btn-sm" href="auth.html?next='+encodeURIComponent('messages.html'+location.search)+'" style="margin-top:16px">Sign in or create an account</a></div>';
     document.getElementById('input').disabled=true;
     document.getElementById('sendBtn').disabled=true;
     return;
@@ -654,6 +756,16 @@ function enterDemoMode(){
       .filter(c=>c.unread>0)
       .sort((a,b)=> new Date(b.lastAt||0) - new Date(a.lastAt||0))[0];
     if(newest){ role = newest._isBuyer ? 'buyer' : 'seller'; activeId = newest.id; }
+    /* Niets ongelezen: open de kant waar gesprekken staan. Staat er niets,
+       dan de kant die bij de rol hoort — een zoeker landde tot vandaag altijd
+       op het lege tabblad "As seller". */
+    else if(BUYER_CONVOS.length && !SELLER_CONVOS.length) role='buyer';
+    else if(!BUYER_CONVOS.length && !SELLER_CONVOS.length){
+      try{
+        const prof = typeof fetchMyProfile==='function' ? await fetchMyProfile() : null;
+        if(prof && prof.role==='buyer') role='buyer';
+      }catch(e){}
+    }
   }
 
   document.querySelectorAll('.role button').forEach(x=>x.classList.toggle('on', x.dataset.role===role));
@@ -673,8 +785,9 @@ function enterDemoMode(){
       target.lastAt = msg.created_at;
       target.time = timeAgoShort(msg.created_at);
       target.preview = vwStrip(msg.body||'').slice(0,120);
-      if(target._loaded && !target.msgs.some(x=>x._id===msg.id)){
-        target.msgs.push(mapDbMsg(msg));
+      if(msg.viewing_id){ target._loaded = false; } /* kaart komt uit `viewings` — bij openen opnieuw inlezen */
+      else if(target._loaded && !target.msgs.some(x=>x._id===msg.id)){
+        target.msgs.push(mapDbMsg(msg, target._byViewing));
         resolveProposals(target.msgs);
       }
       renderConvos();
@@ -739,7 +852,38 @@ document.getElementById('vwSend').addEventListener('click',()=>{
   });
   if(!slots.length){ vwErr.textContent='Fill in at least one date and time.'; return; }
   if(slots.some(s=>new Date(s.iso) < new Date())){ vwErr.textContent='Those times are in the past — pick a future date.'; return; }
-  vwErr.textContent=''; vwPanel.classList.remove('show');
+  /* De database weigert een tijd binnen het komende halfuur (propose_viewing);
+     dat hier al zeggen scheelt een mislukte ronde. */
+  if(slots.some(s=>new Date(s.iso).getTime() < Date.now()+30*60000)){ vwErr.textContent='Give at least half an hour’s notice — pick a later time.'; return; }
+  if(slots.length>3){ vwErr.textContent='Three options at most.'; return; }
+  vwErr.textContent='';
+
+  /* Echte gesprekken: de tijden gaan als rij in `viewings` (proposeSlots →
+     propose_viewing), die zelf het bericht in het gesprek zet, de mail aan
+     beide partijen aanstuurt en de herinneringen draagt. Een eerder open
+     voorstel in dit gesprek wordt daarbij door de database vervangen. */
+  const acDb=convos.find(c=>c.id===activeId);
+  if(acDb && acDb._isDb){
+    if(typeof proposeSlots!=='function'){ vwErr.textContent='Couldn\'t reach the server — please try again.'; return; }
+    const sendBtn=document.getElementById('vwSend');
+    sendBtn.disabled=true; sendBtn.textContent='Sending…';
+    proposeSlots(acDb.dbId, slots.map(s=>s.iso), null)
+      .then(async ()=>{
+        vwPanel.classList.remove('show');
+        document.querySelectorAll('.vwD').forEach(i=>{ i.value=''; });
+        await reloadConvo(acDb);
+      })
+      .catch(e=>{
+        console.warn('propose viewing:', e && e.message);
+        const m=String((e&&e.message)||e);
+        vwErr.textContent = /slot-in-past/.test(m) ? 'Give at least half an hour’s notice — pick a later time.'
+          : /slots-out-of-range/.test(m) ? 'Give one to three times.'
+          : 'Couldn’t send those times — please try again.';
+      })
+      .finally(()=>{ sendBtn.disabled=false; sendBtn.textContent='Send times'; });
+    return;
+  }
+  vwPanel.classList.remove('show');
   document.querySelectorAll('.vwD').forEach(i=>{ i.value=''; });
 
   const card={ f:'propose', mine:true, slots, status:'pending', tm:nowTime(), _at:new Date().toISOString() };
