@@ -40,7 +40,14 @@ rem          /httpdocs in - dan zet je MyKunda over GamGrowth heen.
 rem
 rem          Het script controleert dit ook zelf: het kijkt eerst of
 rem          er in deze map een index.html staat en stopt anders.
-set "SESSIE=mykunda-sftp"
+rem          04-09-2026: de opgeslagen sessie mykunda-sftp werd door de
+rem          server geweigerd (wachtwoord verouderd). gamgrowth-sftp
+rem          logt in op dezelfde server met dezelfde gebruiker
+rem          (ycjoswsp) en werkt wel; EXTERN hieronder blijft de
+rem          MyKunda-map, dus er verandert niets aan waar het heen gaat.
+rem          Zodra mykunda-sftp in WinSCP opnieuw is opgeslagen mag dit
+rem          terug naar mykunda-sftp.
+set "SESSIE=gamgrowth-sftp"
 set "EXTERN=/var/www/vhosts/gamgrowth.com/mykunda.com"
 rem CF_ZONE = de Zone ID van mykunda.com bij Cloudflare. Dat is een
 rem          identificatie en geen geheim, dus die mag hier staan.

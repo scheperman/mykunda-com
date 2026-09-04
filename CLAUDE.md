@@ -2764,14 +2764,14 @@ de code staat, en wat er nog van hem moet komen:
   `profiles.phone` en `listings.contact_phone`) en maakt daar géén lead van;
   hij stuurt één korte uitleg terug. Let op: die tekst zegt dat het nummer
   "niet door een mens gelezen wordt". Kiest Edwin ervoor om het bestaande,
-  door mensen bediende nummer +220 272 0268 naar de Cloud API te verhuizen,
+  door mensen bediende nummer +220 87 272 0268 naar de Cloud API te verhuizen,
   dan moet die zin mee.
 - **Het nummer is de beslissing die openstaat.** Een nummer dat rechtstreeks
   in WhatsApp Manager wordt geregistreerd verdwijnt uit de WhatsApp Business
   app; "coexistence" (app én API op één nummer) bestaat bij Meta alleen via
   Embedded Signup van een Tech Provider/Solution Partner, niet voor een
   bedrijf dat zelf in Business Manager onboardt. Advies: een tweede nummer
-  voor de API en +220 272 0268 laten zoals het is.
+  voor de API en +220 87 272 0268 laten zoals het is.
 - De template-tekst die bij Meta ingediend moet worden staat als commentaar
   bovenin het WhatsApp-blok van `notify-lead/index.ts`. Wijzig je hem daar,
   dan moet hij bij Meta opnieuw ter goedkeuring.
@@ -2815,7 +2815,7 @@ gesloten). Sinds 03-09-2026:
 ## Teksten: geen kantoor, geen telefoon — 03-09-2026
 
 MyKunda is een eenmanszaak zonder kantoor, zonder personeel en zonder
-telefoonlijn; contact loopt uitsluitend via WhatsApp (+220 272 0268) en
+telefoonlijn; contact loopt uitsluitend via WhatsApp (+220 87 272 0268) en
 e-mail. Op 03-09-2026 zijn ~110 zinnen op de site en in de mails daarop
 gelijkgetrokken (verify, buy, index, contact, about, rent, safe, sell,
 legal-terms, 404, 13 gidsen, property-terugvalteksten, e-mailsjablonen).

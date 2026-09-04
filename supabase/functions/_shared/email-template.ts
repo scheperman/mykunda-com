@@ -45,8 +45,8 @@ export const BRAND = {
   site: 'https://mykunda.com',
   logo: 'https://mykunda.com/images/mykunda-icon.png',
   email: 'info@mykunda.com',
-  waNumber: '+220 272 0268',
-  waLink: 'https://wa.me/2202720268',
+  waNumber: '+220 87 272 0268',
+  waLink: 'https://wa.me/220872720268',
   /* Basis van de edge-functie-URL's (afmeldlinks). Uit de omgeving, zodat een
      testproject niet naar productie linkt; de terugval is het productieproject. */
   functionsBase: ((typeof Deno !== 'undefined' && Deno.env.get('SUPABASE_URL')) || 'https://jejaerpqltqryqzjvbjp.supabase.co').replace(/\/+$/, '') + '/functions/v1',

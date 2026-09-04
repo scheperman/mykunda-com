@@ -935,10 +935,10 @@ function injectGlobalSEO(){
     "url":SITE_URL+"/",
     "image":SITE_URL+"/images/home-hero.webp",
     "logo":{"@type":"ImageObject","url":SITE_URL+"/images/mykunda-icon.png"},
-    "telephone":"+220 272 0268",
+    "telephone":"+220 87 272 0268",
     "email":"info@mykunda.com",
     "address":{"@type":"PostalAddress","addressRegion":"West Coast Region","addressCountry":"GM"},
-    "contactPoint":{"@type":"ContactPoint","contactType":"customer support","telephone":"+220 272 0268","email":"info@mykunda.com","availableLanguage":["English","Wolof","Mandinka"]},
+    "contactPoint":{"@type":"ContactPoint","contactType":"customer support","telephone":"+220 87 272 0268","email":"info@mykunda.com","availableLanguage":["English","Wolof","Mandinka"]},
     "description":"MyKunda is a new property platform for The Gambia — built on proven professional standards. Buy, rent and invest in homes and land along the Atlantic coast, with title checks on request and professional service.",
     "areaServed":{"@type":"Country","name":"The Gambia"},
     
@@ -1012,7 +1012,7 @@ function initMobileNav(){
 }
 
 /* ---------- WhatsApp + Share (Google Plus Code aware) ---------- */
-const WA_NUMBER = '2202720268'; // MyKunda Gambia line: +220 272 0268
+const WA_NUMBER = '220872720268'; // MyKunda Gambia line: +220 87 272 0268
 function waLink(message){ return 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(message); }
 
 /* Build a rich share/WhatsApp message for a listing, including its Google Plus Code */
@@ -1089,8 +1089,8 @@ function injectWhatsApp(){
 
 /* ---------- Contact plumbing (shared by every form on the site) ---------- */
 const MYKUNDA_EMAIL='info@mykunda.com';
-const MYKUNDA_PHONE_DISPLAY='+220 272 0268';
-const MYKUNDA_TEL='+2202720268';
+const MYKUNDA_PHONE_DISPLAY='+220 87 272 0268';
+const MYKUNDA_TEL='+220872720268';
 
 /* Wait for the lazily-loaded Supabase client, then submit the lead. Throws when
    the backend is offline or in demo mode, so no form on the site can ever show a

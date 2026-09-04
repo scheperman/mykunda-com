@@ -28,7 +28,7 @@
 <meta name="twitter:title" content="Contact MyKunda">
 <meta name="twitter:description" content="Get in touch about property in The Gambia — by email or WhatsApp.">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"RealEstateAgent","name":"MyKunda","url":"https://mykunda.com","description":"Property platform for The Gambia — buy, rent and invest with title checks on request.","email":"info@mykunda.com","telephone":"+220 272 0268","contactPoint":{"@type":"ContactPoint","contactType":"customer support","email":"info@mykunda.com","telephone":"+220 272 0268","availableLanguage":["en","nl"]},"areaServed":{"@type":"Country","name":"The Gambia"}}
+{"@context":"https://schema.org","@type":"RealEstateAgent","name":"MyKunda","url":"https://mykunda.com","description":"Property platform for The Gambia — buy, rent and invest with title checks on request.","email":"info@mykunda.com","telephone":"+220 87 272 0268","contactPoint":{"@type":"ContactPoint","contactType":"customer support","email":"info@mykunda.com","telephone":"+220 87 272 0268","availableLanguage":["en","nl"]},"areaServed":{"@type":"Country","name":"The Gambia"}}
 </script>
 <noscript></noscript>
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
@@ -148,8 +148,8 @@
     <div class="ct-card">
       <h3>Contact details</h3>
       <div class="row"><div class="ic" id="icMail"></div><div><div class="label">Email</div><div class="val"><a href="mailto:info@mykunda.com">info@mykunda.com</a></div></div></div>
-      <div class="row"><div class="ic" id="icWa"></div><div><div class="label">WhatsApp</div><div class="val"><a href="https://wa.me/2202720268" target="_blank" rel="noopener">+220 272 0268</a></div></div></div>
-      <div class="row"><div class="ic" id="icPhone"></div><div><div class="label">Phone</div><div class="val"><a href="tel:+2202720268">+220 272 0268</a></div></div></div>
+      <div class="row"><div class="ic" id="icWa"></div><div><div class="label">WhatsApp</div><div class="val"><a href="https://wa.me/220872720268" target="_blank" rel="noopener">+220 87 272 0268</a></div></div></div>
+      <div class="row"><div class="ic" id="icPhone"></div><div><div class="label">Phone</div><div class="val"><a href="tel:+220872720268">+220 87 272 0268</a></div></div></div>
     </div>
     <div class="ct-card">
       <h3>How we work</h3>
@@ -206,7 +206,7 @@ document.getElementById('contactForm').addEventListener('submit', async function
     console.error('Contact form lead error:', err);
     var offline=/backend-offline|not defined/i.test(String((err&&err.message)||err));
     document.getElementById('ctErr').textContent = offline
-      ? 'Our contact system is temporarily unavailable. Please email us at info@mykunda.com or WhatsApp +220 272 0268.'
+      ? 'Our contact system is temporarily unavailable. Please email us at info@mykunda.com or WhatsApp +220 87 272 0268.'
       : 'Something went wrong sending your message. Please try again, or email us directly at info@mykunda.com.';
     submitBtn.textContent=origLabel; submitBtn.disabled=false; submitBtn.style.opacity='';
     return;

@@ -48,8 +48,8 @@ const BRAND = {
   line: "#EFEBE1",
   logo: "https://mykunda.com/images/mykunda-icon.png",
   email: "info@mykunda.com",
-  waNumber: "+220 272 0268",
-  waLink: "https://wa.me/2202720268",
+  waNumber: "+220 87 272 0268",
+  waLink: "https://wa.me/220872720268",
   font:
     `-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Helvetica,Arial,sans-serif`,
 };
