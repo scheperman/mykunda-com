@@ -2841,3 +2841,62 @@ Regels die daaruit volgen:
   `property-areas.json` nog de twee ringen van 01-09 draagt terwijl de
   gebiedspagina's er vier hebben — `node build-property-areas.mjs` +
   `_werk/patch-property-areas.mjs` lost dat op (los van deze ronde).
+
+## Fotografie: één bron per foto, drie maten, eerlijke alt — 04-09-2026
+
+Gemeten vóór deze ronde: 47 sitefoto's in `images/`, waarvan de meeste hero's
+800 px breed werden opgerekt naar 1440+ px (`.nhero` is `width:100%`), twee
+er extreem smal waren (`fajara.webp` 800×195, `kotu.webp` 800×268 met een
+zichtbare retoucheervlek in de lucht) en acht Wikimedia-foto's te vaag,
+verbleekt of onpassend waren voor een vastgoedpagina (fatoto, gambissara,
+sukuta, tujereng, kerr-serign — geiten bij een hek —, jabang — een bar —,
+sinchu-alagie, lamin — schoolkinderen). Daarnaast 22 ongebruikte bestanden
+(`-sm.png/.webp`, `og-*.jpg` in de root, `barra.jpg`, `farafenni.jpg`,
+`kerr-serign-street.jpg`, `banjul-port.webp`, `tanji2*`).
+
+Wat er nu geldt:
+
+- **Bronmateriaal** staat in `..\design-export\MyKunda.com\uploads\` (de
+  2752×1536-luchtfoto's, de Pexels-originelen `pexels-*.jpg`). De hero van de
+  homepage is `pexels-david-pastory-…` (Pexels-licentie), de rivierfoto's
+  (`river-gambia`, `mangrove`) `pexels-curiosophotography-4374742`, de
+  straatluchtfoto (`gambia-street-aerial` én `brufut-street` — hetzelfde
+  beeld) `pexels-silveremeya-7381823`. Twee Unsplash-foto's (Unsplash License,
+  account @thegambia / visitthegambia.com): `kotu` (Kotu Beach),
+  `senegambia` (Kololi Beach bij de strip). Niet zelf herleidbaar naar een
+  bron: de aerials van Kololi, Bijilo, Brusubi, Cape Point, Sanyang, Bakau,
+  Batokunku, Brikama, Tanji, Banjul, Gunjur, Basse, Kartong en Fajara — die
+  staan als "eigen en partnerbeeld" op `photo-credits.html`; niet als
+  Unsplash/Commons opvoeren.
+- **Drie maten per foto**, gemaakt in de cloud met Pillow (WebP, method 6):
+  `naam.webp` 1440 px breed, q62 (homepage-hero 1600); `naam-mob.webp` 720 px,
+  q60; `og/naam.jpg` 1200×630, JPEG q74. De hero's van de gebiedspagina's
+  laden `-mob` onder 640 px via `<picture><source>`; kaarten (`.pcard`,
+  `.hood`, `.atile`, `.scard-img`, `.rel-card`, gidskaarten in `guides.html`
+  en `guide.html`) hebben `srcset="…-mob.webp 720w, ….webp 1440w"` met
+  `sizes="(max-width:640px) 100vw, (max-width:1100px) 50vw, 33vw"`. Het
+  script dat dat over alle pagina's zette staat in
+  `..\_tmp\apply-images.mjs` (herhaalbaar; droog zonder `--write`) en leest
+  de maten uit `..\_tmp\manifest.json`.
+- **Wikimedia Commons is vanuit de cloudsessie niet bereikbaar** (domein
+  geblokkeerd voor WebFetch); nieuwe Commons-foto's alleen via Edwins eigen
+  pc. Unsplash-afbeeldingen zijn wél te halen (`images.unsplash.com`, met
+  `?w=2400&fm=jpg&q=90`), maar de Unsplash-zoekindex bevat nauwelijks
+  Gambia buiten kust en Banjul: niets voor de binnenlandse steden.
+- **Zonder eigen foto: eerlijke terugval.** Bestond al voor elf
+  Kombo-dorpen (`gambia-street-aerial`, alt "… — we have no photograph of X
+  yet"); nu ook voor Sukuta, Lamin, Jabang, Sinchu Alagie en Kerr Serign
+  (straatluchtfoto), Fatoto en Gambissara (`river-gambia`) en Tujereng
+  (`sanyang`, "a few kilometres south of Tujereng"). De og-meta wijst mee
+  naar de terugvalfoto. Nooit een foto van plaats A als plaats B
+  presenteren; de alt zegt altijd wat er echt op staat.
+- `photo-credits.html` bevat alleen nog de elf overgebleven Commons-rijen plus
+  de twee Unsplash-rijen; verwijder een rij zodra een foto verdwijnt.
+- Vervangen bestanden houden dezelfde naam, dus **`sw.js` V ophogen** is
+  verplicht (cache-first op `.webp`), nu mk-v132. Verwijderde bestanden
+  staan in `..\_to_delete\images-2026-09-04\` (project- én deploy-kopie);
+  op de server blijven ze staan tot iemand ze wist.
+- Ongewijzigd en bewust: `janjanbureh`, `farafenni`, `bansang`, `bakoteh`,
+  `kuntaur`, `mansa-konko`, `manjai-kunda`, `nema-kunku`, `pipeline`,
+  `soma`, `barra` (Commons, matig maar echt en juist geplaatst) en
+  `kartong` (900 px bron, geen groter origineel).

@@ -1578,7 +1578,7 @@ function requireAuth(returnTo){
 /* ---------- Guides / content hub (metadata; full bodies live in guide.html) ---------- */
 const GUIDES = [
   { slug:'buying-property-in-the-gambia-as-a-foreigner', cat:'Buying', mins:20, date:'2026-08-31',
-    title:'Buying property in The Gambia as a foreigner', img:'images/home-hero-mobile.webp',
+    title:'Buying property in The Gambia as a foreigner', img:'images/home-hero.webp',
     excerpt:'What Gambian law actually says about non-Gambian buyers — the allocation bar, the Minister’s consent to assign, lease terms, ground rent and the true cost and timeline.' },
   { slug:'freehold-leasehold-customary-land-explained', cat:'Land & title', mins:18, date:'2026-08-31',
     title:'Freehold, leasehold & customary land explained', img:'images/sanyang.webp',
