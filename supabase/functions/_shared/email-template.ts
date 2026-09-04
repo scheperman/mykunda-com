@@ -356,7 +356,7 @@ export function leadOwnerEmail(o: {
   const who = escOpt(o.name) || escOpt(o.email) || 'Someone';
   const kind = o.source === 'viewing' ? 'wants to view' : 'asked about';
   const digits = String(o.phone ?? '').replace(/[^\d+]/g, '');
-  const wa = digits ? 'https://wa.me/' + (digits.startsWith('+') ? digits.slice(1) : (digits.length === 7 ? '220' + digits : digits))
+  const wa = digits ? 'https://wa.me/' + (digits.startsWith('+') ? digits.slice(1) : ((digits.length === 9 || digits.length === 7) ? '220' + digits : digits))
     + '?text=' + encodeURIComponent(`Hello${o.name ? ' ' + o.name : ''}, thanks for your enquiry about ${o.listingTitle} on MyKunda. `) : '';
   const p = o.payload ?? {};
   const rows: [string, unknown][] = [

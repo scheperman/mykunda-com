@@ -155,7 +155,7 @@ const NOTIFY_SHARED_KEY = Deno.env.get("NOTIFY_SHARED_KEY") ?? "";
 function waDigits(v: unknown): string {
   let d = String(v ?? "").replace(/\D/g, "");
   if (d.startsWith("00")) d = d.slice(2);
-  if (d.length === 7) d = "220" + d;          // Gambiaans nummer zonder landcode
+  if (d.length === 9 || d.length === 7) d = "220" + d;   // Gambiaans nummer zonder landcode (9 cijfers sinds 2026; 7 = oude vorm)
   return d.length >= 9 ? d : "";
 }
 async function sendWhatsApp(to: string, template: string, params: string[]) {

@@ -2916,13 +2916,15 @@ function markCurrentArea(){
 const WA_NUMBER = '220872720268'; // MyKunda Gambia line: +220 87 272 0268
 function waLink(message){ return 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(message); }
 /* Een opgegeven nummer naar de vorm die wa.me verwacht: alleen cijfers, met
-   landcode. Gambiaanse nummers zijn zeven cijfers; die krijgen 220. Wat niet
+   landcode. Gambiaanse nummers zijn negen cijfers; die krijgen 220. Wat niet
    op een bruikbaar nummer lijkt geeft null, en dan komt er geen knop. */
 function mkWaNumber(raw){
   var d = String(raw||'').replace(/[^0-9]/g,'');
   if(d.indexOf('00')===0) d = d.slice(2);
-  if(d.length===7) d = '220' + d;
-  if(d.length===8 && d.charAt(0)==='0') d = '220' + d.slice(1);
+  /* Sinds de omnummering van 2026 zijn Gambiaanse nummers negen cijfers;
+     de oude zevencijferige vorm wordt nog herkend voor wie die zo intypt. */
+  if(d.length===9 || d.length===7) d = '220' + d;
+  if((d.length===10 || d.length===8) && d.charAt(0)==='0') d = '220' + d.slice(1);
   if(d.length<10 || d.length>15) return null;
   return d;
 }
