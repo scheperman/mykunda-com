@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1pwgtkx--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1uns8e6--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -11,7 +11,7 @@
 <title>Admin — MyKunda</title>
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=131036869798319">
+<link rel="stylesheet" href="styles.min.css?v=171274747967054">
 <style>
 body{background:var(--paper-2)}
 .admin{max-width:1180px;margin:0 auto;padding:34px 28px 70px}
@@ -229,10 +229,48 @@ table.btab{min-width:900px}
 .obadge .bwhen{font-size:12.5px;color:var(--muted-2)}
 .obadge .bhint{font-size:13px;color:var(--muted);line-height:1.6;margin:9px 0 11px;max-width:62ch}
 @media(max-width:640px){.ointake dl{grid-template-columns:1fr;gap:3px 0}.ointake dt{margin-top:8px}}
+
+/* ---- Advert intake ---- */
+.intake-grid{display:grid;grid-template-columns:1fr;gap:26px}
+@media(min-width:960px){.intake-grid{grid-template-columns:1.05fr .95fr}}
+.ilab{display:block;font-size:12.5px;font-weight:700;color:var(--ink-2);margin:0 0 6px}
+.ilab .opt{font-weight:500;color:var(--muted-2)}
+#intakePanel textarea,#intakePanel input[type=text],#intakePanel input[type=date],#intakePanel select{
+  width:100%;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;
+  font-family:var(--sans);font-size:14px;color:var(--ink);background:var(--white)}
+#intakePanel textarea{resize:vertical;line-height:1.55}
+#intakePanel textarea:focus,#intakePanel input:focus,#intakePanel select:focus{outline:none;border-color:var(--green-500)}
+.irow{display:grid;grid-template-columns:1fr;gap:12px;margin-top:14px}
+@media(min-width:560px){.irow{grid-template-columns:1fr 1fr}}
+.ibasis{border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;margin:18px 0 0}
+.ibasis legend{font-size:12.5px;font-weight:800;color:var(--ink);padding:0 6px}
+.iradio{display:flex;gap:10px;align-items:flex-start;padding:8px 0;cursor:pointer}
+.iradio input{margin-top:3px;flex:none}
+.iradio b{display:block;font-size:13.5px;color:var(--ink)}
+.iradio small{display:block;font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:2px}
+#ikPermFields{margin-top:10px;padding-top:12px;border-top:1px solid var(--line)}
+.iacts{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}
+.imsg{margin:12px 0 0;font-size:13.5px;line-height:1.5;background:var(--green-50);color:var(--green-700);border-radius:10px;padding:10px 13px}
+.imsg.warn{background:#FBEDE9;color:#8C3A24}
+.iout{display:flex;flex-direction:column;gap:6px}
+.ifield{display:grid;grid-template-columns:118px 1fr;gap:10px;align-items:baseline;background:var(--paper-2,#F7F5F1);border-radius:9px;padding:8px 12px;font-size:13.5px}
+.ifield b{font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.ifield i{display:block;font-size:12px;color:var(--muted-2);font-style:italic;margin-top:1px}
+.ifield.ok{background:var(--green-50)}
+.ifield.miss{background:#FDF3E7}
+.iempty{font-size:13.5px;color:var(--muted-2)}
+.ifoot{font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:12px}
+.ih3{font-size:15px;font-weight:800;color:var(--ink);margin:30px 0 12px;padding-top:22px;border-top:1px solid var(--line)}
+.itable{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+.itable table{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
+.itable th{text-align:left;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);padding:9px 13px;border-bottom:1px solid var(--line);white-space:nowrap}
+.itable td{padding:9px 13px;border-bottom:1px solid var(--line);vertical-align:top}
+.itable tr:last-child td{border-bottom:0}
+.itable .iline{color:var(--muted);max-width:340px}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=131036869798319"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=171274747967054"><!--/mk-css-->
 </head>
 <body>
 <div id="header"></div>
@@ -259,6 +297,7 @@ table.btab{min-width:900px}
     <button class="vbtn" role="tab" aria-selected="false" data-view="bank">Bank transfers <span class="badge-count" id="cBank">0</span></button>
     <button class="vbtn" role="tab" aria-selected="false" data-view="orders">Orders <span class="badge-count" id="cOrders">0</span></button>
     <button class="vbtn" role="tab" aria-selected="false" data-view="agencies">Businesses <span class="badge-count" id="cAgencies">0</span></button>
+    <button class="vbtn" role="tab" aria-selected="false" data-view="intake">Advert intake</button>
   </div>
 
   <div class="view on" data-view="pending"><div class="panel" id="pendingPanel"></div></div>
@@ -267,15 +306,18 @@ table.btab{min-width:900px}
   <div class="view" data-view="bank"><div class="panel" id="bankPanel"></div></div>
   <div class="view" data-view="orders"><div class="panel" id="ordersPanel"></div></div>
   <div class="view" data-view="agencies"><div class="panel" id="agenciesPanel"></div></div>
+  <div class="view" data-view="intake"><div class="panel" id="intakePanel"></div></div>
 </div>
 
 <div id="footer"></div>
 
 <script src="vendor/supabase-js-2.umd.js"></script>
-<script src="supabase.js?v=131036869798319"></script>
-<script src="app.min.js?v=131036869798319"></script>
-<script src="admin-nav.js?v=131036869798319"></script>
-<script src="admin-guard.js?v=131036869798319"></script>
+<script src="supabase.js?v=171274747967054"></script>
+<script src="app.min.js?v=171274747967054"></script>
+<script src="admin-nav.js?v=171274747967054"></script>
+<script src="admin-guard.js?v=171274747967054"></script>
+<!-- Leest een geplakte advertentietekst. Haalt niets op; zie de kop van het bestand. -->
+<script src="advert-parse.js?v=171274747967054"></script>
 <script>
 document.getElementById('header').innerHTML = headerHTML('', false);
 document.getElementById('footer').innerHTML = footerHTML();
@@ -1223,7 +1265,215 @@ document.getElementById('ordersPanel').addEventListener('click', e=>{
   orderFilter = b.dataset.f; renderOrders();
 });
 
-// in-page view switcher
+/* ================= Advert intake =========================================
+   Plaatsen namens een aanbieder die je zijn advertentietekst heeft gestuurd.
+
+   DRIE DINGEN DIE HIER VASTLIGGEN
+   1. Er wordt niets opgehaald. advert-parse.js krijgt alleen de tekst die
+      hieronder in het vak staat. Meta's voorwaarden 3.2 verbieden
+      geautomatiseerd verzamelen uit hun producten zonder hun voorafgaande
+      toestemming, uitdrukkelijk ook als je bent ingelogd.
+   2. De grondslag is verplicht. Het auteursrecht op de tekst ligt bij de
+      aanbieder; zonder zijn toestemming mag hij hier niet staan. Bij
+      'seller gave permission' eist de database naam, datum en bewijsregel
+      (constraint intake_permission_complete) — het scherm kan veranderen,
+      die regel niet.
+   3. Foto's komen nooit van Facebook. Er is hier bewust geen fotoveld: die
+      levert de aanbieder zelf aan, en ze gaan via het gewone formulier.
+
+   WAT DEZE WEERGAVE (NOG) NIET DOET
+   De advertentie onder het account van de aanbieder zetten. Daar hoort een
+   echte gebruiker bij, en die aanmaken kan alleen serverzijdig. Voor nu:
+   de intake wordt vastgelegd, en de knop hieronder opent list.html met de
+   gelezen velden erin, zodat het concept onder jouw account ontstaat. Het
+   overzetten naar zijn account is een volgende stap.
+   ======================================================================== */
+const INTAKE_SOURCES = [
+  ['facebook_marketplace','Facebook Marketplace'],
+  ['facebook_group','Facebook group'],
+  ['instagram','Instagram'],
+  ['whatsapp','WhatsApp'],
+  ['email','Email'],
+  ['other','Somewhere else']
+];
+let intakeRows = [];
+
+function intakeViewHTML(){
+  return `
+  <div class="pnl-head"><h2>Advert intake</h2>
+    <p class="pnl-sub">Paste the text a seller sent you. Record how you are allowed to use it, check what we read, then open it in the listing form.</p></div>
+
+  <div class="intake-grid">
+    <div>
+      <label class="ilab" for="ikText">The advert text</label>
+      <textarea id="ikText" rows="9" spellcheck="false" placeholder="Paste the text here. Include the price line if there is one — on Marketplace the price sits in a separate field above the description."></textarea>
+
+      <div class="irow">
+        <div><label class="ilab" for="ikSource">Where does it come from?</label>
+          <select id="ikSource">${INTAKE_SOURCES.map(s=>`<option value="${s[0]}">${s[1]}</option>`).join('')}</select></div>
+        <div><label class="ilab" for="ikUrl">Link to the advert <span class="opt">— optional, for your records only</span></label>
+          <input id="ikUrl" type="text" placeholder="facebook.com/marketplace/item/…"></div>
+      </div>
+
+      <fieldset class="ibasis">
+        <legend>On what basis may this go on MyKunda?</legend>
+        <label class="iradio"><input type="radio" name="ikBasis" value="seller_gave_permission" checked>
+          <span><b>The seller sent me this text and asked me to list it</b>
+          <small>Name, date and what shows it are required — the database refuses the record without them.</small></span></label>
+        <label class="iradio"><input type="radio" name="ikBasis" value="seller_pasted">
+          <span><b>The seller pasted it himself, in his own account</b>
+          <small>Then he does not need you: point him at mykunda.com/sell.html. Only pick this if you are filling in for him while he is with you.</small></span></label>
+        <div id="ikPermFields">
+          <div class="irow">
+            <div><label class="ilab" for="ikName">Seller name</label><input id="ikName" type="text" placeholder="As he calls himself"></div>
+            <div><label class="ilab" for="ikDate">Date of the permission</label><input id="ikDate" type="date"></div>
+          </div>
+          <label class="ilab" for="ikNote">What shows the permission?</label>
+          <input id="ikNote" type="text" placeholder="e.g. WhatsApp message of 5 September, screenshot saved">
+        </div>
+      </fieldset>
+
+      <div class="iacts">
+        <button class="btn btn-primary btn-sm" id="ikRead">Read the text</button>
+        <button class="btn btn-ghost btn-sm" id="ikClear">Clear</button>
+      </div>
+      <p class="imsg" id="ikMsg" hidden></p>
+    </div>
+
+    <div>
+      <label class="ilab">What we read</label>
+      <div id="ikOut" class="iout"><p class="iempty">Nothing read yet.</p></div>
+      <div class="iacts" id="ikSaveActs" hidden>
+        <button class="btn btn-primary btn-sm" id="ikSave">Save intake and open the listing form</button>
+      </div>
+      <p class="ifoot">Saving records the text, the origin and the basis. The listing itself is created in the form that opens next, and stays a draft until you send it to review.</p>
+    </div>
+  </div>
+
+  <h3 class="ih3">Recorded intakes</h3>
+  <div id="ikList"><p class="iempty">None yet.</p></div>`;
+}
+
+function intakeFieldRow(k,v,state,src){
+  return `<div class="ifield ${state||''}"><b>${k}</b><span>${v}${src?`<i>${src}</i>`:''}</span></div>`;
+}
+let ikParsed=null;
+
+function intakeRender(f){
+  const CAT={land:'Land / plot',house:'House or apartment',commercial:'Commercial'};
+  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  let h='';
+  h+=intakeFieldRow('Type', f.category?CAT[f.category]:'not found', f.category?'ok':'miss');
+  h+=intakeFieldRow('For', f.deal==='sale'?'Sale':f.deal==='rent'?'Rent':'not clear', f.deal?'ok':'miss');
+  h+=intakeFieldRow('Where', f.place?esc(f.place):'no place name found', f.place?'ok':'miss');
+  h+=intakeFieldRow('Price', f.price!=null?`${f.price_currency} ${f.price.toLocaleString('en-GB')}${f.price_period?' per '+f.price_period:''}`:'not found',
+      f.price!=null?'ok':'miss', f.price!=null?`from “${esc(f.price_quoted)}”${f.price_note?' · '+f.price_note:''}`:'on Marketplace the price is a separate field');
+  const sz=f.size.sqm?(f.size.width_m?`${f.size.width_m} × ${f.size.depth_m} m — ${f.size.sqm} m²`:`${f.size.sqm} m²`):'not found';
+  h+=intakeFieldRow('Size', sz, f.size.sqm?'ok':'', f.size.quoted?`from “${esc(f.size.quoted)}”`:'');
+  if(f.category!=='land') h+=intakeFieldRow('Beds / baths', `${f.beds!=null?f.beds:'—'} / ${f.baths!=null?f.baths:'—'}`, f.beds!=null?'ok':'');
+  h+=intakeFieldRow('Features', f.features.length?esc(f.features.join(', ')):'—', f.features.length?'ok':'');
+  h+=intakeFieldRow('Title words', f.title_words.length?esc(f.title_words.join(', ')):'—', f.title_words.length?'ok':'', f.title_words.length?'taken literally, not interpreted':'');
+  h+=intakeFieldRow('Phone in text', f.phones.length?esc(f.phones.join(', ')):'—','', f.phones.length?'shown for your check; never published by itself':'');
+  h+=intakeFieldRow('Photos','none — ask the seller to send them','miss','we never take photos from Facebook');
+  document.getElementById('ikOut').innerHTML=h;
+  document.getElementById('ikSaveActs').hidden=false;
+}
+
+function intakeListHTML(){
+  if(!intakeRows.length) return '<p class="iempty">None yet.</p>';
+  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  return `<div class="itable"><table><thead><tr><th>When</th><th>Source</th><th>Basis</th><th>First line</th><th>Listing</th></tr></thead><tbody>${
+    intakeRows.map(r=>`<tr>
+      <td>${shortDate(r.created_at)}</td>
+      <td>${esc((INTAKE_SOURCES.find(s=>s[0]===r.source)||[,r.source])[1])}</td>
+      <td>${r.permission_basis==='seller_pasted'?'seller pasted it':`permission — ${esc(r.permission_name||'')} ${r.permission_at?shortDate(r.permission_at):''}`}</td>
+      <td class="iline">${esc(String(r.pasted_text||'').split('\n')[0].slice(0,70))}</td>
+      <td>${r.listing_id?'linked':'—'}</td></tr>`).join('')}</tbody></table></div>`;
+}
+
+async function loadIntakes(){
+  if(!LIVE) return;
+  try{
+    const { data, error } = await sb.from('listing_intake').select('*').order('created_at',{ascending:false}).limit(50);
+    if(error) throw error;
+    intakeRows = data||[];
+    const el=document.getElementById('ikList'); if(el) el.innerHTML=intakeListHTML();
+  }catch(e){
+    const el=document.getElementById('ikList');
+    if(el) el.innerHTML='<p class="iempty">Could not load earlier intakes'+(String(e.message||'').match(/does not exist/i)?' — the listing_intake table is not there yet. Run migration 20260905_01.':'')+'.</p>';
+  }
+}
+
+function intakeWire(){
+  const msg=document.getElementById('ikMsg');
+  const say=(t,warn)=>{ msg.hidden=false; msg.textContent=t; msg.classList.toggle('warn',!!warn); };
+  const basisEls=document.querySelectorAll('input[name="ikBasis"]');
+  const permBox=document.getElementById('ikPermFields');
+  const syncBasis=()=>{ const v=document.querySelector('input[name="ikBasis"]:checked').value;
+                        permBox.style.display = v==='seller_gave_permission'?'block':'none'; };
+  basisEls.forEach(r=>r.addEventListener('change',syncBasis)); syncBasis();
+  document.getElementById('ikDate').value = new Date().toISOString().slice(0,10);
+
+  document.getElementById('ikClear').addEventListener('click',()=>{
+    document.getElementById('ikText').value=''; document.getElementById('ikUrl').value='';
+    document.getElementById('ikOut').innerHTML='<p class="iempty">Nothing read yet.</p>';
+    document.getElementById('ikSaveActs').hidden=true; msg.hidden=true; ikParsed=null;
+  });
+
+  document.getElementById('ikRead').addEventListener('click',()=>{
+    const txt=String(document.getElementById('ikText').value||'').trim();
+    if(!txt){ say('Paste the advert text first.',true); return; }
+    if(!window.MKAdvert){ say('advert-parse.js did not load.',true); return; }
+    try{ ikParsed=window.MKAdvert.parseAdvert(txt); intakeRender(ikParsed); msg.hidden=true; }
+    catch(e){ say('Could not read that text.',true); }
+  });
+
+  document.getElementById('ikSave').addEventListener('click',async ()=>{
+    if(!ikParsed){ say('Read the text first.',true); return; }
+    const basis=document.querySelector('input[name="ikBasis"]:checked').value;
+    const name=document.getElementById('ikName').value.trim();
+    const note=document.getElementById('ikNote').value.trim();
+    const date=document.getElementById('ikDate').value;
+    if(basis==='seller_gave_permission' && (!name||!note||!date)){
+      say('Permission from someone else needs a name, a date and what shows it. Without those this cannot be recorded.',true); return;
+    }
+    const row={
+      source: document.getElementById('ikSource').value,
+      source_url: document.getElementById('ikUrl').value.trim() || null,
+      pasted_text: document.getElementById('ikText').value,
+      parsed: ikParsed,
+      permission_basis: basis,
+      permission_name: basis==='seller_pasted'?null:name,
+      permission_note: basis==='seller_pasted'?null:note,
+      permission_at:   basis==='seller_pasted'?null:new Date(date+'T12:00:00Z').toISOString()
+    };
+    if(LIVE){
+      try{
+        const { data:{ user } } = await sb.auth.getUser();
+        row.created_by = user.id;
+        const { error } = await sb.from('listing_intake').insert(row);
+        if(error) throw error;
+        await loadIntakes();
+      }catch(e){ say('Could not record the intake: '+(e.message||e)+'. Nothing was saved, so nothing is opened either.',true); return; }
+    }
+    /* Doorgeven aan het gewone formulier. prefillFromURL() daar kent deze
+       sleutels al; wat er niet in past vult Edwin met de hand. */
+    const f=ikParsed, q=new URLSearchParams();
+    if(f.category==='commercial'){ q.set('deal','commercial'); if(f.deal) q.set('cdeal',f.deal); }
+    else if(f.deal) q.set('deal',f.deal);
+    if(f.category==='land') q.set('cat','land');
+    else if(f.category==='house') q.set('cat','villa');
+    if(f.place) q.set('area',f.place);
+    if(f.size && f.size.sqm) q.set('sqm',String(f.size.sqm));
+    if(f.beds!=null) q.set('beds',String(f.beds));
+    if(f.baths!=null) q.set('baths',String(f.baths));
+    if(f.price!=null && f.price_currency==='GMD') q.set('price',String(Math.round(f.price)));
+    window.open('list.html?'+q.toString(),'_blank','noopener');
+    say('Recorded. The listing form is open in a new tab. The description does not travel through the address bar — copy it from the box on the left into the description field.');
+  });
+}
+
+/* ---- in-page view switcher ---- */
 document.querySelectorAll('.vbtn').forEach(t=>t.addEventListener('click',()=>{
   document.querySelectorAll('.vbtn').forEach(x=>{ x.classList.remove('on'); x.setAttribute('aria-selected','false'); });
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
@@ -1232,6 +1482,12 @@ document.querySelectorAll('.vbtn').forEach(t=>t.addEventListener('click',()=>{
 }));
 
 load();
+
+/* De intakeweergave staat los van load(): hij haalt geen advertenties op en
+   hoeft dus niet te wachten op de rest van de console. */
+document.getElementById('intakePanel').innerHTML = intakeViewHTML();
+intakeWire();
+loadIntakes();
 
 </script>
 </body>

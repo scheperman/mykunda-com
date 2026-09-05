@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:1hnbf8y--><!--/mk-mark-->
+<!--mk-mark--><meta name="copyright" content="© MyKunda — mykunda.com. All rights reserved."><meta name="robots" content="noindex, nofollow, noai, noimageai"><!--mk:0ztp14l--><!--/mk-mark-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="images/mykunda-icon-sm.png">
@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://jejaerpqltqryqzjvbjp.supabase.co" crossorigin>
 <link rel="preconnect" href="https://api.mapbox.com" crossorigin>
 <link rel="preload" href="fonts/mulish-var-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.min.css?v=131036869798319">
+<link rel="stylesheet" href="styles.min.css?v=171274747967054">
 <style>
 body{background:var(--paper-2);min-height:100vh}
 
@@ -74,6 +74,22 @@ body{background:var(--paper-2);min-height:100vh}
 /* front door */
 .intro-q{display:block;font-family:var(--sans);font-size:13.5px;font-weight:700;color:var(--ink-2);margin:32px 0 11px}
 .step[data-key="intro"] .opt-cards{max-width:620px}
+
+/* plakvak op de introstap */
+.paste-box{max-width:620px;margin-top:34px;border:1.5px dashed var(--line-2);border-radius:var(--r-md);padding:18px 20px;background:var(--paper-2,#FAF8F4)}
+.paste-box .pb-head{display:flex;gap:12px;align-items:flex-start;margin-bottom:13px}
+.paste-box .pb-ic{width:34px;height:34px;border-radius:9px;background:var(--green-50);color:var(--green-700);display:flex;align-items:center;justify-content:center;flex:none}
+.paste-box .pb-head b{display:block;font-size:15px;color:var(--ink);line-height:1.3}
+.paste-box .pb-head span{display:block;font-size:13px;color:var(--muted);margin-top:3px;line-height:1.45}
+.paste-box textarea{width:100%;font-family:var(--sans);font-size:14px;line-height:1.5;padding:11px 13px;border:1.5px solid var(--line);border-radius:var(--r-sm,10px);background:var(--white);color:var(--ink);resize:vertical}
+.paste-box textarea:focus{outline:none;border-color:var(--green-500)}
+.paste-box .pb-acts{display:flex;flex-wrap:wrap;gap:9px;margin-top:11px}
+.paste-box .pb-go,.paste-box .pb-skip{font-family:var(--sans);font-size:13.5px;font-weight:700;border-radius:99px;padding:8px 16px;cursor:pointer;border:1.5px solid transparent}
+.paste-box .pb-go{background:var(--green-700);color:#fff}
+.paste-box .pb-skip{background:none;color:var(--muted);border-color:var(--line-2)}
+.paste-box .pb-out{margin:12px 0 0;font-size:13.5px;line-height:1.5;color:var(--green-700);background:var(--green-50);border-radius:var(--r-sm,10px);padding:10px 13px}
+.paste-box .pb-out.warn{color:#8C3A24;background:#FBEDE9}
+.paste-box.done{border-style:solid;border-color:var(--green-200);background:var(--white)}
 .opt-cards.big{grid-template-columns:1fr;gap:12px}
 .opt-cards.big .opt-card{padding:22px 24px}
 .opt-cards.big .opt-card .t{font-size:19px}
@@ -290,7 +306,7 @@ body{background:var(--paper-2);min-height:100vh}
 </style>
 <meta property="fb:pages" content="61593360783009">
 <meta property="article:publisher" content="https://www.facebook.com/mykundagambia">
-<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=131036869798319"><!--/mk-css-->
+<!--mk-css--><link rel="stylesheet" href="redesign.min.css?v=171274747967054"><!--/mk-css-->
 </head>
 <body>
 <div class="wizbar">
@@ -343,6 +359,25 @@ body{background:var(--paper-2);min-height:100vh}
         <div class="opt-card" data-who="business"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V4h10v17M14 9h6v12M8 8h2M8 12h2M8 16h2"/></svg></span><div><div class="t">An agent or company</div><div class="s" id="whoBizS">A business, listing its own stock or for owners</div></div></div>
       </div>
       <label class="confirm-box" id="ownerConfirm" style="display:none"><span class="box"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><p id="ownerConfirmTxt">This is my own property or my family's, and I charge no agency fee. If that turns out not to be the case, we remove the badge.</p></label>
+
+      <!-- Plakvak. Een afkorting, geen verplichte route: wie niets plakt, ziet
+           het formulier precies zoals eerst. De tekst blijft van de aanbieder,
+           dus dit vak staat alleen op ZIJN eigen plaatsingsformulier. -->
+      <div class="paste-box" id="pasteBox">
+        <div class="pb-head">
+          <span class="pb-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6M9 16h4"/></svg></span>
+          <div>
+            <b>Already advertising this property somewhere else?</b>
+            <span>Paste the text of your advert here and we will fill in this form for you. Include the price line if there is one.</span>
+          </div>
+        </div>
+        <textarea id="pasteIn" rows="5" spellcheck="false" placeholder="Paste your advert text here"></textarea>
+        <div class="pb-acts">
+          <button type="button" class="pb-go" id="pasteGo">Fill in the form</button>
+          <button type="button" class="pb-skip" id="pasteSkip">I will type it myself</button>
+        </div>
+        <p class="pb-out" id="pasteOut" hidden></p>
+      </div>
     </section>
 
     <!-- STEP: what -->
@@ -903,18 +938,21 @@ body{background:var(--paper-2);min-height:100vh}
   </aside>
 </div>
 
-<script src="valuation-areas.js?v=131036869798319"></script>
-<script src="valuation.js?v=131036869798319"></script>
-<script src="app.min.js?v=131036869798319"></script>
-<script src="gambia-places.js?v=131036869798319" defer></script>
-<script src="image-slot.js?v=131036869798319" defer></script>
+<script src="valuation-areas.js?v=171274747967054"></script>
+<script src="valuation.js?v=171274747967054"></script>
+<script src="app.min.js?v=171274747967054"></script>
+<!-- Leest een geplakte advertentietekst en vult daarmee de velden van dit
+     formulier. Haalt niets op; zie de kop van advert-parse.js. -->
+<script src="advert-parse.js?v=171274747967054"></script>
+<script src="gambia-places.js?v=171274747967054" defer></script>
+<script src="image-slot.js?v=171274747967054" defer></script>
 <script>
 /* 4G: Supabase (~205 KB) downloads in parallel, Leaflet (~145 KB) only when the
    seller reaches the location step. */
 window.__sbReady=new Promise(function(res){
   var s1=document.createElement('script'); s1.src='vendor/supabase-js-2.umd.js'; s1.async=true;
   s1.onerror=function(){ window.supabase=null; res(); };
-  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=131036869798319'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
+  s1.onload=function(){ var s2=document.createElement('script'); s2.src='supabase.js?v=171274747967054'; s2.async=true; s2.onload=res; s2.onerror=res; document.head.appendChild(s2); };
   document.head.appendChild(s1);
 });
 window.__leafletReady=function(){
@@ -4014,6 +4052,128 @@ async function publish(){
 showStep(0);
 updateSummary();
 prefillFromURL();
+
+/* ---- Plakvak op de introstap -------------------------------------------
+   De aanbieder plakt de tekst van zijn eigen advertentie; advert-parse.js
+   leest hem en wij zetten de uitkomst in S. Drie regels die hier gelden:
+
+   1. Er wordt NIETS opgehaald. De parser krijgt alleen de tekst die in het
+      vak staat. Zie de kop van advert-parse.js voor waarom dat zo blijft.
+   2. Er wordt niets overschreven wat de aanbieder zelf al heeft ingevuld.
+      Een tweede keer plakken vult dus alleen de gaten.
+   3. Wat de parser niet zeker weet, blijft leeg en wordt hardop gemeld.
+      Liever een leeg veld dan een verzonnen waarde: dit formulier vult een
+      advertentie die straks als feit op de site staat.
+   ------------------------------------------------------------------------ */
+(function(){
+  const box=document.getElementById('pasteBox');
+  if(!box) return;
+  const inEl=document.getElementById('pasteIn');
+  const out=document.getElementById('pasteOut');
+  const skip=document.getElementById('pasteSkip');
+  const go=document.getElementById('pasteGo');
+
+  function say(msg,warn){ out.hidden=false; out.innerHTML=msg; out.classList.toggle('warn',!!warn); }
+  skip.addEventListener('click',function(){ box.hidden=true; });
+
+  /* Van de grove categorie van de parser naar de kaarten van dit formulier. */
+  const HOUSE=[[/\b(apartments?|appartments?|flats?|studio)\b/i,'apartment'],
+               [/\b(room and parlou?r|parlou?r|single room)\b/i,'apartment'],
+               [/\bcompounds?\b/i,'compound'],
+               [/\b(town ?house|terraced)\b/i,'townhouse'],
+               [/\bpenthouse\b/i,'penthouse'],
+               [/\b(lodge|guest ?house|hotel)\b/i,'lodge']];
+  const COMM =[[/\b(shops?|retail|stores?)\b/i,'retail'],
+               [/\boffices?\b/i,'office'],
+               [/\b(warehouse|storage|depot|workshop)\b/i,'warehouse'],
+               [/\b(restaurant|bar|kitchen)\b/i,'restaurant'],
+               [/\bmixed[- ]use\b/i,'mixed_use'],
+               [/\b(yard|plots?|lands?)\b/i,'business_plot']];
+  function pick(rules,text,fallback){
+    for(const r of rules) if(r[0].test(text)) return r[1];
+    return fallback;
+  }
+  const empty = el => !el || String(el.value||'').trim()==='';
+
+  go.addEventListener('click',function(){
+    const txt=String(inEl.value||'').trim();
+    if(!txt){ say('Paste the text of your advert first.',true); return; }
+    if(!window.MKAdvert || typeof window.MKAdvert.parseAdvert!=='function'){
+      say('We could not load the reader. Please fill in the form yourself — nothing is lost.',true); return;
+    }
+    let f;
+    try{ f=window.MKAdvert.parseAdvert(txt); }
+    catch(e){ say('We could not read that text. Please fill in the form yourself.',true); return; }
+
+    const filled=[], todo=[];
+
+    /* 1. Sale, to let, or commercial. */
+    if(!S.dealPicked){
+      if(f.category==='commercial'){
+        S.deal='commercial'; S.dealPicked=true; filled.push('commercial');
+        if(f.deal==='rent'||f.deal==='sale'){ S.cdeal=f.deal; filled.push(f.deal==='rent'?'to let':'for sale'); }
+        else todo.push('whether it is for sale or to let');
+      } else if(f.deal==='sale'||f.deal==='rent'){
+        S.deal=f.deal; S.dealPicked=true; filled.push(f.deal==='rent'?'to let':'for sale');
+      } else todo.push('whether it is for sale or to let');
+    }
+
+    /* 2. Kind of property. */
+    if(f.category==='land') S.cat = isComm() ? 'business_plot' : 'land';
+    else if(f.category==='commercial') S.cat = pick(COMM,txt,'retail');
+    else if(f.category==='house') S.cat = pick(HOUSE,txt,'villa');
+    if(f.category) filled.push('property type');
+    else todo.push('the kind of property');
+
+    /* 3. Place. Alleen de plaatsnaam; het adres blijft aan de aanbieder. */
+    if(f.place && empty(document.getElementById('locInput'))){ S.area=f.place; filled.push('area'); }
+    else if(!f.place) todo.push('where it is');
+
+    /* 4. Afmeting. syncPlotFromDims() rekent de m² uit en zet hem in het
+          juiste veld — land of bebouwd, dat weet die functie zelf. */
+    if(f.size && f.size.width_m && f.size.depth_m && !S.plotW && !S.plotD){
+      S.plotW=String(f.size.width_m); S.plotD=String(f.size.depth_m);
+      const w=document.getElementById('plotWIn'), d=document.getElementById('plotDIn');
+      if(w) w.value=S.plotW; if(d) d.value=S.plotD;
+      try{ syncPlotFromDims(); }catch(e){}
+      filled.push('plot size');
+    } else if(f.size && f.size.sqm && !f.size.width_m){
+      if(isPlotCat() && !S.landSqm){ S.landSqm=String(f.size.sqm); filled.push('plot size'); }
+      else if(!isPlotCat() && !S.plot){ S.plot=String(f.size.sqm); filled.push('plot size'); }
+    } else if(isPlotCat() && !S.landSqm) todo.push('the plot size');
+
+    /* 5. Kamers. */
+    if(f.beds!=null && !S.beds){ S.beds=String(f.beds); filled.push('bedrooms'); }
+    if(f.baths!=null && !S.baths){ S.baths=String(f.baths); filled.push('bathrooms'); }
+
+    /* 6. Prijs. Alleen in dalasi. Staat er een bedrag in een andere munt,
+          dan vullen we niets in: omrekenen zou een getal opleveren dat de
+          aanbieder niet zelf heeft gezegd. */
+    if(f.price!=null && !S.price){
+      if(f.price_currency==='GMD'){
+        S.price=String(Math.round(f.price)); filled.push('asking price');
+        if(f.price_note) todo.push('the price — '+f.price_note);
+      } else todo.push('the price (we found '+f.price_currency+', this form is in dalasi)');
+    } else if(f.price==null) todo.push('the price — on Marketplace it sits in a separate field above the text');
+
+    /* 7. Omschrijving, letterlijk. Wij herschrijven niets. */
+    if(empty(document.getElementById('descIn')) && !S.desc){ S.desc=f.description; filled.push('description'); }
+
+    /* Alles opnieuw tekenen vanuit S, en de stap-1-kaarten mee. */
+    try{ if(window.__trackReady) applyDealUI(); }catch(e){}
+    try{ renderTypes(); }catch(e){}
+    try{ applyStateToUI(); }catch(e){}
+    try{ updateSummary(); }catch(e){}
+    try{ autoSaveDraft(); }catch(e){}
+
+    box.classList.add('done');
+    let msg='<b>We filled in: '+(filled.length?filled.join(', '):'nothing yet')+'.</b>';
+    if(f.phones && f.phones.length) msg+='<br>There is a phone number in your text ('+f.phones.join(', ')+'). We did not put it in the listing — you set your contact details at the end.';
+    if(todo.length) msg+='<br>Still yours to fill in: '+todo.join('; ')+'.';
+    msg+='<br>Please check every field as you go. Nothing is published until you send it in.';
+    say(msg, todo.length>0);
+  });
+})();
 
 /* ---- "Continue where you left off" ---- */
 function rzAgo(ts){

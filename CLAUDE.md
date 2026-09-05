@@ -3076,3 +3076,59 @@ Semrush en Majestic op deze site) en Core Web Vitals in het veld (Search Console
 "Geen gegevens"; de PageSpeed-API gaf die dag een quotumfout). Over het effect van de
 Land-pagina 2.0 blijft de afspraak van 29-08-2026 staan: geen uitspraak vóór eind
 november 2026.
+
+## Advertentietekst overnemen: het plakvak — 05-09-2026
+
+`advert-parse.js` leest de tekst van een advertentie en zet die om in de
+velden van het plaatsingsformulier. Twee schermen gebruiken hem: het
+plakvak bovenaan de introstap van `list.html` (de aanbieder plakt zijn
+eigen tekst) en de weergave **Advert intake** in `admin.html` (jij plakt
+wat een aanbieder je stuurde).
+
+**De twee regels die dit ontwerp bepalen, en waarom er geen importknop is.**
+Meta's servicevoorwaarden artikel 3.2 verbieden het verzamelen van
+gegevens uit Meta-producten met geautomatiseerde middelen zonder hun
+voorafgaande toestemming, uitdrukkelijk ook wanneer je bent ingelogd op je
+eigen account. Een veld waarin je een Marketplace-URL plakt en dat de
+advertentie ophaalt, valt daaronder. Los daarvan ligt het auteursrecht op
+de advertentietekst en de foto's bij de aanbieder: overnemen mag alleen
+met zijn toestemming, ook bij handmatig overtypen. Daarom:
+
+- `advert-parse.js` bevat geen `fetch`, geen `XMLHttpRequest` en geen URL.
+  Bouw daar niets in. Het is een zuivere functie: tekst in, velden uit.
+- Foto's komen nooit van Facebook. Er is bewust geen veld voor een fotolink;
+  beeld levert de aanbieder zelf aan en gaat via `listing_media`.
+- Wie namens een ander plaatst, legt de grondslag vast in
+  `listing_intake.permission_basis`. Bij `seller_gave_permission` eist de
+  constraint `intake_permission_complete` naam, datum en bewijsregel. Het
+  scherm kan veranderen; die regel niet.
+
+**Wat de parser haalt, gemeten op alle 1102 advertenties uit
+FacebookaanbodvastgoedGambia.ods:** categorie 99,9%, afmeting 99,4%,
+koop/huur 97,5%, telefoon 100% (0,3% vals alarm), plaats 57%, prijs 9,9%.
+Dat laatste getal is geen fout: op Marketplace staat de prijs in een APART
+veld boven de omschrijving, en maar 5,8% van de omschrijvingen bevat zelfs
+een valutateken. De parser verzint nooit een bedrag — vindt hij er geen,
+dan blijft het veld leeg en zegt het scherm dat erbij. Diezelfde meting
+liep bovendien op de afgeknipte voorbeeldtekst uit het overzicht (mediaan
+36 tekens, maximaal 108), dus bij een volledig geplakte advertentie is er
+meer om mee te werken.
+
+**Hoe het in list.html hangt.** Het plakvak zit onderaan de sectie
+`data-key="intro"`; de logica staat vlak na `prefillFromURL();` en schrijft
+in `S`, waarna `applyDealUI()`, `renderTypes()`, `applyStateToUI()`,
+`updateSummary()` en `autoSaveDraft()` de rest doen. Het overschrijft nooit
+een veld dat de aanbieder al heeft ingevuld: twee keer plakken vult alleen
+de gaten. Bedragen in een andere munt dan dalasi worden NIET omgerekend —
+dat zou een getal opleveren dat de aanbieder niet zelf heeft gezegd.
+
+**Wat de intakeweergave nog niet doet.** De advertentie onder het account
+van de aanbieder zetten. Daar hoort een echte gebruiker bij en die maak je
+alleen serverzijdig aan. Nu: de intake wordt vastgelegd en de knop opent
+`list.html` met de gelezen velden in de URL (`prefillFromURL` kent die
+sleutels al), zodat het concept onder jouw account ontstaat. De
+omschrijving gaat niet mee door de adresbalk; die kopieer je erbij.
+
+Migratie: `supabase/migrations/20260905_01_listing_intake.sql`, toegepast
+op 05-09-2026. `advert-parse.js` staat in `SITE_ASSETS` en in `VERSIONED`
+van build.mjs.

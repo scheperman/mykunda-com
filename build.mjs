@@ -39,6 +39,9 @@ const SITE_ASSETS = [
   'app.min.js', 'styles.min.css', 'redesign.min.css', 'areas.css',
   'supabase.js', 'sw.js', 'manifest.json', 'admin-guard.js',
   'admin-nav.js', 'image-slot.js', 'gambia-places.js',
+  /* De advertentie-parser achter het plakvak op list.html en de
+     intakeweergave in admin.html. Zuivere functie, haalt niets op. */
+  'advert-parse.js',
   /* Het straten- en plekkenregister uit OpenStreetMap. Geen <script>: app.js
      haalt het pas op zodra iemand in een locatieveld begint te typen. */
   'gambia-osm.json',
@@ -288,6 +291,7 @@ console.log(`minified  app.js ${(appSrc.length / 1024) | 0}kb -> ${(appMin.lengt
 const VERSIONED = [
   'app.min.js', 'styles.min.css', 'redesign.min.css', 'areas.css', 'supabase.js',
   'admin-guard.js', 'admin-nav.js', 'image-slot.js', 'gambia-places.js',
+  'advert-parse.js',
   /* Staat in geen enkele pagina met ?v=, maar telt wel mee voor de stempel:
      app.js hangt die stempel er zelf aan als het bestand wordt opgehaald, dus
      een nieuw register bereikt zo iedereen. */
