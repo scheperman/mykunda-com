@@ -344,7 +344,9 @@ const MARK_START = '<!--mk-mark-->', MARK_END = '<!--/mk-mark-->';
  * verloren de afgeschermde pagina's hun `noindex` en de publieke pagina's hun
  * `index, follow, max-image-preview:large` — precies de regressie van 17-08-2026.
  * robots.txt blokkeert de app-pagina's bewust niet; deze metatag doet dat werk. */
-const NOINDEX_PAGES = new Set(['valuation-selftest.html', 'admin.html', 'dashboard.html', 'messages.html', 'list.html',
+/* claim.html is de overnamepagina: alleen bruikbaar met een code die wij
+   aan een aanbieder hebben gegeven, dus niets om te indexeren. */
+const NOINDEX_PAGES = new Set(['valuation-selftest.html', 'admin.html', 'dashboard.html', 'messages.html', 'list.html', 'claim.html',
   'auth.html', 'checkout.html', 'checkout v2.html', 'checkout v3.html', 'sources.html',
   'rates.html', 'title-verification.html', 'market.html',
   /* 03-09-2026: sales.html is back-office (admin-guard.js) en betaling-status.html is

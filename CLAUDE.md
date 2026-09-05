@@ -3132,3 +3132,51 @@ omschrijving gaat niet mee door de adresbalk; die kopieer je erbij.
 Migratie: `supabase/migrations/20260905_01_listing_intake.sql`, toegepast
 op 05-09-2026. `advert-parse.js` staat in `SITE_ASSETS` en in `VERSIONED`
 van build.mjs.
+
+
+## Advertentie namens een ander: overdracht in plaats van een account — 05-09-2026
+
+**Wij maken nooit een account voor een aanbieder aan.** `handle_new_user()`
+schrijft `consent_contact`, `consent_marketing` en `consent_at` uit de
+aanmeldgegevens. Een account dat wij zouden aanmaken heeft die toestemming per
+definitie niet: elke zo'n rij zou letterlijk vastleggen dat de persoon nooit
+heeft ingestemd, terwijl wij wel zijn gegevens houden. Bij de 363 Facebook-
+aanbieders kan het bovendien niet eens — dat zijn precies de profielen zonder
+telefoonnummer (`build.py` r.9-10) en e-mailadressen staan er geen in.
+
+**Hoe het wel gaat.** Een advertentie die jij namens iemand invoert:
+
+- `owner_id` = jij (beheer), `contact_name` / `contact_phone` = de aanbieder
+  (enquiries), `entered_on_behalf = true`, `status = 'draft'`.
+- `claim_token` is een eenmalige code van twaalf tekens uit `crypto`. Geen
+  oplopend nummer: dat zou de codes van anderen raadbaar maken.
+- `claim_contact` legt vast waar de code naartoe is gestuurd, zodat naderhand
+  te zien is aan wie hij is gegeven.
+
+De aanbieder maakt zelf een account en gaat naar `claim.html?code=…`. De RPC
+`claim_listing(p_token)` is SECURITY DEFINER — hij heeft op dat moment nog geen
+enkel recht op de rij — en zet `owner_id` op `auth.uid()`, stempelt
+`claimed_at`/`claimed_by` en wist de code. Onbekend en al gebruikt geven met
+opzet dezelfde foutmelding: anders is de functie een orakel om codes mee te
+raden. `revoke ... from public, anon`, alleen `authenticated` mag hem aanroepen.
+
+**Twee dingen die de intake tegenhouden.** `kind` en `category` zijn NOT NULL en
+de parser kent maar drie categorieën tegen vijftien in de enum, dus die twee
+kiest een mens in een keuzemenu (`ikKind`, `ikCat`, met `CAT_DEFAULT` als
+beginpunt). Ook zonder contactnaam gaat er niets weg: een advertentie waar een
+enquiry niet kan landen is waardeloos. Lukt de intake-rij niet, dan wordt de
+zojuist gemaakte listing weer verwijderd — geen advertentie zonder
+verantwoording.
+
+**Het formulier opent nu op de echte rij** (`list.html?draft=<uuid>`) in plaats
+van met velden in de adresbalk. `loadDraft()` leest ook `contact_*` terug
+(r.1255) en `listingFields()` schrijft ze weer weg (r.1095-1097), dus de
+omschrijving hoeft niet meer met de hand te worden overgezet.
+
+**Geen mail bij het aanmaken.** De triggers op `listings` sturen alleen iets bij
+een statuswijziging naar `active`, `rejected` of `archived`. Een concept blijft
+stil — houd dat zo.
+
+Migratie: `supabase/migrations/20260905_02_listing_claim.sql`, toegepast op
+05-09-2026. `claim.html` staat in `NOINDEX_PAGES` van build.mjs en niet in
+`HANDS_OFF`, dus header en footer worden vooraf gerenderd.

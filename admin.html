@@ -239,9 +239,19 @@ table.btab{min-width:900px}
   width:100%;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;
   font-family:var(--sans);font-size:14px;color:var(--ink);background:var(--white)}
 #intakePanel textarea{resize:vertical;line-height:1.55}
+/* Chrome negeert line-height op een select, waardoor die twee pixels lager
+   uitkwam dan een tekstveld ernaast. Een vaste hoogte houdt ze gelijk. */
+#intakePanel input[type=text],#intakePanel input[type=date],#intakePanel select{height:42px}
 #intakePanel textarea:focus,#intakePanel input:focus,#intakePanel select:focus{outline:none;border-color:var(--green-500)}
-.irow{display:grid;grid-template-columns:1fr;gap:12px;margin-top:14px}
+.irow{display:grid;grid-template-columns:1fr;gap:12px 18px;margin-top:14px;align-items:stretch}
 @media(min-width:560px){.irow{grid-template-columns:1fr 1fr}}
+/* Labels van ongelijke lengte mogen de velden niet uit elkaar trekken. Het
+   label blijft aan de bovenkant van de cel, het veld zakt naar de onderkant,
+   zodat de velden van een rij op een lijn staan ook als een label omloopt. */
+.irow>div{display:flex;flex-direction:column;min-width:0}
+.irow>div>.ilab{margin-bottom:auto;padding-bottom:6px}
+/* Een los label direct onder een rij velden plakte tegen die velden aan. */
+.irow+.ilab{margin-top:14px}
 .ibasis{border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;margin:18px 0 0}
 .ibasis legend{font-size:12.5px;font-weight:800;color:var(--ink);padding:0 6px}
 .iradio{display:flex;gap:10px;align-items:flex-start;padding:8px 0;cursor:pointer}
@@ -260,6 +270,13 @@ table.btab{min-width:900px}
 .ifield.miss{background:#FDF3E7}
 .iempty{font-size:13.5px;color:var(--muted-2)}
 .ifoot{font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:12px}
+.ihint{font-size:12.5px;color:var(--muted);line-height:1.5;margin:0 0 10px}
+.idone{margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:10px;background:var(--bg-2)}
+.idone p{margin:0 0 8px}
+.itoken{display:block;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:17px;
+        letter-spacing:.09em;padding:10px 12px;border:1px dashed var(--line);border-radius:8px;
+        background:var(--bg);word-break:break-all}
+.ilink{width:100%;margin-top:8px;font-size:12.5px}
 .ih3{font-size:15px;font-weight:800;color:var(--ink);margin:30px 0 12px;padding-top:22px;border-top:1px solid var(--line)}
 .itable{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
 .itable table{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
@@ -1296,6 +1313,22 @@ const INTAKE_SOURCES = [
   ['email','Email'],
   ['other','Somewhere else']
 ];
+
+/* De waarden van listing_category. Handmatig gelijkgehouden met de enum:
+   de parser kent maar drie soorten, de database vijftien, en welke van de
+   vijftien het is beoordeelt een mens. */
+const LISTING_CATEGORIES = [
+  ['apartment','Apartment'],['house','House'],['villa','Villa'],
+  ['townhouse','Townhouse'],['penthouse','Penthouse'],['compound','Compound'],
+  ['land','Land / plot'],['lodge','Lodge'],['commercial','Commercial'],
+  ['office','Office'],['retail','Retail'],['warehouse','Warehouse'],
+  ['restaurant','Restaurant'],['mixed_use','Mixed use'],['business_plot','Business plot']
+];
+
+/* Wat de parser vindt is een gok van drie categorieen; dit is het beginpunt
+   in het keuzemenu, niet het antwoord. */
+const CAT_DEFAULT = { land:'land', house:'villa', commercial:'commercial' };
+
 let intakeRows = [];
 
 function intakeViewHTML(){
@@ -1311,7 +1344,7 @@ function intakeViewHTML(){
       <div class="irow">
         <div><label class="ilab" for="ikSource">Where does it come from?</label>
           <select id="ikSource">${INTAKE_SOURCES.map(s=>`<option value="${s[0]}">${s[1]}</option>`).join('')}</select></div>
-        <div><label class="ilab" for="ikUrl">Link to the advert <span class="opt">— optional, for your records only</span></label>
+        <div><label class="ilab" for="ikUrl">Link to the advert <span class="opt">— optional, we never open it</span></label>
           <input id="ikUrl" type="text" placeholder="facebook.com/marketplace/item/…"></div>
       </div>
 
@@ -1333,6 +1366,19 @@ function intakeViewHTML(){
         </div>
       </fieldset>
 
+      <fieldset class="ibasis">
+        <legend>Who is the seller?</legend>
+        <p class="ihint">This goes on the listing as the contact, so enquiries reach him and not you.</p>
+        <div class="irow">
+          <div><label class="ilab" for="ikCName">Name on the listing</label>
+            <input id="ikCName" type="text" placeholder="As he calls himself"></div>
+          <div><label class="ilab" for="ikCPhone">Phone <span class="opt">— WhatsApp if he has it</span></label>
+            <input id="ikCPhone" type="text" placeholder="+220 …"></div>
+        </div>
+        <label class="ilab" for="ikCWhere">Where will you send him the transfer code?</label>
+        <input id="ikCWhere" type="text" placeholder="e.g. his Messenger profile, or the number above">
+      </fieldset>
+
       <div class="iacts">
         <button class="btn btn-primary btn-sm" id="ikRead">Read the text</button>
         <button class="btn btn-ghost btn-sm" id="ikClear">Clear</button>
@@ -1343,10 +1389,23 @@ function intakeViewHTML(){
     <div>
       <label class="ilab">What we read</label>
       <div id="ikOut" class="iout"><p class="iempty">Nothing read yet.</p></div>
-      <div class="iacts" id="ikSaveActs" hidden>
-        <button class="btn btn-primary btn-sm" id="ikSave">Save intake and open the listing form</button>
+
+      <div id="ikConfirm" hidden>
+        <label class="ilab">Confirm these two before the draft is made</label>
+        <div class="irow">
+          <div><label class="ilab" for="ikKind">For</label>
+            <select id="ikKind"><option value="">— pick one —</option>
+              <option value="sale">Sale</option><option value="rent">Rent</option></select></div>
+          <div><label class="ilab" for="ikCat">Type</label>
+            <select id="ikCat"><option value="">— pick one —</option>${LISTING_CATEGORIES.map(c=>`<option value="${c[0]}">${c[1]}</option>`).join('')}</select></div>
+        </div>
       </div>
-      <p class="ifoot">Saving records the text, the origin and the basis. The listing itself is created in the form that opens next, and stays a draft until you send it to review.</p>
+
+      <div class="iacts" id="ikSaveActs" hidden>
+        <button class="btn btn-primary btn-sm" id="ikSave">Create the draft listing</button>
+      </div>
+      <div id="ikDone" class="idone" hidden></div>
+      <p class="ifoot">The draft is made under your account with the seller as the contact, and carries a one-time code he can use to take it over once he has an account of his own. Nothing is published: it stays a draft until you send it to review.</p>
     </div>
   </div>
 
@@ -1376,6 +1435,13 @@ function intakeRender(f){
   h+=intakeFieldRow('Phone in text', f.phones.length?esc(f.phones.join(', ')):'—','', f.phones.length?'shown for your check; never published by itself':'');
   h+=intakeFieldRow('Photos','none — ask the seller to send them','miss','we never take photos from Facebook');
   document.getElementById('ikOut').innerHTML=h;
+
+  /* De twee kolommen die de database verplicht stelt, kiest een mens. De
+     parser levert alleen het beginpunt; staat er niets, dan blijft het
+     keuzemenu leeg en houdt de knop het tegen. */
+  document.getElementById('ikKind').value = f.deal==='sale'||f.deal==='rent' ? f.deal : '';
+  document.getElementById('ikCat').value  = CAT_DEFAULT[f.category] || '';
+  document.getElementById('ikConfirm').hidden=false;
   document.getElementById('ikSaveActs').hidden=false;
 }
 
@@ -1417,7 +1483,10 @@ function intakeWire(){
   document.getElementById('ikClear').addEventListener('click',()=>{
     document.getElementById('ikText').value=''; document.getElementById('ikUrl').value='';
     document.getElementById('ikOut').innerHTML='<p class="iempty">Nothing read yet.</p>';
-    document.getElementById('ikSaveActs').hidden=true; msg.hidden=true; ikParsed=null;
+    document.getElementById('ikSaveActs').hidden=true;
+    document.getElementById('ikConfirm').hidden=true;
+    const dn=document.getElementById('ikDone'); dn.hidden=true; dn.innerHTML='';
+    msg.hidden=true; ikParsed=null;
   });
 
   document.getElementById('ikRead').addEventListener('click',()=>{
@@ -1447,29 +1516,83 @@ function intakeWire(){
       permission_note: basis==='seller_pasted'?null:note,
       permission_at:   basis==='seller_pasted'?null:new Date(date+'T12:00:00Z').toISOString()
     };
-    if(LIVE){
-      try{
-        const { data:{ user } } = await sb.auth.getUser();
-        row.created_by = user.id;
-        const { error } = await sb.from('listing_intake').insert(row);
-        if(error) throw error;
-        await loadIntakes();
-      }catch(e){ say('Could not record the intake: '+(e.message||e)+'. Nothing was saved, so nothing is opened either.',true); return; }
+    /* De twee kolommen die listings verplicht stelt en die de parser niet
+       zeker weet. Zonder keuze geen concept: liever tegengehouden dan een
+       aanname die als feit op de site komt. */
+    const kind=document.getElementById('ikKind').value;
+    const cat =document.getElementById('ikCat').value;
+    if(!kind || !cat){ say('Pick For and Type first — the database will not take a listing without them.',true); return; }
+
+    const cname=document.getElementById('ikCName').value.trim();
+    if(!cname){ say('The listing needs a contact name, otherwise an enquiry has nowhere to go.',true); return; }
+    const cphone=document.getElementById('ikCPhone').value.trim();
+    const cwhere=document.getElementById('ikCWhere').value.trim();
+
+    if(!LIVE){ say('Not connected to the backend, so nothing was created.',true); return; }
+
+    const f=ikParsed;
+    /* De code is eenmalig en wordt gewist zodra hij is gebruikt. Twaalf
+       tekens uit crypto, geen tellertje: een opvolgend nummer zou de codes
+       van andere aanbieders raadbaar maken. */
+    const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    const token=Array.from(crypto.getRandomValues(new Uint8Array(12)),b=>A[b%A.length]).join('');
+
+    let listingId=null;
+    try{
+      const { data:{ user } } = await sb.auth.getUser();
+      row.created_by = user.id;
+
+      const listing = {
+        owner_id: user.id,
+        kind: kind,
+        category: cat,
+        title: (f.title||'').slice(0,120) || 'Untitled — from intake',
+        description: document.getElementById('ikText').value,
+        area: f.place || null,
+        contact_name: cname,
+        contact_phone: cphone || null,
+        status: 'draft',
+        entered_on_behalf: true,
+        claim_token: token,
+        claim_contact: cwhere || null
+      };
+      /* Alleen wat de parser werkelijk heeft gevonden. Een bedrag in een
+         andere munt dan dalasi gaat niet mee: omrekenen zou een getal
+         opleveren dat de aanbieder nooit heeft genoemd. */
+      if(f.price!=null && f.price_currency==='GMD') listing.price=Math.round(f.price);
+      if(f.size && f.size.sqm) listing.plot_sqm=f.size.sqm;
+      if(f.size && f.size.width_m){ listing.plot_width_m=f.size.width_m; listing.plot_depth_m=f.size.depth_m; }
+      if(f.beds!=null)  listing.beds=f.beds;
+      if(f.baths!=null) listing.baths=f.baths;
+
+      const { data:made, error:lErr } = await sb.from('listings').insert(listing).select('id').single();
+      if(lErr) throw lErr;
+      listingId = made.id;
+
+      row.listing_id = listingId;
+      const { error } = await sb.from('listing_intake').insert(row);
+      if(error){
+        /* De intake is de verantwoording bij de advertentie. Lukt die niet,
+           dan blijft er geen advertentie zonder verantwoording achter. */
+        await sb.from('listings').delete().eq('id', listingId);
+        throw error;
+      }
+      await loadIntakes();
+    }catch(e){
+      say('Could not create it: '+(e.message||e)+(listingId?'':'. Nothing was saved.'),true); return;
     }
-    /* Doorgeven aan het gewone formulier. prefillFromURL() daar kent deze
-       sleutels al; wat er niet in past vult Edwin met de hand. */
-    const f=ikParsed, q=new URLSearchParams();
-    if(f.category==='commercial'){ q.set('deal','commercial'); if(f.deal) q.set('cdeal',f.deal); }
-    else if(f.deal) q.set('deal',f.deal);
-    if(f.category==='land') q.set('cat','land');
-    else if(f.category==='house') q.set('cat','villa');
-    if(f.place) q.set('area',f.place);
-    if(f.size && f.size.sqm) q.set('sqm',String(f.size.sqm));
-    if(f.beds!=null) q.set('beds',String(f.beds));
-    if(f.baths!=null) q.set('baths',String(f.baths));
-    if(f.price!=null && f.price_currency==='GMD') q.set('price',String(Math.round(f.price)));
-    window.open('list.html?'+q.toString(),'_blank','noopener');
-    say('Recorded. The listing form is open in a new tab. The description does not travel through the address bar — copy it from the box on the left into the description field.');
+
+    const link=location.origin+'/claim.html?code='+encodeURIComponent(token);
+    const dn=document.getElementById('ikDone');
+    dn.innerHTML='<p><b>Draft created.</b> It is under your account with '+
+      cname.replace(/[&<>"]/g,'')+' as the contact.</p>'+
+      '<p class="ilab">Transfer code for the seller</p>'+
+      '<code class="itoken">'+token+'</code>'+
+      '<p class="ifoot">Send him this link when he asks to manage it himself. He makes his own account first; the code then moves the listing to him. It works once.</p>'+
+      '<input class="ilink" type="text" readonly value="'+link+'">';
+    dn.hidden=false;
+    window.open('list.html?draft='+encodeURIComponent(listingId),'_blank','noopener');
+    say('Created. The listing form is open in a new tab on this draft — the text and the contact details are already in it.');
   });
 }
 
