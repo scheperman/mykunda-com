@@ -2957,6 +2957,19 @@ van acht goed. `/Bijilo.html` (de URL met 132 vertoningen) geeft nu 301 naar
 `/bijilo.html`, net als `/Bakau.html`, een gids met hoofdletter en `/BUY.HTML`; de
 kleine-letterversies geven gewoon 200 en een onbekende URL nog steeds een echte 404.
 
+Validatie gestart op 05-09-2026 in Search Console (Pagina-indexering > Niet gevonden
+(404) > DETAILS WEERGEVEN > NIEUWE VALIDATIE STARTEN): 11 in behandeling, 0 mislukt.
+De vorige poging liep van 08-08 tot 11-08 en strandde op 10 in behandeling en 1
+mislukt. De elf URL's waren allemaal hoofdletter-varianten uit een oudere build:
+`/Bijilo.html`, `/Legal.html` (kaal en met `?doc=terms` / `?doc=cookies`),
+`/Search.html` (kaal, `?q=Brufut`, `?q=Cape%20Point` en `?q={search_term_string}` -
+die laatste komt uit de SearchAction in de JSON-LD), `/About.html` en
+`/Guide.html?slug=…` voor twee gidsen. Vóór het starten alle elf nagemeten met
+`node _werk/check-gsc-404.mjs`: ze komen alle elf op een 200 uit, de twee
+`Guide.html?slug=`-URL's via twee sprongen. Alleen deze categorie is gevalideerd;
+"Pagina met omleiding" (13) en "Soft 404" (1) blijven op Niet gestart staan, want daar
+is een 301 het bedoelde gedrag.
+
 Ook live nagemeten: het IndexNow-sleutelbestand geeft 200 met de sleutel als inhoud,
 en een proefaanmelding van de homepage werd door IndexNow met 202 aangenomen.
 
