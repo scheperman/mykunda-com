@@ -1,2 +1,12 @@
 import { execSync } from 'node:child_process';
-console.log(execSync('git log -3 --pretty=format:"%h  %s"', { encoding: 'utf8' }));
+const g = c => { try { return execSync(c, { encoding: 'utf8', maxBuffer: 1 << 26 }); } catch (e) { return '(fout) ' + (e.stdout || e.message); } };
+console.log('=== commits die "reported sale" in bijilo.html introduceerden');
+console.log(g('git log --oneline -S"every reported sale" -- bijilo.html'));
+console.log('=== commits die "verified sale" ergens introduceerden');
+console.log(g('git log --oneline -S"every verified sale"'));
+console.log('=== staat het in build-area-prices.mjs?');
+console.log(g('git log --oneline -S"verified sale" -- build-area-prices.mjs'));
+console.log('=== huidige regel in de generator');
+const t = (await import('node:fs')).readFileSync('build-area-prices.mjs', 'utf8');
+const m = t.match(/[^\n]*(?:reported|verified) sale[^\n]*/g);
+console.log(m ? m.join('\n') : '(niet gevonden)');

@@ -1,12 +1,12 @@
 {
  "summary": {
-  "pages": 102,
-  "indexable": 87,
+  "pages": 103,
+  "indexable": 88,
   "noindex": 15,
-  "sitemapUrls": 87,
-  "findings": 23,
+  "sitemapUrls": 88,
+  "findings": 24,
   "byType": {
-   "description >165": 18,
+   "description >165": 19,
    "title <25": 3,
    "geen JSON-LD": 1,
    "title >65": 1
@@ -69,6 +69,7 @@
    "kotu.html:7",
    "kuntaur.html:7",
    "lamin.html:7",
+   "land-for-sale-in-the-gambia.html:6",
    "latriya.html:7",
    "legal-cookies.html:6",
    "legal-privacy.html:6",
@@ -178,6 +179,11 @@
   ],
   [
    "description >165",
+   "land-for-sale-in-the-gambia.html",
+   184
+  ],
+  [
+   "description >165",
    "latriya.html",
    175
   ],
@@ -244,10 +250,10 @@
    "ldTypes": [],
    "ldErr": [],
    "broken": [],
-   "words": 1010,
+   "words": 1013,
    "inSitemap": false,
    "lastmod": null,
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
@@ -287,14 +293,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1438,
+   "words": 1441,
    "inSitemap": true,
    "lastmod": "2026-09-03",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "admin.html": {
    "url": "https://mykunda.com/admin.html",
@@ -325,7 +331,7 @@
    "words": 63,
    "inSitemap": false,
    "lastmod": null,
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 1,
@@ -363,14 +369,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1097,
+   "words": 1100,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "areas-in-the-gambia.html": {
    "url": "https://mykunda.com/areas-in-the-gambia.html",
@@ -406,14 +412,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 2518,
+   "words": 2521,
    "inSitemap": true,
    "lastmod": "2026-08-31",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "auth.html": {
    "url": "https://mykunda.com/auth.html",
@@ -446,11 +452,11 @@
    "words": 249,
    "inSitemap": false,
    "lastmod": null,
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 0,
-   "inboundCount": 93
+   "inboundCount": 94
   },
   "bakau.html": {
    "url": "https://mykunda.com/bakau.html",
@@ -487,14 +493,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1889,
+   "words": 1892,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "bakoteh.html": {
    "url": "https://mykunda.com/bakoteh.html",
@@ -531,14 +537,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1898,
+   "words": 1901,
    "inSitemap": true,
    "lastmod": "2026-09-03",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "banjul.html": {
    "url": "https://mykunda.com/banjul.html",
@@ -575,14 +581,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1912,
+   "words": 1915,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "bansang.html": {
    "url": "https://mykunda.com/bansang.html",
@@ -619,14 +625,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1883,
+   "words": 1886,
    "inSitemap": true,
    "lastmod": "2026-09-03",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "barra.html": {
    "url": "https://mykunda.com/barra.html",
@@ -663,14 +669,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1904,
+   "words": 1907,
    "inSitemap": true,
    "lastmod": "2026-09-03",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "basse.html": {
    "url": "https://mykunda.com/basse.html",
@@ -707,14 +713,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1900,
+   "words": 1903,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "batokunku.html": {
    "url": "https://mykunda.com/batokunku.html",
@@ -751,14 +757,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1892,
+   "words": 1895,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "betaling-status.html": {
    "url": "https://mykunda.com/betaling-status.html",
@@ -784,10 +790,10 @@
    "ldTypes": [],
    "ldErr": [],
    "broken": [],
-   "words": 899,
+   "words": 902,
    "inSitemap": false,
    "lastmod": null,
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 8,
@@ -828,14 +834,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1833,
+   "words": 1836,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "brikama.html": {
    "url": "https://mykunda.com/brikama.html",
@@ -872,14 +878,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1864,
+   "words": 1867,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "brufut.html": {
    "url": "https://mykunda.com/brufut.html",
@@ -916,14 +922,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1841,
+   "words": 1844,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "brusubi.html": {
    "url": "https://mykunda.com/brusubi.html",
@@ -960,14 +966,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1913,
+   "words": 1916,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "busumbala.html": {
    "url": "https://mykunda.com/busumbala.html",
@@ -1004,14 +1010,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1942,
+   "words": 1945,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "buy.html": {
    "url": "https://mykunda.com/buy.html",
@@ -1044,14 +1050,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1521,
+   "words": 1524,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 92
+   "inboundCount": 93
   },
   "cape-point.html": {
    "url": "https://mykunda.com/cape-point.html",
@@ -1088,14 +1094,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1957,
+   "words": 1960,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "checkout.html": {
    "url": "https://mykunda.com/checkout.html",
@@ -1127,7 +1133,7 @@
    "words": 221,
    "inSitemap": false,
    "lastmod": null,
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 2,
@@ -1164,14 +1170,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1489,
+   "words": 1492,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 8,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "contact.html": {
    "url": "https://mykunda.com/contact.html",
@@ -1207,14 +1213,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1009,
+   "words": 1012,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 92
+   "inboundCount": 93
   },
   "dashboard.html": {
    "url": "https://mykunda.com/dashboard.html",
@@ -1245,11 +1251,11 @@
    "words": 539,
    "inSitemap": false,
    "lastmod": null,
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 17,
-   "inboundCount": 94
+   "inboundCount": 95
   },
   "diaspora-land-buying-checklist.html": {
    "url": "https://mykunda.com/diaspora-land-buying-checklist.html",
@@ -1279,14 +1285,14 @@
    "ldTypes": [],
    "ldErr": [],
    "broken": [],
-   "words": 1427,
+   "words": 1430,
    "inSitemap": true,
    "lastmod": "2026-09-03",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 1
+   "inboundCount": 2
   },
   "essau.html": {
    "url": "https://mykunda.com/essau.html",
@@ -1323,14 +1329,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1897,
+   "words": 1900,
    "inSitemap": true,
    "lastmod": "2026-09-03",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "fajara.html": {
    "url": "https://mykunda.com/fajara.html",
@@ -1367,14 +1373,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1833,
+   "words": 1836,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "faq.html": {
    "url": "https://mykunda.com/faq.html",
@@ -1410,14 +1416,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 13186,
+   "words": 13189,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "farafenni.html": {
    "url": "https://mykunda.com/farafenni.html",
@@ -1454,14 +1460,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1909,
+   "words": 1912,
    "inSitemap": true,
    "lastmod": "2026-09-03",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "farato.html": {
    "url": "https://mykunda.com/farato.html",
@@ -1498,14 +1504,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 2305,
+   "words": 2308,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "fatoto.html": {
    "url": "https://mykunda.com/fatoto.html",
@@ -1542,14 +1548,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1891,
+   "words": 1894,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "gambia-property-prices.html": {
    "url": "https://mykunda.com/gambia-property-prices.html",
@@ -1586,14 +1592,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 2350,
+   "words": 2355,
    "inSitemap": true,
-   "lastmod": "2026-09-03",
-   "mtime": "2026-09-04",
+   "lastmod": "2026-09-05",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "gambissara.html": {
    "url": "https://mykunda.com/gambissara.html",
@@ -1630,14 +1636,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1865,
+   "words": 1868,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "ghana-town.html": {
    "url": "https://mykunda.com/ghana-town.html",
@@ -1674,14 +1680,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 2435,
+   "words": 2438,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "guide-bank-mortgages-in-the-gambia.html": {
    "url": "https://mykunda.com/guide-bank-mortgages-in-the-gambia.html",
@@ -1720,14 +1726,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 7754,
+   "words": 7757,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "guide-best-areas-to-buy-on-the-gambian-coast.html": {
    "url": "https://mykunda.com/guide-best-areas-to-buy-on-the-gambian-coast.html",
@@ -1766,14 +1772,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 9068,
+   "words": 9071,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "guide-building-a-house-in-the-gambia.html": {
    "url": "https://mykunda.com/guide-building-a-house-in-the-gambia.html",
@@ -1812,14 +1818,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 8659,
+   "words": 8662,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "guide-buying-property-in-the-gambia-as-a-foreigner.html": {
    "url": "https://mykunda.com/guide-buying-property-in-the-gambia-as-a-foreigner.html",
@@ -1858,14 +1864,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 9336,
+   "words": 9339,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 92
+   "inboundCount": 93
   },
   "guide-cost-of-buying-property-in-the-gambia.html": {
    "url": "https://mykunda.com/guide-cost-of-buying-property-in-the-gambia.html",
@@ -1904,14 +1910,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 7230,
+   "words": 7233,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "guide-developer-financing-in-the-gambia.html": {
    "url": "https://mykunda.com/guide-developer-financing-in-the-gambia.html",
@@ -1950,14 +1956,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 10162,
+   "words": 10165,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "guide-estate-agent-regulation-in-the-gambia.html": {
    "url": "https://mykunda.com/guide-estate-agent-regulation-in-the-gambia.html",
@@ -1996,14 +2002,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 7045,
+   "words": 7048,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "guide-freehold-leasehold-customary-land-explained.html": {
    "url": "https://mykunda.com/guide-freehold-leasehold-customary-land-explained.html",
@@ -2042,14 +2048,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 8419,
+   "words": 8422,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "guide-how-to-verify-land-title-in-the-gambia.html": {
    "url": "https://mykunda.com/guide-how-to-verify-land-title-in-the-gambia.html",
@@ -2088,14 +2094,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 10963,
+   "words": 10966,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "guide-inheritance-and-wills-for-gambian-property.html": {
    "url": "https://mykunda.com/guide-inheritance-and-wills-for-gambian-property.html",
@@ -2134,14 +2140,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 7862,
+   "words": 7865,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "guide-renting-out-property-in-the-gambia.html": {
    "url": "https://mykunda.com/guide-renting-out-property-in-the-gambia.html",
@@ -2180,14 +2186,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 7580,
+   "words": 7583,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "guide-residency-and-retiring-in-the-gambia.html": {
    "url": "https://mykunda.com/guide-residency-and-retiring-in-the-gambia.html",
@@ -2226,14 +2232,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 6228,
+   "words": 6231,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "guide-sending-money-to-the-gambia.html": {
    "url": "https://mykunda.com/guide-sending-money-to-the-gambia.html",
@@ -2272,14 +2278,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 7266,
+   "words": 7269,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "guides.html": {
    "url": "https://mykunda.com/guides.html",
@@ -2315,14 +2321,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1408,
+   "words": 1411,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "gunjur.html": {
    "url": "https://mykunda.com/gunjur.html",
@@ -2359,14 +2365,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1836,
+   "words": 1839,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "how-we-measure-prices.html": {
    "url": "https://mykunda.com/how-we-measure-prices.html",
@@ -2402,14 +2408,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 3088,
+   "words": 3091,
    "inSitemap": true,
    "lastmod": "2026-08-31",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 56
+   "inboundCount": 57
   },
   "index.html": {
    "url": "https://mykunda.com/",
@@ -2446,14 +2452,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1856,
+   "words": 1859,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 93
+   "inboundCount": 94
   },
   "jabang.html": {
    "url": "https://mykunda.com/jabang.html",
@@ -2490,14 +2496,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1857,
+   "words": 1860,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "jambanjelly.html": {
    "url": "https://mykunda.com/jambanjelly.html",
@@ -2534,14 +2540,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 2171,
+   "words": 2174,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "jambur.html": {
    "url": "https://mykunda.com/jambur.html",
@@ -2578,14 +2584,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 2408,
+   "words": 2411,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "janjanbureh.html": {
    "url": "https://mykunda.com/janjanbureh.html",
@@ -2622,14 +2628,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1863,
+   "words": 1866,
    "inSitemap": true,
    "lastmod": "2026-09-03",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "kartong.html": {
    "url": "https://mykunda.com/kartong.html",
@@ -2666,14 +2672,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1912,
+   "words": 1915,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "kerewan.html": {
    "url": "https://mykunda.com/kerewan.html",
@@ -2710,14 +2716,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1847,
+   "words": 1850,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "kerr-serign.html": {
    "url": "https://mykunda.com/kerr-serign.html",
@@ -2754,14 +2760,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1972,
+   "words": 1975,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "kololi.html": {
    "url": "https://mykunda.com/kololi.html",
@@ -2798,14 +2804,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1965,
+   "words": 1968,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "kotu.html": {
    "url": "https://mykunda.com/kotu.html",
@@ -2842,14 +2848,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1917,
+   "words": 1920,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "kuntaur.html": {
    "url": "https://mykunda.com/kuntaur.html",
@@ -2886,14 +2892,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1864,
+   "words": 1867,
    "inSitemap": true,
    "lastmod": "2026-09-03",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "lamin.html": {
    "url": "https://mykunda.com/lamin.html",
@@ -2930,14 +2936,60 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1834,
+   "words": 1837,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
+  },
+  "land-for-sale-in-the-gambia.html": {
+   "url": "https://mykunda.com/land-for-sale-in-the-gambia.html",
+   "title": "Land for sale in The Gambia — plot prices per m² by area 2026",
+   "titleLen": 61,
+   "desc": "Plots for sale across The Gambia and what land really costs: the asking price of a standard 400 m² plot in every area where land changes hands — and how to verify title before you pay.",
+   "descLen": 184,
+   "canon": [
+    "https://mykunda.com/land-for-sale-in-the-gambia.html"
+   ],
+   "robots": "index, follow, max-image-preview:large, noai, noimageai",
+   "noindex": false,
+   "lang": "en",
+   "h1": [
+    "Land for sale in The Gambia"
+   ],
+   "ogTitle": "Land for sale in The Gambia — plot prices by area",
+   "ogDesc": "What a plot costs in every Gambian area where land, not houses, is what changes hands — with the price of a standard 400 m² plot, the price of land per m² and the evidence behind it.",
+   "ogImage": "https://mykunda.com/images/og/kartong.jpg",
+   "ogUrl": "https://mykunda.com/land-for-sale-in-the-gambia.html",
+   "twCard": "summary_large_image",
+   "viewport": true,
+   "imgs": 4,
+   "noalt": 0,
+   "nodim": 0,
+   "nolazy": 3,
+   "ldTypes": [
+    "WebPage",
+    "WebSite",
+    "Organization",
+    "BreadcrumbList",
+    "ListItem",
+    "FAQPage",
+    "Question",
+    "Answer"
+   ],
+   "ldErr": [],
+   "broken": [],
+   "words": 2057,
+   "inSitemap": true,
+   "lastmod": "2026-09-05",
+   "mtime": "2026-09-05",
+   "hreflang": 0,
+   "hasMkMark": true,
+   "noindexLinks": 6,
+   "inboundCount": 92
   },
   "latriya.html": {
    "url": "https://mykunda.com/latriya.html",
@@ -2974,14 +3026,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 2165,
+   "words": 2168,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "legal-cookies.html": {
    "url": "https://mykunda.com/legal-cookies.html",
@@ -3017,14 +3069,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1288,
+   "words": 1291,
    "inSitemap": true,
    "lastmod": "2026-09-02",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "legal-privacy.html": {
    "url": "https://mykunda.com/legal-privacy.html",
@@ -3060,14 +3112,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1535,
+   "words": 1538,
    "inSitemap": true,
    "lastmod": "2026-09-02",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 94
+   "inboundCount": 95
   },
   "legal-terms.html": {
    "url": "https://mykunda.com/legal-terms.html",
@@ -3103,14 +3155,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 2068,
+   "words": 2071,
    "inSitemap": true,
    "lastmod": "2026-09-03",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 94
+   "inboundCount": 95
   },
   "legal.html": {
    "url": "https://mykunda.com/legal.html",
@@ -3146,14 +3198,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1037,
+   "words": 1040,
    "inSitemap": true,
    "lastmod": "2026-09-03",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "list.html": {
    "url": "https://mykunda.com/list.html",
@@ -3195,11 +3247,11 @@
    "words": 1816,
    "inSitemap": false,
    "lastmod": null,
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 1,
-   "inboundCount": 93
+   "inboundCount": 94
   },
   "madiana.html": {
    "url": "https://mykunda.com/madiana.html",
@@ -3236,14 +3288,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 2432,
+   "words": 2435,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "mamuda.html": {
    "url": "https://mykunda.com/mamuda.html",
@@ -3280,14 +3332,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 2101,
+   "words": 2104,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "manjai-kunda.html": {
    "url": "https://mykunda.com/manjai-kunda.html",
@@ -3324,14 +3376,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1915,
+   "words": 1918,
    "inSitemap": true,
    "lastmod": "2026-09-03",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "mansa-konko.html": {
    "url": "https://mykunda.com/mansa-konko.html",
@@ -3368,14 +3420,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1863,
+   "words": 1866,
    "inSitemap": true,
    "lastmod": "2026-09-03",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "market.html": {
    "url": "https://mykunda.com/market.html",
@@ -3415,10 +3467,10 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1429,
+   "words": 1432,
    "inSitemap": false,
    "lastmod": null,
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 8,
@@ -3453,7 +3505,7 @@
    "words": 76,
    "inSitemap": false,
    "lastmod": null,
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 2,
@@ -3494,14 +3546,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1923,
+   "words": 1926,
    "inSitemap": true,
    "lastmod": "2026-09-03",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "old-yundum.html": {
    "url": "https://mykunda.com/old-yundum.html",
@@ -3538,14 +3590,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 2407,
+   "words": 2410,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "photo-credits.html": {
    "url": "https://mykunda.com/photo-credits.html",
@@ -3578,14 +3630,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1067,
+   "words": 1070,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "pipeline.html": {
    "url": "https://mykunda.com/pipeline.html",
@@ -3622,14 +3674,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1882,
+   "words": 1885,
    "inSitemap": true,
    "lastmod": "2026-09-03",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "property.html": {
    "url": "https://mykunda.com/property.html",
@@ -3658,10 +3710,10 @@
    "ldTypes": [],
    "ldErr": [],
    "broken": [],
-   "words": 1182,
+   "words": 1185,
    "inSitemap": false,
    "lastmod": null,
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 8,
@@ -3696,7 +3748,7 @@
    "words": 348,
    "inSitemap": false,
    "lastmod": null,
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 0,
@@ -3733,14 +3785,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1403,
+   "words": 1406,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "safe.html": {
    "url": "https://mykunda.com/safe.html",
@@ -3775,14 +3827,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1523,
+   "words": 1526,
    "inSitemap": true,
    "lastmod": "2026-09-03",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "salagi.html": {
    "url": "https://mykunda.com/salagi.html",
@@ -3819,14 +3871,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 2308,
+   "words": 2311,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "sales.html": {
    "url": "https://mykunda.com/sales.html",
@@ -3854,10 +3906,10 @@
    "ldTypes": [],
    "ldErr": [],
    "broken": [],
-   "words": 1199,
+   "words": 1202,
    "inSitemap": false,
    "lastmod": null,
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
@@ -3898,14 +3950,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1844,
+   "words": 1847,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "search.html": {
    "url": "https://mykunda.com/search.html",
@@ -3941,14 +3993,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 951,
+   "words": 954,
    "inSitemap": true,
    "lastmod": "2026-09-03",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 9,
-   "inboundCount": 92
+   "inboundCount": 93
   },
   "sell.html": {
    "url": "https://mykunda.com/sell.html",
@@ -3981,14 +4033,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 2842,
+   "words": 2845,
    "inSitemap": true,
    "lastmod": "2026-09-05",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 14,
-   "inboundCount": 94
+   "inboundCount": 95
   },
   "senegambia.html": {
    "url": "https://mykunda.com/senegambia.html",
@@ -4025,14 +4077,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1917,
+   "words": 1920,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "serrekunda.html": {
    "url": "https://mykunda.com/serrekunda.html",
@@ -4069,14 +4121,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1906,
+   "words": 1909,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "sinchu-alagie.html": {
    "url": "https://mykunda.com/sinchu-alagie.html",
@@ -4113,14 +4165,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1911,
+   "words": 1914,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "soma.html": {
    "url": "https://mykunda.com/soma.html",
@@ -4157,14 +4209,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1878,
+   "words": 1881,
    "inSitemap": true,
    "lastmod": "2026-09-03",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "sources.html": {
    "url": "https://mykunda.com/sources.html",
@@ -4195,7 +4247,7 @@
    "words": 349,
    "inSitemap": false,
    "lastmod": null,
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 0,
@@ -4236,14 +4288,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1840,
+   "words": 1843,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "tanji.html": {
    "url": "https://mykunda.com/tanji.html",
@@ -4280,14 +4332,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1810,
+   "words": 1813,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "tintinto.html": {
    "url": "https://mykunda.com/tintinto.html",
@@ -4324,14 +4376,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 2165,
+   "words": 2168,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "title-verification.html": {
    "url": "https://mykunda.com/title-verification.html",
@@ -4360,7 +4412,7 @@
    "words": 0,
    "inSitemap": false,
    "lastmod": null,
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 0,
@@ -4401,14 +4453,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 2245,
+   "words": 2248,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "tujereng.html": {
    "url": "https://mykunda.com/tujereng.html",
@@ -4445,14 +4497,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1868,
+   "words": 1871,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   },
   "valuation-selftest.html": {
    "url": "https://mykunda.com/valuation-selftest.html",
@@ -4483,7 +4535,7 @@
    "words": 43,
    "inSitemap": false,
    "lastmod": null,
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 0,
@@ -4520,14 +4572,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1947,
+   "words": 1950,
    "inSitemap": true,
    "lastmod": "2026-09-03",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 6,
-   "inboundCount": 93
+   "inboundCount": 94
   },
   "yundum.html": {
    "url": "https://mykunda.com/yundum.html",
@@ -4564,14 +4616,14 @@
    ],
    "ldErr": [],
    "broken": [],
-   "words": 1844,
+   "words": 1847,
    "inSitemap": true,
    "lastmod": "2026-09-04",
-   "mtime": "2026-09-04",
+   "mtime": "2026-09-05",
    "hreflang": 0,
    "hasMkMark": true,
    "noindexLinks": 7,
-   "inboundCount": 91
+   "inboundCount": 92
   }
  }
 }

@@ -1,0 +1,12 @@
+import { execSync } from 'node:child_process';
+import { writeFileSync } from 'node:fs';
+const g = c => { try { return execSync(c, { encoding: 'utf8', maxBuffer: 1 << 26 }); } catch (e) { return '(fout) ' + (e.stdout || e.message); } };
+writeFileSync('_werk/diff-intrek-buildareaprices.txt', g('git show e61883e -- build-area-prices.mjs'));
+writeFileSync('_werk/diff-intrek-supabase.txt', g('git show e61883e -- supabase.js'));
+writeFileSync('_werk/diff-intrek-htaccess.txt', g('git show e61883e -- .htaccess'));
+console.log('=== supabase.js');
+console.log(g('git show e61883e -- supabase.js'));
+console.log('=== .htaccess');
+console.log(g('git show e61883e -- .htaccess'));
+console.log('=== build-area-prices.mjs: alleen de kopregels van de hunks');
+console.log(g('git show e61883e -- build-area-prices.mjs').split('\n').filter(l => l.startsWith('@@')).join('\n'));

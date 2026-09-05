@@ -114,10 +114,6 @@ RewriteRule ^FAQ\.html$             /faq.html                [R=301,L]
 RewriteRule ^Neighborhood\.html$    /kololi.html             [R=301,L]
 RewriteRule ^neighborhood\.html$    /kololi.html             [R=301,L]
 
-# De grondpagina is op 29-08-2026 ingetrokken. De cijfers die erop stonden komen
-# uit de prijsindex en staan daar nog steeds; die is dus het dichtstbijzijnde
-# equivalent. Beide schrijfwijzen vangen, want de site serveert ook zonder .html.
-RewriteRule ^land-for-sale-in-the-gambia(\.html)?$ /gambia-property-prices.html [R=301,L]
 
 # Legal: the three documents are now real pages, so route the old
 # ?doc= parameter URLs straight to them (query string dropped with the "?").
@@ -138,7 +134,7 @@ RewriteRule ^home\.html$            /                        [R=301,L]
 # die module niet. build.mjs schrijft daarom zelf een regel per geuploade pagina.
 # De RewriteCond eist een hoofdletter in het pad, zodat de goede kleine-letter-URL
 # nooit naar zichzelf omleidt.
-# BEGIN mk-case-redirects (102 pagina's, gegenereerd door build.mjs - niet met de hand wijzigen)
+# BEGIN mk-case-redirects (103 pagina's, gegenereerd door build.mjs - niet met de hand wijzigen)
 RewriteCond %{REQUEST_URI} [A-Z]
 RewriteRule ^404\.html$ /404.html [R=301,L,NC]
 RewriteCond %{REQUEST_URI} [A-Z]
@@ -265,6 +261,8 @@ RewriteCond %{REQUEST_URI} [A-Z]
 RewriteRule ^kuntaur\.html$ /kuntaur.html [R=301,L,NC]
 RewriteCond %{REQUEST_URI} [A-Z]
 RewriteRule ^lamin\.html$ /lamin.html [R=301,L,NC]
+RewriteCond %{REQUEST_URI} [A-Z]
+RewriteRule ^land-for-sale-in-the-gambia\.html$ /land-for-sale-in-the-gambia.html [R=301,L,NC]
 RewriteCond %{REQUEST_URI} [A-Z]
 RewriteRule ^latriya\.html$ /latriya.html [R=301,L,NC]
 RewriteCond %{REQUEST_URI} [A-Z]

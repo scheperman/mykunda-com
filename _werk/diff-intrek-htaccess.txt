@@ -1,0 +1,22 @@
+commit e61883eb8b70237cc33e4d6f1cba0a261e25aacb
+Author: Edwin Scheperman <17229960+scheperman@users.noreply.github.com>
+Date:   Sat Aug 29 17:38:42 2026 +0000
+
+    Landpagina ingetrokken: 301 naar de prijsindex, navigatie naar het kavelaanbod
+
+diff --git a/.htaccess b/.htaccess
+index 7b2cbe6..61ffe2f 100644
+--- a/.htaccess
++++ b/.htaccess
+@@ -114,6 +114,11 @@ RewriteRule ^FAQ\.html$             /faq.html                [R=301,L]
+ RewriteRule ^Neighborhood\.html$    /kololi.html             [R=301,L]
+ RewriteRule ^neighborhood\.html$    /kololi.html             [R=301,L]
+ 
++# De grondpagina is op 29-08-2026 ingetrokken. De cijfers die erop stonden komen
++# uit de prijsindex en staan daar nog steeds; die is dus het dichtstbijzijnde
++# equivalent. Beide schrijfwijzen vangen, want de site serveert ook zonder .html.
++RewriteRule ^land-for-sale-in-the-gambia(\.html)?$ /gambia-property-prices.html [R=301,L]
++
+ # Legal: the three documents are now real pages, so route the old
+ # ?doc= parameter URLs straight to them (query string dropped with the "?").
+ RewriteCond %{QUERY_STRING} (^|&)doc=terms(&|$)   [NC]

@@ -179,7 +179,7 @@ function priceBlock(key, r) {
      gebouwd wordt — door iedereen, ook door ons — en waarom we tóch
      publiceren. Dit is de missie van het platform in twee alinea's tekst;
      de uitgebreide versie staat op how-we-measure-prices.html. */
-  const honest = `<p style="margin-top:14px">These figures are as honest as we can make them — and still young. Reliable Gambian market data barely exists yet, for anyone; building it is one of the reasons MyKunda exists at all. So we publish what we can measure, print the evidence count next to every figure, and leave a blank rather than defend a number we cannot. A market where buyers and sellers can trust what they read has to start somewhere. Every listing and every verified sale sharpens these figures — and if you know a figure on this page to be wrong, <a href="contact.html">tell us</a>.</p>`;
+  const honest = `<p style="margin-top:14px">These figures are as honest as we can make them — and still young. Reliable Gambian market data barely exists yet, for anyone; building it is one of the reasons MyKunda exists at all. So we publish what we can measure, print the evidence count next to every figure, and leave a blank rather than defend a number we cannot. A market where buyers and sellers can trust what they read has to start somewhere. Every listing and every reported sale sharpens these figures — and if you know a figure on this page to be wrong, <a href="contact.html">tell us</a>.</p>`;
 
   return `<div class="block">
         <h2>What property costs in ${name}</h2>
@@ -190,6 +190,7 @@ function priceBlock(key, r) {
           ${houseLine}
           ${rentLine}
           <p style="margin:14px 0 0;font-size:12.5px;color:#8A8478">Evidence behind the land rate: <strong>${note(r)}</strong>. Behind the rent: <strong>${rentNote(r)}</strong>. Gambian tenants think in months; agents advertise by the year, and landlords normally ask six to twelve months up front, so both units are shown.</p>
+          <p style="margin:10px 0 0;font-size:13.5px"><a href="land-for-sale-in-the-gambia.html">What a plot costs in every area we track</a> — the full land table, with the evidence behind each figure.</p>
         </div>
         <p style="margin-top:18px">${expl}${upc}</p>
         <p style="margin-top:14px">Every figure on this page is an <em>asking</em> price. No one in The Gambia publishes what property actually sells for — there is no public register of sale prices — so what a seller asks is the only thing that can be measured consistently. Sale prices are generally lower, by an amount that depends entirely on the seller.${yieldLine(r)}</p>
@@ -414,7 +415,7 @@ function evCell(r) {
       'Upcountry we publish land only \u2014 there is not enough house or rental advertising to put a number on either. ' +
       'All of it is young data, honestly labelled: reliable Gambian market data barely exists yet, and building it \u2014 ' +
       'listing by listing, figure by figure \u2014 is part of why MyKunda exists. ' +
-      'For bare plots specifically, see the <a href="search.html?type=sale&amp;cat=land">plots for sale</a>.</p>';
+      'For bare plots specifically, see <a href="land-for-sale-in-the-gambia.html">land for sale in The Gambia</a>.</p>';
   });
   src = src.replace(/<p class="px-stamp">[\s\S]*?<\/p>/,
     '<p class="px-stamp"><span></span> Asking prices, in Gambian dalasi per square metre. ' + DB.sources.land_obs +
@@ -509,9 +510,103 @@ await patch('areas-in-the-gambia.html', src => {
   return src;
 });
 
-/* De grondpagina is op 29-08-2026 ingetrokken; het patch-blok dat hier zijn tabel
-   en FAQ bijwerkte is daarmee vervallen. De kavelcijfers staan in
-   gambia-property-prices.html, dat hierboven wel wordt bijgewerkt. */
+/* de grondpagina: dezelfde tabel, maar dan voor kavels */
+await patch('land-for-sale-in-the-gambia.html', src => {
+  let n = 0;
+  /* De rijen die deze stap daadwerkelijk publiceert. De FAQ eronder rekent op
+     precies deze verzameling, zodat "van D… tot D…" nooit een gebied kan noemen
+     dat niet in de tabel staat. */
+  const landRows = [];
+  const probsLand = [];
+  src = src.replace(/<tr><td><a href="([a-z-]+)\.html">([^<]+)<\/a><\/td><td class="reg">([^<]*)<\/td>[\s\S]*?<\/tr>/g,
+    (m, slug, label, reg) => {
+      const r = bySlug[slug]; if (!r) return m;
+      n++; landRows.push(r);
+      return `<tr><td><a href="${slug}.html">${label}</a></td><td class="reg">${reg}</td>` +
+        `<td class="med">${Dk(r.plot400)}<span>plot, 400 m²</span></td>` +
+        `<td class="num">${D(r.gmd_m2)}</td>` +
+        `<td class="num">${evCell(r)}</td></tr>`;
+    });
+  src = src.replace(/<thead><tr>[\s\S]*?<\/tr><\/thead>/,
+    '<thead><tr><th>Area</th><th>Region</th><th>Typical plot asking price</th>' +
+    '<th style="text-align:right">Land, per m²</th><th style="text-align:right">Evidence</th></tr></thead>');
+  src = src.replace(/<p class="px-stamp">[\s\S]*?<\/p>/,
+    '<p class="px-stamp"><span></span> Asking prices in Gambian dalasi, measured <time datetime="' + DB.measured + '">' +
+    DB.measured_label + '</time>. The standard unit here is a 20 × 20 metre plot of 400 m² — the size most Gambian plots are sold in. ' +
+    'The evidence base is young; the count next to each figure says exactly how much sits behind it. ' +
+    '<a href="how-we-measure-prices.html">How we measure these prices</a></p>');
+  src = src.replace(/a standard 1000 m² plot, the area price per m² and the year-on-year change/g,
+    'a standard 400 m² plot, the price of land per m² and the evidence behind it');
+  src = src.replace(/1000 m²/g, '400 m²');
+  src = src.replace(/<b>Avg\. price \/ m²<\/b> is the area's index across everything that sells there, built and unbuilt, so it sits far/,
+    "<b>Land, per m²</b> is the rate for bare ground only — buildings are priced separately on this site, so it sits far");
+  src = src.replace(/MyKunda price index/g, 'MyKunda price table');
+  /* "Of the 41 areas MyKunda tracks, fourteen are markets ..." — twee getallen
+     die met de hand meegeteld moesten worden en dat dus niet werden. n is het
+     aantal rijen dat deze stap zojuist heeft geschreven. */
+  {
+    const W = ['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven',
+               'twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen','twenty',
+               'twenty-one','twenty-two','twenty-three','twenty-four','twenty-five'];
+    src = src.replace(/Of the (<b>)?\d+ areas(<\/b>)? MyKunda tracks, [a-z-]+ are markets/,
+      `Of the <b>${Object.keys(A).length} areas</b> MyKunda tracks, ${W[n] || n} are markets`);
+
+    /* "you will find all forty-one in the index" — een met de hand geschreven
+       aantal dat sinds de groei naar 46 gebieden niet meer klopte. Voluit
+       geschreven getallen ontsnappen aan de `\d+ areas`-regel verderop, dus
+       vervangt deze stap het door het cijfer uit de tabel zelf. */
+    src = src.replace(/(not listed here — you will find all )(?:[a-z-]+|\d+)( in the index)/,
+      `$1${Object.keys(A).length}$2`);
+
+    /* De maand in de eyebrow stond met de hand in de pagina en verouderde stil
+       mee met elke meting die er niet in werd bijgewerkt. */
+    const MAAND = new Date(DB.measured + 'T00:00:00Z')
+      .toLocaleDateString('en-GB', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+    src = src.replace(/(<div class="eyebrow">Land &amp; plots · )[^<]*(<\/div>)/, `$1${MAAND}$2`);
+
+    /* Het eerste FAQ-antwoord is het enige met bedragen erin. Ze komen uit
+       dezelfde rijen als de tabel: de goedkoopste en duurste kavel, en de
+       goedkoopste en duurste grondprijs per m². */
+    if (landRows.length) {
+      const perPlot = landRows.slice().sort((a, b) => a.plot400 - b.plot400);
+      const perM2   = landRows.slice().sort((a, b) => a.gmd_m2 - b.gmd_m2);
+      const pLo = perPlot[0], pHi = perPlot[perPlot.length - 1];
+      const mLo = perM2[0],   mHi = perM2[perM2.length - 1];
+      const antwoord =
+        `<p>Across the ${W[n] || n} areas where a plot is the typical sale, a standard 400 m² plot ` +
+        `is advertised at between <b>${Dk(pLo.plot400)}</b> in ${pLo.label} and <b>${Dk(pHi.plot400)}</b> ` +
+        `in ${pHi.label}. Bare land itself runs from <b>${D(mLo.gmd_m2)}</b> per m² in ${mLo.label} ` +
+        `to <b>${D(mHi.gmd_m2)}</b> in ${mHi.label}. The table above gives every area, with the ` +
+        `evidence behind each figure.</p>`;
+      if (!/<div class="a" id="faqA1">/.test(src)) probsLand.push('faqA1 niet gevonden');
+      else src = src.replace(/(<div class="a" id="faqA1">)[\s\S]*?(<\/div>)/, `$1${antwoord}$2`);
+    }
+
+    /* De structured data wordt uit de zichtbare vragen en antwoorden opgebouwd,
+       niet apart onderhouden. Zo kan Google nooit iets anders te lezen krijgen
+       dan de bezoeker. */
+    const qa = [...src.matchAll(
+      /<details[^>]*>\s*<summary>([\s\S]*?)<\/summary>\s*<div class="a"[^>]*>([\s\S]*?)<\/div>\s*<\/details>/g)];
+    if (!qa.length) probsLand.push('geen FAQ-blokken gevonden');
+    else if (!/<script type="application\/ld\+json" id="mkFaqLd">/.test(src)) probsLand.push('mkFaqLd niet gevonden');
+    else {
+      const kaal = s => s.replace(/<[^>]+>/g, ' ')
+        .replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ')
+        .replace(/\s+/g, ' ').trim();
+      const ld = {
+        '@context': 'https://schema.org', '@type': 'FAQPage',
+        mainEntity: qa.map(m => ({
+          '@type': 'Question', name: kaal(m[1]),
+          acceptedAnswer: { '@type': 'Answer', text: kaal(m[2]) }
+        }))
+      };
+      src = src.replace(/(<script type="application\/ld\+json" id="mkFaqLd">)[\s\S]*?(<\/script>)/,
+        `$1\n${JSON.stringify(ld)}\n$2`);
+    }
+  }
+  if (probsLand.length) { report.push(['land-for-sale-in-the-gambia.html', probsLand.join(' | ')]); return null; }
+  return n ? src : null;
+});
 
 /* objectpagina: het buurtblok onder de listing.
    Het patch-blok dat hier stond, zocht naar `stats: [['Avg. price/m²', …]]`.
@@ -669,7 +764,7 @@ for (const f of ['gambia-property-prices.html', 'how-we-measure-prices.html', 'i
                        'Eighteen','Nineteen','Twenty'][n] || String(n);
   for (const f of ['gambia-property-prices.html', 'how-we-measure-prices.html', 'index.html',
                    'areas-in-the-gambia.html', 'faq.html', 'about.html',
-                   'buy.html', 'rent.html',
+                   'buy.html', 'rent.html', 'land-for-sale-in-the-gambia.html',
                    'search.html', 'sell.html', 'home.html']) {
     let src;
     try { src = await readFile(f, 'utf8'); } catch { continue; }
