@@ -30,6 +30,11 @@ import { createHash } from 'node:crypto';
    Zonder die ophoging krijgt elke terugkerende bezoeker eerst nog de oude pagina. */
 
 /* Files that belong on the server. Everything else in the root is internal. */
+/* IndexNow-sleutel. Geen geheim: hij staat als los bestand in de webroot en is
+   juist bedoeld om daar opgehaald te worden. Wijzig hem niet zonder ook het
+   bestand in de root te hernoemen - anders weigert IndexNow de aanmelding. */
+const INDEXNOW_KEY = '1a01e0ded2474955709f9b30fe339e29';
+
 const SITE_ASSETS = [
   'app.min.js', 'styles.min.css', 'redesign.min.css', 'areas.css',
   'supabase.js', 'sw.js', 'manifest.json', 'admin-guard.js',
@@ -44,7 +49,11 @@ const SITE_ASSETS = [
   'market-index.js', 'market-sources.js',
   'valuation.js', 'valuation-areas.js',
   'title-verification-app.js', 'title-verification-components.js',
-  'robots.txt', 'sitemap.xml', 'sitemap-pages.xml', '.htaccess'
+  'robots.txt', 'sitemap.xml', 'sitemap-pages.xml', '.htaccess',
+  /* Tweede sitemap, alleen aanwezig zodra build-listing-pages.mjs draait.
+     Ontbreekt het bestand, dan slaat de mirrorstap het over. */
+  'sitemap-listings.xml',
+  INDEXNOW_KEY + '.txt'
 ];
 
 /* Bestanden die in de root MOETEN blijven maar NIET op de server horen. Ze stonden
@@ -533,7 +542,7 @@ function contentHash(html) {
   try { ledger = JSON.parse(await readFile(LEDGER, 'utf8')); } catch {}
   const sm = await readFile('sitemap-pages.xml', 'utf8');
   const inSitemap = new Set();
-  let newest = '0000-00-00', changed = 0;
+  let newest = '0000-00-00', changed = 0; const changedUrls = [];
   const out = sm.replace(/<url><loc>https:\/\/mykunda\.com\/([^<]*)<\/loc><lastmod>(\d{4}-\d{2}-\d{2})<\/lastmod>/g, (m, path, lastmod) => {
     const file = path === '' ? 'index.html' : path;
     inSitemap.add(file);
@@ -544,7 +553,7 @@ function contentHash(html) {
     const prev = ledger[file];
     let date = lastmod;
     if (!prev) ledger[file] = { hash: h, lastmod };                 /* eerste keer: datum overnemen */
-    else if (prev.hash !== h) { date = today; ledger[file] = { hash: h, lastmod: today }; changed++; }
+    else if (prev.hash !== h) { date = today; ledger[file] = { hash: h, lastmod: today }; changed++; changedUrls.push(`https://mykunda.com/${path}`); }
     else date = prev.lastmod;
     if (date > newest) newest = date;
     return `<url><loc>https://mykunda.com/${path}</loc><lastmod>${date}</lastmod>`;
@@ -555,18 +564,82 @@ function contentHash(html) {
   const idx = await readFile('sitemap.xml', 'utf8');
   await writeIfChanged('sitemap.xml', idx.replace(/(sitemap-pages\.xml<\/loc><lastmod>)\d{4}-\d{2}-\d{2}/, `$1${newest}`));
   console.log(`sitemap   ${inSitemap.size} URL's, ${changed} lastmod bijgewerkt, jongste ${newest}`);
+  /* IndexNow (05-09-2026): Bing en Yandex horen zo binnen enkele minuten van een
+     wijziging, in plaats van bij hun volgende crawl. build.mjs schrijft hier alleen
+     het bericht; upload.bat verstuurt het pas NA een geslaagde upload, want een URL
+     aanmelden die nog niet live staat levert een fout op. Niets gewijzigd = geen
+     bestand = upload.bat slaat de stap over. */
+  await mkdir('_werk', { recursive: true });
+  /* Optellen, niet overschrijven: tussen twee uploads kan er meer dan één keer
+     gebouwd worden, en dan zou de tweede bouw (0 wijzigingen) het bericht van de
+     eerste wissen. upload.bat gooit het bestand weg zodra IndexNow het heeft
+     aangenomen; tot die tijd stapelt het op. */
+  let wachtrij = [];
+  try { wachtrij = JSON.parse(await readFile('_werk/indexnow.json', 'utf8')).urlList || []; } catch {}
+  const alles = [...new Set([...wachtrij, ...changedUrls])];
+  if (alles.length) {
+    await writeFile('_werk/indexnow.json', JSON.stringify({
+      host: 'mykunda.com', key: INDEXNOW_KEY,
+      keyLocation: `https://mykunda.com/${INDEXNOW_KEY}.txt`,
+      urlList: alles
+    }, null, 1) + '\n');
+  }
+  console.log(`indexnow  ${changedUrls.length} nieuw, ${alles.length} in de wachtrij`);
   /* Vangrails: elke indexeerbare, geuploade pagina hoort in de sitemap; en een pagina
      die admin-guard.js laadt is back-office en hoort in NOINDEX_PAGES. */
+  /* Advertentiepagina's (listing-*.html) horen niet in sitemap-pages.xml maar in
+     sitemap-listings.xml, geschreven door build-listing-pages.mjs. Zolang dat script
+     niet meedraait bestaan ze niet en doet deze lus niets. */
+  let inListings = new Set();
+  try {
+    const sl = readFileSync('sitemap-listings.xml', 'utf8');
+    inListings = new Set([...sl.matchAll(/<loc>https:\/\/mykunda\.com\/([^<]*)<\/loc>/g)].map(m => m[1]));
+  } catch {}
   for (const f of pages) {
     if (NOT_UPLOADED.has(f) || NOINDEX_PAGES.has(f) || JS_ROBOTS.has(f) || f === '404.html') continue;
+    if (f.startsWith('listing-')) {
+      if (!inListings.has(f)) console.log(`LET OP: ${f} is indexeerbaar maar staat niet in sitemap-listings.xml`);
+      continue;
+    }
     if (!inSitemap.has(f)) console.log(`LET OP: ${f} is indexeerbaar maar staat niet in sitemap-pages.xml`);
   }
+  for (const f of inListings) if (!pages.includes(f)) console.log(`LET OP: sitemap-listings.xml noemt ${f}, maar dat bestand staat niet in de root`);
   for (const f of pages) {
     if (NOINDEX_PAGES.has(f)) continue;
     if (/admin-guard\.js/.test(readFileSyncSafe(f))) console.log(`LET OP: ${f} laadt admin-guard.js maar staat niet in NOINDEX_PAGES`);
   }
 }
 function readFileSyncSafe(f) { return readFileSync(f, 'utf8'); }
+
+/* ---------------- hoofdletter-URL's: 301 in plaats van 404 (05-09-2026) ------
+ *
+ * Google kent van een oudere build URL's met een hoofdletter; /Bijilo.html haalde
+ * over 18-06 t/m 03-09-2026 132 vertoningen, meer dan /bijilo.html met 59, en gaf
+ * een 404. Het vangnet in .htaccess was mod_speling (CheckCaseOnly), maar de server
+ * draait LiteSpeed en heeft die module niet: alleen de met de hand opgesomde namen
+ * werkten, de 46 gebiedspagina's en 13 gidsen niet. Daarom schrijft de build zelf
+ * een regel per geuploade pagina, tussen twee markers in .htaccess. De RewriteCond
+ * eist een hoofdletter in het pad, zodat de al goede kleine-letter-URL nooit naar
+ * zichzelf omleidt - geen lus. Nieuwe pagina's liften vanzelf mee. */
+{
+  const CASE_START = '# BEGIN mk-case-redirects';
+  const CASE_END = '# END mk-case-redirects';
+  const ht = await readFile('.htaccess', 'utf8');
+  const i = ht.indexOf(CASE_START), j = ht.indexOf(CASE_END);
+  if (i < 0 || j < 0) {
+    console.log('LET OP: de markers mk-case-redirects ontbreken in .htaccess - hoofdletter-redirects niet bijgewerkt');
+  } else {
+    const rules = [];
+    for (const f of pages.filter(p => !NOT_UPLOADED.has(p)).sort()) {
+      if (f !== f.toLowerCase()) { console.log(`LET OP: ${f} heeft zelf een hoofdletter - geen case-redirect gemaakt`); continue; }
+      rules.push(`RewriteCond %{REQUEST_URI} [A-Z]\nRewriteRule ^${f.replace(/\./g, '\\.')}$ /${f} [R=301,L,NC]`);
+    }
+    const block = `${CASE_START} (${rules.length} pagina's, gegenereerd door build.mjs - niet met de hand wijzigen)\n`
+      + rules.join('\n') + '\n' + CASE_END;
+    await writeIfChanged('.htaccess', ht.slice(0, i) + block + ht.slice(j + CASE_END.length));
+    console.log(`case      ${rules.length} hoofdletter-redirects in .htaccess`);
+  }
+}
 
 /* Mirror into deploy/ */
 await mkdir('deploy', { recursive: true });

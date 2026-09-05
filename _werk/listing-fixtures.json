@@ -1,0 +1,53 @@
+{
+  "_leesmij": "PROEFDATA, geen echte advertenties. Alleen bedoeld om build-listing-pages.mjs te kunnen draaien en controleren zolang de tabel listings leeg is. De veldnamen en enum-waarden komen uit het echte schema (public.listings, 05-09-2026). Namen, prijzen en teksten zijn verzonnen en mogen nooit op de site komen: de generator schrijft alleen met --fixture in deze proefstand.",
+  "listings": [
+    {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "kind": "sale", "category": "house", "status": "active", "segment": "residential",
+      "title": "Testadvertentie 1", "area": "Brusubi", "street": "Phase 2",
+      "price": 4750000, "price_currency": "GMD", "negotiable": true,
+      "beds": 4, "baths": 3, "sqm": 210, "plot_sqm": 600,
+      "plot_width_m": 20, "plot_depth_m": 30,
+      "year_built": 2021, "condition": "good", "title_type": "leasehold", "lease_years_remaining": 88,
+      "water": "mains", "electricity": "NAWEC meter", "road": "tarred", "fencing": "walled",
+      "lat": 13.4157, "lng": -16.7284, "is_verified_title": true,
+      "highlights": "Walled compound, borehole and a NAWEC meter already connected.",
+      "description": "PROEFTEKST. A four bedroom family house on a walled plot in Brusubi, finished in 2021 and lived in since.\n\nPROEFTEKST. Three bathrooms, a separate kitchen and a covered terrace at the back. The plot measures twenty by thirty metres and has room for a second building.",
+      "created_at": "2026-08-14T09:00:00Z", "updated_at": "2026-09-01T09:00:00Z"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000002",
+      "kind": "sale", "category": "land", "status": "active", "segment": "residential",
+      "title": "Testadvertentie 2", "area": "Tujereng",
+      "price": 900000, "price_currency": "GMD",
+      "plot_sqm": 900, "plot_width_m": 30, "plot_depth_m": 30,
+      "title_type": "customary", "land_water": "borehole nearby", "land_beach": "1.2 km to the beach",
+      "road": "laterite", "fencing": "none", "beach_m": 1200,
+      "lat": 13.2708, "lng": -16.8003, "is_verified_title": false,
+      "description": "PROEFTEKST. A thirty by thirty metre plot in Tujereng, one and a bit kilometres back from the beach, on a laterite road.",
+      "created_at": "2026-08-20T09:00:00Z", "updated_at": "2026-08-28T09:00:00Z"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "kind": "rent", "category": "apartment", "status": "active", "segment": "residential",
+      "title": "Testadvertentie 3", "area": "Kololi",
+      "price": 22000, "price_currency": "GMD", "price_period": "month",
+      "beds": 2, "baths": 1, "sqm": 78, "furnished": "furnished",
+      "deposit": 44000, "min_term_months": 6,
+      "water": "mains", "electricity": "prepaid meter", "condition": "good",
+      "lat": 13.4478, "lng": -16.7003,
+      "description": "PROEFTEKST. A furnished two bedroom apartment in Kololi, on the first floor, with a shared yard and a prepaid meter.",
+      "created_at": "2026-08-25T09:00:00Z", "updated_at": "2026-09-02T09:00:00Z"
+    }
+  ],
+  "media": {
+    "00000000-0000-4000-8000-000000000001": [
+      { "storage_path": "00000000-0000-4000-8000-000000000001/proef-1.jpg", "sort": 0 },
+      { "storage_path": "00000000-0000-4000-8000-000000000001/proef-2.jpg", "sort": 1 }
+    ],
+    "00000000-0000-4000-8000-000000000002": [
+      { "storage_path": "00000000-0000-4000-8000-000000000002/proef-1.jpg", "sort": 0 }
+    ],
+    "00000000-0000-4000-8000-000000000003": []
+  }
+}

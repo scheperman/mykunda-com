@@ -2900,3 +2900,103 @@ Wat er nu geldt:
   `kuntaur`, `mansa-konko`, `manjai-kunda`, `nema-kunku`, `pipeline`,
   `soma`, `barra` (Commons, matig maar echt en juist geplaatst) en
   `kartong` (900 px bron, geen groter origineel).
+
+## Vindbaarheid: gemeten en gerepareerd op 05-09-2026
+
+Search Console (sc-domain:mykunda.com, venster 18-06 t/m 03-09-2026): **25 klikken,
+2.120 vertoningen, CTR 1,2%, gemiddelde positie 30,8**. Geen van de 143 zichtbare
+zoekopdrachten haalt een klik; de 25 klikken zitten onder de weergavedrempel. Dat is
+een positieprobleem, geen CTR-probleem.
+
+De vertoningen komen binnen op de verkeerde intentie. Van de 1.167 vertoningen achter
+die 143 zoekopdrachten gaat 883 (76%) naar plaats- en toerismezoekopdrachten (bijilo,
+brikama, fajara golf club), 185 (16%) naar geld sturen naar Gambia, en maar 87 (7,5%)
+naar kopen en grond. Binnen die laatste groep gaat 72 over grond: "land for sale in
+gambia" (30), "buying land in gambia" (17), "gambia land" (13) plus elf varianten.
+Het VK levert 883 vertoningen op gemiddelde positie 42,9 - het grootste publiek en de
+slechtste positie; Gambia staat op 10,8, Italië op 12,4, Nederland op 21,2.
+
+Indexering: 66 geïndexeerd, 63 niet, waarvan 21 "Gevonden - momenteel niet
+geïndexeerd" (autoriteitssignaal, geen techniekfout), 13 omleiding, 11 noindex, 11
+"Niet gevonden (404)" met validatie MISLUKT. Site-vitaliteit: "Geen gegevens" - te
+weinig verkeer voor velddata.
+
+### Hoofdletter-URL's: 301 door build.mjs, niet door mod_speling
+
+`/Bijilo.html` haalde 132 vertoningen - méér dan `/bijilo.html` met 59 - en gaf een
+**404**. Het vangnet in `.htaccess` was `mod_speling` (`CheckCaseOnly On`), en
+**LiteSpeed heeft die module niet**: alleen de vijftien met de hand opgesomde namen
+(Home.html, Guides.html, ...) werkten, de 46 gebiedspagina's en 13 gidsen niet.
+
+`build.mjs` schrijft nu zelf één regel per geuploade pagina tussen
+`# BEGIN mk-case-redirects` en `# END mk-case-redirects` in `.htaccess` (102 regels op
+05-09-2026). Elke regel heeft een eigen `RewriteCond %{REQUEST_URI} [A-Z]`: zonder die
+voorwaarde zou `[NC]` de goede kleine-letter-URL naar zichzelf laten lussen. Nieuwe
+pagina's liften vanzelf mee. Zet nooit met de hand iets tussen die markers - de
+volgende bouw overschrijft het. Het mod_speling-blok blijft staan als terugval voor
+het geval de site ooit op echt Apache draait.
+
+Controleren: `node _werk/check-case-redirects.mjs` (bron) en `... deploy` (het
+uploadpakket). Live na een upload: `/Bakau.html` hoort 301 te geven, niet 404.
+
+### IndexNow
+
+De sleutel staat in `build.mjs` als `INDEXNOW_KEY` en als los bestand
+`1a01e0ded2474955709f9b30fe339e29.txt` in de root; beide moeten gelijk blijven, anders
+weigert IndexNow. De sleutel is geen geheim - hij hoort juist openbaar in de webroot.
+
+`build.mjs` schrijft de URL's waarvan de lastmod vandaag is bijgewerkt in
+`_werk/indexnow.json` en **telt op** bij wat er al stond: tussen twee uploads kan er
+meer dan één keer gebouwd worden. `upload.bat` verstuurt het bestand pas NA een
+geslaagde upload (stap 4b) - een URL aanmelden die nog niet live staat geeft een fout -
+en gooit het pas weg bij antwoordcode 200 of 202. Mislukt de aanmelding, dan blijft de
+wachtrij staan en gaat hij de volgende keer gewoon mee.
+
+Controleren: `node _werk/check-indexnow.mjs` (kijkt of het sleutelbestand live staat en
+wat er in de wachtrij zit); met `--verstuur` meldt hij ook echt aan.
+
+### Advertentiepagina's: `build-listing-pages.mjs` staat klaar maar draait niet mee
+
+`listings` stond op 05-09-2026 nog op nul rijen en `property.html` draagt `noindex`,
+ook mét `?id=`. Er is dus geen enkele indexeerbare advertentie, en dat is de grootste
+ontbrekende laag: een vastgoedsite haalt zijn lange staart uit objectpagina's.
+
+`build-listing-pages.mjs` in de root maakt per actieve advertentie een statische pagina
+`listing-<kop>-<kort id>.html` met de inhoud al in de HTML, plus
+`sitemap-listings.xml` en een tweede verwijzing in de sitemapindex. `listing-urls.json`
+(root, niet op de server) legt vast welke bestandsnaam bij welke advertentie hoort,
+zodat een gewijzigde titel de URL niet verandert.
+
+Het script **draait bewust nog niet mee in de leverroute**: zonder een enkele
+advertentie valt er niets op echte data na te kijken. Het is wel getest op proefdata:
+`node build-listing-pages.mjs --fixture --uit=_werk/proef2` gevolgd door
+`node _werk/check-listing-pages.mjs _werk/proef2` gaf 45 van 45 controles goed. Draai
+de proefdata **altijd** met `--uit=`: een proefpagina in de root wordt door `build.mjs`
+als een echte pagina opgepakt en staat na de eerstvolgende upload live. Het script
+weigert dat ook zelf.
+
+Aanzetten staat stap voor stap onderaan `build-listing-pages.mjs`. Twee dingen zitten
+er al in: `sitemap-listings.xml` staat in `SITE_ASSETS` (de mirrorstap slaat bestanden
+over die niet bestaan) en de vangrail in `build.mjs` houdt pagina's die met `listing-`
+beginnen tegen `sitemap-listings.xml` in plaats van tegen `sitemap-pages.xml`. Wat er
+nog bij hoort: een crawlbare lijst. Een sitemap is genoeg om gevonden te worden, niet
+om gewicht te krijgen - zonder links vanaf de gebiedspagina en vanaf buy/rent blijft
+elke advertentiepagina een wees.
+
+### Links vanaf de zustersites
+
+gamgrowth.com en innfold.com noemden mykunda.com nul keer. Op 05-09-2026 is dat op
+beide sites gerepareerd, in lopende tekst en niet als linkblok: bij Innfold in het
+vertrouwensblok op de homepage ("The same team built and runs MyKunda"), bij Gam Growth
+als extra FAQ-vraag voor telers die nog geen perceel hebben, met een link naar de
+prijsindex. Beide sites hebben hun eigen `upload.bat`; bij Gam Growth staat dezelfde
+vraag ook in de FAQPage-JSON-LD en die twee moeten gelijk blijven.
+Controleren: `node _werk/check-zusterlinks.mjs --live`.
+
+### Wat niet gemeten is
+
+Het inkomende linkprofiel (geen betrouwbare gratis bron; `robots.txt` blokkeert Ahrefs,
+Semrush en Majestic op deze site) en Core Web Vitals in het veld (Search Console meldt
+"Geen gegevens"; de PageSpeed-API gaf die dag een quotumfout). Over het effect van de
+Land-pagina 2.0 blijft de afspraak van 29-08-2026 staan: geen uitspraak vóór eind
+november 2026.

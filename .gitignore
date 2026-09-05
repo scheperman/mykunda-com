@@ -24,5 +24,10 @@ _werk/backup-*/
 _werk/osm-cache/
 _werk/osm-log.txt
 
+# Proefuitvoer van build-listing-pages.mjs (--uit=). Gegenereerd uit
+# _werk/listing-fixtures.json en dus opnieuw te maken; hoort niet in de repo.
+_werk/proef*/
+_werk/indexnow.json
+
 # Map met bestanden die weg mogen
 _to_delete/

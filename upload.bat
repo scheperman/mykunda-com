@@ -45,7 +45,14 @@ rem          wachtwoord); hersteld door hostnaam en wachtwoord van
 rem          gamgrowth-sftp over te nemen (zelfde server, zelfde
 rem          gebruiker ycjoswsp). Weigert hij ooit weer, dan werkt
 rem          gamgrowth-sftp hier ook - EXTERN blijft de MyKunda-map.
-set "SESSIE=mykunda-sftp"
+rem          05-09-2026: mykunda-sftp weigerde weer (Password authentication
+rem          failed voor ycjoswsp), net als op 04-09. gamgrowth-sftp komt op
+rem          dezelfde server bij dezelfde gebruiker uit en werkt wel; nagemeten
+rem          met een stat op de MyKunda-index.html. Daarom staat die hier nu.
+rem          EXTERN blijft de MyKunda-map - het script controleert dat zelf.
+rem          Repareer je ooit het wachtwoord van mykunda-sftp, zet die naam dan
+rem          gerust terug; allebei werken ze.
+set "SESSIE=gamgrowth-sftp"
 set "EXTERN=/var/www/vhosts/gamgrowth.com/mykunda.com"
 rem CF_ZONE = de Zone ID van mykunda.com bij Cloudflare. Dat is een
 rem          identificatie en geen geheim, dus die mag hier staan.
@@ -72,6 +79,7 @@ rem  Een venster dat sluit is geen bevestiging.
 set "ST_BOUW=niet gedraaid"
 set "ST_UPLOAD=niet gedraaid"
 set "ST_CACHE=niet gedraaid"
+set "ST_INDEX=niet gedraaid"
 set "ST_GIT=niet gedraaid"
 set "PROBLEEM="
 
@@ -86,8 +94,10 @@ if /i "%~1"=="--zelftest" (
   set "ST_BOUW=ok"
   set "ST_UPLOAD=ok"
   set "ST_CACHE=ok"
+  set "ST_INDEX=ok - aangemeld bij IndexNow"
   set "ST_GIT=ok - vastgelegd en gepusht"
   if /i "%~2"=="fout" set "ST_CACHE=MOET MET DE HAND - zie hierboven"
+  if /i "%~2"=="fout" set "ST_INDEX=MISLUKT - antwoordcode 403"
   if /i "%~2"=="fout" set "ST_GIT=MISLUKT - push geweigerd, commit staat lokaal klaar"
   if /i "%~2"=="fout" set "PROBLEEM=1"
   goto :einde
@@ -260,6 +270,7 @@ if errorlevel 1 goto :purgefout
 
 del "%CFOUT%" >nul 2>&1
 set "ST_CACHE=ok"
+call :indexnow
 echo   Cache geleegd. Binnen enkele seconden is de nieuwe versie live.
 echo   Nakijken kan in een privevenster.
 goto :klaar
@@ -274,6 +285,7 @@ echo   Zone - Cache Purge - Purge op deze zone.
 goto :handmatig
 
 :handmatig
+call :indexnow
 set "ST_CACHE=MOET MET DE HAND - zie hierboven"
 set "PROBLEEM=1"
 echo.
@@ -294,6 +306,7 @@ goto :vastleggen
 del "%SCRIPT%" "%VOORBEELD%" >nul 2>&1
 set "ST_UPLOAD=niets te doen - server stond al gelijk"
 set "ST_CACHE=niet nodig"
+set "ST_INDEX=niet nodig"
 echo.
 echo ===============================================================
 echo   Niets gewijzigd. Niets geupload, cache ongemoeid gelaten.
@@ -403,6 +416,43 @@ if defined GEENCOMMIT (
 echo   Gepusht naar origin.
 goto :einde
 
+rem  IndexNow: Bing en Yandex meteen op de hoogte stellen van de pagina's die
+rem  echt zijn gewijzigd. build.mjs heeft het bericht al klaargezet in
+rem  _werk\indexnow.json - met precies de URL's waarvan de lastmod vandaag is
+rem  bijgewerkt. Hier gaat het pas weg, NA een geslaagde upload: een URL aanmelden
+rem  die nog niet live staat levert een fout op. Geen bestand = niets gewijzigd =
+rem  niets te doen. De sleutel is geen geheim; hij hoort juist openbaar in de
+rem  webroot te staan, anders weigert IndexNow de aanmelding.
+:indexnow
+set "ST_INDEX=niets aan te melden"
+if not exist "_werk\indexnow.json" goto :eof
+where curl.exe >nul 2>&1
+if errorlevel 1 (
+  set "ST_INDEX=overgeslagen - curl niet gevonden"
+  goto :eof
+)
+set "INCODE="
+for /f %%C in ('curl -s -o "%TEMP%\indexnow-mykunda.txt" -w "%%{http_code}" -X POST "https://api.indexnow.org/indexnow" -H "Content-Type: application/json; charset=utf-8" --data-binary "@_werk\indexnow.json"') do set "INCODE=%%C"
+set "ST_INDEX=MISLUKT - antwoordcode !INCODE!"
+if "!INCODE!"=="200" set "ST_INDEX=ok - aangemeld bij IndexNow"
+if "!INCODE!"=="202" set "ST_INDEX=ok - in behandeling bij IndexNow"
+if not defined INCODE set "ST_INDEX=MISLUKT - curl gaf geen antwoord"
+if not "!INCODE!"=="200" if not "!INCODE!"=="202" set "PROBLEEM=1"
+rem  Aangenomen? Dan is de wachtrij leeg. Zo niet, dan blijft het bericht staan en
+rem  gaat het bij de volgende upload gewoon opnieuw mee - niets gaat verloren.
+if "!INCODE!"=="200" del "_werk\indexnow.json" >nul 2>&1
+if "!INCODE!"=="202" del "_werk\indexnow.json" >nul 2>&1
+if not "!INCODE!"=="200" if not "!INCODE!"=="202" (
+  echo.
+  echo   IndexNow weigerde de aanmelding. Antwoord:
+  if exist "%TEMP%\indexnow-mykunda.txt" type "%TEMP%\indexnow-mykunda.txt"
+  echo.
+  echo   Meestal staat het sleutelbestand nog niet op de server:
+  echo     https://mykunda.com/1a01e0ded2474955709f9b30fe339e29.txt
+)
+del "%TEMP%\indexnow-mykunda.txt" >nul 2>&1
+goto :eof
+
 rem  Feitelijk, niet verzonnen: de datum en wat er daadwerkelijk klaarstaat.
 :standaardbericht
 for /f %%N in ('git diff --cached --name-only ^| find /c /v ""') do set "AANTAL=%%N"
@@ -426,6 +476,7 @@ echo ---------------------------------------------------------------
 echo    1     bouwen             !ST_BOUW!
 echo    2-3   uploaden           !ST_UPLOAD!
 echo    4     Cloudflare-cache   !ST_CACHE!
+echo    4b    IndexNow           !ST_INDEX!
 echo    5     git                !ST_GIT!
 call :gitstand
 echo ===============================================================

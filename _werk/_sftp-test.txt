@@ -1,0 +1,6 @@
+option batch abort
+option confirm off
+open "innfold-sftp"
+stat "/var/www/vhosts/gamgrowth.com/mykunda.com/index.html"
+close
+exit
