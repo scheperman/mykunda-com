@@ -290,6 +290,22 @@ Die `UTF8Encoding $false` is er om een BOM te voorkomen: drie bytes vóór
 
 ### De sessie heet `mykunda-sftp`, en waarom niet `mykunda`
 
+**Sinds 05-09-2026 staat `SESSIE` in `upload.bat` op `gamgrowth-sftp`.** `mykunda-sftp`
+weigerde die dag opnieuw met `Password authentication failed` voor gebruiker
+`ycjoswsp` - hetzelfde als op 04-09. De server was gewoon bereikbaar en de hostsleutel
+klopte; alleen het opgeslagen wachtwoord in díé sessie is verouderd. `gamgrowth-sftp`
+komt op dezelfde server bij dezelfde gebruiker uit en werkt wel: nagemeten met een
+`stat` op `/var/www/vhosts/gamgrowth.com/mykunda.com/index.html`, en daarna gebruikt
+voor een geslaagde upload. `EXTERN` blijft de MyKunda-map, en het script controleert
+die map zelf voordat het iets verstuurt.
+
+Proefverbinding zonder iets te versturen: `node _werk/_sftp-test.mjs <sessienaam>`.
+Repareer je het wachtwoord van `mykunda-sftp`, dan kan die naam gerust terug; allebei
+werken ze. Innfold gebruikt een eigen sessie (`innfold-sftp`, gebruiker `iqrgznuv`,
+eigen vhost) en die deed het op 05-09 wel.
+
+De naamgeving hieronder blijft gelden voor welke sessienaam je ook kiest:
+
 Op 26-08-2026 stond de upload stil op `Kan site map of werkruimte niet openen`.
 De opgeslagen verbinding zelf mankeerde niets. Het probleem was een **werkruimte**
 met de naam `MyKunda`, die er onbedoeld bij was gekomen.
@@ -2935,6 +2951,14 @@ voorwaarde zou `[NC]` de goede kleine-letter-URL naar zichzelf laten lussen. Nie
 pagina's liften vanzelf mee. Zet nooit met de hand iets tussen die markers - de
 volgende bouw overschrijft het. Het mod_speling-blok blijft staan als terugval voor
 het geval de site ooit op echt Apache draait.
+
+Live nagemeten op 05-09-2026 na de upload met `node _werk/check-case-live.mjs`: acht
+van acht goed. `/Bijilo.html` (de URL met 132 vertoningen) geeft nu 301 naar
+`/bijilo.html`, net als `/Bakau.html`, een gids met hoofdletter en `/BUY.HTML`; de
+kleine-letterversies geven gewoon 200 en een onbekende URL nog steeds een echte 404.
+
+Ook live nagemeten: het IndexNow-sleutelbestand geeft 200 met de sleutel als inhoud,
+en een proefaanmelding van de homepage werd door IndexNow met 202 aangenomen.
 
 Controleren: `node _werk/check-case-redirects.mjs` (bron) en `... deploy` (het
 uploadpakket). Live na een upload: `/Bakau.html` hoort 301 te geven, niet 404.
